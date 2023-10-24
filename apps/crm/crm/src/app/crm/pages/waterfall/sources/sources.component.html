@@ -1,0 +1,44 @@
+<ng-container *ngIf="waterfall$ | async as waterfall">
+  <section>
+    <button mat-button color="primary" [disabled]="!waterfall.sources.length" (click)="removeSources(waterfall.sources)">
+      <mat-icon svgIcon="delete"></mat-icon>
+      <span>Remove all sources</span>
+    </button>
+  </section>
+  <bf-table [source]="waterfall.sources" clickable useFilter pagination="50">
+    <ng-template colRef="id" label="Id" let-id sort defaultSort>
+      {{ id }}
+    </ng-template>
+    <ng-template colRef="name" label="Name" let-name sort>
+      {{ name }}
+    </ng-template>
+    <ng-template colRef="medias" label="Medias" let-medias sort>
+      <mat-chip-list *ngIf="medias.length else noMedias" aria-label="Medias">
+        <mat-chip disableRipple *ngFor="let media of medias  | toGroupLabel:'medias':'All'">
+          {{ media }}
+        </mat-chip>
+      </mat-chip-list>
+      <ng-template #noMedias>--</ng-template>
+    </ng-template>
+    <ng-template colRef="territories" label="Territories" let-territories sort>
+      <span *ngIf="territories.length else noTerritories" class="group-label" (click)="openTerritoryModal(territories)">
+        {{ territories | toGroupLabel:'territories':'World' | join | maxLength:30 }}
+      </span>
+      <ng-template #noTerritories>--</ng-template>
+    </ng-template>
+    <ng-template colRef="destinationId" label="Destination Right" let-destinationId sort>
+      {{ destinationId }}
+    </ng-template>
+    <ng-template colRef="destinationId" label="Valid" let-destinationId sort>
+      <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="rightExists(destinationId) else noMatchingRight"></mat-icon>
+      <ng-template #noMatchingRight>
+        <mat-icon svgIcon="cancel" class="icon-nok" matTooltip="Import required right"></mat-icon>
+      </ng-template>
+    </ng-template>
+    <ng-template colRef="" label="Action" let-source sticky>
+      <button mat-icon-button (click)="removeSources([source])">
+        <mat-icon svgIcon="delete" matTooltip="Delete source"></mat-icon>
+      </button>
+    </ng-template>
+  </bf-table>
+</ng-container>

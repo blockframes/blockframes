@@ -1,12 +1,9 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
 
 // Blockframes
-import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
-import { TitleState, History, Waterfall } from '@blockframes/model';
 import { appUrl } from '@env';
+import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 
 @Component({
   selector: 'waterfall-title-waterfall',
@@ -17,29 +14,16 @@ import { appUrl } from '@env';
 export class WaterfallComponent implements OnInit {
 
   public crmAppUrl;
-  public isLoading$ = new BehaviorSubject(true);
-  public tree: { state: TitleState; history: History[] };
-
-  private waterfall: Waterfall;
+  public state$ = this.shell.state$;
 
   constructor(
-    private route: ActivatedRoute,
-    private waterfallService: WaterfallService
+    private shell: DashboardWaterfallShellComponent,
   ) { }
 
   async ngOnInit() {
-    const waterfallId: string = this.route.snapshot.params.movieId;
+    const { id: waterfallId } = await this.shell.movie;
     this.crmAppUrl = `${appUrl.crm}/c/o/dashboard/crm/waterfall/${waterfallId}`;
-    this.waterfall = await this.waterfallService.getValue(waterfallId);
-    await this.loadWaterfall();
   }
 
-  async loadWaterfall() {
-    if (this.waterfall.versions.length) {
-      const firstVersion = this.waterfall.versions.shift();
-      const data = await this.waterfallService.buildWaterfall({ waterfallId: this.waterfall.id, versionId: firstVersion.id });
-      this.tree = data.waterfall;
-    }
-    this.isLoading$.next(false);
-  }
+
 }

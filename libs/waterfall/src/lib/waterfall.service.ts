@@ -50,7 +50,7 @@ export interface WaterfallState {
   version: Version;
 }
 
-interface WaterfallData {
+export interface WaterfallData {
   waterfall: Waterfall;
   documents: WaterfallDocument[];
   contracts: WaterfallContract[];

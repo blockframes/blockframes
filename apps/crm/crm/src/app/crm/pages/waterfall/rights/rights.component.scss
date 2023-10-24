@@ -1,0 +1,13 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  margin: 40px;
+}
+
+section {
+  display: flex;
+  align-items: end;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px;
+}

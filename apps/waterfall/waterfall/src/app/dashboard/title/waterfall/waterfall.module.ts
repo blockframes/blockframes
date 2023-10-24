@@ -13,7 +13,6 @@ import { WaterfallComponent } from './waterfall.component';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [WaterfallComponent],
@@ -25,7 +24,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
     // Material
     MatButtonModule,
-    MatSnackBarModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: WaterfallComponent }]),

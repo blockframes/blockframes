@@ -1,8 +1,8 @@
-<title-dashboard-shell *ngIf="movie$ | async as movie" [routes]="navLinks" editRoute="./edit">
-  <movie-cta fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
+<waterfall-dashboard-shell *ngIf="movie$ | async as movie" [routes]="navLinks" editRoute="./edit">
+  <waterfall-cta fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
     <a mat-button color="primary" [routerLink]="['right-holders']" class="main-dashboard-cta">
       <mat-icon svgIcon="group"></mat-icon>
       <span>Rights Holders Management</span>
     </a>
-  </movie-cta>
-</title-dashboard-shell>
+  </waterfall-cta>
+</waterfall-dashboard-shell>

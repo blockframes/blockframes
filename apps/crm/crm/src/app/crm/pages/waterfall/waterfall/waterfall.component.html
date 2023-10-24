@@ -1,0 +1,149 @@
+<ng-container *ngIf="waterfall$ | async as waterfall">
+
+  <ng-container *ngIf="waterfall.versions.length else noWaterfall">
+    <div>
+      <h3>Versions</h3>
+      <button mat-button [disabled]="(canInitWaterfall$ | async) === false" (click)="initWaterfall()" color="primary" [matTooltip]="(canInitWaterfall$ | async) ? 'Initialize a new version' : 'Missing data'">
+        <mat-icon svgIcon="add"></mat-icon>
+        <span>Initialize a new version</span>
+      </button>
+    </div>
+    <bf-table [source]="waterfall.versions" clickable useFilter pagination="50">
+      <ng-template colRef="id" label="Id" let-id sort defaultSort>
+        {{ id }}
+      </ng-template>
+      <ng-template colRef="name" label="Name" let-name sort>
+        {{ name }}
+      </ng-template>
+      <ng-template colRef="description" label="Description" let-description sort>
+        {{ description }}
+      </ng-template>
+      <ng-template colRef="blockIds" label="Blocks" let-blockIds sort>
+        {{ blockIds.length }} block(s)
+      </ng-template>
+      <ng-template colRef="id" label="Actions" let-versionId sticky>
+        <button mat-icon-button (click)="removeVersion(versionId)">
+          <mat-icon svgIcon="delete" matTooltip="Delete version"></mat-icon>
+        </button>
+        <button mat-icon-button (click)="duplicateVersion(versionId)">
+          <mat-icon svgIcon="file_copy" matTooltip="Duplicate version"></mat-icon>
+        </button>
+        <button mat-icon-button (click)="displayActions(versionId)">
+          <mat-icon svgIcon="search" matTooltip="Show actions"></mat-icon>
+        </button>
+        <button mat-icon-button (click)="displayWaterfall(versionId)">
+          <mat-icon svgIcon="star" matTooltip="Show waterfall"></mat-icon>
+        </button>
+        <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'dashboard', versionId]" (click)="$event.stopPropagation()">
+          <mat-icon svgIcon="launch" matTooltip="Go to dashboard"></mat-icon>
+        </a>
+      </ng-template>
+    </bf-table>
+  </ng-container>
+  
+  <ng-template #noWaterfall>
+    <section>
+      <h1>Waterfall not initialized.</h1>
+      <p class="mat-body-1">
+        Please initalize a first version that you're going to work with by importing the required elements:
+      </p>
+      <ul>
+        <li>              
+          <a mat-button routerLink="/c/o/dashboard/crm/import/documents">
+            <mat-icon svgIcon="document_signed"></mat-icon><span matLine>1 Documents (contracts)</span>
+          </a>
+          <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="(contracts$ | async)?.length else notImported"></mat-icon>
+        </li>
+        <li>
+          <a mat-button routerLink="/c/o/dashboard/crm/import/sources">
+            <mat-icon svgIcon="world"></mat-icon><span matLine>2 Sources</span>
+          </a>
+          <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="waterfall.sources.length else notImported"></mat-icon>
+        </li>
+        <li>
+          <a mat-button routerLink="/c/o/dashboard/crm/import/rights">
+            <mat-icon svgIcon="local_offer"></mat-icon><span matLine>3 Rights</span>
+          </a>
+          <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="(hasMinimalRights$ | async) else noMinimalRights"></mat-icon>
+          <ng-template #noMinimalRights>
+            <mat-icon svgIcon="cancel" class="icon-nok" matTooltip="All sources does not have an associated Right"></mat-icon>
+          </ng-template>
+        </li>
+        <li>
+          <a mat-button routerLink="/c/o/dashboard/crm/import/statements">
+            <mat-icon svgIcon="monetization"></mat-icon><span matLine>4 Statements</span>
+          </a>
+          <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="(incomes$ | async)?.length else notImported"></mat-icon>
+        </li>
+      </ul>
+      <a *ngIf="(canInitWaterfall$ | async)" (click)="initWaterfall()" class="surface">
+        <img asset="add_draft.svg" alt="Add waterfall image">
+        <button mat-button color="primary" matTooltip="Initialize Waterfall">Initialize Waterfall</button>
+      </a>
+    </section>
+    <ng-template #notImported>
+      <mat-icon svgIcon="cancel" class="icon-nok"></mat-icon>
+    </ng-template>
+  </ng-template>
+
+  <ng-container *ngIf="actions$ | async as actions">
+    <ng-container *ngIf="(displayActions$ | async) && actions.length">
+      <h3>Actions</h3>
+      <bf-table [source]="actions" clickable useFilter pagination="50">
+        <ng-template colRef="actionId" label="#" let-actionId>
+          {{ actionId }}
+        </ng-template>
+        <ng-template colRef="payload.date" label="Date" let-date sort>
+          {{ date | date: 'dd/MM/yyyy' }}
+        </ng-template>
+        <ng-template colRef="block" label="Block" let-block sort>
+          {{ block.name }}
+          <button mat-icon-button [cdkCopyToClipboard]="block.id" (click)="$event.stopPropagation()">
+            <mat-icon svgIcon="file_copy"></mat-icon>
+          </button>
+        </ng-template>
+        <ng-template colRef="name" label="Type" let-name sort>
+          {{ name }}
+        </ng-template>
+        <ng-template colRef="payload.id" label="Id" let-id>
+          {{ id ? id : '--' }}
+          <button *ngIf="id" mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
+            <mat-icon svgIcon="file_copy"></mat-icon>
+          </button>
+        </ng-template>
+        <ng-template colRef="payload" label="Rightholder" let-payload>
+          <ng-container *ngIf="payload.orgId">{{ getRightholderName(payload.orgId) }}</ng-container>
+          <ng-container *ngIf="payload.blameId">{{ getRightholderName(payload.blameId) }}</ng-container>
+          <ng-container *ngIf="!payload.orgId && !payload.blameId">--</ng-container>
+        </ng-template>
+        <ng-template colRef="payload.amount" label="Amount" let-amount sort>
+          <ng-container *ngIf="amount else noPrice">
+            <price-per-currency [price]="getPrice(amount)"></price-per-currency>
+          </ng-container>
+          <ng-template #noPrice>--</ng-template>
+        </ng-template>
+        <ng-template colRef="payload.from" label="From" let-from sort>
+          {{ getPayloadPair(from) }}
+        </ng-template>
+        <ng-template colRef="payload.to" label="To" let-to sort>
+          {{ getPayloadPair(to) }}
+        </ng-template>
+        <ng-template colRef="payload.percent" label="%" let-percent>
+          {{ percent ? percent * 100  : '--' }}
+        </ng-template>
+      </bf-table>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="(displayWaterfall$ | async) && (state$ | async)?.version.id">
+    <h3>Waterfall</h3>
+    <waterfall-g6-graph [tree]="(state$ | async)?.waterfall" [waterfallId]="waterfall.id"></waterfall-g6-graph>
+  </ng-container>
+  
+  <ng-container *ngIf="waterfall.versions.length">
+    <h3>Tree</h3>
+    <article class="surface">
+      <waterfall-g6-tree [waterfall]="waterfall"></waterfall-g6-tree>
+    </article>
+  </ng-container>
+</ng-container>

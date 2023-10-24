@@ -1,0 +1,30 @@
+<ng-container *ngIf="documents$ | async as documents">
+  <section>
+    <button mat-button color="primary" [disabled]="!documents.length" (click)="removeDocuments(documents)">
+      <mat-icon svgIcon="delete"></mat-icon>
+      <span>Remove all documents</span>
+    </button>
+  </section>
+  <bf-table [source]="documents" clickable useFilter pagination="50" (rowClick)="goTo($event.id)">
+    <ng-template colRef="id" label="Id" let-id sort>
+      {{ id }}
+    </ng-template>
+    <ng-template colRef="signatureDate" label="Signature Date" let-signatureDate sort defaultSort>
+      {{ signatureDate | date: 'dd/MM/yyyy' }}
+    </ng-template>
+    <ng-template colRef="rootId" label="Parent" let-rootId sort>
+      {{ rootId ? rootId : '--' }}
+    </ng-template>
+    <ng-template colRef="type" label="Type" let-type sort>
+      {{ type }}
+    </ng-template>
+    <ng-template colRef="" label="Action" let-document sticky>
+      <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', documents.waterfallId, 'documents', document.id]" (click)="$event.stopPropagation()">
+        <mat-icon svgIcon="launch"></mat-icon>
+      </a>
+      <button mat-icon-button (click)="removeDocuments([document]); $event.stopPropagation()">
+        <mat-icon svgIcon="delete" matTooltip="Delete document"></mat-icon>
+      </button>
+    </ng-template>
+  </bf-table>
+</ng-container>

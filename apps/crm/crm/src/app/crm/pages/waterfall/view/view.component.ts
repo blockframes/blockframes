@@ -1,4 +1,3 @@
-
 import { ActivatedRoute } from '@angular/router';
 import { pluck, switchMap } from 'rxjs/operators';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
@@ -6,9 +5,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouteDescription } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 
-
 @Component({
-  selector: 'waterfall-title-view',
+  selector: 'crm-waterfall-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -20,24 +18,41 @@ export class TitleViewComponent {
 
   navLinks: RouteDescription[] = [
     {
-      path: 'dashboard',
-      label: 'Dashboard'
+      path: 'waterfall',
+      label: 'Waterfall',
     },
     {
-      path: 'statements',
-      label: 'Statements'
+      path: 'rightholders',
+      label: 'Right Holders',
     },
     {
       path: 'documents',
       label: 'Documents'
     },
+
     {
-      path: 'waterfall',
-      label: 'Waterfall',
+      path: 'contracts',
+      label: '1 - Contracts',
     },
     {
-      path: 'charts',
-      label: 'Charts',
+      path: 'sources',
+      label: '2 - Sources',
+    },
+    {
+      path: 'rights',
+      label: '3 - Rights',
+    },
+    {
+      path: 'statements',
+      label: '4 - Statements',
+    },
+    {
+      path: 'incomes',
+      label: 'Incomes',
+    },
+    {
+      path: 'expenses',
+      label: 'Expenses',
     },
     {
       path: 'sales',

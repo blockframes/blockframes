@@ -1,0 +1,32 @@
+<ng-container *ngIf="incomes$ | async as incomes">
+  <section>
+    <button mat-button color="primary" [disabled]="!incomes.length" (click)="removeIncomes(incomes)">
+      <mat-icon svgIcon="delete"></mat-icon>
+      <span>Remove all incomes</span>
+    </button>
+  </section>
+  <bf-table [source]="incomes" clickable useFilter pagination="50">
+    <ng-template colRef="id" label="Id" let-id sort>
+      {{ id }}
+    </ng-template>
+    <ng-template colRef="" label="Contract Id" let-item sort>
+      {{ getCurrentContract({ contractId: item.contractId, date: item.date }) }}
+    </ng-template>
+    <ng-template colRef="date" label="Date" let-date sort defaultSort>
+      {{ date | date: 'dd/MM/yyyy' }}
+    </ng-template>
+    <ng-template colRef="" label="Source" let-item sort>
+      {{ getAssociatedSource(item) }}
+    </ng-template>
+    <ng-template colRef="" label="Price" let-item sort>
+      <ng-container *ngIf="toPricePerCurrency(item) as amount">
+        <price-per-currency [price]="amount"></price-per-currency>
+      </ng-container>
+    </ng-template>
+    <ng-template colRef="" label="Action" let-income sticky>
+      <button mat-icon-button (click)="removeIncomes([income])">
+        <mat-icon svgIcon="delete" matTooltip="Delete income"></mat-icon>
+      </button>
+    </ng-template>
+  </bf-table>
+</ng-container>

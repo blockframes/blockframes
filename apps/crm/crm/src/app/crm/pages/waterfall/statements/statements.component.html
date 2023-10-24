@@ -1,0 +1,39 @@
+<ng-container *ngIf="statements$ | async as statements">
+  <section>
+    <button mat-button color="primary" [disabled]="!statements.length" (click)="removeStatements(statements)">
+      <mat-icon svgIcon="delete"></mat-icon>
+      <span>Remove all statements</span>
+    </button>
+  </section>
+  <bf-table [source]="statements" clickable useFilter pagination="50" (rowClick)="goTo($event.id)">
+    <ng-template colRef="id" label="Id" let-id sort>
+      {{ id }}
+    </ng-template>
+    <ng-template colRef="type" label="Type" let-type sort>
+      {{ type | toLabel: 'statementType' }}
+    </ng-template>
+    <ng-template colRef="status" label="Status" let-status sort>
+      {{ status | toLabel: 'statementStatus' }}
+    </ng-template>
+    <ng-template colRef="" label="Contract Id" let-item sort>
+      {{ getCurrentContract({ contractId: item.contractId, date: item.duration.from }) }}
+    </ng-template>
+    <ng-template colRef="rightholderId" label="Rightholder" let-rightholderId sort>
+      {{ getRightholderName(rightholderId) }}
+    </ng-template>
+    <ng-template colRef="duration.from" label="From" let-from sort defaultSort>
+      {{ from | date: 'dd/MM/yyyy' }}
+    </ng-template>
+    <ng-template colRef="duration.to" label="To" let-to sort defaultSort>
+      {{ to | date: 'dd/MM/yyyy' }}
+    </ng-template>
+    <ng-template colRef="" label="Actions" let-statement sticky>
+      <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', statement.waterfallId, 'statements', statement.id]" (click)="$event.stopPropagation()">
+        <mat-icon svgIcon="launch" matTooltip="Go to statement"></mat-icon>
+      </a>
+      <button mat-icon-button (click)="removeStatements([statement]);$event.stopPropagation()">
+        <mat-icon svgIcon="delete" matTooltip="Delete statement"></mat-icon>
+      </button>
+    </ng-template>
+  </bf-table>
+</ng-container>
