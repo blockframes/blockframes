@@ -25,7 +25,7 @@ import {
 import { MovieService } from '@blockframes/movie/service';
 import { filter, map, pluck, switchMap, tap } from 'rxjs/operators';
 import { NavigationService } from '@blockframes/ui/navigation.service';
-import { WaterfallData, WaterfallService } from '@blockframes/waterfall/waterfall.service';
+import { WaterfallData, WaterfallService, WaterfallState } from '@blockframes/waterfall/waterfall.service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import { where } from 'firebase/firestore';
 import { TermService } from '@blockframes/contract/term/service';
@@ -176,7 +176,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     map(blocks => blocks.map(b => Object.values(b.actions).map(a => ({ ...a, block: b }))).flat()),
   );
 
-  public state$ = combineLatest([this.isRefreshing$, this.waterfall$, this.versionId$, this.date$, this.canBypassRules$]).pipe(
+  public state$: Observable<WaterfallState> = combineLatest([this.isRefreshing$, this.waterfall$, this.versionId$, this.date$, this.canBypassRules$]).pipe(
     filter(([isRefreshing, waterfall]) => !!waterfall.versions.length && !isRefreshing),
     map(([_, waterfall, _versionId, date, canBypassRules]) => ({
       waterfallId: waterfall.id,
