@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet, Event, ActivatedRoute } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
-import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, firstValueFrom, Observable, Subscription } from 'rxjs';
 import {
   Action,
   App,
@@ -19,15 +19,13 @@ import {
   Waterfall,
   WaterfallContract,
   convertDocumentTo,
-  createTitleState,
-  createVersion,
   isContract,
   Version
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { filter, map, pluck, switchMap, tap } from 'rxjs/operators';
 import { NavigationService } from '@blockframes/ui/navigation.service';
-import { WaterfallData, WaterfallService, WaterfallState } from '@blockframes/waterfall/waterfall.service';
+import { WaterfallData, WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import { where } from 'firebase/firestore';
 import { TermService } from '@blockframes/contract/term/service';
@@ -43,11 +41,6 @@ import { AuthService } from '@blockframes/auth/service';
 
 @Directive({ selector: 'waterfall-cta, [waterfallCta]' })
 export class WaterfallCtaDirective { }
-
-const emptyWaterfallState = (waterfallId: string): Observable<WaterfallState> => of({
-  waterfall: { state: createTitleState(waterfallId), history: [] },
-  version: createVersion(),
-});
 
 @Component({
   selector: '[routes] waterfall-dashboard-shell',
@@ -183,13 +176,14 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   );
 
   public state$ = combineLatest([this.waterfall$, this.versionId$, this.date$, this.canBypassRules$]).pipe(
-    switchMap(([waterfall, _versionId, date, canBypassRules]) => {
-      const waterfallId = waterfall.id;
-      const versionId = _versionId || waterfall.versions[0]?.id;
-      return versionId ?
-        this.waterfallService.buildWaterfall({ waterfallId, versionId, canBypassRules, date }) :
-        emptyWaterfallState(waterfallId);
-    })
+    filter(([waterfall]) => !!waterfall.versions.length),
+    map(([waterfall, _versionId, date, canBypassRules]) => ({
+      waterfallId: waterfall.id,
+      versionId: _versionId || waterfall.versions[0]?.id,
+      date,
+      canBypassRules
+    })),
+    switchMap(config => this.waterfallService.buildWaterfall(config))
   );
 
   @Input() routes: RouteDescription[];

@@ -29,13 +29,15 @@ import {
   isDirectSalesStatement,
   getStatementsHistory,
   RightType,
-  pathExists
+  pathExists,
+  DistributorStatement,
+  ProducerStatement
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 import { WaterfallState } from '@blockframes/waterfall/waterfall.service';
-import { firstValueFrom } from 'rxjs';
+import { combineLatest, filter, firstValueFrom, map, tap } from 'rxjs';
 
 interface RightDetails {
   from: string,
@@ -53,21 +55,36 @@ interface RightDetails {
 })
 export class StatementComponent implements OnInit {
   public waterfall: Waterfall;
-  public statement: Statement;
   public incomes: Income[];
   public sources: WaterfallSource[];
   public expenses: Expense[];
   public rights: Right[];
   public rightDetails: RightDetails[][] = [];
   public currency = mainCurrency;
-  public options = { xAxis: { categories: [] }, series: [] };
-  public formatter = { formatter: (value: number) => `${value} ${movieCurrencies[mainCurrency]}` };
-  public state: WaterfallState;
   public paymentDateControl = new UntypedFormControl();
-
   private allRights: Right[];
-  private statements: Statement[];
+
+  private state$ = this.shell.state$.pipe(
+    tap(state => this.state = state)
+  );
+  public state: WaterfallState;
+
+  private statement$ = this.shell.statements$.pipe(
+    map(statements => statements.find(s => s.id === this.route.snapshot.paramMap.get('statementId'))),
+  );
+  public statement: Statement;
+
+  private contract$ = combineLatest([this.statement$, this.shell.contracts$]).pipe(
+    filter(([statement]) => isDistributorStatement(statement) || isProducerStatement(statement)),
+    map(([statement, contracts]: [DistributorStatement | ProducerStatement, WaterfallContract[]]) => contracts.find(c => c.id === statement.contractId)),
+    tap(contract => this.contract = contract)
+  );
   private contract: WaterfallContract;
+
+  public graph$ = combineLatest([this.shell.state$, this.statement$, this.shell.statements$, this.contract$]).pipe(
+    map(([state, statement, statements, contract]) => this.buildGraph(state, statement, statements, contract))
+  );
+  public formatter = { formatter: (value: number) => `${value} ${movieCurrencies[mainCurrency]}` };
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
@@ -80,17 +97,15 @@ export class StatementComponent implements OnInit {
   ngOnInit() { return this.switchToVersion(); }
 
   public async switchToVersion(versionId?: string) {
-    const statementId = this.route.snapshot.paramMap.get('statementId');
     const data = await firstValueFrom(this.shell.data$);
 
     this.waterfall = data.waterfall;
     this.allRights = data.rights;
-    this.statements = data.statements;
-    this.statement = this.statements.find(s => s.id === statementId);
+    this.statement = await firstValueFrom(this.statement$);
 
     if (isDistributorStatement(this.statement) || isProducerStatement(this.statement)) {
       const statement = this.statement;
-      this.contract = data.contracts.find(c => c.id === statement.contractId);
+      this.contract = await firstValueFrom(this.contract$);
       if (!this.contract) {
         this.snackBar.open(`Contract "${statement.contractId}" not found in waterfall.`, 'close', { duration: 5000 });
         return;
@@ -124,14 +139,13 @@ export class StatementComponent implements OnInit {
       await this.shell.initWaterfall({ id: 'version_1', description: 'Version 1' });
     }
 
-    await this.buildWaterfallState(versionId || this.waterfall.versions[0].id);
+    this.state = await firstValueFrom(this.state$);
+    this.shell.setVersionId(versionId || this.waterfall.versions[0].id);
+    this.shell.setDate(this.statement.duration.to);
 
     if (this.statement.incomeIds.some(i => !this.state.waterfall.state.incomes[i])) { // Some incomes are not in the waterfall
       await this.shell.refreshWaterfall(this.state.version.id);
-      await this.buildWaterfallState(this.state.version.id);
     }
-
-    this.buildGraph();
 
     const rightIds = unique(this.sources.map(s => this.getAssociatedRights(s.id)).flat().map(r => r.id));
     this.rights = this.allRights.filter(r => rightIds.includes(r.id));
@@ -139,14 +153,6 @@ export class StatementComponent implements OnInit {
     this.generatePayments();
 
     this.cdRef.markForCheck();
-  }
-
-  private async buildWaterfallState(versionId: string) {
-    this.shell.setVersionId(versionId);
-    this.shell.setDate(this.statement.duration.to)
-    this.snackBar.open('Waterfall is loading. Please wait', 'close', { duration: 5000 });
-    this.state = await firstValueFrom(this.shell.state$);
-    this.snackBar.open('Waterfall loaded !', 'close', { duration: 5000 });
   }
 
   public toPricePerCurrency(item: Income | Expense | Payment): PricePerCurrency {
@@ -247,27 +253,27 @@ export class StatementComponent implements OnInit {
     }
   }
 
-  private buildGraph() {
-
+  private buildGraph(state: WaterfallState, statement: Statement, statements: Statement[], contract: WaterfallContract) {
+    if (!state?.version.id) return;
     const history = getStatementsHistory(
-      this.state.waterfall.history,
-      this.statements.filter(s => s.type === this.statement.type),
-      this.statement.rightholderId,
-      this.contract?.id
+      state.waterfall.history,
+      statements.filter(s => s.type === statement.type),
+      statement.rightholderId,
+      contract?.id
     );
 
     const categories = history.map(h => new Date(h.date).toISOString().slice(0, 10));
     const series = [
       {
         name: 'Revenue',
-        data: history.map(h => Math.round(h.orgs[this.statement.rightholderId].revenu.actual))
+        data: history.map(h => Math.round(h.orgs[statement.rightholderId].revenu.actual))
       },
       {
         name: 'Turnover',
-        data: history.map(h => Math.round(h.orgs[this.statement.rightholderId].turnover.actual))
+        data: history.map(h => Math.round(h.orgs[statement.rightholderId].turnover.actual))
       }
     ];
-    this.options = { xAxis: { categories }, series };
+    return { xAxis: { categories }, series };
   }
 
   public showRightDetails({ id: rightId }: { id: string }) {
@@ -390,8 +396,6 @@ export class StatementComponent implements OnInit {
     this.statement = await this.statementService.getValue(this.statement.id, { waterfallId: this.waterfall.id });
 
     await this.shell.refreshWaterfall(this.state.version.id);
-    await this.buildWaterfallState(this.state.version.id);
-    this.buildGraph();
     this.cdRef.markForCheck();
   }
 
@@ -411,8 +415,6 @@ export class StatementComponent implements OnInit {
     this.statement = await this.statementService.getValue(this.statement.id, { waterfallId: this.waterfall.id });
 
     await this.shell.refreshWaterfall(this.state.version.id);
-    await this.buildWaterfallState(this.state.version.id);
-    this.buildGraph();
     this.cdRef.markForCheck();
   }
 }
