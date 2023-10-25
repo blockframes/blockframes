@@ -14,9 +14,10 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
 export class WaterfallComponent {
 
   public crmAppUrl = `${appUrl.crm}/c/o/dashboard/crm/waterfall/${this.shell.waterfall.id}`;
+  public waterfall = this.shell.waterfall;
   public state$ = this.shell.state$;
 
   constructor(private shell: DashboardWaterfallShellComponent) { 
-    this.shell.setDate(new Date());
+    this.shell.setDate(undefined);
   }
 }

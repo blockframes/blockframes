@@ -1,8 +1,8 @@
 <ng-container *ngIf="statement">
   <h3>{{ statement.type | toLabel: 'statementType' }} Statement - {{ statement.id }}</h3>
 
-  <section>
-    <mat-form-field appearance="fill">
+  <section *ngIf="state$ | async as state">
+    <mat-form-field *ngIf="waterfall$ | async as waterfall" appearance="fill">
       <mat-label>Waterfall Version</mat-label>
       <mat-select (selectionChange)="switchToVersion($event.value)" [(value)]="state.version.id">
         <mat-option *ngFor="let versions of waterfall.versions" [value]="versions.id">

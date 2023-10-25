@@ -7,7 +7,7 @@
         <mat-label>Waterfall Role</mat-label>
         <mat-error>This field is mandatory</mat-error>
       </static-select>
-      <button mat-button color="primary" [disabled]=!waterfallRoleControl.valid (click)="save(rightholder)">
+      <button mat-button color="primary" [disabled]=!waterfallRoleControl.valid (click)="save(rightholder.id)">
         <mat-icon svgIcon="edit"></mat-icon>
         <span>Update</span>
       </button>

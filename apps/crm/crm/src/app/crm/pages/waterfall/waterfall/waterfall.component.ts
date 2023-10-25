@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { PricePerCurrency, mainCurrency } from '@blockframes/model';
-import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
@@ -24,9 +23,10 @@ export class WaterfallComponent {
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
-    private waterfallService: WaterfallService,
     private snackBar: MatSnackBar
-  ) { }
+  ) {
+    this.shell.setDate(undefined);
+  }
 
   public getRightholderName(id: string) {
     if (!id) return '--';
@@ -41,22 +41,22 @@ export class WaterfallComponent {
     const versionNumber = this.shell.waterfall.versions.length + 1;
     const versionId = `version_${versionNumber}`;
     this.snackBar.open(`Creating version "${versionId}"... Please wait`, 'close');
-    await this.waterfallService.initWaterfall(this.shell.waterfall.id, { id: versionId, description: `Version ${versionNumber}` });
+    await this.shell.initWaterfall({ id: versionId, description: `Version ${versionNumber}` });
     this.snackBar.open(`Version "${versionId}" initialized !`, 'close', { duration: 5000 });
   }
 
   public async removeVersion(id: string) {
-    await this.waterfallService.removeVersion(this.shell.waterfall.id, id);
+    await this.shell.removeVersion(id);
     this.displayActions$.next(false);
     this.displayWaterfall$.next(false);
     this.snackBar.open(`Version "${id}" deleted from waterfall !`, 'close', { duration: 5000 });
   }
 
-  public async duplicateVersion(id: string) {
-    this.snackBar.open(`Creating version  from "${id}"... Please wait`, 'close');
+  public async duplicateVersion(versionId: string) {
+    this.snackBar.open(`Creating version  from "${versionId}"... Please wait`, 'close');
     try {
-      const newVersion = await this.waterfallService.duplicateVersion(this.shell.waterfall.id, id);
-      this.snackBar.open(`Version "${newVersion.id}" copied from ${id} !`, 'close', { duration: 5000 });
+      const newVersion = await this.shell.duplicateVersion(versionId);
+      this.snackBar.open(`Version "${newVersion.id}" copied from ${versionId} !`, 'close', { duration: 5000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 5000 });
     }

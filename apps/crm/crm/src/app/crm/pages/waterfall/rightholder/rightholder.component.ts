@@ -53,14 +53,13 @@ export class RightholderComponent {
     private waterfallService: WaterfallService,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar
-  ) { }
+  ) { 
+    this.shell.setDate(undefined);
+  }
 
-  public async save(rightholder: WaterfallRightholder) {
-    const index = this.shell.waterfall.rightholders.indexOf(rightholder);
-    rightholder.roles = this.waterfallRoleControl.value;
-    this.shell.waterfall.rightholders[index] = rightholder;
-    await this.waterfallService.update({ id: this.shell.waterfall.id, rightholders: this.shell.waterfall.rightholders });
-
+  public async save(id: string) {
+    const rightholders = this.shell.waterfall.rightholders.map(r => r.id === id ? { ...r, roles: this.waterfallRoleControl.value } : r);
+    await this.waterfallService.update({ id: this.shell.waterfall.id, rightholders });
     this.snackBar.open('Roles updated', 'close', { duration: 3000 });
   }
 

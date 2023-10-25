@@ -3,7 +3,6 @@ import { UntypedFormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import {
-  Waterfall,
   Statement,
   Income,
   Expense,
@@ -30,8 +29,6 @@ import {
   getStatementsHistory,
   RightType,
   pathExists,
-  DistributorStatement,
-  ProducerStatement
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
@@ -54,29 +51,33 @@ interface RightDetails {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatementComponent implements OnInit {
-  public waterfall: Waterfall;
+  public waterfall$ = this.shell.waterfall$;
+  private waterfall = this.shell.waterfall;
   public incomes: Income[];
   public sources: WaterfallSource[];
-  public expenses: Expense[];
+  public expenses: Expense[] = [];
   public rights: Right[];
   public rightDetails: RightDetails[][] = [];
   public currency = mainCurrency;
   public paymentDateControl = new UntypedFormControl();
   private allRights: Right[];
 
-  private state$ = this.shell.state$.pipe(
+  public state$ = this.shell.state$.pipe(
     tap(state => this.state = state)
   );
-  public state: WaterfallState;
+  private state: WaterfallState;
 
   private statement$ = this.shell.statements$.pipe(
     map(statements => statements.find(s => s.id === this.route.snapshot.paramMap.get('statementId'))),
+    filter(statement => !!statement),
   );
   public statement: Statement;
 
   private contract$ = combineLatest([this.statement$, this.shell.contracts$]).pipe(
-    filter(([statement]) => isDistributorStatement(statement) || isProducerStatement(statement)),
-    map(([statement, contracts]: [DistributorStatement | ProducerStatement, WaterfallContract[]]) => contracts.find(c => c.id === statement.contractId)),
+    map(([statement, contracts]) => (isDistributorStatement(statement) || isProducerStatement(statement)) ?
+      contracts.find(c => c.id === statement.contractId) :
+      undefined
+    ),
     tap(contract => this.contract = contract)
   );
   private contract: WaterfallContract;
@@ -97,10 +98,7 @@ export class StatementComponent implements OnInit {
   ngOnInit() { return this.switchToVersion(); }
 
   public async switchToVersion(versionId?: string) {
-    const data = await firstValueFrom(this.shell.data$);
-
-    this.waterfall = data.waterfall;
-    this.allRights = data.rights;
+    this.allRights = await firstValueFrom(this.shell.rights$);
     this.statement = await firstValueFrom(this.statement$);
 
     if (isDistributorStatement(this.statement) || isProducerStatement(this.statement)) {
@@ -115,12 +113,14 @@ export class StatementComponent implements OnInit {
       this.paymentDateControl.setValue(this.statement.payments.rightholder?.date || this.statement.duration.to);
     }
 
-    this.incomes = data.incomes.filter(i => this.statement.incomeIds.includes(i.id));
+    const incomes = await firstValueFrom(this.shell.incomes$);
+    this.incomes = incomes.filter(i => this.statement.incomeIds.includes(i.id));
     this.sources = this.incomes.map(i => getAssociatedSource(i, this.waterfall.sources));
 
     if (isDistributorStatement(this.statement) || isDirectSalesStatement(this.statement)) {
       const statement = this.statement;
-      this.expenses = data.expenses.filter(e => statement.expenseIds.includes(e.id));
+      const expenses = await firstValueFrom(this.shell.expenses$);
+      this.expenses = expenses.filter(e => statement.expenseIds.includes(e.id));
 
       for (const income of this.incomes) {
         if (this.statement.payments.income.find(p => p.incomeId === income.id)) continue;
@@ -136,15 +136,19 @@ export class StatementComponent implements OnInit {
     }
 
     if (!versionId && !this.waterfall.versions[0]?.id) { // Waterfall was never initialized
+      this.snackBar.open('Initializing waterfall... Please wait', 'close', { duration: 5000 });
       await this.shell.initWaterfall({ id: 'version_1', description: 'Version 1' });
+      this.snackBar.open('Waterfall initialized!', 'close', { duration: 5000 });
     }
 
-    this.state = await firstValueFrom(this.state$);
-    this.shell.setVersionId(versionId || this.waterfall.versions[0].id);
+    this.shell.setVersionId(versionId || 'version_1');
     this.shell.setDate(this.statement.duration.to);
+    this.state = await firstValueFrom(this.state$);
 
     if (this.statement.incomeIds.some(i => !this.state.waterfall.state.incomes[i])) { // Some incomes are not in the waterfall
+      this.snackBar.open('Refreshing waterfall... Please wait', 'close', { duration: 5000 });
       await this.shell.refreshWaterfall(this.state.version.id);
+      this.snackBar.open('Waterfall refreshed!', 'close', { duration: 5000 });
     }
 
     const rightIds = unique(this.sources.map(s => this.getAssociatedRights(s.id)).flat().map(r => r.id));
@@ -395,7 +399,9 @@ export class StatementComponent implements OnInit {
     await this.statementService.update(this.statement, { params: { waterfallId: this.waterfall.id } });
     this.statement = await this.statementService.getValue(this.statement.id, { waterfallId: this.waterfall.id });
 
+    this.snackBar.open('Refreshing waterfall... Please wait', 'close', { duration: 5000 });
     await this.shell.refreshWaterfall(this.state.version.id);
+    this.snackBar.open('Waterfall refreshed!', 'close', { duration: 5000 });
     this.cdRef.markForCheck();
   }
 
@@ -414,7 +420,9 @@ export class StatementComponent implements OnInit {
     await this.statementService.update(this.statement, { params: { waterfallId: this.waterfall.id } });
     this.statement = await this.statementService.getValue(this.statement.id, { waterfallId: this.waterfall.id });
 
+    this.snackBar.open('Refreshing waterfall... Please wait', 'close', { duration: 5000 });
     await this.shell.refreshWaterfall(this.state.version.id);
+    this.snackBar.open('Waterfall refreshed!', 'close', { duration: 5000 });
     this.cdRef.markForCheck();
   }
 }

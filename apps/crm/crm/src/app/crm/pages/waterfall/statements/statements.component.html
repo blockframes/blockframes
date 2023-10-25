@@ -21,7 +21,7 @@
     <ng-template colRef="rightholderId" label="Rightholder" let-rightholderId sort>
       {{ getRightholderName(rightholderId) }}
     </ng-template>
-    <ng-template colRef="duration.from" label="From" let-from sort defaultSort>
+    <ng-template colRef="duration.from" label="From" let-from sort>
       {{ from | date: 'dd/MM/yyyy' }}
     </ng-template>
     <ng-template colRef="duration.to" label="To" let-to sort defaultSort>
