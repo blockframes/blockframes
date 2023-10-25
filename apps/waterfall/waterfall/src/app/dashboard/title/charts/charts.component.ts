@@ -12,15 +12,13 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 })
 export class ChartsComponent {
 
-  path = '/assets/images/demo-cannes/Right Holders Involved-a.svg';
+  path = '/assets/images/demo-cannes/Right Holders Involved_1.svg';
 
   switch() {
-    if (this.path === '/assets/images/demo-cannes/Right Holders Involved-a.svg') {
-      this.path = '/assets/images/demo-cannes/Right Holders Involved-b.svg';
-    } else if (this.path === '/assets/images/demo-cannes/Right Holders Involved-b.svg') {
-      this.path = '/assets/images/demo-cannes/Right Holders Involved-c.svg';
+    if (this.path === '/assets/images/demo-cannes/Right Holders Involved_1.svg') {
+      this.path = '/assets/images/demo-cannes/Right Holders Involved_2.svg';
     } else {
-      this.path = '/assets/images/demo-cannes/Right Holders Involved-a.svg';
+      this.path = '/assets/images/demo-cannes/Right Holders Involved_1.svg';
     }
   }
 }
