@@ -168,6 +168,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
 
   private versionId$ = new BehaviorSubject<string>(undefined);
   private date$ = new BehaviorSubject<Date>(undefined);
+  public isRefreshing$ = new BehaviorSubject<boolean>(false);
 
   public actions$: Observable<(Action & { block: Block })[]> = this.versionId$.pipe(
     switchMap(versionId => this.waterfall$.pipe(map(v => v.versions.find(v => v.id === versionId)?.blockIds || []))),
@@ -238,8 +239,11 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   }
 
   async refreshWaterfall(versionId: string) {
+    this.isRefreshing$.next(true);
     const data = await firstValueFrom(this.data$);
-    return this.waterfallService.refreshWaterfall(data, versionId);
+    const waterfall = await this.waterfallService.refreshWaterfall(data, versionId);
+    this.isRefreshing$.next(false);
+    return waterfall;
   }
 
   ngOnDestroy() {

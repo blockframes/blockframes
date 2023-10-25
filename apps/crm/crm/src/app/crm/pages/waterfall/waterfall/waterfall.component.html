@@ -137,7 +137,7 @@
 
   <ng-container *ngIf="(displayWaterfall$ | async) && (state$ | async) as state">
     <h3>Waterfall</h3>
-    <waterfall-g6-graph [tree]="state.waterfall" [waterfallId]="waterfall.id"></waterfall-g6-graph>
+    <waterfall-g6-graph [tree]="state.waterfall" [rightholders]="waterfall.rightholders"></waterfall-g6-graph>
   </ng-container>
   
   <ng-container *ngIf="waterfall.versions.length">

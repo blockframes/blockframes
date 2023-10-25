@@ -14,7 +14,7 @@ import {
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { WaterfallService, WaterfallState } from '@blockframes/waterfall/waterfall.service';
-import { Observable, combineLatest, map, tap } from 'rxjs';
+import { Observable, combineLatest, map, pluck, tap } from 'rxjs';
 
 const rolesWithStatements: RightholderRole[] = ['salesAgent', 'mainDistributor', 'localDistributor', 'producer', 'coProducer'];
 
@@ -26,14 +26,14 @@ const rolesWithStatements: RightholderRole[] = ['salesAgent', 'mainDistributor',
 })
 export class RightholderComponent {
 
-  public rightholder$ = this.shell.waterfall$.pipe(
-    map(waterfall => waterfall.rightholders.find(r => r.id === this.route.snapshot.paramMap.get('rightholderId'))),
+  public rightholder$ = combineLatest([this.route.params.pipe(pluck('rightholderId')), this.shell.waterfall$]).pipe(
+    map(([rightholderId, waterfall]) => waterfall.rightholders.find(r => r.id === rightholderId)),
     tap(rightholder => this.waterfallRoleControl.setValue(rightholder.roles))
   );
 
-  public rights$: Observable<(Right & { revenue: PricePerCurrency })[]> = combineLatest([this.shell.state$, this.shell.rights$]).pipe(
-    map(([state, rights]) => rights
-      .filter(r => r.rightholderId === this.route.snapshot.paramMap.get('rightholderId'))
+  public rights$: Observable<(Right & { revenue: PricePerCurrency })[]> = combineLatest([this.rightholder$, this.shell.state$, this.shell.rights$]).pipe(
+    map(([rightholder, state, rights]) => rights
+      .filter(r => r.rightholderId === rightholder.id)
       .map(r => ({ ...r, revenue: { [mainCurrency]: state.waterfall.state.rights[r.id]?.revenu.actual || 0 } }))
     )
   );
@@ -53,7 +53,7 @@ export class RightholderComponent {
     private waterfallService: WaterfallService,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar
-  ) { 
+  ) {
     this.shell.setDate(undefined);
   }
 

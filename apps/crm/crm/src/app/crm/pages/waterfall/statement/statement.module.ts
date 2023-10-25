@@ -11,6 +11,7 @@ import { FilterRightsPipe, StatementComponent } from './statement.component';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { JoinPipeModule, MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -36,6 +37,7 @@ import { MatInputModule } from '@angular/material/input';
     ToLabelModule,
     JoinPipeModule,
     MaxLengthModule,
+    LogoSpinnerModule,
 
     MatIconModule,
     MatButtonModule,

@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { map, Observable } from 'rxjs';
 import { ComboConfig, EdgeConfig, GraphData, IG6GraphEvent, NodeConfig } from '@antv/g6';
 import { toG6 } from '../../g6/utils';
-import { 
+import {
   OrgState,
   RightState,
   TransferState,
@@ -14,7 +14,6 @@ import {
   HorizontalState,
   mainCurrency
 } from '@blockframes/model';
-import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 @Component({
   selector: 'waterfall-g6-graph',
@@ -33,14 +32,13 @@ export class GraphComponent implements OnInit, AfterViewInit, OnChanges {
   verticalGroup?: VerticalState;
   horizontalGroup?: HorizontalState;
   org?: OrgState;
-  rightholders: WaterfallRightholder[] = [];
   currency = mainCurrency;
 
   @Input() tree?: { state: TitleState, history: History[] };
   @Input() hideDetails = false;
-  @Input() waterfallId: string;
+  @Input() rightholders?: WaterfallRightholder[] = [];
 
-  constructor(private waterfallService: WaterfallService) {
+  constructor() {
     this.control = new FormControl(0, { nonNullable: true });
   }
 
@@ -55,8 +53,6 @@ export class GraphComponent implements OnInit, AfterViewInit, OnChanges {
 
     this.data$ = this.control.valueChanges.pipe(map(index => this.graphs[index]));
     this.state$ = this.control.valueChanges.pipe(map(index => this.history[index]));
-
-    if (this.waterfallId) await this.loadRightholders();
   }
 
   async ngOnChanges() {
@@ -65,13 +61,6 @@ export class GraphComponent implements OnInit, AfterViewInit, OnChanges {
     this.graphs = this.history.map(h => toG6(h));
 
     this.control.setValue(this.history.length - 1);
-
-    if (this.waterfallId) await this.loadRightholders();
-  }
-
-  private async loadRightholders() {
-    const waterfall = await this.waterfallService.getValue(this.waterfallId);
-    this.rightholders = waterfall.rightholders;
   }
 
   ngAfterViewInit() {

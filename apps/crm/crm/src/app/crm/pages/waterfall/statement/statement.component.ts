@@ -34,7 +34,7 @@ import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 import { WaterfallState } from '@blockframes/waterfall/waterfall.service';
-import { combineLatest, filter, firstValueFrom, map, tap } from 'rxjs';
+import { combineLatest, filter, firstValueFrom, map, pluck, tap } from 'rxjs';
 
 interface RightDetails {
   from: string,
@@ -66,9 +66,10 @@ export class StatementComponent implements OnInit {
     tap(state => this.state = state)
   );
   private state: WaterfallState;
+  public isRefreshing$ = this.shell.isRefreshing$;
 
-  private statement$ = this.shell.statements$.pipe(
-    map(statements => statements.find(s => s.id === this.route.snapshot.paramMap.get('statementId'))),
+  private statement$ = combineLatest([this.route.params.pipe(pluck('statementId')),this.shell.statements$]).pipe(
+    map(([statementId, statements]) => statements.find(s => s.id === statementId)),
     filter(statement => !!statement),
   );
   public statement: Statement;

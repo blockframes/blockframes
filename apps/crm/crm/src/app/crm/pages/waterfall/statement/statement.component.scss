@@ -35,3 +35,8 @@ article.payment-date {
 button[mat-button] {
   margin-bottom: 64px;
 }
+
+article.loader {
+  display: flex;
+  justify-content: center;
+}
