@@ -133,7 +133,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     switchMap(({ id: waterfallId }) => this.blockService.valueChanges({ waterfallId }))
   );
 
-  public data$: Observable<WaterfallData> = combineLatest([
+  private data$: Observable<WaterfallData> = combineLatest([
     this.waterfall$, this.documents$, this.rights$, this.incomes$,
     this.expenses$, this.statements$, this.blocks$, this.terms$
   ]).pipe(
