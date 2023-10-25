@@ -6,16 +6,15 @@ import { CommonModule } from '@angular/common';
 // Pages
 import { DashboardComponent } from './dashboard.component';
 
-// Material
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+// Blockframes
+import { DashboardCardModule } from '@blockframes/waterfall/components/dashboard-card/dashboard-card.module';
 
 @NgModule({
   declarations: [DashboardComponent],
   imports: [
     CommonModule,
 
-    // Material
-    MatSnackBarModule,
+    DashboardCardModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: DashboardComponent }]),

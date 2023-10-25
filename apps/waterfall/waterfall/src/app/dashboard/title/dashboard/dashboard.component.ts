@@ -1,11 +1,10 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { mainCurrency } from '@blockframes/model';
 
 // Blockframes
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
-import { WaterfallService, WaterfallState } from '@blockframes/waterfall/waterfall.service';
-
+import { map } from 'rxjs';
 
 @Component({
   selector: 'waterfall-title-dashboard',
@@ -13,27 +12,33 @@ import { WaterfallService, WaterfallState } from '@blockframes/waterfall/waterfa
   styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
+
+  private currentRightholder = 'yi40WQqMrgBmbYl7p1mg' // TODO #9519 rf on wrong
+
+  public incomes$ = this.shell.state$.pipe(
+    map(state => {
+      const incomeStates = Object.values(state.waterfall.state.incomes);
+      if (!incomeStates.length) return { [mainCurrency]: 0 };
+      const sum = incomeStates.map(a => a.amount).reduce((a, b) => a + b);
+      return { [mainCurrency]: sum };
+    })
+  );
+
+  private rightholderState$ = this.shell.state$.pipe(
+    map(state => state.waterfall.state.orgs[this.currentRightholder])
+  );
+
+  public turnover$ = this.rightholderState$.pipe(
+    map(state => ({ [mainCurrency]: state.turnover.actual }))
+  );
+
+  public revenue$ = this.rightholderState$.pipe(
+    map(state => ({ [mainCurrency]: state.revenu.actual }))
+  );
 
   constructor(
-    private waterfallService: WaterfallService,
     private shell: DashboardWaterfallShellComponent,
-    private snackBar: MatSnackBar,
   ) { }
 
-  // TODO #9519
-  async ngOnInit() {
-    console.log('todo')
-   /* const { id : waterfallId} = await this.shell.movie;
-
-    const data = await this.waterfallService.loadWaterfalldata(waterfallId);
-    const versionId = data.waterfall.versions[0].id;
-
-    this.snackBar.open('Waterfall is loading. Please wait', 'close', { duration: 5000 });
-    this.state = await this.waterfallService.buildWaterfall({ waterfallId, versionId });
-    this.snackBar.open('Waterfall loaded !', 'close', { duration: 5000 });
-
-    console.log(this.state)*/
-
-  }
 }

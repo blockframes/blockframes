@@ -1,1 +1,20 @@
-test
+<header>
+  <waterfall-dashboard-card 
+    *ngIf="incomes$ | async as income"
+    mode="primary"
+    title="Total Film Revenue"
+    [price]="income">
+  </waterfall-dashboard-card>
+
+  <waterfall-dashboard-card 
+    *ngIf="turnover$ | async as turnover"
+    title="My Total Cash Flow"
+    [price]="turnover">
+  </waterfall-dashboard-card>
+
+  <waterfall-dashboard-card 
+    *ngIf="revenue$ | async as revenue"
+    title="My Total Revenue"
+    [price]="revenue">
+  </waterfall-dashboard-card>
+</header>
