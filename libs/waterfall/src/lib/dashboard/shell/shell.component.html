@@ -1,0 +1,38 @@
+<section fxLayout="column" *ngIf="waterfall$ | async">
+  <header fxLayout="column" bgAsset="header-dashboard-background.png">
+    <a mat-icon-button (click)="goBack()">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </a>
+    <section fxLayout fxLayout.lt-md="column" fxLayoutGap="16px">
+      <ng-container *ngIf="movie$ | async as movie">
+        <section fxLayout fxLayoutGap="16px" fxFlex>
+          <img fxHide.xs [ref]="movie.poster" asset="empty_poster.svg" alt="movie poster">
+          <article fxLayout="column" fxFlex>
+            <h1 test-id="titles-header-title">
+              {{ movie.title.international }}
+              <a *ngIf="editRoute" mat-icon-button [routerLink]="editRoute">
+                <mat-icon svgIcon="edit"></mat-icon>
+              </a>
+            </h1>
+            <h6>{{ movie.directors | displayName }}</h6>
+          </article>
+        </section>
+        <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" >
+          <ng-content select="waterfall-cta"></ng-content>
+        </aside>
+      </ng-container>
+    </section>
+  </header>
+
+  <nav mat-tab-nav-bar>
+    <a mat-tab-link *ngFor="let link of routes" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
+      [active]="rla.isActive">
+      {{link.label}}
+    </a>
+  </nav>
+
+  <div [@routeAnimation]="animationOutlet(outlet)">
+    <router-outlet #outlet="outlet"></router-outlet>
+  </div>
+
+</section>

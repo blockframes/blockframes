@@ -72,12 +72,8 @@ export const panelRoutes: Routes = [
   { path: 'contracts/:contractId/form', loadChildren: () => import('./pages/contracts/term-form/term-form.module').then(s => s.TermFormModule) },
   { path: 'offer/:offerId', loadChildren: () => import('./pages/offers/shell/shell.module').then(m => m.OfferShellModule) },
   { path: 'import', loadChildren: () => import('./pages/import/import.module').then(m => m.CrmImportModule) },
-  { path: 'waterfalls', loadChildren: () => import('./pages/waterfalls/waterfalls.module').then(m => m.WaterfallListModule) },
-  { path: 'waterfall/:waterfallId', loadChildren: () => import('./pages/waterfall/waterfall.module').then(m => m.WaterfallModule) },
-  { path: 'waterfall/:waterfallId/document/:documentId', loadChildren: () => import('./pages/waterfall-document/waterfall-document.module').then(m => m.WaterfallDocumentModule) },
-  { path: 'waterfall/:waterfallId/rightholder/:rightholderId', loadChildren: () => import('./pages/waterfall-rightholder/waterfall-rightholder.module').then(m => m.WaterfallRightholderModule) },
-  { path: 'waterfall/:waterfallId/dashboard/:versionId', loadChildren: () => import('./pages/waterfall-dashboard/waterfall-dashboard.module').then(m => m.WaterfallDashboardModule) },
-  { path: 'waterfall/:waterfallId/statement/:statementId', loadChildren: () => import('./pages/waterfall-statement/waterfall-statement.module').then(m => m.WaterfallStatementModule) },
+  { path: 'waterfalls', loadChildren: () => import('./pages/waterfall/list/list.module').then(m => m.ListModule) },
+  { path: 'waterfall/:movieId', loadChildren: () => import('./pages/waterfall/view/view.module').then(m => m.WaterfallViewModule) },
 ];
 
 @NgModule({

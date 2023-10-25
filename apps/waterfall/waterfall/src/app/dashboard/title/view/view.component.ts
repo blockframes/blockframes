@@ -20,6 +20,10 @@ export class TitleViewComponent {
 
   navLinks: RouteDescription[] = [
     {
+      path: 'dashboard',
+      label: 'Dashboard'
+    },
+    {
       path: 'statements',
       label: 'Statements'
     },

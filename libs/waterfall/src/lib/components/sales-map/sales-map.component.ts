@@ -1,13 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import {
   filterContractsByTitle,
-  Term,
   territoriesSold,
   TerritorySoldMarker,
   ContractType,
   Media,
   Territory,
-  Income,
   getTotalIncome,
   getDeclaredAmount,
   getLatestContract,
@@ -15,18 +13,13 @@ import {
   getContractAndAmendments,
   WaterfallContract,
   getContractDurationStatus,
-  Waterfall,
   isWaterfallMandate,
-  WaterfallMandate,
-  WaterfallSale,
-  isWaterfallSale
+  isWaterfallSale,
+  Waterfall,
+  Term,
+  Income
 } from '@blockframes/model';
-import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
-import { TermService } from '@blockframes/contract/term/service';
 import { differenceInDays, differenceInMonths, differenceInYears } from 'date-fns';
-import { IncomeService } from '@blockframes/contract/income/service';
-import { where } from 'firebase/firestore';
-import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { unique } from '@blockframes/utils/helpers';
 
 function getDateDifference(a: Date, b: Date) {
@@ -38,6 +31,13 @@ function getDateDifference(a: Date, b: Date) {
   if (dayDiff > 0) return { value: dayDiff, label: dayDiff === 1 ? 'day' : 'days' };
 }
 
+export interface SalesMapData {
+  contracts: WaterfallContract[];
+  waterfall: Waterfall;
+  terms: Term[];
+  incomes: Income[];
+}
+
 @Component({
   selector: 'waterfall-sales-map',
   templateUrl: './sales-map.component.html',
@@ -46,14 +46,7 @@ function getDateDifference(a: Date, b: Date) {
 })
 export class SalesMapComponent implements OnInit {
 
-  @Input() waterfallId: string;
-
-  private contracts: WaterfallContract[];
-  private mandates: WaterfallMandate[];
-  private mandateTerms: Term[];
-  private sales: WaterfallSale[];
-  private salesTerms: Term[];
-  private waterfall: Waterfall;
+  @Input() data: SalesMapData;
 
   public hoveredTerritory: {
     name: string;
@@ -76,34 +69,23 @@ export class SalesMapComponent implements OnInit {
 
   public territoriesSold: Record<string, TerritorySoldMarker[]>;
 
-  private incomesCache: Income[] = [];
+  constructor(private cdr: ChangeDetectorRef) { }
 
-  constructor(
-    private termsService: TermService,
-    private waterfallService: WaterfallService,
-    private waterfallDocumentsService: WaterfallDocumentsService,
-    private incomeService: IncomeService,
-    private cdr: ChangeDetectorRef
-  ) { }
+  ngOnInit() {
 
-  async ngOnInit() {
-    this.waterfall = await this.waterfallService.getValue(this.waterfallId);
-    this.contracts = await this.waterfallDocumentsService.getContracts(this.waterfallId);
-    this.incomesCache = await this.incomeService.getValue([where('titleId', '==', this.waterfallId)]);
+    const mandates = this.data.contracts.filter(isWaterfallMandate);
+    const mandateTerms = this.getTerms(mandates);
+    const sales = this.data.contracts.filter(isWaterfallSale);
+    const salesTerms = this.getTerms(sales);
 
-    this.mandates = this.contracts.filter(isWaterfallMandate);
-    this.mandateTerms = await this.getTerms(this.mandates);
-    this.sales = this.contracts.filter(isWaterfallSale);
-    this.salesTerms = await this.getTerms(this.sales);
-
-    const res = filterContractsByTitle(this.waterfallId, this.mandates, this.mandateTerms, this.sales, this.salesTerms);
+    const res = filterContractsByTitle(this.data.waterfall.id, mandates, mandateTerms, sales, salesTerms);
     this.territoriesSold = territoriesSold([...res.mandates, ...res.sales]);
     this.cdr.markForCheck();
   }
 
   private getTerms(contracts: WaterfallContract[]) {
     const termIds = unique(contracts.map(c => c.termIds).flat());
-    return this.termsService.getValue(termIds);
+    return this.data.terms.filter(t => termIds.includes(t.id));
   }
 
   /** Display the territories information in the tooltip */
@@ -113,7 +95,7 @@ export class SalesMapComponent implements OnInit {
       const contractAndAmendments = getContractAndAmendments(firstContract.id, territory.contracts);
       const contract = getCurrentContract(contractAndAmendments);
 
-      const rightholderName = this.waterfall.rightholders.find(r => r.id === contract.buyerId).name;
+      const rightholderName = this.data.waterfall.rightholders.find(r => r.id === contract.buyerId).name;
 
       const durationStatus = getContractDurationStatus(contract);
 
@@ -160,10 +142,10 @@ export class SalesMapComponent implements OnInit {
         const contractAndAmendments = getContractAndAmendments(rootContract.id, territory.contracts);
         const contract = getLatestContract(contractAndAmendments);
         const childContracts = contractAndAmendments.filter(c => c.rootId);
-        const incomes = this.incomesCache.filter(i => contractAndAmendments.find(c => c.id === i.contractId));
+        const incomes = this.data.incomes.filter(i => contractAndAmendments.find(c => c.id === i.contractId));
 
         const contractInfos = {
-          buyerName: this.waterfall.rightholders.find(r => r.id === contract.buyerId).name,
+          buyerName: this.data.waterfall.rightholders.find(r => r.id === contract.buyerId).name,
           type: contract.type,
           signatureDate: contract.signatureDate,
           duration: contract.duration,

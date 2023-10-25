@@ -1,0 +1,44 @@
+<ng-container *ngIf="rights$ | async as rights">
+  <section>
+    <button mat-button color="primary" [disabled]="!rights.length" (click)="removeRights(rights)">
+      <mat-icon svgIcon="delete"></mat-icon>
+      <span>Remove all rights</span>
+    </button>
+  </section>
+  <bf-table [source]="rights" clickable useFilter pagination="50">
+    <ng-template colRef="id" label="Id" let-id sort>
+      {{ id }}
+      <button mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
+        <mat-icon svgIcon="file_copy"></mat-icon>
+      </button>
+    </ng-template>
+    <ng-template colRef="name" label="Name" let-name sort>
+      {{ name }}
+    </ng-template>
+    <ng-template colRef="type" label="Type" let-type sort>
+      {{ type | toLabel: 'rightTypes' }}
+    </ng-template>
+    <ng-template colRef="contractId" label="Contract" let-contractId sort>
+      {{ contractId ? contractId : '--' }}
+    </ng-template>
+    <ng-template colRef="" label="Org" let-item sort>
+      <ng-container *ngIf="item.rightholderId">{{ getRightholderName(item.rightholderId) }}</ng-container>
+      <ng-container *ngIf="item.blameId">{{ getRightholderName(item.blameId) }}</ng-container>
+      <ng-container *ngIf="!item.rightholderId && !item.blameId">--</ng-container>
+    </ng-template>
+    <ng-template colRef="groupId" label="Group" let-groupId sort>
+      {{ groupId ? groupId : '--' }}
+    </ng-template>
+    <ng-template colRef="percent" label="%" let-percent>
+      {{ percent ? percent  : '--' }}
+    </ng-template>
+    <ng-template colRef="conditions" label="Conditions" let-conditions>
+      {{ conditions?.conditions?.length ? conditions.conditions.length  : '--' }}
+    </ng-template>
+    <ng-template colRef="" label="Actions" let-right sticky>
+      <button mat-icon-button (click)="removeRights([right])">
+        <mat-icon svgIcon="delete" matTooltip="Delete right"></mat-icon>
+      </button>
+    </ng-template>
+  </bf-table>
+</ng-container>

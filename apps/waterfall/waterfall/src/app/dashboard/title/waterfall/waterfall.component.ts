@@ -1,12 +1,9 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 // Blockframes
-import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
-import { TitleState, History, Waterfall } from '@blockframes/model';
 import { appUrl } from '@env';
+import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 
 @Component({
   selector: 'waterfall-title-waterfall',
@@ -14,32 +11,13 @@ import { appUrl } from '@env';
   styleUrls: ['./waterfall.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WaterfallComponent implements OnInit {
+export class WaterfallComponent {
 
-  public crmAppUrl;
-  public isLoading$ = new BehaviorSubject(true);
-  public tree: { state: TitleState; history: History[] };
+  public crmAppUrl = `${appUrl.crm}/c/o/dashboard/crm/waterfall/${this.shell.waterfall.id}`;
+  public waterfall = this.shell.waterfall;
+  public state$ = this.shell.state$;
 
-  private waterfall: Waterfall;
-
-  constructor(
-    private route: ActivatedRoute,
-    private waterfallService: WaterfallService
-  ) { }
-
-  async ngOnInit() {
-    const waterfallId: string = this.route.snapshot.params.movieId;
-    this.crmAppUrl = `${appUrl.crm}/c/o/dashboard/crm/waterfall/${waterfallId}`;
-    this.waterfall = await this.waterfallService.getValue(waterfallId);
-    await this.loadWaterfall();
-  }
-
-  async loadWaterfall() {
-    if (this.waterfall.versions.length) {
-      const firstVersion = this.waterfall.versions.shift();
-      const data = await this.waterfallService.buildWaterfall({ waterfallId: this.waterfall.id, versionId: firstVersion.id });
-      this.tree = data.waterfall;
-    }
-    this.isLoading$.next(false);
+  constructor(private shell: DashboardWaterfallShellComponent) { 
+    this.shell.setDate(undefined);
   }
 }

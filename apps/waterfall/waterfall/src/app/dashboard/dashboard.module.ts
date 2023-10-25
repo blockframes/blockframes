@@ -50,7 +50,7 @@ const routes: Routes = [{
         {
           path: 'create',
           data: { createMode: true },
-          loadChildren: () => import('@blockframes/waterfall/components/edit/edit.module').then(m => m.WaterfallEditFormModule),
+          loadChildren: () => import('@blockframes/waterfall/dashboard/edit/edit.module').then(m => m.WaterfallEditFormModule),
         },
         {
           path: ':movieId',
@@ -64,7 +64,7 @@ const routes: Routes = [{
             {
               path: 'edit',
               data: { createMode: false },
-              loadChildren: () => import('@blockframes/waterfall/components/edit/edit.module').then(m => m.WaterfallEditFormModule),
+              loadChildren: () => import('@blockframes/waterfall/dashboard/edit/edit.module').then(m => m.WaterfallEditFormModule),
             },
             {
               path: 'right-holders',
