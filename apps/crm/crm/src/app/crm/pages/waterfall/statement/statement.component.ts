@@ -53,10 +53,10 @@ interface RightDetails {
 export class StatementComponent implements OnInit {
   public waterfall$ = this.shell.waterfall$;
   private waterfall = this.shell.waterfall;
-  public incomes: Income[];
+  public incomes: Income[] = [];
   public sources: WaterfallSource[];
   public expenses: Expense[] = [];
-  public rights: Right[];
+  public rights: Right[] = [];
   public rightDetails: RightDetails[][] = [];
   public currency = mainCurrency;
   public paymentDateControl = new UntypedFormControl();
@@ -149,6 +149,7 @@ export class StatementComponent implements OnInit {
     if (this.statement.incomeIds.some(i => !this.state.waterfall.state.incomes[i])) { // Some incomes are not in the waterfall
       this.snackBar.open('Refreshing waterfall... Please wait', 'close', { duration: 5000 });
       await this.shell.refreshWaterfall(this.state.version.id);
+      this.state = await firstValueFrom(this.state$);
       this.snackBar.open('Waterfall refreshed!', 'close', { duration: 5000 });
     }
 

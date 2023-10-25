@@ -39,7 +39,7 @@
     </section>
   
     <h3>Incomes</h3>
-    <bf-table [source]="incomes" clickable useFilter pagination="50">
+    <bf-table [source]="incomes" useFilter pagination="50">
       <ng-template colRef="id" label="Id" let-id sort>
         {{ id }}
       </ng-template>
@@ -55,7 +55,7 @@
   
     <ng-container *ngIf="expenses.length">
       <h3>Expenses</h3>
-      <bf-table [source]="expenses" clickable useFilter pagination="50">
+      <bf-table [source]="expenses" useFilter pagination="50">
         <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
         </ng-template>

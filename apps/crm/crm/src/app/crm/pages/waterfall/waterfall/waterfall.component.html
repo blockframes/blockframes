@@ -93,7 +93,7 @@
         <ng-template colRef="actionId" label="#" let-actionId>
           {{ actionId }}
         </ng-template>
-        <ng-template colRef="payload.date" label="Date" let-date sort>
+        <ng-template colRef="payload.date" label="Date" let-date sort defaultSort>
           {{ date | date: 'dd/MM/yyyy' }}
         </ng-template>
         <ng-template colRef="block" label="Block" let-block sort>
@@ -102,7 +102,7 @@
             <mat-icon svgIcon="file_copy"></mat-icon>
           </button>
         </ng-template>
-        <ng-template colRef="name" label="Type" let-name sort>
+        <ng-template colRef="name" label="Type" let-name>
           {{ name }}
         </ng-template>
         <ng-template colRef="payload.id" label="Id" let-id>
@@ -116,16 +116,16 @@
           <ng-container *ngIf="payload.blameId">{{ getRightholderName(payload.blameId) }}</ng-container>
           <ng-container *ngIf="!payload.orgId && !payload.blameId">--</ng-container>
         </ng-template>
-        <ng-template colRef="payload.amount" label="Amount" let-amount sort>
+        <ng-template colRef="payload.amount" label="Amount" let-amount>
           <ng-container *ngIf="amount else noPrice">
             <price-per-currency [price]="getPrice(amount)"></price-per-currency>
           </ng-container>
           <ng-template #noPrice>--</ng-template>
         </ng-template>
-        <ng-template colRef="payload.from" label="From" let-from sort>
+        <ng-template colRef="payload.from" label="From" let-from>
           {{ getPayloadPair(from) }}
         </ng-template>
-        <ng-template colRef="payload.to" label="To" let-to sort>
+        <ng-template colRef="payload.to" label="To" let-to>
           {{ getPayloadPair(to) }}
         </ng-template>
         <ng-template colRef="payload.percent" label="%" let-percent>

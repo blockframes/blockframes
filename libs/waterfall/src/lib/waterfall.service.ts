@@ -219,7 +219,7 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     return newVersion;
   }
 
-  public async addBlocksToVersion(waterfall: Waterfall, versionId: string, blockIds: string[]) {
+  public addBlocksToVersion(waterfall: Waterfall, versionId: string, blockIds: string[]) {
     const existingVersionIndex = waterfall.versions.findIndex(v => v.id === versionId);
     existingVersionIndex !== -1 ?
       blockIds.forEach(id => waterfall.versions[existingVersionIndex].blockIds.push(id)) :

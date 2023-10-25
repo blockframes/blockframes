@@ -176,9 +176,9 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     map(blocks => blocks.map(b => Object.values(b.actions).map(a => ({ ...a, block: b }))).flat()),
   );
 
-  public state$ = combineLatest([this.waterfall$, this.versionId$, this.date$, this.canBypassRules$]).pipe(
-    filter(([waterfall]) => !!waterfall.versions.length),
-    map(([waterfall, _versionId, date, canBypassRules]) => ({
+  public state$ = combineLatest([this.isRefreshing$, this.waterfall$, this.versionId$, this.date$, this.canBypassRules$]).pipe(
+    filter(([isRefreshing, waterfall]) => !!waterfall.versions.length && !isRefreshing),
+    map(([_, waterfall, _versionId, date, canBypassRules]) => ({
       waterfallId: waterfall.id,
       versionId: _versionId || waterfall.versions[0]?.id,
       date,
@@ -223,8 +223,11 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   }
 
   async initWaterfall(version: Partial<Version>) {
+    this.isRefreshing$.next(true);
     const data = await firstValueFrom(this.data$);
-    return this.waterfallService.initWaterfall(data, version);
+    const waterfall = await this.waterfallService.initWaterfall(data, version);
+    this.isRefreshing$.next(false);
+    return waterfall;
   }
 
   async removeVersion(versionId: string) {
