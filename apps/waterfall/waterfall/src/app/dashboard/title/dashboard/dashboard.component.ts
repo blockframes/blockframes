@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit {
 
   // TODO #9519
   async ngOnInit() {
+    console.log('todo')
    /* const { id : waterfallId} = await this.shell.movie;
 
     const data = await this.waterfallService.loadWaterfalldata(waterfallId);
