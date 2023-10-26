@@ -1,10 +1,34 @@
 // Angular
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { mainCurrency } from '@blockframes/model';
+import { Observable, map } from 'rxjs';
+import { ApexChart, ApexDataLabels, ApexNonAxisChartSeries, ApexResponsive, ApexTooltip } from 'ng-apexcharts';
 
 // Blockframes
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
-import { map } from 'rxjs';
+import { mainCurrency, movieCurrencies, titleCase } from '@blockframes/model';
+
+type ChartOptions = {
+  series: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  responsive: ApexResponsive[];
+  labels: string[];
+  tooltip: ApexTooltip;
+  dataLabels: ApexDataLabels;
+};
+
+const responsiveChart: ApexResponsive[] = [
+  {
+    breakpoint: 480,
+    options: {
+      chart: {
+        width: 200
+      },
+      legend: {
+        position: "bottom"
+      }
+    }
+  }
+];
 
 @Component({
   selector: 'waterfall-title-dashboard',
@@ -37,8 +61,39 @@ export class DashboardComponent {
     map(state => ({ [mainCurrency]: state.revenu.actual }))
   );
 
+  private rightholdersRevenue$ = this.shell.state$.pipe(
+    map(state => Object.values(state.waterfall.state.orgs)),
+    map(orgs => orgs.map(org => ({
+      name: this.shell.waterfall.rightholders.find(r => r.id === org.id).name,
+      revenue: org.revenu.actual,
+    })))
+  );
+
+  public rightholdersRevenueChart$: Observable<Partial<ChartOptions>> = this.rightholdersRevenue$.pipe(
+    map(rightholders => {
+      const series = rightholders.map(r => r.revenue);
+      const labels = rightholders.map(r => titleCase(r.name));
+      return {
+        series,
+        labels,
+        chart: {
+          type: 'pie',
+          // width: 380
+        },
+        responsive: responsiveChart,
+        tooltip: {
+          y: {
+            formatter: (value) => `${Math.round(value)} ${movieCurrencies[mainCurrency]}`
+          }
+        },
+      }
+    })
+  );
+
   constructor(
     private shell: DashboardWaterfallShellComponent,
-  ) { }
+  ) {
+
+  }
 
 }

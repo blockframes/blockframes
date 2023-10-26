@@ -18,3 +18,57 @@
     [price]="revenue">
   </waterfall-dashboard-card>
 </header>
+
+<section>
+  <article class="surface">
+    <h3>Right Holders Revenue Split</h3>
+    <mat-divider></mat-divider>
+    <apx-chart *ngIf="rightholdersRevenueChart$ | async as chartOptions"
+      [series]="chartOptions.series"
+      [chart]="chartOptions.chart"
+      [labels]="chartOptions.labels"
+      [responsive]="chartOptions.responsive"
+      [tooltip]="chartOptions.tooltip"
+    ></apx-chart>
+  </article>
+  <article class="surface">
+    <h3>Quick Acces</h3>
+    <mat-divider></mat-divider>
+    <div>
+      <a [routerLink]="['..', 'waterfall']" class="surface">
+        <img asset="waterfall_icon.svg" alt="Manage Waterfall image">
+        <button mat-button color="primary" class="main-dashboard-cta">Manage Waterfall</button>
+      </a>
+      <a [routerLink]="['..', 'statements']" class="surface">
+        <img asset="statements_icon.svg" alt="Check Statements image">
+        <button mat-button color="primary" class="main-dashboard-cta">Check Statements</button>
+      </a>
+      <a [routerLink]="['..', 'documents']" class="surface">
+        <img asset="certify_documents_icon.svg" alt="Certify Documents image">
+        <button mat-button color="primary" class="main-dashboard-cta">Certify Documents</button>
+      </a>
+      <a [routerLink]="['..', 'sales']" class="surface">
+        <img asset="world_sales_icon.svg" alt="See World Sales image">
+        <button mat-button color="primary" class="main-dashboard-cta">See World Sales</button>
+      </a>
+    </div>
+  </article>
+</section>
+
+<section>
+  <article class="surface">
+    <h3>Right Holders ROI</h3>
+    <mat-divider></mat-divider>
+  </article>
+  <article class="surface">
+    <h3>Net Revenue Over Time</h3>
+    <mat-divider></mat-divider>
+  </article>
+</section>
+
+<section>
+  <article class="surface">
+    <h3>Revenue Summary</h3>
+    <mat-divider></mat-divider>
+  </article>
+</section>

@@ -4,3 +4,40 @@ header {
   gap: 16px;
   justify-content: space-between;
 }
+
+section {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  padding: 24px;
+  justify-content: space-between;
+
+  article.surface {
+    width: 100%;
+    min-height: 256px;
+
+    div {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    
+    div > a {
+      flex: 50%;
+    }
+  }
+}
+
+a.surface {
+  margin-top: 42px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 330px;
+  border: none;
+  img {
+    width: 80px;
+    align-self: center;
+    margin-bottom: 24px;
+  }
+}
