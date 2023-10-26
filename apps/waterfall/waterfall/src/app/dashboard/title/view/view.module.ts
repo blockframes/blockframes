@@ -54,6 +54,14 @@ const routes: Routes = [{
       loadChildren: () => import('../charts/charts.module').then(m => m.ChartsModule),
       data: { animation: 5 }
     },
+    {
+      path: 'statement-distrib',
+      loadChildren: () => import('../statements-distrib/statements-distrib.module').then(m => m.StatementDistribModule),
+    },
+    {
+      path: 'statement-coprod',
+      loadChildren: () => import('../statements-coprod/statements-coprod.module').then(m => m.StatementsCoprodModule),
+    },
   ]
 }];
 

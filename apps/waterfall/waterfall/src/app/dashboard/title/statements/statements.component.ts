@@ -1,5 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 // Blockframes
 
@@ -15,49 +16,27 @@ export class StatementsComponent {
   topPath = '/assets/images/demo-cannes/Nav_Distrib.svg';
   path = '/assets/images/demo-cannes/Statements_Distrib.svg';
 
+  constructor(    private route: ActivatedRoute,
+    private router: Router,) {
+
+
+  }
+
   switchTop() {
     if(this.topPath === '/assets/images/demo-cannes/Nav_Distrib.svg' ) {
       this.topPath = '/assets/images/demo-cannes/Nav_Coprod.svg';
-      this.path = '/assets/images/demo-cannes/Statements_Coprod.svg'
+      this.path = '/assets/images/demo-cannes/Statements_Coprod.png'
     } else {
       this.topPath = '/assets/images/demo-cannes/Nav_Distrib.svg';
       this.path = '/assets/images/demo-cannes/Statements_Distrib.svg'
     }
   }
 
-  switch() {
+  goTo() {
     if(this.topPath === '/assets/images/demo-cannes/Nav_Distrib.svg' ) {
-      if (this.path === '/assets/images/demo-cannes/Statements_Distrib.svg') {
-        this.path = '/assets/images/demo-cannes/distrib-statements/Statement_1.svg';
-      } else if(this.path === '/assets/images/demo-cannes/distrib-statements/Statement_1.svg' ) {
-        this.path = '/assets/images/demo-cannes/distrib-statements/Statement_2.svg';
-      } else if(this.path === '/assets/images/demo-cannes/distrib-statements/Statement_2.svg' ) {
-        this.path = '/assets/images/demo-cannes/distrib-statements/Statement_3.svg';
-      } else if(this.path === '/assets/images/demo-cannes/distrib-statements/Statement_3.svg' ) {
-        this.path = '/assets/images/demo-cannes/distrib-statements/Statement_4.svg';
-      } else if(this.path === '/assets/images/demo-cannes/distrib-statements/Statement_4.svg' ) {
-        this.path = '/assets/images/demo-cannes/distrib-statements/Statement_5.svg';
-      } else if(this.path === '/assets/images/demo-cannes/distrib-statements/Statement_5.svg' ) {
-        this.path = '/assets/images/demo-cannes/distrib-statements/Statement_6.svg';
-      } else if(this.path === '/assets/images/demo-cannes/distrib-statements/Statement_6.svg' ) {
-        this.path = '/assets/images/demo-cannes/distrib-statements/Statement_7.svg';
-      } else if(this.path === '/assets/images/demo-cannes/distrib-statements/Statement_7.svg' ) {
-        this.path = '/assets/images/demo-cannes/distrib-statements/Statement_8.svg';
-      } else if(this.path === '/assets/images/demo-cannes/distrib-statements/Statement_8.svg' ) {
-        this.path = '/assets/images/demo-cannes/distrib-statements/Statement_9.svg';
-      } else if(this.path === '/assets/images/demo-cannes/distrib-statements/Statement_9.svg' ) {
-        this.path = '/assets/images/demo-cannes/distrib-statements/Statement_10.svg';
-      } else {
-        this.path = '/assets/images/demo-cannes/Statements_Distrib.svg';
-      }
+      this.router.navigate(['..', 'statement-distrib'], { relativeTo: this.route });
     } else {
-      if (this.path === '/assets/images/demo-cannes/Statements_Coprod.svg') {
-        this.path = '/assets/images/demo-cannes/outgoing-statements/Outgoing_1.svg';
-      } else if(this.path === '/assets/images/demo-cannes/outgoing-statements/Outgoing_1.svg' ) {
-        this.path = '/assets/images/demo-cannes/outgoing-statements/Outgoing_2.svg';
-      } else {
-        this.path = '/assets/images/demo-cannes/Statements_Coprod.svg';
-      }
+      this.router.navigate(['..', 'statement-coprod'], { relativeTo: this.route });
     }
 
 
