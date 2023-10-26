@@ -89,6 +89,14 @@ const routes: Routes = [{
               path: 'right-holders',
               loadChildren: () => import('./waterfall/right-holders/right-holders.module').then(m => m.RightHoldersModule),
             },
+            {
+              path: 'statement-distrib',
+              loadChildren: () => import('./waterfall/statements-distrib/statements-distrib.module').then(m => m.StatementDistribModule),
+            },
+            {
+              path: 'statement-coprod',
+              loadChildren: () => import('./waterfall/statements-coprod/statements-coprod.module').then(m => m.StatementsCoprodModule),
+            },
           ],
         },
       ],

@@ -15,15 +15,16 @@ export class StatementsComponent {
 
   topPath = '/assets/images/demo-cannes/Nav_Distrib.svg';
   path = '/assets/images/demo-cannes/Statements_Distrib.svg';
+  movieId = this.route.snapshot.paramMap.get('movieId');
 
-  constructor(    private route: ActivatedRoute,
-    private router: Router,) {
-
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router) {
 
   }
 
   switchTop() {
-    if(this.topPath === '/assets/images/demo-cannes/Nav_Distrib.svg' ) {
+    if (this.topPath === '/assets/images/demo-cannes/Nav_Distrib.svg') {
       this.topPath = '/assets/images/demo-cannes/Nav_Coprod.svg';
       this.path = '/assets/images/demo-cannes/Statements_Coprod.png'
     } else {
@@ -33,13 +34,11 @@ export class StatementsComponent {
   }
 
   goTo() {
-    if(this.topPath === '/assets/images/demo-cannes/Nav_Distrib.svg' ) {
-      this.router.navigate(['..', 'statement-distrib'], { relativeTo: this.route });
+    if (this.topPath === '/assets/images/demo-cannes/Nav_Distrib.svg') {
+      this.router.navigate(['/c/o/dashboard/waterfall/', this.movieId, 'statement-distrib'], { relativeTo: this.route });
     } else {
-      this.router.navigate(['..', 'statement-coprod'], { relativeTo: this.route });
+      this.router.navigate(['/c/o/dashboard/waterfall/', this.movieId, 'statement-coprod'], { relativeTo: this.route });
     }
-
-
 
   }
 }
