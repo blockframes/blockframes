@@ -10,10 +10,13 @@ import { DashboardComponent } from './dashboard.component';
 // Blockframes
 import { DashboardCardModule } from '@blockframes/waterfall/components/dashboard-card/dashboard-card.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 
 // Material
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [DashboardComponent],
@@ -23,10 +26,13 @@ import { MatButtonModule } from '@angular/material/button';
 
     DashboardCardModule,
     ImageModule,
+    TableModule,
+    PricePerCurrencyModule,
 
     // Material
     MatDividerModule,
     MatButtonModule,
+    MatIconModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: DashboardComponent }]),

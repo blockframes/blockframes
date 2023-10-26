@@ -1,11 +1,12 @@
 // Angular
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, combineLatest, map } from 'rxjs';
 import { ApexChart, ApexDataLabels, ApexNonAxisChartSeries, ApexResponsive, ApexTooltip } from 'ng-apexcharts';
 
 // Blockframes
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { mainCurrency, movieCurrencies, titleCase } from '@blockframes/model';
+import { sorts } from '@blockframes/ui/list/table/sorts';
 
 type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -89,6 +90,22 @@ export class DashboardComponent {
       }
     })
   );
+
+  public rightholdersRevenueSummary$ = combineLatest([this.incomes$, this.shell.state$]).pipe(
+    map(([incomes, state]) => {
+      const orgs = Object.values(state.waterfall.state.orgs);
+      return orgs.map(org => ({
+        name: this.shell.waterfall.rightholders.find(r => r.id === org.id).name,
+        investment: { [mainCurrency]: org.investment },
+        expense: { [mainCurrency]: org.expense },
+        turnover: { [mainCurrency]: org.turnover.actual },
+        revenue: { [mainCurrency]: org.revenu.actual },
+        gross: Math.round(org.revenu.actual / incomes[mainCurrency] * 100),
+      }));
+    }),
+  );
+
+  public sorts = sorts;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,

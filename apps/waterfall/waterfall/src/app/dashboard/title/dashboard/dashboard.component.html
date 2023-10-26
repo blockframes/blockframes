@@ -70,5 +70,30 @@
   <article class="surface">
     <h3>Revenue Summary</h3>
     <mat-divider></mat-divider>
+    <bf-table [source]="rightholdersRevenueSummary$ | async" useFilter  pagination="50">
+      <ng-template colRef="name" label="Right Holder Name" let-name sort>
+        {{ name | titlecase }}
+      </ng-template>
+      <ng-template colRef="investment" label="Investment" let-investment [sort]="sorts.byPriceCurrency">
+        <price-per-currency [price]="investment" default="€ 0"></price-per-currency>
+      </ng-template>
+      <ng-template colRef="expense" label="Expenses" let-expense sort [sort]="sorts.byPriceCurrency">
+        <price-per-currency [price]="expense" default="€ 0"></price-per-currency>
+      </ng-template>
+      <ng-template colRef="turnover" label="Cash Flow" let-turnover sort [sort]="sorts.byPriceCurrency">
+        <price-per-currency [price]="turnover" default="€ 0"></price-per-currency>
+      </ng-template>
+      <ng-template colRef="revenue" label="Net Revenue" let-revenue sort [sort]="sorts.byPriceCurrency">
+        <price-per-currency [price]="revenue" default="€ 0"></price-per-currency>
+      </ng-template>
+      <ng-template colRef="gross" label="% Gross" let-gross sort>
+        {{ gross }} %
+      </ng-template>
+      <ng-template colRef="value" label="Action" let-rightholder sticky>
+        <a mat-icon-button [routerLink]="[]">
+          <mat-icon svgIcon="file"></mat-icon>
+        </a>
+      </ng-template>
+    </bf-table>
   </article>
 </section>

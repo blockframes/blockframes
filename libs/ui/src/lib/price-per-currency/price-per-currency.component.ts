@@ -11,9 +11,10 @@ export class PricePerCurrencyComponent {
 
   @Input() price: PricePerCurrency;
   @Input() convertTo: MovieCurrency;
+  @Input() default: string | number = '-';
 
   public convertedCurrencies() {
-    if(!this.convertTo) return false;
+    if (!this.convertTo) return false;
     return convertCurrenciesTo(this.price, this.convertTo)[this.convertTo];
   }
 }
