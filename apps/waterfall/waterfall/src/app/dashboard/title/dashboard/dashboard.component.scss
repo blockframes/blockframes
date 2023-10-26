@@ -16,7 +16,17 @@ section {
     width: 100%;
     min-height: 256px;
 
+    h3, mat-divider {
+      margin-left: 24px;
+      margin-right: 24px;
+    }
+
+    apx-chart {
+      padding: 24px;
+    }
+
     div {
+      padding: 24px;
       display: flex;
       flex-wrap: wrap;
     }
@@ -26,9 +36,15 @@ section {
     }
   }
 
+  aside {
+    display: block;
+    text-align: right;
+    padding: 16px 24px 0 0;
+  }
+
   bf-table {
-    margin-top: 24px;
     border: none;
+    padding: 0 24px;
   }
 }
 

@@ -70,6 +70,11 @@
   <article class="surface">
     <h3>Revenue Summary</h3>
     <mat-divider></mat-divider>
+    <aside>
+      <button mat-button color="primary">
+        <span>Export in .CSV</span>
+      </button>
+    </aside>
     <bf-table [source]="rightholdersRevenueSummary$ | async" useFilter  pagination="50">
       <ng-template colRef="name" label="Right Holder Name" let-name sort>
         {{ name | titlecase }}

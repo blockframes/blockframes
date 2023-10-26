@@ -25,7 +25,7 @@ const responsiveChart: ApexResponsive[] = [
         width: 200
       },
       legend: {
-        position: "bottom"
+        position: 'bottom'
       }
     }
   }
@@ -39,7 +39,7 @@ const responsiveChart: ApexResponsive[] = [
 })
 export class DashboardComponent {
 
-  private currentRightholder = 'yi40WQqMrgBmbYl7p1mg' // TODO #9519 rf on wrong
+  private currentRightholder = 'yi40WQqMrgBmbYl7p1mg' // TODO #9519 (rf on wrong)
 
   public incomes$ = this.shell.state$.pipe(
     map(state => {
@@ -77,16 +77,9 @@ export class DashboardComponent {
       return {
         series,
         labels,
-        chart: {
-          type: 'pie',
-          // width: 380
-        },
+        chart: { type: 'pie' },
         responsive: responsiveChart,
-        tooltip: {
-          y: {
-            formatter: (value) => `${Math.round(value)} ${movieCurrencies[mainCurrency]}`
-          }
-        },
+        tooltip: { y: { formatter: (value) => `${Math.round(value)} ${movieCurrencies[mainCurrency]}` } },
       }
     })
   );
