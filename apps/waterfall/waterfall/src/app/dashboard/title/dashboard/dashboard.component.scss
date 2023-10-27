@@ -34,6 +34,11 @@ section {
     div > a {
       flex: 50%;
     }
+
+    mat-form-field {
+      width: 80%;
+      padding: 24px 0 0 24px;
+    }
   }
 
   aside {

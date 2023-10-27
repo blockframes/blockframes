@@ -59,10 +59,40 @@
   <article class="surface">
     <h3>Right Holders ROI</h3>
     <mat-divider></mat-divider>
+    <apx-chart *ngIf="rightholdersROIChart$ | async as chartOptions"
+      [series]="chartOptions.series"
+      [chart]="chartOptions.chart"
+      [dataLabels]="chartOptions.dataLabels"
+      [plotOptions]="chartOptions.plotOptions"
+      [xaxis]="chartOptions.xaxis"
+      [stroke]="chartOptions.stroke"
+      [tooltip]="chartOptions.tooltip"
+    ></apx-chart>
   </article>
   <article class="surface">
     <h3>Net Revenue Over Time</h3>
     <mat-divider></mat-divider>
+    <mat-form-field appearance="outline" *ngIf="rightholdersState$ | async as rightholders">
+      <mat-label>Highlight Right Holder</mat-label>
+      <mat-select [value]="currentRightholder" [formControl]="rightholderControl">
+        <mat-option *ngFor="let rightholder of rightholders" [value]="rightholder.id">
+          {{ rightholder.name | titlecase }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <apx-chart *ngIf="netRevenueChart$ | async as chartOptions"
+      [series]="chartOptions.series"
+      [chart]="chartOptions.chart"
+      [xaxis]="chartOptions.xaxis"
+      [markers]="chartOptions.markers"
+      [stroke]="chartOptions.stroke"
+      [yaxis]="chartOptions.yaxis"
+      [dataLabels]="chartOptions.dataLabels"
+      [title]="chartOptions.title"
+      [fill]="chartOptions.fill"
+      [tooltip]="chartOptions.tooltip"
+      [legend]="chartOptions.legend"
+    ></apx-chart>
   </article>
 </section>
 
