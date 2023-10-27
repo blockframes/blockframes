@@ -17,10 +17,9 @@ import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { WaterfallFormGuardedComponent } from '@blockframes/waterfall/guard';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 import { WaterfallPermissionsService } from '@blockframes/waterfall/permissions.service';
-import { RightholderRole, WaterfallRightholder, createAppConfig, createMovieAppConfig } from '@blockframes/model';
+import { RightholderRole, WaterfallRightholder, createAppConfig, createMovieAppConfig, createWaterfallRightholder } from '@blockframes/model';
 import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '@blockframes/waterfall/form/right-holder.form';
 import { WaterfallDocumentForm } from '@blockframes/waterfall/form/document.form';
-
 
 @Component({
   selector: 'waterfall-title-edit-form',
@@ -101,9 +100,8 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
       this.movieForm.patchValue(movie);
       this.waterfallRoleControl.patchValue(permissions.roles);
       this.rightholdersForm.clear({ emitEvent: false });
-      waterfall.rightholders.forEach(({ id, name, roles }) => {
-        this.rightholdersForm.push(new WaterfallRightholderForm({ id, name, roles }));
-      });
+      if (waterfall.rightholders.length === 0) this.rightholdersForm.add(createWaterfallRightholder());
+      waterfall.rightholders.forEach(rightholder => this.rightholdersForm.add(rightholder));
     }
     this.loading$.next(false);
   }
@@ -147,7 +145,10 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
 
       // Remove form value with no names and no roles and format the good values
       const rightholders: WaterfallRightholder[] = this.rightholdersForm.value.filter(rightholder => rightholder.name || rightholder.roles.length)
-        .map(rightholder => ({ id: rightholder.id ?? this.waterfallService.createId(), name: rightholder.name ?? '', roles: rightholder.roles ?? [] }));
+        .map(rightholder => createWaterfallRightholder({
+          ...rightholder,
+          id: rightholder.id || this.waterfallService.createId()
+        }));
 
       // ! `id` needs to be in the update object, because of a bug in ng-fire
       await this.waterfallService.update({ id: this.movieId, rightholders });

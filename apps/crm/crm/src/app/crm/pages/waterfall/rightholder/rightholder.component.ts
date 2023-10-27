@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -15,6 +14,7 @@ import {
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { WaterfallService, WaterfallState } from '@blockframes/waterfall/waterfall.service';
 import { Observable, combineLatest, map, pluck, tap } from 'rxjs';
+import { WaterfallRightholderForm } from '@blockframes/waterfall/form/right-holder.form';
 
 const rolesWithStatements: RightholderRole[] = ['salesAgent', 'mainDistributor', 'localDistributor', 'producer', 'coProducer'];
 
@@ -28,7 +28,7 @@ export class RightholderComponent {
 
   public rightholder$ = combineLatest([this.route.params.pipe(pluck('rightholderId')), this.shell.waterfall$]).pipe(
     map(([rightholderId, waterfall]) => waterfall.rightholders.find(r => r.id === rightholderId)),
-    tap(rightholder => this.waterfallRoleControl.setValue(rightholder.roles))
+    tap(rightholder => this.rightholdersForm.setValue(rightholder))
   );
 
   public rights$: Observable<(Right & { revenue: PricePerCurrency })[]> = combineLatest([this.rightholder$, this.shell.state$, this.shell.rights$]).pipe(
@@ -45,7 +45,9 @@ export class RightholderComponent {
     )
   );
 
-  public waterfallRoleControl = new FormControl<RightholderRole[]>(undefined, [Validators.required]);
+  public permissions$ = this.shell.permissions$;
+
+  public rightholdersForm = new WaterfallRightholderForm({});
   public formatter = { formatter: (value: number) => `${value} ${movieCurrencies[mainCurrency]}` };
 
   constructor(
@@ -57,8 +59,9 @@ export class RightholderComponent {
     this.shell.setDate(undefined);
   }
 
-  public async save(id: string) {
-    const rightholders = this.shell.waterfall.rightholders.map(r => r.id === id ? { ...r, roles: this.waterfallRoleControl.value } : r);
+  public async save() {
+    const formValue: WaterfallRightholder = this.rightholdersForm.value;
+    const rightholders = this.shell.waterfall.rightholders.map(r => r.id === formValue.id ? formValue : r);
     await this.waterfallService.update({ id: this.shell.waterfall.id, rightholders });
     this.snackBar.open('Roles updated', 'close', { duration: 3000 });
   }

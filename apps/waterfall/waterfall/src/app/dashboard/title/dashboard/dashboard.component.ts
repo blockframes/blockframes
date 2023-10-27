@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Observable, combineLatest, map, startWith, switchMap } from 'rxjs';
 import {
   ApexAxisChartSeries,
@@ -23,6 +23,9 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
 import { OrgState, mainCurrency, movieCurrencies, titleCase, History } from '@blockframes/model';
 import { sorts } from '@blockframes/ui/list/table/sorts';
 import { FormControl } from '@angular/forms';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { OrganizationService } from '@blockframes/organization/service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 type ChartOptions = {
   series: ApexNonAxisChartSeries | ApexAxisChartSeries;
@@ -47,14 +50,14 @@ type ChartOptions = {
   styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardComponent {
-
-  public currentRightholder = 'yi40WQqMrgBmbYl7p1mg' // TODO #9519 (rf on wrong)
+export class DashboardComponent implements OnInit {
   private waterfall = this.shell.waterfall;
+  public state$ = this.shell.state$;
+  public currentRightholder = this.waterfall.rightholders.find(r => r.orgId === this.orgService.org.id)?.id;
   public sorts = sorts;
   public rightholderControl = new FormControl<string>(this.currentRightholder);
 
-  public incomes$ = this.shell.state$.pipe(
+  public incomes$ = this.state$.pipe(
     map(state => {
       const incomeStates = Object.values(state.waterfall.state.incomes);
       if (!incomeStates.length) return { [mainCurrency]: 0 };
@@ -63,7 +66,7 @@ export class DashboardComponent {
     })
   );
 
-  public rightholdersState$: Observable<(OrgState & { name: string })[]> = this.shell.state$.pipe(
+  public rightholdersState$: Observable<(OrgState & { name: string })[]> = this.state$.pipe(
     map(state => Object.values(state.waterfall.state.orgs)),
     map(orgs => orgs.map(org => ({
       ...org,
@@ -71,16 +74,16 @@ export class DashboardComponent {
     })))
   );
 
-  private rightholderState$ = this.shell.state$.pipe(
+  private rightholderState$ = this.state$.pipe(
     map(state => state.waterfall.state.orgs[this.currentRightholder])
   );
 
   public turnover$ = this.rightholderState$.pipe(
-    map(state => ({ [mainCurrency]: state.turnover.actual }))
+    map(orgState => ({ [mainCurrency]: orgState?.turnover.actual || 0 }))
   );
 
   public revenue$ = this.rightholderState$.pipe(
-    map(state => ({ [mainCurrency]: state.revenu.actual }))
+    map(orgState => ({ [mainCurrency]: orgState?.revenu.actual || 0 }))
   );
 
   private rightholdersRevenue$ = this.rightholdersState$.pipe(
@@ -172,11 +175,12 @@ export class DashboardComponent {
   public netRevenueChart$: Observable<Partial<ChartOptions>> = this.rightholderControl.valueChanges.pipe(
     startWith(this.currentRightholder),
     switchMap(rightholderId => this.rightholdersState$.pipe(map(orgs => orgs.find(org => org.id === rightholderId)))),
-    switchMap(rightholder => this.shell.state$.pipe(map(state => ({
+    switchMap(rightholder => this.state$.pipe(map(state => ({
       rightholder,
       history: state.waterfall.history.filter(h => Object.values(h.incomes).length > 0)
     })))),
     map((data) => {
+      if (!data.rightholder) return;
       const lastHistoryPerYear = this.getLastHistoryPerYear(data.history);
       const categories = lastHistoryPerYear.map(h => new Date(h.date).getFullYear());
 
@@ -273,12 +277,24 @@ export class DashboardComponent {
     }),
   );
 
-  constructor(private shell: DashboardWaterfallShellComponent) {
+  constructor(
+    private shell: DashboardWaterfallShellComponent,
+    private orgService: OrganizationService,
+    private dynTitle: DynamicTitleService,
+    private snackbar: MatSnackBar,
+  ) {
     this.shell.setDate(undefined);
+    this.dynTitle.setPageTitle(this.shell.movie.title.international, 'Waterfall Dashboard');
+  }
+
+  ngOnInit() {
+    if (!this.currentRightholder && this.waterfall.versions.length > 0) {
+      this.snackbar.open(`Organization "${this.orgService.org.name}" is not associated to any rightholders.`, 'close', { duration: 5000 });
+    }
   }
 
   private getLastHistoryPerYear(history: History[]) {
-    const firstYear = new Date(history[0].date).getFullYear();
+    const firstYear = new Date(history[0] ? history[0].date : new Date().getFullYear() - 1).getFullYear();
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: currentYear - firstYear + 1 }, (_, i) => firstYear + i);
     const historyPerYear = years.map(year => history.filter(h => new Date(h.date).getFullYear() === year));

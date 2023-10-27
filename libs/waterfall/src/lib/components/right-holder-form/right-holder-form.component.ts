@@ -5,6 +5,7 @@ import { FormList } from '@blockframes/utils/form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '@blockframes/waterfall/form/right-holder.form';
+import { createWaterfallRightholder } from '@blockframes/model';
 
 
 @Component({
@@ -25,9 +26,9 @@ export class RightHolderFormComponent {
   ) { }
 
   add() {
-    this.rightholdersForm.push(new WaterfallRightholderForm({ id: this.waterfallService.createId(), name: '', roles: [] }));
+    this.rightholdersForm.add(createWaterfallRightholder({ id: this.waterfallService.createId() }));
   }
-  
+
   remove(index: number) {
     this.rightholdersForm.removeAt(index);
   }

@@ -11,7 +11,6 @@ import { DashboardWaterfallShellModule } from '@blockframes/waterfall/dashboard/
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatMenuModule } from '@angular/material/menu';
 
 
 const routes: Routes = [{
@@ -68,7 +67,6 @@ const routes: Routes = [{
     // Material
     MatIconModule,
     MatButtonModule,
-    MatMenuModule,
 
     // Routes
     RouterModule.forChild(routes),

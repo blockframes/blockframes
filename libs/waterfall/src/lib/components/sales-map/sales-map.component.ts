@@ -79,7 +79,7 @@ export class SalesMapComponent implements OnInit {
     const salesTerms = this.getTerms(sales);
 
     const res = filterContractsByTitle(this.data.waterfall.id, mandates, mandateTerms, sales, salesTerms);
-    this.territoriesSold = territoriesSold([...res.mandates, ...res.sales]);
+    this.territoriesSold = territoriesSold([...res.mandates.filter(m => m.terms), ...res.sales.filter(s => s.terms)]);
     this.cdr.markForCheck();
   }
 

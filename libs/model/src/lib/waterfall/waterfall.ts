@@ -82,6 +82,7 @@ export interface WaterfallRightholder {
   id: string;
   name: string;
   roles: RightholderRole[];
+  orgId: string; // The "real" orgId of the rightholder
 };
 
 export interface Waterfall {
@@ -101,8 +102,8 @@ export function createWaterfall(params: Partial<Waterfall> = {}): Waterfall {
     orgIds: [],
     documents: [],
     sources: [],
-    rightholders: [],
     ...params,
+    rightholders: params.rightholders?.map(r => createWaterfallRightholder(r)) ?? [],
   }
 }
 
@@ -111,6 +112,7 @@ export function createWaterfallRightholder(params: Partial<WaterfallRightholder>
     id: '',
     name: '',
     roles: [],
+    orgId: '',
     ...params,
   }
 }
