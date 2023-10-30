@@ -1,0 +1,74 @@
+header {
+  display: flex;
+  padding: 24px;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+section {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  padding: 24px;
+  justify-content: space-between;
+
+  article.surface {
+    width: 100%;
+    min-height: 256px;
+
+    h3, mat-divider {
+      margin-left: 24px;
+      margin-right: 24px;
+    }
+
+    apx-chart {
+      padding: 24px;
+    }
+
+    div {
+      padding: 24px;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    
+    div > a {
+      flex: 50%;
+    }
+
+    mat-form-field {
+      width: 80%;
+      padding: 24px 0 0 24px;
+    }
+  }
+
+  aside {
+    display: block;
+    text-align: right;
+    padding: 16px 24px 0 0;
+  }
+
+  bf-table {
+    border: none;
+    padding: 0 24px;
+  }
+}
+
+a.surface {
+  margin-top: 42px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 330px;
+  border: none;
+  img {
+    width: 80px;
+    align-self: center;
+    margin-bottom: 24px;
+  }
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+}

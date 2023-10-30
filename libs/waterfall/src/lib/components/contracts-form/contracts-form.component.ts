@@ -15,7 +15,8 @@ import {
   createWaterfallContract,
   createWaterfallDocument,
   rightholderRoles,
-  createTerm
+  createTerm,
+  createWaterfallRightholder
 } from '@blockframes/model';
 import { TermService } from '@blockframes/contract/term/service';
 
@@ -38,7 +39,7 @@ export class ContractsFormComponent implements OnInit {
   waterfall: Waterfall;
 
   @Input() movieId: string;
-  @Input() documentForm = new WaterfallDocumentForm({ id: this.documentService.createId() });
+  @Input() documentForm: WaterfallDocumentForm;
 
   @Output() skip = new EventEmitter();
 
@@ -71,6 +72,10 @@ export class ContractsFormComponent implements OnInit {
   select(role: RightholderRole) {
     this.selected = role;
     this.creating = this.contracts$.getValue()[role].length === 0; // if we select an empty role we automatically switch to create mode
+    if (this.creating) {
+      this.documentForm = new WaterfallDocumentForm({ id: this.documentService.createId() });
+      this.documentForm.markAsPristine();
+    }
   }
 
   create() {
@@ -113,11 +118,11 @@ export class ContractsFormComponent implements OnInit {
       existingSeller.roles = this.documentForm.controls.licensorRole.value; // update roles
     } else {
       sellerId = this.waterfallService.createId();
-      rightholders.push({
+      rightholders.push(createWaterfallRightholder({
         id: sellerId,
         name: this.documentForm.controls.licensorName.value,
         roles: this.documentForm.controls.licensorRole.value,
-      });
+      }));
     }
 
     // Buyer create/update
@@ -125,11 +130,11 @@ export class ContractsFormComponent implements OnInit {
     const existingBuyer = rightholders.find(r => r.name === this.documentForm.controls.licenseeName.value);
     if (!existingBuyer) {
       buyerId = this.waterfallService.createId();
-      rightholders.push({
+      rightholders.push(createWaterfallRightholder({
         id: buyerId,
         name: this.documentForm.controls.licenseeName.value,
         roles: [this.selected],
-      });
+      }));
     } else {
       buyerId = existingBuyer.id;
       // TODO add selected role if needed

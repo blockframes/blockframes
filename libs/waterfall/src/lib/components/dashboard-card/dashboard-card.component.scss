@@ -1,0 +1,43 @@
+section {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  width: 430px;
+  height: 139px;
+  gap: 24px;
+  padding: 20px;
+  article {
+    mat-icon {
+      vertical-align: text-bottom;
+    }
+  }
+  price-per-currency {
+    font-size: 38px;
+  }
+}
+
+section.primary {
+  color: var(--accent-contrast);
+  article {
+    text-align: center;
+    mat-icon {
+      color: var(--accent-contrast);
+    }
+  }
+  price-per-currency {
+    margin-left: 82px;
+  }
+}
+
+section.secondary {
+  color: var(--active);
+  article {
+    text-align: left;
+    mat-icon {
+      color: var(--active);
+    }
+  }
+  price-per-currency {
+    color: var(--primary-lighter);
+  }
+}

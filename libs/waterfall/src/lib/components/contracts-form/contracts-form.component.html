@@ -37,7 +37,7 @@
         <header>
           <mat-icon svgIcon="document"></mat-icon>
           <h2>{{selected | toLabel: 'rightholderRoles'}} Contract</h2>
-          <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Enlarge' : 'Shrink'">
+          <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'">
             <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
           </button>
           <button mat-icon-button matTooltip="Save changes" (click)="save()">

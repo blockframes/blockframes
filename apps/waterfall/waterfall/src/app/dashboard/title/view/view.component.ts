@@ -1,11 +1,6 @@
-
-import { ActivatedRoute } from '@angular/router';
-import { pluck, switchMap } from 'rxjs/operators';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 import { RouteDescription } from '@blockframes/model';
-import { MovieService } from '@blockframes/movie/service';
-
 
 @Component({
   selector: 'waterfall-title-view',
@@ -14,9 +9,6 @@ import { MovieService } from '@blockframes/movie/service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleViewComponent {
-  public movie$ = this.route.params.pipe(
-    pluck('movieId'),
-    switchMap((movieId: string) => this.movieService.valueChanges(movieId)));
 
   navLinks: RouteDescription[] = [
     {
@@ -44,10 +36,5 @@ export class TitleViewComponent {
       label: 'World Sales',
     },
   ];
-
-  constructor(
-    private route: ActivatedRoute,
-    private movieService: MovieService,
-  ) { }
 
 }

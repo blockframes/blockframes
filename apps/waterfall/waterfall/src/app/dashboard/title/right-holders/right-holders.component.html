@@ -4,6 +4,6 @@
   </a>
   <h1>Manage Right Holders</h1>
 
-  <waterfall-right-holder-form [rightholdersForm]="rightholdersForm"></waterfall-right-holder-form>
+  <waterfall-right-holder-form *ngIf="rightholdersForm.controls.length" [rightholdersForm]="rightholdersForm"></waterfall-right-holder-form>
 
 </section>

@@ -22,6 +22,10 @@ export class TitleViewComponent {
       label: 'Waterfall',
     },
     {
+      path: 'dashboards',
+      label: 'Dashboards',
+    },
+    {
       path: 'rightholders',
       label: 'Right Holders',
     },

@@ -1,12 +1,13 @@
 
-import { ActivatedRoute } from '@angular/router';
 import { Subscription, debounceTime } from 'rxjs';
-import { FormArray, FormControl, FormGroup} from '@angular/forms';
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
-import { RightholderRole, WaterfallRightholder } from '@blockframes/model';
+import { createWaterfallRightholder } from '@blockframes/model';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
-
+import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '@blockframes/waterfall/form/right-holder.form';
+import { FormList } from '@blockframes/utils/form';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'waterfall-right-holders',
@@ -16,34 +17,38 @@ import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 })
 export class RightHoldersComponent implements OnInit, OnDestroy {
 
-  rightholdersForm = new FormArray<FormGroup<{ id: FormControl<string>, name: FormControl<string>, roles: FormControl<RightholderRole[]> }>>([
-    new FormGroup({ id: new FormControl(this.waterfallService.createId()), name: new FormControl(''), roles: new FormControl([]) }),
-  ]);
-
-  movieId = '';
-
-  subscription?: Subscription;
+  rightholdersForm = FormList.factory<WaterfallRightholderFormValue, WaterfallRightholderForm>([], rightholder => new WaterfallRightholderForm(rightholder));
+  private subscription?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private waterfallService: WaterfallService,
-  ) { }
+    private cdr: ChangeDetectorRef,
+    private dynTitle: DynamicTitleService,
+  ) { 
+    this.dynTitle.setPageTitle('Manage Right Holders');
+  }
 
   async ngOnInit() {
-    this.movieId = this.route.snapshot.params.movieId;
-    const waterfall = await this.waterfallService.getValue(this.movieId);
-    this.rightholdersForm.patchValue(waterfall.rightholders);
+    const movieId: string = this.route.snapshot.params.movieId;
+    const waterfall = await this.waterfallService.getValue(movieId);
+    if (waterfall.rightholders.length === 0) this.rightholdersForm.add(createWaterfallRightholder());
+    waterfall.rightholders.forEach(rightholder => this.rightholdersForm.add(rightholder));
+    this.cdr.markForCheck();
 
     this.subscription = this.rightholdersForm.valueChanges.pipe(
       debounceTime(3000), // avoid triggering save on every key stroke
     ).subscribe(async rightholders => {
       // Remove form value with no names and no roles and format the good values
-        const newRightholders: WaterfallRightholder[] = rightholders.filter(rightholder => rightholder.name || rightholder.roles.length)
-        .map(rightholder => ({ id: rightholder.id ?? this.waterfallService.createId(), name: rightholder.name ?? '', roles: rightholder.roles ?? [] }))
-      ;
+      const newRightholders = rightholders.filter(rightholder => rightholder.name || rightholder.roles.length)
+        .map(rightholder => createWaterfallRightholder({
+          ...rightholder,
+          id: rightholder.id || this.waterfallService.createId(),
+        }))
+        ;
 
       // ! `id` needs to be in the update object, because of a bug in ng-fire
-      await this.waterfallService.update({ id: this.movieId, rightholders: newRightholders });
+      await this.waterfallService.update({ id: waterfall.id, rightholders: newRightholders });
     });
   }
 

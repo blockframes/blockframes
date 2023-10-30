@@ -20,7 +20,8 @@ import {
   WaterfallContract,
   convertDocumentTo,
   isContract,
-  Version
+  Version,
+  Movie
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { filter, map, pluck, switchMap, tap } from 'rxjs/operators';
@@ -52,12 +53,13 @@ export class WaterfallCtaDirective { }
 export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   private countRouteEvents = 1;
-  public waterfall: Waterfall;
 
   public movie$ = this.route.params.pipe(
     pluck('movieId'),
-    switchMap((movieId: string) => this.movieService.valueChanges(movieId))
+    switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
+    tap(movie => this.movie = movie)
   );
+  public movie: Movie;
 
   // ---------
   // Rules checks
@@ -77,7 +79,6 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   public canBypassRules$ = combineLatest([this.isProducer$, this.authService.isBlockframesAdmin$]).pipe(
     map(([isProducer, isAdmin]) => isProducer || isAdmin)
   );
-
 
   // ---------
   // Contracts, Terms and Documents
@@ -124,6 +125,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     switchMap(movie => this.waterfallService.valueChanges(movie.id)),
     tap(waterfall => this.waterfall = waterfall)
   );
+  public waterfall: Waterfall;
 
   public rights$ = this.movie$.pipe(
     switchMap(({ id: waterfallId }) => this.rightService.valueChanges({ waterfallId }))

@@ -1,1 +1,142 @@
-test
+<ng-container *ngIf="state$ | async else loading">
+  <header>
+    <waterfall-dashboard-card 
+      *ngIf="incomes$ | async as income"
+      mode="primary"
+      title="Total Film Revenue"
+      [price]="income">
+    </waterfall-dashboard-card>
+  
+    <waterfall-dashboard-card 
+      *ngIf="turnover$ | async as turnover"
+      title="My Total Cash Flow"
+      [price]="turnover">
+    </waterfall-dashboard-card>
+  
+    <waterfall-dashboard-card 
+      *ngIf="revenue$ | async as revenue"
+      title="My Total Revenue"
+      [price]="revenue">
+    </waterfall-dashboard-card>
+  </header>
+  
+  <section>
+    <article class="surface">
+      <h3>Right Holders Revenue Split</h3>
+      <mat-divider></mat-divider>
+      <apx-chart *ngIf="rightholdersRevenueChart$ | async as chartOptions"
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [labels]="chartOptions.labels"
+        [responsive]="chartOptions.responsive"
+        [tooltip]="chartOptions.tooltip"
+      ></apx-chart>
+    </article>
+    <article class="surface">
+      <h3>Quick Acces</h3>
+      <mat-divider></mat-divider>
+      <div>
+        <a [routerLink]="['..', 'waterfall']" class="surface">
+          <img asset="waterfall_icon.svg" alt="Manage Waterfall image">
+          <button mat-button color="primary" class="main-dashboard-cta">Manage Waterfall</button>
+        </a>
+        <a [routerLink]="['..', 'statements']" class="surface">
+          <img asset="statements_icon.svg" alt="Check Statements image">
+          <button mat-button color="primary" class="main-dashboard-cta">Check Statements</button>
+        </a>
+        <a [routerLink]="['..', 'documents']" class="surface">
+          <img asset="certify_documents_icon.svg" alt="Certify Documents image">
+          <button mat-button color="primary" class="main-dashboard-cta">Certify Documents</button>
+        </a>
+        <a [routerLink]="['..', 'sales']" class="surface">
+          <img asset="world_sales_icon.svg" alt="See World Sales image">
+          <button mat-button color="primary" class="main-dashboard-cta">See World Sales</button>
+        </a>
+      </div>
+    </article>
+  </section>
+  
+  <section>
+    <article class="surface">
+      <h3>Right Holders ROI</h3>
+      <mat-divider></mat-divider>
+      <apx-chart *ngIf="rightholdersROIChart$ | async as chartOptions"
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [dataLabels]="chartOptions.dataLabels"
+        [plotOptions]="chartOptions.plotOptions"
+        [xaxis]="chartOptions.xaxis"
+        [stroke]="chartOptions.stroke"
+        [tooltip]="chartOptions.tooltip"
+      ></apx-chart>
+    </article>
+    <article class="surface">
+      <h3>Net Revenue Over Time</h3>
+      <mat-divider></mat-divider>
+      <mat-form-field appearance="outline" *ngIf="rightholdersState$ | async as rightholders">
+        <mat-label>Highlight Right Holder</mat-label>
+        <mat-select [value]="currentRightholder" [formControl]="rightholderControl">
+          <mat-option *ngFor="let rightholder of rightholders" [value]="rightholder.id">
+            {{ rightholder.name | titlecase }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <apx-chart *ngIf="netRevenueChart$ | async as chartOptions"
+        [series]="chartOptions.series"
+        [chart]="chartOptions.chart"
+        [xaxis]="chartOptions.xaxis"
+        [markers]="chartOptions.markers"
+        [stroke]="chartOptions.stroke"
+        [yaxis]="chartOptions.yaxis"
+        [dataLabels]="chartOptions.dataLabels"
+        [title]="chartOptions.title"
+        [fill]="chartOptions.fill"
+        [tooltip]="chartOptions.tooltip"
+        [legend]="chartOptions.legend"
+      ></apx-chart>
+    </article>
+  </section>
+  
+  <section>
+    <article class="surface">
+      <h3>Revenue Summary</h3>
+      <mat-divider></mat-divider>
+      <aside>
+        <button mat-button color="primary">
+          <span>Export in .CSV</span>
+        </button>
+      </aside>
+      <bf-table [source]="rightholdersRevenueSummary$ | async" useFilter  pagination="50">
+        <ng-template colRef="name" label="Right Holder Name" let-name sort>
+          {{ name | titlecase }}
+        </ng-template>
+        <ng-template colRef="investment" label="Investment" let-investment [sort]="sorts.byPriceCurrency">
+          <price-per-currency [price]="investment" default="€ 0"></price-per-currency>
+        </ng-template>
+        <ng-template colRef="expense" label="Expenses" let-expense sort [sort]="sorts.byPriceCurrency">
+          <price-per-currency [price]="expense" default="€ 0"></price-per-currency>
+        </ng-template>
+        <ng-template colRef="turnover" label="Cash Flow" let-turnover sort [sort]="sorts.byPriceCurrency">
+          <price-per-currency [price]="turnover" default="€ 0"></price-per-currency>
+        </ng-template>
+        <ng-template colRef="revenue" label="Net Revenue" let-revenue sort [sort]="sorts.byPriceCurrency">
+          <price-per-currency [price]="revenue" default="€ 0"></price-per-currency>
+        </ng-template>
+        <ng-template colRef="gross" label="% Gross" let-gross sort>
+          {{ gross }} %
+        </ng-template>
+        <ng-template colRef="value" label="Action" let-rightholder sticky>
+          <a mat-icon-button [routerLink]="[]">
+            <mat-icon svgIcon="file"></mat-icon>
+          </a>
+        </ng-template>
+      </bf-table>
+    </article>
+  </section>
+</ng-container>
+
+<ng-template #loading>
+  <article class="spinner">
+    <logo-spinner></logo-spinner>
+  </article>
+</ng-template>
