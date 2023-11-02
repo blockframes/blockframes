@@ -8,16 +8,16 @@ import { allOf } from '../avail';
 export interface WaterfallPermissions {
   _meta?: DocumentMeta;
   id: string; // orgId
-  // #9254 If not movie owner, define the orgIds visible in the waterfall by the current org
-  scope: string[];
-  // Roles will define what can org do on waterfall/blocks/actions/...
-  roles: RightholderRole[]
+  // Define the rightholderIds (fake orgs) that this current org can see
+  rightholderIds: string[];
+  // Roles will define what can org do on waterfall, blocks, actions, statements, rights etc..
+  roles: RightholderRole[];
 }
 
 export function createWaterfallPermissions(params: Partial<WaterfallPermissions> = {}): WaterfallPermissions {
   return {
     id: '',
-    scope: [],
+    rightholderIds: [],
     roles: [],
     ...params,
   }
@@ -82,7 +82,6 @@ export interface WaterfallRightholder {
   id: string;
   name: string;
   roles: RightholderRole[];
-  orgId: string; // The "real" orgId of the rightholder
 };
 
 export interface Waterfall {
@@ -112,7 +111,6 @@ export function createWaterfallRightholder(params: Partial<WaterfallRightholder>
     id: '',
     name: '',
     roles: [],
-    orgId: '',
     ...params,
   }
 }
@@ -203,8 +201,8 @@ export interface WaterfallDocument<Meta extends WaterfallDocumentMeta = unknown>
   type: 'financingPlan' | 'budget' | 'contract';
   folder: string; // TODO #9389 we might want to drop that for a sub-type, TO BE CONFIRMED WITH THE TEAM
   waterfallId: string; // Parent document Id
-  ownerId: string; // TODO #9389 uploader orgId
-  sharedWith: string[]; // TODO #9389 orgIds allowed to see the document
+  ownerId: string; // TODO #9389 uploader orgId 
+  sharedWith: string[]; // TODO #9389 orgIds allowed to see the document 
   meta: Meta;
 }
 

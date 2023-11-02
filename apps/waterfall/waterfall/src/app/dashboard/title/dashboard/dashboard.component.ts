@@ -1,6 +1,6 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { Observable, combineLatest, map, startWith, switchMap } from 'rxjs';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Observable, combineLatest, filter, map, switchMap, tap } from 'rxjs';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -50,12 +50,22 @@ type ChartOptions = {
   styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
   private waterfall = this.shell.waterfall;
   public state$ = this.shell.state$;
-  public currentRightholder = this.waterfall.rightholders.find(r => r.orgId === this.orgService.org.id)?.id;
+  public currentRightholder$ = this.shell.permission$.pipe(
+    map(permission => permission.rightholderIds.map(r => this.waterfall.rightholders.find(rh => rh.id === r))),
+    map(rightholders => rightholders.pop()),
+    tap(rightholder => {
+      if (!rightholder && this.waterfall.versions.length > 0) {
+        this.snackbar.open(`Organization "${this.orgService.org.name}" is not associated to any rightholders.`, 'close', { duration: 5000 });
+      } else {
+        this.rightholderControl.setValue(rightholder.id);
+      }
+    })
+  );
   public sorts = sorts;
-  public rightholderControl = new FormControl<string>(this.currentRightholder);
+  public rightholderControl = new FormControl<string>('');
 
   public incomes$ = this.state$.pipe(
     map(state => {
@@ -74,8 +84,9 @@ export class DashboardComponent implements OnInit {
     })))
   );
 
-  private rightholderState$ = this.state$.pipe(
-    map(state => state.waterfall.state.orgs[this.currentRightholder])
+  private rightholderState$ = combineLatest([this.state$, this.currentRightholder$]).pipe(
+    filter(([_, currentRightholder]) => !!currentRightholder),
+    map(([state, currentRightholder]) => state.waterfall.state.orgs[currentRightholder.id])
   );
 
   public turnover$ = this.rightholderState$.pipe(
@@ -173,7 +184,6 @@ export class DashboardComponent implements OnInit {
   );
 
   public netRevenueChart$: Observable<Partial<ChartOptions>> = this.rightholderControl.valueChanges.pipe(
-    startWith(this.currentRightholder),
     switchMap(rightholderId => this.rightholdersState$.pipe(map(orgs => orgs.find(org => org.id === rightholderId)))),
     switchMap(rightholder => this.state$.pipe(map(state => ({
       rightholder,
@@ -285,12 +295,6 @@ export class DashboardComponent implements OnInit {
   ) {
     this.shell.setDate(undefined);
     this.dynTitle.setPageTitle(this.shell.movie.title.international, 'Waterfall Dashboard');
-  }
-
-  ngOnInit() {
-    if (!this.currentRightholder && this.waterfall.versions.length > 0) {
-      this.snackbar.open(`Organization "${this.orgService.org.name}" is not associated to any rightholders.`, 'close', { duration: 5000 });
-    }
   }
 
   private getLastHistoryPerYear(history: History[]) {

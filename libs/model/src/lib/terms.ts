@@ -30,6 +30,7 @@ export interface Term extends BucketTerm {
   licensedOriginal: boolean;
   price?: number;
   currency?: MovieCurrency;
+  // TODO #9464 add privacy or app , edit rules & shellComponent?
 }
 
 export function createTerm(params: Partial<Term> = {}): Term {

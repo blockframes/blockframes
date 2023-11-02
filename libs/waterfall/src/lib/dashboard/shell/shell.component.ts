@@ -68,11 +68,11 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     switchMap(({ id: waterfallId }) => this.permissionService.valueChanges({ waterfallId }))
   );
 
-  public $permission = this.permissions$.pipe(
-    map(permissions => permissions.find(p => p.id === this.authService.profile.orgId))
+  public permission$ = this.movie$.pipe(
+    switchMap(({ id: waterfallId }) => this.permissionService.valueChanges(this.authService.profile.orgId, { waterfallId })),
   );
 
-  public isProducer$ = this.$permission.pipe(
+  public isProducer$ = this.permission$.pipe(
     map(permission => permission?.roles.some(r => r === 'producer'))
   );
 
@@ -83,8 +83,17 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   // ---------
   // Contracts, Terms and Documents
   // ---------
-  public documents$ = this.movie$.pipe(
-    switchMap(({ id: waterfallId }) => this.waterfallDocumentService.valueChanges({ waterfallId }))
+
+  private myDocuments$ = this.movie$.pipe(
+    switchMap(({ id: waterfallId }) => combineLatest([
+      this.waterfallDocumentService.valueChanges([where('ownerId', '==', this.authService.profile.orgId)], { waterfallId }),
+      this.waterfallDocumentService.valueChanges([where('sharedWith', 'array-contains', this.authService.profile.orgId)], { waterfallId })
+    ])),
+    map(([myDocuments, sharedDocuments]) => [...myDocuments, ...sharedDocuments])
+  );
+
+  public documents$ = combineLatest([this.movie$, this.canBypassRules$]).pipe(
+    switchMap(([{ id: waterfallId }, canBypassRules]) => canBypassRules ? this.waterfallDocumentService.valueChanges({ waterfallId }) : this.myDocuments$)
   );
 
   public contracts$ = this.documents$.pipe(
@@ -110,12 +119,22 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     switchMap(({ id: waterfallId }) => this.statementService.valueChanges({ waterfallId }))
   );
 
-  public incomes$ = this.movie$.pipe(
-    switchMap(({ id: waterfallId }) => this.incomeService.valueChanges([where('titleId', '==', waterfallId)]))
+  private myIncomes$ = this.contracts$.pipe(
+    switchMap(contracts => Promise.all(contracts.map(c => this.incomeService.getValue([where('contractId', '==', c.id)])))),
+    map(incomes => incomes.flat())
   );
 
-  public expenses$ = this.movie$.pipe(
-    switchMap(({ id: waterfallId }) => this.expenseService.valueChanges([where('titleId', '==', waterfallId)]))
+  public incomes$ = combineLatest([this.movie$, this.canBypassRules$]).pipe(
+    switchMap(([{ id: waterfallId }, canBypassRules]) => canBypassRules ? this.incomeService.valueChanges([where('titleId', '==', waterfallId)]) : this.myIncomes$)
+  );
+
+  private myExpenses$ = this.contracts$.pipe(
+    switchMap(contracts => Promise.all(contracts.map(c => this.expenseService.getValue([where('contractId', '==', c.id)])))),
+    map(expenses => expenses.flat())
+  );
+
+  public expenses$ = combineLatest([this.movie$, this.canBypassRules$]).pipe(
+    switchMap(([{ id: waterfallId }, canBypassRules]) => canBypassRules ? this.expenseService.valueChanges([where('titleId', '==', waterfallId)]) : this.myExpenses$)
   );
 
   // ---------

@@ -349,7 +349,7 @@ service cloud.firestore {
         && ( isNotUpdatingFieldDepth3(['app', 'waterfall', 'access']) || newAppAccess.waterfall.access == false )
         && ( isNotUpdatingFieldDepth3(['app', 'festival', 'access']) || newAppAccess.festival.access == false )
         && ( isNotUpdatingFieldDepth3(['app', 'financiers', 'access']) || newAppAccess.financiers.access == false )
-        && (orgCan('canUpdate', orgId, movie.id) || orgId in getWaterfall(movie.id).orgIds );
+        && ( orgCan('canUpdate', orgId, movie.id) || orgId in getWaterfall(movie.id).orgIds );
     }
 
     function checkStatus(data, status) {
@@ -412,7 +412,7 @@ service cloud.firestore {
       }
     }
 
-    match /terms/{termId} {
+    match /terms/{termId} { // TODO create new collection for waterfallTerms to allow better rules ?
       allow read: if isSignedInWithPassword() && notInMaintenance();
       allow create: if (
           userOrgId() == getContract(incomingData().contractId).buyerId || 
@@ -582,7 +582,10 @@ service cloud.firestore {
         && isNotUpdatingId('id', existingData().id)
         && notInMaintenance()
         && isOrgMember(userOrgId())
-        && hasWaterfallRole(waterfallId, 'producer');
+        && (
+          hasWaterfallRole(waterfallId, 'producer') || 
+          ( userOrgId() in getMovie(waterfallId).orgIds && isOnlyUpdatingRightholders() )
+        );
       allow delete: if false;
 
       match /blocks/{blockId} {
@@ -607,7 +610,7 @@ service cloud.firestore {
         allow read: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && hasWaterfallRole(waterfallId, 'producer');
+          && hasWaterfallRole(waterfallId, 'producer'); // TODO #9464 add can read document (contractId), & unit test
         allow create: if userHasValidOrg()
           && isRequestFieldValueEqualToOrNotSetted(['id'], rightId)
           && notInMaintenance()
@@ -621,7 +624,7 @@ service cloud.firestore {
         allow delete: if false;
       }
 
-      match /statements/{statementId} {
+      match /statements/{statementId} { // TODO #9464 unit test
         allow read: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
@@ -719,6 +722,15 @@ service cloud.firestore {
 
     function getWaterfallDocument(waterfallId, documentId) {
       return get(/databases/$(database)/documents/waterfall/$(waterfallId)/documents/$(documentId)).data;
+    }
+
+    function isOnlyUpdatingRightholders() {
+      return isNotUpdatingField(['_meta', 'createdBy'])
+        && isNotUpdatingField(['_meta', 'createdAt'])
+        && isNotUpdatingField(['orgIds'])
+        && isNotUpdatingField(['documents'])
+        && isNotUpdatingField(['sources'])
+        && isNotUpdatingField(['versions'])
     }
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -892,7 +904,7 @@ service cloud.firestore {
         || ( incoming.keys().hasAll([fieldArray[0]]) && (resource == null || !existing.keys().hasAll([fieldArray[0]])) );
     }
 
-    //updating only the specified fields?
+    // Is updating only the specified fields?
     function onlyChange(fields) {
       return incomingData().diff(existingData()).affectedKeys().hasOnly(fields);
     }

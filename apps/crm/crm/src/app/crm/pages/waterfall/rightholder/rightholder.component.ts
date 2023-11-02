@@ -6,6 +6,7 @@ import {
   Right,
   RightholderRole,
   Statement,
+  WaterfallPermissions,
   WaterfallRightholder,
   getStatementsHistory,
   mainCurrency,
@@ -15,6 +16,8 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
 import { WaterfallService, WaterfallState } from '@blockframes/waterfall/waterfall.service';
 import { Observable, combineLatest, map, pluck, tap } from 'rxjs';
 import { WaterfallRightholderForm } from '@blockframes/waterfall/form/right-holder.form';
+import { FormControl } from '@angular/forms';
+import { WaterfallPermissionsService } from '@blockframes/waterfall/permissions.service';
 
 const rolesWithStatements: RightholderRole[] = ['salesAgent', 'mainDistributor', 'localDistributor', 'producer', 'coProducer'];
 
@@ -26,9 +29,12 @@ const rolesWithStatements: RightholderRole[] = ['salesAgent', 'mainDistributor',
 })
 export class RightholderComponent {
 
-  public rightholder$ = combineLatest([this.route.params.pipe(pluck('rightholderId')), this.shell.waterfall$]).pipe(
+  public permissions$ = this.shell.permissions$;
+
+  public rightholder$ = combineLatest([this.route.params.pipe(pluck('rightholderId')), this.shell.waterfall$, this.permissions$]).pipe(
+    tap(([rightholderId, _, permissions]) => this.permissionControl.setValue(permissions.filter(p => p.rightholderIds.includes(rightholderId)).map(p => p.id))),
     map(([rightholderId, waterfall]) => waterfall.rightholders.find(r => r.id === rightholderId)),
-    tap(rightholder => this.rightholdersForm.setValue(rightholder))
+    tap(rightholder => this.rightholderForm.setValue(rightholder))
   );
 
   public rights$: Observable<(Right & { revenue: PricePerCurrency })[]> = combineLatest([this.rightholder$, this.shell.state$, this.shell.rights$]).pipe(
@@ -45,24 +51,43 @@ export class RightholderComponent {
     )
   );
 
-  public permissions$ = this.shell.permissions$;
-
-  public rightholdersForm = new WaterfallRightholderForm({});
+  public rightholderForm = new WaterfallRightholderForm({});
+  public permissionControl = new FormControl<string[]>([]);
   public formatter = { formatter: (value: number) => `${value} ${movieCurrencies[mainCurrency]}` };
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
     private waterfallService: WaterfallService,
+    private waterfallPermissionService: WaterfallPermissionsService,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar
   ) {
     this.shell.setDate(undefined);
   }
 
-  public async save() {
-    const formValue: WaterfallRightholder = this.rightholdersForm.value;
+  public async save(permissions: WaterfallPermissions[]) {
+    const formValue: WaterfallRightholder = this.rightholderForm.value;
     const rightholders = this.shell.waterfall.rightholders.map(r => r.id === formValue.id ? formValue : r);
-    await this.waterfallService.update({ id: this.shell.waterfall.id, rightholders });
+
+    const selectedPermissions = permissions.filter(p => this.permissionControl.value.find(id => id === p.id));
+    const notSelectedPermissions = permissions.filter(p => !selectedPermissions.find(sp => sp.id === p.id));
+
+    const promises = [this.waterfallService.update({ id: this.shell.waterfall.id, rightholders })];
+    for (const permission of selectedPermissions) {
+      if (!permission.rightholderIds.includes(formValue.id)) {
+        permission.rightholderIds.push(formValue.id);
+        promises.push(this.waterfallPermissionService.update(permission, { params: { waterfallId: this.shell.waterfall.id } }));
+      }
+    }
+
+    for (const permission of notSelectedPermissions) {
+      if (permission.rightholderIds.includes(formValue.id)) {
+        permission.rightholderIds = permission.rightholderIds.filter(id => id !== formValue.id);
+        promises.push(this.waterfallPermissionService.update(permission, { params: { waterfallId: this.shell.waterfall.id } }));
+      }
+    }
+
+    await Promise.all(promises);
     this.snackBar.open('Roles updated', 'close', { duration: 3000 });
   }
 

@@ -124,13 +124,15 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
         this.uploadService.upload();
 
         await this.waterfallService.create(this.movieId, movie.orgIds);
-        await this.permissionsService.create(this.movieId, { id: movie.orgIds[0], roles: this.waterfallRoleControl.value });
+        await this.permissionsService.create(this.movieId, { id: orgId, roles: this.waterfallRoleControl.value });
 
       } else {
         await this.movieService.update({ ...this.movieForm.value, id: this.movieId });
         this.uploadService.upload();
 
-        await this.permissionsService.update(orgId, { roles: this.waterfallRoleControl.value }, { params: { waterfallId: this.movieId } });
+        if (this.waterfallRoleControl.value.includes('producer')) { // Only producer can update waterfall permissions
+          await this.permissionsService.update(orgId, { roles: this.waterfallRoleControl.value }, { params: { waterfallId: this.movieId } });
+        }
       }
 
       this.movieForm.markAsPristine();
@@ -151,6 +153,7 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
         }));
 
       // ! `id` needs to be in the update object, because of a bug in ng-fire
+      console.log(rightholders);
       await this.waterfallService.update({ id: this.movieId, rightholders });
       this.rightholdersForm.markAsPristine();
 

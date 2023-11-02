@@ -45,8 +45,14 @@
 
 <section class="surface">
   <h2>Your Role in Waterfall</h2>
-  <static-select [control]="waterfallRoleControl" scope="rightholderRoles" mode="outline" multiple required>
-    <mat-label>Waterfall Role</mat-label>
-    <mat-error>This field is mandatory</mat-error>
-  </static-select>
+  <ng-container *ngIf="!createMode && (isProducer$ | async) === false else showRoleSelect">
+    {{ waterfallRoleControl.value | toLabel: 'rightholderRoles' }}
+    <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Once movie is created, only producer can manage his roles."></mat-icon>
+  </ng-container>
+  <ng-template #showRoleSelect>
+    <static-select [control]="waterfallRoleControl" scope="rightholderRoles" mode="outline" multiple required>
+      <mat-label>Waterfall Role</mat-label>
+      <mat-error>This field is mandatory</mat-error>
+    </static-select>
+  </ng-template>
 </section>

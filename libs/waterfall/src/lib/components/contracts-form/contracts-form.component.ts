@@ -19,6 +19,7 @@ import {
   createWaterfallRightholder
 } from '@blockframes/model';
 import { TermService } from '@blockframes/contract/term/service';
+import { OrganizationService } from '@blockframes/organization/service';
 
 @Component({
   selector: '[movieId] waterfall-contracts-form',
@@ -47,6 +48,7 @@ export class ContractsFormComponent implements OnInit {
     private waterfallService: WaterfallService,
     private uploaderService: FileUploaderService,
     private documentService: WaterfallDocumentsService,
+    private orgService: OrganizationService,
     private termsService: TermService,
   ) {
     const newContracts: Partial<Record<RightholderRole, WaterfallContract[]>> = {};
@@ -147,6 +149,7 @@ export class ContractsFormComponent implements OnInit {
       type: 'contract',
       waterfallId: this.movieId,
       signatureDate: this.documentForm.controls.signatureDate.value,
+      ownerId: this.orgService.org.id,
       meta: createWaterfallContract({
         type: this.selected,
         status: 'accepted',
