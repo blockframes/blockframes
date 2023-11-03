@@ -1,0 +1,20 @@
+
+p.source {
+  background: #FFE500;
+  margin: 0;
+  font-weight: 700;
+  text-transform: uppercase;
+  width: 240px;
+  height: 40px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding: 6px 12px;
+  text-align: center;
+  color: #232323;
+
+  &.selected {
+    border-radius: 8px;
+    border: solid 2px var(--primary);
+    box-shadow: 0px 6px 12px 0px rgba(0, 0, 0, 0.35);
+  }
+}

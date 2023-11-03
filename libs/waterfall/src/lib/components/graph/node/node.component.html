@@ -1,0 +1,16 @@
+
+<ng-container *ngIf="node.type === 'source'">
+  <waterfall-graph-source [source]="node" [selected]="selected" (handleSelect)="handleSelect.emit()"></waterfall-graph-source>
+</ng-container>
+
+<ng-container *ngIf="node.type === 'right'">
+  <waterfall-graph-right [right]="node" [selected]="selected" (handleSelect)="handleSelect.emit()"></waterfall-graph-right>
+</ng-container>
+
+<ng-container *ngIf="node.type === 'vertical'">
+  <waterfall-graph-vertical [vertical]="node" [selected]="selected" (handleSelect)="handleSelect.emit()"></waterfall-graph-vertical>
+</ng-container>
+
+<ng-container *ngIf="node.type === 'horizontal'">
+  <waterfall-graph-horizontal [horizontal]="node" [selected]="selected" (handleSelect)="handleSelect.emit()"></waterfall-graph-horizontal>
+</ng-container>

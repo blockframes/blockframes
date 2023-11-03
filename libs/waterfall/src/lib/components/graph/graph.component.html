@@ -1,0 +1,22 @@
+
+<section class="surface">
+  <header>
+    <h2>Waterfall Scheme</h2>
+    <p>Please provide the condition details to establish the accurate waterfall</p>
+  </header>
+
+  <bf-graph-container>
+
+    <waterfall-graph-node
+      *ngFor="let node of (nodes$ | async)"
+      node
+      [node]="node"
+      (handleSelect)="select(node.id)"
+      [selected]="(selected$ | async) === node.id"
+      [ngStyle]="{ left: node.x + 'px', top: node.y + 'px' }"
+    ></waterfall-graph-node>
+
+    <svg:path *ngFor="let arrow of (arrows$ | async)" edge [attr.d]="arrow.path" stroke-width="2" stroke="#9392A7" fill="none"></svg:path>
+    <waterfall-graph-label *ngFor="let arrow of (arrows$ | async)" node [ngStyle]="{ left: arrow.labelPosition.x + 'px', top: arrow.labelPosition.y + 'px' }" [amount]="arrow.amount"></waterfall-graph-label>
+  </bf-graph-container>
+</section>

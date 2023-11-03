@@ -1,0 +1,4 @@
+
+<p class="name">{{vertical.name}}</p>
+<waterfall-graph-right *ngFor="let member of vertical.members" [right]="member" [selected]="selected" (handleSelect)="handleSelect.emit()" hideAmount></waterfall-graph-right>
+<p class="amount">{{vertical.data?.revenu?.calculated ?? 0 | bigNumber:'1.0-2' }}€</p>

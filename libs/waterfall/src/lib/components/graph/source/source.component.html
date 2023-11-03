@@ -1,0 +1,8 @@
+
+<p
+  (click)="handleSelect.emit()"
+  [matTooltip]="source.name || 'Source Name'"
+  [ngClass]="['source', 'nodrag', selected ? 'selected' : '']"
+>
+  {{source.name || 'Receipt Source (Media & Territory)'}}
+</p>

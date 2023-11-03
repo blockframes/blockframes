@@ -1,6 +1,8 @@
 <ng-container *ngIf="waterfall$ | async as waterfall">
   <ng-container *ngIf="waterfall.versions.length; else noWaterfall">
-    <waterfall-g6-graph *ngIf="(state$ | async) as state; else loading" [tree]="state.waterfall" [rightholders]="waterfall.rightholders"></waterfall-g6-graph>
+    <ng-container *ngIf="(state$ | async) as state; else loading">
+      <waterfall-graph *ngIf="(rights$ | async) as rights; else loading" [state]="state.waterfall.state" [rights]="rights" [sources]="waterfall.sources"></waterfall-graph>
+    </ng-container>
   </ng-container>
 </ng-container>
 
