@@ -90,5 +90,6 @@ export class DocumentFormComponent implements OnInit, OnDestroy {
     } else {
       this.removeFile.emit(false);
     }
+    this.form.markAsDirty();
   }
 }
