@@ -53,7 +53,7 @@ export class DocumentFormComponent implements OnInit, OnDestroy {
 
         if (value.licensorName && value.licensorRole.length === 0) {
           const rightholder = this.waterfall.rightholders.find(r => r.name === value.licensorName);
-          if (rightholder) this.form.controls.licensorRole.setValue(rightholder.roles, { emitEvent: false })
+          if (rightholder) this.form.controls.licensorRole.setValue(rightholder.roles, { emitEvent: false });
         }
       }),
       this.form.controls.endDate.valueChanges.subscribe(() => {
