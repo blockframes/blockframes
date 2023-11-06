@@ -120,7 +120,7 @@ export class ContractsFormComponent implements OnInit {
       endDate: contract.duration?.to,
       price: contract.price,
       terms,
-      file: file,
+      file: file || { id: contract.id },
     });
     this.creating = true;
     this.documentForm.markAsPristine();
