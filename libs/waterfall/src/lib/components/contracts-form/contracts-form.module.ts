@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Components
-import { ContractsFormComponent, RightHolderNamePipe, GetFilePipe } from './contracts-form.component';
+import { ContractsFormComponent, GetFilePipe } from './contracts-form.component';
 
 // Blockframes
 import { ToLabelModule } from '@blockframes/utils/pipes';
@@ -12,6 +12,7 @@ import { CardModalModule } from '@blockframes/ui/card-modal/card-modal.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { DocumentFormModule } from '@blockframes/waterfall/components/forms/document-form/form.module';
 import { DownloadPipeModule } from '@blockframes/media/file/pipes/download.pipe';
+import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -23,7 +24,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 @NgModule({
   declarations: [
     ContractsFormComponent,
-    RightHolderNamePipe,
     GetFilePipe,
   ],
   imports: [
@@ -35,6 +35,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     ToLabelModule,
     ImageModule,
     DownloadPipeModule,
+    RightHolderNamePipeModule,
 
     // Material
     MatIconModule,

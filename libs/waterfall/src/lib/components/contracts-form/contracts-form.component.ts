@@ -65,20 +65,7 @@ export class ContractsFormComponent implements OnInit {
       map(documents => sortContracts(documents.map(d => convertDocumentTo<WaterfallContract>(d)))),
       map(rawContracts => {
         const contracts: Partial<Record<RightholderRole, WaterfallContract[]>> = {};
-        Object.keys(rightholderRoles).forEach(r => contracts[r] = []);
-        rawContracts.forEach(contract => {
-          const rightholder = this.waterfall.rightholders.find(r => r.id === contract.buyerId);
-          if (!rightholder) return; // ! malformed data
-          rightholder.roles.forEach(role => {
-            contracts[role] ||= [];
-            const index = contracts[role].findIndex(c => c.id === contract.id);
-            if (index !== -1) {
-              contracts[role][index] = contract;
-            } else {
-              contracts[role].push(contract);
-            }
-          });
-        });
+        Object.keys(rightholderRoles).forEach((r: RightholderRole) => contracts[r] = rawContracts.filter(c => c.type === r));
         return contracts;
       }),
       tap(rawContracts => this.contracts = rawContracts)
@@ -204,16 +191,6 @@ export class ContractsFormComponent implements OnInit {
       this.uploaderService.upload();
     }
     this.documentForm.markAsPristine();
-  }
-}
-
-
-@Pipe({ name: 'rightholderName' })
-export class RightHolderNamePipe implements PipeTransform {
-  transform(value: string, waterfall: Waterfall): string {
-    const rightholder = waterfall.rightholders.find(r => r.id === value);
-    if (!rightholder) return 'Unknown'; // ! malformed data
-    return rightholder.name;
   }
 }
 

@@ -45,8 +45,6 @@ export class RightholderComponent {
     )
   );
 
-  public permissions$ = this.shell.permissions$;
-
   public rightholdersForm = new WaterfallRightholderForm({});
   public formatter = { formatter: (value: number) => `${value} ${movieCurrencies[mainCurrency]}` };
 

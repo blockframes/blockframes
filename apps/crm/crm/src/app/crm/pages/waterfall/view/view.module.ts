@@ -24,7 +24,7 @@ const routes: Routes = [{
     {
       path: 'dashboards',
       loadChildren: () => import('../dashboards/dashboards.module').then(m => m.DashboardsModule),
-      data: { animation: 0 }
+      data: { animation: 1 }
     },
     {
       path: 'rightholders',
@@ -32,44 +32,49 @@ const routes: Routes = [{
       data: { animation: 2 }
     },
     {
+      path: 'permissions',
+      loadChildren: () => import('../permissions/permissions.module').then(m => m.PermissionsModule),
+      data: { animation: 3 }
+    },
+    {
       path: 'documents',
       loadChildren: () => import('../documents/documents.module').then(m => m.DocumentsModule),
-      data: { animation: 3 }
+      data: { animation: 4 }
     },
     {
       path: 'contracts',
       loadChildren: () => import('../contracts/contracts.module').then(m => m.ContractsModule),
-      data: { animation: 4 }
+      data: { animation: 5 }
     },
     {
       path: 'sources',
       loadChildren: () => import('../sources/sources.module').then(m => m.SourcesModule),
-      data: { animation: 5 }
+      data: { animation: 6 }
     },
     {
       path: 'rights',
       loadChildren: () => import('../rights/rights.module').then(m => m.RightsModule),
-      data: { animation: 6 }
+      data: { animation: 7 }
     },
     {
       path: 'statements',
       loadChildren: () => import('../statements/statements.module').then(m => m.StatementsModule),
-      data: { animation: 7 }
+      data: { animation: 8 }
     },
     {
       path: 'incomes',
       loadChildren: () => import('../incomes/incomes.module').then(m => m.IncomesModule),
-      data: { animation: 8 }
+      data: { animation: 9 }
     },
     {
       path: 'expenses',
       loadChildren: () => import('../expenses/expenses.module').then(m => m.ExpensesModule),
-      data: { animation: 9 }
+      data: { animation: 10 }
     },
     {
       path: 'sales',
       loadChildren: () => import('../sales/sales.module').then(m => m.SalesModule),
-      data: { animation: 10 }
+      data: { animation: 11 }
     },
     {
       path: 'dashboards/:versionId',
