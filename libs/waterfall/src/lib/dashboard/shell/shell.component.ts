@@ -21,7 +21,8 @@ import {
   convertDocumentTo,
   isContract,
   Version,
-  Movie
+  Movie,
+  sortContracts
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { filter, map, pluck, switchMap, tap } from 'rxjs/operators';
@@ -68,16 +69,16 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     switchMap(({ id: waterfallId }) => this.permissionService.valueChanges({ waterfallId }))
   );
 
-  public $permission = this.permissions$.pipe(
-    map(permissions => permissions.find(p => p.id === this.authService.profile.orgId))
+  private permission$ = this.movie$.pipe(
+    switchMap(({ id: waterfallId }) => this.permissionService.valueChanges(this.authService.profile.orgId, { waterfallId })),
   );
 
-  public isProducer$ = this.$permission.pipe(
-    map(permission => permission?.roles.some(r => r === 'producer'))
+  private isWaterfallAdmin$ = this.permission$.pipe(
+    map(permission => permission?.isAdmin)
   );
 
-  public canBypassRules$ = combineLatest([this.isProducer$, this.authService.isBlockframesAdmin$]).pipe(
-    map(([isProducer, isAdmin]) => isProducer || isAdmin)
+  private canBypassRules$ = combineLatest([this.isWaterfallAdmin$, this.authService.isBlockframesAdmin$]).pipe(
+    map(([isWaterfallAdmin, isBlockframesAdmin]) => isWaterfallAdmin || isBlockframesAdmin)
   );
 
   // ---------
@@ -89,7 +90,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
 
   public contracts$ = this.documents$.pipe(
     map(documents => documents.filter(d => isContract(d))),
-    map(documents => documents.map(d => convertDocumentTo<WaterfallContract>(d)))
+    map(documents => sortContracts(documents.map(d => convertDocumentTo<WaterfallContract>(d))))
   );
 
   public terms$ = this.movie$.pipe(

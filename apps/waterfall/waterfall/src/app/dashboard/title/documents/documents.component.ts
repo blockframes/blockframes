@@ -169,7 +169,6 @@ export class DocumentsComponent implements OnInit, OnDestroy {
   //       waterfallId: this.movieId,
   //       type: this.documentType.value as any,
   //       ownerId: this.organizationService.org.id,
-  //       sharedWith: [],
   //       meta: this.dummyValue.value,
   //       licensor: this.licensor.value,
   //       licensee: this.licensee.value,

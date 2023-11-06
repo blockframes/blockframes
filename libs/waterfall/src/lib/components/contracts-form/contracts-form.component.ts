@@ -1,5 +1,5 @@
 
-import { BehaviorSubject } from 'rxjs';
+import { Observable, map, startWith, tap } from 'rxjs';
 import { Component, ChangeDetectionStrategy, ViewChild, Input, OnInit, Pipe, PipeTransform, Output, EventEmitter } from '@angular/core';
 
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
@@ -16,9 +16,14 @@ import {
   createWaterfallDocument,
   rightholderRoles,
   createTerm,
-  createWaterfallRightholder
+  createWaterfallRightholder,
+  WaterfallFile,
+  isContract,
+  sortContracts,
+  convertDocumentTo
 } from '@blockframes/model';
 import { TermService } from '@blockframes/contract/term/service';
+import { OrganizationService } from '@blockframes/organization/service';
 
 @Component({
   selector: '[movieId] waterfall-contracts-form',
@@ -28,15 +33,17 @@ import { TermService } from '@blockframes/contract/term/service';
 })
 export class ContractsFormComponent implements OnInit {
 
-  contracts$ = new BehaviorSubject<Partial<Record<RightholderRole, WaterfallContract[]>>>({});
-
   @ViewChild(CardModalComponent) cardModal: CardModalComponent;
 
   selected?: RightholderRole;
 
   creating = false;
 
-  waterfall: Waterfall;
+  waterfall$: Observable<Waterfall>;
+  contracts$: Observable<Partial<Record<RightholderRole, WaterfallContract[]>>>;
+  private waterfall: Waterfall;
+  private contracts: Partial<Record<RightholderRole, WaterfallContract[]>>;
+  private removeFileOnSave = false;
 
   @Input() movieId: string;
   @Input() documentForm: WaterfallDocumentForm;
@@ -47,40 +54,53 @@ export class ContractsFormComponent implements OnInit {
     private waterfallService: WaterfallService,
     private uploaderService: FileUploaderService,
     private documentService: WaterfallDocumentsService,
+    private orgService: OrganizationService,
     private termsService: TermService,
-  ) {
-    const newContracts: Partial<Record<RightholderRole, WaterfallContract[]>> = {};
-    Object.keys(rightholderRoles).forEach(r => newContracts[r] = []);
-    this.contracts$.next(newContracts);
-  }
+  ) { }
 
-  async ngOnInit() {
-    this.waterfall = await this.waterfallService.getValue(this.movieId);
-    const rawContracts = await this.documentService.getContracts(this.waterfall.id);
-    const newContracts = this.contracts$.getValue();
-    rawContracts.forEach(contract => {
-      const rightholder = this.waterfall.rightholders.find(r => r.id === contract.buyerId);
-      if (!rightholder) return; // ! malformed data
-      rightholder.roles.forEach(role => {
-        newContracts[role] ||= [];
-        newContracts[role].push(contract);
-      });
-    });
-    this.contracts$.next(newContracts);
+  ngOnInit() {
+    this.contracts$ = this.documentService.valueChanges({ waterfallId: this.movieId }).pipe(
+      startWith([]),
+      map(documents => documents.filter(d => isContract(d))),
+      map(documents => sortContracts(documents.map(d => convertDocumentTo<WaterfallContract>(d)))),
+      map(rawContracts => {
+        const contracts: Partial<Record<RightholderRole, WaterfallContract[]>> = {};
+        Object.keys(rightholderRoles).forEach(r => contracts[r] = []);
+        rawContracts.forEach(contract => {
+          const rightholder = this.waterfall.rightholders.find(r => r.id === contract.buyerId);
+          if (!rightholder) return; // ! malformed data
+          rightholder.roles.forEach(role => {
+            contracts[role] ||= [];
+            const index = contracts[role].findIndex(c => c.id === contract.id);
+            if (index !== -1) {
+              contracts[role][index] = contract;
+            } else {
+              contracts[role].push(contract);
+            }
+          });
+        });
+        return contracts;
+      }),
+      tap(rawContracts => this.contracts = rawContracts)
+    )
+
+    this.waterfall$ = this.waterfallService.valueChanges(this.movieId).pipe(
+      tap(waterfall => this.waterfall = waterfall)
+    );
   }
 
   select(role: RightholderRole) {
     this.selected = role;
-    this.creating = this.contracts$.getValue()[role].length === 0; // if we select an empty role we automatically switch to create mode
+    this.creating = this.contracts[role].length === 0; // if we select an empty role we automatically switch to create mode
     if (this.creating) {
-      this.documentForm = new WaterfallDocumentForm({ id: this.documentService.createId() });
+      this.documentForm.reset(this.documentService.createId());
       this.documentForm.markAsPristine();
     }
   }
 
   create() {
     this.creating = true;
-    this.documentForm = new WaterfallDocumentForm({ id: this.documentService.createId() });
+    this.documentForm.reset(this.documentService.createId());
     this.documentForm.markAsPristine();
   }
 
@@ -89,7 +109,7 @@ export class ContractsFormComponent implements OnInit {
     const licensee = this.waterfall.rightholders.find(r => r.id === contract.buyerId);
     const licensor = this.waterfall.rightholders.find(r => r.id === contract.sellerId);
     const file = this.waterfall.documents.find(f => f.id === contract.id);
-    this.documentForm = new WaterfallDocumentForm({
+    this.documentForm.patchValue({
       id: contract.id,
       licenseeName: licensee?.name,
       licenseeRole: licensee?.roles,
@@ -104,6 +124,10 @@ export class ContractsFormComponent implements OnInit {
     });
     this.creating = true;
     this.documentForm.markAsPristine();
+  }
+
+  removeFile(bool: boolean) {
+    this.removeFileOnSave = bool;
   }
 
   async save() {
@@ -143,10 +167,11 @@ export class ContractsFormComponent implements OnInit {
     await this.waterfallService.update({ id: this.movieId, rightholders });
 
     const document = createWaterfallDocument<WaterfallContract>({
-      id: this.documentForm.controls.file.controls.id.value,
+      id: this.documentForm.controls.id.value,
       type: 'contract',
       waterfallId: this.movieId,
       signatureDate: this.documentForm.controls.signatureDate.value,
+      ownerId: this.orgService.org.id,
       meta: createWaterfallContract({
         type: this.selected,
         status: 'accepted',
@@ -173,7 +198,11 @@ export class ContractsFormComponent implements OnInit {
       this.termsService.upsert(terms)
     ]);
 
-    this.uploaderService.upload();
+    if (this.removeFileOnSave) {
+      this.documentService.removeFile({ waterfallId: this.waterfall.id, documentId: document.id });
+    } else {
+      this.uploaderService.upload();
+    }
     this.documentForm.markAsPristine();
   }
 }
@@ -185,5 +214,13 @@ export class RightHolderNamePipe implements PipeTransform {
     const rightholder = waterfall.rightholders.find(r => r.id === value);
     if (!rightholder) return 'Unknown'; // ! malformed data
     return rightholder.name;
+  }
+}
+
+@Pipe({ name: 'getFile' })
+export class GetFilePipe implements PipeTransform {
+  transform(contractId: string, waterfall: Waterfall): WaterfallFile {
+    const file = waterfall.documents.find(f => f.id === contractId);
+    return file;
   }
 }

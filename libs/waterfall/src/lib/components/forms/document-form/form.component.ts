@@ -4,13 +4,12 @@ import { FormControl } from '@angular/forms';
 import { add, Duration } from 'date-fns';
 import { BehaviorSubject, Subscription, combineLatest } from 'rxjs';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 
 // Blockframes
 import { Waterfall } from '@blockframes/model';
 import { BucketTermForm, createBucketTermControl } from '@blockframes/contract/bucket/form';
 import { WaterfallDocumentForm, WaterfallDocumentFormValue } from '@blockframes/waterfall/form/document.form';
-
 
 @Component({
   selector: '[waterfall][form] waterfall-document-form',
@@ -35,6 +34,8 @@ export class DocumentFormComponent implements OnInit, OnDestroy {
   licensor$ = new BehaviorSubject<string[]>([]); // seller
 
   subscription: Subscription[] = [];
+
+  @Output() removeFile = new EventEmitter<boolean>(false);
 
   ngOnInit() {
     if (this.form.controls.terms.length === 0) {
@@ -80,5 +81,14 @@ export class DocumentFormComponent implements OnInit, OnDestroy {
 
   addTerm() {
     this.form.controls.terms.push(BucketTermForm.factory({}, createBucketTermControl));
+  }
+
+  change($event: 'removed' | 'added') {
+    if ($event === 'removed') {
+      this.removeFile.emit(true);
+      this.form.get('file').get('id').setValue(this.form.value.id);
+    } else {
+      this.removeFile.emit(false);
+    }
   }
 }

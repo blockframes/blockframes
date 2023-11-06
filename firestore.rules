@@ -349,7 +349,7 @@ service cloud.firestore {
         && ( isNotUpdatingFieldDepth3(['app', 'waterfall', 'access']) || newAppAccess.waterfall.access == false )
         && ( isNotUpdatingFieldDepth3(['app', 'festival', 'access']) || newAppAccess.festival.access == false )
         && ( isNotUpdatingFieldDepth3(['app', 'financiers', 'access']) || newAppAccess.financiers.access == false )
-        && (orgCan('canUpdate', orgId, movie.id) || orgId in getWaterfall(movie.id).orgIds );
+        && ( orgCan('canUpdate', orgId, movie.id) || isWaterfallAdmin(movie.id) );
     }
 
     function checkStatus(data, status) {
@@ -417,21 +417,21 @@ service cloud.firestore {
       allow create: if (
           userOrgId() == getContract(incomingData().contractId).buyerId || 
           userOrgId() == getContract(incomingData().contractId).sellerId || 
-          hasWaterfallRole(incomingData().titleId, 'producer')
+          canUpdateWaterfallDocument(incomingData().titleId, incomingData().contractId)
         )
         && notInMaintenance();
       allow update: if (
           userOrgId() == getContract(existingData().contractId).sellerId ||
-          hasWaterfallRole(existingData().titleId, 'producer')
+          canUpdateWaterfallDocument(existingData().titleId, existingData().contractId)
         )
         && notInMaintenance();
-      allow delete: if false;
+      allow delete: if canUpdateWaterfallDocument(existingData().titleId, existingData().contractId) && notInMaintenance();
     }
 
     match /incomes/{incomeId} {
       allow read: if (
           userOrgId() in getContract(existingData().contractId).stakeholders || 
-          canReadWaterfallDocument(existingData().titleId, existingData().contractId)
+          isWaterfallMember(existingData().titleId)
         )
         && notInMaintenance();
       allow create: if (
@@ -439,17 +439,15 @@ service cloud.firestore {
           canUpdateWaterfallDocument(incomingData().titleId, incomingData().contractId)
         )
         && notInMaintenance();
-      allow update: if canUpdateWaterfallDocument(existingData().titleId, existingData().contractId);
-      allow delete: if canUpdateWaterfallDocument(existingData().titleId, existingData().contractId);
+      allow update: if canUpdateWaterfallDocument(existingData().titleId, existingData().contractId) && notInMaintenance();
+      allow delete: if canUpdateWaterfallDocument(existingData().titleId, existingData().contractId) && notInMaintenance();
     }
 
     match /expenses/{expenseId} {
-      allow read: if canReadWaterfallDocument(existingData().titleId, existingData().contractId)
-        && notInMaintenance();
-      allow create: if canUpdateWaterfallDocument(incomingData().titleId, incomingData().contractId)
-        && notInMaintenance();
-      allow update: if canUpdateWaterfallDocument(existingData().titleId, existingData().contractId);
-      allow delete: if canUpdateWaterfallDocument(existingData().titleId, existingData().contractId);
+      allow read: if isWaterfallMember(existingData().titleId) && notInMaintenance();
+      allow create: if canUpdateWaterfallDocument(incomingData().titleId, incomingData().contractId) && notInMaintenance();
+      allow update: if canUpdateWaterfallDocument(existingData().titleId, existingData().contractId) && notInMaintenance();
+      allow delete: if canUpdateWaterfallDocument(existingData().titleId, existingData().contractId) && notInMaintenance();
     }
 
     // Get the data of an existing contract
@@ -582,24 +580,24 @@ service cloud.firestore {
         && isNotUpdatingId('id', existingData().id)
         && notInMaintenance()
         && isOrgMember(userOrgId())
-        && hasWaterfallRole(waterfallId, 'producer');
+        && ( isWaterfallAdmin(waterfallId) || ( isWaterfallMember(waterfallId) && isOnlyUpdatingRightholders() ) );
       allow delete: if false;
 
       match /blocks/{blockId} {
         allow read: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && hasWaterfallRole(waterfallId, 'producer');
+          && isWaterfallAdmin(waterfallId);
         allow create: if userHasValidOrg()
           && isRequestFieldValueEqualToOrNotSetted(['id'], blockId)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && hasWaterfallRole(waterfallId, 'producer');
+          && isWaterfallAdmin(waterfallId);
         allow update: if userHasValidOrg()
           && isNotUpdatingId('id', existingData().id)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && hasWaterfallRole(waterfallId, 'producer');
+          && isWaterfallAdmin(waterfallId);
         allow delete: if false;
       }
 
@@ -607,17 +605,17 @@ service cloud.firestore {
         allow read: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && hasWaterfallRole(waterfallId, 'producer');
+          && isWaterfallAdmin(waterfallId);
         allow create: if userHasValidOrg()
           && isRequestFieldValueEqualToOrNotSetted(['id'], rightId)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && hasWaterfallRole(waterfallId, 'producer');
+          && isWaterfallAdmin(waterfallId);
         allow update: if userHasValidOrg()
           && isNotUpdatingId('id', existingData().id)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && hasWaterfallRole(waterfallId, 'producer');
+          && isWaterfallAdmin(waterfallId);
         allow delete: if false;
       }
 
@@ -625,27 +623,18 @@ service cloud.firestore {
         allow read: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( 
-            hasWaterfallRole(waterfallId, 'producer') || 
-            existingData().rightholderId == userOrgId()
-          );
+          && ( isWaterfallAdmin(waterfallId) || existingData().rightholderId == userOrgId() );
         allow create: if userHasValidOrg()
           && isRequestFieldValueEqualToOrNotSetted(['id'], statementId)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( 
-            hasWaterfallRole(waterfallId, 'producer') || 
-            incomingData().rightholderId == userOrgId()
-          );
+          && ( isWaterfallAdmin(waterfallId) || incomingData().rightholderId == userOrgId() );
         allow update: if userHasValidOrg()
           && isNotUpdatingId('id', existingData().id)
           && isNotUpdatingId('rightholderId', existingData().rightholderId)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( 
-            hasWaterfallRole(waterfallId, 'producer') || 
-            existingData().rightholderId == userOrgId()
-          );
+          && ( isWaterfallAdmin(waterfallId) || existingData().rightholderId == userOrgId() );
         allow delete: if false;
       }
 
@@ -653,20 +642,17 @@ service cloud.firestore {
         allow read: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( userOrgId() == orgId || hasWaterfallRole(waterfallId, 'producer'));
+          && ( userOrgId() == orgId || isWaterfallAdmin(waterfallId));
         allow create: if userHasValidOrg()
           && isRequestFieldValueEqualToOrNotSetted(['id'], orgId)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( 
-            ( userOrgId() in getMovie(waterfallId).orgIds && userOrgId() == orgId ) ||
-            hasWaterfallRole(waterfallId, 'producer')
-          );
+          && ( isCreatingWaterfall(waterfallId) || isWaterfallAdmin(waterfallId) );
         allow update: if userHasValidOrg()
           && isNotUpdatingId('id', existingData().id)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && hasWaterfallRole(waterfallId, 'producer');
+          && isWaterfallAdmin(waterfallId);
         allow delete: if false;
       }
 
@@ -674,15 +660,11 @@ service cloud.firestore {
         allow read: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && (
-            userOrgId() in existingData().sharedWith ||
-            userOrgId() == existingData().ownerId || 
-            hasWaterfallRole(waterfallId, 'producer')
-          )
+          && isWaterfallMember(waterfallId);
         allow create: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && userOrgId() in getWaterfall(waterfallId).orgIds;
+          && isWaterfallMember(waterfallId);
         allow update: if userHasValidOrg()
           && isNotUpdatingId('id', existingData().id)
           && notInMaintenance()
@@ -695,8 +677,26 @@ service cloud.firestore {
       }
     }
 
-    function hasWaterfallRole(waterfallId, role){
-      return role in getWaterfallPermissions(waterfallId).roles;
+    function isCreatingWaterfall(waterfallId) {
+			return userOrgId() in getAfter(/databases/$(database)/documents/waterfall/$(waterfallId)).data.orgIds && 
+        exists(/databases/$(database)/documents/waterfall/$(waterfallId)) == false;
+    }
+
+    function isWaterfallAdmin(waterfallId) {
+      return getWaterfallPermissions(waterfallId).isAdmin == true;
+    }
+
+    function isWaterfallMember(waterfallId) {
+      return userOrgId() in getWaterfall(waterfallId).orgIds;
+    }
+
+    function isOnlyUpdatingRightholders() {
+      return isNotUpdatingField(['_meta', 'createdBy'])
+        && isNotUpdatingField(['_meta', 'createdAt'])
+        && isNotUpdatingField(['orgIds'])
+        && isNotUpdatingField(['documents'])
+        && isNotUpdatingField(['sources'])
+        && isNotUpdatingField(['versions'])
     }
 
     function getWaterfallPermissions(waterfallId) {
@@ -708,13 +708,7 @@ service cloud.firestore {
     }
 
     function canUpdateWaterfallDocument(waterfallId, documentId) {
-      return getWaterfallDocument(waterfallId, documentId).ownerId == userOrgId() || 
-        hasWaterfallRole(waterfallId, 'producer');
-    }
-
-    function canReadWaterfallDocument(waterfallId, documentId) {
-      return canUpdateWaterfallDocument(waterfallId, documentId) || 
-        userOrgId() in getWaterfallDocument(waterfallId, documentId).sharedWith;
+      return getWaterfallDocument(waterfallId, documentId).ownerId == userOrgId() || isWaterfallAdmin(waterfallId);
     }
 
     function getWaterfallDocument(waterfallId, documentId) {
@@ -892,7 +886,7 @@ service cloud.firestore {
         || ( incoming.keys().hasAll([fieldArray[0]]) && (resource == null || !existing.keys().hasAll([fieldArray[0]])) );
     }
 
-    //updating only the specified fields?
+    // Is updating only the specified fields ?
     function onlyChange(fields) {
       return incomingData().diff(existingData()).affectedKeys().hasOnly(fields);
     }

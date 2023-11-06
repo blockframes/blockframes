@@ -2,13 +2,18 @@
 section {
   margin: 32px 0;
 
-  mat-form-field,
-  static-select {
+  mat-form-field {
     width: 50%;
   }
 
   .title {
     padding-right: 84px;
+  }
+}
+
+h2 {
+  mat-icon {
+    width: 20px;
   }
 }
 
@@ -41,5 +46,15 @@ div {
     border-top-width: 2px;
     margin-left: 16px;
     width: 100%;
+  }
+}
+
+article {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  img {
+    max-width: 453px;
+    max-height: 597px;
   }
 }

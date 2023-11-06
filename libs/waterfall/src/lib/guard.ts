@@ -15,7 +15,6 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 export interface WaterfallFormGuardedComponent {
   movieForm: MovieForm;
   documentForm: WaterfallDocumentForm;
-  waterfallRoleControl: FormControl<RightholderRole[]>;
   rightholdersForm: FormArray<FormGroup<{ id: FormControl<string>, name: FormControl<string>, roles: FormControl<RightholderRole[]> }>>
 };
 
@@ -29,7 +28,6 @@ export class WaterfallFormGuard<T extends WaterfallFormGuardedComponent> impleme
   canDeactivate(component: T) {
     if (
       component.movieForm.pristine &&
-      component.waterfallRoleControl.pristine &&
       component.rightholdersForm.pristine &&
       component.documentForm.pristine
     ) return true;

@@ -2,23 +2,26 @@ import { CallableContext } from 'firebase-functions/lib/common/providers/https';
 import * as admin from 'firebase-admin';
 import {
   Block,
+  PublicUser,
   Right,
   Statement,
   Waterfall,
   WaterfallContract,
   WaterfallDocument,
+  WaterfallPermissions,
   convertDocumentTo,
   isContract,
   isDirectSalesStatement,
   isDistributorStatement
 } from '@blockframes/model';
 import { waterfall } from '@blockframes/waterfall/main';
-import { getDocumentSnap, toDate } from '@blockframes/firebase-utils/firebase-utils';
+import { getDocument, getDocumentSnap, toDate } from '@blockframes/firebase-utils/firebase-utils';
 import { BlockframesChange, BlockframesSnapshot, removeAllSubcollections } from '@blockframes/firebase-utils';
 import { difference } from 'lodash';
 import { cleanRelatedContractDocuments } from './contracts';
 import { db } from './internals/firebase';
 import { EventContext } from 'firebase-functions';
+import { cleanWaterfallMedias } from './media';
 
 export async function buildWaterfall(data: { waterfallId: string, versionId: string }) {
   if (!data.waterfallId) throw new Error('Missing waterfallId in request');
@@ -53,14 +56,13 @@ export async function onWaterfallUpdate(change: BlockframesChange<Waterfall>) {
     throw new Error('waterfall update function got invalid org data');
   }
 
-  // TODO #9389
-  // cleanWaterfallMedias(before, after);
+  cleanWaterfallMedias(before, after);
 
   // If org is removed from waterfall document, we also remove permissions
   if (before.orgIds.length > after.orgIds.length) {
     const orgRemovedId = difference(before.orgIds, after.orgIds)[0];
     const permission = await getDocumentSnap(`waterfall/${after.id}/permissions/${orgRemovedId}`);
-    return permission.ref.delete()
+    return permission.ref.delete();
   }
 
   // Deletes removed blocks from versions
@@ -73,12 +75,12 @@ export async function onWaterfallUpdate(change: BlockframesChange<Waterfall>) {
 export async function onWaterfallDelete(snap: BlockframesSnapshot<Waterfall>, context: EventContext) {
   const { waterfallID } = context.params;
   const batch = db.batch();
+  const waterfall = snap.data();
 
   // Delete sub-collections
   await removeAllSubcollections(snap, batch);
 
-  // TODO #9389
-  // cleanWaterfallMedias(before, after);
+  cleanWaterfallMedias(waterfall);
 
   // Remove remaining standalone incomes and expenses (not linked to contracts)
   const [incomes, expenses] = await Promise.all([
@@ -146,8 +148,23 @@ export async function onWaterfallRightDelete(docSnapshot: BlockframesSnapshot<Ri
   return true;
 }
 
-export const removeWaterfallFile = async (data: any, context: CallableContext) => {
-  //  TODO #9389 check caller's org with context.uid  and check ownerId === org.id;
-  // remove waterfall.document.find(d => d.id === documentId);
-  return;
+export const removeWaterfallFile = async (data: { waterfallId: string, documentId: string }, context: CallableContext) => {
+  if (!context?.auth) throw new Error('Permission denied: missing auth context.');
+  const user = await getDocument<PublicUser>(`users/${context.auth.uid}`);
+  if (!user.orgId) throw new Error('Permission denied: missing org id.');
+  const waterfallSnap = await getDocumentSnap(`waterfall/${data.waterfallId}`);
+  if (!waterfallSnap.exists) throw new Error('Permission denied: waterfall not found.');
+  const waterfall = waterfallSnap.data() as Waterfall;
+  if (!waterfall.orgIds.includes(user.orgId)) throw new Error('Permission denied: user is not part of the waterfall.');
+  const permission = await getDocument<WaterfallPermissions>(`waterfall/${data.waterfallId}/permissions/${user.orgId}`);
+  const document = await getDocument<WaterfallDocument>(`waterfall/${data.waterfallId}/documents/${data.documentId}`);
+
+  const canRemoveFile = permission.isAdmin || document.ownerId === user.orgId;
+  if (!canRemoveFile) throw new Error('Permission denied: user is not waterfall admin or document owner.');
+
+  const file = waterfall.documents.find(d => d.id === data.documentId);
+  if (!file) throw new Error('File not found');
+  const documents = waterfall.documents.filter(d => d.id !== data.documentId);
+  // This will trigger onWaterfallUpdate => cleanWaterfallMedias
+  return waterfallSnap.ref.update({ documents });
 };

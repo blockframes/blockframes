@@ -13,11 +13,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 
 // Blockframes
 import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
-import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
 
 // Pages
 import { TitleFormComponent } from './form.component';
-
 
 @NgModule({
   declarations: [TitleFormComponent],
@@ -26,7 +26,8 @@ import { TitleFormComponent } from './form.component';
     CommonModule,
     ReactiveFormsModule,
     ImageUploaderModule,
-    StaticSelectModule,
+    ImageModule,
+    StorageFileModule,
 
     // Material
     MatIconModule,

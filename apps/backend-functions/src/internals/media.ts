@@ -14,8 +14,7 @@ import {
   Privacy,
   Movie,
   User,
-  WaterfallDocument,
-  WaterfallPermissions
+  Waterfall
 } from '@blockframes/model';
 import { getDocument, getDocumentSnap } from '@blockframes/firebase-utils';
 
@@ -80,14 +79,11 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
       }
     case 'waterfall':
       {
-        const waterfallDocument = await getDocument<WaterfallDocument>(`waterfall/${file.docId}/documents/${file.id}`);
-        // If user is owner of doc or if shared with user's org
-        canAccess = waterfallDocument.ownerId === userDoc.orgId || waterfallDocument.sharedWith.includes(userDoc.orgId);
-        if(!canAccess) {
-          // If user is producer
-          const permissions = await getDocument<WaterfallPermissions>(`waterfall/${file.docId}/permissions/${userDoc.orgId}`);
-          canAccess = permissions.roles.includes('producer');
-        }
+        // Only waterfall members can access file
+        const waterfallSnap = await getDocumentSnap(`waterfall/${file.docId}`);
+        if (!waterfallSnap.exists) { return false; }
+        const waterfall = await getDocument<Waterfall>(`waterfall/${file.docId}`);
+        canAccess = waterfall.orgIds.some(id => userDoc.orgId === id);
         break;
       }
     default:
