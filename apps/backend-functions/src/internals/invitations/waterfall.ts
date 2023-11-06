@@ -119,7 +119,8 @@ async function addOrgToWaterfall(userId: string, waterfallId: string, roles: Rig
       // Update Permissions
       tx.set(permission.ref, {
         ...permissionData,
-        roles: Array.from(new Set([...permissionData.roles, ...roles]))
+        // TODO #9538 should be isAdmin & rightholderIds
+        // roles: Array.from(new Set([...permissionData.roles, ...roles])) 
       })
     ]);
   });

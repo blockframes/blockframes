@@ -15,7 +15,7 @@ import {
   isDistributorStatement
 } from '@blockframes/model';
 import { waterfall } from '@blockframes/waterfall/main';
-import { getDocument, getDocumentSnap, toDate } from '@blockframes/firebase-utils/firebase-utils';
+import { getDocument, getCollection, getDocumentSnap, toDate } from '@blockframes/firebase-utils/firebase-utils';
 import { BlockframesChange, BlockframesSnapshot, removeAllSubcollections } from '@blockframes/firebase-utils';
 import { difference } from 'lodash';
 import { cleanRelatedContractDocuments } from './contracts';
@@ -58,29 +58,49 @@ export async function onWaterfallUpdate(change: BlockframesChange<Waterfall>) {
 
   cleanWaterfallMedias(before, after);
 
+  const promises = [];
+
   // If org is removed from waterfall document, we also remove permissions
   if (before.orgIds.length > after.orgIds.length) {
-    const orgRemovedId = difference(before.orgIds, after.orgIds)[0];
-    const permission = await getDocumentSnap(`waterfall/${after.id}/permissions/${orgRemovedId}`);
-    return permission.ref.delete();
+    const orgRemovedIds = difference(before.orgIds, after.orgIds);
+    for (const orgRemovedId of orgRemovedIds) {
+      promises.push(getDocumentSnap(`waterfall/${after.id}/permissions/${orgRemovedId}`).then(p => p.ref.delete()));
+    }
   }
+
+  // If rightholder is removed from waterfall document, we also update permissions
+  if (before.rightholders.length > after.rightholders.length) {
+    const rightholderRemovedIds = difference(before.rightholders.map(r => r.id), after.rightholders.map(r => r.id));
+    const _permissions = await getCollection<WaterfallPermissions>(`waterfall/${after.id}/permissions`);
+    const permissions = after.orgIds.map(o => _permissions.find(p => p.id === o));
+    for (const permission of permissions) {
+      if (permission.rightholderIds.some(id => rightholderRemovedIds.includes(id))) {
+        permission.rightholderIds = permission.rightholderIds.filter(id => !rightholderRemovedIds.includes(id));
+        promises.push(getDocumentSnap(`waterfall/${after.id}/permissions/${permission.id}`).then(p => p.ref.update(permission)));
+      }
+    }
+  }
+
 
   // Deletes removed blocks from versions
   const blocksBefore = before.versions ? Array.from(new Set(before.versions.map(v => v.blockIds).flat())) : [];
   const blocksAfter = after.versions ? Array.from(new Set(after.versions.map(v => v.blockIds).flat())) : [];
   const removedBlocks = blocksBefore.filter(b => !blocksAfter.includes(b));
-  return Promise.all(removedBlocks.map(blockId => getDocumentSnap(`waterfall/${after.id}/blocks/${blockId}`).then(b => b.ref.delete())));
+  for (const blockId of removedBlocks) {
+    promises.push(getDocumentSnap(`waterfall/${after.id}/blocks/${blockId}`).then(b => b.ref.delete()));
+  }
+  return Promise.all(promises);
 }
 
 export async function onWaterfallDelete(snap: BlockframesSnapshot<Waterfall>, context: EventContext) {
   const { waterfallID } = context.params;
   const batch = db.batch();
-  const waterfall = snap.data();
 
   // Delete sub-collections
   await removeAllSubcollections(snap, batch);
 
-  cleanWaterfallMedias(waterfall);
+  // TODO #9389
+  // cleanWaterfallMedias(before, after);
 
   // Remove remaining standalone incomes and expenses (not linked to contracts)
   const [incomes, expenses] = await Promise.all([

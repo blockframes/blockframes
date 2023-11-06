@@ -20,7 +20,7 @@ export class TitleFormComponent implements OnInit {
   @Input() movieId = '';
   @Input() createMode: boolean;
 
-  public canEditMovie$
+  public canEditMovie$;
 
   constructor(
     private authService: AuthService,

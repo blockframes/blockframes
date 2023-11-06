@@ -51,7 +51,7 @@ export class PermissionsComponent {
 
   public save() {
     if (this.form.invalid) return;
-    this.waterfall.orgIds.push(this.form.value.id);
+    if (!this.waterfall.orgIds.includes(this.form.value.id)) this.waterfall.orgIds.push(this.form.value.id);
     return Promise.all([
       this.waterfallService.update(this.waterfall),
       this.waterfallPermissionsService.upsert(this.form.value, { params: { waterfallId: this.waterfall.id } }),

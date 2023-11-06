@@ -69,7 +69,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     switchMap(({ id: waterfallId }) => this.permissionService.valueChanges({ waterfallId }))
   );
 
-  private permission$ = this.movie$.pipe(
+  public permission$ = this.movie$.pipe(
     switchMap(({ id: waterfallId }) => this.permissionService.valueChanges(this.authService.profile.orgId, { waterfallId })),
   );
 
@@ -111,12 +111,22 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     switchMap(({ id: waterfallId }) => this.statementService.valueChanges({ waterfallId }))
   );
 
-  public incomes$ = this.movie$.pipe(
-    switchMap(({ id: waterfallId }) => this.incomeService.valueChanges([where('titleId', '==', waterfallId)]))
+  private myIncomes$ = this.contracts$.pipe(
+    switchMap(contracts => Promise.all(contracts.map(c => this.incomeService.getValue([where('contractId', '==', c.id)])))),
+    map(incomes => incomes.flat())
   );
 
-  public expenses$ = this.movie$.pipe(
-    switchMap(({ id: waterfallId }) => this.expenseService.valueChanges([where('titleId', '==', waterfallId)]))
+  public incomes$ = combineLatest([this.movie$, this.canBypassRules$]).pipe(
+    switchMap(([{ id: waterfallId }, canBypassRules]) => canBypassRules ? this.incomeService.valueChanges([where('titleId', '==', waterfallId)]) : this.myIncomes$)
+  );
+
+  private myExpenses$ = this.contracts$.pipe(
+    switchMap(contracts => Promise.all(contracts.map(c => this.expenseService.getValue([where('contractId', '==', c.id)])))),
+    map(expenses => expenses.flat())
+  );
+
+  public expenses$ = combineLatest([this.movie$, this.canBypassRules$]).pipe(
+    switchMap(([{ id: waterfallId }, canBypassRules]) => canBypassRules ? this.expenseService.valueChanges([where('titleId', '==', waterfallId)]) : this.myExpenses$)
   );
 
   // ---------
