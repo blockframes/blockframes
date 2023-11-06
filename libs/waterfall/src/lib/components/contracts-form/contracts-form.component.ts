@@ -81,14 +81,12 @@ export class ContractsFormComponent implements OnInit {
     this.creating = this.contracts[role].length === 0; // if we select an empty role we automatically switch to create mode
     if (this.creating) {
       this.documentForm.reset(this.documentService.createId());
-      this.documentForm.markAsPristine();
     }
   }
 
   create() {
     this.creating = true;
     this.documentForm.reset(this.documentService.createId());
-    this.documentForm.markAsPristine();
   }
 
   async edit(contract: WaterfallContract) {
