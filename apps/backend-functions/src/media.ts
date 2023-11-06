@@ -214,8 +214,6 @@ export async function linkFile(data: storage.ObjectMetadata) {
         'documents.videos',
         'promotional.still_photo',
         'promotional.notes',
-
-        // TODO #9389
         'documents',
       ];
       const isList = fileLists.includes(metadata.field);
