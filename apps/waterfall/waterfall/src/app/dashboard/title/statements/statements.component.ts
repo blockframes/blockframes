@@ -26,10 +26,10 @@ export class StatementsComponent {
   switchTop() {
     if (this.topPath === '/assets/images/demo-cannes/Nav_Distrib.svg') {
       this.topPath = '/assets/images/demo-cannes/Nav_Coprod.svg';
-      this.path = '/assets/images/demo-cannes/Statements_Coprod.png'
+      this.path = '/assets/images/demo-cannes/Statements_Coprod.svg';
     } else {
       this.topPath = '/assets/images/demo-cannes/Nav_Distrib.svg';
-      this.path = '/assets/images/demo-cannes/Statements_Distrib.svg'
+      this.path = '/assets/images/demo-cannes/Statements_Distrib.svg';
     }
   }
 
