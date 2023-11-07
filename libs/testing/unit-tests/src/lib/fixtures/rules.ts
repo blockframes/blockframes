@@ -356,6 +356,16 @@ export const rulesFixtures = {
     id: 'T004',
     contractId: 'W002'
   },
+  'terms/TW02': {
+    id: 'TW02',
+    titleId: 'MI-0d7',
+    contractId: 'D003'
+  },
+  'terms/TW12': {
+    id: 'TW12',
+    titleId: 'WF-001',
+    contractId: 'D003'
+  },
 
   // Incomes
   'incomes/I00X': {
