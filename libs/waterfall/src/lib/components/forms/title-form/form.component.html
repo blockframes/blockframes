@@ -1,7 +1,9 @@
 
 <section class="surface">
-  <h2>Main Information</h2>
-
+  <h2>
+    <span>Main Information</span>
+    <mat-icon class="icon-tooltip" *ngIf="(canEditMovie$ | async) === false" svgIcon="info" matTooltip="Only admins can edit the movie informations"></mat-icon>
+  </h2>
   <mat-form-field appearance="outline" class="title">
     <mat-label>Title</mat-label>
     <input matInput type="text" placeholder="Title" [formControl]="movieForm.title.controls.international" required />
@@ -21,19 +23,21 @@
       <mat-error>This field is mandatory</mat-error>
     </mat-form-field>
 
-    <ng-container *ngIf="last else notLast">
-      <button mat-mini-fab color="primary" (click)="addDirector()" matTooltip="Add a new director">
-        <mat-icon svgIcon="add"></mat-icon>
-      </button>
+    <ng-container *ngIf="canEditMovie$ | async">
+      <ng-container *ngIf="last else notLast">
+        <button mat-mini-fab color="primary" (click)="addDirector()" matTooltip="Add a new director">
+          <mat-icon svgIcon="add"></mat-icon>
+        </button>
+      </ng-container>
+      <ng-template #notLast>
+        <button mat-icon-button color="danger" (click)="removeDirector(index)" matTooltip="Delete director">
+          <mat-icon svgIcon="delete"></mat-icon>
+        </button>
+      </ng-template>
     </ng-container>
-    <ng-template #notLast>
-      <button mat-icon-button color="danger" (click)="removeDirector(index)" matTooltip="Delete director">
-        <mat-icon svgIcon="delete"></mat-icon>
-      </button>
-    </ng-template>
   </div>
 
-  <image-uploader
+  <image-uploader *ngIf="canEditMovie$ | async else noUpload"
     [meta]="['movies', 'poster', movieId]"
     ratio="poster"
     [form]="movieForm.poster"
@@ -41,12 +45,10 @@
   >
     <h3 title>Movie Poster</h3>
   </image-uploader>
-</section>
 
-<section class="surface">
-  <h2>Your Role in Waterfall</h2>
-  <static-select [control]="waterfallRoleControl" scope="rightholderRoles" mode="outline" multiple required>
-    <mat-label>Waterfall Role</mat-label>
-    <mat-error>This field is mandatory</mat-error>
-  </static-select>
+  <ng-template #noUpload>
+    <article>
+      <img [ref]="movieForm.poster.value | storageFile: 'movies':'poster':movieId" asset="empty_poster.svg" ratio="poster" alt="Movie Illustration">
+    </article>
+  </ng-template>
 </section>

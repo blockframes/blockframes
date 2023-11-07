@@ -30,6 +30,10 @@ export class TitleViewComponent {
       label: 'Right Holders',
     },
     {
+      path: 'permissions',
+      label: 'Permissions',
+    },
+    {
       path: 'documents',
       label: 'Documents'
     },

@@ -10,7 +10,7 @@
 
   <p>Please provide us with all the contracts, so that we can create a waterfall.</p>
 
-  <article>
+  <article *ngIf="waterfall$ | async as waterfall">
     <ul>
       <li *ngFor="let item of contracts$ | async | keyvalue" (click)="select(item.key)" [ngClass]="{'selected': item.key === selected}">
         <p class="role">{{item.key | toLabel: 'rightholderRoles'}}</p>
@@ -55,9 +55,13 @@
             <button mat-icon-button matTooltip="Edit contract" (click)="edit(contract)">
               <mat-icon svgIcon="edit"></mat-icon>
             </button>
-            <button mat-icon-button matTooltip="Download documents">
+            <a mat-icon-button *ngIf="contract.id | getFile: waterfall as file" 
+              [href]="file | getUrl | async"
+              target="_blank"
+              matTooltip="Download documents"
+            >
               <mat-icon svgIcon="cloud_download"></mat-icon>
-            </button>
+            </a>
             <button mat-icon-button class="circle" matTooltip="Create amendment">
               <mat-icon svgIcon="add"></mat-icon>
             </button>
@@ -70,7 +74,7 @@
           </div>
         </ng-container>
         <ng-template #creatingContracts>
-          <waterfall-document-form [waterfall]="waterfall" [form]="documentForm"></waterfall-document-form>
+          <waterfall-document-form [waterfall]="waterfall" [form]="documentForm" (removeFile)="removeFile($event)"></waterfall-document-form>
         </ng-template>
       </ng-container>
       <ng-template #notSelected>

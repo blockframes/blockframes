@@ -2,23 +2,26 @@ import { CallableContext } from 'firebase-functions/lib/common/providers/https';
 import * as admin from 'firebase-admin';
 import {
   Block,
+  PublicUser,
   Right,
   Statement,
   Waterfall,
   WaterfallContract,
   WaterfallDocument,
+  WaterfallPermissions,
   convertDocumentTo,
   isContract,
   isDirectSalesStatement,
   isDistributorStatement
 } from '@blockframes/model';
 import { waterfall } from '@blockframes/waterfall/main';
-import { getDocumentSnap, toDate } from '@blockframes/firebase-utils/firebase-utils';
+import { getDocument, getCollection, getDocumentSnap, toDate } from '@blockframes/firebase-utils/firebase-utils';
 import { BlockframesChange, BlockframesSnapshot, removeAllSubcollections } from '@blockframes/firebase-utils';
 import { difference } from 'lodash';
 import { cleanRelatedContractDocuments } from './contracts';
 import { db } from './internals/firebase';
 import { EventContext } from 'firebase-functions';
+import { cleanWaterfallMedias } from './media';
 
 export async function buildWaterfall(data: { waterfallId: string, versionId: string }) {
   if (!data.waterfallId) throw new Error('Missing waterfallId in request');
@@ -53,21 +56,40 @@ export async function onWaterfallUpdate(change: BlockframesChange<Waterfall>) {
     throw new Error('waterfall update function got invalid org data');
   }
 
-  // TODO #9389
-  // cleanWaterfallMedias(before, after);
+  cleanWaterfallMedias(before, after);
+
+  const promises = [];
 
   // If org is removed from waterfall document, we also remove permissions
   if (before.orgIds.length > after.orgIds.length) {
-    const orgRemovedId = difference(before.orgIds, after.orgIds)[0];
-    const permission = await getDocumentSnap(`waterfall/${after.id}/permissions/${orgRemovedId}`);
-    return permission.ref.delete()
+    const orgRemovedIds = difference(before.orgIds, after.orgIds);
+    for (const orgRemovedId of orgRemovedIds) {
+      promises.push(getDocumentSnap(`waterfall/${after.id}/permissions/${orgRemovedId}`).then(p => p.ref.delete()));
+    }
   }
+
+  // If rightholder is removed from waterfall document, we also update permissions
+  if (before.rightholders.length > after.rightholders.length) {
+    const rightholderRemovedIds = difference(before.rightholders.map(r => r.id), after.rightholders.map(r => r.id));
+    const _permissions = await getCollection<WaterfallPermissions>(`waterfall/${after.id}/permissions`);
+    const permissions = after.orgIds.map(o => _permissions.find(p => p.id === o));
+    for (const permission of permissions) {
+      if (permission.rightholderIds.some(id => rightholderRemovedIds.includes(id))) {
+        permission.rightholderIds = permission.rightholderIds.filter(id => !rightholderRemovedIds.includes(id));
+        promises.push(getDocumentSnap(`waterfall/${after.id}/permissions/${permission.id}`).then(p => p.ref.update(permission)));
+      }
+    }
+  }
+
 
   // Deletes removed blocks from versions
   const blocksBefore = before.versions ? Array.from(new Set(before.versions.map(v => v.blockIds).flat())) : [];
   const blocksAfter = after.versions ? Array.from(new Set(after.versions.map(v => v.blockIds).flat())) : [];
   const removedBlocks = blocksBefore.filter(b => !blocksAfter.includes(b));
-  return Promise.all(removedBlocks.map(blockId => getDocumentSnap(`waterfall/${after.id}/blocks/${blockId}`).then(b => b.ref.delete())));
+  for (const blockId of removedBlocks) {
+    promises.push(getDocumentSnap(`waterfall/${after.id}/blocks/${blockId}`).then(b => b.ref.delete()));
+  }
+  return Promise.all(promises);
 }
 
 export async function onWaterfallDelete(snap: BlockframesSnapshot<Waterfall>, context: EventContext) {
@@ -77,8 +99,8 @@ export async function onWaterfallDelete(snap: BlockframesSnapshot<Waterfall>, co
   // Delete sub-collections
   await removeAllSubcollections(snap, batch);
 
-  // TODO #9389
-  // cleanWaterfallMedias(before, after);
+  const waterfall = snap.data();
+  cleanWaterfallMedias(waterfall);
 
   // Remove remaining standalone incomes and expenses (not linked to contracts)
   const [incomes, expenses] = await Promise.all([
@@ -146,8 +168,23 @@ export async function onWaterfallRightDelete(docSnapshot: BlockframesSnapshot<Ri
   return true;
 }
 
-export const removeWaterfallFile = async (data: any, context: CallableContext) => {
-  //  TODO #9389 check caller's org with context.uid  and check ownerId === org.id;
-  // remove waterfall.document.find(d => d.id === documentId);
-  return;
+export const removeWaterfallFile = async (data: { waterfallId: string, documentId: string }, context: CallableContext) => {
+  if (!context?.auth) throw new Error('Permission denied: missing auth context.');
+  const user = await getDocument<PublicUser>(`users/${context.auth.uid}`);
+  if (!user.orgId) throw new Error('Permission denied: missing org id.');
+  const waterfallSnap = await getDocumentSnap(`waterfall/${data.waterfallId}`);
+  if (!waterfallSnap.exists) throw new Error('Permission denied: waterfall not found.');
+  const waterfall = waterfallSnap.data() as Waterfall;
+  if (!waterfall.orgIds.includes(user.orgId)) throw new Error('Permission denied: user is not part of the waterfall.');
+  const permission = await getDocument<WaterfallPermissions>(`waterfall/${data.waterfallId}/permissions/${user.orgId}`);
+  const document = await getDocument<WaterfallDocument>(`waterfall/${data.waterfallId}/documents/${data.documentId}`);
+
+  const canRemoveFile = permission.isAdmin || document.ownerId === user.orgId;
+  if (!canRemoveFile) throw new Error('Permission denied: user is not waterfall admin or document owner.');
+
+  const file = waterfall.documents.find(d => d.id === data.documentId);
+  if (!file) throw new Error('File not found');
+  const documents = waterfall.documents.filter(d => d.id !== data.documentId);
+  // This will trigger onWaterfallUpdate => cleanWaterfallMedias
+  return waterfallSnap.ref.update({ documents });
 };

@@ -8,17 +8,17 @@ import { allOf } from '../avail';
 export interface WaterfallPermissions {
   _meta?: DocumentMeta;
   id: string; // orgId
-  // #9254 If not movie owner, define the orgIds visible in the waterfall by the current org
-  scope: string[];
-  // Roles will define what can org do on waterfall/blocks/actions/...
-  roles: RightholderRole[]
+  // Define the rightholderIds (fake orgs) that this current org can impersonate
+  rightholderIds: string[];
+  // Is the current org admin of the waterfall
+  isAdmin: boolean;
 }
 
 export function createWaterfallPermissions(params: Partial<WaterfallPermissions> = {}): WaterfallPermissions {
   return {
     id: '',
-    scope: [],
-    roles: [],
+    rightholderIds: [],
+    isAdmin: false,
     ...params,
   }
 }
@@ -43,7 +43,7 @@ export function createVersion(params: Partial<Version> = {}) {
 }
 
 export interface WaterfallFile extends StorageFile {
-  id: string; // TODO #9389 will be the id of the subCollection WaterfallDocument that stores data linked to this file
+  id: string; // Same as the WaterfallDocument id
   privacy: 'protected';
 }
 
@@ -82,14 +82,13 @@ export interface WaterfallRightholder {
   id: string;
   name: string;
   roles: RightholderRole[];
-  orgId: string; // The "real" orgId of the rightholder
 };
 
 export interface Waterfall {
   _meta?: DocumentMeta;
   id: string;
   versions: Version[]
-  orgIds: string[]; // Orgs linked to waterfall, can read document if in it
+  orgIds: string[]; // Orgs linked to waterfall, can read documents if in it
   documents: WaterfallFile[];
   sources: WaterfallSource[];
   rightholders: WaterfallRightholder[];
@@ -112,7 +111,6 @@ export function createWaterfallRightholder(params: Partial<WaterfallRightholder>
     id: '',
     name: '',
     roles: [],
-    orgId: '',
     ...params,
   }
 }
@@ -139,7 +137,6 @@ export function createWaterfallDocument<Meta extends WaterfallDocumentMeta>(para
     folder: '',
     waterfallId: '',
     ownerId: '',
-    sharedWith: [],
     rootId: (params.meta as any).rootId ?? '',
     signatureDate: (params.meta as any).signatureDate ?? new Date(),
     ...params,
@@ -196,20 +193,19 @@ export type WaterfallDocumentMeta = WaterfallBudget | WaterfallContract | Waterf
 
 export interface WaterfallDocument<Meta extends WaterfallDocumentMeta = unknown> {
   _meta?: DocumentMeta;
-  id: string; // TODO #9389 same id as the actual PDF file stored in waterfall/{waterfallId}/documents
+  id: string; // Same as the WaterfallFile id
   /** If document is an amendment, provide root document Id */
   rootId: string;
   signatureDate?: Date;
   type: 'financingPlan' | 'budget' | 'contract';
   folder: string; // TODO #9389 we might want to drop that for a sub-type, TO BE CONFIRMED WITH THE TEAM
   waterfallId: string; // Parent document Id
-  ownerId: string; // TODO #9389 uploader orgId
-  sharedWith: string[]; // TODO #9389 orgIds allowed to see the document
+  ownerId: string; // Uploader orgId
   meta: Meta;
 }
 
 interface WaterfallBudget {
-  // TODO #9389 add form data
+  // Not implemented yet
   value?: string;
 }
 
@@ -226,6 +222,6 @@ export interface WaterfallMandate extends WaterfallContract {
 }
 
 interface WaterfallFinancingPlan {
-  // TODO #9389 add form data
+  // Not implemented yet
   value?: string;
 }

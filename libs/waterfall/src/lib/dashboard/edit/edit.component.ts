@@ -2,10 +2,9 @@
 // Angular
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
-import { BehaviorSubject, combineLatest, map, startWith } from 'rxjs';
+import { BehaviorSubject, map, startWith } from 'rxjs';
 import { Component, ChangeDetectionStrategy, OnInit, ViewChild } from '@angular/core';
 
 // Blockframes
@@ -16,8 +15,7 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { WaterfallFormGuardedComponent } from '@blockframes/waterfall/guard';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
-import { WaterfallPermissionsService } from '@blockframes/waterfall/permissions.service';
-import { RightholderRole, WaterfallRightholder, createAppConfig, createMovieAppConfig, createWaterfallRightholder } from '@blockframes/model';
+import { WaterfallRightholder, createAppConfig, createMovieAppConfig, createWaterfallRightholder } from '@blockframes/model';
 import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '@blockframes/waterfall/form/right-holder.form';
 import { WaterfallDocumentForm } from '@blockframes/waterfall/form/document.form';
 
@@ -34,7 +32,6 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
 
   documentForm = new WaterfallDocumentForm({ id: '' });
   movieForm = new MovieForm({ directors: [{ firstName: '', lastName: '' }] });
-  waterfallRoleControl = new FormControl<RightholderRole[]>(undefined, [Validators.required]);
   rightholdersForm = FormList.factory<WaterfallRightholderFormValue, WaterfallRightholderForm>([], rightholder => new WaterfallRightholderForm(rightholder));
 
   movieId = '';
@@ -42,19 +39,13 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
   @ViewChild('stepper') stepper?: MatStepper;
 
   // check the invalidity of the movie forms value to disable/enable the create button
-  invalidMovie$ = combineLatest([
-    this.movieForm.valueChanges,
-    this.waterfallRoleControl.valueChanges,
-  ]).pipe(
-    map(([movie, waterfall]) => {
+  invalidMovie$ = this.movieForm.valueChanges.pipe(
+    map(movie => {
       // check movie
       if (!movie.title.international) return true;
       if (movie.directors.length === 0) return true;
       const missing = movie.directors.some(d => !d.firstName || !d.lastName);
       if (missing) return true;
-
-      // check waterfall
-      if (waterfall.length === 0) return true;
 
       return false;
     }),
@@ -80,7 +71,6 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
     private orgService: OrganizationService,
     private uploadService: FileUploaderService,
     private waterfallService: WaterfallService,
-    private permissionsService: WaterfallPermissionsService,
   ) { }
 
   async ngOnInit() {
@@ -91,17 +81,17 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
       this.route.snapshot.params.movieId;
 
     if (!this.createMode) {
-      const [movie, waterfall, permissions] = await Promise.all([
+      const [movie, waterfall] = await Promise.all([
         this.movieService.getValue(this.movieId),
         this.waterfallService.getValue(this.movieId),
-        this.permissionsService.getValue(this.orgService.org.id, { waterfallId: this.movieId }),
       ]);
 
       this.movieForm.patchValue(movie);
-      this.waterfallRoleControl.patchValue(permissions.roles);
       this.rightholdersForm.clear({ emitEvent: false });
       if (waterfall.rightholders.length === 0) this.rightholdersForm.add(createWaterfallRightholder());
       waterfall.rightholders.forEach(rightholder => this.rightholdersForm.add(rightholder));
+    } else {
+      this.rightholdersForm.add(createWaterfallRightholder({ name: this.orgService.org.name }));
     }
     this.loading$.next(false);
   }
@@ -114,7 +104,7 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
 
   // update a new movie along with its waterfall permissions
   async update() {
-    if (!this.movieForm.pristine || !this.waterfallRoleControl.pristine) {
+    if (!this.movieForm.pristine) {
       this.updating$.next(true);
 
       const orgId = this.orgService.org.id;
@@ -122,19 +112,15 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
         const appAccess = createMovieAppConfig({ waterfall: createAppConfig({ status: 'accepted', access: true }) });
         const movie = await this.movieService.create({ ...this.movieForm.value, id: this.movieId, app: appAccess });
         this.uploadService.upload();
-
-        await this.waterfallService.create(this.movieId, movie.orgIds);
-        await this.permissionsService.create(this.movieId, { id: movie.orgIds[0], roles: this.waterfallRoleControl.value });
-
+        this.movieForm.patchValue(movie);
+        await this.waterfallService.create(this.movieId, [orgId]);
+        this.createMode = false;
       } else {
         await this.movieService.update({ ...this.movieForm.value, id: this.movieId });
         this.uploadService.upload();
-
-        await this.permissionsService.update(orgId, { roles: this.waterfallRoleControl.value }, { params: { waterfallId: this.movieId } });
       }
 
       this.movieForm.markAsPristine();
-      this.waterfallRoleControl.markAsPristine();
 
       this.updating$.next(false);
       this.snackBar.open('Movie updated!', 'close', { duration: 3000 });

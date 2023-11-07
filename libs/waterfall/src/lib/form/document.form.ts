@@ -31,6 +31,7 @@ export interface WaterfallDocumentFormValue {
 
 function createWaterfallDocumentFormControl(contract: (Partial<WaterfallDocumentFormValue> & { id: string })) {
   return {
+    id: new FormControl(contract.id),
     licenseeName: new FormControl(contract.licenseeName ?? ''),
     licenseeRole: new FormControl<RightholderRole[]>(contract.licenseeRole ?? []),
 
@@ -38,8 +39,8 @@ function createWaterfallDocumentFormControl(contract: (Partial<WaterfallDocument
     licensorRole: new FormControl<RightholderRole[]>(contract.licensorRole ?? []),
 
     signatureDate: new FormControl(contract.signatureDate ?? new Date()),
-    startDate: new FormControl(contract.startDate ??  new Date()),
-    endDate: new FormControl(contract.endDate ??  new Date()),
+    startDate: new FormControl(contract.startDate ?? new Date()),
+    endDate: new FormControl(contract.endDate ?? new Date()),
 
     price: new FormControl(contract.price ?? 0),
 
@@ -55,5 +56,22 @@ export class WaterfallDocumentForm extends FormEntity<WaterfallDocumentFormContr
   constructor(contract: (Partial<WaterfallDocumentFormValue> & { id: string })) {
     const control = createWaterfallDocumentFormControl(contract);
     super(control);
+  }
+
+  reset(id: string) {
+    super.reset();
+    this.patchValue({
+      id,
+      licenseeName: '',
+      licenseeRole: [],
+      licensorName: '',
+      licensorRole: [],
+      signatureDate: new Date(),
+      startDate: new Date(),
+      endDate: new Date(),
+      price: 0,
+      file: { id },
+    });
+    this.markAsPristine();
   }
 }

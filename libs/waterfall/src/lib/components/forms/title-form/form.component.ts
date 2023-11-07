@@ -1,10 +1,11 @@
 // Angular
-import { FormControl } from '@angular/forms';
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 
 // Blockframes
-import { RightholderRole } from '@blockframes/model';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
+import { AuthService } from '@blockframes/auth/service';
+import { WaterfallPermissionsService } from '@blockframes/waterfall/permissions.service';
+import { combineLatest, map, tap } from 'rxjs';
 
 
 @Component({
@@ -13,11 +14,29 @@ import { MovieForm } from '@blockframes/movie/form/movie.form';
   styleUrls: ['./form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TitleFormComponent {
+export class TitleFormComponent implements OnInit {
 
   @Input() movieForm: MovieForm;
-  @Input() waterfallRoleControl: FormControl<RightholderRole[]>;
   @Input() movieId = '';
+  @Input() createMode: boolean;
+
+  public canEditMovie$;
+
+  constructor(
+    private authService: AuthService,
+    private permissionService: WaterfallPermissionsService,
+  ) { }
+
+  ngOnInit() {
+    const isWaterfallAdmin$ = this.permissionService.valueChanges(this.authService.profile.orgId, { waterfallId: this.movieId }).pipe(
+      map(permission => permission?.isAdmin)
+    );
+
+    this.canEditMovie$ = combineLatest([isWaterfallAdmin$, this.authService.isBlockframesAdmin$]).pipe(
+      map(([isWaterfallAdmin, isBlockframesAdmin]) => this.createMode || isWaterfallAdmin || isBlockframesAdmin),
+      tap(canEditMovie => canEditMovie ? this.movieForm.enable() : this.movieForm.disable())
+    );
+  }
 
   addDirector() {
     this.movieForm.directors.add({ firstName: '', lastName: '' });

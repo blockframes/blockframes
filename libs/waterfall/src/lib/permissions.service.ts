@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
+import type firestore from 'firebase/firestore';
 import { DocumentSnapshot } from '@firebase/firestore';
-import { RightholderRole, WaterfallPermissions, createDocumentMeta, createWaterfallPermissions } from '@blockframes/model';
+import { WaterfallPermissions, createDocumentMeta, createWaterfallPermissions } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/service';
 import { BlockframesSubCollection } from '@blockframes/utils/abstract-service';
-import { OrganizationService } from '@blockframes/organization/service';
+import { AtomicWrite } from 'ngfire';
+import { doc } from 'firebase/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class WaterfallPermissionsService extends BlockframesSubCollection<WaterfallPermissions> {
@@ -11,7 +13,6 @@ export class WaterfallPermissionsService extends BlockframesSubCollection<Waterf
 
   constructor(
     private authService: AuthService,
-    private orgService: OrganizationService,
   ) {
     super();
   }
@@ -22,17 +23,15 @@ export class WaterfallPermissionsService extends BlockframesSubCollection<Waterf
     return createWaterfallPermissions(permissions);
   }
 
-  public create(waterfallId: string, permissions: Partial<WaterfallPermissions>) {
+  public create(waterfallId: string, write: AtomicWrite, id: string, isAdmin: boolean = false) {
     const createdBy = this.authService.uid;
     const perm = createWaterfallPermissions({
       _meta: createDocumentMeta({ createdBy }),
-      ...permissions
+      id,
+      isAdmin
     });
-    return this.add(perm, { params: { waterfallId } });
+    const permRef = doc(this.db, `waterfall/${waterfallId}/permissions/${perm.id}`);
+    (write as firestore.WriteBatch).set(permRef, perm);
   }
 
-  public async hasRole(waterfallId: string, role: RightholderRole, orgId = this.orgService.org.id) {
-    const permissions = await this.getValue(orgId, { waterfallId });
-    return permissions.roles.includes(role);
-  }
 }

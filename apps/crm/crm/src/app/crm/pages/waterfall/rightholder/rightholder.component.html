@@ -2,23 +2,12 @@
   <h3>{{ rightholder.name }}</h3>
 
   <section>
-    <form [formGroup]="rightholdersForm">
-      <static-select [control]="rightholdersForm.get('roles')" multiple scope="rightholderRoles">
+    <form [formGroup]="rightholderForm">
+      <static-select [control]="rightholderForm.get('roles')" multiple scope="rightholderRoles">
         <mat-label>Waterfall Role</mat-label>
         <mat-error>This field is mandatory</mat-error>
       </static-select>
-      <mat-form-field appearance="outline" *ngIf="permissions$ | async as permissions">
-        <mat-label>Associated with (real org)</mat-label>
-        <mat-select [value]="rightholdersForm.get('orgId').value" [formControl]="rightholdersForm.get('orgId')">
-          <mat-option [value]=""></mat-option>
-          <mat-option *ngFor="let permission of permissions" [value]="permission.id">
-            <ng-container *ngIf="permission.id | getOrg | async as org">
-              {{ org.name }} ( {{ permission.roles | toLabel: 'rightholderRoles' }} )
-            </ng-container>
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <button mat-button color="primary" [disabled]=!rightholdersForm.valid (click)="save()">
+      <button mat-button color="primary" [disabled]=!rightholderForm.valid (click)="save()">
         <mat-icon svgIcon="edit"></mat-icon>
         <span>Update</span>
       </button>

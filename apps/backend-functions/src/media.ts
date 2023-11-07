@@ -149,10 +149,11 @@ export async function linkFile(data: storage.ObjectMetadata) {
 
             if (subDocumentSnap.exists) {
               // check if user is allowed to update already existing WaterfallDocument
-              const document = userSnap.data() as WaterfallDocument;
-              await assertFile(user.orgId === document.ownerId || permissionsDoc.roles.includes('producer'), notAllowedError);
+              const document = subDocumentSnap.data() as WaterfallDocument;
+              await assertFile(user.orgId === document.ownerId || permissionsDoc.isAdmin, notAllowedError);
             } else {
               // TODO #9389 init WaterfallDocument with ownerId = user.orgId
+              // Not implemented yet: should be used when we uploading a document without filling the document form
             }
 
             break;
@@ -213,8 +214,6 @@ export async function linkFile(data: storage.ObjectMetadata) {
         'documents.videos',
         'promotional.still_photo',
         'promotional.notes',
-
-        // TODO #9389
         'documents',
       ];
       const isList = fileLists.includes(metadata.field);
@@ -474,6 +473,29 @@ export async function cleanMovieMedias(before: Movie, after?: Movie): Promise<vo
     if (before.promotional.notes?.length) {
       before.promotional.notes.forEach(note => mediaToDelete.push(note));
     }
+  }
+
+  await Promise.all(mediaToDelete.map(m => deleteMedia(m)));
+
+}
+
+export async function cleanWaterfallMedias(before: Waterfall, after?: Waterfall): Promise<void> {
+
+  const mediaToDelete: StorageFile[] = [];
+  if (after) { // Updating
+
+    const documentsToDelete = checkFileList(
+      before.documents,
+      after.documents
+    );
+    mediaToDelete.push(...documentsToDelete);
+
+  } else { // Deleting
+
+    if (before.documents?.length) {
+      before.documents.forEach(doc => mediaToDelete.push(doc));
+    }
+
   }
 
   await Promise.all(mediaToDelete.map(m => deleteMedia(m)));

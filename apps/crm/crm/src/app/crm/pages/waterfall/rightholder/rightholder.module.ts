@@ -19,7 +19,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [RightholderComponent],
@@ -39,7 +38,6 @@ import { MatSelectModule } from '@angular/material/select';
     MatButtonModule,
     MatFormFieldModule,
     MatSnackBarModule,
-    MatSelectModule,
 
     RouterModule.forChild([{ path: '', component: RightholderComponent }])
   ]

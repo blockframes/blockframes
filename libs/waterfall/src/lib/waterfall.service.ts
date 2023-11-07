@@ -34,6 +34,8 @@ import { doc } from 'firebase/firestore';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 import { waterfall as _waterfall } from './main';
 import { BlockService } from './block.service';
+import { WaterfallPermissionsService } from './permissions.service';
+import type firestore from 'firebase/firestore';
 
 export const fromOrg = (orgId: string) => [where('orgIds', 'array-contains', orgId)];
 
@@ -61,7 +63,8 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
   constructor(
     private functions: CallableFunctions,
     private authService: AuthService,
-    private blockService: BlockService
+    private blockService: BlockService,
+    private waterfallPermissionsService: WaterfallPermissionsService,
   ) {
     super();
   }
@@ -122,15 +125,31 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     );
   }
 
-  public async create(id: string, orgIds?: string[]) {
+  public async create(id: string, orgIds: string[]) {
     const createdBy = this.authService.uid;
     const waterfall = createWaterfall({
       _meta: createDocumentMeta({ createdBy }),
       id,
+      orgIds,
     });
-    if (orgIds?.length) waterfall.orgIds = orgIds;
-    await this.add(waterfall);
+
+    await this.runTransaction(async (tx) => {
+      await this.add(waterfall, { write: tx });
+    });
     return waterfall;
+  }
+
+  onCreate(waterfall: Waterfall, { write }: WriteOptions) {
+    const ref = this.getRef(waterfall.id);
+    write.update(ref, '_meta.createdAt', new Date());
+    for (const orgId of waterfall.orgIds) {
+      this.waterfallPermissionsService.create(
+        waterfall.id,
+        write as firestore.Transaction,
+        orgId,
+        true
+      );
+    }
   }
 
   public async initWaterfall(data: WaterfallData, version: Partial<Version>) {

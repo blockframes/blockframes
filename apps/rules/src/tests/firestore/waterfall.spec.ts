@@ -35,12 +35,12 @@ describe('Movie Owner', () => {
 
     test('Should not be able to update waterfall document', async () => {
       const ref = db.doc('waterfall/M001');
-      await assertFails(ref.set({ id: 'M001', orgIds: ['O001', 'O003'] }));
+      await assertFails(ref.update({ id: 'M001', orgIds: ['O001', 'O003'] }));
     });
 
     test('Should not be able to change waterfall document id', async () => {
       const ref = db.doc('waterfall/M001');
-      await assertFails(ref.set({ id: 'foo' }));
+      await assertFails(ref.update({ id: 'foo' }));
     });
   });
 
@@ -52,12 +52,12 @@ describe('Movie Owner', () => {
 
     test('Should not be able to update block document', async () => {
       const ref = db.doc('waterfall/M001/blocks/B001');
-      await assertFails(ref.set({ id: 'B001', actions: { 1: { name: 'init' } } }));
+      await assertFails(ref.update({ id: 'B001', actions: { 1: { name: 'init' } } }));
     });
 
     test('Should not be able to change block document id', async () => {
       const ref = db.doc('waterfall/M001/blocks/B001');
-      await assertFails(ref.set({ id: 'B002' }));
+      await assertFails(ref.update({ id: 'B002' }));
     });
 
     test('Should not be able to read block document', async () => {
@@ -72,24 +72,24 @@ describe('Movie Owner', () => {
   });
 
   describe('Permissions', () => {
-    test('Should be able to create his own permissions document', async () => {
+    test('Should not be able to create his own permissions document', async () => {
       const ref = db.doc('waterfall/M001/permissions/O001');
-      await assertSucceeds(ref.set({ id: 'O001', roles: ['author'] }));
+      await assertFails(ref.set({ id: 'O001', isAdmin: false }));
     });
 
     test('Should not be able to create others permissions document', async () => {
       const ref = db.doc('waterfall/M001/permissions/O003');
-      await assertFails(ref.set({ id: 'O003', roles: ['financier'] }));
+      await assertFails(ref.set({ id: 'O003', isAdmin: false }));
     });
 
     test('Should not be able to update permissions document', async () => {
       const ref = db.doc('waterfall/M001/permissions/O003');
-      await assertFails(ref.set({ id: 'O003', roles: ['financier'], scope: ['O001'] }));
+      await assertFails(ref.update({ id: 'O003', isAdmin: true }));
     });
 
     test('Should not be able to change permissions document id', async () => {
       const ref = db.doc('waterfall/M001/permissions/O003');
-      await assertFails(ref.set({ id: 'O002' }));
+      await assertFails(ref.update({ id: 'O002' }));
     });
 
     test('Should not be able to read permissions document', async () => {
@@ -111,17 +111,17 @@ describe('Movie Owner', () => {
 
     test('Should not be able to update document', async () => {
       const ref = db.doc('waterfall/M001/documents/D001');
-      await assertFails(ref.set({ id: 'D001', meta: { foo: 'bar' } }));
+      await assertFails(ref.update({ id: 'D001', meta: { foo: 'bar' } }));
     });
 
-    test('Should not be able to read document', async () => {
+    test('Should be able to read document', async () => {
       const ref = db.doc('waterfall/M001/documents/D001');
-      await assertFails(ref.get());
+      await assertSucceeds(ref.get());
     });
 
-    test('Should not be able to list documents', async () => {
+    test('Should be able to list documents', async () => {
       const ref = db.collection('waterfall/M001/documents');
-      await assertFails(ref.get());
+      await assertSucceeds(ref.get());
     });
   });
 });
@@ -156,7 +156,7 @@ describe('User that is not owner of movie', () => {
   describe('Movies', () => {
     test('Should not be able to update movie document', async () => {
       const ref = db.doc('movies/M001');
-      await assertFails(ref.set({ id: 'M001', notes: 'unit test update' }));
+      await assertFails(ref.update({ id: 'M001', notes: 'unit test update' }));
     });
   });
 
@@ -169,7 +169,7 @@ describe('User that is not owner of movie', () => {
 
     test('Should not be able to update block document', async () => {
       const ref = db.doc('waterfall/M001/blocks/B001');
-      await assertFails(ref.set({ id: 'B001', actions: { 1: { name: 'init' } } }));
+      await assertFails(ref.update({ id: 'B001', actions: { 1: { name: 'init' } } }));
     });
 
     test('Should not be able to read block document', async () => {
@@ -186,12 +186,12 @@ describe('User that is not owner of movie', () => {
   describe('Permissions', () => {
     test('Should not be able to create permissions document', async () => {
       const ref = db.doc('waterfall/M001/permissions/O003');
-      await assertFails(ref.set({ id: 'O003', roles: ['financier'] }));
+      await assertFails(ref.set({ id: 'O003', isAdmin: false }));
     });
 
     test('Should not be able to update permissions document', async () => {
       const ref = db.doc('waterfall/MI-0d7/permissions/O003');
-      await assertFails(ref.set({ id: 'O003', roles: ['financier'], scope: ['O001'] }));
+      await assertFails(ref.update({ id: 'O003', isAdmin: true, rightholderIds: ['1234'] }));
     });
 
     test('Should not be able to read permissions document', async () => {
@@ -213,7 +213,7 @@ describe('User that is not owner of movie', () => {
 
     test('Should not be able to update document', async () => {
       const ref = db.doc('waterfall/M001/documents/D001');
-      await assertFails(ref.set({ id: 'D001', meta: { foo: 'bar' } }));
+      await assertFails(ref.update({ id: 'D001', meta: { foo: 'bar' } }));
     });
 
     test('Should not be able to read document', async () => {
@@ -226,10 +226,54 @@ describe('User that is not owner of movie', () => {
       await assertFails(ref.get());
     });
   });
+  
+  describe('Statements', () => {
+    test('Should not be able to create statements', async () => {
+      const ref = db.doc('waterfall/M001/statements/S003');
+      await assertFails(ref.set({ id: 'S003', foo: 'bar' }));
+    });
+
+    test('Should not be able to update statements', async () => {
+      const ref = db.doc('waterfall/M001/statements/S001');
+      await assertFails(ref.update({ id: 'S001', foo: 'bar' }));
+    });
+
+    test('Should not be able to read statements', async () => {
+      const ref = db.doc('waterfall/M001/statements/S001');
+      await assertFails(ref.get());
+    });
+
+    test('Should not be able to list statements', async () => {
+      const ref = db.collection('waterfall/M001/statements');
+      await assertFails(ref.get());
+    });
+  });
+
+  describe('Rights', () => {
+    test('Should not be able to create rights', async () => {
+      const ref = db.doc('waterfall/M001/rights/R003');
+      await assertFails(ref.set({ id: 'R003', foo: 'bar' }));
+    });
+
+    test('Should not be able to update rights', async () => {
+      const ref = db.doc('waterfall/M001/rights/R001');
+      await assertFails(ref.update({ id: 'R001', foo: 'bar' }));
+    });
+
+    test('Should not be able to read rights', async () => {
+      const ref = db.doc('waterfall/M001/rights/R001');
+      await assertFails(ref.get());
+    });
+
+    test('Should not be able to list rights', async () => {
+      const ref = db.collection('waterfall/M001/rights');
+      await assertFails(ref.get());
+    });
+  });
 
 });
 
-describe('User that is linked to waterfall but not producer', () => {
+describe('User that is linked to waterfall but not admin', () => {
   const projectId = `waterfall-rules-spec-${Date.now()}`;
   let db: Firestore;
 
@@ -257,14 +301,19 @@ describe('User that is linked to waterfall but not producer', () => {
 
     test('Should not be able to update waterfall document', async () => {
       const ref = db.doc('waterfall/MI-0d7');
-      await assertFails(ref.set({ id: 'MI-0d7', orgIds: ['O002', 'O003'] }));
+      await assertFails(ref.update({ id: 'MI-0d7', orgIds: ['O002', 'O003'] }));
+    });
+
+    test('Should be able to update waterfall rightholders only', async () => {
+      const ref = db.doc('waterfall/MI-0d7');
+      await assertSucceeds(ref.update({ id: 'MI-0d7', rightholders: [{ id: 'foo', name: 'bar' }] }));
     });
   });
 
   describe('Movies', () => {
-    test('Should be able to update movie document', async () => {
+    test('Should not be able to update movie document', async () => {
       const ref = db.doc('movies/MI-0d7');
-      await assertSucceeds(ref.set({ id: 'MI-0d7', notes: 'unit test update' }));
+      await assertFails(ref.update({ id: 'MI-0d7', notes: 'unit test update' }));
     });
   });
 
@@ -276,7 +325,7 @@ describe('User that is linked to waterfall but not producer', () => {
 
     test('Should not be able to update block document', async () => {
       const ref = db.doc('waterfall/MI-0d7/blocks/B001');
-      await assertFails(ref.set({ id: 'B001', actions: { 1: { name: 'init' } } }));
+      await assertFails(ref.update({ id: 'B001', actions: { 1: { name: 'init' } } }));
     });
 
     test('Should not be able to read block document', async () => {
@@ -292,13 +341,13 @@ describe('User that is linked to waterfall but not producer', () => {
 
   describe('Permissions', () => {
     test('Should not be able to create permissions document', async () => {
-      const ref = db.doc('waterfall/MI-077/permissions/O002');
-      await assertFails(ref.set({ id: 'O002', roles: ['financier'] }));
+      const ref = db.doc('waterfall/MI-077/permissions/O00X');
+      await assertFails(ref.set({ id: 'O00X', isAdmin: true }));
     });
 
     test('Should not be able to update permissions document', async () => {
       const ref = db.doc('waterfall/MI-0d7/permissions/O002');
-      await assertFails(ref.set({ id: 'O002', roles: ['financier'], scope: ['O001'] }));
+      await assertFails(ref.update({ id: 'O002', isAdmin: false, rightHolderIds: ['1234'] }));
     });
 
     test('Should be able to read his own permissions document', async () => {
@@ -323,43 +372,28 @@ describe('User that is linked to waterfall but not producer', () => {
       await assertSucceeds(ref.set({ id: 'D002', ownerId: 'O002', meta: {} }));
     });
 
-    test('Should not be able to read document if not owner or shared with him', async () => {
-      const ref = db.doc('waterfall/MI-0d7/documents/D001');
-      await assertFails(ref.get());
-    });
-
-    test('Should be able to read document if owner', async () => {
+    test('Should be able to read document ', async () => {
       const ref = db.doc('waterfall/MI-0d7/documents/D002');
       await assertSucceeds(ref.get());
     });
 
     test('Should be able to update document if owner', async () => {
       const ref = db.doc('waterfall/MI-0d7/documents/D002');
-      await assertSucceeds(ref.set({ id: 'D002', ownerId: 'O002', meta: { foo: 'bar' } }));
+      await assertSucceeds(ref.update({ id: 'D002', ownerId: 'O002', meta: { foo: 'bar' } }));
     });
 
     test('Should not be able to update document if not owner', async () => {
       const ref = db.doc('waterfall/MI-0d7/documents/D001');
-      await assertFails(ref.set({ id: 'D001', ownerId: 'O002', meta: { foo: 'bar' } }));
+      await assertFails(ref.update({ id: 'D001', ownerId: 'O002', meta: { foo: 'bar' } }));
     });
 
-    test('Should be able to read document if shared with him', async () => {
+    test('Should not be able to update document', async () => {
       const ref = db.doc('waterfall/MI-0d7/documents/D003');
-      await assertSucceeds(ref.get());
-    });
-
-    test('Should not be able to update document if shared with him', async () => {
-      const ref = db.doc('waterfall/MI-0d7/documents/D003');
-      await assertFails(ref.set({ id: 'D003', ownerId: 'O002', meta: { foo: 'bar' } }));
+      await assertFails(ref.update({ id: 'D003', ownerId: 'O002', meta: { foo: 'bar' } }));
     });
 
     test('Should not be able to list all documents', async () => {
       const ref = db.collection('waterfall/MI-0d7/documents');
-      await assertFails(ref.get());
-    });
-
-    test('Should be able to query documents that are shared with him', async () => {
-      const ref = db.collection('waterfall/MI-0d7/documents').where('sharedWith', 'array-contains', 'O002');
       await assertSucceeds(ref.get());
     });
 
@@ -389,12 +423,12 @@ describe('User that is linked to waterfall but not producer', () => {
         await assertSucceeds(ref.get());
       });
 
-      test('Should be able to list all incomes linked to a document that is shared with him', async () => {
+      test('Should be able to list all incomes linked to a document he can read', async () => {
         const ref = db.collection('incomes').where('contractId', '==', 'D003').where('titleId', '==', 'MI-0d7');
         await assertSucceeds(ref.get());
       });
 
-      test('Should be able to list all incomes linked to documents he owns or that is shared with him', async () => {
+      test('Should be able to list all incomes linked to documents he owns or he can read', async () => {
         const ref = db.collection('incomes').where('contractId', 'in', ['D003', 'D002']).where('titleId', '==', 'MI-0d7');
         await assertSucceeds(ref.get());
       });
@@ -404,19 +438,19 @@ describe('User that is linked to waterfall but not producer', () => {
         await assertSucceeds(ref.set({ id: 'I003', price: 150, titleId: 'MI-0d7', contractId: 'D002' }));
       });
 
-      test('Should not be able to create income linked to a document that is shared with him', async () => {
+      test('Should not be able to create income linked to a document he can read', async () => {
         const ref = db.doc('incomes/I004');
         await assertFails(ref.set({ id: 'I004', price: 150, titleId: 'MI-0d7', contractId: 'D003' }));
       });
 
       test('Should not be able to update an income linked to a document he can read', async () => {
         const ref = db.doc('incomes/I002');
-        await assertFails(ref.set({ id: 'I002', price: 150, titleId: 'MI-0d7', contractId: 'D003' }));
+        await assertFails(ref.update({ id: 'I002', price: 150, titleId: 'MI-0d7', contractId: 'D003' }));
       });
 
       test('Should be able to update an income linked to a document that he owns', async () => {
         const ref = db.doc('incomes/I003');
-        await assertSucceeds(ref.set({ id: 'I003', price: 100, titleId: 'MI-0d7', contractId: 'D002' }));
+        await assertSucceeds(ref.update({ id: 'I003', price: 100, titleId: 'MI-0d7', contractId: 'D002' }));
       });
 
       test('Should not be able to delete an income linked to a document he can read', async () => {
@@ -451,12 +485,12 @@ describe('User that is linked to waterfall but not producer', () => {
         await assertSucceeds(ref.get());
       });
 
-      test('Should be able to list all expenses linked to a document that is shared with him', async () => {
+      test('Should be able to list all expenses linked to a document he can read', async () => {
         const ref = db.collection('expenses').where('contractId', '==', 'D003').where('titleId', '==', 'MI-0d7');
         await assertSucceeds(ref.get());
       });
 
-      test('Should be able to list all expenses linked to documents he owns or that is shared with him', async () => {
+      test('Should be able to list all expenses linked to documents he owns or he can read', async () => {
         const ref = db.collection('expenses').where('contractId', 'in', ['D003', 'D002']).where('titleId', '==', 'MI-0d7');
         await assertSucceeds(ref.get());
       });
@@ -466,19 +500,19 @@ describe('User that is linked to waterfall but not producer', () => {
         await assertSucceeds(ref.set({ id: 'E003', price: 150, titleId: 'MI-0d7', contractId: 'D002' }));
       });
 
-      test('Should not be able to create expense linked to a document that is shared with him', async () => {
+      test('Should not be able to create expense linked to a document he can read', async () => {
         const ref = db.doc('expenses/E004');
         await assertFails(ref.set({ id: 'E004', price: 150, titleId: 'MI-0d7', contractId: 'D003' }));
       });
 
       test('Should not be able to update an expense linked to a document he can read', async () => {
         const ref = db.doc('expenses/E002');
-        await assertFails(ref.set({ id: 'E002', price: 150, titleId: 'MI-0d7', contractId: 'D003' }));
+        await assertFails(ref.update({ id: 'E002', price: 150, titleId: 'MI-0d7', contractId: 'D003' }));
       });
 
       test('Should be able to update an expense linked to a document that he owns', async () => {
         const ref = db.doc('expenses/E003');
-        await assertSucceeds(ref.set({ id: 'E003', price: 100, titleId: 'MI-0d7', contractId: 'D002' }));
+        await assertSucceeds(ref.update({ id: 'E003', price: 100, titleId: 'MI-0d7', contractId: 'D002' }));
       });
 
       test('Should not be able to delete an expense linked to a document he can read', async () => {
@@ -491,10 +525,112 @@ describe('User that is linked to waterfall but not producer', () => {
         await assertSucceeds(ref.delete());
       });
     });
+
+    describe('Statements', () => {
+      test('Should not be able to create statement if missing rightholderId', async () => {
+        const ref = db.doc('waterfall/MI-0d7/statements/S00X');
+        await assertFails(ref.set({ id: 'S00X', foo: 'bar' }));
+      });
+
+      test('Should be able to create statement', async () => {
+        const ref = db.doc('waterfall/MI-0d7/statements/S00X');
+        await assertSucceeds(ref.set({ id: 'S00X', rightholderId: 'O002' }));
+      });
+
+      test('Should not be able to update statements if not rightholder', async () => {
+        const ref = db.doc('waterfall/MI-0d7/statements/S001');
+        await assertFails(ref.update({ id: 'S001', foo: 'bar' }));
+      });
+
+      test('Should not be able to read statements if not rightholder', async () => {
+        const ref = db.doc('waterfall/MI-0d7/statements/S001');
+        await assertFails(ref.get());
+      });
+
+      test('Should be able to update statements if rightholder', async () => {
+        const ref = db.doc('waterfall/MI-0d7/statements/S002');
+        await assertSucceeds(ref.update({ id: 'S002', foo: 'bar' }));
+      });
+
+      test('Should be able to read statements if rightholder', async () => {
+        const ref = db.doc('waterfall/MI-0d7/statements/S002');
+        await assertSucceeds(ref.get());
+      });
+
+      test('Should be able to query statements documents if rightholder', async () => {
+        const ref = db.collection('waterfall/MI-0d7/statements').where('rightholderId', '==', 'O002');
+        await assertSucceeds(ref.get());
+      });
+
+      test('Should not be able to list statements', async () => {
+        const ref = db.collection('waterfall/MI-0d7/statements');
+        await assertFails(ref.get());
+      });
+    });
+
+    describe('Rights', () => {
+      test('Should not be able to create rights', async () => {
+        const ref = db.doc('waterfall/MI-0d7/rights/R003');
+        await assertFails(ref.set({ id: 'R003', foo: 'bar' }));
+      });
+
+      test('Should not be able to update rights', async () => {
+        const ref = db.doc('waterfall/MI-0d7/rights/R001');
+        await assertFails(ref.update({ id: 'R001', foo: 'bar' }));
+      });
+
+      test('Should not be able to read rights', async () => {
+        const ref = db.doc('waterfall/MI-0d7/rights/R001');
+        await assertFails(ref.get());
+      });
+
+      test('Should not be able to list rights', async () => {
+        const ref = db.collection('waterfall/MI-0d7/rights');
+        await assertFails(ref.get());
+      });
+    });
+
+    describe('Terms', () => {
+      test('Should be able to list all terms', async () => {
+        const ref = db.collection('terms');
+        await assertSucceeds(ref.get());
+      });
+
+      test('Should be able to create terms linked to a document he owns', async () => {
+        const ref = db.doc('terms/TW03');
+        await assertSucceeds(ref.set({ id: 'TW03', price: 150, titleId: 'MI-0d7', contractId: 'D002' }));
+      });
+
+      test('Should not be able to create terms linked to a document he can read', async () => {
+        const ref = db.doc('terms/TW04');
+        await assertFails(ref.set({ id: 'TW04', price: 150, titleId: 'MI-0d7', contractId: 'D003' }));
+      });
+
+      test('Should not be able to update a term linked to a document he can read', async () => {
+        const ref = db.doc('terms/TW02');
+        await assertFails(ref.update({ id: 'TW02', price: 150, titleId: 'MI-0d7', contractId: 'D003' }));
+      });
+
+      test('Should be able to update a term linked to a document that he owns', async () => {
+        const ref = db.doc('terms/TW03');
+        await assertSucceeds(ref.update({ id: 'TW03', price: 100, titleId: 'MI-0d7', contractId: 'D002' }));
+      });
+
+      test('Should not be able to delete a term linked to a document he can read', async () => {
+        const ref = db.doc('terms/TW02');
+        await assertFails(ref.delete());
+      });
+
+      test('Should be able to delete a term linked to a document that he owns', async () => {
+        const ref = db.doc('terms/TW03');
+        await assertSucceeds(ref.delete());
+      });
+    });
+
   });
 });
 
-describe('User that is linked to waterfall with producer role', () => {
+describe('User that is linked to waterfall with admin level', () => {
   const projectId = `waterfall-rules-spec-${Date.now()}`;
   let db: Firestore;
 
@@ -503,6 +639,13 @@ describe('User that is linked to waterfall with producer role', () => {
   });
 
   afterAll(() => Promise.all(getApps().map((app) => deleteApp(app))));
+
+  describe('Movies', () => {
+    test('Should able to update movie document if waterfall admin', async () => {
+      const ref = db.doc('movies/WF-001');
+      await assertSucceeds(ref.update({ id: 'WF-001', notes: 'unit test update' }));
+    });
+  });
 
   describe('Waterfall', () => {
 
@@ -518,12 +661,12 @@ describe('User that is linked to waterfall with producer role', () => {
 
     test('Should be able to update waterfall document', async () => {
       const ref = db.doc('waterfall/WF-001');
-      await assertSucceeds(ref.set({ id: 'WF-001', orgIds: ['O001'], notes: 'updated by unit test' }));
+      await assertSucceeds(ref.update({ id: 'WF-001', orgIds: ['O001'], notes: 'updated by unit test' }));
     });
 
     test('Should not be able to change waterfall document id', async () => {
       const ref = db.doc('waterfall/WF-001');
-      await assertFails(ref.set({ id: 'foo' }));
+      await assertFails(ref.update({ id: 'foo' }));
     });
   });
 
@@ -535,12 +678,12 @@ describe('User that is linked to waterfall with producer role', () => {
 
     test('Should be able to update block document', async () => {
       const ref = db.doc('waterfall/WF-001/blocks/B001');
-      await assertSucceeds(ref.set({ id: 'B001', actions: { 1: { name: 'init' } } }));
+      await assertSucceeds(ref.update({ id: 'B001', actions: { 1: { name: 'init' } } }));
     });
 
     test('Should not be able to change block document id', async () => {
       const ref = db.doc('waterfall/WF-001/blocks/B001');
-      await assertFails(ref.set({ id: 'B002' }));
+      await assertFails(ref.update({ id: 'B002' }));
     });
 
     test('Should be able to read block document', async () => {
@@ -562,7 +705,7 @@ describe('User that is linked to waterfall with producer role', () => {
 
     test('Should be able to update document', async () => {
       const ref = db.doc('waterfall/WF-001/documents/D001');
-      await assertSucceeds(ref.set({ id: 'D001', meta: { foo: 'bar' } }));
+      await assertSucceeds(ref.update({ id: 'D001', meta: { foo: 'bar' } }));
     });
 
     test('Should be able to read document', async () => {
@@ -576,20 +719,111 @@ describe('User that is linked to waterfall with producer role', () => {
     });
   });
 
+  describe('Statements', () => {
+    test('Should be able to create statement if missing rightholderId', async () => {
+      const ref = db.doc('waterfall/WF-001/statements/S00X');
+      await assertSucceeds(ref.set({ id: 'S00X', foo: 'bar' }));
+    });
+
+    test('Should be able to update statements if not rightholder', async () => {
+      const ref = db.doc('waterfall/WF-001/statements/S001');
+      await assertSucceeds(ref.update({ id: 'S001', foo: 'bar' }));
+    });
+
+    test('Should be able to read statements if not rightholder', async () => {
+      const ref = db.doc('waterfall/WF-001/statements/S001');
+      await assertSucceeds(ref.get());
+    });
+
+    test('Should be able to update statements if rightholder', async () => {
+      const ref = db.doc('waterfall/WF-001/statements/S002');
+      await assertSucceeds(ref.update({ id: 'S002', foo: 'bar' }));
+    });
+
+    test('Should be able to read statements if rightholder', async () => {
+      const ref = db.doc('waterfall/WF-001/statements/S002');
+      await assertSucceeds(ref.get());
+    });
+
+    test('Should be able to list statements', async () => {
+      const ref = db.collection('waterfall/WF-001/statements');
+      await assertSucceeds(ref.get());
+    });
+  });
+
+  describe('Rights', () => {
+    test('Should be able to create rights', async () => {
+      const ref = db.doc('waterfall/WF-001/rights/R003');
+      await assertSucceeds(ref.set({ id: 'R003', foo: 'bar' }));
+    });
+
+    test('Should be able to update rights', async () => {
+      const ref = db.doc('waterfall/WF-001/rights/R001');
+      await assertSucceeds(ref.update({ id: 'R001', foo: 'bar' }));
+    });
+
+    test('Should be able to read rights', async () => {
+      const ref = db.doc('waterfall/WF-001/rights/R001');
+      await assertSucceeds(ref.get());
+    });
+
+    test('Should be able to list rights', async () => {
+      const ref = db.collection('waterfall/WF-001/rights');
+      await assertSucceeds(ref.get());
+    });
+  });
+
+  describe('Terms', () => {
+    test('Should be able to list all terms', async () => {
+      const ref = db.collection('terms');
+      await assertSucceeds(ref.get());
+    });
+
+    test('Should be able to create terms linked to a document he owns', async () => {
+      const ref = db.doc('terms/TW13');
+      await assertSucceeds(ref.set({ id: 'TW13', price: 150, titleId: 'WF-001', contractId: 'D002' }));
+    });
+
+    test('Should be able to create terms linked to a document he can read', async () => {
+      const ref = db.doc('terms/TW14');
+      await assertSucceeds(ref.set({ id: 'TW14', price: 150, titleId: 'WF-001', contractId: 'D003' }));
+    });
+
+    test('Should be able to update a term linked to a document he can read', async () => {
+      const ref = db.doc('terms/TW12');
+      await assertSucceeds(ref.update({ id: 'TW12', price: 150, titleId: 'WF-001', contractId: 'D003' }));
+    });
+
+    test('Should be able to update a term linked to a document that he owns', async () => {
+      const ref = db.doc('terms/TW13');
+      await assertSucceeds(ref.update({ id: 'TW13', price: 100, titleId: 'WF-001', contractId: 'D002' }));
+    });
+
+    test('Should be able to delete a term linked to a document he can read', async () => {
+      const ref = db.doc('terms/TW12');
+      await assertSucceeds(ref.delete());
+    });
+
+    test('Should be able to delete a term linked to a document that he owns', async () => {
+      const ref = db.doc('terms/TW13');
+      await assertSucceeds(ref.delete());
+    });
+  });
+
   describe('Permissions', () => {
     test('Should be able to create permissions document', async () => {
       const ref = db.doc('waterfall/WF-001/permissions/O003');
-      await assertSucceeds(ref.set({ id: 'O003', roles: ['financier'] }));
+      await assertSucceeds(ref.set({ id: 'O003', isAdmin: true }));
     });
 
     test('Should be able to update permissions document', async () => {
       const ref = db.doc('waterfall/WF-001/permissions/foo');
-      await assertSucceeds(ref.set({ id: 'foo', roles: ['producer', 'financier'] }));
+      await assertSucceeds(ref.update({ id: 'foo', rightholderIds: ['1234'] }));
     });
 
     test('Should not be able to change permissions document id', async () => {
       const ref = db.doc('waterfall/WF-001/permissions/O001');
-      await assertFails(ref.set({ id: 'O002' }));
+      await assertFails(ref.update({ id: 'O002' }));
     });
 
     test('Should be able to read permissions document', async () => {
@@ -602,13 +836,13 @@ describe('User that is linked to waterfall with producer role', () => {
       await assertSucceeds(ref.get());
     });
 
-    test('Should not be able to read permissions document if not producer anymore', async () => {
+    test('Should not be able to read permissions document if not admin anymore', async () => {
       const ref1 = db.doc('waterfall/WF-001/permissions/foo');
       await assertSucceeds(ref1.get());
 
-      // Self remove producer role
+      // Self remove admin
       const ref2 = db.doc('waterfall/WF-001/permissions/O001');
-      await assertSucceeds(ref2.set({ id: 'O001', roles: ['financier'] }));
+      await assertSucceeds(ref2.set({ id: 'O001', isAdmin: false }));
 
       const ref3 = db.doc('waterfall/WF-001/permissions/foo');
       await assertFails(ref3.get());
