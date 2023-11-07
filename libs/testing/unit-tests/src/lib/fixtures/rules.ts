@@ -255,6 +255,9 @@ export const rulesFixtures = {
     note: '',
     orgIds: ['O001']
   },
+  'movies/WF-001': {
+    id: 'WF-001',
+  },
 
   // Events
   'events/E001': {
@@ -331,6 +334,52 @@ export const rulesFixtures = {
     id: 'C002',
     stakeholders: []
   },
+  'contracts/W001': {
+    id: 'W001',
+    buyerId: 'O001',
+  },
+  'contracts/W002': {
+    id: 'W002',
+    sellerId: 'O001',
+  },
+
+  // Terms
+  'terms/T00X': {
+    id: 'T00X',
+    contractId: 'XXX'
+  },
+  'terms/T003': {
+    id: 'T003',
+    contractId: 'W001'
+  },
+  'terms/T004': {
+    id: 'T004',
+    contractId: 'W002'
+  },
+
+  // Incomes
+  'incomes/I00X': {
+    id: 'I00X',
+    contractId: 'W001'
+  },
+  'incomes/I001': {
+    id: 'I001',
+    titleId: 'MI-0d7',
+    contractId: 'D002'
+  },
+  'incomes/I002': {
+    id: 'I002',
+    titleId: 'MI-0d7',
+    contractId: 'D003'
+  },
+  'incomes/I013': {
+    id: 'I013',
+    contractId: 'W002'
+  },
+  'incomes/I016': {
+    id: 'I016',
+    contractId: 'C001'
+  },
 
   // Consents
   'consents/O001': {
@@ -360,18 +409,19 @@ export const rulesFixtures = {
   },
   'waterfall/MI-0d7/permissions/O002': {
     id: 'O002',
-    roles: ['financier']
+    isAdmin: false
   },
   'waterfall/WF-001/permissions/O001': {
     id: 'O001',
-    roles: ['producer']
+    isAdmin: true,
   },
   'waterfall/WF-001/permissions/foo': {
     id: 'foo',
-    roles: []
+    isAdmin: false
   },
   'waterfall/MI-0d7/permissions/O003': {
     id: 'O003',
+    isAdmin: false
   },
   'waterfall/M001/documents/D001': {
     id: 'D001'
@@ -384,17 +434,34 @@ export const rulesFixtures = {
   },
   'waterfall/MI-0d7/documents/D003': {
     id: 'D003',
-    sharedWith: ['O002']
   },
-  'incomes/I001': {
-    id: 'I001',
-    titleId: 'MI-0d7',
-    contractId: 'D002'
+  'waterfall/M001/statements/S001': {
+    id: 'S001',
   },
-  'incomes/I002': {
-    id: 'I002',
-    titleId: 'MI-0d7',
-    contractId: 'D003'
+  'waterfall/MI-0d7/statements/S001': {
+    id: 'S001',
+    rightholderId: 'O003'
+  },
+  'waterfall/MI-0d7/statements/S002': {
+    id: 'S002',
+    rightholderId: 'O002'
+  },
+  'waterfall/WF-001/statements/S001': {
+    id: 'S001',
+    rightholderId: 'O003'
+  },
+  'waterfall/WF-001/statements/S002': {
+    id: 'S002',
+    rightholderId: 'O002'
+  },
+  'waterfall/M001/rights/R001': {
+    id: 'R001',
+  },
+  'waterfall/MI-0d7/rights/R001': {
+    id: 'R001',
+  },
+  'waterfall/WF-001/rights/R001': {
+    id: 'R001',
   },
   'expenses/E001': {
     id: 'E001',
@@ -406,7 +473,7 @@ export const rulesFixtures = {
     titleId: 'MI-0d7',
     contractId: 'D003'
   },
-  
+
 };
 
 

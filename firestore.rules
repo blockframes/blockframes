@@ -344,11 +344,11 @@ service cloud.firestore {
         && ( isNotUpdatingFieldDepth3(['app', 'catalog', 'status']) || ( currAppAccess.catalog.access == true && newAppAccess.catalog.status in ['submitted', 'draft', 'archived'] ) )
         && ( isNotUpdatingFieldDepth3(['app', 'waterfall', 'status']) || ( currAppAccess.waterfall.access == true && newAppAccess.waterfall.status in ['accepted'] ) )
         && ( isNotUpdatingFieldDepth3(['app', 'festival', 'status']) || ( currAppAccess.festival.access == true && newAppAccess.festival.status in ['submitted', 'draft', 'accepted', 'archived'] ) )
-        && ( isNotUpdatingFieldDepth3(['app', 'financiers', 'status']) || ( currAppAccess.financiers.access == true && newAppAccess.financiers.status in ['submitted', 'draft', 'archived'] ) )
+        // && ( isNotUpdatingFieldDepth3(['app', 'financiers', 'status']) || ( currAppAccess.financiers.access == true && newAppAccess.financiers.status in ['submitted', 'draft', 'archived'] ) )
         && ( isNotUpdatingFieldDepth3(['app', 'catalog', 'access']) || newAppAccess.catalog.access == false )
         && ( isNotUpdatingFieldDepth3(['app', 'waterfall', 'access']) || newAppAccess.waterfall.access == false )
         && ( isNotUpdatingFieldDepth3(['app', 'festival', 'access']) || newAppAccess.festival.access == false )
-        && ( isNotUpdatingFieldDepth3(['app', 'financiers', 'access']) || newAppAccess.financiers.access == false )
+        // && ( isNotUpdatingFieldDepth3(['app', 'financiers', 'access']) || newAppAccess.financiers.access == false )
         && ( orgCan('canUpdate', orgId, movie.id) || isWaterfallAdmin(movie.id) );
     }
 
@@ -623,18 +623,18 @@ service cloud.firestore {
         allow read: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( isWaterfallAdmin(waterfallId) || existingData().rightholderId == userOrgId() );
+          && ( isWaterfallAdmin(waterfallId) || ( isWaterfallMember(waterfallId) && existingData().rightholderId == userOrgId() ));
         allow create: if userHasValidOrg()
           && isRequestFieldValueEqualToOrNotSetted(['id'], statementId)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( isWaterfallAdmin(waterfallId) || incomingData().rightholderId == userOrgId() );
+          && ( isWaterfallAdmin(waterfallId) || ( isWaterfallMember(waterfallId) && incomingData().rightholderId == userOrgId() ));
         allow update: if userHasValidOrg()
           && isNotUpdatingId('id', existingData().id)
           && isNotUpdatingId('rightholderId', existingData().rightholderId)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( isWaterfallAdmin(waterfallId) || existingData().rightholderId == userOrgId() );
+          && ( isWaterfallAdmin(waterfallId) || ( isWaterfallMember(waterfallId) && existingData().rightholderId == userOrgId() ));
         allow delete: if false;
       }
 

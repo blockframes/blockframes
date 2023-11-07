@@ -153,7 +153,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
               await assertFile(user.orgId === document.ownerId || permissionsDoc.isAdmin, notAllowedError);
             } else {
               // TODO #9389 init WaterfallDocument with ownerId = user.orgId
-              // Not implemented yet: should be used when we uploading a document wiohtout filling the document form
+              // Not implemented yet: should be used when we uploading a document without filling the document form
             }
 
             break;

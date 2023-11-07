@@ -99,8 +99,8 @@ export async function onWaterfallDelete(snap: BlockframesSnapshot<Waterfall>, co
   // Delete sub-collections
   await removeAllSubcollections(snap, batch);
 
-  // TODO #9389
-  // cleanWaterfallMedias(before, after);
+  const waterfall = snap.data();
+  cleanWaterfallMedias(waterfall);
 
   // Remove remaining standalone incomes and expenses (not linked to contracts)
   const [incomes, expenses] = await Promise.all([
