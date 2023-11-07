@@ -12,17 +12,13 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
 })
 export class RightsComponent {
   public rights$ = this.shell.rights$;
+  public waterfall = this.shell.waterfall;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
     private rightService: RightService,
     private snackBar: MatSnackBar,
   ) { }
-
-  public getRightholderName(id: string) {
-    if (!id) return '--';
-    return this.shell.waterfall.rightholders.find(r => r.id === id)?.name || '--';
-  }
 
   public async removeRights(rights: Right[]) {
     const promises = rights.map(right => this.rightService.remove(right.id, { params: { waterfallId: this.shell.waterfall.id } }));

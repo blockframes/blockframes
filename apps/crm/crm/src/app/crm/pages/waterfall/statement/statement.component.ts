@@ -165,11 +165,6 @@ export class StatementComponent implements OnInit {
     return { [item.currency]: item.price };
   }
 
-  public getRightholderName(id: string) {
-    if (!id) return '--';
-    return this.waterfall.rightholders.find(r => r.id === id)?.name || '--';
-  }
-
   public getRightholderActual(type: 'revenu' | 'turnover') {
     const orgState = this.state.waterfall.state.orgs[this.statement.rightholderId];
     const actual = orgState ? orgState[type].actual : 0;

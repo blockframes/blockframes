@@ -12,6 +12,7 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { JoinPipeModule, MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
+import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -38,6 +39,7 @@ import { MatInputModule } from '@angular/material/input';
     JoinPipeModule,
     MaxLengthModule,
     LogoSpinnerModule,
+    RightHolderNamePipeModule,
 
     MatIconModule,
     MatButtonModule,

@@ -19,8 +19,8 @@
     </section>
   
     <section>
-      <ul>
-        <li><strong>Rightholder :</strong> {{ getRightholderName(statement.rightholderId) }}</li>
+      <ul *ngIf="waterfall$ | async as waterfall">
+        <li><strong>Rightholder :</strong> {{ statement.rightholderId | rightholderName: waterfall }}</li>
         <li><strong>From :</strong> {{ statement.duration.from | date: 'MM/dd/yyyy' }}</li>
         <li><strong>To :</strong> {{ statement.duration.to | date: 'MM/dd/yyyy' }}</li>
         <li><strong>Contract :</strong> {{ getContractId() }}</li>
@@ -137,8 +137,8 @@
   
     <ng-container *ngIf="getRightholderPayment() as rightholderPayment">
       <h3>Payment</h3>
-      <ul>
-        <li><strong>To :</strong> {{ getRightholderName(rightholderPayment.to) }}</li>
+      <ul *ngIf="waterfall$ | async as waterfall">
+        <li><strong>To :</strong> {{ rightholderPayment.to | rightholderName: waterfall }}</li>
         <li><strong>Amount :</strong> <price-per-currency [price]="toPricePerCurrency(rightholderPayment)"></price-per-currency></li>
         <li><strong>Status :</strong> {{ rightholderPayment.status | toLabel: 'paymentStatus' }}</li>
         <li><strong>Related to: </strong> {{ rightholderPayment.incomeIds | join }}</li>

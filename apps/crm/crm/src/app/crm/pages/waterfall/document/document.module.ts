@@ -10,6 +10,7 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { DetailedGroupModule } from '@blockframes/ui/detail-modal/detailed.module';
 import { ToGroupLabelPipeModule, JoinPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
+import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -27,6 +28,7 @@ import { MatButtonModule } from '@angular/material/button';
     JoinPipeModule,
     PricePerCurrencyModule,
     ToLabelModule,
+    RightHolderNamePipeModule,
 
     MatIconModule,
     MatButtonModule,

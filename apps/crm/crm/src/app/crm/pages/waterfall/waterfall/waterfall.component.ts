@@ -3,6 +3,7 @@ import { PricePerCurrency, mainCurrency } from '@blockframes/model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
+import { rightholderName } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 
 @Component({
   selector: 'crm-waterfall',
@@ -26,11 +27,6 @@ export class WaterfallComponent {
     private snackBar: MatSnackBar
   ) {
     this.shell.setDate(undefined);
-  }
-
-  public getRightholderName(id: string) {
-    if (!id) return '--';
-    return this.shell.waterfall.rightholders.find(r => r.id === id)?.name || '--';
   }
 
   public getPrice(amount: number): PricePerCurrency {
@@ -78,7 +74,7 @@ export class WaterfallComponent {
     if (!from) return '--';
     if (typeof from === 'string') return from;
 
-    if (from?.org) return this.getRightholderName(from.org);
+    if (from?.org) return rightholderName(from.org, this.shell.waterfall);
     if (from?.income) return from.income;
     if (from?.right) return from.right;
   }

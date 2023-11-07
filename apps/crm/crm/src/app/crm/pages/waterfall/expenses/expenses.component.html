@@ -10,7 +10,7 @@
       {{ id }}
     </ng-template>
     <ng-template colRef="rightholderId" label="Rightholder" let-rightholderId sort>
-      {{ getRightholderName(rightholderId) }}
+      {{ rightholderId | rightholderName: waterfall }}
     </ng-template>
     <ng-template colRef="" label="Contract Id" let-item sort>
       {{ getCurrentContract({ contractId: item.contractId, date: item.date }) }}
