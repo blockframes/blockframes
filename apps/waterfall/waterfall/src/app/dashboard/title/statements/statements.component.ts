@@ -2,6 +2,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 // Blockframes
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 
 
 @Component({
@@ -11,4 +13,12 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatementsComponent {
+
+  constructor(
+    private shell: DashboardWaterfallShellComponent,
+    private dynTitle: DynamicTitleService,
+  ) {
+    this.shell.setDate(undefined);
+    this.dynTitle.setPageTitle(this.shell.movie.title.international, 'Statements');
+  }
 }
