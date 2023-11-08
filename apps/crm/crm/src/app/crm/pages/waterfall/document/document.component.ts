@@ -16,6 +16,8 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
 export class DocumentComponent {
   private contractId = this.route.snapshot.paramMap.get('documentId');
 
+  public waterfall = this.shell.waterfall;
+
   public contract$ = this.shell.contractsAndTerms$.pipe(
     map(contracts => contracts.find(c => c.id === this.contractId)),
   );
@@ -42,11 +44,6 @@ export class DocumentComponent {
 
   public openDetails(items: string[], scope: Scope) {
     this.dialog.open(DetailedGroupComponent, { data: createModalData({ items, scope }), autoFocus: false });
-  }
-
-  public getRightholderName(id: string) {
-    if (!id) return '--';
-    return this.shell.waterfall.rightholders.find(r => r.id === id)?.name || '--';
   }
 
   public getDeclaredAmount(contract: WaterfallContract & { terms: Term[] }) {

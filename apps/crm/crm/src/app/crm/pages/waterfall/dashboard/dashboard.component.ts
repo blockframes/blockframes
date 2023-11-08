@@ -161,11 +161,6 @@ export class DashboardComponent implements OnInit {
     return this.waterfall.rightholders.find(r => r.id === id);
   }
 
-  public getRightholderName(id: string) {
-    if (!id) return '--';
-    return this.getRightholder(id)?.name || '--';
-  }
-
   public getCurrentContract(item: Statement) {
     if (isDistributorStatement(item) || isProducerStatement(item)) {
       const contracts = getContractAndAmendments(item.contractId, this.contracts);

@@ -21,9 +21,9 @@
     <ng-template colRef="contractId" label="Contract" let-contractId sort>
       {{ contractId ? contractId : '--' }}
     </ng-template>
-    <ng-template colRef="" label="Org" let-item sort>
-      <ng-container *ngIf="item.rightholderId">{{ getRightholderName(item.rightholderId) }}</ng-container>
-      <ng-container *ngIf="item.blameId">{{ getRightholderName(item.blameId) }}</ng-container>
+    <ng-template colRef="" label="Rightholder" let-item sort>
+      <ng-container *ngIf="item.rightholderId">{{ item.rightholderId | rightholderName: waterfall }}</ng-container>
+      <ng-container *ngIf="item.blameId">{{ item.blameId | rightholderName: waterfall }}</ng-container>
       <ng-container *ngIf="!item.rightholderId && !item.blameId">--</ng-container>
     </ng-template>
     <ng-template colRef="groupId" label="Group" let-groupId sort>

@@ -18,7 +18,7 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExpensesComponent implements OnInit {
-
+  public waterfall = this.shell.waterfall;
   public expenses$ = this.shell.expenses$;
   private contracts: WaterfallContract[] = [];
 
@@ -30,11 +30,6 @@ export class ExpensesComponent implements OnInit {
 
   async ngOnInit() {
     this.contracts = await firstValueFrom(this.shell.contracts$);
-  }
-
-  public getRightholderName(id: string) {
-    if (!id) return '--';
-    return this.shell.waterfall.rightholders.find(r => r.id === id)?.name || '--';
   }
 
   public getCurrentContract(item: { contractId: string, date: Date }) {

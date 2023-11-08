@@ -16,10 +16,10 @@
       {{ rootId ? rootId : '--' }}
     </ng-template>
     <ng-template colRef="sellerId" label="Licensor" let-sellerId sort>
-      {{ getRightholderName(sellerId) }}
+      {{ sellerId | rightholderName: waterfall }}
     </ng-template>
     <ng-template colRef="buyerId" label="Licensee" let-buyerId sort>
-      {{ getRightholderName(buyerId) }}
+      {{ buyerId | rightholderName: waterfall }}
     </ng-template>
     <ng-template colRef="" label="Price" let-item sort>
       <price-per-currency *ngIf="getDeclaredAmount(item) as amount" [price]="amount"></price-per-currency>
