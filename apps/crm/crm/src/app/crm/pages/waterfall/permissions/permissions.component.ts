@@ -57,4 +57,8 @@ export class PermissionsComponent {
       this.waterfallPermissionsService.upsert(this.form.value, { params: { waterfallId: this.waterfall.id } }),
     ]);
   }
+
+  public removePermissions(id: string) {
+    return this.waterfallPermissionsService.remove(id, { params: { waterfallId: this.waterfall.id } });
+  }
 }

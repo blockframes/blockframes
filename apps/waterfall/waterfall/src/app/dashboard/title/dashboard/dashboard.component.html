@@ -73,14 +73,13 @@
     <article class="surface">
       <h3>Net Revenue Over Time</h3>
       <mat-divider></mat-divider>
-      <mat-form-field appearance="outline" *ngIf="rightholdersState$ | async as rightholders">
+      <waterfall-rightholder-select
+        *ngIf="rightholdersState$ | async as rightholders"
+        [rightholders]="rightholders"
+        [value]="currentRightholder$ | async"
+        [control]="rightholderControl">
         <mat-label>Highlight Right Holder</mat-label>
-        <mat-select *ngIf="currentRightholder$ | async as currentRightholder" [value]="currentRightholder" [formControl]="rightholderControl">
-          <mat-option *ngFor="let rightholder of rightholders" [value]="rightholder.id">
-            {{ rightholder.name | titlecase }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      </waterfall-rightholder-select>
       <apx-chart *ngIf="netRevenueChart$ | async as chartOptions"
         [series]="chartOptions.series"
         [chart]="chartOptions.chart"

@@ -13,13 +13,14 @@ import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/righthol
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { RightholderSelectModule } from '@blockframes/waterfall/components/rightholder-select/rightholder-select.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [PermissionsComponent],
@@ -33,12 +34,13 @@ import { MatSelectModule } from '@angular/material/select';
     AlgoliaAutocompleteModule,
     StorageFileModule,
     ImageModule,
+    RightholderSelectModule,
 
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,
     MatCheckboxModule,
-    MatSelectModule,
+    MatTooltipModule,
     RouterModule.forChild([{ path: '', component: PermissionsComponent }])
   ]
 })

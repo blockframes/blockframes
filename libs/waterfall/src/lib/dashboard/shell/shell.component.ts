@@ -63,13 +63,13 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   public movie: Movie;
 
   // ---------
-  // Rules checks
+  // Rules & Identity checks
   // ---------
   public permissions$ = this.movie$.pipe(
     switchMap(({ id: waterfallId }) => this.permissionService.valueChanges({ waterfallId }))
   );
 
-  public permission$ = this.movie$.pipe(
+  private permission$ = this.movie$.pipe(
     switchMap(({ id: waterfallId }) => this.permissionService.valueChanges(this.authService.profile.orgId, { waterfallId })),
   );
 
@@ -79,6 +79,11 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
 
   private canBypassRules$ = combineLatest([this.isWaterfallAdmin$, this.authService.isBlockframesAdmin$]).pipe(
     map(([isWaterfallAdmin, isBlockframesAdmin]) => isWaterfallAdmin || isBlockframesAdmin)
+  );
+
+  public currentRightholder$ = this.permission$.pipe(
+    map(permission => permission.rightholderIds.map(r => this.waterfall.rightholders.find(rh => rh.id === r))),
+    map(rightholders => rightholders.pop())
   );
 
   // ---------

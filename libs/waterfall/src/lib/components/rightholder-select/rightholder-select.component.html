@@ -1,0 +1,11 @@
+<mat-form-field [appearance]="mode">
+  <mat-icon matPrefix svgIcon="business"></mat-icon>
+  <mat-label>
+    <ng-content select="mat-label"></ng-content>
+  </mat-label>
+  <mat-select [disabled]="disabled" [value]="value" [formControl]="control" [required]="required" [multiple]="multiple">
+    <mat-option *ngFor="let rightholder of rightholders" [value]="rightholder.id">
+      {{ rightholder.name | titlecase }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
