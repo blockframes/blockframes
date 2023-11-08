@@ -138,8 +138,8 @@ describe('User that is not owner of movie', () => {
 
   describe('Waterfall', () => {
     it('Should not be able to create waterfall document', async () => {
-      const ref = db.doc('waterfall/M001');
-      await assertFails(ref.set({ id: 'M001' }));
+      const ref = db.doc('waterfall/M00X');
+      await assertFails(ref.set({ id: 'M00X' }));
     });
 
     test('Should not be able to read waterfall document', async () => {
@@ -532,19 +532,19 @@ describe('User that is linked to waterfall but not admin', () => {
         await assertFails(ref.set({ id: 'S00X', foo: 'bar' }));
       });
 
-      test('Should be able to create statement', async () => {
+      test('Should be able to create statement if orgId can manage rightholderId', async () => {
         const ref = db.doc('waterfall/MI-0d7/statements/S00X');
-        await assertSucceeds(ref.set({ id: 'S00X', rightholderId: 'O002' }));
+        await assertSucceeds(ref.set({ id: 'S00X', rightholderId: 'RH002' }));
       });
 
-      test('Should not be able to update statements if not rightholder', async () => {
+      test('Should not be able to update statements if orgId can not manage rightholder', async () => {
         const ref = db.doc('waterfall/MI-0d7/statements/S001');
         await assertFails(ref.update({ id: 'S001', foo: 'bar' }));
       });
 
-      test('Should not be able to read statements if not rightholder', async () => {
+      test('Should be able to read statements', async () => {
         const ref = db.doc('waterfall/MI-0d7/statements/S001');
-        await assertFails(ref.get());
+        await assertSucceeds(ref.get());
       });
 
       test('Should be able to update statements if rightholder', async () => {
@@ -552,19 +552,24 @@ describe('User that is linked to waterfall but not admin', () => {
         await assertSucceeds(ref.update({ id: 'S002', foo: 'bar' }));
       });
 
-      test('Should be able to read statements if rightholder', async () => {
-        const ref = db.doc('waterfall/MI-0d7/statements/S002');
+      test('Should be able to query statements documents for rightholders org can manage', async () => {
+        const ref = db.collection('waterfall/MI-0d7/statements').where('rightholderId', '==', 'RH002');
         await assertSucceeds(ref.get());
       });
 
-      test('Should be able to query statements documents if rightholder', async () => {
-        const ref = db.collection('waterfall/MI-0d7/statements').where('rightholderId', '==', 'O002');
-        await assertSucceeds(ref.get());
-      });
-
-      test('Should not be able to list statements', async () => {
+      test('Should be able to list statements', async () => {
         const ref = db.collection('waterfall/MI-0d7/statements');
-        await assertFails(ref.get());
+        await assertSucceeds(ref.get());
+      });
+
+      test('Should be able to delete statement for rightholders org can manage', async () => {
+        const ref = db.doc('waterfall/MI-0d7/statements/S00X');
+        await assertSucceeds(ref.delete());
+      });
+
+      test('Should not be able to delete statement for rightholders org cannot manage', async () => {
+        const ref = db.doc('waterfall/MI-0d7/statements/S001');
+        await assertFails(ref.delete());
       });
     });
 
@@ -748,6 +753,11 @@ describe('User that is linked to waterfall with admin level', () => {
     test('Should be able to list statements', async () => {
       const ref = db.collection('waterfall/WF-001/statements');
       await assertSucceeds(ref.get());
+    });
+
+    test('Should be able to delete statement', async () => {
+      const ref = db.doc('waterfall/WF-001/statements/S001');
+      await assertSucceeds(ref.delete());
     });
   });
 

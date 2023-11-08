@@ -623,19 +623,22 @@ service cloud.firestore {
         allow read: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( isWaterfallAdmin(waterfallId) || ( isWaterfallMember(waterfallId) && existingData().rightholderId == userOrgId() ));
+          && isWaterfallMember(waterfallId);
         allow create: if userHasValidOrg()
           && isRequestFieldValueEqualToOrNotSetted(['id'], statementId)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( isWaterfallAdmin(waterfallId) || ( isWaterfallMember(waterfallId) && incomingData().rightholderId == userOrgId() ));
+          && ( isWaterfallAdmin(waterfallId) || canManage(waterfallId, incomingData().rightholderId) );
         allow update: if userHasValidOrg()
           && isNotUpdatingId('id', existingData().id)
           && isNotUpdatingId('rightholderId', existingData().rightholderId)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( isWaterfallAdmin(waterfallId) || ( isWaterfallMember(waterfallId) && existingData().rightholderId == userOrgId() ));
-        allow delete: if false;
+          && ( isWaterfallAdmin(waterfallId) || canManage(waterfallId, existingData().rightholderId) );
+        allow delete: if userHasValidOrg()
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && ( isWaterfallAdmin(waterfallId) || canManage(waterfallId, existingData().rightholderId) );
       }
 
       match /permissions/{orgId} {
@@ -688,6 +691,10 @@ service cloud.firestore {
 
     function isWaterfallMember(waterfallId) {
       return userOrgId() in getWaterfall(waterfallId).orgIds;
+    }
+
+    function canManage(waterfallId, rightholderId) {
+      return isWaterfallMember(waterfallId) && rightholderId in getWaterfallPermissions(waterfallId).rightholderIds;
     }
 
     function isOnlyUpdatingRightholders() {

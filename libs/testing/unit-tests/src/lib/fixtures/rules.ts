@@ -419,7 +419,8 @@ export const rulesFixtures = {
   },
   'waterfall/MI-0d7/permissions/O002': {
     id: 'O002',
-    isAdmin: false
+    isAdmin: false,
+    rightholderIds: ['RH002']
   },
   'waterfall/WF-001/permissions/O001': {
     id: 'O001',
@@ -450,19 +451,19 @@ export const rulesFixtures = {
   },
   'waterfall/MI-0d7/statements/S001': {
     id: 'S001',
-    rightholderId: 'O003'
+    rightholderId: 'RH003'
   },
   'waterfall/MI-0d7/statements/S002': {
     id: 'S002',
-    rightholderId: 'O002'
+    rightholderId: 'RH002'
   },
   'waterfall/WF-001/statements/S001': {
     id: 'S001',
-    rightholderId: 'O003'
+    rightholderId: 'RH003'
   },
   'waterfall/WF-001/statements/S002': {
     id: 'S002',
-    rightholderId: 'O002'
+    rightholderId: 'RH002'
   },
   'waterfall/M001/rights/R001': {
     id: 'R001',
