@@ -13,6 +13,7 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
 })
 export class ContractsComponent {
   public contracts$ = this.shell.contractsAndTerms$;
+  public waterfall = this.shell.waterfall;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
@@ -28,11 +29,6 @@ export class ContractsComponent {
 
   public getDeclaredAmount(contract: WaterfallContract & { terms: Term[] }) {
     return getDeclaredAmount(contract);
-  }
-
-  public getRightholderName(id: string) {
-    if (!id) return '--';
-    return this.shell.waterfall.rightholders.find(r => r.id === id)?.name || '--';
   }
 
   public async removeDocuments(documents: WaterfallContract[]) {

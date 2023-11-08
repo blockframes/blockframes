@@ -13,6 +13,7 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { GraphModule } from '@blockframes/waterfall/components/g6/graph/graph.module';
 import { TreeModule } from '@blockframes/waterfall/components/g6/tree/tree.module';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
+import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 
 // Material
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -30,6 +31,7 @@ import { MatIconModule } from '@angular/material/icon';
     GraphModule,
     TreeModule,
     ClipboardModule,
+    RightHolderNamePipeModule,
     MatIconModule,
     MatButtonModule,
     MatSnackBarModule,

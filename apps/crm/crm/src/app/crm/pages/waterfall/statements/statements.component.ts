@@ -15,6 +15,7 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
 export class StatementsComponent implements OnInit {
 
   public statements$ = this.shell.statements$;
+  public waterfall = this.shell.waterfall;
   private contracts: WaterfallContract[] = [];
 
   constructor(
@@ -31,11 +32,6 @@ export class StatementsComponent implements OnInit {
 
   public goTo(id: string) {
     this.router.navigate([id], { relativeTo: this.route });
-  }
-
-  public getRightholderName(id: string) {
-    if (!id) return '--';
-    return this.shell.waterfall.rightholders.find(r => r.id === id)?.name || '--';
   }
 
   public getCurrentContract(item: { contractId: string, date: Date }) {

@@ -47,7 +47,7 @@
 
         <ng-container *ngIf="(contracts$ | async)[selected].length > 0 && !creating; else creatingContracts">
           <div *ngFor="let contract of (contracts$ | async)[selected]" class="contract-list">
-            <p>{{contract.buyerId | rightholderName: waterfall}} & {{contract.sellerId | rightholderName: waterfall}}</p>
+            <p>{{ contract.buyerId | rightholderName: waterfall }} & {{ contract.sellerId | rightholderName: waterfall }}</p>
             
             <!-- TODO -->
             <!-- <p class="amendment">1 amendment - 30/06/2023</p> -->

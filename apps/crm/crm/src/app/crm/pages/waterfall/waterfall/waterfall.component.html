@@ -112,8 +112,8 @@
           </button>
         </ng-template>
         <ng-template colRef="payload" label="Rightholder" let-payload>
-          <ng-container *ngIf="payload.orgId">{{ getRightholderName(payload.orgId) }}</ng-container>
-          <ng-container *ngIf="payload.blameId">{{ getRightholderName(payload.blameId) }}</ng-container>
+          <ng-container *ngIf="payload.orgId">{{ payload.orgId | rightholderName: waterfall }}</ng-container>
+          <ng-container *ngIf="payload.blameId">{{ payload.blameId | rightholderName: waterfall }}</ng-container>
           <ng-container *ngIf="!payload.orgId && !payload.blameId">--</ng-container>
         </ng-template>
         <ng-template colRef="payload.amount" label="Amount" let-amount>

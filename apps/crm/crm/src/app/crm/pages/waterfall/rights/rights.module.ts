@@ -6,6 +6,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { RightsComponent } from './rights.component';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
+import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -21,6 +22,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     TableModule,
     ToLabelModule,
     ClipboardModule,
+    RightHolderNamePipeModule,
 
     MatIconModule,
     MatButtonModule,
