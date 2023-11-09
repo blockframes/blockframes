@@ -7,7 +7,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 
 // Blockframes
-import { Waterfall } from '@blockframes/model';
+import { rightholderGroups, RightholderRole, Waterfall } from '@blockframes/model';
 import { BucketTermForm, createBucketTermControl } from '@blockframes/contract/bucket/form';
 import { WaterfallDocumentForm, WaterfallDocumentFormValue } from '@blockframes/waterfall/form/document.form';
 
@@ -21,10 +21,12 @@ export class DocumentFormComponent implements OnInit, OnDestroy {
 
   @Input() waterfall: Waterfall;
   @Input() form: WaterfallDocumentForm;
+  @Input() type: RightholderRole;
 
   hideStartDate$ = new BehaviorSubject(true);
 
-  toggleTermsControl = new FormControl(true);
+  showTerms: boolean;
+  toggleTermsControl = new FormControl(false);
   durationControl = new FormControl<number | undefined>(undefined);
 
   periods: (keyof Duration)[] = ['days', 'weeks', 'months', 'years'];
@@ -38,8 +40,10 @@ export class DocumentFormComponent implements OnInit, OnDestroy {
   @Output() removeFile = new EventEmitter<boolean>(false);
 
   ngOnInit() {
-    if (this.form.controls.terms.length === 0) {
-      this.addTerm();
+    this.showTerms = rightholderGroups.withTerms.includes(this.type);
+    if (this.showTerms) {
+      this.toggleTermsControl.setValue(true);
+      if (this.form.controls.terms.length === 0) this.addTerm();
     }
     const names = this.waterfall.rightholders.map(r => r.name);
     this.licensee$.next(names);

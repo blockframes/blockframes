@@ -40,6 +40,7 @@ import { unique } from '@blockframes/utils/helpers';
 import { APP } from '@blockframes/utils/routes/utils';
 import { WaterfallPermissionsService } from '@blockframes/waterfall/permissions.service';
 import { AuthService } from '@blockframes/auth/service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Directive({ selector: 'waterfall-cta, [waterfallCta]' })
 export class WaterfallCtaDirective { }
@@ -73,7 +74,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     switchMap(({ id: waterfallId }) => this.permissionService.valueChanges(this.authService.profile.orgId, { waterfallId })),
   );
 
-  private isWaterfallAdmin$ = this.permission$.pipe(
+  public isWaterfallAdmin$ = this.permission$.pipe(
     map(permission => permission?.isAdmin)
   );
 
@@ -116,22 +117,12 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     switchMap(({ id: waterfallId }) => this.statementService.valueChanges({ waterfallId }))
   );
 
-  private myIncomes$ = this.contracts$.pipe(
-    switchMap(contracts => Promise.all(contracts.map(c => this.incomeService.getValue([where('contractId', '==', c.id)])))),
-    map(incomes => incomes.flat())
+  public incomes$ = this.movie$.pipe(
+    switchMap(({ id: waterfallId }) => this.incomeService.valueChanges([where('titleId', '==', waterfallId)]))
   );
 
-  public incomes$ = combineLatest([this.movie$, this.canBypassRules$]).pipe(
-    switchMap(([{ id: waterfallId }, canBypassRules]) => canBypassRules ? this.incomeService.valueChanges([where('titleId', '==', waterfallId)]) : this.myIncomes$)
-  );
-
-  private myExpenses$ = this.contracts$.pipe(
-    switchMap(contracts => Promise.all(contracts.map(c => this.expenseService.getValue([where('contractId', '==', c.id)])))),
-    map(expenses => expenses.flat())
-  );
-
-  public expenses$ = combineLatest([this.movie$, this.canBypassRules$]).pipe(
-    switchMap(([{ id: waterfallId }, canBypassRules]) => canBypassRules ? this.expenseService.valueChanges([where('titleId', '==', waterfallId)]) : this.myExpenses$)
+  public expenses$ = this.movie$.pipe(
+    switchMap(({ id: waterfallId }) => this.expenseService.valueChanges([where('titleId', '==', waterfallId)]))
   );
 
   // ---------
@@ -223,7 +214,8 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     private permissionService: WaterfallPermissionsService,
     private router: Router,
     private route: ActivatedRoute,
-    private navService: NavigationService
+    private navService: NavigationService,
+    private snackBar: MatSnackBar,
   ) { }
 
   ngOnInit() {
@@ -240,11 +232,13 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     this.date$.next(date);
   }
 
-  async initWaterfall(version: Partial<Version>) {
+  async initWaterfall(version: Partial<Version> = { id: `version_${this.waterfall.versions.length + 1}`, description: `Version ${this.waterfall.versions.length + 1}` }) {
+    this.snackBar.open(`Creating version "${version.id}"... Please wait`, 'close');
     this.isRefreshing$.next(true);
     const data = await firstValueFrom(this.data$);
     const waterfall = await this.waterfallService.initWaterfall(data, version);
     this.isRefreshing$.next(false);
+    this.snackBar.open(`Version "${version.id}" initialized !`, 'close', { duration: 5000 });
     return waterfall;
   }
 

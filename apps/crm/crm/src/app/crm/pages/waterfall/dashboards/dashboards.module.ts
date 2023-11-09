@@ -8,6 +8,7 @@ import { DashboardsComponent } from './dashboards.component';
 
 // Modules
 import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { EmptyWaterfallModule } from '@blockframes/waterfall/components/empty/empty.module';
 
 // Material
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -18,7 +19,9 @@ import { MatIconModule } from '@angular/material/icon';
   declarations: [DashboardsComponent],
   imports: [
     CommonModule,
+
     TableModule,
+    EmptyWaterfallModule,
 
     MatIconModule,
     MatButtonModule,

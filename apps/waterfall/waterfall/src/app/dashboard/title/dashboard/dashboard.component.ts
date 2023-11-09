@@ -52,6 +52,7 @@ type ChartOptions = {
 })
 export class DashboardComponent {
   private waterfall = this.shell.waterfall;
+  public waterfall$ = this.shell.waterfall$;
   public state$ = this.shell.state$;
   public currentRightholder$ = this.shell.currentRightholder$.pipe(
     tap(rightholder => {

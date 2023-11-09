@@ -14,6 +14,7 @@ import { GraphModule } from '@blockframes/waterfall/components/g6/graph/graph.mo
 import { TreeModule } from '@blockframes/waterfall/components/g6/tree/tree.module';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
+import { EmptyWaterfallModule } from '@blockframes/waterfall/components/empty/empty.module';
 
 // Material
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -25,6 +26,7 @@ import { MatIconModule } from '@angular/material/icon';
   declarations: [WaterfallComponent],
   imports: [
     CommonModule,
+
     TableModule,
     ImageModule,
     PricePerCurrencyModule,
@@ -32,6 +34,8 @@ import { MatIconModule } from '@angular/material/icon';
     TreeModule,
     ClipboardModule,
     RightHolderNamePipeModule,
+    EmptyWaterfallModule,
+
     MatIconModule,
     MatButtonModule,
     MatSnackBarModule,

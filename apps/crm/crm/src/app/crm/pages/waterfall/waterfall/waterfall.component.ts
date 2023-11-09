@@ -12,18 +12,11 @@ import { rightholderName } from '@blockframes/waterfall/pipes/rightholder-name.p
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaterfallComponent {
-  public waterfall$ = this.shell.waterfall$;
-  public incomes$ = this.shell.incomes$;
-  public contracts$ = this.shell.contracts$;
-  public state$ = this.shell.state$;
-  public canInitWaterfall$ = this.shell.canInitWaterfall$;
-  public hasMinimalRights$ = this.shell.hasMinimalRights$;
   public displayActions$ = new BehaviorSubject<boolean>(false);
   public displayWaterfall$ = new BehaviorSubject<boolean>(false);
-  public actions$ = this.shell.actions$;
 
   constructor(
-    private shell: DashboardWaterfallShellComponent,
+    public shell: DashboardWaterfallShellComponent,
     private snackBar: MatSnackBar
   ) {
     this.shell.setDate(undefined);
@@ -31,14 +24,6 @@ export class WaterfallComponent {
 
   public getPrice(amount: number): PricePerCurrency {
     return { [mainCurrency]: amount };
-  }
-
-  public async initWaterfall() {
-    const versionNumber = this.shell.waterfall.versions.length + 1;
-    const versionId = `version_${versionNumber}`;
-    this.snackBar.open(`Creating version "${versionId}"... Please wait`, 'close');
-    await this.shell.initWaterfall({ id: versionId, description: `Version ${versionNumber}` });
-    this.snackBar.open(`Version "${versionId}" initialized !`, 'close', { duration: 5000 });
   }
 
   public async removeVersion(id: string) {

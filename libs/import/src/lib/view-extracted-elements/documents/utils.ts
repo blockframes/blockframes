@@ -9,8 +9,8 @@ import {
   WaterfallDocument,
   WaterfallRightholder,
   WaterfallDocumentMeta,
-  RightholderRole,
-  isContract
+  isContract,
+  rightholderGroups
 } from '@blockframes/model';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getDocumentConfig } from './fieldConfigs';
@@ -90,8 +90,7 @@ export async function formatDocument(
 }
 
 function getTerms(document: WaterfallDocument, terms: FieldsConfig['term'][number][] = []) {
-  const contractTypesWithTerms: RightholderRole[] = ['salesAgent', 'mainDistributor', 'localDistributor', 'sale', 'other'];
-  if (isContract(document) && contractTypesWithTerms.includes(document.meta.type)) {
+  if (isContract(document) && rightholderGroups.withTerms.includes(document.meta.type)) {
     return terms.map(term => toTerm(term, document.waterfallId, document.id, term.id));
   } else {
     return [];

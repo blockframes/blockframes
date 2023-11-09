@@ -15,6 +15,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
+import { EmptyWaterfallModule } from '@blockframes/waterfall/components/empty/empty.module';
 
 // Material
 import { MatDividerModule } from '@angular/material/divider';
@@ -36,6 +37,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     PricePerCurrencyModule,
     LogoSpinnerModule,
     RightholderSelectModule,
+    EmptyWaterfallModule,
 
     // Material
     MatDividerModule,

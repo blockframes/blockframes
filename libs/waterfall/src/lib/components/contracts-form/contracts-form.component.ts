@@ -65,7 +65,9 @@ export class ContractsFormComponent implements OnInit {
       map(documents => sortContracts(documents.map(d => convertDocumentTo<WaterfallContract>(d)))),
       map(rawContracts => {
         const contracts: Partial<Record<RightholderRole, WaterfallContract[]>> = {};
-        Object.keys(rightholderRoles).forEach((r: RightholderRole) => contracts[r] = rawContracts.filter(c => c.type === r));
+        Object.keys(rightholderRoles)
+          .filter(r => r !== 'producer')
+          .forEach((r: RightholderRole) => contracts[r] = rawContracts.filter(c => c.type === r));
         return contracts;
       }),
       tap(rawContracts => this.contracts = rawContracts)
@@ -80,13 +82,13 @@ export class ContractsFormComponent implements OnInit {
     this.selected = role;
     this.creating = this.contracts[role].length === 0; // if we select an empty role we automatically switch to create mode
     if (this.creating) {
-      this.documentForm.reset(this.documentService.createId());
+      this.documentForm.reset({ id: this.documentService.createId() });
     }
   }
 
   create() {
     this.creating = true;
-    this.documentForm.reset(this.documentService.createId());
+    this.documentForm.reset({ id: this.documentService.createId() });
   }
 
   async edit(contract: WaterfallContract) {
@@ -94,7 +96,7 @@ export class ContractsFormComponent implements OnInit {
     const licensee = this.waterfall.rightholders.find(r => r.id === contract.buyerId);
     const licensor = this.waterfall.rightholders.find(r => r.id === contract.sellerId);
     const file = this.waterfall.documents.find(f => f.id === contract.id);
-    this.documentForm.patchValue({
+    this.documentForm.reset({
       id: contract.id,
       licenseeName: licensee?.name,
       licenseeRole: licensee?.roles,
@@ -105,10 +107,9 @@ export class ContractsFormComponent implements OnInit {
       endDate: contract.duration?.to,
       price: contract.price,
       terms,
-      file: file || { id: contract.id },
+      file: file,
     });
     this.creating = true;
-    this.documentForm.markAsPristine();
   }
 
   removeFile(bool: boolean) {

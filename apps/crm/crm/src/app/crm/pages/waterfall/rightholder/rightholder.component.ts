@@ -4,19 +4,17 @@ import { ActivatedRoute } from '@angular/router';
 import {
   PricePerCurrency,
   Right,
-  RightholderRole,
   Statement,
   WaterfallRightholder,
   getStatementsHistory,
   mainCurrency,
-  movieCurrencies
+  movieCurrencies,
+  rightholderGroups
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { WaterfallService, WaterfallState } from '@blockframes/waterfall/waterfall.service';
 import { Observable, combineLatest, map, pluck, tap } from 'rxjs';
 import { WaterfallRightholderForm } from '@blockframes/waterfall/form/right-holder.form';
-
-const rolesWithStatements: RightholderRole[] = ['salesAgent', 'mainDistributor', 'localDistributor', 'producer', 'coProducer'];
 
 @Component({
   selector: 'crm-rightholder',
@@ -39,7 +37,7 @@ export class RightholderComponent {
   );
 
   public graph$ = combineLatest([this.shell.state$, this.rightholder$, this.shell.statements$]).pipe(
-    map(([state, rightholder, statements]) => rightholder.roles.some(r => rolesWithStatements.includes(r)) ?
+    map(([state, rightholder, statements]) => rightholder.roles.some(r => rightholderGroups.withStatements.includes(r)) ?
       this.buildGraph(state, rightholder, statements) :
       undefined
     )
