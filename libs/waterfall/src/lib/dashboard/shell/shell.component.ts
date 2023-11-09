@@ -74,11 +74,11 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     switchMap(({ id: waterfallId }) => this.permissionService.valueChanges(this.authService.profile.orgId, { waterfallId })),
   );
 
-  public isWaterfallAdmin$ = this.permission$.pipe(
+  private isWaterfallAdmin$ = this.permission$.pipe(
     map(permission => permission?.isAdmin)
   );
 
-  private canBypassRules$ = combineLatest([this.isWaterfallAdmin$, this.authService.isBlockframesAdmin$]).pipe(
+  public canBypassRules$ = combineLatest([this.isWaterfallAdmin$, this.authService.isBlockframesAdmin$]).pipe(
     map(([isWaterfallAdmin, isBlockframesAdmin]) => isWaterfallAdmin || isBlockframesAdmin)
   );
 

@@ -75,11 +75,11 @@
               </span>
             </li>
           </ul>
-          <a mat-button color="primary" class="main-dashboard-cta" [routerLink]="['document', infos.rootContract]">
+          <a mat-button color="primary" class="main-dashboard-cta" [routerLink]="['..', 'documents', infos.rootContract]">
             <mat-icon svgIcon="document_signed"></mat-icon>
             <span>See Contract</span>
           </a>
-          <a *ngFor="let child of infos.childContracts" mat-button color="primary" class="main-dashboard-cta" [routerLink]="['document', child]">
+          <a *ngFor="let child of infos.childContracts" mat-button color="primary" class="main-dashboard-cta" [routerLink]="['..', 'documents', child]">
             <mat-icon svgIcon="document_signed"></mat-icon>
             <span>See Amendment</span>
           </a>

@@ -7,7 +7,7 @@
 <ng-template #notInitalized>
   <h1>Waterfall not initialized.</h1>
 
-  <ng-container *ngIf="shell.isWaterfallAdmin$ | async else notAdmin">
+  <ng-container *ngIf="shell.canBypassRules$ | async else notAdmin">
     <p class="mat-body-1">
       Please initalize a first version that you're going to work with.
     </p>
@@ -41,10 +41,16 @@
       </li>
     </ul>
     
-    <a *ngIf="shell.canInitWaterfall$ | async" (click)="shell.initWaterfall()" class="surface">
+    <a *ngIf="shell.canInitWaterfall$ | async else canNotInit" (click)="shell.initWaterfall()" class="surface">
       <img asset="add_draft.svg" alt="Add waterfall image">
       <button mat-button color="primary" matTooltip="Initialize Waterfall">Initialize Waterfall</button>
     </a>
+    <ng-template #canNotInit>
+      <a class="surface">
+        <img asset="add_draft.svg" alt="Add waterfall image">
+        <button mat-button disabled color="primary" matTooltip="Not enough data to initialize waterfall">Initialize Waterfall</button>
+      </a>
+    </ng-template>
   </ng-container>
 </ng-template>
 
