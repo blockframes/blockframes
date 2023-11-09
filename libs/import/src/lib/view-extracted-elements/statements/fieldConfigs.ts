@@ -114,7 +114,7 @@ export function getStatementConfig(option: StatementConfig) {
         if (!value) throw mandatoryError(value, 'Statement type');
         const type = getKeyIfExists('statementType', value);
         if (!type) throw wrongValueError(value, 'Statement type');
-        const allowedStatementTypes: StatementType[] = ['mainDistributor', 'localDistributor', 'salesAgent', 'directSales'];
+        const allowedStatementTypes: StatementType[] = ['mainDistributor', 'salesAgent', 'directSales'];
         if (!allowedStatementTypes.includes(type)) throw wrongValueError(value, `Statement type must me one of the following "${allowedStatementTypes.join(', ')}"`);
         return type;
       },

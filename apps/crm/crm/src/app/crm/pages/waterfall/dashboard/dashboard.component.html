@@ -57,7 +57,7 @@
     </bf-table>
 
     <h3>Statements to create</h3>
-    <bf-table [source]="producersOrCoproducers" clickable (rowClick)="displayRightholderStatements($event.id)" useFilter pagination="50">
+    <bf-table [source]="producers" clickable (rowClick)="displayRightholderStatements($event.id)" useFilter pagination="50">
       <ng-template colRef="name" label="Right Holder" let-name sort>
         {{ name }}
       </ng-template>

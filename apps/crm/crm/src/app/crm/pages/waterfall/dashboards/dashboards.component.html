@@ -1,5 +1,5 @@
 <ng-container *ngIf="waterfall$ | async as waterfall">
-  <ng-container *ngIf="waterfall.versions.length">
+  <ng-container *ngIf="waterfall.versions.length else noWaterfall">
     <bf-table [source]="waterfall.versions" clickable useFilter pagination="50" (rowClick)="goTo($event.id)">
       <ng-template colRef="id" label="Id" let-id sort defaultSort>
         {{ id }}
@@ -21,3 +21,7 @@
     </bf-table>
   </ng-container>
 </ng-container>
+
+<ng-template #noWaterfall>
+  <waterfall-empty showImportLinks></waterfall-empty>
+</ng-template>

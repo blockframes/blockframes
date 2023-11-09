@@ -1,0 +1,69 @@
+<ng-container *ngIf="(shell.isRefreshing$ | async) else notInitalized">
+  <article class="loader">
+    <logo-spinner></logo-spinner>
+  </article>
+</ng-container>
+
+<ng-template #notInitalized>
+  <h1>Waterfall not initialized.</h1>
+
+  <ng-container *ngIf="shell.canBypassRules$ | async else notAdmin">
+    <p class="mat-body-1">
+      Please initalize a first version that you're going to work with.
+    </p>
+    <ul *ngIf="showImportLinks">
+      <li>              
+        <a mat-button routerLink="/c/o/dashboard/crm/import/documents">
+          <mat-icon svgIcon="document_signed"></mat-icon><span matLine>1 Documents (contracts)</span>
+        </a>
+        <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="(shell.contracts$ | async)?.length else notImported"></mat-icon>
+      </li>
+      <li>
+        <a mat-button routerLink="/c/o/dashboard/crm/import/sources">
+          <mat-icon svgIcon="world"></mat-icon><span matLine>2 Sources</span>
+        </a>
+        <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="shell.waterfall.sources.length else notImported"></mat-icon>
+      </li>
+      <li>
+        <a mat-button routerLink="/c/o/dashboard/crm/import/rights">
+          <mat-icon svgIcon="local_offer"></mat-icon><span matLine>3 Rights</span>
+        </a>
+        <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="(shell.hasMinimalRights$ | async) else noMinimalRights"></mat-icon>
+        <ng-template #noMinimalRights>
+          <mat-icon svgIcon="cancel" class="icon-nok" matTooltip="All sources does not have an associated Right"></mat-icon>
+        </ng-template>
+      </li>
+      <li>
+        <a mat-button routerLink="/c/o/dashboard/crm/import/statements">
+          <mat-icon svgIcon="monetization"></mat-icon><span matLine>4 Statements</span>
+        </a>
+        <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="(shell.incomes$ | async)?.length else notImported"></mat-icon>
+      </li>
+    </ul>
+    
+    <a *ngIf="shell.canInitWaterfall$ | async else canNotInit" (click)="shell.initWaterfall()" class="surface">
+      <img asset="add_draft.svg" alt="Add waterfall image">
+      <button mat-button color="primary" matTooltip="Initialize Waterfall">Initialize Waterfall</button>
+    </a>
+    <ng-template #canNotInit>
+      <a class="surface">
+        <img asset="add_draft.svg" alt="Add waterfall image">
+        <button mat-button disabled color="primary" matTooltip="Not enough data to initialize waterfall">Initialize Waterfall</button>
+      </a>
+    </ng-template>
+  </ng-container>
+</ng-template>
+
+<ng-template #notImported>
+  <mat-icon svgIcon="cancel" class="icon-nok"></mat-icon>
+</ng-template>
+
+<ng-template #notAdmin>
+  <p class="mat-body-1">
+    You are not authorized to initialize waterfall.
+  </p>
+  <a class="surface">
+    <img asset="add_draft.svg" alt="Add waterfall image">
+    <button mat-button disabled color="primary" matTooltip="Not authorized to initialize waterfall">Initialize Waterfall</button>
+  </a>
+</ng-template>

@@ -58,19 +58,20 @@ export class WaterfallDocumentForm extends FormEntity<WaterfallDocumentFormContr
     super(control);
   }
 
-  reset(id: string) {
+  reset(data: Partial<WaterfallDocumentFormValue>) {
     super.reset();
     this.patchValue({
-      id,
-      licenseeName: '',
-      licenseeRole: [],
-      licensorName: '',
-      licensorRole: [],
-      signatureDate: new Date(),
-      startDate: new Date(),
-      endDate: new Date(),
-      price: 0,
-      file: { id },
+      id: data.id,
+      licenseeName: data.licenseeName || '',
+      licenseeRole: data.licenseeRole || [],
+      licensorName: data.licensorName || '',
+      licensorRole: data.licenseeRole || [],
+      signatureDate: data.signatureDate || new Date(),
+      startDate: data.startDate || new Date(),
+      endDate: data.endDate || new Date(),
+      price: data.price || 0,
+      file: data.file || { id: data.id },
+      terms: data.terms || [],
     });
     this.markAsPristine();
   }

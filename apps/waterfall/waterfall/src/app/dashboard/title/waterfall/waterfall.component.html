@@ -1,18 +1,11 @@
-<ng-container *ngIf="waterfall.versions.length; else noWaterfall">
-  <waterfall-g6-graph *ngIf="(state$ | async) as state; else loading" [tree]="state.waterfall" [rightholders]="waterfall.rightholders"></waterfall-g6-graph>
+<ng-container *ngIf="waterfall$ | async as waterfall">
+  <ng-container *ngIf="waterfall.versions.length; else noWaterfall">
+    <waterfall-g6-graph *ngIf="(state$ | async) as state; else loading" [tree]="state.waterfall" [rightholders]="waterfall.rightholders"></waterfall-g6-graph>
+  </ng-container>
 </ng-container>
 
 <ng-template #noWaterfall>
-  <section>
-    <h1>Waterfall not initialized.</h1>
-    <p class="mat-body-1">
-      Please initalize a first version that you're going to work with.
-    </p>
-    <a target="_blank" [href]="crmAppUrl" class="surface">
-      <img asset="add_draft.svg" alt="Add waterfall image">
-      <button mat-button color="primary">Initialize Waterfall</button>
-    </a>
-  </section>
+  <waterfall-empty></waterfall-empty>
 </ng-template>
 
 <ng-template #loading>

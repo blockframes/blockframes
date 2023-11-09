@@ -4,10 +4,10 @@ import { FormControl } from '@angular/forms';
 import { add, Duration } from 'date-fns';
 import { BehaviorSubject, Subscription, combineLatest } from 'rxjs';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy, Output, EventEmitter, OnChanges } from '@angular/core';
 
 // Blockframes
-import { Waterfall } from '@blockframes/model';
+import { rightholderGroups, RightholderRole, Waterfall } from '@blockframes/model';
 import { BucketTermForm, createBucketTermControl } from '@blockframes/contract/bucket/form';
 import { WaterfallDocumentForm, WaterfallDocumentFormValue } from '@blockframes/waterfall/form/document.form';
 
@@ -17,10 +17,11 @@ import { WaterfallDocumentForm, WaterfallDocumentFormValue } from '@blockframes/
   styleUrls: ['./form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DocumentFormComponent implements OnInit, OnDestroy {
+export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() waterfall: Waterfall;
   @Input() form: WaterfallDocumentForm;
+  @Input() type: RightholderRole;
 
   hideStartDate$ = new BehaviorSubject(true);
 
@@ -38,9 +39,7 @@ export class DocumentFormComponent implements OnInit, OnDestroy {
   @Output() removeFile = new EventEmitter<boolean>(false);
 
   ngOnInit() {
-    if (this.form.controls.terms.length === 0) {
-      this.addTerm();
-    }
+    if (this.form.controls.terms.length === 0) this.addTerm();
     const names = this.waterfall.rightholders.map(r => r.name);
     this.licensee$.next(names);
     this.licensor$.next(names);
@@ -69,6 +68,11 @@ export class DocumentFormComponent implements OnInit, OnDestroy {
       }),
     );
 
+  }
+
+  ngOnChanges() {
+    const showTerms = rightholderGroups.withTerms.includes(this.type);
+    this.toggleTermsControl.setValue(showTerms);
   }
 
   ngOnDestroy() {

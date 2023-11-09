@@ -2,7 +2,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 // Blockframes
-import { appUrl } from '@env';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
@@ -13,9 +12,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaterfallComponent {
-
-  public crmAppUrl = `${appUrl.crm}/c/o/dashboard/crm/waterfall/${this.shell.waterfall.id}`;
-  public waterfall = this.shell.waterfall;
+  public waterfall$ = this.shell.waterfall$;
   public state$ = this.shell.state$;
 
   constructor(

@@ -23,7 +23,7 @@ import { Expense } from '../expense';
 import { Term } from '../terms';
 import { getContractAndAmendments, getDeclaredAmount } from '../contract';
 import { convertCurrenciesTo, sortByDate, sum } from '../utils';
-import { MovieCurrency, RightholderRole, Media, Territory } from '../static';
+import { MovieCurrency, Media, Territory, rightholderGroups } from '../static';
 import { Right, orderRights } from './right';
 import { Statement, isDirectSalesStatement, isDistributorStatement, isProducerStatement } from './statement';
 
@@ -140,8 +140,7 @@ export function contractsToActions(contracts: WaterfallContract[], terms: Term[]
 
 export function investmentsToActions(contracts: WaterfallContract[], terms: Term[]) {
   const actions: Action[] = [];
-  const investmentContractTypes: RightholderRole[] = ['salesAgent', 'mainDistributor', 'coProducer', 'financier', 'institution'];
-  const investmentContracts = contracts.filter(c => investmentContractTypes.includes(c.type));
+  const investmentContracts = contracts.filter(c => rightholderGroups.investors.includes(c.type));
 
   for (const c of investmentContracts) {
     if (c.rootId) continue; // Only root contracts are considered as investments

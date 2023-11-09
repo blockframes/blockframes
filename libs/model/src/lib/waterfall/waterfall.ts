@@ -2,7 +2,7 @@ import { BaseContract } from '../contract';
 import { Income } from '../income';
 import { StorageFile } from '../media';
 import { DocumentMeta, createDocumentMeta } from '../meta';
-import { Media, RightholderRole, Territory } from '../static';
+import { Media, RightholderRole, Territory, rightholderGroups } from '../static';
 import { allOf } from '../avail';
 
 export interface WaterfallPermissions {
@@ -165,12 +165,11 @@ const isBudget = (document: Partial<WaterfallDocument>): document is WaterfallDo
 const isFinancingPlan = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallFinancingPlan> => document?.type === 'financingPlan';
 
 export function isWaterfallMandate(contract: Partial<WaterfallContract>): contract is WaterfallMandate {
-  const mandateTypes: RightholderRole[] = ['salesAgent', 'mainDistributor', 'localDistributor'];
-  return mandateTypes.includes(contract.type);
+  return Object.keys(rightholderGroups.distributors).includes(contract.type);
 }
 
 export function isWaterfallSale(contract: Partial<WaterfallContract>): contract is WaterfallSale {
-  return contract.type === 'sale';
+  return Object.keys(rightholderGroups.sales).includes(contract.type);
 }
 
 export function convertDocumentTo<T>(document: WaterfallDocument): T {
@@ -214,11 +213,11 @@ export interface WaterfallContract extends BaseContract {
 };
 
 export interface WaterfallSale extends WaterfallContract {
-  type: 'sale'
+  type: keyof typeof rightholderGroups.sales;
 }
 
 export interface WaterfallMandate extends WaterfallContract {
-  type: 'salesAgent' | 'mainDistributor' | 'localDistributor'
+  type: keyof typeof rightholderGroups.distributors;
 }
 
 interface WaterfallFinancingPlan {

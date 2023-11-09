@@ -861,18 +861,41 @@ export const stakeholderRoles = {
   broadcasterCoproducer: 'Broadcaster coproducer'
 } as const
 
+export const rightholderGroups = {
+  // Distributors
+  distributors: {
+    salesAgent: 'Sales Agent',
+    mainDistributor: 'Main Distributor',
+  },
+  // Roles only used for the sale map (should not be present in waterfall and statements)
+  sales: {
+    localDistributor: 'Local Distributor',
+    sale: 'Broadcaster',
+  },
+  // Producer 
+  producers: {
+    producer: 'Producer',
+  },
+  // Beneficiaries
+  beneficiaries: {
+    author: 'Author',
+    coProducer: 'Co-Producer',
+    financier: 'Financier',
+    institution: 'Institution',
+    performer: 'Cast',
+    other: 'Other'
+  },
+  // Custom groups
+  withStatements: ['salesAgent', 'mainDistributor', 'producer'] as string[], // Rightholders that can create a statement
+  investors: ['salesAgent', 'mainDistributor', 'coProducer', 'financier', 'institution'] as string[], // Rightholders (contracts) that can invest in a movie
+  withTerms: ['salesAgent', 'mainDistributor', 'localDistributor', 'sale', 'other'] as string[] // Contract types that should have terms
+} as const
+
 export const rightholderRoles = {
-  salesAgent: 'Sales Agent',
-  mainDistributor: 'Main Distributor',
-  localDistributor: 'Local Distributor',
-  sale: 'Sale',
-  author: 'Author',
-  producer: 'Producer',
-  coProducer: 'Co-Producer',
-  financier: 'Financiers',
-  institution: 'Institution',
-  performer: 'Performer',
-  other: 'Other'
+  ...rightholderGroups.distributors,
+  ...rightholderGroups.sales,
+  ...rightholderGroups.producers,
+  ...rightholderGroups.beneficiaries,
 } as const
 
 export const rightTypes = {
@@ -1754,9 +1777,7 @@ export const statementStatus = {
 export const statementType = {
   salesAgent: 'Sales Agent',
   mainDistributor: 'Main Distributor',
-  localDistributor: 'Local Distributor',
-  producer: 'Producer',
-  coProducer: 'Co-Producer',
+  producer: 'Outgoing statements',
   directSales: 'Direct Sales',
 } as const;
 

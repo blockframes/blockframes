@@ -1,5 +1,5 @@
 import { DocumentMeta } from '../meta';
-import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus } from '../static';
+import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups } from '../static';
 import { Duration, createDuration } from '../terms';
 import { sortByDate } from '../utils';
 import { History } from './state';
@@ -105,8 +105,8 @@ export interface Statement {
 }
 
 export interface DistributorStatement extends Statement {
-  type: 'mainDistributor' | 'localDistributor' | 'salesAgent';
-  contractId: string; // rightholderId is licensee or licensor of this contract
+  type: 'mainDistributor' | 'salesAgent';
+  contractId: string; // For distributor statements, rightholderId is licensee (and producer is licensor) of this contract
   expenseIds: string[];
   payments: {
     income: IncomePayment[];
@@ -123,8 +123,8 @@ export interface DistributorStatement extends Statement {
 }
 
 export interface ProducerStatement extends Statement {
-  type: 'producer' | 'coProducer';
-  contractId: string; // rightholderId is licensee or licensor of this contract
+  type: 'producer';
+  contractId: string; // For outgoing statements, rightholderId (producer) is licensor of this contract, except for statements made to author (in this case, producer is licensee)
   payments: {
     right: RightPayment[]; // Mode external
     rightholder: RightholderPayment;
@@ -163,11 +163,11 @@ export function createStatement(params: Partial<Statement>) {
 }
 
 export function isDistributorStatement(statement: Partial<Statement>): statement is DistributorStatement {
-  return statement.type === 'mainDistributor' || statement.type === 'localDistributor' || statement.type === 'salesAgent';
+  return Object.keys(rightholderGroups.distributors).includes(statement.type);
 }
 
 export function isProducerStatement(statement: Partial<Statement>): statement is ProducerStatement {
-  return statement.type === 'producer' || statement.type === 'coProducer';
+  return statement.type === 'producer';
 }
 
 export function isDirectSalesStatement(statement: Partial<Statement>): statement is DirectSalesStatement {
@@ -199,7 +199,7 @@ export function createProducerStatement(params: Partial<ProducerStatement> = {})
       right: statement.payments.right,
       rightholder: params.payments?.rightholder || undefined
     },
-    type: params.type || 'producer',
+    type: 'producer',
   }
 }
 

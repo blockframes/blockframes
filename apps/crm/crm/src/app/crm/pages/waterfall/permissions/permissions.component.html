@@ -18,14 +18,13 @@
     Is waterfall admin ?
   </mat-checkbox>
 
-  <mat-form-field appearance="outline">
+  <waterfall-rightholder-select
+    [rightholders]="waterfall.rightholders"
+    [control]="form.get('rightholderIds')"
+    multiple
+    required>
     <mat-label>Can manage</mat-label>
-    <mat-select [value]="form.get('rightholderIds').value" multiple [formControl]="form.get('rightholderIds')">
-      <mat-option *ngFor="let rightholder of waterfall.rightholders" [value]="rightholder.id">
-        {{ rightholder.name }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+  </waterfall-rightholder-select>
 
   <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
     <span>Submit</span>
@@ -47,6 +46,11 @@
     </ng-template>
     <ng-template colRef="isAdmin" label="Admin" let-isAdmin sort>
       {{ isAdmin }}
+    </ng-template>
+    <ng-template colRef="id" label="Actions" let-id sticky>
+      <button mat-icon-button (click)="removePermissions(id);$event.stopPropagation()">
+        <mat-icon svgIcon="delete" matTooltip="Remove permissions"></mat-icon>
+      </button>
     </ng-template>
   </bf-table>
 </ng-container>

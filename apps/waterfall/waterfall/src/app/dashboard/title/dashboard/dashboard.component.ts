@@ -52,10 +52,9 @@ type ChartOptions = {
 })
 export class DashboardComponent {
   private waterfall = this.shell.waterfall;
+  public waterfall$ = this.shell.waterfall$;
   public state$ = this.shell.state$;
-  public currentRightholder$ = this.shell.permission$.pipe(
-    map(permission => permission.rightholderIds.map(r => this.waterfall.rightholders.find(rh => rh.id === r))),
-    map(rightholders => rightholders.pop()),
+  public currentRightholder$ = this.shell.currentRightholder$.pipe(
     tap(rightholder => {
       if (!rightholder && this.waterfall.versions.length > 0) {
         this.snackbar.open(`Organization "${this.orgService.org.name}" is not associated to any rightholders.`, 'close', { duration: 5000 });

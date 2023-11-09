@@ -13,6 +13,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [DashboardWaterfallShellComponent, WaterfallCtaDirective],
@@ -29,7 +30,8 @@ import { MatButtonModule } from '@angular/material/button';
     // Material
     MatTabsModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSnackBarModule,
   ],
 })
 export class DashboardWaterfallShellModule { }
