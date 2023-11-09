@@ -25,7 +25,7 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
 
   hideStartDate$ = new BehaviorSubject(true);
 
-  toggleTermsControl = new FormControl(false);
+  toggleTermsControl = new FormControl(true);
   durationControl = new FormControl<number | undefined>(undefined);
 
   periods: (keyof Duration)[] = ['days', 'weeks', 'months', 'years'];
