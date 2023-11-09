@@ -68,7 +68,7 @@ export class StatementComponent implements OnInit {
   private state: WaterfallState;
   public isRefreshing$ = this.shell.isRefreshing$;
 
-  private statement$ = combineLatest([this.route.params.pipe(pluck('statementId')),this.shell.statements$]).pipe(
+  private statement$ = combineLatest([this.route.params.pipe(pluck('statementId')), this.shell.statements$]).pipe(
     map(([statementId, statements]) => statements.find(s => s.id === statementId)),
     filter(statement => !!statement),
   );
@@ -166,7 +166,7 @@ export class StatementComponent implements OnInit {
   }
 
   public getRightholderActual(type: 'revenu' | 'turnover') {
-    const orgState = this.state.waterfall.state.orgs[this.statement.rightholderId];
+    const orgState = this.state.waterfall.state.orgs[this.statement.senderId];
     const actual = orgState ? orgState[type].actual : 0;
     return { [mainCurrency]: actual };
   }
@@ -205,12 +205,11 @@ export class StatementComponent implements OnInit {
 
     let rightholderRights: Right[] = []
     if (isDistributorStatement(this.statement)) {
-      const otherParty = this.contract.sellerId === this.statement.rightholderId ? this.contract.buyerId : this.contract.sellerId;
-      rightholderRights = rights.filter(r => otherParty === r.rightholderId || r.contractId === this.contract.id);
+      rightholderRights = rights.filter(r => r.rightholderId === this.statement.receiverId || r.contractId === this.contract.id);
     } else if (isProducerStatement(this.statement)) {
-      rightholderRights = rights.filter(r => r.contractId === this.contract.id && r.rightholderId !== this.statement.rightholderId);
+      rightholderRights = rights.filter(r => r.rightholderId !== this.statement.senderId && r.contractId === this.contract.id);
     } else if (isDirectSalesStatement(this.statement)) {
-      rightholderRights = rights.filter(r => r.rightholderId === this.statement.rightholderId);
+      rightholderRights = rights.filter(r => r.rightholderId === this.statement.senderId);
     }
 
     if (!this.state.waterfall.state.sources[sourceId]) {
@@ -259,7 +258,7 @@ export class StatementComponent implements OnInit {
     const history = getStatementsHistory(
       state.waterfall.history,
       statements.filter(s => s.type === statement.type),
-      statement.rightholderId,
+      statement.senderId,
       contract?.id
     );
 
@@ -267,11 +266,11 @@ export class StatementComponent implements OnInit {
     const series = [
       {
         name: 'Revenue',
-        data: history.map(h => Math.round(h.orgs[statement.rightholderId].revenu.actual))
+        data: history.map(h => Math.round(h.orgs[statement.senderId].revenu.actual))
       },
       {
         name: 'Turnover',
-        data: history.map(h => Math.round(h.orgs[statement.rightholderId].turnover.actual))
+        data: history.map(h => Math.round(h.orgs[statement.senderId].turnover.actual))
       }
     ];
     return { xAxis: { categories }, series };
@@ -331,7 +330,7 @@ export class StatementComponent implements OnInit {
       const paymentExists = this.statement.payments.right.find(p => p.to === right.id);
       if (paymentExists) continue;
 
-      const isInternal = right.rightholderId === this.statement.rightholderId;
+      const isInternal = right.rightholderId === this.statement.senderId;
       const amount = this.getCalculatedAmount(right.id);
       const payment = createRightPayment({
         id: this.statementService.createId(),
@@ -352,9 +351,8 @@ export class StatementComponent implements OnInit {
 
     // Rightholder Payments
     if ((isDistributorStatement(this.statement) || isProducerStatement(this.statement)) && !this.statement.payments.rightholder) {
-      const to = this.contract.sellerId === this.statement.rightholderId ? this.contract.buyerId : this.contract.sellerId;
       const price = this.getRightholderPaymentPrice();
-      const externalRights = this.rights.filter(r => r.rightholderId !== this.statement.rightholderId);
+      const externalRights = this.rights.filter(r => r.rightholderId !== this.statement.senderId);
 
       // Sum of external right payments
       this.statement.payments.rightholder = createRightholderPayment({
@@ -366,8 +364,7 @@ export class StatementComponent implements OnInit {
           const income = this.incomes.find(i => i.id === id);
           const source = getAssociatedSource(income, this.waterfall.sources);
           return externalRights.some(r => pathExists(r.id, source.id, this.state.waterfall.state));
-        }),
-        to
+        })
       });
     }
 
@@ -427,7 +424,7 @@ export class StatementComponent implements OnInit {
 @Pipe({ name: 'filterRights' })
 export class FilterRightsPipe implements PipeTransform {
   transform(rights: Right[], statement: Statement) {
-    if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) return rights.filter(r => r.rightholderId === statement.rightholderId);
+    if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) return rights.filter(r => r.rightholderId === statement.senderId);
     if (isProducerStatement(statement)) return rights;
   }
 }

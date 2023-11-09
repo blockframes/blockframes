@@ -18,8 +18,11 @@
     <ng-template colRef="" label="Contract Id" let-item sort>
       {{ getCurrentContract({ contractId: item.contractId, date: item.duration.from }) }}
     </ng-template>
-    <ng-template colRef="rightholderId" label="Rightholder" let-rightholderId sort>
-      {{ rightholderId | rightholderName: waterfall }}
+    <ng-template colRef="senderId" label="Rightholder" let-senderId sort>
+      {{ senderId | rightholderName: waterfall }}
+    </ng-template>
+    <ng-template colRef="receiverId" label="Receiver" let-receiverId sort>
+      {{ receiverId | rightholderName: waterfall }}
     </ng-template>
     <ng-template colRef="duration.from" label="From" let-from sort>
       {{ from | date: 'dd/MM/yyyy' }}

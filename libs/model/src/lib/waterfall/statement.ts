@@ -31,7 +31,6 @@ export interface RightholderPayment extends Payment {
   type: 'rightholder';
   mode: 'external';
   incomeIds: string[]; // Incomes related to this payment
-  to: string; // rightholderId : the other party of the contract that is not the rightholder of the statement
 }
 
 /**
@@ -71,7 +70,6 @@ export function createIncomePayment(params: Partial<IncomePayment> = {}): Income
 export function createRightholderPayment(params: Partial<RightholderPayment> = {}): RightholderPayment {
   const payment = createPaymentBase(params);
   return {
-    to: '',
     ...payment,
     incomeIds: params.incomeIds || [],
     mode: 'external',

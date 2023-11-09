@@ -351,7 +351,7 @@ export function statementsToActions(statements: Statement[]) {
             income: payment.incomeId
           },
           to: {
-            org: statement.rightholderId
+            org: statement.senderId
           },
           contractId: isDistributorStatement(statement) ? statement.contractId : undefined,
           date: payment.date
@@ -368,10 +368,10 @@ export function statementsToActions(statements: Statement[]) {
         id: rightholderPayment.id,
         amount: convertCurrenciesTo({ [rightholderPayment.currency]: rightholderPayment.price }, mainCurrency)[mainCurrency],
         from: {
-          org: statement.rightholderId
+          org: statement.senderId
         },
         to: {
-          org: rightholderPayment.to
+          org: statement.receiverId
         },
         contractId: isDistributorStatement(statement) || isProducerStatement(statement) ? statement.contractId : undefined,
         date: rightholderPayment.date
@@ -387,7 +387,7 @@ export function statementsToActions(statements: Statement[]) {
         id: payment.id,
         amount: convertCurrenciesTo({ [payment.currency]: payment.price }, mainCurrency)[mainCurrency],
         from: {
-          org: payment.mode === 'internal' ? statement.rightholderId : rightholderPayment.to
+          org: payment.mode === 'internal' ? statement.senderId : statement.receiverId
         },
         to: {
           right: payment.to

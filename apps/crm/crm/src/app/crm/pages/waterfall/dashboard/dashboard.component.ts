@@ -37,7 +37,7 @@ import { add } from 'date-fns';
 import { firstValueFrom } from 'rxjs';
 
 interface RightholderStatements {
-  rightholderId: string,
+  senderId: string,
   pending: ProducerStatement[],
   existing: ProducerStatement[]
 }
@@ -174,7 +174,7 @@ export class DashboardComponent implements OnInit {
   public getPendingRevenue(rightholderId: string): PricePerCurrency {
     const pendingRevenue = this.statements
       .filter(s => (isDistributorStatement(s) || isProducerStatement(s)) && s.payments.rightholder)
-      .filter((s: DistributorStatement | ProducerStatement) => s.payments.rightholder.to === rightholderId && s.payments.rightholder.status === 'pending')
+      .filter((s: DistributorStatement | ProducerStatement) => s.receiverId === rightholderId && s.payments.rightholder.status === 'pending')
       .map((s: DistributorStatement | ProducerStatement) => s.payments.rightholder);
 
     const pending: PricePerCurrency = {};
@@ -185,20 +185,20 @@ export class DashboardComponent implements OnInit {
     return pending;
   }
 
-  public statementsToCreate(rightholderId: string) {
+  public statementsToCreate(senderId: string) {
     const currentStateDate = new Date(this.currentState.date);
 
     // Fetch active distributor statements where rightholder has received payments
     const distributorStatements = this.statements
       .filter(s => isDistributorStatement(s) && s.payments.rightholder)
       .filter(s => s.duration.to.getTime() <= currentStateDate.getTime())
-      .filter((s: DistributorStatement) => s.payments.rightholder.to === rightholderId && s.payments.rightholder.status === 'received') as DistributorStatement[];
+      .filter((s: DistributorStatement) => s.receiverId === senderId && s.payments.rightholder.status === 'received') as DistributorStatement[];
 
     // Fetch active direct sales statements created by the rightholder
     const directSalesStatements = this.statements
       .filter(s => isDirectSalesStatement(s))
       .filter(s => s.duration.to.getTime() <= currentStateDate.getTime())
-      .filter(s => s.rightholderId === rightholderId && s.status === 'reported') as DirectSalesStatement[];
+      .filter(s => s.senderId === senderId && s.status === 'reported') as DirectSalesStatement[];
 
     const statements = [...distributorStatements, ...directSalesStatements];
     if (!statements.length) return [];
@@ -208,7 +208,7 @@ export class DashboardComponent implements OnInit {
 
     // Fetch current contracts where the rightholder is involved (buyer or seller) that are not in the excluded list
     const contractsIds = this.contracts.
-      filter(c => (c.buyerId === rightholderId || c.sellerId === rightholderId) && !excludedContractsIds.find(id => id === c.id))
+      filter(c => (c.buyerId === senderId || c.sellerId === senderId) && !excludedContractsIds.find(id => id === c.id))
       .map(c => getCurrentContract(getContractAndAmendments(c.id, this.contracts), currentStateDate)?.id)
       .filter(c => !!c); // Remove contracts that are not active in the current state date
 
@@ -231,7 +231,8 @@ export class DashboardComponent implements OnInit {
     return filteredContracts.map(c => createProducerStatement({
       id: this.statementService.createId(),
       contractId: c.id,
-      rightholderId,
+      senderId,
+      receiverId: c.sellerId === senderId ? c.buyerId : c.sellerId,
       waterfallId: this.waterfall.id,
       incomeIds: incomeIds.filter(id => !this.statements // Remove incomes for which a statement already exists for this contract
         .filter(s => !isDirectSalesStatement(s))
@@ -256,11 +257,11 @@ export class DashboardComponent implements OnInit {
     return unique(incomes.map(i => getAssociatedSource(i, this.waterfall.sources)));
   }
 
-  public displayRightholderStatements(rightholderId: string) {
+  public displayRightholderStatements(senderId: string) {
     this.rightholderStatements = {
-      rightholderId,
-      pending: this.statementsToCreate(rightholderId),
-      existing: this.statements.filter(s => s.rightholderId === rightholderId && isProducerStatement(s)) as ProducerStatement[]
+      senderId,
+      pending: this.statementsToCreate(senderId),
+      existing: this.statements.filter(s => s.senderId === senderId && isProducerStatement(s)) as ProducerStatement[]
     };
     this.cdRef.markForCheck();
   }
@@ -269,7 +270,7 @@ export class DashboardComponent implements OnInit {
     const id = await this.statementService.add(statement, { params: { waterfallId: this.waterfall.id } });
     if (redirect) return this.router.navigate(['/c/o/dashboard/crm/waterfall', this.waterfall.id, 'statement', id]);
     this.statements.push(statement);
-    this.displayRightholderStatements(statement.rightholderId);
+    this.displayRightholderStatements(statement.senderId);
   }
 
   public goTo(type: 'statements' | 'rightholders', id: string) {
