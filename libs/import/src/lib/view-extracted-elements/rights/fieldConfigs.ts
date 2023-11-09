@@ -188,7 +188,11 @@ export function getRightConfig(option: RightConfig) {
         return Number(value) / 100 || 1;
       },
         /* aa */ 'right.contractId': async (value: string, data: FieldsConfig) => {
-        if (!value.trim()) return;
+        const groupRightTypes: RightType[] = ['horizontal', 'vertical'];
+        const isGroup = groupRightTypes.includes(data.right.type);
+        if (!value.trim() && !isGroup) throw optionalWarning('Contract Id should be defined except for groups and producer rights');
+        if (isGroup && value.trim()) throw optionalWarning('Skipped contract id for group right');
+        if (isGroup) return;
         if (value.split(separator).length > 1) throw mandatoryError(value, 'Contract Id', 'Multiple contract are not allowed');
         // If contract ID is specified instead of a date, we use signature date as right date.
         const contract = await getWaterfallDocument(value.trim(), waterfallDocumentsService, documentCache, data.waterfallId);
@@ -196,8 +200,6 @@ export function getRightConfig(option: RightConfig) {
         if (!isContract(contract)) throw mandatoryError(value, 'Contract Id', `Document "${contract.id}" is not a contract`);
         if (!contract.meta.duration.from) throw mandatoryError(value, 'Contract start date', `Contract id "${contract.id}" is missing start date.`);
         if (!contract.meta.duration.to) throw mandatoryError(value, 'Contract end date', `Contract id "${contract.id}" is missing end date.`);
-        const groupRightTypes: RightType[] = ['horizontal', 'vertical'];
-        if (groupRightTypes.includes(data.right.type)) throw optionalWarning('Skipped contract id for group right');
         return contract.id;
       },
     };
