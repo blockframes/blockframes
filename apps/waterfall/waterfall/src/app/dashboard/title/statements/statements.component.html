@@ -1,1 +1,57 @@
-statements
+<ng-container *ngIf="waterfall$ | async as waterfall">
+  <ng-container *ngIf="waterfall.versions.length else noWaterfall">
+    <ng-container *ngIf="statements.length else noStatements">
+      <header>
+        <mat-chip-list aria-label="Statement type">
+          <ng-container *ngFor="let type of statementTypes">
+            <mat-divider *ngIf="type.divider && type.visible" [vertical]="true"></mat-divider>
+            <mat-chip
+            *ngIf="type.visible"
+            [selected]="type.selected"
+            (click)="changeType(type.key)">{{ type.value }}</mat-chip>
+          </ng-container>
+        </mat-chip-list>
+        
+        <ng-container *ngIf="rightholders.length > 0">
+          <waterfall-rightholder-select *ngIf="selected !== 'directSales'"
+            [rightholders]="rightholders"
+            [control]="rightholderControl">
+            <mat-label>Right Holder</mat-label>
+          </waterfall-rightholder-select>
+        </ng-container>
+      </header>
+      
+      <section>
+        <bf-table *ngIf="rightholderStatements.length > 0 else noStatement" [source]="rightholderStatements" pagination="50">
+          <ng-template colRef="id" label="#" let-id sort>
+            TODO order
+          </ng-template>
+          <ng-template colRef="duration" label="Statement period" let-duration sort>
+            {{ duration.from | date: 'dd/MM/yyyy' }} -  {{ duration.to | date: 'dd/MM/yyyy' }}
+          </ng-template>
+          <ng-template colRef="type" label="Type" let-type sort>
+            {{ type | toLabel: 'statementType' }}
+          </ng-template>
+          <ng-template colRef="status" label="Status" let-status sort>
+            <bf-tag>{{ status | toLabel: 'statementStatus' }}</bf-tag>
+          </ng-template>
+        </bf-table>
+        <ng-template #noStatement>
+          <waterfall-empty-statement-card [type]="selected"></waterfall-empty-statement-card>
+        </ng-template>
+      </section>
+    </ng-container>
+  </ng-container>
+</ng-container>
+
+<ng-template #noWaterfall>
+  <waterfall-empty></waterfall-empty>
+</ng-template>
+
+<ng-template #noStatements>
+  <section class="no-statements">
+    <waterfall-empty-statement-card type="mainDistributor"></waterfall-empty-statement-card>
+    <waterfall-empty-statement-card type="salesAgent"></waterfall-empty-statement-card>
+    <waterfall-empty-statement-card type="producer" disabled></waterfall-empty-statement-card>
+  </section>
+</ng-template>

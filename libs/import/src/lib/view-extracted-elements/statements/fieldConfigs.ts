@@ -4,9 +4,9 @@ import {
   Movie,
   MovieCurrency,
   Statement,
-  StatementType,
   Territory,
-  WaterfallRightholder
+  WaterfallRightholder,
+  distributorsStatementType
 } from '@blockframes/model';
 import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
 import {
@@ -114,8 +114,7 @@ export function getStatementConfig(option: StatementConfig) {
         if (!value) throw mandatoryError(value, 'Statement type');
         const type = getKeyIfExists('statementType', value);
         if (!type) throw wrongValueError(value, 'Statement type');
-        const allowedStatementTypes: StatementType[] = ['mainDistributor', 'salesAgent', 'directSales'];
-        if (!allowedStatementTypes.includes(type)) throw wrongValueError(value, `Statement type must me one of the following "${allowedStatementTypes.join(', ')}"`);
+        if (!distributorsStatementType.includes(type)) throw wrongValueError(value, `Statement type must me one of the following "${distributorsStatementType.join(', ')}"`);
         return type;
       },
         /* h */ 'incomes[].id': async (value: string) => {
