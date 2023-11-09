@@ -23,14 +23,11 @@
       
       <section>
         <bf-table *ngIf="rightholderStatements.length > 0 else noStatement" [source]="rightholderStatements" pagination="50">
-          <ng-template colRef="id" label="#" let-id sort>
-            TODO order
+          <ng-template colRef="order" label="#" let-order>
+            {{ order }}
           </ng-template>
-          <ng-template colRef="duration" label="Statement period" let-duration sort>
+          <ng-template colRef="duration" label="Statement period" let-duration>
             {{ duration.from | date: 'dd/MM/yyyy' }} -  {{ duration.to | date: 'dd/MM/yyyy' }}
-          </ng-template>
-          <ng-template colRef="type" label="Type" let-type sort>
-            {{ type | toLabel: 'statementType' }}
           </ng-template>
           <ng-template colRef="status" label="Status" let-status sort>
             <bf-tag>{{ status | toLabel: 'statementStatus' }}</bf-tag>

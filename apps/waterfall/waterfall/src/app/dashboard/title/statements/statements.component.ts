@@ -10,6 +10,7 @@ import {
   WaterfallRightholder,
   distributorsStatementType,
   rightholderGroups,
+  sortByDate,
   statementType
 } from '@blockframes/model';
 
@@ -49,7 +50,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
   public waterfall$ = this.shell.waterfall$;
 
   public statements: Statement[] = [];
-  public rightholderStatements: Statement[] = [];
+  public rightholderStatements: (Statement & { order: number })[] = [];
 
   public rightholders: WaterfallRightholder[] = [];
   public rightholderControl = new FormControl<string>('');
@@ -86,7 +87,8 @@ export class StatementsComponent implements OnInit, OnDestroy {
     this.changeType('mainDistributor');
 
     this.sub = this.rightholderControl.valueChanges.pipe(startWith(this.rightholderControl.value)).subscribe(value => {
-      this.rightholderStatements = this.statements.filter(statement => statement[this.selected === 'producer' ? 'receiverId' : 'senderId'] === value && statement.type === this.selected);
+      const filteredStatements = this.statements.filter(statement => statement[this.selected === 'producer' ? 'receiverId' : 'senderId'] === value && statement.type === this.selected);
+      this.rightholderStatements = sortByDate(filteredStatements, 'duration.to').map((s, i) => ({ ...s, order: i + 1 })).reverse();
       this.cdr.markForCheck();
     });
   }
@@ -105,7 +107,6 @@ export class StatementsComponent implements OnInit, OnDestroy {
       .filter(r => this.statements.some(statement => statement[this.selected === 'producer' ? 'receiverId' : 'senderId'] === r.id && statement.type === selected.key));
 
     // TODO #9485 CF statementsToCreate on CRM SIDE (use rights that are in relation with distributor statements)
-
 
     // TODO #9485 display only rightholders that have statements
     this.rightholders = rightholders;
