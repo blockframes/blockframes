@@ -11,7 +11,6 @@ import {
   PricePerCurrency,
   ProducerStatement,
   Right,
-  RightholderRole,
   Statement,
   Version,
   Waterfall,
@@ -27,7 +26,8 @@ import {
   isProducerStatement,
   mainCurrency,
   movieCurrencies,
-  pathExists
+  pathExists,
+  rightholderGroups
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
@@ -61,7 +61,7 @@ export class DashboardComponent implements OnInit {
   private state: WaterfallState;
   public currentState: History;
   public currentBlock: string;
-  public producersOrCoproducers: WaterfallRightholder[] = [];
+  public producers: WaterfallRightholder[] = []; // TODO #9485 transform into single rightholder as there is only one producer per waterfall
   public options = { xAxis: { categories: [] }, series: [] };
   public formatter = { formatter: (value: number) => `${value} ${movieCurrencies[mainCurrency]}` };
 
@@ -94,8 +94,8 @@ export class DashboardComponent implements OnInit {
     if (this.statementBlocks.length) {
       this.currentBlock = this.statementBlocks[this.statementBlocks.length - 1].id;
       this.selectBlock(this.currentBlock);
-      if (!this.producersOrCoproducers.length) {
-        this.snackBar.open('No producers or coproducers found for this waterfall. Please set rightholders roles.', 'close', { duration: 5000 });
+      if (!this.producers.length) {
+        this.snackBar.open('No producer found for this waterfall. Please set rightholders roles.', 'close', { duration: 5000 });
       } else {
         this.snackBar.open('Waterfall loaded !', 'close', { duration: 5000 });
       }
@@ -110,9 +110,9 @@ export class DashboardComponent implements OnInit {
     const index = this.version.blockIds.indexOf(blockId);
     this.currentState = this.history[index + 1]; // First history entry is always empty (init)
     this.rightholderStatements = undefined;
-    this.producersOrCoproducers = Object.values(this.currentState.orgs)
+    this.producers = Object.values(this.currentState.orgs)
       .map(({ id }) => this.getRightholder(id))
-      .filter(({ roles }) => roles.includes('producer') || roles.includes('coProducer'));
+      .filter(({ roles }) => roles.includes('producer'));
 
     this.buildGraph(blockId);
     this.cdRef.markForCheck();
@@ -214,11 +214,7 @@ export class DashboardComponent implements OnInit {
 
     const contracts = unique(contractsIds)
       .map(id => this.contracts.find(c => c.id === id))
-      .filter(c => {
-        // Remove Distributor contracts
-        const distributorContractTypes: RightholderRole[] = ['mainDistributor', 'localDistributor', 'salesAgent'];
-        return !distributorContractTypes.includes(c.type);
-      });
+      .filter(c => !Object.keys(rightholderGroups.distributors).includes(c.type));
 
     // Fetch incomes and sources related to the statements
     const distributorStatementsIncomeIds = distributorStatements.map(s => s.payments.rightholder.incomeIds).flat();
@@ -232,10 +228,8 @@ export class DashboardComponent implements OnInit {
       return rights.some(r => sources.some(s => pathExists(r.id, s.id, this.state.waterfall.state)));
     });
 
-    const rightholder = this.waterfall.rightholders.find(r => r.id === rightholderId);
     return filteredContracts.map(c => createProducerStatement({
       id: this.statementService.createId(),
-      type: rightholder.roles.includes('producer') ? 'producer' : 'coProducer',
       contractId: c.id,
       rightholderId,
       waterfallId: this.waterfall.id,
