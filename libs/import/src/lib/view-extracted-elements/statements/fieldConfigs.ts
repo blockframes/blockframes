@@ -97,10 +97,10 @@ export function getStatementConfig(option: StatementConfig) {
         }
         return value;
       },
-        /* d */ 'statement.rightholderId': async (value: string, data: FieldsConfig) => {
+        /* d */ 'statement.senderId': async (value: string, data: FieldsConfig) => {
         if (!value) return '';
-        const rightholderId = await getRightholderId(value, data.statement.waterfallId, waterfallService, rightholderCache);
-        return rightholderId;
+        const senderId = await getRightholderId(value, data.statement.waterfallId, waterfallService, rightholderCache);
+        return senderId;
       },
         /* e */ 'statement.duration.from': async (value: string) => {
         if (!value) throw mandatoryError(value, 'Date');

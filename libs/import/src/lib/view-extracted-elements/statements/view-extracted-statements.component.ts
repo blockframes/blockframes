@@ -11,6 +11,7 @@ import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 import { IncomeService } from '@blockframes/contract/income/service';
 import { ExpenseService } from '@blockframes/contract/expense/service';
+import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 
 @Component({
   selector: 'import-view-extracted-statements[sheetTab]',
@@ -32,6 +33,7 @@ export class ViewExtractedStatementsComponent implements OnInit {
     private statementService: StatementService,
     private incomeService: IncomeService,
     private expenseService: ExpenseService,
+    private waterfallDocumentsService: WaterfallDocumentsService,
   ) {
     this.dynTitle.setPageTitle('Submit your statements');
   }
@@ -44,6 +46,7 @@ export class ViewExtractedStatementsComponent implements OnInit {
       this.statementService,
       this.incomeService,
       this.expenseService,
+      this.waterfallDocumentsService,
       this.authService.profile.orgId,
     );
 

@@ -451,19 +451,19 @@ export const rulesFixtures = {
   },
   'waterfall/MI-0d7/statements/S001': {
     id: 'S001',
-    rightholderId: 'RH003'
+    senderId: 'RH003'
   },
   'waterfall/MI-0d7/statements/S002': {
     id: 'S002',
-    rightholderId: 'RH002'
+    senderId: 'RH002'
   },
   'waterfall/WF-001/statements/S001': {
     id: 'S001',
-    rightholderId: 'RH003'
+    senderId: 'RH003'
   },
   'waterfall/WF-001/statements/S002': {
     id: 'S002',
-    rightholderId: 'RH002'
+    senderId: 'RH002'
   },
   'waterfall/M001/rights/R001': {
     id: 'R001',
