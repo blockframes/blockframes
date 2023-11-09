@@ -1777,7 +1777,7 @@ export const statementStatus = {
 export const statementType = {
   salesAgent: 'Sales Agent',
   mainDistributor: 'Main Distributor',
-  producer: 'Outgoing statements',
+  producer: 'Outgoing',
   directSales: 'Direct Sales',
 } as const;
 

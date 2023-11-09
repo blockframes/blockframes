@@ -189,3 +189,4 @@ export type PaymentStatus = keyof typeof paymentStatus;
 export type StatementStatus = keyof typeof statementStatus;
 
 export type StatementType = keyof typeof statementType;
+export type StatementTypeValue = typeof statementType[StatementType];

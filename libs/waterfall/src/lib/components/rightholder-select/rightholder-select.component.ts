@@ -16,5 +16,4 @@ export class RightholderSelectComponent {
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
   @Input() @boolean multiple: boolean;
   @Input() @boolean required: boolean;
-  @Input() @boolean disabled: boolean;
 }
