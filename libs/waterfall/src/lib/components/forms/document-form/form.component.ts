@@ -4,7 +4,7 @@ import { FormControl } from '@angular/forms';
 import { add, Duration } from 'date-fns';
 import { BehaviorSubject, Subscription, combineLatest } from 'rxjs';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy, Output, EventEmitter, OnChanges } from '@angular/core';
 
 // Blockframes
 import { rightholderGroups, RightholderRole, Waterfall } from '@blockframes/model';
@@ -17,7 +17,7 @@ import { WaterfallDocumentForm, WaterfallDocumentFormValue } from '@blockframes/
   styleUrls: ['./form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DocumentFormComponent implements OnInit, OnDestroy {
+export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() waterfall: Waterfall;
   @Input() form: WaterfallDocumentForm;
@@ -25,7 +25,6 @@ export class DocumentFormComponent implements OnInit, OnDestroy {
 
   hideStartDate$ = new BehaviorSubject(true);
 
-  showTerms: boolean;
   toggleTermsControl = new FormControl(false);
   durationControl = new FormControl<number | undefined>(undefined);
 
@@ -40,11 +39,7 @@ export class DocumentFormComponent implements OnInit, OnDestroy {
   @Output() removeFile = new EventEmitter<boolean>(false);
 
   ngOnInit() {
-    this.showTerms = rightholderGroups.withTerms.includes(this.type);
-    if (this.showTerms) {
-      this.toggleTermsControl.setValue(true);
-      if (this.form.controls.terms.length === 0) this.addTerm();
-    }
+    if (this.form.controls.terms.length === 0) this.addTerm();
     const names = this.waterfall.rightholders.map(r => r.name);
     this.licensee$.next(names);
     this.licensor$.next(names);
@@ -73,6 +68,11 @@ export class DocumentFormComponent implements OnInit, OnDestroy {
       }),
     );
 
+  }
+
+  ngOnChanges() {
+    const showTerms = rightholderGroups.withTerms.includes(this.type);
+    this.toggleTermsControl.setValue(showTerms);
   }
 
   ngOnDestroy() {
