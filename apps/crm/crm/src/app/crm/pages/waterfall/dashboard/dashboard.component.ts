@@ -20,6 +20,7 @@ import {
   createProducerStatement,
   getAssociatedSource,
   getContractAndAmendments,
+  getContractsWith,
   getCurrentContract,
   isDirectSalesStatement,
   isDistributorStatement,
@@ -203,11 +204,8 @@ export class DashboardComponent implements OnInit {
     // Fetch contract ids that are related to the statements (remove amendments or root contracts)
     const excludedContractsIds = unique(distributorStatements.map(s => getContractAndAmendments(s.contractId, this.contracts).map(c => c.id)).flat());
 
-    // Fetch current contracts where the rightholder is involved (buyer or seller) that are not in the excluded list
-    const contractsIds = this.contracts.
-      filter(c => (c.buyerId === senderId || c.sellerId === senderId) && !excludedContractsIds.find(id => id === c.id))
-      .map(c => getCurrentContract(getContractAndAmendments(c.id, this.contracts), currentStateDate)?.id)
-      .filter(c => !!c); // Remove contracts that are not active in the current state date
+    // Fetch current contracts where the sender is involved (buyer or seller) that are not in the excluded list
+    const contractsIds = getContractsWith([senderId], this.contracts, currentStateDate, excludedContractsIds).map(c => c.id);
 
     const contracts = unique(contractsIds)
       .map(id => this.contracts.find(c => c.id === id))
