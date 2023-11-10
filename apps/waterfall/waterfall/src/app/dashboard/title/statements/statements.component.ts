@@ -102,16 +102,15 @@ export class StatementsComponent implements OnInit, OnDestroy {
     const selected = this.statementTypes.find(type => type.selected);
     this.selected = selected.key;
     if (!selected) this.rightholders = [];
-    const rightholders = this.waterfall.rightholders
-      .filter(r => r.roles.some(role => selected.roles.includes(role)))
-      .filter(r => this.statements.some(statement => statement[this.selected === 'producer' ? 'receiverId' : 'senderId'] === r.id && statement.type === selected.key));
+    const rightholderKey = this.selected === 'producer' ? 'receiverId' : 'senderId';
+    this.rightholders = this.waterfall.rightholders
+      .filter(r => r.roles.some(role => selected.roles.includes(role))) // Rightholders that have the selected role
+      .filter(r => this.statements.some(stm => stm[rightholderKey] === r.id && stm.type === selected.key)); // Rightholders that have statements of the selected type
 
-    // TODO #9485 CF statementsToCreate on CRM SIDE (use rights that are in relation with distributor statements)
+    // TODO #9485 + que ceux avec qui j'ai un contrat ? CF CRM
+    // TODO #9485 CF statementsToCreate on CRM SIDE (use this.rights that are in relation with distributor statements)
 
-    // TODO #9485 display only rightholders that have statements
-    this.rightholders = rightholders;
     this.rightholderControl.setValue(this.rightholders[0]?.id);
-    // TODO #9485 + que ceux avec qui j'ai un contrat ?
 
     this.cdr.markForCheck();
   }

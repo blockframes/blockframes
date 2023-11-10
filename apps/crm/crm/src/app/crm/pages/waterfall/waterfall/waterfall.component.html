@@ -77,7 +77,7 @@
         </ng-template>
         <ng-template colRef="payload.amount" label="Amount" let-amount>
           <ng-container *ngIf="amount else noPrice">
-            <price-per-currency [price]="getPrice(amount)"></price-per-currency>
+            <price-per-currency [price]="amount | formatPair"></price-per-currency>
           </ng-container>
           <ng-template #noPrice>--</ng-template>
         </ng-template>

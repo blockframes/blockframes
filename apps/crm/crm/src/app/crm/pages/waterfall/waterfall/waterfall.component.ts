@@ -22,10 +22,6 @@ export class WaterfallComponent {
     this.shell.setDate(undefined);
   }
 
-  public getPrice(amount: number): PricePerCurrency {
-    return { [mainCurrency]: amount };
-  }
-
   public async removeVersion(id: string) {
     await this.shell.removeVersion(id);
     this.displayActions$.next(false);

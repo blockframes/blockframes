@@ -10,6 +10,7 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { EmptyStatementCardModule } from '@blockframes/waterfall/components/empty-statement-card/empty-statement-card.module';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
+import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 
 // Pages
 import { StatementsComponent } from './statements.component';
@@ -23,13 +24,14 @@ import { MatDividerModule } from '@angular/material/divider';
   declarations: [StatementsComponent],
   imports: [
     CommonModule,
-    
+
     RightholderSelectModule,
     EmptyWaterfallModule,
     TableModule,
     ToLabelModule,
     EmptyStatementCardModule,
     TagModule,
+    PricePerCurrencyModule,
 
     // Material
     MatFormFieldModule,

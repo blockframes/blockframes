@@ -29,12 +29,35 @@
           <ng-template colRef="duration" label="Statement period" let-duration>
             {{ duration.from | date: 'dd/MM/yyyy' }} -  {{ duration.to | date: 'dd/MM/yyyy' }}
           </ng-template>
-          <ng-template colRef="status" label="Status" let-status sort>
-            <bf-tag>{{ status | toLabel: 'statementStatus' }}</bf-tag>
+          <ng-template colRef="payments" label="Amount Due" let-payments>
+            <price-per-currency 
+              *ngIf="payments.rightholder as payment else noPayment" 
+              [price]="payment.price | formatPair : payment.currency">
+            </price-per-currency>
+          </ng-template>
+          <ng-template colRef="payments" label="Amount Paid" let-payments>
+            <price-per-currency 
+              *ngIf="payments.rightholder?.status === 'received' else noPayment"
+              [price]="payments.rightholder.price | formatPair : payments.rightholder.currency">
+            </price-per-currency>
+          </ng-template>
+          <ng-template colRef="payments" label="Payment Date" let-payments>
+            <ng-container *ngIf="payments.rightholder?.status === 'received'">
+              {{ payments.rightholder.date | date: 'dd/MM/yyyy' }}
+            </ng-container>
+          </ng-template>
+          <ng-template colRef="status" label="Reported" let-status sort>
+            <bf-tag [ngClass]="status === 'draft'? 'active' : ''">{{ status | toLabel: 'statementStatus' }}</bf-tag>
+          </ng-template>
+          <ng-template colRef="id" label="Actions" let-versionId sticky>
+            
           </ng-template>
         </bf-table>
         <ng-template #noStatement>
           <waterfall-empty-statement-card [type]="selected"></waterfall-empty-statement-card>
+        </ng-template>
+        <ng-template #noPayment>
+          <price-per-currency [price]="0 | formatPair"></price-per-currency>
         </ng-template>
       </section>
     </ng-container>

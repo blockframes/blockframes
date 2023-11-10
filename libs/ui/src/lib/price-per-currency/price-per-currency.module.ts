@@ -3,11 +3,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // Component
-import { PricePerCurrencyComponent } from './price-per-currency.component';
+import { FormatPairPipe, PricePerCurrencyComponent } from './price-per-currency.component';
 
 @NgModule({
   imports: [CommonModule],
-  exports: [PricePerCurrencyComponent],
-  declarations: [PricePerCurrencyComponent],
+  exports: [PricePerCurrencyComponent, FormatPairPipe],
+  declarations: [PricePerCurrencyComponent, FormatPairPipe],
 })
 export class PricePerCurrencyModule { }

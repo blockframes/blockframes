@@ -29,6 +29,7 @@ import {
   pathExists,
   rightholderGroups
 } from '@blockframes/model';
+import { formatPair } from '@blockframes/ui/price-per-currency/price-per-currency.component';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { StatementService } from '@blockframes/waterfall/statement.service';
@@ -149,12 +150,8 @@ export class DashboardComponent implements OnInit {
 
   public getTotalIncomes(incomeState: Record<string, IncomeState>): PricePerCurrency {
     const incomeStates = Object.values(incomeState);
-    if (!incomeStates.length) return this.getPrice(0);
-    return this.getPrice(incomeStates.map(a => a.amount).reduce((a, b) => a + b));
-  }
-
-  public getPrice(amount: number): PricePerCurrency {
-    return { [mainCurrency]: amount };
+    if (!incomeStates.length) return formatPair(0);
+    return formatPair(incomeStates.map(a => a.amount).reduce((a, b) => a + b));
   }
 
   public getRightholder(id: string) {

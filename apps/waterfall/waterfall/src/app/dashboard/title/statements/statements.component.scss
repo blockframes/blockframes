@@ -31,3 +31,9 @@ bf-table {
   padding: 0;
   border: none;
 }
+
+bf-tag.active {
+  background-color: var(--primary-lighter);
+  border: none;
+  color: #ffffff;
+}
