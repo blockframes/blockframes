@@ -67,7 +67,8 @@ export class ContractsFormComponent implements OnInit {
         const contracts: Partial<Record<RightholderRole, WaterfallContract[]>> = {};
         Object.keys(rightholderRoles)
           .filter(r => r !== 'producer')
-          .forEach((r: RightholderRole) => contracts[r] = rawContracts.filter(c => c.type === r));
+          // Fetch all root contracts for each role
+          .forEach((r: RightholderRole) => contracts[r] = rawContracts.filter(c => c.type === r && !c.rootId));
         return contracts;
       }),
       tap(rawContracts => this.contracts = rawContracts)
