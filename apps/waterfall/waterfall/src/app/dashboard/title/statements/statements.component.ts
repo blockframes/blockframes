@@ -7,7 +7,10 @@ import {
   Statement,
   StatementType,
   StatementTypeValue,
+  WaterfallContract,
   WaterfallRightholder,
+  getContractWith,
+  hasContractWith,
   isProducerStatement,
   rightholderGroups,
   sortByDate,
@@ -51,12 +54,14 @@ export class StatementsComponent implements OnInit, OnDestroy {
 
   public statements: Statement[] = [];
   public rightholderStatements: (Statement & { order: number })[] = [];
+  public rightholderContract: WaterfallContract;
+  public statementSender: WaterfallRightholder;
 
   public rightholders: WaterfallRightholder[] = [];
   public rightholderControl = new FormControl<string>('');
 
-
-  private rights: Right[];
+  private contracts: WaterfallContract[] = [];
+  private rights: Right[] = [];
   public statementTypes: StatementChipConfig[] = [];
   public selected: StatementType;
   private waterfall = this.shell.waterfall;
@@ -74,6 +79,8 @@ export class StatementsComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.rights = await firstValueFrom(this.shell.rights$);
     this.statements = await firstValueFrom(this.shell.statements$);
+    this.statementSender = await firstValueFrom(this.shell.currentRightholder$);
+    this.contracts = await firstValueFrom(this.shell.contracts$);
     this.statementTypes = Object.entries(statementsRolesMapping).map(([key, value]: [StatementType, StatementRolesConfig]) => (
       {
         selected: false,
@@ -89,6 +96,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
     this.sub = this.rightholderControl.valueChanges.pipe(startWith(this.rightholderControl.value)).subscribe(value => {
       const filteredStatements = this.statements.filter(statement => statement[this.selected === 'producer' ? 'receiverId' : 'senderId'] === value && statement.type === this.selected);
       this.rightholderStatements = sortByDate(filteredStatements, 'duration.to').map((s, i) => ({ ...s, order: i + 1 })).reverse();
+      this.rightholderContract = getContractWith([this.statementSender.id, value], this.contracts);
       this.cdr.markForCheck();
     });
   }
@@ -104,11 +112,11 @@ export class StatementsComponent implements OnInit, OnDestroy {
     if (!selected) this.rightholders = [];
     const rightholderKey = this.selected === 'producer' ? 'receiverId' : 'senderId';
     this.rightholders = this.waterfall.rightholders
+      .filter(r => hasContractWith([this.statementSender.id, r.id], this.contracts)) // Rightholder have a contract with the statement sender (current rightholder)
       .filter(r => r.roles.some(role => selected.roles.includes(role))) // Rightholders that have the selected role
       .filter(r => this.statements.some(stm => stm[rightholderKey] === r.id && stm.type === selected.key)); // Rightholders that have statements of the selected type
 
-    // TODO #9485 + que ceux avec qui j'ai un contrat ? CF CRM
-    // TODO #9485 CF statementsToCreate on CRM SIDE (use this.rights that are in relation with distributor statements)
+    // TODO #9485 for outgoing statements : CF statementsToCreate on CRM SIDE (use this.rights that are in relation with distributor statements)
 
     this.rightholderControl.setValue(this.rightholders[0]?.id);
 

@@ -13,8 +13,23 @@ header {
       cursor: pointer;
     }
   }
-  waterfall-rightholder-select {
-    width: 30%;
+
+  article {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    span {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      flex-grow: 2;
+      waterfall-rightholder-select {
+        width: 30%;
+      }
+      a { 
+        margin-top: -14px;
+      }
+    }
   }
 }
 
@@ -22,7 +37,7 @@ section {
   padding: 24px;
 }
 
-section.no-statements {
+section.flex-center {
   display: flex;
   justify-content: center;
 }

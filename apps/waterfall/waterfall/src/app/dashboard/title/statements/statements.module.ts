@@ -11,6 +11,7 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 import { EmptyStatementCardModule } from '@blockframes/waterfall/components/empty-statement-card/empty-statement-card.module';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
+import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 
 // Pages
 import { StatementsComponent } from './statements.component';
@@ -19,6 +20,9 @@ import { StatementsComponent } from './statements.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [StatementsComponent],
@@ -32,11 +36,15 @@ import { MatDividerModule } from '@angular/material/divider';
     EmptyStatementCardModule,
     TagModule,
     PricePerCurrencyModule,
+    RightHolderNamePipeModule,
 
     // Material
     MatFormFieldModule,
     MatChipsModule,
     MatDividerModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatButtonModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: StatementsComponent }]),

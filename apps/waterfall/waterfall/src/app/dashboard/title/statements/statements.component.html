@@ -12,13 +12,23 @@
           </ng-container>
         </mat-chip-list>
         
-        <ng-container *ngIf="rightholders.length > 0">
-          <waterfall-rightholder-select *ngIf="selected !== 'directSales'"
-            [rightholders]="rightholders"
-            [control]="rightholderControl">
-            <mat-label>Right Holder</mat-label>
-          </waterfall-rightholder-select>
-        </ng-container>
+        <article *ngIf="rightholders.length > 0">
+          <span>
+            <waterfall-rightholder-select *ngIf="selected !== 'directSales'"
+              [rightholders]="rightholders"
+              [control]="rightholderControl">
+              <mat-label>Right Holder</mat-label>
+            </waterfall-rightholder-select>
+            <a mat-icon-button [routerLink]="['..', 'documents', rightholderContract.id]">
+              <mat-icon svgIcon="contract" matTooltip="See contract"></mat-icon>
+            </a>
+          </span>
+          <div>
+            <a mat-button [routerLink]="['// TODO #9485']">
+              <span>Add statement for {{ rightholderControl.value | rightholderName: waterfall }}</span>
+            </a>
+          </div>
+        </article>
       </header>
       
       <section>
@@ -60,6 +70,12 @@
           <price-per-currency [price]="0 | formatPair"></price-per-currency>
         </ng-template>
       </section>
+
+      <section *ngIf="rightholderStatements.length > 0" class="flex-center">
+        <a mat-button [routerLink]="['// TODO #9485']">
+          <span>Add New Distributor</span>
+        </a>
+      </section>
     </ng-container>
   </ng-container>
 </ng-container>
@@ -69,7 +85,7 @@
 </ng-template>
 
 <ng-template #noStatements>
-  <section class="no-statements">
+  <section class="flex-center">
     <waterfall-empty-statement-card type="mainDistributor"></waterfall-empty-statement-card>
     <waterfall-empty-statement-card type="salesAgent"></waterfall-empty-statement-card>
     <waterfall-empty-statement-card type="producer" disabled></waterfall-empty-statement-card>
