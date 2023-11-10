@@ -19,7 +19,7 @@
               [control]="rightholderControl">
               <mat-label>Right Holder</mat-label>
             </waterfall-rightholder-select>
-            <a mat-icon-button [routerLink]="['..', 'documents', rightholderContract.id]">
+            <a *ngIf="selected !== 'directSales'" mat-icon-button [routerLink]="['..', 'documents', rightholderContract.id]">
               <mat-icon svgIcon="contract" matTooltip="See contract"></mat-icon>
             </a>
           </span>
