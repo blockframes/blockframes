@@ -8,7 +8,7 @@ import {
   StatementType,
   StatementTypeValue,
   WaterfallRightholder,
-  distributorsStatementType,
+  isProducerStatement,
   rightholderGroups,
   sortByDate,
   statementType
@@ -75,12 +75,12 @@ export class StatementsComponent implements OnInit, OnDestroy {
     this.rights = await firstValueFrom(this.shell.rights$);
     this.statements = await firstValueFrom(this.shell.statements$);
     this.statementTypes = Object.entries(statementsRolesMapping).map(([key, value]: [StatementType, StatementRolesConfig]) => (
-      { 
-        selected: false, 
-        key, 
-        value: statementType[key], 
+      {
+        selected: false,
+        key,
+        value: statementType[key],
         ...value,
-        visible: key === 'producer' ? this.statements.some(s => distributorsStatementType.includes(s.type) && s.status === 'reported') : value.visible
+        visible: key === 'producer' ? this.statements.some(s => !isProducerStatement(s) && s.status === 'reported') : value.visible
       }
     ));
 

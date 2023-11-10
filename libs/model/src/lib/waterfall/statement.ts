@@ -4,8 +4,6 @@ import { Duration, createDuration } from '../terms';
 import { sortByDate } from '../utils';
 import { History } from './state';
 
-export const distributorsStatementType: StatementType[] = ['mainDistributor', 'salesAgent', 'directSales'];
-
 export interface Payment {
   id: string;
   type: PaymentType;
