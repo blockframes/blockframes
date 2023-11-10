@@ -44,6 +44,7 @@ export const icons = [
   { name: 'cloud_upload', url: 'assets/icons/cloud_upload.svg' },
   { name: 'close', url: 'assets/icons/close.svg' },
   { name: 'comment', url: 'assets/icons/comment.svg' },
+  { name: 'contract', url: 'assets/icons/contract.svg' },
   { name: 'CNY', url: 'assets/icons/CNY.svg' },
   { name: 'dashboard', url: 'assets/icons/dashboard.svg' },
   { name: 'delete', url: 'assets/icons/delete.svg' },
