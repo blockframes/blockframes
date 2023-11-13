@@ -267,7 +267,19 @@ function getIncomingStatements(receiverId: string, statements: Statement[], inco
   return { distributorStatements, directSalesStatements, incomeIds, sources: incomeSources };
 }
 
-export function getOutgoingStatementPrerequists(senderId: string, receiverId: string, statements: Statement[], contracts: WaterfallContract[], rights: Right[], titleState: TitleState, incomes: Income[], sources: WaterfallSource[], date: Date) {
+interface OutgoingStatementPrerequistsConfig {
+  senderId: string,
+  receiverId: string,
+  statements: Statement[],
+  contracts: WaterfallContract[],
+  rights: Right[],
+  titleState: TitleState,
+  incomes: Income[],
+  sources: WaterfallSource[],
+  date: Date
+}
+
+export function getOutgoingStatementPrerequists({ senderId, receiverId, statements, contracts, rights, titleState, incomes, sources, date }: OutgoingStatementPrerequistsConfig) {
   const incomingStatements = getIncomingStatements(senderId, statements, incomes, sources, date);
   // No incoming distributor or direct sales statements for senderId, no need to create outgoing statement
   if (!incomingStatements.distributorStatements.length && !incomingStatements.directSalesStatements.length) return {};
@@ -303,6 +315,6 @@ export function getOutgoingStatementPrerequists(senderId: string, receiverId: st
   return { incomeIds: statementIncomeIds, contract };
 }
 
-export function canCreateOutgoingStatement(senderId: string, receiverId: string, statements: Statement[], contracts: WaterfallContract[], rights: Right[], titleState: TitleState, incomes: Income[], sources: WaterfallSource[], date: Date) {
-  return !!getOutgoingStatementPrerequists(senderId, receiverId, statements, contracts, rights, titleState, incomes, sources, date).incomeIds?.length;
+export function canCreateOutgoingStatement(data: OutgoingStatementPrerequistsConfig) {
+  return !!getOutgoingStatementPrerequists(data).incomeIds?.length;
 }

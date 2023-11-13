@@ -107,9 +107,19 @@ export class StatementsComponent implements OnInit, OnDestroy {
       this.rightholderStatements = sortByDate(filteredStatements, 'duration.to').map((s, i) => ({ ...s, order: i + 1 })).reverse();
       this.rightholderContract = getContractWith([this.statementSender.id, value], this.contracts, this.currentStateDate);
 
-      this.canCreateStatement = this.selected === 'producer' ?
-        canCreateOutgoingStatement(this.statementSender.id, value, this.statements, this.contracts, this.rights, this.state.waterfall.state, this.incomes, this.waterfall.sources, this.currentStateDate) :
-        true;
+      const config = {
+        senderId: this.statementSender.id,
+        receiverId: value,
+        statements: this.statements,
+        contracts: this.contracts,
+        rights: this.rights,
+        titleState: this.state.waterfall.state,
+        incomes: this.incomes,
+        sources: this.waterfall.sources,
+        date: this.currentStateDate
+      };
+
+      this.canCreateStatement = this.selected === 'producer' ? canCreateOutgoingStatement(config) : true;
 
       this.cdr.markForCheck();
     });

@@ -191,7 +191,20 @@ export class DashboardComponent implements OnInit {
       .filter(r => r.roles.some(role => outgoingStatementBeneficiaries.includes(role))) // Rightholder can receive an outgoing statement
 
     return rightholders.map(receiver => {
-      const prerequists = getOutgoingStatementPrerequists(senderId, receiver.id, this.statements, this.contracts, this.rights, this.state.waterfall.state, this.incomes, this.waterfall.sources, currentStateDate);
+
+      const config = {
+        senderId,
+        receiverId: receiver.id,
+        statements: this.statements,
+        contracts: this.contracts,
+        rights: this.rights,
+        titleState: this.state.waterfall.state,
+        incomes: this.incomes,
+        sources: this.waterfall.sources,
+        date: currentStateDate
+      };
+
+      const prerequists = getOutgoingStatementPrerequists(config);
 
       if (!prerequists.incomeIds?.length) return;
       return createProducerStatement({
