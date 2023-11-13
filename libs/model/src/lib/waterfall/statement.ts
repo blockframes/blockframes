@@ -1,5 +1,5 @@
 import { DocumentMeta } from '../meta';
-import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups } from '../static';
+import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups, RightType } from '../static';
 import { Duration, createDuration } from '../terms';
 import { sortByDate } from '../utils';
 import { History, TitleState } from './state';
@@ -317,4 +317,26 @@ export function getOutgoingStatementPrerequists({ senderId, receiverId, statemen
 
 export function canCreateOutgoingStatement(data: OutgoingStatementPrerequistsConfig) {
   return !!getOutgoingStatementPrerequists(data).incomeIds?.length;
+}
+
+/**
+ * Return the rights that should be used during statement creation
+ * Will include rights of senderId and/or receiverId depending of the statement type.
+ * If statement have a contractId, it will also be used to filter rights.
+ * @param statement 
+ * @param _rights 
+ * @returns 
+ */
+export function getStatementRights(statement: Statement, _rights: Right[]) {
+  // Groups are skipped here and revenue will be re-calculated from the childrens
+  const groupRightTypes: RightType[] = ['horizontal', 'vertical'];
+  const rights = _rights.filter(r => !groupRightTypes.includes(r.type));
+
+  if (isDistributorStatement(statement)) {
+    return rights.filter(r => r.rightholderId === statement.receiverId || r.contractId === statement.contractId);
+  } else if (isProducerStatement(statement)) {
+    return rights.filter(r => r.rightholderId !== statement.senderId && r.contractId === statement.contractId);
+  } else if (isDirectSalesStatement(statement)) {
+    return rights.filter(r => r.rightholderId === statement.senderId);
+  }
 }
