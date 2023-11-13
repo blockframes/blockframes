@@ -41,12 +41,13 @@ import { APP } from '@blockframes/utils/routes/utils';
 import { WaterfallPermissionsService } from '@blockframes/waterfall/permissions.service';
 import { AuthService } from '@blockframes/auth/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Directive({ selector: 'waterfall-cta, [waterfallCta]' })
 export class WaterfallCtaDirective { }
 
 @Component({
-  selector: '[routes] waterfall-dashboard-shell',
+  selector: 'waterfall-dashboard-shell',
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss'],
   animations: [routeAnimation],
@@ -198,6 +199,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
 
   @Input() routes: RouteDescription[];
   @Input() editRoute?: string | string[];
+  @Input() @boolean lite = false;
 
   constructor(
     @Inject(APP) public app: App,

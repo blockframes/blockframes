@@ -59,8 +59,18 @@
           <ng-template colRef="status" label="Reported" let-status sort>
             <bf-tag [ngClass]="status === 'draft'? 'active' : ''">{{ status | toLabel: 'statementStatus' }}</bf-tag>
           </ng-template>
-          <ng-template colRef="id" label="Actions" let-versionId sticky>
-            
+          <ng-template colRef="" label="Actions" let-statement sticky>
+            <ng-container *ngIf="statement.status === 'draft'">
+              <a mat-icon-button [routerLink]="['..', 'statement', statement.id, 'notify']">
+                <mat-icon svgIcon="notifications" matTooltip="Notify Right Holder"></mat-icon>
+              </a>
+              <a mat-icon-button [routerLink]="['..', 'statement', statement.id, 'edit']">
+                <mat-icon svgIcon="edit" matTooltip="Edit Statement"></mat-icon>
+              </a>
+            </ng-container>
+            <a mat-icon-button *ngIf="statement.status === 'reported'" target="_blank" [routerLink]="['..', 'statement', statement.id]">
+              <mat-icon svgIcon="visibility" matTooltip="View Statement"></mat-icon>
+            </a>
           </ng-template>
         </bf-table>
         <ng-template #noStatement>

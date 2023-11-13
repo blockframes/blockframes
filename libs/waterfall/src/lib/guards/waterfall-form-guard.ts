@@ -6,7 +6,7 @@ import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
 // Blockframes
 import { RightholderRole } from '@blockframes/model';
-import { WaterfallDocumentForm } from './form/document.form';
+import { WaterfallDocumentForm } from './../form/document.form';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
