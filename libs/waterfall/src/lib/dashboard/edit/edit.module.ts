@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatStepperModule } from '@angular/material/stepper';
 
 // Blockframes
-import { WaterfallFormGuard } from '@blockframes/waterfall/guard';
+import { WaterfallFormGuard } from '@blockframes/waterfall/guards/waterfall-form-guard';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 import { TitleFormModule } from '@blockframes/waterfall/components/forms/title-form/form.module';
 import { ContractsFormModule } from '@blockframes/waterfall/components/contracts-form/contracts-form.module';

@@ -54,10 +54,10 @@ const routes: Routes = [{
         },
         {
           path: ':movieId',
+          canActivate: [MovieActiveGuard, MovieTunnelGuard],
           children: [
             {
               path: '',
-              canActivate: [MovieActiveGuard, MovieTunnelGuard],
               loadChildren: () => import('./title/view/view.module').then(m => m.TitleViewModule),
               data: { redirect: '/c/o/dashboard/home' }
             },
@@ -69,6 +69,10 @@ const routes: Routes = [{
             {
               path: 'right-holders',
               loadChildren: () => import('./title/right-holders/right-holders.module').then(m => m.RightHoldersModule),
+            },
+            {
+              path: 'statement',
+              loadChildren: () => import('./statement/statement.module').then(m => m.StatementModule),
             },
           ],
         },
