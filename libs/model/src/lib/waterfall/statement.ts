@@ -2,7 +2,12 @@ import { DocumentMeta } from '../meta';
 import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups } from '../static';
 import { Duration, createDuration } from '../terms';
 import { sortByDate } from '../utils';
-import { History } from './state';
+import { History, TitleState } from './state';
+import { WaterfallContract, WaterfallSource, getAssociatedSource, getIncomesSources } from './waterfall';
+import { Right } from './right';
+import { pathExists } from './node';
+import { Income } from '../income';
+import { getContractWith } from '../contract';
 
 export interface Payment {
   id: string;
@@ -232,4 +237,72 @@ export function getStatementsHistory(history: History[], statements: Statement[]
   return uniqueDates
     .map(date => history.find(h => new Date(h.date).getTime() === date))
     .filter(h => !!h);
+}
+
+/**
+ * Fetch all distributor and direct sales statements where the rightholder has received payments
+ * @param receiverId 
+ * @param statements 
+ * @param date 
+ */
+function getIncomingStatements(receiverId: string, statements: Statement[], incomes: Income[], sources: WaterfallSource[], date: Date) {
+  // Fetch active distributor statements where rightholder has received payments
+  const distributorStatements = statements
+    .filter(s => isDistributorStatement(s) && s.payments.rightholder)
+    .filter(s => s.duration.to.getTime() <= date.getTime())
+    .filter((s: DistributorStatement) => s.receiverId === receiverId && s.payments.rightholder.status === 'received') as DistributorStatement[];
+
+  // Fetch active direct sales statements created by the rightholder
+  const directSalesStatements = statements
+    .filter(s => isDirectSalesStatement(s))
+    .filter(s => s.duration.to.getTime() <= date.getTime())
+    .filter(s => s.senderId === receiverId && s.status === 'reported') as DirectSalesStatement[];
+
+  // Fetch incomes and sources related to this statements
+  const distributorStatementsIncomeIds = distributorStatements.map(s => s.payments.rightholder.incomeIds).flat();
+  const directSalesStatementsIncomeIds = directSalesStatements.map(s => s.incomeIds).flat();
+  const incomeIds = Array.from(new Set([...distributorStatementsIncomeIds, ...directSalesStatementsIncomeIds]));
+  const statementIncomes = incomes.filter(i => incomeIds.includes(i.id));
+  const incomeSources = getIncomesSources(statementIncomes, sources);
+  return { distributorStatements, directSalesStatements, incomeIds, sources: incomeSources };
+}
+
+export function getOutgoingStatementPrerequists(senderId: string, receiverId: string, statements: Statement[], contracts: WaterfallContract[], rights: Right[], titleState: TitleState, incomes: Income[], sources: WaterfallSource[], date: Date) {
+  const incomingStatements = getIncomingStatements(senderId, statements, incomes, sources, date);
+  // No incoming distributor or direct sales statements for senderId, no need to create outgoing statement
+  if (!incomingStatements.distributorStatements.length && !incomingStatements.directSalesStatements.length) return {};
+
+  const contract = getContractWith([senderId, receiverId], contracts, date);
+  // There is no contract between senderId and receiverId, cannot create outgoing statement
+  if (!contract) return {};
+
+  const contractRights = rights.filter(r => r.contractId === contract.id);
+  // Contract have no rights associated, cannot create outgoing statement
+  if (!contractRights) return {};
+
+  // If there is no path between the rights of the contract and the sources of the incoming statements, cannot create outgoing statement
+  const hasPath = contractRights.some(r => incomingStatements.sources.some(s => pathExists(r.id, s.id, titleState)));
+  if (!hasPath) return {};
+
+  // Fetch previous statements for this contract (this senderId and receiverId)
+  const previousStatements = statements.filter(s => !isDirectSalesStatement(s))
+    .filter((s: ProducerStatement | DistributorStatement) => s.contractId === contract.id);
+
+  // Fetch incomeIds for which no statement was created for this contract, if there is no incomeIds, cannot create outgoing statement
+  const incomeIds = incomingStatements.incomeIds.filter(id => !previousStatements.some(s => s.incomeIds.includes(id)));
+  if (!incomeIds.length) return {};
+
+  // Filter incomes again to keep only incomes that are related to this contract
+  const statementIncomeIds = incomeIds.filter(id => {
+    // Filter incomes again to keep only incomes that are related to this contract
+    const income = incomes.find(i => i.id === id);
+    const source = getAssociatedSource(income, sources);
+    return contractRights.some(r => pathExists(r.id, source.id, titleState));
+  })
+
+  return { incomeIds: statementIncomeIds, contract };
+}
+
+export function canCreateOutgoingStatement(senderId: string, receiverId: string, statements: Statement[], contracts: WaterfallContract[], rights: Right[], titleState: TitleState, incomes: Income[], sources: WaterfallSource[], date: Date) {
+  return !!getOutgoingStatementPrerequists(senderId, receiverId, statements, contracts, rights, titleState, incomes, sources, date).incomeIds?.length;
 }

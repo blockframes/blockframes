@@ -66,6 +66,10 @@ export function getAssociatedSource(income: Income, sources: WaterfallSource[]) 
   return candidates[0];
 }
 
+export function getIncomesSources(incomes: Income[], sources: WaterfallSource[]) {
+  return Array.from(new Set(incomes.map(i => getAssociatedSource(i, sources))));
+}
+
 /**
  * Defines sources that an income will be associated to.
  * row_all, us_svod etc ..

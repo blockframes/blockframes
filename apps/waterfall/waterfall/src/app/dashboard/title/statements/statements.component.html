@@ -24,7 +24,7 @@
             </a>
           </span>
           <div>
-            <a mat-button [routerLink]="['// TODO #9485']">
+            <a mat-button [disabled]="!canCreateStatement" [routerLink]="['// TODO #9485']">
               <span>Add statement for {{ rightholderControl.value | rightholderName: waterfall }}</span>
             </a>
           </div>

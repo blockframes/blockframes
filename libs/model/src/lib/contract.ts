@@ -170,7 +170,7 @@ export function getContractDurationStatus(contract: BaseContract): 'future' | 'p
  * @param excludedIds
  * @returns 
  */
-export function getContractsWith<T extends BaseContract>(parties: string[], _contracts: T[], date = new Date(), excludedIds: string[] = []) {
+function getContractsWith<T extends BaseContract>(parties: string[], _contracts: T[], date = new Date(), excludedIds: string[] = []) {
   const filteredContracts = _contracts.filter(c => !excludedIds.includes(c.id));
   const contracts = filteredContracts.map(c => getCurrentContract<T>(getContractAndAmendments<T>(c.id, filteredContracts), date));
   return contracts
