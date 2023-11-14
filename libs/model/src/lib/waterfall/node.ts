@@ -156,7 +156,15 @@ function getAllValidPaths(from: string, to: string, subTree: { node: string, par
   return paths;
 }
 
-export function getPath(from: string, to: string, state: TitleState) {
+export function getPath(from: string, _to: string, state: TitleState) {
+  let to = _to;
+  // Is "to" in a group ?
+  const grp = getGroup(state, _to);
+  if (grp) {
+    // Is this group also in a group ? (vertical inside horizontal)
+    const parentGroup = getGroup(state, grp.id);
+    to = parentGroup ? parentGroup.id : grp.id;
+  }
   const subTree = getNodesSubTree(state, [from]);
   const paths = getAllValidPaths(from, to, subTree);
   if (paths.length > 1) throw new Error(`Too many paths between ${from} and ${to}`);
@@ -173,7 +181,7 @@ export function pathExists(from: string, to: string, state: TitleState) {
 }
 
 /**
- * Rertuns parent nodes of a given node
+ * Return parent nodes of a given node
  * @param state 
  * @param id 
  * @returns 
