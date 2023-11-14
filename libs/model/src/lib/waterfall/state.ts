@@ -202,7 +202,7 @@ export function createContractState(contract: Partial<ContractState> & { id: str
 export interface SourceState {
   id: string;
   amount: number;
-  destinationIds: string[];
+  destinationIds: string[]; // TODO #9485 should be only one destination
   incomeIds: string[];
 }
 

@@ -43,6 +43,7 @@ const actions = {
   prependHorizontal,
   prependVertical,
   invest,
+  source,
   income,
   /**
    * Add a new payment to the state.
@@ -292,6 +293,20 @@ export function groupByDate(actions: Action[]) {
   return sortByDate(group, 'date');
 }
 
+export function sourcesToAction(waterfallSources: WaterfallSource[]) {
+  const actions: Action[] = [];
+
+  waterfallSources.forEach((s, index) => {
+    actions.push(action('source', {
+      id: s.id,
+      destinationIds: [s.destinationId],
+      date: new Date(1 + (index * 1000)) // 01/01/1970 + "index" seconds 
+    }));
+  });
+
+  return actions;
+}
+
 export function incomesToActions(contracts: WaterfallContract[], incomes: Income[], sources: WaterfallSource[]) {
   const actions: Action[] = [];
 
@@ -408,7 +423,7 @@ export function statementsToActions(statements: Statement[]) {
 // ACTIONS //
 /////////////
 interface BaseAction {
-  date?: Date;
+  date?: Date; // TODO #9485 remove "?"
 }
 
 export interface RightAction extends BaseAction {
@@ -679,6 +694,16 @@ function prependNode(state: TitleState, nextIds: string[], nodeId: string) {
   }
 }
 
+export interface SourceAction extends BaseAction {
+  id: string;
+  destinationIds: string[];
+}
+
+function source(state: TitleState, payload: SourceAction) {
+  state.rights[payload.id] ||= createRightState({ id: payload.id, orgId: payload.id, percent: 0 });
+  state.sources[payload.id] ||= createSourceState({ id: payload.id, amount: 0, destinationIds: payload.destinationIds });
+}
+
 export interface IncomeAction extends BaseAction {
   id: string;
   amount: number;
@@ -688,21 +713,6 @@ export interface IncomeAction extends BaseAction {
   territories: Territory[];
   medias: Media[];
   isCompensation?: boolean;
-}
-
-export interface PaymentAction extends BaseAction {
-  id: string;
-  amount: number;
-  from: {
-    org?: string;
-    income?: string;
-  };
-  to: {
-    org?: string;
-    right?: string;
-  };
-  contractId?: string;
-  date: Date;
 }
 
 /** Distribute the income per thresholds */
@@ -787,6 +797,21 @@ function income(state: TitleState, payload: IncomeAction) {
     }
     rest -= amount;
   }
+}
+
+export interface PaymentAction extends BaseAction {
+  id: string;
+  amount: number;
+  from: {
+    org?: string;
+    income?: string;
+  };
+  to: {
+    org?: string;
+    right?: string;
+  };
+  contractId?: string;
+  date: Date;
 }
 
 /**
