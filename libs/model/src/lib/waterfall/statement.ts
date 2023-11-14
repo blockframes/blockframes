@@ -99,7 +99,7 @@ export interface Statement {
   status: StatementStatus;
   id: string;
   waterfallId: string;
-  senderId: string, // rightholderId of statement creater
+  senderId: string, // rightholderId of statement creator
   receiverId: string, // rightholderId of statement receiver
   duration: Duration;
   incomeIds: string[];
