@@ -1,0 +1,13 @@
+<div class="drag-container" #dragContainer>
+  <ng-content select="[node]"></ng-content>
+
+  <svg width="20000" height="20000" viewBox="0 0 20000 20000">
+    <ng-content select="[edge]"></ng-content>
+  </svg>
+</div>
+
+<div class="zoom-controls">
+  <button class="top" (click)="zoomIn()">+</button>
+  <hr/>
+  <button class="bottom" (click)="zoomOut()">-</button>
+</div>

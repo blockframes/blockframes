@@ -4,13 +4,14 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 // Modules
-import { GraphModule } from '@blockframes/waterfall/components/g6/graph/graph.module';
-import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { EmptyWaterfallModule } from '@blockframes/waterfall/components/empty/empty.module';
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 
 // Pages
 import { WaterfallComponent } from './waterfall.component';
+import { GraphModule } from '@blockframes/waterfall/components/g6/graph/graph.module';
+import { WaterfallGraphModule } from '@blockframes/waterfall/components/graph/graph.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -19,10 +20,11 @@ import { MatButtonModule } from '@angular/material/button';
   declarations: [WaterfallComponent],
   imports: [
     CommonModule,
-    GraphModule,
     LogoSpinnerModule,
     ImageModule,
     EmptyWaterfallModule,
+    GraphModule,
+    WaterfallGraphModule,
 
     // Material
     MatButtonModule,

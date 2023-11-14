@@ -1,0 +1,22 @@
+
+:host {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  gap: 32px;
+  border: dashed 1px var(--accent);
+  padding: 32px;
+
+  p {
+    position: absolute;
+    top: 0px;
+    left: 6px;
+    background: var(--accent);
+    text-transform: uppercase;
+    color: var(--accent-contrast);
+    padding: 2px 12px;
+    border-radius: 3px;
+    transform: translateY(-50%);
+  }
+}
