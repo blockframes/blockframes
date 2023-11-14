@@ -255,9 +255,12 @@ function formatChilds(childs: Right[], subChilds: Right[] = []) {
         percent: child.percent / 100,
         orgId: child.rightholderId,
         contractId: child.contractId,
-        conditions: child.conditions,
         pools: child.pools,
       };
+
+      if (child.conditions) {
+        childRight.conditions = child.conditions;
+      }
 
       return childRight;
     }

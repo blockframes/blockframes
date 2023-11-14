@@ -1,5 +1,5 @@
 import { SourcesImportState } from '../../utils';
-import { App, Movie, createRight, createWaterfallSource } from '@blockframes/model';
+import { App, Movie, createWaterfallSource } from '@blockframes/model';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getSourceConfig } from './fieldConfigs';
 import { MovieService } from '@blockframes/movie/service';
