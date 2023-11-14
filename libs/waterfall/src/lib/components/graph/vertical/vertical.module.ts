@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { NumberPipeModule } from '@blockframes/utils/pipes';
 
+import { WaterfallGraphLevelModule } from '../level/level.module';
 import { WaterfallGraphRightModule } from '../right/right.module';
 import { WaterfallGraphVerticalComponent } from './vertical.component';
 
@@ -14,6 +15,7 @@ import { WaterfallGraphVerticalComponent } from './vertical.component';
     CommonModule,
     NumberPipeModule,
     WaterfallGraphRightModule,
+    WaterfallGraphLevelModule,
   ],
   exports: [ WaterfallGraphVerticalComponent ],
 })

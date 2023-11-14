@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, HostBinding, HostListener, Input, Output } from '@angular/core';
 
 import { SourceNode } from '../layout';
 
@@ -16,4 +16,11 @@ export class WaterfallGraphSourceComponent {
   @Input() selected: boolean;
 
   @Output() handleSelect = new EventEmitter();
+
+
+  @HostBinding('class.nodrag') nodrag = true;
+
+  @HostListener('click') handleClick() {
+    this.handleSelect.emit();
+  }
 }

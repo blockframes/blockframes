@@ -8,11 +8,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { NumberPipeModule } from '@blockframes/utils/pipes';
 
-import { WaterfallGraphRightComponent } from './right.component';
+import { WaterfallGraphLevelComponent } from './level.component';
 
 
 @NgModule({
-  declarations: [ WaterfallGraphRightComponent ],
+  declarations: [ WaterfallGraphLevelComponent ],
   imports: [
     CommonModule,
     NumberPipeModule,
@@ -20,6 +20,6 @@ import { WaterfallGraphRightComponent } from './right.component';
     MatIconModule,
     MatTooltipModule,
   ],
-  exports: [ WaterfallGraphRightComponent ],
+  exports: [ WaterfallGraphLevelComponent ],
 })
-export class WaterfallGraphRightModule {}
+export class WaterfallGraphLevelModule {}

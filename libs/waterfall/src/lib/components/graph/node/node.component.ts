@@ -13,8 +13,8 @@ import { Node } from '../layout';
 export class WaterfallGraphNodeComponent {
 
   @Input() node: Node;
-  @Input() selected = false;
+  @Input() selected = '';
 
-  @Output() handleSelect = new EventEmitter();
+  @Output() handleSelect = new EventEmitter<string>();
 
 }

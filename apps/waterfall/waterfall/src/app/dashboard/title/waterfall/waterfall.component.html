@@ -1,7 +1,13 @@
 <ng-container *ngIf="waterfall$ | async as waterfall">
   <ng-container *ngIf="waterfall.versions.length; else noWaterfall">
     <ng-container *ngIf="(state$ | async) as state; else loading">
-      <waterfall-graph *ngIf="(rights$ | async) as rights; else loading" [state]="state.waterfall.state" [rights]="rights" [sources]="waterfall.sources"></waterfall-graph>
+      <waterfall-graph
+        *ngIf="(rights$ | async) as rights; else loading"
+        [state]="state.waterfall.state"
+        [rights]="rights"
+        [sources]="waterfall.sources"
+        [rightholders]="waterfall.rightholders"
+      ></waterfall-graph>
     </ng-container>
   </ng-container>
 </ng-container>

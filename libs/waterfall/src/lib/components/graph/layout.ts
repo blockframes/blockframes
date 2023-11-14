@@ -2,7 +2,7 @@
 import { graphlib, layout } from 'dagre';
 import LayoutEngine, { ElkExtendedEdge, ElkNode } from 'elkjs/lib/elk.bundled';
 
-import { HorizontalState, Right, RightState, SourceState, TitleState, TransferState, VerticalState, WaterfallSource } from '@blockframes/model';
+import { HorizontalState, Right, RightState, SourceState, TitleState, TransferState, VerticalState, WaterfallRightholder, WaterfallSource } from '@blockframes/model';
 
 
 
@@ -27,6 +27,7 @@ export interface RightNode extends NodeBase {
   type: 'right';
   data: RightState;
   color: string;
+  orgName: string;
 }
 
 export interface VerticalNode extends NodeBase {
@@ -55,10 +56,22 @@ const colors = [
   '#351E29',
 ];
 
+const RIGHT_WIDTH = 240;
+const RIGHT_HEIGHT = 180;
+const LEVEL_HEIGHT = 76;
+const SOURCE_WIDTH = 400;
+const SOURCE_HEIGHT = 70;
+const SPACING = 32;
 
-export async function toGraph(rights: Right[], sources: WaterfallSource[], state: TitleState) {
+
+export async function toGraph(rights: Right[], sources: WaterfallSource[], state: TitleState, rightholders: WaterfallRightholder[]) {
 
   const orgIds = Object.keys(state.orgs).sort();
+  const orgNames: Record<string, string> = {};
+  orgIds.forEach(id => {
+    const rightholder = rightholders.find(rh => rh.id === id);
+    orgNames[id] = rightholder?.name ?? 'Unknown Org';
+  })
   const orgColors = orgIds.map((_, i) => colors[i % colors.length]);
 
   const nodes: Node[] = rights.filter(right => right.groupId === '').map(right => {
@@ -68,12 +81,13 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[], state
       id: right.id,
       name: right.name,
       x: 0, y: 0,
-      width: 240, height: 96,
+      width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
       type: undefined,
       children: [ ...children ],
       data: undefined,
       members: undefined,
       color: undefined,
+      orgName: undefined,
     };
  
     if (right.type === 'vertical') {
@@ -86,18 +100,19 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[], state
           id: vMember.id,
           name: vMember.name,
           x: 0, y: 0,
-          width: 240, height: 96,
+          width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
           type: 'right',
           children: [],
           data: memberState,
           color,
+          orgName: orgNames[memberState.orgId],
         };
       });
 
       node.type = 'vertical';
       node.members = members;
-      node.height = (96 * members.length) + (32 * (members.length + 1));
-      node.width = 240 + 64;
+      node.height = RIGHT_HEIGHT + (LEVEL_HEIGHT * (members.length - 1)) + (SPACING * (members.length + 1));
+      node.width = RIGHT_WIDTH + (SPACING * 2);
       node.data = nodeState;
     } else if (right.type === 'horizontal') {
       const nodeState = state.horizontals[right.id];
@@ -112,18 +127,19 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[], state
               id: vMember.id,
               name: vMember.name,
               x: 0, y: 0,
-              width: 240, height: 96,
+              width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
               type: 'right',
               children: [],
               data: vMemberState,
               color,
+              orgName: orgNames[vMemberState.orgId],
             };
           });
           return {
             id: member.id,
             name: member.name,
             x: 0, y: 0,
-            width:  240 + 64, height: (96 * vMembers.length) + (32 * (vMembers.length + 1)),
+            width:  RIGHT_WIDTH + (SPACING * 2), height: RIGHT_HEIGHT + (LEVEL_HEIGHT * (vMembers.length - 1)) + (SPACING * (vMembers.length + 1)),
             type: 'vertical',
             children: [],
             members: vMembers,
@@ -137,19 +153,20 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[], state
             id: member.id,
             name: member.name,
             x: 0, y: 0,
-            width: 240, height: 96,
+            width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
             type: 'right',
             children: [],
             data: memberState,
             color,
+            orgName: orgNames[memberState.orgId],
           };
         }
       });
       const maxMemberHeight = Math.max(...members.map(member => member.height));
       node.type = 'horizontal';
       node.members = members;
-      node.height = maxMemberHeight + (32 * 2);
-      node.width = (240 * members.length) + (32 * (members.length + 1));
+      node.height = maxMemberHeight + (SPACING * 2);
+      node.width = (RIGHT_WIDTH * members.length) + (SPACING * (members.length + 1));
       node.data = nodeState;
     } else {
       const nodeState = state.rights[right.id];
@@ -158,6 +175,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[], state
       node.type = 'right';
       node.data = nodeState;
       node.color = color;
+      node.orgName = orgNames[nodeState.orgId];
     }
 
     return node;
@@ -169,7 +187,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[], state
       id: source.id,
       name: source.name,
       x: 0, y: 0,
-      width: 240, height: 40,
+      width: SOURCE_WIDTH, height: SOURCE_HEIGHT,
       type: 'source',
       children: [ source.destinationId ],
       data: nodeState,
@@ -181,7 +199,19 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[], state
   const arrows = await autoLayout2(nodes, Object.values(state.transfers));
   // const arrows = await autoLayout3(nodes, Object.values(state.transfers));
 
-  return { nodes, arrows };
+  let minX = Infinity;
+  let maxX = 0;
+  let minY = Infinity;
+  let maxY = 0;
+
+  nodes.forEach(node => {
+    minX = Math.min(minX, node.x);
+    maxX = Math.max(maxX, node.x + node.width);
+    minY = Math.min(minY, node.y);
+    maxY = Math.max(maxY, node.y + node.height);
+  });
+
+  return { nodes, arrows, bounds: { minX, maxX, minY, maxY } };
 }
 
 

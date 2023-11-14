@@ -13,7 +13,7 @@ import { HorizontalNode } from '../layout';
 export class WaterfallGraphHorizontalComponent {
 
   @Input() horizontal: HorizontalNode;
-  @Input() selected: boolean;
+  @Input() selected: string;
 
-  @Output() handleSelect = new EventEmitter();
+  @Output() handleSelect = new EventEmitter<string>();
 }

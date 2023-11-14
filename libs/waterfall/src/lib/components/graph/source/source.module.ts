@@ -2,6 +2,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { WaterfallGraphSourceComponent } from './source.component';
@@ -12,6 +13,7 @@ import { WaterfallGraphSourceComponent } from './source.component';
   imports: [
     CommonModule,
 
+    MatIconModule,
     MatTooltipModule,
   ],
   exports: [ WaterfallGraphSourceComponent ],

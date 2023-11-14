@@ -15,5 +15,5 @@ export class WaterfallGraphVerticalComponent {
   @Input() vertical: VerticalNode;
   @Input() selected: boolean;
 
-  @Output() handleSelect = new EventEmitter();
+  @Output() handleSelect = new EventEmitter<string>();
 }

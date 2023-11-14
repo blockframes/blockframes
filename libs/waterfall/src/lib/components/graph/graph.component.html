@@ -11,8 +11,8 @@
       *ngFor="let node of (nodes$ | async)"
       node
       [node]="node"
-      (handleSelect)="select(node.id)"
-      [selected]="(selected$ | async) === node.id"
+      (handleSelect)="select($event)"
+      [selected]="(selected$ | async)"
       [ngStyle]="{ left: node.x + 'px', top: node.y + 'px' }"
     ></waterfall-graph-node>
 

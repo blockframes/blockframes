@@ -2,8 +2,9 @@
 import { BehaviorSubject } from 'rxjs';
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core';
 
-import { TitleState } from '@blockframes/model';
 import { Right, WaterfallSource } from '@blockframes/model';
+import { GraphService } from '@blockframes/ui/graph/graph.service';
+import { TitleState, WaterfallRightholder } from '@blockframes/model';
 import { CardModalComponent } from '@blockframes/ui/card-modal/card-modal.component';
 
 import { Arrow, Node, toGraph } from './layout';
@@ -19,6 +20,7 @@ export class WaterfallGraphComponent implements OnInit {
 
   @Input() state: TitleState;
   @Input() rights: Right[];
+  @Input() rightholders: WaterfallRightholder[];
   @Input() sources: WaterfallSource[];
 
   @ViewChild(CardModalComponent) cardModal: CardModalComponent;
@@ -27,6 +29,9 @@ export class WaterfallGraphComponent implements OnInit {
   nodes$ = new BehaviorSubject<Node[]>([]);
   arrows$ = new BehaviorSubject<Arrow[]>([]);
 
+  constructor(
+    private service: GraphService,
+  ) { }
 
   ngOnInit() {
     this.layout();
@@ -37,7 +42,8 @@ export class WaterfallGraphComponent implements OnInit {
   }
 
   async layout() {
-    const { nodes, arrows } = await toGraph(this.rights, this.sources, this.state);
+    const { nodes, arrows, bounds } = await toGraph(this.rights, this.sources, this.state, this.rightholders);
+    this.service.updateBounds(bounds);
     this.nodes$.next(nodes);
     this.arrows$.next(arrows);
   }

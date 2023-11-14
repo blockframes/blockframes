@@ -1,18 +1,33 @@
 
-p.source {
-  background: #FFE500;
-  margin: 0;
-  font-weight: 700;
-  text-transform: uppercase;
-  width: 240px;
-  height: 40px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  padding: 6px 12px;
-  text-align: center;
-  color: #232323;
+:host {
+  background-color: #ffc535;
+  cursor: default;
+  background: radial-gradient(circle 500px at 70% 170%, #feb90f 0%, #feb90f 49.9%, #ffc535 50%, #ffc535 100%);
+  width: 400px;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 32px;
 
-  &.selected {
+  mat-icon {
+    color:#ffffff;
+    flex-shrink: 0;
+  }
+
+  p {
+    margin: 0;
+    font-weight: 700;
+    text-transform: uppercase;
+    color:#ffffff;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  &[ng-reflect-selected="true"] {
     border-radius: 8px;
     border: solid 2px var(--primary);
     box-shadow: 0px 6px 12px 0px rgba(0, 0, 0, 0.35);
