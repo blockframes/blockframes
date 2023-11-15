@@ -1,0 +1,10 @@
+
+<p>{{horizontal.name}}</p>
+<ng-container *ngFor="let member of horizontal.members">
+  <ng-container *ngIf="member.type === 'vertical'; else rightmember">
+    <waterfall-graph-vertical [vertical]="member" [selected]="selected === member.id" (handleSelect)="handleSelect.emit(member.id)"></waterfall-graph-vertical>
+  </ng-container>
+  <ng-template #rightmember>
+    <waterfall-graph-right [right]="member" [selected]="selected === member.id" (handleSelect)="handleSelect.emit(member.id)"></waterfall-graph-right>
+  </ng-template>
+</ng-container>

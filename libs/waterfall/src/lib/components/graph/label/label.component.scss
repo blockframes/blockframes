@@ -1,0 +1,17 @@
+
+:host {
+  position: absolute;
+  width: fit-content;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  user-select: none;
+
+  p {
+    background: #219ebc;
+    color: var(--accent-contrast);
+    padding: 2px 16px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+  };
+}
