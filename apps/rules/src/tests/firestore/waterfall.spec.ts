@@ -60,14 +60,14 @@ describe('Movie Owner', () => {
       await assertFails(ref.update({ id: 'B002' }));
     });
 
-    test('Should not be able to read block document', async () => {
+    test('Should be able to read block document', async () => {
       const ref = db.doc('waterfall/M001/blocks/B001');
-      await assertFails(ref.get());
+      await assertSucceeds(ref.get());
     });
 
-    test('Should not be able to list block documents', async () => {
+    test('Should be able to list block documents', async () => {
       const ref = db.collection('waterfall/M001/blocks');
-      await assertFails(ref.get());
+      await assertSucceeds(ref.get());
     });
   });
 
