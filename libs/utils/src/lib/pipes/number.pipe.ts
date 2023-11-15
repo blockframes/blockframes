@@ -36,7 +36,7 @@ export class BigNumberPipe implements PipeTransform {
     @Inject(LOCALE_ID) private locale: string,
   ) {}
 
-  transform(value: number, digitInfo: string) {
+  transform(value: number, digitInfo?: string) {
     if (value === null || value === undefined) return '';
     const num = strToNumber(value);
     const { result, symbol } = toBigNumber(num);
