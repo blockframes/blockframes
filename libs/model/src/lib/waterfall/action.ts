@@ -25,7 +25,7 @@ import { getContractAndAmendments, getDeclaredAmount } from '../contract';
 import { convertCurrenciesTo, sortByDate, sum } from '../utils';
 import { MovieCurrency, Media, Territory, rightholderGroups } from '../static';
 import { Right, orderRights } from './right';
-import { Statement, isDirectSalesStatement, isDistributorStatement, isProducerStatement } from './statement';
+import { Statement, isDirectSalesStatement, isDistributorStatement } from './statement';
 
 const actions = {
   /**
@@ -43,6 +43,7 @@ const actions = {
   prependHorizontal,
   prependVertical,
   invest,
+  source,
   income,
   /**
    * Add a new payment to the state.
@@ -255,9 +256,12 @@ function formatChilds(childs: Right[], subChilds: Right[] = []) {
         percent: child.percent / 100,
         orgId: child.rightholderId,
         contractId: child.contractId,
-        conditions: child.conditions,
         pools: child.pools,
       };
+
+      if (child.conditions) {
+        childRight.conditions = child.conditions;
+      }
 
       return childRight;
     }
@@ -287,6 +291,20 @@ export function groupByDate(actions: Action[]) {
     grp.actions = sortByDate(grp.actions, 'payload.date');
   }
   return sortByDate(group, 'date');
+}
+
+export function sourcesToAction(waterfallSources: WaterfallSource[]) {
+  const actions: Action[] = [];
+
+  waterfallSources.forEach((s, index) => {
+    actions.push(action('source', {
+      id: s.id,
+      destinationIds: [s.destinationId],
+      date: new Date(1 + (index * 1000)) // 01/01/1970 + "index" seconds 
+    }));
+  });
+
+  return actions;
 }
 
 export function incomesToActions(contracts: WaterfallContract[], incomes: Income[], sources: WaterfallSource[]) {
@@ -353,14 +371,14 @@ export function statementsToActions(statements: Statement[]) {
           to: {
             org: statement.senderId
           },
-          contractId: isDistributorStatement(statement) ? statement.contractId : undefined,
+          contractId: statement.contractId,
           date: payment.date
         });
       }
     }
 
     const rightPayments = statement.payments.right.filter(p => p.status === 'received') || [];
-    const rightholderPayment = ((isDistributorStatement(statement) || isProducerStatement(statement)) && statement.payments.rightholder.status === 'received') ? statement.payments.rightholder : undefined;
+    const rightholderPayment = statement.payments.rightholder?.status === 'received' ? statement.payments.rightholder : undefined;
 
     // Org to Org payments
     if (rightholderPayment) {
@@ -373,7 +391,7 @@ export function statementsToActions(statements: Statement[]) {
         to: {
           org: statement.receiverId
         },
-        contractId: isDistributorStatement(statement) || isProducerStatement(statement) ? statement.contractId : undefined,
+        contractId: statement.contractId,
         date: rightholderPayment.date
       });
     }
@@ -392,7 +410,7 @@ export function statementsToActions(statements: Statement[]) {
         to: {
           right: payment.to
         },
-        contractId: isDistributorStatement(statement) || isProducerStatement(statement) ? statement.contractId : undefined,
+        contractId: statement.contractId,
         date: payment.date
       });
     }
@@ -405,7 +423,7 @@ export function statementsToActions(statements: Statement[]) {
 // ACTIONS //
 /////////////
 interface BaseAction {
-  date?: Date;
+  date?: Date; // TODO #9485 remove "?"
 }
 
 export interface RightAction extends BaseAction {
@@ -676,6 +694,16 @@ function prependNode(state: TitleState, nextIds: string[], nodeId: string) {
   }
 }
 
+export interface SourceAction extends BaseAction {
+  id: string;
+  destinationIds: string[];
+}
+
+function source(state: TitleState, payload: SourceAction) {
+  state.rights[payload.id] ||= createRightState({ id: payload.id, orgId: payload.id, percent: 0 });
+  state.sources[payload.id] ||= createSourceState({ id: payload.id, amount: 0, destinationIds: payload.destinationIds });
+}
+
 export interface IncomeAction extends BaseAction {
   id: string;
   amount: number;
@@ -685,21 +713,6 @@ export interface IncomeAction extends BaseAction {
   territories: Territory[];
   medias: Media[];
   isCompensation?: boolean;
-}
-
-export interface PaymentAction extends BaseAction {
-  id: string;
-  amount: number;
-  from: {
-    org?: string;
-    income?: string;
-  };
-  to: {
-    org?: string;
-    right?: string;
-  };
-  contractId?: string;
-  date: Date;
 }
 
 /** Distribute the income per thresholds */
@@ -784,6 +797,21 @@ function income(state: TitleState, payload: IncomeAction) {
     }
     rest -= amount;
   }
+}
+
+export interface PaymentAction extends BaseAction {
+  id: string;
+  amount: number;
+  from: {
+    org?: string;
+    income?: string;
+  };
+  to: {
+    org?: string;
+    right?: string;
+  };
+  contractId?: string;
+  date: Date;
 }
 
 /**

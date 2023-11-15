@@ -1,0 +1,14 @@
+<header>
+  <h1 *ngIf="statement">{{ statement.type | toLabel: 'statementType' }} Statement</h1>
+  <article>
+    <span>
+      <mat-icon svgIcon="movie"></mat-icon><span matLine><strong>Movie: </strong>{{ shell.movie.title.international }}</span>
+    </span>
+    <span *ngIf="statement.status === 'reported'">
+      <mat-icon svgIcon="calendar_today"></mat-icon><span matLine><strong>Covered Period: </strong>{{ statement.duration.from | date: 'dd/MM/yyyy' }} -  {{ statement.duration.to | date: 'dd/MM/yyyy' }}</span>
+    </span>
+    <span *ngIf="sources">
+      <mat-icon svgIcon="business"></mat-icon><span matLine><strong>{{ rightholderTag }}: </strong>{{ rightholderName }} ({{ sources | join:'name' }})</span>
+    </span>
+  </article>
+</header>

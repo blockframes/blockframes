@@ -22,12 +22,15 @@ import {
   isContract,
   Version,
   Movie,
-  sortContracts
+  sortContracts,
+  Expense,
+  Income,
+  Statement
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { filter, map, pluck, switchMap, tap } from 'rxjs/operators';
 import { NavigationService } from '@blockframes/ui/navigation.service';
-import { WaterfallData, WaterfallService } from '@blockframes/waterfall/waterfall.service';
+import { WaterfallData, WaterfallService, WaterfallState } from '@blockframes/waterfall/waterfall.service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import { where } from 'firebase/firestore';
 import { TermService } from '@blockframes/contract/term/service';
@@ -79,6 +82,10 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     map(permission => permission?.isAdmin)
   );
 
+  /**
+   * Check if user is blockframes admin or waterfall admin.
+   * This is used when creating or refreshing waterfall.
+   */
   public canBypassRules$ = combineLatest([this.isWaterfallAdmin$, this.authService.isBlockframesAdmin$]).pipe(
     map(([isWaterfallAdmin, isBlockframesAdmin]) => isWaterfallAdmin || isBlockframesAdmin)
   );
@@ -186,16 +193,19 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     map(blocks => blocks.map(b => Object.values(b.actions).map(a => ({ ...a, block: b }))).flat()),
   );
 
-  public state$ = combineLatest([this.isRefreshing$, this.waterfall$, this.versionId$, this.date$, this.canBypassRules$]).pipe(
+  public state$ = combineLatest([this.isRefreshing$, this.waterfall$, this.versionId$, this.date$]).pipe(
     filter(([isRefreshing, waterfall]) => !!waterfall.versions.length && !isRefreshing),
-    map(([_, waterfall, _versionId, date, canBypassRules]) => ({
-      waterfallId: waterfall.id,
+    map(([_, waterfall, _versionId, date]) => ({
+      waterfall: waterfall,
       versionId: _versionId || waterfall.versions[0]?.id,
-      date,
-      canBypassRules
+      date
     })),
     switchMap(config => this.waterfallService.buildWaterfall(config))
   );
+
+  private _simulation$ = new BehaviorSubject<WaterfallState>(undefined);
+  public simulation$ = this._simulation$.asObservable().pipe(filter(state => !!state));
+  private simulationData: WaterfallData;
 
   @Input() routes: RouteDescription[];
   @Input() editRoute?: string | string[];
@@ -235,6 +245,8 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   }
 
   async initWaterfall(version: Partial<Version> = { id: `version_${this.waterfall.versions.length + 1}`, description: `Version ${this.waterfall.versions.length + 1}` }) {
+    const canBypassRules = await firstValueFrom(this.canBypassRules$);
+    if(!canBypassRules) throw new Error('You are not allowed to create waterfall');
     this.snackBar.open(`Creating version "${version.id}"... Please wait`, 'close');
     this.isRefreshing$.next(true);
     const data = await firstValueFrom(this.data$);
@@ -245,22 +257,46 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   }
 
   async removeVersion(versionId: string) {
+    const canBypassRules = await firstValueFrom(this.canBypassRules$);
+    if(!canBypassRules) throw new Error('You are not allowed to remove waterfall');
     const data = await firstValueFrom(this.data$);
     return this.waterfallService.removeVersion(data, versionId);
   }
 
   async duplicateVersion(versionId: string) {
+    const canBypassRules = await firstValueFrom(this.canBypassRules$);
+    if(!canBypassRules) throw new Error('You are not allowed to duplicate waterfall');
     const waterfall = await firstValueFrom(this.waterfall$);
     const blocks = await firstValueFrom(this.blocks$);
     return this.waterfallService.duplicateVersion(waterfall, blocks, versionId);
   }
 
   async refreshWaterfall(versionId: string) {
+    const canBypassRules = await firstValueFrom(this.canBypassRules$);
+    if(!canBypassRules) throw new Error('You are not allowed to refresh waterfall');
     this.isRefreshing$.next(true);
     const data = await firstValueFrom(this.data$);
     const waterfall = await this.waterfallService.refreshWaterfall(data, versionId);
     this.isRefreshing$.next(false);
     return waterfall;
+  }
+
+  /**
+   * Simulates a waterfall with the given incomes, expenses and statements in addition to existing data
+   * @param incomes 
+   * @param expenses 
+   * @param statements 
+   */
+  async simulateWaterfall(append?: { incomes?: Income[], expenses?: Expense[], statements?: Statement[] }) {
+    this.isRefreshing$.next(true);
+    if (!this.simulationData) this.simulationData = await firstValueFrom(this.data$);
+    if (append?.incomes) this.simulationData.incomes.push(...append.incomes);
+    if (append?.expenses) this.simulationData.expenses.push(...append.expenses);
+    if (append?.statements) this.simulationData.statements.push(...append.statements);
+    const date = await firstValueFrom(this.date$);
+    const waterfall = await this.waterfallService.simulateWaterfall(this.simulationData, date);
+    this._simulation$.next(waterfall);
+    this.isRefreshing$.next(false);
   }
 
   ngOnDestroy() {

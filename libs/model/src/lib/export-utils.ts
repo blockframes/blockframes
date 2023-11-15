@@ -6,7 +6,7 @@ import { getAllAppsExcept } from './apps';
 import { Language, appName, modules, toGroupLabel } from './static';
 import { format } from 'date-fns';
 import { CrmMovie, Movie, MovieLanguageSpecification } from './movie';
-import { deletedIdentifier, displayName, smartJoin, sum, toLabel } from './utils';
+import { deletedIdentifier, displayName, getTotalPerCurrency, smartJoin, sum, toLabel } from './utils';
 import { CrmEvent } from './event';
 import { DetailedContract } from './contract';
 import { getNegotiationStatus } from './negociation';
@@ -15,7 +15,6 @@ import { CrmBucket } from './bucket';
 import { AnonymousCredentials } from './identity';
 import { AvailsFilter } from './avail';
 import { maxBudget } from './algolia';
-import { getTotalIncome } from './income';
 
 type ExportType = 'csv' | 'airtable';
 
@@ -40,7 +39,7 @@ const getPrice = (sale: DetailedContract) => {
   if (sale.buyerId) {
     return `${sale.negotiation?.price || ''} ${sale.negotiation?.currency || ''}`;
   } else {
-    const totalIncome = getTotalIncome(sale.incomes);
+    const totalIncome = getTotalPerCurrency(sale.incomes);
     const incomes = [];
     if (totalIncome.EUR) incomes.push(`${totalIncome.EUR} 'EUR'`);
     if (totalIncome.USD) incomes.push(`${totalIncome.USD} 'USD'`);

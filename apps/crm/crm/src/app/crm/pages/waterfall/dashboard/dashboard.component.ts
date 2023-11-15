@@ -3,7 +3,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Block,
-  DistributorStatement,
   History,
   Income,
   IncomeState,
@@ -24,7 +23,6 @@ import {
   getIncomesSources,
   getOutgoingStatementPrerequists,
   hasContractWith,
-  isDistributorStatement,
   isProducerStatement,
   mainCurrency,
   movieCurrencies,
@@ -158,21 +156,17 @@ export class DashboardComponent implements OnInit {
     return this.waterfall.rightholders.find(r => r.id === id);
   }
 
-  public getCurrentContract(item: Statement) {
-    if (isDistributorStatement(item) || isProducerStatement(item)) {
-      const contracts = getContractAndAmendments(item.contractId, this.contracts);
-      const current = getCurrentContract(contracts, item.duration.from);
-      if (!current) return '--';
-      return current.rootId ? `${current.id} (${current.rootId})` : current.id;
-    }
-    return '--';
+  public getCurrentContract(item: Statement) { // TODO #9485 create pipe
+    const contracts = getContractAndAmendments(item.contractId, this.contracts);
+    const current = getCurrentContract(contracts, item.duration.from);
+    if (!current) return '--';
+    return current.rootId ? `${current.id} (${current.rootId})` : current.id;
   }
 
   public getPendingRevenue(rightholderId: string): PricePerCurrency {
     const pendingRevenue = this.statements
-      .filter(s => (isDistributorStatement(s) || isProducerStatement(s)) && s.payments.rightholder)
-      .filter((s: DistributorStatement | ProducerStatement) => s.receiverId === rightholderId && s.payments.rightholder.status === 'pending')
-      .map((s: DistributorStatement | ProducerStatement) => s.payments.rightholder);
+      .filter(s => s.receiverId === rightholderId && s.payments.rightholder?.status === 'pending')
+      .map(s => s.payments.rightholder);
 
     const pending: PricePerCurrency = {};
     pendingRevenue.forEach(i => {
@@ -206,20 +200,28 @@ export class DashboardComponent implements OnInit {
 
       const prerequists = getOutgoingStatementPrerequists(config);
 
-      if (!prerequists.incomeIds?.length) return;
-      return createProducerStatement({
-        id: this.statementService.createId(),
-        contractId: prerequists.contract.id,
-        senderId,
-        receiverId: receiver.id,
-        waterfallId: this.waterfall.id,
-        incomeIds: prerequists.incomeIds,
-        duration: createDuration({
-          from: add(currentStateDate, { days: 1 }),
-          to: add(currentStateDate, { days: 1, months: 6 }),
-        })
-      })
-    }).filter(s => !!s);
+      if (!Object.keys(prerequists).length) return;
+      const statements: ProducerStatement[] = [];
+      for (const contractId in prerequists) {
+        const prerequist = prerequists[contractId];
+        const producerStatement = createProducerStatement({
+          id: this.statementService.createId(),
+          contractId: prerequist.contract.id,
+          senderId,
+          receiverId: receiver.id,
+          waterfallId: this.waterfall.id,
+          incomeIds: prerequist.incomeIds,
+          duration: createDuration({
+            from: add(currentStateDate, { days: 1 }),
+            to: add(currentStateDate, { days: 1, months: 6 }),
+          })
+        });
+        statements.push(producerStatement);
+      }
+
+      return statements;
+
+    }).filter(s => !!s).flat();
   }
 
   public getIncomesSources(incomeIds: string[]) {

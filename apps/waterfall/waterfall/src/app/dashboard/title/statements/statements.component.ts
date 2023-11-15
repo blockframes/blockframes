@@ -14,7 +14,7 @@ import {
   WaterfallContract,
   WaterfallRightholder,
   canCreateOutgoingStatement,
-  getContractWith,
+  getContractsWith,
   hasContractWith,
   isProducerStatement,
   rightholderGroups,
@@ -58,7 +58,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
 
   public statements: Statement[] = [];
   public rightholderStatements: (Statement & { order: number })[] = [];
-  public rightholderContract: WaterfallContract;
+  public rightholderContracts: WaterfallContract[] = [];
   public statementSender: WaterfallRightholder;
   public canCreateStatement: boolean;
 
@@ -105,7 +105,6 @@ export class StatementsComponent implements OnInit, OnDestroy {
     this.sub = this.rightholderControl.valueChanges.pipe(startWith(this.rightholderControl.value)).subscribe(value => {
       const filteredStatements = this.statements.filter(statement => statement[this.selected === 'producer' ? 'receiverId' : 'senderId'] === value && statement.type === this.selected);
       this.rightholderStatements = sortByDate(filteredStatements, 'duration.to').map((s, i) => ({ ...s, order: i + 1 })).reverse();
-      this.rightholderContract = getContractWith([this.statementSender.id, value], this.contracts, this.currentStateDate);
 
       const config = {
         senderId: this.statementSender.id,
@@ -120,6 +119,9 @@ export class StatementsComponent implements OnInit, OnDestroy {
       };
 
       this.canCreateStatement = this.selected === 'producer' ? canCreateOutgoingStatement(config) : true;
+
+      this.rightholderContracts = getContractsWith([this.statementSender.id, value], this.contracts, this.currentStateDate)
+        .filter(c => this.rights.some(r => r.contractId === c.id));
 
       this.cdr.markForCheck();
     });
@@ -136,7 +138,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
     if (!selected) this.rightholders = [];
     const rightholderKey = this.selected === 'producer' ? 'receiverId' : 'senderId';
     this.rightholders = this.waterfall.rightholders
-      .filter(r => hasContractWith([this.statementSender.id, r.id], this.contracts, this.currentStateDate)) // Rightholder have a contract with the statement sender (current rightholder)
+      .filter(r => hasContractWith([this.statementSender.id, r.id], this.contracts, this.currentStateDate)) // Rightholder have at least one contract with the statement sender (current rightholder)
       .filter(r => r.roles.some(role => selected.roles.includes(role))) // Rightholder have the selected role
       .filter(r => this.statements.some(stm => stm[rightholderKey] === r.id && stm.type === selected.key)); // Rightholder have statements of the selected type (meaning he already have rights in the waterfall)
 

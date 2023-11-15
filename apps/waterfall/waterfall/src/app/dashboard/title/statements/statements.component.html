@@ -19,9 +19,21 @@
               [control]="rightholderControl">
               <mat-label>Right Holder</mat-label>
             </waterfall-rightholder-select>
-            <a *ngIf="selected !== 'directSales'" mat-icon-button [routerLink]="['..', 'documents', rightholderContract.id]">
-              <mat-icon svgIcon="contract" matTooltip="See contract"></mat-icon>
-            </a>
+            <ng-container *ngIf="selected !== 'directSales'">
+              <a *ngIf="rightholderContracts.length === 1" mat-icon-button [routerLink]="['..', 'documents', rightholderContracts[0].id]">
+                <mat-icon svgIcon="contract" matTooltip="See contract"></mat-icon>
+              </a>
+
+              <button *ngIf="rightholderContracts.length > 1" mat-icon-button [matMenuTriggerFor]="contractsMenu">
+                <mat-icon svgIcon="contract" matTooltip="See contracts"></mat-icon>
+              </button>
+              
+              <mat-menu #contractsMenu="matMenu">
+                <a mat-menu-item *ngFor="let rightholderContract of rightholderContracts" [routerLink]="['..', 'documents', rightholderContract.id]">
+                  {{ rightholderContract.duration.from | date: 'dd/MM/yyyy' }} -  {{ rightholderContract.duration.to | date: 'dd/MM/yyyy' }}
+                </a>
+              </mat-menu>
+            </ng-container>
           </span>
           <div>
             <a mat-button [disabled]="!canCreateStatement" [routerLink]="['// TODO #9485']">

@@ -1,13 +1,13 @@
 import { DocumentMeta } from '../meta';
-import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups } from '../static';
+import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups, RightType } from '../static';
 import { Duration, createDuration } from '../terms';
-import { sortByDate } from '../utils';
-import { History, TitleState } from './state';
+import { sortByDate, sum } from '../utils';
+import { History, TitleState, TransferState } from './state';
 import { WaterfallContract, WaterfallSource, getAssociatedSource, getIncomesSources } from './waterfall';
 import { Right } from './right';
-import { pathExists } from './node';
+import { getSources, pathExists } from './node';
 import { Income } from '../income';
-import { getContractWith } from '../contract';
+import { getContractsWith } from '../contract';
 
 export interface Payment {
   id: string;
@@ -47,6 +47,7 @@ export interface RightPayment extends Payment {
   mode: 'internal' | 'external';
   incomeIds: string[]; // Incomes related to this payment
   to: string; // rightId
+  details: { incomeId: string, amount: number }[]; // amount paid per incomeId
 }
 
 function createPaymentBase(params: Partial<Payment> = {}): Payment {
@@ -89,22 +90,26 @@ export function createRightPayment(params: Partial<RightPayment> = {}): RightPay
     ...payment,
     incomeIds: params.incomeIds || [],
     type: 'right',
-    mode: params.mode
+    mode: params.mode,
+    details: params.details || [],
   }
 }
 
 export interface Statement {
   _meta?: DocumentMeta;
   type: StatementType;
+  contractId?: string;
   status: StatementStatus;
   id: string;
   waterfallId: string;
-  senderId: string, // rightholderId of statement creater
+  senderId: string, // rightholderId of statement creator
   receiverId: string, // rightholderId of statement receiver
   duration: Duration;
   incomeIds: string[];
   payments: {
+    income?: IncomePayment[];
     right: RightPayment[]
+    rightholder?: RightholderPayment;
   };
 }
 
@@ -229,7 +234,7 @@ export function getStatementsHistory(history: History[], statements: Statement[]
 
   const filteredStatements = statements
     .filter(s => s.senderId === senderId)
-    .filter(s => !contractId || ((isDistributorStatement(s) || isProducerStatement(s)) && s.contractId === contractId));
+    .filter(s => !contractId || s.contractId === contractId);
 
   const sortedStatements = sortByDate(filteredStatements, 'duration.to');
   const uniqueDates = Array.from(new Set(sortedStatements.map(s => s.duration.to.getTime())));
@@ -280,41 +285,131 @@ interface OutgoingStatementPrerequistsConfig {
 }
 
 export function getOutgoingStatementPrerequists({ senderId, receiverId, statements, contracts, rights, titleState, incomes, sources, date }: OutgoingStatementPrerequistsConfig) {
+  const prerequists: Record<string, { contract: WaterfallContract, incomeIds: string[] }> = {};
   const incomingStatements = getIncomingStatements(senderId, statements, incomes, sources, date);
   // No incoming distributor or direct sales statements for senderId, no need to create outgoing statement
   if (!incomingStatements.distributorStatements.length && !incomingStatements.directSalesStatements.length) return {};
 
-  const contract = getContractWith([senderId, receiverId], contracts, date);
+  const matchingContracts = getContractsWith([senderId, receiverId], contracts, date);
   // There is no contract between senderId and receiverId, cannot create outgoing statement
-  if (!contract) return {};
+  if (!matchingContracts.length) return prerequists;
 
-  const contractRights = rights.filter(r => r.contractId === contract.id);
-  // Contract have no rights associated, cannot create outgoing statement
-  if (!contractRights) return {};
+  for (const contract of matchingContracts) {
+    const contractRights = rights.filter(r => r.contractId === contract.id);
+    // Contract have no rights associated, cannot create outgoing statement
+    if (!contractRights) continue;
 
-  // If there is no path between the rights of the contract and the sources of the incoming statements, cannot create outgoing statement
-  const hasPath = contractRights.some(r => incomingStatements.sources.some(s => pathExists(r.id, s.id, titleState)));
-  if (!hasPath) return {};
+    // If there is no path between the rights of the contract and the sources of the incoming statements, cannot create outgoing statement
+    const hasPath = contractRights.some(r => incomingStatements.sources.some(s => pathExists(r.id, s.id, titleState)));
+    if (!hasPath) continue;
 
-  // Fetch previous statements for this contract (this senderId and receiverId)
-  const previousStatements = statements.filter(s => !isDirectSalesStatement(s))
-    .filter((s: ProducerStatement | DistributorStatement) => s.contractId === contract.id);
+    // Fetch previous statements for this contract (this senderId and receiverId)
+    const previousStatements = statements.filter(s => !isDirectSalesStatement(s))
+      .filter((s: ProducerStatement | DistributorStatement) => s.contractId === contract.id);
 
-  // Fetch incomeIds for which no statement was created for this contract, if there is no incomeIds, cannot create outgoing statement
-  const incomeIds = incomingStatements.incomeIds.filter(id => !previousStatements.some(s => s.incomeIds.includes(id)));
-  if (!incomeIds.length) return {};
+    // Fetch incomeIds for which no statement was created for this contract, if there is no incomeIds, cannot create outgoing statement
+    const incomeIds = incomingStatements.incomeIds.filter(id => !previousStatements.some(s => s.incomeIds.includes(id)));
+    if (!incomeIds.length) continue;
 
-  // Filter incomes again to keep only incomes that are related to this contract
-  const statementIncomeIds = incomeIds.filter(id => {
     // Filter incomes again to keep only incomes that are related to this contract
-    const income = incomes.find(i => i.id === id);
-    const source = getAssociatedSource(income, sources);
-    return contractRights.some(r => pathExists(r.id, source.id, titleState));
-  })
+    const statementIncomeIds = incomeIds.filter(id => {
+      // Filter incomes again to keep only incomes that are related to this contract
+      const income = incomes.find(i => i.id === id);
+      const source = getAssociatedSource(income, sources);
+      return contractRights.some(r => pathExists(r.id, source.id, titleState));
+    });
 
-  return { incomeIds: statementIncomeIds, contract };
+    if (!statementIncomeIds.length) continue;
+
+    prerequists[contract.id] = { contract, incomeIds: statementIncomeIds };
+  }
+
+  return prerequists;
 }
 
 export function canCreateOutgoingStatement(data: OutgoingStatementPrerequistsConfig) {
-  return !!getOutgoingStatementPrerequists(data).incomeIds?.length;
+  return Object.keys(getOutgoingStatementPrerequists(data)).length > 0;
+}
+
+/**
+ * Return the rights that should be used during statement creation
+ * Will include rights of senderId and/or receiverId depending of the statement type.
+ * If statement have a contractId, it will also be used to filter rights.
+ * @param statement 
+ * @param _rights 
+ * @returns 
+ */
+export function getStatementRights(statement: Statement, _rights: Right[]) {
+  const rights = skipGroups(_rights);
+
+  if (isDistributorStatement(statement)) {
+    return rights.filter(r => r.rightholderId === statement.receiverId || r.contractId === statement.contractId);
+  } else if (isProducerStatement(statement)) {
+    return rights.filter(r => r.rightholderId !== statement.senderId && r.contractId === statement.contractId);
+  } else if (isDirectSalesStatement(statement)) {
+    return rights.filter(r => r.rightholderId === statement.senderId);
+  }
+}
+
+export function getStatementSources(statement: Statement, sources: WaterfallSource[], incomes: Income[], rights?: Right[], state?: TitleState) {
+
+  if (statement.status === 'reported') {
+    const statementIncomes = statement.incomeIds.map(id => incomes.find(i => i.id === id));
+    return getIncomesSources(statementIncomes, sources);
+  }
+
+  let topLevelRights: Right[] = [];
+  // TODO #9485 better factorization with getStatementRights ? 
+  if (isProducerStatement(statement)) {
+    // TODO #9485 sources (incomeIds) will come from distributor statements above (created automatically)
+    /*rightholderRights = rights.filter(r => r.rightholderId === statement.receiverId && r.contractId === statement.contractId);*/
+  } else if (isDistributorStatement(statement)) {
+    const rightholderRights = rights.filter(r => r.rightholderId === statement.senderId && r.contractId === statement.contractId);
+    topLevelRights = getTopLevelRights(rightholderRights, state);
+  } else if (isDirectSalesStatement(statement)) {
+    const rightholderRights = rights.filter(r => r.rightholderId === statement.senderId);
+    topLevelRights = getTopLevelRights(rightholderRights, state);
+  }
+
+  const sourceNodes = getSources(state, topLevelRights.map(r => r.id));
+  const sourceIds = Array.from(sourceNodes.map(node => node.id));
+  return sourceIds.map(id => sources.find(s => s.id === id));
+}
+
+/**
+ * For a subset of rights, return the enabled rights that are not children of any other right of this subset
+ * Example: fetch top level rights of a right holder
+ * @param _rights 
+ * @param state 
+ * @returns 
+ */
+function getTopLevelRights(_rights: Right[], state: TitleState) {
+  const rights = skipGroups(_rights).filter(r => state.rights[r.id].enabled);
+  const topLevelRights: Right[] = [];
+  for (const right of rights) {
+    if (!rights.filter(r => r.id !== right.id).some(r => pathExists(right.id, r.id, state))) {
+      topLevelRights.push(right);
+    }
+  }
+  return topLevelRights;
+}
+
+function skipGroups(rights: Right[]) {
+  // Groups are skipped here and revenue will be re-calculated from the childrens
+  const groupRightTypes: RightType[] = ['horizontal', 'vertical'];
+  return rights.filter(r => !groupRightTypes.includes(r.type));
+}
+
+/**
+ * Look into transfer state to find the calculated amount for this rightId and incomeIds
+ * @param rightId 
+ * @param _incomeIds 
+ * @param transferState 
+ * @returns number
+ */
+export function getCalculatedAmount(rightId: string, _incomeIds: string[] | string, transferState: Record<string, TransferState>): number {
+  const incomeIds = Array.isArray(_incomeIds) ? _incomeIds : [_incomeIds];
+  const transfers = Object.values(transferState).filter(t => t.to === rightId);
+  const history = transfers.map(t => t.history.filter(h => h.checked && incomeIds.includes(h.incomeId))).flat();
+  return sum(history, i => i.amount * i.percent);
 }

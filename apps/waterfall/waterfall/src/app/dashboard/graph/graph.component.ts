@@ -20,7 +20,7 @@ import { actions as blameExample } from '@blockframes/waterfall/fixtures/example
   styleUrls: ['./graph.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GraphComponent {
+export class GraphComponent { // TODO #9485 remove
   private actions = {
     'casablancas-v2': casablancasV2,
     'reality-group': realityGroup,

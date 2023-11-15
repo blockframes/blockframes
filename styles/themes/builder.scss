@@ -103,6 +103,7 @@
     icon: map.get($foreground, 700),
     icons: map.get($foreground, 700),
     text: map.get($foreground, 700),
+    third-text: map.get($foreground, 800),
     slider-min: map.get($foreground, 700),
     slider-off: rgba(map.get($foreground, 700), 0.26),
     slider-off-active: rgba(map.get($foreground, 700), 0.38),
@@ -228,6 +229,7 @@
   --foreground-disabled-text: #{mat.get-color-from-palette($foreground, 'disabled-text')};
   --foreground-divider: #{mat.get-color-from-palette($foreground, 'divider')};
   --foreground-text: #{mat.get-color-from-palette($foreground, 'text')};
+  --foreground-third-text: #{mat.get-color-from-palette($foreground, 'third-text')};
   --foreground-base: #{mat.get-color-from-palette($foreground, 'base')};
   --primary-lighter: #{mat.get-color-from-palette($primary, 200)};
   --primary-lighter-contrast: #{mat.get-color-from-palette($primary, 'lighter-contrast')};

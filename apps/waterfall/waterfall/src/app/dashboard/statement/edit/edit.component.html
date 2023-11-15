@@ -1,0 +1,7 @@
+<ng-container *ngIf="statement$ | async as statement">
+  <ng-container *ngIf="sources$ | async as sources">
+    <waterfall-statement-header [statement]="statement" [sources]="sources"></waterfall-statement-header>
+
+    <button mat-button (click)="testSimulation()">simulate</button>
+  </ng-container>
+</ng-container>

@@ -26,9 +26,15 @@ header {
       waterfall-rightholder-select {
         width: 30%;
       }
-      a { 
-        margin-top: -14px;
+      button, a {
+        mat-icon {
+          vertical-align: inherit;
+        }
       }
+    }
+    div {
+      width: 30%;
+      text-align: right;
     }
   }
 }
