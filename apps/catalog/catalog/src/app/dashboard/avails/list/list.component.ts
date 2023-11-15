@@ -24,7 +24,7 @@ import {
   FullMandate,
   decodeDate,
   PricePerCurrency,
-  getTotalIncome
+  getTotalPerCurrency
 } from '@blockframes/model';
 import { TermService } from '@blockframes/contract/term/service';
 import { ContractService } from '@blockframes/contract/contract/service';
@@ -71,7 +71,7 @@ const saleCountAndTotalPrice = (title: JoinSaleTitleType) => {
   if (!title.sales) return title;
   title.saleCount = title.sales.filter(isCatalogSale).length;
   title.allSaleCount = title.sales.length;
-  title.totalIncome = getTotalIncome(title.sales.map(s => s.incomes).flat());
+  title.totalIncome = getTotalPerCurrency(title.sales.map(s => s.incomes).flat());
   return title;
 };
 

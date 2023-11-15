@@ -6,7 +6,7 @@ import {
   ContractType,
   Media,
   Territory,
-  getTotalIncome,
+  getTotalPerCurrency,
   getDeclaredAmount,
   getLatestContract,
   getCurrentContract,
@@ -152,7 +152,7 @@ export class SalesMapComponent implements OnInit {
           medias: unique(contract.terms.map(t => t.medias).flat()),
           territories: unique(contract.terms.map(t => t.territories).flat()),
           declaredAmount: getDeclaredAmount(contract),
-          totalIncome: getTotalIncome(incomes),
+          totalIncome: getTotalPerCurrency(incomes),
           rootContract: rootContract.id,
           childContracts: childContracts.map(c => c.id)
         };
