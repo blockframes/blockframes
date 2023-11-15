@@ -33,10 +33,11 @@ export class StatementViewComponent {
     map(([statement, incomes]) => getStatementSources(statement, this.waterfall.sources, incomes)),
   );
 
-  public breakdown$ = combineLatest([this.sources$, this.shell.incomes$, this.statementsHistory$]).pipe(
-    map(([sources, incomes, history]) => {
-      const current = history[0];
-      const previous = history[1];
+  public breakdown$ = combineLatest([this.sources$, this.shell.incomes$, this.statementsHistory$, this.statement$]).pipe(
+    map(([sources, incomes, _history, current]) => {
+      const indexOfCurrent = _history.findIndex(s => s.id === current.id);
+      const previous = _history[indexOfCurrent + 1];
+      const history = _history.slice(indexOfCurrent);
 
       return sources.map(source => {
         const currentSourcePayments = current.payments.income.filter(income => getAssociatedSource(incomes.find(i => i.id === income.incomeId), this.waterfall.sources).id === source.id);

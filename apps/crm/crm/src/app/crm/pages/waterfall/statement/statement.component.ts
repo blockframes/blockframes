@@ -118,6 +118,7 @@ export class StatementComponent implements OnInit {
       const expenses = await firstValueFrom(this.shell.expenses$);
       this.expenses = expenses.filter(e => statement.expenseIds.includes(e.id));
 
+      // TODO #9485 create an empty income (& payement) for each source (simulation) of this statement ?
       for (const income of this.incomes) {
         if (this.statement.payments.income.find(p => p.incomeId === income.id)) continue;
         this.statement.payments.income.push(createIncomePayment({
