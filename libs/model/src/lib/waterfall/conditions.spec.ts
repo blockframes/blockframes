@@ -4,7 +4,7 @@ import { and, condition } from './conditions';
 
 describe('Test standalone conditions', () => {
   describe('ContractAmount', () => {
-    it('ContractAmout with target > amount', () => {
+    it('ContractAmount with target > amount', () => {
       const actions: Action[] = [
         action('contract', { id: 'contract', amount: 50_000, date: new Date() }),
         action('append', { id: 'seller', orgId: 'seller', percent: 1, previous: [], conditions: and([condition('contractAmount', { operator: '>=', target: 50_001 })]) }),
@@ -17,7 +17,7 @@ describe('Test standalone conditions', () => {
       expect(orgs['seller'].revenu.calculated).toEqual(0);
     });
 
-    it('ContractAmout with target < amount', () => {
+    it('ContractAmount with target < amount', () => {
       const actions: Action[] = [
         action('contract', { id: 'contract', amount: 50_000, date: new Date() }),
         action('append', { id: 'seller', orgId: 'seller', percent: 1, previous: [], conditions: and([condition('contractAmount', { operator: '>=', target: 49_999 })]) }),
@@ -30,7 +30,7 @@ describe('Test standalone conditions', () => {
       expect(orgs['seller'].revenu.calculated).toEqual(10_000);
     });
 
-    it('ContractAmout with target == amount', () => {
+    it('ContractAmount with target == amount', () => {
       const actions: Action[] = [
         action('contract', { id: 'contract', amount: 50_000, date: new Date() }),
         action('append', { id: 'seller', orgId: 'seller', percent: 1, previous: [], conditions: and([condition('contractAmount', { operator: '>=', target: 50_000 })]) }),
