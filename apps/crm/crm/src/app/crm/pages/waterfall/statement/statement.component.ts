@@ -75,10 +75,7 @@ export class StatementComponent implements OnInit {
   public statement: Statement;
 
   private contract$ = combineLatest([this.statement$, this.shell.contracts$]).pipe(
-    map(([statement, contracts]) => (isDistributorStatement(statement) || isProducerStatement(statement)) ?
-      contracts.find(c => c.id === statement.contractId) :
-      undefined
-    )
+    map(([statement, contracts]) => contracts.find(c => c.id === statement.contractId))
   );
 
   public graph$ = combineLatest([this.shell.state$, this.statement$, this.shell.statements$, this.contract$]).pipe(
@@ -101,10 +98,9 @@ export class StatementComponent implements OnInit {
     this.statement = await firstValueFrom(this.statement$);
 
     if (isDistributorStatement(this.statement) || isProducerStatement(this.statement)) {
-      const statement = this.statement;
       const contract = await firstValueFrom(this.contract$);
       if (!contract) {
-        this.snackBar.open(`Contract "${statement.contractId}" not found in waterfall.`, 'close', { duration: 5000 });
+        this.snackBar.open(`Contract "${this.statement.contractId}" not found in waterfall.`, 'close', { duration: 5000 });
         return;
       }
 
@@ -167,10 +163,6 @@ export class StatementComponent implements OnInit {
     const orgState = this.state.waterfall.state.orgs[this.statement.senderId];
     const actual = orgState ? orgState[type].actual : 0;
     return { [mainCurrency]: actual };
-  }
-
-  public getContractId() {
-    return isDistributorStatement(this.statement) || isProducerStatement(this.statement) ? this.statement.contractId : '--';
   }
 
   public getAssociatedSource(income: Income) {

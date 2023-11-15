@@ -3,7 +3,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Block,
-  DistributorStatement,
   History,
   Income,
   IncomeState,
@@ -24,7 +23,6 @@ import {
   getIncomesSources,
   getOutgoingStatementPrerequists,
   hasContractWith,
-  isDistributorStatement,
   isProducerStatement,
   mainCurrency,
   movieCurrencies,
@@ -159,20 +157,16 @@ export class DashboardComponent implements OnInit {
   }
 
   public getCurrentContract(item: Statement) { // TODO #9485 create pipe
-    if (isDistributorStatement(item) || isProducerStatement(item)) {
-      const contracts = getContractAndAmendments(item.contractId, this.contracts);
-      const current = getCurrentContract(contracts, item.duration.from);
-      if (!current) return '--';
-      return current.rootId ? `${current.id} (${current.rootId})` : current.id;
-    }
-    return '--';
+    const contracts = getContractAndAmendments(item.contractId, this.contracts);
+    const current = getCurrentContract(contracts, item.duration.from);
+    if (!current) return '--';
+    return current.rootId ? `${current.id} (${current.rootId})` : current.id;
   }
 
   public getPendingRevenue(rightholderId: string): PricePerCurrency {
     const pendingRevenue = this.statements
-      .filter(s => (isDistributorStatement(s) || isProducerStatement(s)) && s.payments.rightholder)
-      .filter((s: DistributorStatement | ProducerStatement) => s.receiverId === rightholderId && s.payments.rightholder.status === 'pending')
-      .map((s: DistributorStatement | ProducerStatement) => s.payments.rightholder);
+      .filter(s => s.receiverId === rightholderId && s.payments.rightholder?.status === 'pending')
+      .map(s => s.payments.rightholder);
 
     const pending: PricePerCurrency = {};
     pendingRevenue.forEach(i => {

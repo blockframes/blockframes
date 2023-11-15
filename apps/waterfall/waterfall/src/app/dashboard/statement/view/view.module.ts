@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 
 // Blockframes
 import { StatementHeaderModule } from '@blockframes/waterfall/components/statement-header/statement-header.module';
-import { StatementPipeModule } from '@blockframes/waterfall/pipes/statement.pipe';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 
@@ -23,7 +22,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
 
     // Blockframes
     StatementHeaderModule,
-    StatementPipeModule,
     PricePerCurrencyModule,
     TableModule,
 

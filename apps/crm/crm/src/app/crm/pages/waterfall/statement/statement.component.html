@@ -24,7 +24,7 @@
         <li *ngIf="statement.type !== 'directSales'"><strong>Receiver :</strong> {{ statement.receiverId | rightholderName: waterfall }}</li>
         <li><strong>From :</strong> {{ statement.duration.from | date: 'MM/dd/yyyy' }}</li>
         <li><strong>To :</strong> {{ statement.duration.to | date: 'MM/dd/yyyy' }}</li>
-        <li><strong>Contract :</strong> {{ getContractId() }}</li>
+        <li *ngIf="statement.contractId"><strong>Contract :</strong> {{ statement.contractId }}</li>
         <li><strong>Status: </strong> {{ statement.status | toLabel: 'statementStatus' }}</li>
         <li><strong>Turnover :</strong> <price-per-currency [price]="getRightholderActual('turnover')"></price-per-currency></li>
         <li><strong>Revenue :</strong> <price-per-currency [price]="getRightholderActual('revenu')"></price-per-currency></li>
@@ -136,7 +136,7 @@
       </ng-container>
     </article>
   
-    <ng-container *ngIf="statement | righholderPayment as rightholderPayment">
+    <ng-container *ngIf="statement.payments.rightholder as rightholderPayment">
       <h3>Payment</h3>
       <ul *ngIf="waterfall$ | async as waterfall">
         <li><strong>To :</strong> {{ statement.receiverId | rightholderName: waterfall }}</li>

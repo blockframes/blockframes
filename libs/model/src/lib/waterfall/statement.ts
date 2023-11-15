@@ -96,6 +96,7 @@ export function createRightPayment(params: Partial<RightPayment> = {}): RightPay
 export interface Statement {
   _meta?: DocumentMeta;
   type: StatementType;
+  contractId?: string;
   status: StatementStatus;
   id: string;
   waterfallId: string;
@@ -104,7 +105,9 @@ export interface Statement {
   duration: Duration;
   incomeIds: string[];
   payments: {
+    income?: IncomePayment[];
     right: RightPayment[]
+    rightholder?: RightholderPayment;
   };
 }
 
@@ -229,7 +232,7 @@ export function getStatementsHistory(history: History[], statements: Statement[]
 
   const filteredStatements = statements
     .filter(s => s.senderId === senderId)
-    .filter(s => !contractId || ((isDistributorStatement(s) || isProducerStatement(s)) && s.contractId === contractId));
+    .filter(s => !contractId || s.contractId === contractId);
 
   const sortedStatements = sortByDate(filteredStatements, 'duration.to');
   const uniqueDates = Array.from(new Set(sortedStatements.map(s => s.duration.to.getTime())));

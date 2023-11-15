@@ -7,7 +7,7 @@
       <p class="mat-body-2">Here is the <strong>Summary of your Statement</strong>. Please verify the information below.</p>
     
 
-      <ng-container *ngIf="statement | righholderPayment as payment">
+      <ng-container *ngIf="statement.payments.rightholder as payment">
         <article class="participation" *ngIf="statement.type === 'mainDistributor' || statement.type ==='salesAgent'">
           <span>Producer’s net participation:</span>
           <price-per-currency [price]="payment.price | formatPair: payment.currency"></price-per-currency>
