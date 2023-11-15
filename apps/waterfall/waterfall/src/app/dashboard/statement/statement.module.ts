@@ -38,7 +38,7 @@ const routes: Routes = [{
         },
         {
           path: 'edit',
-          loadChildren: () => import('./view/view.module').then(m => m.StatementViewModule), // TODO #9485
+          loadChildren: () => import('./edit/edit.module').then(m => m.StatementEditModule),
         },
       ],
       data: {

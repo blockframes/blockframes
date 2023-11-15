@@ -5,7 +5,7 @@ import { sortByDate } from '../utils';
 import { History, TitleState } from './state';
 import { WaterfallContract, WaterfallSource, getAssociatedSource, getIncomesSources } from './waterfall';
 import { Right } from './right';
-import { pathExists } from './node';
+import { getSources, pathExists } from './node';
 import { Income } from '../income';
 import { getContractsWith } from '../contract';
 
@@ -346,6 +346,31 @@ export function getStatementRights(statement: Statement, _rights: Right[]) {
   }
 }
 
+export function getStatementSources(statement: Statement, sources: WaterfallSource[], incomes: Income[], rights?: Right[], state?: TitleState) {
+
+  if (statement.status === 'reported') {
+    const statementIncomes = statement.incomeIds.map(id => incomes.find(i => i.id === id));
+    return getIncomesSources(statementIncomes, sources);
+  }
+
+  let topLevelRights: Right[] = [];
+  // TODO #9485 better factorization with getStatementRights ? 
+  if (isProducerStatement(statement)) {
+    // TODO #9485 sources (incomeIds) will come from distributor statements above (created automatically)
+    /*rightholderRights = rights.filter(r => r.rightholderId === statement.receiverId && r.contractId === statement.contractId);*/
+  } else if (isDistributorStatement(statement)) {
+    const rightholderRights = rights.filter(r => r.rightholderId === statement.senderId && r.contractId === statement.contractId);
+    topLevelRights = getTopLevelRights(rightholderRights, state);
+  } else if (isDirectSalesStatement(statement)) {
+    const rightholderRights = rights.filter(r => r.rightholderId === statement.senderId);
+    topLevelRights = getTopLevelRights(rightholderRights, state);
+  }
+
+  const sourceNodes = getSources(state, topLevelRights.map(r => r.id));
+  const sourceIds = Array.from(sourceNodes.map(node => node.id));
+  return sourceIds.map(id => sources.find(s => s.id === id));
+}
+
 /**
  * For a subset of rights, return the enabled rights that are not children of any other right of this subset
  * Example: fetch top level rights of a right holder
@@ -353,7 +378,7 @@ export function getStatementRights(statement: Statement, _rights: Right[]) {
  * @param state 
  * @returns 
  */
-export function getTopLevelRights(_rights: Right[], state: TitleState) {
+function getTopLevelRights(_rights: Right[], state: TitleState) {
   const rights = skipGroups(_rights).filter(r => state.rights[r.id].enabled);
   const topLevelRights: Right[] = [];
   for (const right of rights) {

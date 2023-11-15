@@ -5,12 +5,16 @@ import { RouterModule } from '@angular/router';
 
 // Blockframes
 import { StatementHeaderModule } from '@blockframes/waterfall/components/statement-header/statement-header.module';
+import { StatementPipeModule } from '@blockframes/waterfall/pipes/statement.pipe';
+import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
+import { TableModule } from '@blockframes/ui/list/table/table.module';
 
 // Components
 import { StatementViewComponent } from './view.component';
 
 // Material
-import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [StatementViewComponent],
@@ -19,9 +23,13 @@ import { MatButtonModule } from '@angular/material/button';
 
     // Blockframes
     StatementHeaderModule,
+    StatementPipeModule,
+    PricePerCurrencyModule,
+    TableModule,
 
     // Material
-    MatButtonModule,
+    MatDividerModule,
+    MatExpansionModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: StatementViewComponent }]),

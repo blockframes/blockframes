@@ -136,7 +136,7 @@
       </ng-container>
     </article>
   
-    <ng-container *ngIf="getRightholderPayment() as rightholderPayment">
+    <ng-container *ngIf="statement | righholderPayment as rightholderPayment">
       <h3>Payment</h3>
       <ul *ngIf="waterfall$ | async as waterfall">
         <li><strong>To :</strong> {{ statement.receiverId | rightholderName: waterfall }}</li>

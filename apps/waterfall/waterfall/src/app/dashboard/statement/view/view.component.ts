@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { createIncome } from '@blockframes/model';
+import { getStatementSources } from '@blockframes/model';
 
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
@@ -16,24 +16,21 @@ export class StatementViewComponent {
 
   public statement$ = combineLatest([this.route.params.pipe(pluck('statementId')), this.shell.statements$]).pipe(
     map(([statementId, statements]) => statements.find(s => s.id === statementId)),
+    // tap(statement => this.shell.setDate(statement.duration.to)), TODO #9485 if state or simulation is needed here
   );
+
+  public sources$ = combineLatest([this.statement$, this.shell.incomes$]).pipe(
+    map(([statement, incomes]) => getStatementSources(statement, this.waterfall.sources, incomes)),
+  );
+
+  public waterfall = this.shell.waterfall;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
   ) {
-    this.shell.setDate(undefined); // TODO #9485 use statement date to fetch enabled rights (new Date('12/31/2013'))
     this.dynTitle.setPageTitle(this.shell.movie.title.international, 'View Statement');
-    this.shell.simulateWaterfall();
   }
-
-
-  public async testSimulation() {
-
-    this.shell.simulateWaterfall({ incomes: [createIncome({ medias: ['theatrical'], price: 1000000, currency: 'EUR', contractId: 'playtime_rf', id:'incometest', territories: ['france'], date: new Date()})]})
-
-  }
-
 
 }

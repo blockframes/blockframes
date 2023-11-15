@@ -173,10 +173,6 @@ export class StatementComponent implements OnInit {
     return isDistributorStatement(this.statement) || isProducerStatement(this.statement) ? this.statement.contractId : '--';
   }
 
-  public getRightholderPayment() {
-    return isDistributorStatement(this.statement) || isProducerStatement(this.statement) ? this.statement.payments.rightholder : undefined;
-  }
-
   public getAssociatedSource(income: Income) {
     try {
       return getAssociatedSource(income, this.waterfall.sources).name;

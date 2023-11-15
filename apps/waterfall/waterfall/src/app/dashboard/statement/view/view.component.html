@@ -1,3 +1,65 @@
-<waterfall-statement-header *ngIf="statement$ | async as statement" [statement]="statement"></waterfall-statement-header>
+<ng-container *ngIf="statement$ | async as statement">
+  <ng-container *ngIf="sources$ | async as sources">
+    <waterfall-statement-header [statement]="statement" [sources]="sources"></waterfall-statement-header>
 
-<button mat-button (click)="testSimulation()">simulate</button>
+    <section>
+      <mat-divider></mat-divider>
+      <p class="mat-body-2">Here is the <strong>Summary of your Statement</strong>. Please verify the information below.</p>
+    
+
+      <ng-container *ngIf="statement | righholderPayment as payment">
+        <article class="participation" *ngIf="statement.type === 'mainDistributor' || statement.type ==='salesAgent'">
+          <span>Producer’s net participation:</span>
+          <price-per-currency [price]="payment.price | formatPair: payment.currency"></price-per-currency>
+        </article>  
+      </ng-container>
+
+      <article class="breakdown">
+        <header>
+          <span>Calculation breakdown</span>
+          <div>Net Receipts</div>
+        </header>
+
+        <div class="surface" *ngFor="let source of sources">
+          
+          <mat-expansion-panel >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <span>{{ source.name }}</span>
+                <price-per-currency [price]="10 | formatPair"></price-per-currency>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <bf-table [source]="[]">
+              <ng-template colRef="" label="Section" let-section >
+
+              </ng-template>
+              <ng-template colRef="" label="Prior Period" let-previous >
+
+              </ng-template>
+              <ng-template colRef="" label="Current Period" let-current >
+
+              </ng-template>
+              <ng-template colRef="" label="Cumulative" let-cumulated >
+
+              </ng-template>
+            </bf-table>
+          </mat-expansion-panel>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="surface">
+          <mat-expansion-panel >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <span>Expenses</span>
+                <price-per-currency [price]="10 | formatPair"></price-per-currency>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            expenses
+          </mat-expansion-panel>
+        </div>
+      </article>
+    </section>
+  </ng-container>
+</ng-container>

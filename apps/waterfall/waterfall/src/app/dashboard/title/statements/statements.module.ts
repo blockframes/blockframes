@@ -23,6 +23,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [StatementsComponent],
@@ -45,6 +46,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatIconModule,
     MatTooltipModule,
     MatButtonModule,
+    MatMenuModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: StatementsComponent }]),
