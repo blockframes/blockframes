@@ -328,14 +328,14 @@ describe('User that is linked to waterfall but not admin', () => {
       await assertFails(ref.update({ id: 'B001', actions: { 1: { name: 'init' } } }));
     });
 
-    test('Should not be able to read block document', async () => {
+    test('Should be able to read block document', async () => {
       const ref = db.doc('waterfall/MI-0d7/blocks/B001');
-      await assertFails(ref.get());
+      await assertSucceeds(ref.get());
     });
 
-    test('Should not be able to list block documents', async () => {
+    test('Should be able to list block documents', async () => {
       const ref = db.collection('waterfall/MI-0d7/blocks');
-      await assertFails(ref.get());
+      await assertSucceeds(ref.get());
     });
   });
 
@@ -584,14 +584,14 @@ describe('User that is linked to waterfall but not admin', () => {
         await assertFails(ref.update({ id: 'R001', foo: 'bar' }));
       });
 
-      test('Should not be able to read rights', async () => {
+      test('Should be able to read rights', async () => {
         const ref = db.doc('waterfall/MI-0d7/rights/R001');
-        await assertFails(ref.get());
+        await assertSucceeds(ref.get());
       });
 
-      test('Should not be able to list rights', async () => {
+      test('Should be able to list rights', async () => {
         const ref = db.collection('waterfall/MI-0d7/rights');
-        await assertFails(ref.get());
+        await assertSucceeds(ref.get());
       });
     });
 

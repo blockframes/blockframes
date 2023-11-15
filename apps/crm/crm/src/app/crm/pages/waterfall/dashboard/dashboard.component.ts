@@ -158,7 +158,7 @@ export class DashboardComponent implements OnInit {
     return this.waterfall.rightholders.find(r => r.id === id);
   }
 
-  public getCurrentContract(item: Statement) {
+  public getCurrentContract(item: Statement) { // TODO #9485 create pipe
     if (isDistributorStatement(item) || isProducerStatement(item)) {
       const contracts = getContractAndAmendments(item.contractId, this.contracts);
       const current = getCurrentContract(contracts, item.duration.from);
@@ -206,20 +206,28 @@ export class DashboardComponent implements OnInit {
 
       const prerequists = getOutgoingStatementPrerequists(config);
 
-      if (!prerequists.incomeIds?.length) return;
-      return createProducerStatement({
-        id: this.statementService.createId(),
-        contractId: prerequists.contract.id,
-        senderId,
-        receiverId: receiver.id,
-        waterfallId: this.waterfall.id,
-        incomeIds: prerequists.incomeIds,
-        duration: createDuration({
-          from: add(currentStateDate, { days: 1 }),
-          to: add(currentStateDate, { days: 1, months: 6 }),
-        })
-      })
-    }).filter(s => !!s);
+      if (!Object.keys(prerequists).length) return;
+      const statements: ProducerStatement[] = [];
+      for (const contractId in prerequists) {
+        const prerequist = prerequists[contractId];
+        const producerStatement = createProducerStatement({
+          id: this.statementService.createId(),
+          contractId: prerequist.contract.id,
+          senderId,
+          receiverId: receiver.id,
+          waterfallId: this.waterfall.id,
+          incomeIds: prerequist.incomeIds,
+          duration: createDuration({
+            from: add(currentStateDate, { days: 1 }),
+            to: add(currentStateDate, { days: 1, months: 6 }),
+          })
+        });
+        statements.push(producerStatement);
+      }
+
+      return statements;
+
+    }).filter(s => !!s).flat();
   }
 
   public getIncomesSources(incomeIds: string[]) {

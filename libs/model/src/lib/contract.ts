@@ -170,8 +170,8 @@ export function getContractDurationStatus(contract: BaseContract): 'future' | 'p
  * @param excludedIds
  * @returns 
  */
-function getContractsWith<T extends BaseContract>(parties: string[], _contracts: T[], date = new Date(), excludedIds: string[] = []) {
-  const filteredContracts = _contracts.filter(c => !excludedIds.includes(c.id));
+export function getContractsWith<T extends BaseContract>(parties: string[], _contracts: T[], date = new Date()) {
+  const filteredContracts = _contracts.filter(c => !c.rootId);
   const contracts = filteredContracts.map(c => getCurrentContract<T>(getContractAndAmendments<T>(c.id, filteredContracts), date));
   return contracts
     .filter(c => !!c) // Remove contracts that are not active for the given date
@@ -183,26 +183,14 @@ function getContractsWith<T extends BaseContract>(parties: string[], _contracts:
 }
 
 /**
- * Returns the first current contract where one or two parties are involved
- * @param parties
- * @param _contracts 
- * @param date 
- * @returns 
- */
-export function getContractWith<T extends BaseContract>(parties: string[], _contracts: T[], date = new Date()) {
-  const contracts = getContractsWith<T>(parties, _contracts, date);
-  return contracts.length ? contracts[0] : undefined;
-}
-
-/**
- * Return true if there is a current contract where one or two parties are involved
+ * Return true if there is at least one current contract where one or two parties are involved
  * @param parties 
  * @param _contracts 
  * @param date 
  * @returns 
  */
 export function hasContractWith<T extends BaseContract>(parties: string[], _contracts: T[], date = new Date()) {
-  return !!getContractWith<T>(parties, _contracts, date);
+  return getContractsWith<T>(parties, _contracts, date).length > 0;
 }
 
 // ----------------------------

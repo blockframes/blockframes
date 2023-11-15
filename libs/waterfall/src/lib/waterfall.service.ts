@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CallableFunctions, WriteOptions } from 'ngfire';
+import { WriteOptions } from 'ngfire';
 import { where, DocumentSnapshot } from '@firebase/firestore';
 import {
   Version,
@@ -26,9 +26,11 @@ import {
   Statement,
   Block,
   WaterfallDocument,
-  investmentsToActions
+  investmentsToActions,
+  buildBlock,
+  sourcesToAction
 } from '@blockframes/model';
-import { jsonDateReviver, unique } from '@blockframes/utils/helpers';
+import { unique } from '@blockframes/utils/helpers';
 import { AuthService } from '@blockframes/auth/service';
 import { doc } from 'firebase/firestore';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
@@ -61,7 +63,6 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
   readonly path = 'waterfall';
 
   constructor(
-    private functions: CallableFunctions,
     private authService: AuthService,
     private blockService: BlockService,
     private waterfallPermissionsService: WaterfallPermissionsService,
@@ -75,46 +76,12 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     return createWaterfall(block);
   }
 
-  public async buildWaterfall(data: { waterfallId: string, versionId: string, date?: Date, canBypassRules?: boolean }) {
-    const waterfall = data.canBypassRules ? await this.buildWaterfallAdmin(data) : await this.buildWaterfallUser(data);
-
-    if (data.date) { // Stops waterfall at a given date
-      waterfall.waterfall.history = waterfall.waterfall.history.filter(h => {
-        const stateDate = new Date(h.date);
-        const compareDate = data.date;
-        stateDate.setHours(0, 0, 0, 0);
-        compareDate.setHours(0, 0, 0, 0);
-        return stateDate.getTime() <= compareDate.getTime();
-      });
-      waterfall.waterfall.state = waterfall.waterfall.history[waterfall.waterfall.history.length - 1];
-    }
-
-    return waterfall;
-  }
-
-  /**
-   * Because of rules, regular users have to use backend function.
-   * @param data 
-   */
-  private async buildWaterfallUser(data: { waterfallId: string, versionId: string }): Promise<WaterfallState> {
-    const waterfall = await this.functions.call<{ waterfallId: string, versionId: string }, string>('buildWaterfall', data);
-    return JSON.parse(waterfall, jsonDateReviver); // Cloud functions cannot return Dates
-  }
-
-  /**
-   * Used only by BlockframesAdmin users that can bypass database rules
-   * @param data 
-   */
-  private async buildWaterfallAdmin(data: { waterfallId: string, versionId: string }): Promise<WaterfallState> {
-    const [waterfall, blocks] = await Promise.all([
-      this.getValue(data.waterfallId),
-      this.blockService.getValue({ waterfallId: data.waterfallId })
-    ]);
-
-    const version = waterfall.versions.find(v => v.id === data.versionId);
+  public async buildWaterfall(data: { waterfall: Waterfall, versionId: string, date?: Date }) {
+    const blocks = await this.blockService.getValue({ waterfallId: data.waterfall.id });
+    const version = data.waterfall.versions.find(v => v.id === data.versionId);
     const versionBlocks = version.blockIds.map(blockId => blocks.find(b => b.id === blockId));
-
-    return { waterfall: _waterfall(data.waterfallId, versionBlocks), version };
+    const build = buildWaterfall(data.waterfall.id, version, versionBlocks);
+    return waterfallToDate(build, data.date);
   }
 
   onUpdate(waterfall: Waterfall, { write }: WriteOptions) {
@@ -173,31 +140,27 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
    * @returns 
    */
   private async _initWaterfall(data: WaterfallData, version: Partial<Version>) {
-    const contractActions = contractsToActions(data.contracts, data.terms);
-    const investmentActions = investmentsToActions(data.contracts, data.terms);
-    const rightActions = rightsToActions(data.rights);
-    const incomeActions = incomesToActions(data.contracts, data.incomes, data.waterfall.sources);
-    const expenseActions = expensesToActions(data.expenses);
-    const paymentActions = statementsToActions(data.statements);
-
-    const groupedActions = groupByDate([
-      ...contractActions,
-      ...investmentActions,
-      ...rightActions,
-      ...expenseActions, // Expenses should be added before incomes
-      ...incomeActions,
-      ...paymentActions
-    ]);
-
-    const blocks = await Promise.all(groupedActions.map(group => {
-      const blockName = getBlockName(group.date, group.actions);
-      return this.blockService.create(data.waterfall.id, blockName, group.actions, group.date);
-    }));
+    const blocks = buildBlocks(data, this.authService.uid);
+    const blockIds = await this.blockService.add(blocks, { params: { waterfallId: data.waterfall.id } });
 
     await this.addVersion(data.waterfall, version);
 
-    await this.addBlocksToVersion(data.waterfall, version.id, blocks);
+    await this.addBlocksToVersion(data.waterfall, version.id, blockIds);
     return data.waterfall;
+  }
+
+  /**
+   * Runs a simulation of the waterfall without storing data in the database
+   * @param waterfall 
+   * @param blocks 
+   * @param date 
+   * @returns 
+   */
+  public simulateWaterfall(data: WaterfallData, date?: Date) {
+    const blocks = buildBlocks(data, this.authService.uid, { simulation: true });
+    const version = createVersion({ id: 'simulation', name: 'Simulation' });
+    const simulation = buildWaterfall('simulated-waterfall', version, blocks);
+    return waterfallToDate(simulation, date);
   }
 
   public addVersion(waterfall: Waterfall, params: Partial<Version>) {
@@ -232,7 +195,8 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
 
     await this.addVersion(waterfall, newVersion);
 
-    const blocksIds = await Promise.all(versionBlocks.map(b => this.blockService.create(waterfall.id, b.name, Object.values(b.actions), new Date(b.timestamp))));
+    const duplicatedBlocks = versionBlocks.map(b => buildBlock(b.name, Object.values(b.actions), new Date(b.timestamp), this.authService.uid));
+    const blocksIds = await this.blockService.add(duplicatedBlocks, { params: { waterfallId: waterfall.id } });
 
     await this.addBlocksToVersion(waterfall, newVersion.id, blocksIds);
     return newVersion;
@@ -283,4 +247,57 @@ function getBlockName(date: Date, actions: Action[]) {
   if (actionsNames.every(n => contractsActions.includes(n))) return `contracts-${dateStr}`;
   if (actionsNames.every(n => rightsActions.includes(n))) return `rights-${dateStr}`;
   return `mixed-${dateStr}`;
+}
+
+function waterfallToDate(build: WaterfallState, date?: Date) {
+  if (date) { // Stops waterfall at a given date
+    build.waterfall.history = build.waterfall.history.filter(h => {
+      const stateDate = new Date(h.date);
+      const compareDate = date;
+      stateDate.setHours(0, 0, 0, 0);
+      compareDate.setHours(0, 0, 0, 0);
+      return stateDate.getTime() <= compareDate.getTime();
+    });
+    build.waterfall.state = build.waterfall.history[build.waterfall.history.length - 1];
+  }
+  return build;
+}
+
+function groupActions(data: WaterfallData, isSimulation = false) {
+  const sourceActions = isSimulation ? sourcesToAction(data.waterfall.sources) : [];
+  const contractActions = contractsToActions(data.contracts, data.terms);
+  const investmentActions = investmentsToActions(data.contracts, data.terms);
+  const rightActions = rightsToActions(data.rights);
+  const incomeActions = incomesToActions(data.contracts, data.incomes, data.waterfall.sources); // TODO #9485 only if statement is reported
+  const expenseActions = expensesToActions(data.expenses); // TODO #9485 only if statement is reported
+  const paymentActions = statementsToActions(data.statements);
+
+  const groupedActions = groupByDate([
+    ...sourceActions,
+    ...contractActions,
+    ...investmentActions,
+    ...rightActions,
+    ...expenseActions, // Expenses should be added before incomes
+    ...incomeActions,
+    ...paymentActions
+  ]);
+
+  return groupedActions;
+}
+
+function buildBlocks(data: WaterfallData, createdBy: string, options?: { simulation: boolean }) {
+  const groupedActions = groupActions(data, options?.simulation);
+
+  return groupedActions.map(group => {
+    const blockName = getBlockName(group.date, group.actions);
+    return buildBlock(blockName, group.actions, group.date, createdBy);
+  });
+}
+
+/**
+ * Used only by BlockframesAdmin users that can bypass database rules
+ * @param data 
+ */
+function buildWaterfall(waterfallId: string, version: Version, blocks: Block[]): WaterfallState {
+  return { waterfall: _waterfall(waterfallId, blocks), version };
 }

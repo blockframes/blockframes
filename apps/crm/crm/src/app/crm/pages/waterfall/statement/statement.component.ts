@@ -27,8 +27,8 @@ import {
   getPath,
   isDirectSalesStatement,
   getStatementsHistory,
-  RightType,
   pathExists,
+  getStatementRights,
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
@@ -78,10 +78,8 @@ export class StatementComponent implements OnInit {
     map(([statement, contracts]) => (isDistributorStatement(statement) || isProducerStatement(statement)) ?
       contracts.find(c => c.id === statement.contractId) :
       undefined
-    ),
-    tap(contract => this.contract = contract)
+    )
   );
-  private contract: WaterfallContract;
 
   public graph$ = combineLatest([this.shell.state$, this.statement$, this.shell.statements$, this.contract$]).pipe(
     map(([state, statement, statements, contract]) => this.buildGraph(state, statement, statements, contract))
@@ -104,8 +102,8 @@ export class StatementComponent implements OnInit {
 
     if (isDistributorStatement(this.statement) || isProducerStatement(this.statement)) {
       const statement = this.statement;
-      this.contract = await firstValueFrom(this.contract$);
-      if (!this.contract) {
+      const contract = await firstValueFrom(this.contract$);
+      if (!contract) {
         this.snackBar.open(`Contract "${statement.contractId}" not found in waterfall.`, 'close', { duration: 5000 });
         return;
       }
@@ -138,18 +136,18 @@ export class StatementComponent implements OnInit {
 
     if (!versionId && !this.waterfall.versions[0]?.id) { // Waterfall was never initialized
       this.snackBar.open('Initializing waterfall... Please wait', 'close', { duration: 5000 });
-      await this.shell.initWaterfall({ id: 'version_1', description: 'Version 1' });
+      await this.shell.initWaterfall({ id: 'version_1', description: 'Version 1' }); // TODO #9485 use simulation
       this.snackBar.open('Waterfall initialized!', 'close', { duration: 5000 });
     }
 
     this.shell.setVersionId(versionId || 'version_1');
     this.shell.setDate(this.statement.duration.to);
-    this.state = await firstValueFrom(this.state$);
+    this.state = await firstValueFrom(this.state$); // TODO #9485 use simulation
 
     if (this.statement.incomeIds.some(i => !this.state.waterfall.state.incomes[i])) { // Some incomes are not in the waterfall
       this.snackBar.open('Refreshing waterfall... Please wait', 'close', { duration: 5000 });
-      await this.shell.refreshWaterfall(this.state.version.id);
-      this.state = await firstValueFrom(this.state$);
+      await this.shell.refreshWaterfall(this.state.version.id); // TODO #9485 use simulation
+      this.state = await firstValueFrom(this.state$);  // TODO #9485 use simulation
       this.snackBar.open('Waterfall refreshed!', 'close', { duration: 5000 });
     }
 
@@ -172,7 +170,7 @@ export class StatementComponent implements OnInit {
   }
 
   public getContractId() {
-    return isDistributorStatement(this.statement) || isProducerStatement(this.statement) ? this.contract.id : '--';
+    return isDistributorStatement(this.statement) || isProducerStatement(this.statement) ? this.statement.contractId : '--';
   }
 
   public getRightholderPayment() {
@@ -198,19 +196,7 @@ export class StatementComponent implements OnInit {
   }
 
   private getAssociatedRights(sourceId: string) {
-    const rightsFromSource: Right[] = [];
-    // Groups are skipped here and revenue will be re-calculated from the childrens
-    const groupRightTypes: RightType[] = ['horizontal', 'vertical'];
-    const rights = this.allRights.filter(r => !groupRightTypes.includes(r.type));
-
-    let rightholderRights: Right[] = []
-    if (isDistributorStatement(this.statement)) {
-      rightholderRights = rights.filter(r => r.rightholderId === this.statement.receiverId || r.contractId === this.contract.id);
-    } else if (isProducerStatement(this.statement)) {
-      rightholderRights = rights.filter(r => r.rightholderId !== this.statement.senderId && r.contractId === this.contract.id);
-    } else if (isDirectSalesStatement(this.statement)) {
-      rightholderRights = rights.filter(r => r.rightholderId === this.statement.senderId);
-    }
+    const rightholderRights = getStatementRights(this.statement, this.allRights);
 
     if (!this.state.waterfall.state.sources[sourceId]) {
       this.snackBar.open(`Source "${sourceId}" not found in waterfall.`, 'close', { duration: 5000 });
@@ -218,6 +204,7 @@ export class StatementComponent implements OnInit {
       return [];
     }
 
+    const rightsFromSource: Right[] = [];
     for (const right of rightholderRights) {
       const sources = getSources(this.state.waterfall.state, right.id);
       if (sources.find(s => s.id === sourceId)) rightsFromSource.push(right);
@@ -391,6 +378,7 @@ export class StatementComponent implements OnInit {
     // Validate all internal "right" payments
     this.statement.payments.right = this.statement.payments.right.map(p => ({ ...p, status: p.mode === 'internal' ? 'received' : p.status }));
     await this.statementService.update(this.statement, { params: { waterfallId: this.waterfall.id } });
+    // TODO #9485 create income & expenses here
     this.statement = await this.statementService.getValue(this.statement.id, { waterfallId: this.waterfall.id });
 
     this.snackBar.open('Refreshing waterfall... Please wait', 'close', { duration: 5000 });
@@ -422,7 +410,7 @@ export class StatementComponent implements OnInit {
 }
 
 @Pipe({ name: 'filterRights' })
-export class FilterRightsPipe implements PipeTransform {
+export class FilterRightsPipe implements PipeTransform { // TODO #9485 reuse in front app
   transform(rights: Right[], statement: Statement) {
     if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) return rights.filter(r => r.rightholderId === statement.senderId);
     if (isProducerStatement(statement)) return rights;

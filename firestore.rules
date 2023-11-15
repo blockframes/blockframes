@@ -587,7 +587,7 @@ service cloud.firestore {
         allow read: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && isWaterfallAdmin(waterfallId);
+          && isWaterfallMember(waterfallId);
         allow create: if userHasValidOrg()
           && isRequestFieldValueEqualToOrNotSetted(['id'], blockId)
           && notInMaintenance()
@@ -605,7 +605,7 @@ service cloud.firestore {
         allow read: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && isWaterfallAdmin(waterfallId);
+          && isWaterfallMember(waterfallId);
         allow create: if userHasValidOrg()
           && isRequestFieldValueEqualToOrNotSetted(['id'], rightId)
           && notInMaintenance()

@@ -7,7 +7,7 @@ import { WaterfallContract, WaterfallSource, getAssociatedSource, getIncomesSour
 import { Right } from './right';
 import { pathExists } from './node';
 import { Income } from '../income';
-import { getContractWith } from '../contract';
+import { getContractsWith } from '../contract';
 
 export interface Payment {
   id: string;
@@ -280,43 +280,50 @@ interface OutgoingStatementPrerequistsConfig {
 }
 
 export function getOutgoingStatementPrerequists({ senderId, receiverId, statements, contracts, rights, titleState, incomes, sources, date }: OutgoingStatementPrerequistsConfig) {
+  const prerequists: Record<string, { contract: WaterfallContract, incomeIds: string[] }> = {};
   const incomingStatements = getIncomingStatements(senderId, statements, incomes, sources, date);
   // No incoming distributor or direct sales statements for senderId, no need to create outgoing statement
   if (!incomingStatements.distributorStatements.length && !incomingStatements.directSalesStatements.length) return {};
 
-  const contract = getContractWith([senderId, receiverId], contracts, date);
+  const matchingContracts = getContractsWith([senderId, receiverId], contracts, date);
   // There is no contract between senderId and receiverId, cannot create outgoing statement
-  if (!contract) return {};
+  if (!matchingContracts.length) return prerequists;
 
-  const contractRights = rights.filter(r => r.contractId === contract.id);
-  // Contract have no rights associated, cannot create outgoing statement
-  if (!contractRights) return {};
+  for (const contract of matchingContracts) {
+    const contractRights = rights.filter(r => r.contractId === contract.id);
+    // Contract have no rights associated, cannot create outgoing statement
+    if (!contractRights) continue;
 
-  // If there is no path between the rights of the contract and the sources of the incoming statements, cannot create outgoing statement
-  const hasPath = contractRights.some(r => incomingStatements.sources.some(s => pathExists(r.id, s.id, titleState)));
-  if (!hasPath) return {};
+    // If there is no path between the rights of the contract and the sources of the incoming statements, cannot create outgoing statement
+    const hasPath = contractRights.some(r => incomingStatements.sources.some(s => pathExists(r.id, s.id, titleState)));
+    if (!hasPath) continue;
 
-  // Fetch previous statements for this contract (this senderId and receiverId)
-  const previousStatements = statements.filter(s => !isDirectSalesStatement(s))
-    .filter((s: ProducerStatement | DistributorStatement) => s.contractId === contract.id);
+    // Fetch previous statements for this contract (this senderId and receiverId)
+    const previousStatements = statements.filter(s => !isDirectSalesStatement(s))
+      .filter((s: ProducerStatement | DistributorStatement) => s.contractId === contract.id);
 
-  // Fetch incomeIds for which no statement was created for this contract, if there is no incomeIds, cannot create outgoing statement
-  const incomeIds = incomingStatements.incomeIds.filter(id => !previousStatements.some(s => s.incomeIds.includes(id)));
-  if (!incomeIds.length) return {};
+    // Fetch incomeIds for which no statement was created for this contract, if there is no incomeIds, cannot create outgoing statement
+    const incomeIds = incomingStatements.incomeIds.filter(id => !previousStatements.some(s => s.incomeIds.includes(id)));
+    if (!incomeIds.length) continue;
 
-  // Filter incomes again to keep only incomes that are related to this contract
-  const statementIncomeIds = incomeIds.filter(id => {
     // Filter incomes again to keep only incomes that are related to this contract
-    const income = incomes.find(i => i.id === id);
-    const source = getAssociatedSource(income, sources);
-    return contractRights.some(r => pathExists(r.id, source.id, titleState));
-  })
+    const statementIncomeIds = incomeIds.filter(id => {
+      // Filter incomes again to keep only incomes that are related to this contract
+      const income = incomes.find(i => i.id === id);
+      const source = getAssociatedSource(income, sources);
+      return contractRights.some(r => pathExists(r.id, source.id, titleState));
+    });
 
-  return { incomeIds: statementIncomeIds, contract };
+    if (!statementIncomeIds.length) continue;
+
+    prerequists[contract.id] = { contract, incomeIds: statementIncomeIds };
+  }
+
+  return prerequists;
 }
 
 export function canCreateOutgoingStatement(data: OutgoingStatementPrerequistsConfig) {
-  return !!getOutgoingStatementPrerequists(data).incomeIds?.length;
+  return Object.keys(getOutgoingStatementPrerequists(data)).length > 0;
 }
 
 /**
@@ -328,9 +335,7 @@ export function canCreateOutgoingStatement(data: OutgoingStatementPrerequistsCon
  * @returns 
  */
 export function getStatementRights(statement: Statement, _rights: Right[]) {
-  // Groups are skipped here and revenue will be re-calculated from the childrens
-  const groupRightTypes: RightType[] = ['horizontal', 'vertical'];
-  const rights = _rights.filter(r => !groupRightTypes.includes(r.type));
+  const rights = skipGroups(_rights);
 
   if (isDistributorStatement(statement)) {
     return rights.filter(r => r.rightholderId === statement.receiverId || r.contractId === statement.contractId);
@@ -339,4 +344,28 @@ export function getStatementRights(statement: Statement, _rights: Right[]) {
   } else if (isDirectSalesStatement(statement)) {
     return rights.filter(r => r.rightholderId === statement.senderId);
   }
+}
+
+/**
+ * For a subset of rights, return the enabled rights that are not children of any other right of this subset
+ * Example: fetch top level rights of a right holder
+ * @param _rights 
+ * @param state 
+ * @returns 
+ */
+export function getTopLevelRights(_rights: Right[], state: TitleState) {
+  const rights = skipGroups(_rights).filter(r => state.rights[r.id].enabled);
+  const topLevelRights: Right[] = [];
+  for (const right of rights) {
+    if (!rights.filter(r => r.id !== right.id).some(r => pathExists(right.id, r.id, state))) {
+      topLevelRights.push(right);
+    }
+  }
+  return topLevelRights;
+}
+
+function skipGroups(rights: Right[]) {
+  // Groups are skipped here and revenue will be re-calculated from the childrens
+  const groupRightTypes: RightType[] = ['horizontal', 'vertical'];
+  return rights.filter(r => !groupRightTypes.includes(r.type));
 }
