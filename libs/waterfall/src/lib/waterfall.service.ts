@@ -264,6 +264,7 @@ function waterfallToDate(build: WaterfallState, date?: Date) {
 }
 
 function groupActions(data: WaterfallData, isSimulation = false) {
+  // TODO #9485 this may be activated for real waterfall also (generate bad display for graph generated with G6 but not with new one)
   const sourceActions = isSimulation ? sourcesToAction(data.waterfall.sources) : [];
   const contractActions = contractsToActions(data.contracts, data.terms);
   const investmentActions = investmentsToActions(data.contracts, data.terms);
