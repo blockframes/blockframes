@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { createIncome } from '@blockframes/model';
 
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
@@ -22,8 +23,16 @@ export class StatementViewComponent {
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
   ) {
-    this.shell.setDate(undefined);
+    this.shell.setDate(undefined); // TODO #9485 use statement date to fetch enabled rights (new Date('12/31/2013'))
     this.dynTitle.setPageTitle(this.shell.movie.title.international, 'View Statement');
+    this.shell.simulateWaterfall();
+  }
+
+
+  public async testSimulation() {
+
+    this.shell.simulateWaterfall({ incomes: [createIncome({ medias: ['theatrical'], price: 1000000, currency: 'EUR', contractId: 'playtime_rf', id:'incometest', territories: ['france'], date: new Date()})]})
+
   }
 
 

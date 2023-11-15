@@ -9,6 +9,9 @@ import { StatementHeaderModule } from '@blockframes/waterfall/components/stateme
 // Components
 import { StatementViewComponent } from './view.component';
 
+// Material
+import { MatButtonModule } from '@angular/material/button';
+
 @NgModule({
   declarations: [StatementViewComponent],
   imports: [
@@ -16,6 +19,9 @@ import { StatementViewComponent } from './view.component';
 
     // Blockframes
     StatementHeaderModule,
+
+    // Material
+    MatButtonModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: StatementViewComponent }]),
