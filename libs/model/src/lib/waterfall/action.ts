@@ -25,7 +25,7 @@ import { getContractAndAmendments, getDeclaredAmount } from '../contract';
 import { convertCurrenciesTo, sortByDate, sum } from '../utils';
 import { MovieCurrency, Media, Territory, rightholderGroups } from '../static';
 import { Right, orderRights } from './right';
-import { Statement, isDirectSalesStatement, isDistributorStatement, isProducerStatement } from './statement';
+import { Statement, isDirectSalesStatement, isDistributorStatement } from './statement';
 
 const actions = {
   /**
@@ -371,14 +371,14 @@ export function statementsToActions(statements: Statement[]) {
           to: {
             org: statement.senderId
           },
-          contractId: isDistributorStatement(statement) ? statement.contractId : undefined,
+          contractId: statement.contractId,
           date: payment.date
         });
       }
     }
 
     const rightPayments = statement.payments.right.filter(p => p.status === 'received') || [];
-    const rightholderPayment = ((isDistributorStatement(statement) || isProducerStatement(statement)) && statement.payments.rightholder.status === 'received') ? statement.payments.rightholder : undefined;
+    const rightholderPayment = statement.payments.rightholder?.status === 'received' ? statement.payments.rightholder : undefined;
 
     // Org to Org payments
     if (rightholderPayment) {
@@ -391,7 +391,7 @@ export function statementsToActions(statements: Statement[]) {
         to: {
           org: statement.receiverId
         },
-        contractId: isDistributorStatement(statement) || isProducerStatement(statement) ? statement.contractId : undefined,
+        contractId: statement.contractId,
         date: rightholderPayment.date
       });
     }
@@ -410,7 +410,7 @@ export function statementsToActions(statements: Statement[]) {
         to: {
           right: payment.to
         },
-        contractId: isDistributorStatement(statement) || isProducerStatement(statement) ? statement.contractId : undefined,
+        contractId: statement.contractId,
         date: payment.date
       });
     }

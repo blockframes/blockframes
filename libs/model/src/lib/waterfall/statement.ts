@@ -1,8 +1,8 @@
 import { DocumentMeta } from '../meta';
 import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups, RightType } from '../static';
 import { Duration, createDuration } from '../terms';
-import { sortByDate } from '../utils';
-import { History, TitleState } from './state';
+import { sortByDate, sum } from '../utils';
+import { History, TitleState, TransferState } from './state';
 import { WaterfallContract, WaterfallSource, getAssociatedSource, getIncomesSources } from './waterfall';
 import { Right } from './right';
 import { getSources, pathExists } from './node';
@@ -47,6 +47,7 @@ export interface RightPayment extends Payment {
   mode: 'internal' | 'external';
   incomeIds: string[]; // Incomes related to this payment
   to: string; // rightId
+  details: { incomeId: string, amount: number }[]; // amount paid per incomeId
 }
 
 function createPaymentBase(params: Partial<Payment> = {}): Payment {
@@ -89,13 +90,15 @@ export function createRightPayment(params: Partial<RightPayment> = {}): RightPay
     ...payment,
     incomeIds: params.incomeIds || [],
     type: 'right',
-    mode: params.mode
+    mode: params.mode,
+    details: params.details || [],
   }
 }
 
 export interface Statement {
   _meta?: DocumentMeta;
   type: StatementType;
+  contractId?: string;
   status: StatementStatus;
   id: string;
   waterfallId: string;
@@ -104,7 +107,9 @@ export interface Statement {
   duration: Duration;
   incomeIds: string[];
   payments: {
+    income?: IncomePayment[];
     right: RightPayment[]
+    rightholder?: RightholderPayment;
   };
 }
 
@@ -229,7 +234,7 @@ export function getStatementsHistory(history: History[], statements: Statement[]
 
   const filteredStatements = statements
     .filter(s => s.senderId === senderId)
-    .filter(s => !contractId || ((isDistributorStatement(s) || isProducerStatement(s)) && s.contractId === contractId));
+    .filter(s => !contractId || s.contractId === contractId);
 
   const sortedStatements = sortByDate(filteredStatements, 'duration.to');
   const uniqueDates = Array.from(new Set(sortedStatements.map(s => s.duration.to.getTime())));
@@ -393,4 +398,18 @@ function skipGroups(rights: Right[]) {
   // Groups are skipped here and revenue will be re-calculated from the childrens
   const groupRightTypes: RightType[] = ['horizontal', 'vertical'];
   return rights.filter(r => !groupRightTypes.includes(r.type));
+}
+
+/**
+ * Look into transfer state to find the calculated amount for this rightId and incomeIds
+ * @param rightId 
+ * @param _incomeIds 
+ * @param transferState 
+ * @returns number
+ */
+export function getCalculatedAmount(rightId: string, _incomeIds: string[] | string, transferState: Record<string, TransferState>): number {
+  const incomeIds = Array.isArray(_incomeIds) ? _incomeIds : [_incomeIds];
+  const transfers = Object.values(transferState).filter(t => t.to === rightId);
+  const history = transfers.map(t => t.history.filter(h => h.checked && incomeIds.includes(h.incomeId))).flat();
+  return sum(history, i => i.amount * i.percent);
 }

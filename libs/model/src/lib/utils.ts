@@ -370,6 +370,15 @@ export const externalOrgIdentifier = 'External';
 // TODO #9422
 export type PricePerCurrency = Partial<Record<MovieCurrency, number>>;
 
+export function getTotalPerCurrency(prices: { price: number, currency: MovieCurrency }[] = []): PricePerCurrency {
+  const totalPrice: PricePerCurrency = {};
+  prices.forEach(i => {
+    totalPrice[i.currency] ||= 0;
+    totalPrice[i.currency] += i.price;
+  });
+  return totalPrice;
+}
+
 // TODO #9422
 const pairs = {
   'EUR-USD': 1.09,
