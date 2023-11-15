@@ -29,6 +29,7 @@ import {
   getStatementsHistory,
   pathExists,
   getStatementRights,
+  getCalculatedAmount,
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
@@ -207,10 +208,7 @@ export class StatementComponent implements OnInit {
   }
 
   public getCalculatedAmount(rightId: string): PricePerCurrency {
-    const transfers = Object.values(this.state.waterfall.state.transfers).filter(t => t.to === rightId);
-    const history = transfers.map(t => t.history.filter(h => h.checked && this.statement.incomeIds.includes(h.incomeId))).flat();
-    const currentCalculatedRevenue = sum(history, i => i.amount * i.percent);
-    return { [mainCurrency]: currentCalculatedRevenue };
+    return { [mainCurrency]: getCalculatedAmount(rightId, this.statement.incomeIds, this.state.waterfall.state.transfers) };
   }
 
   public getCumulatedAmount(rightId: string, overrall = false): PricePerCurrency {
@@ -306,18 +304,15 @@ export class StatementComponent implements OnInit {
       if (paymentExists) continue;
 
       const isInternal = right.rightholderId === this.statement.senderId;
-      const amount = this.getCalculatedAmount(right.id);
+      const amountPerIncome = this.statement.incomeIds.map(incomeId => ({ incomeId, amount: getCalculatedAmount(right.id, incomeId, this.state.waterfall.state.transfers) }));
       const payment = createRightPayment({
         id: this.statementService.createId(),
         to: right.id,
-        price: amount[mainCurrency],
+        price: sum(amountPerIncome, i => i.amount),
         currency: mainCurrency,
         date: isInternal ? this.statement.duration.to : undefined,
-        incomeIds: this.statement.incomeIds.filter(id => {
-          const income = this.incomes.find(i => i.id === id);
-          const source = getAssociatedSource(income, this.waterfall.sources);
-          return pathExists(right.id, source.id, this.state.waterfall.state);
-        }),
+        incomeIds: amountPerIncome.map(i => i.incomeId),
+        details: amountPerIncome,
         mode: isInternal ? 'internal' : 'external'
       });
 
