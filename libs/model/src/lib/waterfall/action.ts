@@ -299,7 +299,7 @@ export function sourcesToAction(waterfallSources: WaterfallSource[]) {
   waterfallSources.forEach((s, index) => {
     actions.push(action('source', {
       id: s.id,
-      destinationIds: [s.destinationId],
+      destinationId: s.destinationId,
       date: new Date(1 + (index * 1000)) // 01/01/1970 + "index" seconds 
     }));
   });
@@ -696,12 +696,12 @@ function prependNode(state: TitleState, nextIds: string[], nodeId: string) {
 
 export interface SourceAction extends BaseAction {
   id: string;
-  destinationIds: string[];
+  destinationId: string;
 }
 
 function source(state: TitleState, payload: SourceAction) {
   state.rights[payload.id] ||= createRightState({ id: payload.id, orgId: payload.id, percent: 0 });
-  state.sources[payload.id] ||= createSourceState({ id: payload.id, amount: 0, destinationIds: payload.destinationIds });
+  state.sources[payload.id] ||= createSourceState({ id: payload.id, amount: 0, destinationId: payload.destinationId });
 }
 
 export interface IncomeAction extends BaseAction {
@@ -724,7 +724,9 @@ function income(state: TitleState, payload: IncomeAction) {
     if (!payload.isCompensation) {
       state.sources[payload.from] ||= createSourceState({ id: payload.from, amount: 0 });
       state.sources[payload.from].amount += payload.amount;
-      state.sources[payload.from].destinationIds = Array.from(new Set([...state.sources[payload.from].destinationIds, payload.to]));
+      const destinationId = state.sources[payload.from].destinationId;
+      if (destinationId && destinationId !== payload.to) throw new Error(`Invalid source destination "${destinationId}" for income "${payload.id}" and source "${payload.from}"`);
+      state.sources[payload.from].destinationId = payload.to;
       state.sources[payload.from].incomeIds = Array.from(new Set([...state.sources[payload.from].incomeIds, payload.id]));
     }
   }

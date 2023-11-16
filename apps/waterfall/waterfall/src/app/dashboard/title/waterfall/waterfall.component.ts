@@ -2,7 +2,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 // Blockframes
-import { appUrl } from '@env';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
