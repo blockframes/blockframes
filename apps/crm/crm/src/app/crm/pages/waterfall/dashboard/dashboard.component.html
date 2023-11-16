@@ -56,23 +56,9 @@
       </ng-template>
     </bf-table>
 
-    <h3>Statements to create</h3>
-    <bf-table [source]="producers" clickable (rowClick)="displayRightholderStatements($event.id)" useFilter pagination="50">
-      <ng-template colRef="name" label="Right Holder" let-name sort>
-        {{ name }}
-      </ng-template>
-      <ng-template colRef="roles" label="Roles" let-roles sort>
-        {{ roles | toLabel: 'rightholderRoles' }}
-      </ng-template>
-      <ng-template colRef="id" label="Statements to create" let-id sort>
-        {{ statementsToCreate(id).length }}
-      </ng-template>
-    </bf-table>
-  </ng-container>
-
-  <article *ngIf="rightholderStatements?.pending.length">
-    <h3>Pending statements for "{{ rightholderStatements.senderId | rightholderName: waterfall }}"</h3>
-    <bf-table [source]="rightholderStatements.pending" useFilter pagination="50">
+  <article *ngIf="outgoingStatements?.pending.length">
+    <h3>Pending statements for {{ 'producer' | toLabel: 'rightholderRoles' }} "{{ outgoingStatements.senderId | rightholderName: waterfall }}"</h3>
+    <bf-table [source]="outgoingStatements.pending" useFilter pagination="50">
       <ng-template colRef="type" label="Type" let-type sort>
         {{ type | toLabel: 'statementType' }}
       </ng-template>
@@ -99,9 +85,9 @@
     </bf-table>
   </article>
 
-  <article *ngIf="rightholderStatements?.existing.length">
-    <h3>Existing statements for "{{ rightholderStatements.senderId | rightholderName: waterfall }}"</h3>
-    <bf-table [source]="rightholderStatements.existing" useFilter clickable (rowClick)="goTo('statements', $event.id)" pagination="50">
+  <article *ngIf="outgoingStatements?.existing.length">
+    <h3>Existing statements for {{ 'producer' | toLabel: 'rightholderRoles' }} "{{ outgoingStatements.senderId | rightholderName: waterfall }}"</h3>
+    <bf-table [source]="outgoingStatements.existing" useFilter clickable (rowClick)="goTo('statements', $event.id)" pagination="50">
       <ng-template colRef="type" label="Type" let-type sort>
         {{ type | toLabel: 'statementType' }}
       </ng-template>

@@ -35,7 +35,7 @@ import { WaterfallState } from '@blockframes/waterfall/waterfall.service';
 import { add } from 'date-fns';
 import { firstValueFrom } from 'rxjs';
 
-interface RightholderStatements {
+interface OutgoingStatements {
   senderId: string,
   pending: ProducerStatement[],
   existing: ProducerStatement[]
@@ -53,14 +53,14 @@ export class DashboardComponent implements OnInit {
   public statementBlocks: Block[];
   public history: History[];
   private statements: Statement[];
-  public rightholderStatements: RightholderStatements;
+  public outgoingStatements: OutgoingStatements;
   public contracts: WaterfallContract[] = [];
   private rights: Right[];
   private incomes: Income[];
   private state: WaterfallState;
   public currentState: History;
   public currentBlock: string;
-  public producers: WaterfallRightholder[] = []; // TODO #9485 transform into single rightholder as there is only one producer per waterfall
+  public producer: WaterfallRightholder;
   public options = { xAxis: { categories: [] }, series: [] };
   public formatter = { formatter: (value: number) => `${value} ${movieCurrencies[mainCurrency]}` };
 
@@ -93,7 +93,7 @@ export class DashboardComponent implements OnInit {
     if (this.statementBlocks.length) {
       this.currentBlock = this.statementBlocks[this.statementBlocks.length - 1].id;
       this.selectBlock(this.currentBlock);
-      if (!this.producers.length) {
+      if (!this.producer) {
         this.snackBar.open('No producer found for this waterfall. Please set rightholders roles.', 'close', { duration: 5000 });
       } else {
         this.snackBar.open('Waterfall loaded !', 'close', { duration: 5000 });
@@ -108,10 +108,11 @@ export class DashboardComponent implements OnInit {
   public selectBlock(blockId: string) {
     const index = this.version.blockIds.indexOf(blockId);
     this.currentState = this.history[index + 1]; // First history entry is always empty (init)
-    this.rightholderStatements = undefined;
-    this.producers = Object.values(this.currentState.orgs)
+    this.producer = Object.values(this.currentState.orgs)
       .map(({ id }) => this.getRightholder(id))
-      .filter(({ roles }) => roles.includes('producer'));
+      .find(({ roles }) => roles.includes('producer'));
+
+    if (this.producer) this.displayOutgoingStatements();
 
     this.buildGraph(blockId);
     this.cdRef.markForCheck();
@@ -176,18 +177,18 @@ export class DashboardComponent implements OnInit {
     return pending;
   }
 
-  public statementsToCreate(senderId: string) {
+  private statementsToCreate() {
     const currentStateDate = new Date(this.currentState.date);
 
     const outgoingStatementBeneficiaries = Object.keys(rightholderGroups.beneficiaries) as RightholderRole[];
     const rightholders = this.waterfall.rightholders
-      .filter(r => hasContractWith([senderId, r.id], this.contracts, currentStateDate)) // Rightholder have a contract with the statement sender
+      .filter(r => hasContractWith([this.producer.id, r.id], this.contracts, currentStateDate)) // Rightholder have a contract with the statement sender
       .filter(r => r.roles.some(role => outgoingStatementBeneficiaries.includes(role))) // Rightholder can receive an outgoing statement
 
     return rightholders.map(receiver => {
 
       const config = {
-        senderId,
+        senderId: this.producer.id,
         receiverId: receiver.id,
         statements: this.statements,
         contracts: this.contracts,
@@ -207,7 +208,7 @@ export class DashboardComponent implements OnInit {
         const producerStatement = createProducerStatement({
           id: this.statementService.createId(),
           contractId: prerequist.contract.id,
-          senderId,
+          senderId: this.producer.id,
           receiverId: receiver.id,
           waterfallId: this.waterfall.id,
           incomeIds: prerequist.incomeIds,
@@ -229,11 +230,11 @@ export class DashboardComponent implements OnInit {
     return getIncomesSources(incomes, this.waterfall.sources);
   }
 
-  public displayRightholderStatements(senderId: string) {
-    this.rightholderStatements = {
-      senderId,
-      pending: this.statementsToCreate(senderId),
-      existing: this.statements.filter(s => s.senderId === senderId && isProducerStatement(s)) as ProducerStatement[]
+  private displayOutgoingStatements() {
+    this.outgoingStatements = {
+      senderId: this.producer.id,
+      pending: this.statementsToCreate(),
+      existing: this.statements.filter(s => s.senderId === this.producer.id && isProducerStatement(s)) as ProducerStatement[]
     };
     this.cdRef.markForCheck();
   }
@@ -242,7 +243,7 @@ export class DashboardComponent implements OnInit {
     const id = await this.statementService.add(statement, { params: { waterfallId: this.waterfall.id } });
     if (redirect) return this.router.navigate(['/c/o/dashboard/crm/waterfall', this.waterfall.id, 'statement', id]);
     this.statements.push(statement);
-    this.displayRightholderStatements(statement.senderId);
+    this.displayOutgoingStatements();
   }
 
   public goTo(type: 'statements' | 'rightholders', id: string) {
