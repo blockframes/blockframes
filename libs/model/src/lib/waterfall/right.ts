@@ -49,7 +49,8 @@ export function createRight(params: Partial<Right> = {}) {
  */
 export function orderRights(rights: Right[]): Right[] {
   const allNextIds = Array.from(new Set(rights.map(right => right.nextIds).flat()));
-  if (allNextIds.some(id => !rights.map(right => right.id).includes(id))) throw new Error('Some nextIds do not match any right id');
+  const notMatching = allNextIds.filter(id => !rights.map(right => right.id).includes(id))
+  if (notMatching.length) throw new Error(`Some nextIds do not match any right id : ${notMatching}`);
 
   const rootRights = rights.filter(right => !right.nextIds.length);
   let childRights = rights.filter(right => right.nextIds.length);
