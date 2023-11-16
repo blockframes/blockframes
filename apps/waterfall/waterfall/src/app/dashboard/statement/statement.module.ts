@@ -26,7 +26,7 @@ const routes: Routes = [{
     },
     {
       path: 'create',
-      loadChildren: () => import('./view/view.module').then(m => m.StatementViewModule), // TODO #9485
+      loadChildren: () => import('./view/view.module').then(m => m.StatementViewModule), // TODO #9524 #9525 #9532 #9531
     },
     {
       path: ':statementId',

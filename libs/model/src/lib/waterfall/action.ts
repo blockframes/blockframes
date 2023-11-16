@@ -423,7 +423,7 @@ export function statementsToActions(statements: Statement[]) {
 // ACTIONS //
 /////////////
 interface BaseAction {
-  date?: Date; // TODO #9485 remove "?"
+  date?: Date; // TODO #9336 : once fixtures are removed, this should be required (remove "?")
 }
 
 export interface RightAction extends BaseAction {

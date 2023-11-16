@@ -29,7 +29,7 @@ export class StatementEditComponent {
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
   ) {
-    this.shell.setDate(undefined); // TODO #9485 use statement date from form to fetch enabled rights (new Date('12/31/2013'))
+    this.shell.setDate(undefined); // TODO #9524 #9525 #9532 #9531 use statement date from form to fetch enabled rights (new Date('12/31/2013'))
     this.dynTitle.setPageTitle(this.shell.movie.title.international, 'Edit Statement');
     this.shell.simulateWaterfall();
   }

@@ -16,7 +16,7 @@ export class StatementViewComponent {
 
   public statement$ = combineLatest([this.route.params.pipe(pluck('statementId')), this.shell.statements$]).pipe(
     map(([statementId, statements]) => statements.find(s => s.id === statementId)),
-    // tap(statement => this.shell.setDate(statement.duration.to)), TODO #9485 if state or simulation is needed here
+    // tap(statement => this.shell.setDate(statement.duration.to)), TODO #9524 #9525 #9532 #9531 if state or simulation is needed here
   );
 
   private statementsHistory$ = combineLatest([this.statement$, this.shell.statements$]).pipe(

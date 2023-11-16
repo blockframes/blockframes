@@ -361,7 +361,7 @@ export function getStatementSources(statement: Statement, sources: WaterfallSour
   let topLevelRights: Right[] = [];
   // TODO #9485 better factorization with getStatementRights ? 
   if (isProducerStatement(statement)) {
-    // TODO #9485 sources (incomeIds) will come from distributor statements above (created automatically)
+    // TODO #9531 sources (incomeIds) will come from distributor statements above (created automatically)
     /*rightholderRights = rights.filter(r => r.rightholderId === statement.receiverId && r.contractId === statement.contractId);*/
   } else if (isDistributorStatement(statement)) {
     const rightholderRights = rights.filter(r => r.rightholderId === statement.senderId && r.contractId === statement.contractId);
