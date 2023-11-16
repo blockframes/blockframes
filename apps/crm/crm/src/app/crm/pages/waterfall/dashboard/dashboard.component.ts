@@ -3,14 +3,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Block,
-  DirectSalesStatement,
-  DistributorStatement,
   History,
   Income,
   IncomeState,
   PricePerCurrency,
   ProducerStatement,
   Right,
+  RightholderRole,
   Statement,
   Version,
   Waterfall,
@@ -21,15 +20,15 @@ import {
   getAssociatedSource,
   getContractAndAmendments,
   getCurrentContract,
-  isDirectSalesStatement,
-  isDistributorStatement,
+  getIncomesSources,
+  getOutgoingStatementPrerequists,
+  hasContractWith,
   isProducerStatement,
   mainCurrency,
   movieCurrencies,
-  pathExists,
   rightholderGroups
 } from '@blockframes/model';
-import { unique } from '@blockframes/utils/helpers';
+import { formatPair } from '@blockframes/ui/price-per-currency/price-per-currency.component';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 import { WaterfallState } from '@blockframes/waterfall/waterfall.service';
@@ -37,7 +36,7 @@ import { add } from 'date-fns';
 import { firstValueFrom } from 'rxjs';
 
 interface RightholderStatements {
-  rightholderId: string,
+  senderId: string,
   pending: ProducerStatement[],
   existing: ProducerStatement[]
 }
@@ -149,33 +148,25 @@ export class DashboardComponent implements OnInit {
 
   public getTotalIncomes(incomeState: Record<string, IncomeState>): PricePerCurrency {
     const incomeStates = Object.values(incomeState);
-    if (!incomeStates.length) return this.getPrice(0);
-    return this.getPrice(incomeStates.map(a => a.amount).reduce((a, b) => a + b));
-  }
-
-  public getPrice(amount: number): PricePerCurrency {
-    return { [mainCurrency]: amount };
+    if (!incomeStates.length) return formatPair(0);
+    return formatPair(incomeStates.map(a => a.amount).reduce((a, b) => a + b));
   }
 
   public getRightholder(id: string) {
     return this.waterfall.rightholders.find(r => r.id === id);
   }
 
-  public getCurrentContract(item: Statement) {
-    if (isDistributorStatement(item) || isProducerStatement(item)) {
-      const contracts = getContractAndAmendments(item.contractId, this.contracts);
-      const current = getCurrentContract(contracts, item.duration.from);
-      if (!current) return '--';
-      return current.rootId ? `${current.id} (${current.rootId})` : current.id;
-    }
-    return '--';
+  public getCurrentContract(item: Statement) { // TODO #9485 create pipe
+    const contracts = getContractAndAmendments(item.contractId, this.contracts);
+    const current = getCurrentContract(contracts, item.duration.from);
+    if (!current) return '--';
+    return current.rootId ? `${current.id} (${current.rootId})` : current.id;
   }
 
   public getPendingRevenue(rightholderId: string): PricePerCurrency {
     const pendingRevenue = this.statements
-      .filter(s => (isDistributorStatement(s) || isProducerStatement(s)) && s.payments.rightholder)
-      .filter((s: DistributorStatement | ProducerStatement) => s.payments.rightholder.to === rightholderId && s.payments.rightholder.status === 'pending')
-      .map((s: DistributorStatement | ProducerStatement) => s.payments.rightholder);
+      .filter(s => s.receiverId === rightholderId && s.payments.rightholder?.status === 'pending')
+      .map(s => s.payments.rightholder);
 
     const pending: PricePerCurrency = {};
     pendingRevenue.forEach(i => {
@@ -185,82 +176,64 @@ export class DashboardComponent implements OnInit {
     return pending;
   }
 
-  public statementsToCreate(rightholderId: string) {
+  public statementsToCreate(senderId: string) {
     const currentStateDate = new Date(this.currentState.date);
 
-    // Fetch active distributor statements where rightholder has received payments
-    const distributorStatements = this.statements
-      .filter(s => isDistributorStatement(s) && s.payments.rightholder)
-      .filter(s => s.duration.to.getTime() <= currentStateDate.getTime())
-      .filter((s: DistributorStatement) => s.payments.rightholder.to === rightholderId && s.payments.rightholder.status === 'received') as DistributorStatement[];
+    const outgoingStatementBeneficiaries = Object.keys(rightholderGroups.beneficiaries) as RightholderRole[];
+    const rightholders = this.waterfall.rightholders
+      .filter(r => hasContractWith([senderId, r.id], this.contracts, currentStateDate)) // Rightholder have a contract with the statement sender
+      .filter(r => r.roles.some(role => outgoingStatementBeneficiaries.includes(role))) // Rightholder can receive an outgoing statement
 
-    // Fetch active direct sales statements created by the rightholder
-    const directSalesStatements = this.statements
-      .filter(s => isDirectSalesStatement(s))
-      .filter(s => s.duration.to.getTime() <= currentStateDate.getTime())
-      .filter(s => s.rightholderId === rightholderId && s.status === 'reported') as DirectSalesStatement[];
+    return rightholders.map(receiver => {
 
-    const statements = [...distributorStatements, ...directSalesStatements];
-    if (!statements.length) return [];
+      const config = {
+        senderId,
+        receiverId: receiver.id,
+        statements: this.statements,
+        contracts: this.contracts,
+        rights: this.rights,
+        titleState: this.state.waterfall.state,
+        incomes: this.incomes,
+        sources: this.waterfall.sources,
+        date: currentStateDate
+      };
 
-    // Fetch contract ids that are related to the statements (remove amendments or root contracts)
-    const excludedContractsIds = unique(distributorStatements.map(s => getContractAndAmendments(s.contractId, this.contracts).map(c => c.id)).flat());
+      const prerequists = getOutgoingStatementPrerequists(config);
 
-    // Fetch current contracts where the rightholder is involved (buyer or seller) that are not in the excluded list
-    const contractsIds = this.contracts.
-      filter(c => (c.buyerId === rightholderId || c.sellerId === rightholderId) && !excludedContractsIds.find(id => id === c.id))
-      .map(c => getCurrentContract(getContractAndAmendments(c.id, this.contracts), currentStateDate)?.id)
-      .filter(c => !!c); // Remove contracts that are not active in the current state date
+      if (!Object.keys(prerequists).length) return;
+      const statements: ProducerStatement[] = [];
+      for (const contractId in prerequists) {
+        const prerequist = prerequists[contractId];
+        const producerStatement = createProducerStatement({
+          id: this.statementService.createId(),
+          contractId: prerequist.contract.id,
+          senderId,
+          receiverId: receiver.id,
+          waterfallId: this.waterfall.id,
+          incomeIds: prerequist.incomeIds,
+          duration: createDuration({
+            from: add(currentStateDate, { days: 1 }),
+            to: add(currentStateDate, { days: 1, months: 6 }),
+          })
+        });
+        statements.push(producerStatement);
+      }
 
-    const contracts = unique(contractsIds)
-      .map(id => this.contracts.find(c => c.id === id))
-      .filter(c => !Object.keys(rightholderGroups.distributors).includes(c.type));
+      return statements;
 
-    // Fetch incomes and sources related to the statements
-    const distributorStatementsIncomeIds = distributorStatements.map(s => s.payments.rightholder.incomeIds).flat();
-    const directSalesStatementsIncomeIds = directSalesStatements.map(s => s.incomeIds).flat();
-    const incomeIds = unique([...distributorStatementsIncomeIds, ...directSalesStatementsIncomeIds]);
-    const sources = this.getIncomesSources(incomeIds);
-
-    // Filter contracts that have at least one right that is related to the sources
-    const filteredContracts = contracts.filter(c => {
-      const rights = this.rights.filter(r => r.contractId === c.id);
-      return rights.some(r => sources.some(s => pathExists(r.id, s.id, this.state.waterfall.state)));
-    });
-
-    return filteredContracts.map(c => createProducerStatement({
-      id: this.statementService.createId(),
-      contractId: c.id,
-      rightholderId,
-      waterfallId: this.waterfall.id,
-      incomeIds: incomeIds.filter(id => !this.statements // Remove incomes for which a statement already exists for this contract
-        .filter(s => !isDirectSalesStatement(s))
-        .filter((s: ProducerStatement | DistributorStatement) => s.contractId === c.id)
-        .some(s => s.incomeIds.includes(id))
-      ).filter(id => {
-        // Filter incomes again to keep only incomes that are related to this contract
-        const income = this.incomes.find(i => i.id === id);
-        const source = getAssociatedSource(income, this.waterfall.sources);
-        const rights = this.rights.filter(r => r.contractId === c.id);
-        return rights.some(r => pathExists(r.id, source.id, this.state.waterfall.state));
-      }),
-      duration: createDuration({
-        from: add(currentStateDate, { days: 1 }),
-        to: add(currentStateDate, { days: 1, months: 6 }),
-      })
-    })).filter(s => s.incomeIds.length);
+    }).filter(s => !!s).flat();
   }
 
   public getIncomesSources(incomeIds: string[]) {
     const incomes = this.incomes.filter(i => incomeIds.includes(i.id));
-    return unique(incomes.map(i => getAssociatedSource(i, this.waterfall.sources)));
+    return getIncomesSources(incomes, this.waterfall.sources);
   }
 
-  public displayRightholderStatements(rightholderId: string) {
+  public displayRightholderStatements(senderId: string) {
     this.rightholderStatements = {
-      rightholderId,
-      pending: this.statementsToCreate(rightholderId),
-      existing: this.statements.filter(s => s.rightholderId === rightholderId && isProducerStatement(s)) as ProducerStatement[]
+      senderId,
+      pending: this.statementsToCreate(senderId),
+      existing: this.statements.filter(s => s.senderId === senderId && isProducerStatement(s)) as ProducerStatement[]
     };
     this.cdRef.markForCheck();
   }
@@ -269,7 +242,7 @@ export class DashboardComponent implements OnInit {
     const id = await this.statementService.add(statement, { params: { waterfallId: this.waterfall.id } });
     if (redirect) return this.router.navigate(['/c/o/dashboard/crm/waterfall', this.waterfall.id, 'statement', id]);
     this.statements.push(statement);
-    this.displayRightholderStatements(statement.rightholderId);
+    this.displayRightholderStatements(statement.senderId);
   }
 
   public goTo(type: 'statements' | 'rightholders', id: string) {

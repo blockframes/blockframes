@@ -587,7 +587,7 @@ service cloud.firestore {
         allow read: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && isWaterfallAdmin(waterfallId);
+          && isWaterfallMember(waterfallId);
         allow create: if userHasValidOrg()
           && isRequestFieldValueEqualToOrNotSetted(['id'], blockId)
           && notInMaintenance()
@@ -605,7 +605,7 @@ service cloud.firestore {
         allow read: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && isWaterfallAdmin(waterfallId);
+          && isWaterfallMember(waterfallId);
         allow create: if userHasValidOrg()
           && isRequestFieldValueEqualToOrNotSetted(['id'], rightId)
           && notInMaintenance()
@@ -628,17 +628,18 @@ service cloud.firestore {
           && isRequestFieldValueEqualToOrNotSetted(['id'], statementId)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( isWaterfallAdmin(waterfallId) || canManage(waterfallId, incomingData().rightholderId) );
+          && ( isWaterfallAdmin(waterfallId) || canManage(waterfallId, incomingData().senderId) );
         allow update: if userHasValidOrg()
           && isNotUpdatingId('id', existingData().id)
-          && isNotUpdatingId('rightholderId', existingData().rightholderId)
+          && isNotUpdatingId('senderId', existingData().senderId)
+          && isNotUpdatingId('receiverId', existingData().receiverId)
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( isWaterfallAdmin(waterfallId) || canManage(waterfallId, existingData().rightholderId) );
+          && ( isWaterfallAdmin(waterfallId) || canManage(waterfallId, existingData().senderId) );
         allow delete: if userHasValidOrg()
           && notInMaintenance()
           && isOrgMember(userOrgId())
-          && ( isWaterfallAdmin(waterfallId) || canManage(waterfallId, existingData().rightholderId) );
+          && ( isWaterfallAdmin(waterfallId) || canManage(waterfallId, existingData().senderId) );
       }
 
       match /permissions/{orgId} {

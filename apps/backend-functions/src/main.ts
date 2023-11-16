@@ -42,7 +42,6 @@ import { createPdf as _createPdf } from './createPdf';
 import { scheduledAirtable, synchronizeAirtable } from './airtable';
 import { onNegotiationCreated, onNegotiationUpdate } from './negotiation';
 import {
-  buildWaterfall as _buildWaterfall,
   onWaterfallDelete,
   onWaterfallDocumentDelete,
   onWaterfallStatementDelete,
@@ -301,8 +300,6 @@ export const downloadVideoToStorage = functions(superHeavyConfig).https.onReques
 //--------------------------------
 //          WATERFALL           //
 //--------------------------------
-
-export const buildWaterfall = functions().https.onCall(skipInMaintenance(_buildWaterfall));
 
 /**
  * Trigger: when a waterfall is updated

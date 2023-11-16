@@ -1,1 +1,115 @@
-statements
+<ng-container *ngIf="waterfall$ | async as waterfall">
+  <ng-container *ngIf="waterfall.versions.length else noWaterfall">
+    <ng-container *ngIf="statements.length else noStatements">
+      <header>
+        <mat-chip-list aria-label="Statement type">
+          <ng-container *ngFor="let type of statementTypes">
+            <mat-divider *ngIf="type.divider && type.visible" [vertical]="true"></mat-divider>
+            <mat-chip
+            *ngIf="type.visible"
+            [selected]="type.selected"
+            (click)="changeType(type.key)">{{ type.value }}</mat-chip>
+          </ng-container>
+        </mat-chip-list>
+        
+        <article *ngIf="rightholders.length > 0">
+          <span>
+            <waterfall-rightholder-select *ngIf="selected !== 'directSales'"
+              [rightholders]="rightholders"
+              [control]="rightholderControl">
+              <mat-label>Right Holder</mat-label>
+            </waterfall-rightholder-select>
+            <ng-container *ngIf="selected !== 'directSales'">
+              <a *ngIf="rightholderContracts.length === 1" mat-icon-button [routerLink]="['..', 'documents', rightholderContracts[0].id]">
+                <mat-icon svgIcon="contract" matTooltip="See contract"></mat-icon>
+              </a>
+
+              <button *ngIf="rightholderContracts.length > 1" mat-icon-button [matMenuTriggerFor]="contractsMenu">
+                <mat-icon svgIcon="contract" matTooltip="See contracts"></mat-icon>
+              </button>
+              
+              <mat-menu #contractsMenu="matMenu">
+                <a mat-menu-item *ngFor="let rightholderContract of rightholderContracts" [routerLink]="['..', 'documents', rightholderContract.id]">
+                  {{ rightholderContract.duration.from | date: 'dd/MM/yyyy' }} -  {{ rightholderContract.duration.to | date: 'dd/MM/yyyy' }}
+                </a>
+              </mat-menu>
+            </ng-container>
+          </span>
+          <div>
+            <a mat-button [disabled]="!canCreateStatement" [routerLink]="['// TODO #9485']">
+              <span>Add statement for {{ rightholderControl.value | rightholderName: waterfall }}</span>
+            </a>
+          </div>
+        </article>
+      </header>
+      
+      <section>
+        <bf-table *ngIf="rightholderStatements.length > 0 else noStatement" [source]="rightholderStatements" pagination="50">
+          <ng-template colRef="order" label="#" let-order>
+            {{ order }}
+          </ng-template>
+          <ng-template colRef="duration" label="Statement period" let-duration>
+            {{ duration.from | date: 'dd/MM/yyyy' }} -  {{ duration.to | date: 'dd/MM/yyyy' }}
+          </ng-template>
+          <ng-template colRef="payments" label="Amount Due" let-payments>
+            <price-per-currency 
+              *ngIf="payments.rightholder as payment else noPayment" 
+              [price]="payment.price | formatPair : payment.currency">
+            </price-per-currency>
+          </ng-template>
+          <ng-template colRef="payments" label="Amount Paid" let-payments>
+            <price-per-currency 
+              *ngIf="payments.rightholder?.status === 'received' else noPayment"
+              [price]="payments.rightholder.price | formatPair : payments.rightholder.currency">
+            </price-per-currency>
+          </ng-template>
+          <ng-template colRef="payments" label="Payment Date" let-payments>
+            <ng-container *ngIf="payments.rightholder?.status === 'received'">
+              {{ payments.rightholder.date | date: 'dd/MM/yyyy' }}
+            </ng-container>
+          </ng-template>
+          <ng-template colRef="status" label="Reported" let-status sort>
+            <bf-tag [ngClass]="status === 'draft'? 'active' : ''">{{ status | toLabel: 'statementStatus' }}</bf-tag>
+          </ng-template>
+          <ng-template colRef="" label="Actions" let-statement sticky>
+            <ng-container *ngIf="statement.status === 'draft'">
+              <a mat-icon-button [routerLink]="['..', 'statement', statement.id, 'notify']">
+                <mat-icon svgIcon="notifications" matTooltip="Notify Right Holder"></mat-icon>
+              </a>
+              <a mat-icon-button [routerLink]="['..', 'statement', statement.id, 'edit']">
+                <mat-icon svgIcon="edit" matTooltip="Edit Statement"></mat-icon>
+              </a>
+            </ng-container>
+            <a mat-icon-button *ngIf="statement.status === 'reported'" target="_blank" [routerLink]="['..', 'statement', statement.id]">
+              <mat-icon svgIcon="visibility" matTooltip="View Statement"></mat-icon>
+            </a>
+          </ng-template>
+        </bf-table>
+        <ng-template #noStatement>
+          <waterfall-empty-statement-card [type]="selected"></waterfall-empty-statement-card>
+        </ng-template>
+        <ng-template #noPayment>
+          <price-per-currency [price]="0 | formatPair"></price-per-currency>
+        </ng-template>
+      </section>
+
+      <section *ngIf="rightholderStatements.length > 0" class="flex-center">
+        <a mat-button [routerLink]="['// TODO #9485']">
+          <span>Add New Distributor</span>
+        </a>
+      </section>
+    </ng-container>
+  </ng-container>
+</ng-container>
+
+<ng-template #noWaterfall>
+  <waterfall-empty></waterfall-empty>
+</ng-template>
+
+<ng-template #noStatements>
+  <section class="flex-center">
+    <waterfall-empty-statement-card type="mainDistributor"></waterfall-empty-statement-card>
+    <waterfall-empty-statement-card type="salesAgent"></waterfall-empty-statement-card>
+    <waterfall-empty-statement-card type="producer" disabled></waterfall-empty-statement-card>
+  </section>
+</ng-template>

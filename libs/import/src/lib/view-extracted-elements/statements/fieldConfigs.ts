@@ -4,9 +4,9 @@ import {
   Movie,
   MovieCurrency,
   Statement,
-  StatementType,
   Territory,
-  WaterfallRightholder
+  WaterfallRightholder,
+  isProducerStatement
 } from '@blockframes/model';
 import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
 import {
@@ -97,10 +97,10 @@ export function getStatementConfig(option: StatementConfig) {
         }
         return value;
       },
-        /* d */ 'statement.rightholderId': async (value: string, data: FieldsConfig) => {
+        /* d */ 'statement.senderId': async (value: string, data: FieldsConfig) => {
         if (!value) return '';
-        const rightholderId = await getRightholderId(value, data.statement.waterfallId, waterfallService, rightholderCache);
-        return rightholderId;
+        const senderId = await getRightholderId(value, data.statement.waterfallId, waterfallService, rightholderCache);
+        return senderId;
       },
         /* e */ 'statement.duration.from': async (value: string) => {
         if (!value) throw mandatoryError(value, 'Date');
@@ -114,8 +114,7 @@ export function getStatementConfig(option: StatementConfig) {
         if (!value) throw mandatoryError(value, 'Statement type');
         const type = getKeyIfExists('statementType', value);
         if (!type) throw wrongValueError(value, 'Statement type');
-        const allowedStatementTypes: StatementType[] = ['mainDistributor', 'salesAgent', 'directSales'];
-        if (!allowedStatementTypes.includes(type)) throw wrongValueError(value, `Statement type must me one of the following "${allowedStatementTypes.join(', ')}"`);
+        if (isProducerStatement({ type })) throw wrongValueError(value, 'Invalid statement type');
         return type;
       },
         /* h */ 'incomes[].id': async (value: string) => {

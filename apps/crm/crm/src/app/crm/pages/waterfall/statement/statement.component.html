@@ -20,10 +20,11 @@
   
     <section>
       <ul *ngIf="waterfall$ | async as waterfall">
-        <li><strong>Rightholder :</strong> {{ statement.rightholderId | rightholderName: waterfall }}</li>
+        <li><strong>Rightholder :</strong> {{ statement.senderId | rightholderName: waterfall }}</li>
+        <li *ngIf="statement.type !== 'directSales'"><strong>Receiver :</strong> {{ statement.receiverId | rightholderName: waterfall }}</li>
         <li><strong>From :</strong> {{ statement.duration.from | date: 'MM/dd/yyyy' }}</li>
         <li><strong>To :</strong> {{ statement.duration.to | date: 'MM/dd/yyyy' }}</li>
-        <li><strong>Contract :</strong> {{ getContractId() }}</li>
+        <li *ngIf="statement.contractId"><strong>Contract :</strong> {{ statement.contractId }}</li>
         <li><strong>Status: </strong> {{ statement.status | toLabel: 'statementStatus' }}</li>
         <li><strong>Turnover :</strong> <price-per-currency [price]="getRightholderActual('turnover')"></price-per-currency></li>
         <li><strong>Revenue :</strong> <price-per-currency [price]="getRightholderActual('revenu')"></price-per-currency></li>
@@ -135,10 +136,10 @@
       </ng-container>
     </article>
   
-    <ng-container *ngIf="getRightholderPayment() as rightholderPayment">
+    <ng-container *ngIf="statement.payments.rightholder as rightholderPayment">
       <h3>Payment</h3>
       <ul *ngIf="waterfall$ | async as waterfall">
-        <li><strong>To :</strong> {{ rightholderPayment.to | rightholderName: waterfall }}</li>
+        <li><strong>To :</strong> {{ statement.receiverId | rightholderName: waterfall }}</li>
         <li><strong>Amount :</strong> <price-per-currency [price]="toPricePerCurrency(rightholderPayment)"></price-per-currency></li>
         <li><strong>Status :</strong> {{ rightholderPayment.status | toLabel: 'paymentStatus' }}</li>
         <li><strong>Related to: </strong> {{ rightholderPayment.incomeIds | join }}</li>

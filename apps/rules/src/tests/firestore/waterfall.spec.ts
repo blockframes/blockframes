@@ -60,14 +60,14 @@ describe('Movie Owner', () => {
       await assertFails(ref.update({ id: 'B002' }));
     });
 
-    test('Should not be able to read block document', async () => {
+    test('Should be able to read block document', async () => {
       const ref = db.doc('waterfall/M001/blocks/B001');
-      await assertFails(ref.get());
+      await assertSucceeds(ref.get());
     });
 
-    test('Should not be able to list block documents', async () => {
+    test('Should be able to list block documents', async () => {
       const ref = db.collection('waterfall/M001/blocks');
-      await assertFails(ref.get());
+      await assertSucceeds(ref.get());
     });
   });
 
@@ -328,14 +328,14 @@ describe('User that is linked to waterfall but not admin', () => {
       await assertFails(ref.update({ id: 'B001', actions: { 1: { name: 'init' } } }));
     });
 
-    test('Should not be able to read block document', async () => {
+    test('Should be able to read block document', async () => {
       const ref = db.doc('waterfall/MI-0d7/blocks/B001');
-      await assertFails(ref.get());
+      await assertSucceeds(ref.get());
     });
 
-    test('Should not be able to list block documents', async () => {
+    test('Should be able to list block documents', async () => {
       const ref = db.collection('waterfall/MI-0d7/blocks');
-      await assertFails(ref.get());
+      await assertSucceeds(ref.get());
     });
   });
 
@@ -527,14 +527,14 @@ describe('User that is linked to waterfall but not admin', () => {
     });
 
     describe('Statements', () => {
-      test('Should not be able to create statement if missing rightholderId', async () => {
+      test('Should not be able to create statement if missing senderId', async () => {
         const ref = db.doc('waterfall/MI-0d7/statements/S00X');
         await assertFails(ref.set({ id: 'S00X', foo: 'bar' }));
       });
 
-      test('Should be able to create statement if orgId can manage rightholderId', async () => {
+      test('Should be able to create statement if orgId can manage senderId', async () => {
         const ref = db.doc('waterfall/MI-0d7/statements/S00X');
-        await assertSucceeds(ref.set({ id: 'S00X', rightholderId: 'RH002' }));
+        await assertSucceeds(ref.set({ id: 'S00X', senderId: 'RH002' }));
       });
 
       test('Should not be able to update statements if orgId can not manage rightholder', async () => {
@@ -553,7 +553,7 @@ describe('User that is linked to waterfall but not admin', () => {
       });
 
       test('Should be able to query statements documents for rightholders org can manage', async () => {
-        const ref = db.collection('waterfall/MI-0d7/statements').where('rightholderId', '==', 'RH002');
+        const ref = db.collection('waterfall/MI-0d7/statements').where('senderId', '==', 'RH002');
         await assertSucceeds(ref.get());
       });
 
@@ -584,14 +584,14 @@ describe('User that is linked to waterfall but not admin', () => {
         await assertFails(ref.update({ id: 'R001', foo: 'bar' }));
       });
 
-      test('Should not be able to read rights', async () => {
+      test('Should be able to read rights', async () => {
         const ref = db.doc('waterfall/MI-0d7/rights/R001');
-        await assertFails(ref.get());
+        await assertSucceeds(ref.get());
       });
 
-      test('Should not be able to list rights', async () => {
+      test('Should be able to list rights', async () => {
         const ref = db.collection('waterfall/MI-0d7/rights');
-        await assertFails(ref.get());
+        await assertSucceeds(ref.get());
       });
     });
 
@@ -725,7 +725,7 @@ describe('User that is linked to waterfall with admin level', () => {
   });
 
   describe('Statements', () => {
-    test('Should be able to create statement if missing rightholderId', async () => {
+    test('Should be able to create statement if missing senderId', async () => {
       const ref = db.doc('waterfall/WF-001/statements/S00X');
       await assertSucceeds(ref.set({ id: 'S00X', foo: 'bar' }));
     });

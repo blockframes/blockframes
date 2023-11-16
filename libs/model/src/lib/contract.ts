@@ -162,6 +162,37 @@ export function getContractDurationStatus(contract: BaseContract): 'future' | 'p
   return 'ongoing';
 }
 
+/**
+ * Returns the current contracts where one or two parties are involved
+ * @param parties
+ * @param _contracts 
+ * @param date 
+ * @param excludedIds
+ * @returns 
+ */
+export function getContractsWith<T extends BaseContract>(parties: string[], _contracts: T[], date = new Date()) {
+  const filteredContracts = _contracts.filter(c => !c.rootId);
+  const contracts = filteredContracts.map(c => getCurrentContract<T>(getContractAndAmendments<T>(c.id, filteredContracts), date));
+  return contracts
+    .filter(c => !!c) // Remove contracts that are not active for the given date
+    .filter(contract => {
+      if (parties.length === 1) return contract.buyerId === parties[0] || contract.sellerId === parties[0];
+      const contractParties = [contract.buyerId, contract.sellerId];
+      return contractParties.includes(parties[0]) && contractParties.includes(parties[1]);
+    });
+}
+
+/**
+ * Return true if there is at least one current contract where one or two parties are involved
+ * @param parties 
+ * @param _contracts 
+ * @param date 
+ * @returns 
+ */
+export function hasContractWith<T extends BaseContract>(parties: string[], _contracts: T[], date = new Date()) {
+  return getContractsWith<T>(parties, _contracts, date).length > 0;
+}
+
 // ----------------------------
 //    AMENDMENTS MANAGEMENT  //
 // ----------------------------

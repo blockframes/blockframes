@@ -7,7 +7,9 @@ import {
   createIncome,
   isDistributorStatement,
   createExpense,
-  isDirectSalesStatement
+  isDirectSalesStatement,
+  convertDocumentTo,
+  WaterfallContract
 } from '@blockframes/model';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getStatementConfig } from './fieldConfigs';
@@ -16,6 +18,7 @@ import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 import { IncomeService } from '@blockframes/contract/income/service';
 import { ExpenseService } from '@blockframes/contract/expense/service';
+import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 
 export interface FormatConfig {
   app: App;
@@ -28,6 +31,7 @@ export async function formatStatement(
   statementService: StatementService,
   incomeService: IncomeService,
   expenseService: ExpenseService,
+  waterfallDocumentsService: WaterfallDocumentsService,
   userOrgId: string,
 ) {
   const statements: StatementsImportState[] = [];
@@ -58,7 +62,15 @@ export async function formatStatement(
 
     const statement = createStatement(data.statement);
 
-    if (!isDirectSalesStatement(statement)) statement.contractId = data.contractId;
+    if (!isDirectSalesStatement(statement)) {
+      const document = await waterfallDocumentsService.getValue(data.contractId, { waterfallId: statement.waterfallId });
+      const contract = convertDocumentTo<WaterfallContract>(document);
+      const otherParty = contract.sellerId === statement.senderId ? contract.buyerId : contract.sellerId;
+      statement.receiverId = otherParty;
+      statement.contractId = data.contractId;
+    } else {
+      statement.receiverId = statement.senderId;
+    };
 
     const incomes = data.incomes.filter(i => i.price && i.currency).map(i => {
       const { territories_included, territories_excluded } = i;
@@ -98,7 +110,7 @@ export async function formatStatement(
       const expense = createExpense({ ...e });
       if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) statement.expenseIds.push(expense.id);
       expense.contractId = isDistributorStatement(statement) ? statement.contractId : undefined;
-      expense.rightholderId = statement.rightholderId;
+      expense.rightholderId = statement.senderId;
       expense.date = statement.duration.to;
       expense.titleId = statement.waterfallId;
 

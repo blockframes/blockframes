@@ -1,7 +1,5 @@
 import { CallableContext } from 'firebase-functions/lib/common/providers/https';
-import * as admin from 'firebase-admin';
 import {
-  Block,
   PublicUser,
   Right,
   Statement,
@@ -14,38 +12,13 @@ import {
   isDirectSalesStatement,
   isDistributorStatement
 } from '@blockframes/model';
-import { waterfall } from '@blockframes/waterfall/main';
-import { getDocument, getCollection, getDocumentSnap, toDate } from '@blockframes/firebase-utils/firebase-utils';
+import { getDocument, getCollection, getDocumentSnap } from '@blockframes/firebase-utils/firebase-utils';
 import { BlockframesChange, BlockframesSnapshot, removeAllSubcollections } from '@blockframes/firebase-utils';
 import { difference } from 'lodash';
 import { cleanRelatedContractDocuments } from './contracts';
 import { db } from './internals/firebase';
 import { EventContext } from 'firebase-functions';
 import { cleanWaterfallMedias } from './media';
-
-export async function buildWaterfall(data: { waterfallId: string, versionId: string }) {
-  if (!data.waterfallId) throw new Error('Missing waterfallId in request');
-
-  const db = admin.firestore();
-
-  const waterfallSnap = await db.collection('waterfall').doc(data.waterfallId).get();
-  if (!waterfallSnap.exists) throw new Error(`Invalid waterfallId ${data.waterfallId}`);
-  const waterfallDoc = toDate<Waterfall>(waterfallSnap.data());
-
-  const blocksSnap = await db.collection('waterfall').doc(data.waterfallId).collection('blocks').get();
-  const blocks = blocksSnap.docs.map(d => toDate<Block>(d.data()));
-
-  const version = waterfallDoc.versions.find(v => v.id === data.versionId);
-  if (!version) throw new Error(`Invalid versionId ${data.versionId}`);
-
-  const versionBlocks = version.blockIds.map(blockId => {
-    const block = blocks.find(b => b.id === blockId);
-    if (!block) throw new Error(`${blockId} not found`);
-    return block;
-  });
-
-  return JSON.stringify({ waterfall: waterfall(data.waterfallId, versionBlocks), version });
-}
 
 export async function onWaterfallUpdate(change: BlockframesChange<Waterfall>) {
   const before = change.before.data();

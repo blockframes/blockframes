@@ -1,10 +1,10 @@
 <section fxLayout="column" *ngIf="waterfall$ | async">
-  <header fxLayout="column" bgAsset="header-dashboard-background.png">
+  <header fxLayout="column" [bgAsset]="!lite ? 'header-dashboard-background.png' : ''">
     <a mat-icon-button (click)="goBack()">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
-    <section fxLayout fxLayout.lt-md="column" fxLayoutGap="16px">
-      <ng-container *ngIf="movie$ | async as movie">
+    <section *ngIf="movie$ | async as movie" fxLayout fxLayout.lt-md="column" fxLayoutGap="16px">
+      <ng-container *ngIf="!lite">
         <section fxLayout fxLayoutGap="16px" fxFlex>
           <img fxHide.xs [ref]="movie.poster" asset="empty_poster.svg" alt="movie poster">
           <article fxLayout="column" fxFlex>
@@ -24,7 +24,7 @@
     </section>
   </header>
 
-  <nav mat-tab-nav-bar>
+  <nav mat-tab-nav-bar *ngIf="!lite">
     <a mat-tab-link *ngFor="let link of routes" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
       [active]="rla.isActive">
       {{link.label}}
