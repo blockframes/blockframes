@@ -5,7 +5,6 @@ import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.co
 import { MatDialog } from '@angular/material/dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { firstValueFrom } from 'rxjs';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 
 @Component({
@@ -26,7 +25,7 @@ export class SourcesComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.rights =await firstValueFrom(this.shell.rights$);
+    this.rights = await this.shell.rights();
   }
 
   public openTerritoryModal(territories: Territory[]) {

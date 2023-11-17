@@ -85,11 +85,11 @@ export class StatementsComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.state = await firstValueFrom(this.shell.state$);
-    this.rights = await firstValueFrom(this.shell.rights$);
-    this.statements = await firstValueFrom(this.shell.statements$);
+    this.rights = await this.shell.rights();
+    this.statements = await this.shell.statements();
     this.statementSender = await firstValueFrom(this.shell.currentRightholder$);
-    this.contracts = await firstValueFrom(this.shell.contracts$);
-    this.incomes = await firstValueFrom(this.shell.incomes$);
+    this.contracts = await this.shell.contracts();
+    this.incomes = await this.shell.incomes();
     this.statementTypes = Object.entries(statementsRolesMapping).map(([key, value]: [StatementType, StatementRolesConfig]) => (
       {
         selected: false,

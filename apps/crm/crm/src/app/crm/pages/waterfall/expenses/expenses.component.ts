@@ -8,7 +8,6 @@ import {
   getCurrentContract,
 } from '@blockframes/model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { firstValueFrom } from 'rxjs';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 
 @Component({
@@ -29,7 +28,7 @@ export class ExpensesComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.contracts = await firstValueFrom(this.shell.contracts$);
+    this.contracts = await this.shell.contracts();
   }
 
   public getCurrentContract(item: { contractId: string, date: Date }) {

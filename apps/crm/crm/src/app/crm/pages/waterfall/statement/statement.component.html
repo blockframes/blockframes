@@ -5,8 +5,7 @@
 </ng-container>
 <ng-template #showStatement>
   <ng-container *ngIf="statement">
-    <h3>{{ statement.type | toLabel: 'statementType' }} Statement - {{ statement.id }}</h3>
-  
+    <waterfall-statement-header *ngIf="sources" [statement]="statement" [sources]="sources"></waterfall-statement-header>
     <ng-container *ngIf="waterfall$ | async as waterfall">
       <section *ngIf="waterfall.versions.length">
         <mat-form-field appearance="fill">
@@ -21,10 +20,7 @@
     
       <section>
         <ul>
-          <li><strong>Rightholder :</strong> {{ statement.senderId | rightholderName: waterfall }}</li>
           <li *ngIf="statement.type !== 'directSales'"><strong>Receiver :</strong> {{ statement.receiverId | rightholderName: waterfall }}</li>
-          <li><strong>From :</strong> {{ statement.duration.from | date: 'MM/dd/yyyy' }}</li>
-          <li><strong>To :</strong> {{ statement.duration.to | date: 'MM/dd/yyyy' }}</li>
           <li *ngIf="statement.contractId"><strong>Contract :</strong> {{ statement.contractId }}</li>
           <li><strong>Status: </strong> {{ statement.status | toLabel: 'statementStatus' }}</li>
           <li><strong>Turnover :</strong> <price-per-currency [price]="getRightholderActual('turnover')"></price-per-currency></li>

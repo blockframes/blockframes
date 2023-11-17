@@ -78,10 +78,10 @@ export class DashboardComponent implements OnInit {
     this.shell.setDate(undefined);
 
     this.waterfall = this.shell.waterfall;
-    this.statements = await firstValueFrom(this.shell.statements$);
-    this.contracts = await firstValueFrom(this.shell.contracts$);
-    this.rights = await firstValueFrom(this.shell.rights$);
-    this.incomes = await firstValueFrom(this.shell.incomes$);
+    this.statements = await this.shell.statements();
+    this.contracts = await this.shell.contracts();
+    this.rights = await this.shell.rights();
+    this.incomes = await this.shell.incomes();
     const versionBlocks = await firstValueFrom(this.shell.versionBlocks$);
 
     this.snackBar.open('Waterfall is loading. Please wait', 'close', { duration: 5000 });

@@ -60,7 +60,7 @@ export class StatementComponent implements OnInit {
   public waterfall$ = this.shell.waterfall$;
   private waterfall = this.shell.waterfall;
   public incomes: Income[] = [];
-  private sources: WaterfallSource[];
+  public sources: WaterfallSource[];
   public expenses: Expense[] = [];
   public rights: Right[] = [];
   public rightDetails: RightDetails[][] = [];
@@ -100,13 +100,13 @@ export class StatementComponent implements OnInit {
   ngOnInit() { return this.switchToVersion(); }
 
   public async switchToVersion(_versionId?: string) {
-    this.allRights = await firstValueFrom(this.shell.rights$);
+    this.allRights = await this.shell.rights();
     const statement = await firstValueFrom(this.statement$);
-    const _incomes = await this.incomeService.getValue([where('titleId', '==', this.waterfall.id)]);
-    const incomes = _incomes.filter(i => statement.incomeIds.includes(i.id));
+    const incomes = await this.shell.incomes(statement.incomeIds);
 
     if (isDistributorStatement(statement) || isProducerStatement(statement)) {
-      this.contract = await firstValueFrom(this.contract$);
+      const _contracts = await this.shell.contracts([statement.contractId]);
+      this.contract = _contracts[0];
       if (!this.contract) {
         this.snackBar.open(`Contract "${statement.contractId}" not found in waterfall.`, 'close', { duration: 5000 });
         return;

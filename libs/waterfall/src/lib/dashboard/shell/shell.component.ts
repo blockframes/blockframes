@@ -171,11 +171,13 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
 
   // Blocks used for the current version of the state
   public versionBlocks$ = combineLatest([this.versionId$, this.waterfall$, this.blocks$]).pipe(
+    filter(([versionId, waterfall, blocks]) => versionId && !!waterfall.versions.length && !!blocks.length),
     map(([versionId, waterfall, blocks]) => {
       const version = waterfall.versions.find(v => v.id === versionId);
       const blockIds = version.blockIds || [];
       return blockIds.map(id => blocks.find(b => b.id === id));
     }),
+    filter(blocks => !blocks.some(b => !b))
   );
 
   public actions$: Observable<(Action & { block: Block })[]> = this.versionBlocks$.pipe(
@@ -225,19 +227,13 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   }
 
   private async loadData(): Promise<WaterfallData> {
-    const waterfallId = this.waterfall.id;
-    // TODO #9520 this.versionId$ should be used to fetch correct data
-    // const versionId = await firstValueFrom(this.versionId$);
-    const documents = await this.waterfallDocumentService.getValue({ waterfallId });
-    const contracts = documents.filter(d => isContract(d)).map(c => convertDocumentTo<WaterfallContract>(c));
-    // TODO #9520 rights should be fitered by the current version this.versionId$
-    const rights = await this.rightService.getValue({ waterfallId });
-    // TODO #9520 incomes should be fitered by the current version this.versionId$
-    const incomes = await this.incomeService.getValue([where('titleId', '==', waterfallId)]);
-    // TODO #9520 expenses should be fitered by the current version this.versionId$
-    const expenses = await this.expenseService.getValue([where('titleId', '==', waterfallId)]);
-    const statements = await this.statementService.getValue({ waterfallId });
-    const terms = await this.termService.getValue([where('titleId', '==', waterfallId)]);
+    const versionId = await firstValueFrom(this.versionId$);
+    const contracts = await this.contracts();
+    const rights = await this.rights(versionId);
+    const incomes = await this.incomes([], versionId);
+    const expenses = await this.expenses(versionId);
+    const statements = await this.statements();
+    const terms = await this.terms();
 
     return {
       waterfall: this.waterfall,
@@ -246,8 +242,39 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
       incomes,
       expenses,
       statements,
-      terms,
+      terms
     };
+  }
+
+  async contracts(ids: string[] = []) {
+    const params = { waterfallId: this.waterfall.id };
+    const contracts = ids.length ?
+      await this.waterfallDocumentService.getValue(ids, params) :
+      await this.waterfallDocumentService.getValue([where('type', '==', 'contract')], params);
+    return contracts.filter(d => isContract(d)).map(c => convertDocumentTo<WaterfallContract>(c));
+  }
+
+  rights(versionId?: string) {
+    // TODO #9520 rights should be fitered by the current version this.versionId$
+    return this.rightService.getValue({ waterfallId: this.waterfall.id });
+  }
+
+  incomes(ids: string[] = [], versionId?: string) {
+    // TODO #9520 incomes should be fitered by the current version this.versionId$
+    return ids.length ? this.incomeService.getValue(ids) : this.incomeService.getValue([where('titleId', '==', this.waterfall.id)]);
+  }
+
+  statements() {
+    return this.statementService.getValue({ waterfallId: this.waterfall.id });
+  }
+
+  expenses(versionId?: string) {
+    // TODO #9520 expenses should be fitered by the current version this.versionId$
+    return this.expenseService.getValue([where('titleId', '==', this.waterfall.id)]);
+  }
+
+  terms() {
+    return this.termService.getValue([where('titleId', '==', this.waterfall.id)]);
   }
 
   setVersionId(versionId: string) {
