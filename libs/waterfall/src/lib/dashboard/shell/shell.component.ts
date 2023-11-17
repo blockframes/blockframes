@@ -59,6 +59,9 @@ export class WaterfallCtaDirective { }
 export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   private countRouteEvents = 1;
+  private versionId$ = new BehaviorSubject<string>(undefined);
+  private date$ = new BehaviorSubject<Date>(undefined);
+  public isRefreshing$ = new BehaviorSubject<boolean>(false);
 
   public movie$ = this.route.params.pipe(
     pluck('movieId'),
@@ -146,27 +149,6 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     switchMap(({ id: waterfallId }) => this.rightService.valueChanges({ waterfallId }))
   );
 
-  public blocks$ = this.movie$.pipe(
-    switchMap(({ id: waterfallId }) => this.blockService.valueChanges({ waterfallId }))
-  );
-
-  private data$: Observable<WaterfallData> = combineLatest([
-    this.waterfall$, this.documents$, this.rights$, this.incomes$,
-    this.expenses$, this.statements$, this.blocks$, this.terms$
-  ]).pipe(
-    map(([waterfall, documents, rights, incomes, expenses, statements, blocks, terms]) => ({
-      waterfall,
-      documents,
-      contracts: documents.filter(d => isContract(d)).map(c => convertDocumentTo<WaterfallContract>(c)),
-      rights,
-      incomes,
-      expenses,
-      statements,
-      blocks,
-      terms,
-    }))
-  );
-
   public hasMinimalRights$ = combineLatest([this.waterfall$, this.rights$]).pipe(
     map(([waterfall, rights]) => {
       if (!waterfall.sources.length) return false;
@@ -183,13 +165,20 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     })
   );
 
-  private versionId$ = new BehaviorSubject<string>(undefined);
-  private date$ = new BehaviorSubject<Date>(undefined);
-  public isRefreshing$ = new BehaviorSubject<boolean>(false);
+  private blocks$ = this.movie$.pipe(
+    switchMap(({ id: waterfallId }) => this.blockService.valueChanges({ waterfallId }))
+  );
 
-  public actions$: Observable<(Action & { block: Block })[]> = this.versionId$.pipe(
-    switchMap(versionId => this.waterfall$.pipe(map(v => v.versions.find(v => v.id === versionId)?.blockIds || []))),
-    switchMap(blockIds => this.blocks$.pipe(map(blocks => blocks.filter(b => blockIds.includes(b.id))))),
+  // Blocks used for the current version of the state
+  public versionBlocks$ = combineLatest([this.versionId$, this.waterfall$, this.blocks$]).pipe(
+    map(([versionId, waterfall, blocks]) => {
+      const version = waterfall.versions.find(v => v.id === versionId);
+      const blockIds = version.blockIds || [];
+      return blockIds.map(id => blocks.find(b => b.id === id));
+    }),
+  );
+
+  public actions$: Observable<(Action & { block: Block })[]> = this.versionBlocks$.pipe(
     map(blocks => blocks.map(b => Object.values(b.actions).map(a => ({ ...a, block: b }))).flat()),
   );
 
@@ -205,7 +194,6 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
 
   private _simulation$ = new BehaviorSubject<WaterfallState>(undefined);
   public simulation$ = this._simulation$.asObservable().pipe(filter(state => !!state));
-  private simulationData: WaterfallData;
 
   @Input() routes: RouteDescription[];
   @Input() editRoute?: string | string[];
@@ -236,6 +224,32 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
       .subscribe(() => this.countRouteEvents++);
   }
 
+  private async loadData(): Promise<WaterfallData> {
+    const waterfallId = this.waterfall.id;
+    // TODO #9520 this.versionId$ should be used to fetch correct data
+    // const versionId = await firstValueFrom(this.versionId$);
+    const documents = await this.waterfallDocumentService.getValue({ waterfallId });
+    const contracts = documents.filter(d => isContract(d)).map(c => convertDocumentTo<WaterfallContract>(c));
+    // TODO #9520 rights should be fitered by the current version this.versionId$
+    const rights = await this.rightService.getValue({ waterfallId });
+    // TODO #9520 incomes should be fitered by the current version this.versionId$
+    const incomes = await this.incomeService.getValue([where('titleId', '==', waterfallId)]);
+    // TODO #9520 expenses should be fitered by the current version this.versionId$
+    const expenses = await this.expenseService.getValue([where('titleId', '==', waterfallId)]);
+    const statements = await this.statementService.getValue({ waterfallId });
+    const terms = await this.termService.getValue([where('titleId', '==', waterfallId)]);
+
+    return {
+      waterfall: this.waterfall,
+      contracts,
+      rights,
+      incomes,
+      expenses,
+      statements,
+      terms,
+    };
+  }
+
   setVersionId(versionId: string) {
     this.versionId$.next(versionId);
   }
@@ -246,11 +260,12 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
 
   async initWaterfall(version: Partial<Version> = { id: `version_${this.waterfall.versions.length + 1}`, description: `Version ${this.waterfall.versions.length + 1}` }) {
     const canBypassRules = await firstValueFrom(this.canBypassRules$);
-    if(!canBypassRules) throw new Error('You are not allowed to create waterfall');
+    if (!canBypassRules) throw new Error('You are not allowed to create waterfall');
     this.snackBar.open(`Creating version "${version.id}"... Please wait`, 'close');
     this.isRefreshing$.next(true);
-    const data = await firstValueFrom(this.data$);
+    const data = await this.loadData();
     const waterfall = await this.waterfallService.initWaterfall(data, version);
+    this.setVersionId(version.id);
     this.isRefreshing$.next(false);
     this.snackBar.open(`Version "${version.id}" initialized !`, 'close', { duration: 5000 });
     return waterfall;
@@ -258,25 +273,26 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
 
   async removeVersion(versionId: string) {
     const canBypassRules = await firstValueFrom(this.canBypassRules$);
-    if(!canBypassRules) throw new Error('You are not allowed to remove waterfall');
-    const data = await firstValueFrom(this.data$);
+    if (!canBypassRules) throw new Error('You are not allowed to remove waterfall');
+    const data = await this.loadData();
     return this.waterfallService.removeVersion(data, versionId);
   }
 
   async duplicateVersion(versionId: string) {
     const canBypassRules = await firstValueFrom(this.canBypassRules$);
-    if(!canBypassRules) throw new Error('You are not allowed to duplicate waterfall');
+    if (!canBypassRules) throw new Error('You are not allowed to duplicate waterfall');
     const waterfall = await firstValueFrom(this.waterfall$);
     const blocks = await firstValueFrom(this.blocks$);
     return this.waterfallService.duplicateVersion(waterfall, blocks, versionId);
   }
 
-  async refreshWaterfall(versionId: string) {
+  async refreshWaterfall(_versionId?: string) {
     const canBypassRules = await firstValueFrom(this.canBypassRules$);
-    if(!canBypassRules) throw new Error('You are not allowed to refresh waterfall');
+    if (!canBypassRules) throw new Error('You are not allowed to refresh waterfall');
     this.isRefreshing$.next(true);
-    const data = await firstValueFrom(this.data$);
-    const waterfall = await this.waterfallService.refreshWaterfall(data, versionId);
+    const data = await this.loadData();
+    const versionId = _versionId || await firstValueFrom(this.versionId$);
+    const waterfall = versionId ? await this.waterfallService.refreshWaterfall(data, versionId) : await this.initWaterfall();
     this.isRefreshing$.next(false);
     return waterfall;
   }
@@ -287,16 +303,19 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
    * @param expenses 
    * @param statements 
    */
-  async simulateWaterfall(append?: { incomes?: Income[], expenses?: Expense[], statements?: Statement[] }) {
+  async simulateWaterfall(append: { incomes?: Income[], expenses?: Expense[], statements?: Statement[] } = { incomes: [], expenses: [], statements: [] }) {
     this.isRefreshing$.next(true);
-    if (!this.simulationData) this.simulationData = await firstValueFrom(this.data$);
-    if (append?.incomes) this.simulationData.incomes.push(...append.incomes);
-    if (append?.expenses) this.simulationData.expenses.push(...append.expenses);
-    if (append?.statements) this.simulationData.statements.push(...append.statements);
+    const data = await this.loadData();
     const date = await firstValueFrom(this.date$);
-    const waterfall = await this.waterfallService.simulateWaterfall(this.simulationData, date);
+    const waterfall = await this.waterfallService.simulateWaterfall({
+      ...data,
+      incomes: [...data.incomes, ...append.incomes || []],
+      expenses: [...data.expenses, ...append.expenses || []],
+      statements: [...data.statements, ...append.statements || []]
+    }, date);
     this._simulation$.next(waterfall);
     this.isRefreshing$.next(false);
+    return waterfall;
   }
 
   ngOnDestroy() {
