@@ -321,6 +321,8 @@ export const onWaterfallDocumentDeleteEvent = onDocumentDelete('waterfall/{water
  */
 export const onWaterfallStatementDeleteEvent = onDocumentDelete('waterfall/{waterfallID}/statements/{statementID}', onWaterfallStatementDelete);
 
+// TODO #9485 on onWaterfallStatementUpdateEvent remove expenses & incomes that are not in the statement anymore
+
 /**
  * Trigger: when a waterfallRight is deleted
  */

@@ -82,13 +82,12 @@ export class DashboardComponent implements OnInit {
     this.contracts = await firstValueFrom(this.shell.contracts$);
     this.rights = await firstValueFrom(this.shell.rights$);
     this.incomes = await firstValueFrom(this.shell.incomes$);
-    const blocks = await firstValueFrom(this.shell.blocks$);
+    const versionBlocks = await firstValueFrom(this.shell.versionBlocks$);
 
     this.snackBar.open('Waterfall is loading. Please wait', 'close', { duration: 5000 });
     this.state = await firstValueFrom(this.shell.state$);
     this.history = this.state.waterfall.history;
     this.version = this.state.version;
-    const versionBlocks = this.version.blockIds.map(id => blocks.find(b => b.id === id));
     this.statementBlocks = versionBlocks.filter(b => this.statements.find(s => s.duration.to.getTime() === b.timestamp));
     if (this.statementBlocks.length) {
       this.currentBlock = this.statementBlocks[this.statementBlocks.length - 1].id;
