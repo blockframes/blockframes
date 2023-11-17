@@ -29,6 +29,9 @@
         <price-per-currency [price]="amount"></price-per-currency>
       </ng-container>
     </ng-template>
+    <ng-template colRef="status" label="Status" let-status sort>
+      {{ status | toLabel: 'paymentStatus' }}
+    </ng-template>
     <ng-template colRef="" label="Action" let-expense sticky>
       <button mat-icon-button (click)="removeExpenses([expense])">
         <mat-icon svgIcon="delete" matTooltip="Delete expense"></mat-icon>

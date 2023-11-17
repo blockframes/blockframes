@@ -14,6 +14,7 @@ import {
   createSourceState,
   createPoolState,
   ContractState,
+  createExpenseState,
 } from './state';
 import { getMinThreshold } from './threshold';
 import { assertNode, getChildRights, getGroup, getNode, getNodeOrg, isGroupChild, isRight, updateNode } from './node';
@@ -310,7 +311,7 @@ export function sourcesToAction(waterfallSources: WaterfallSource[]) {
 export function incomesToActions(contracts: WaterfallContract[], incomes: Income[], sources: WaterfallSource[]) {
   const actions: Action[] = [];
 
-  incomes.forEach(i => {
+  for (const i of incomes.filter(i => i.status === 'received')) {
     const contractAndAmendments = getContractAndAmendments(i.contractId, contracts);
     // On waterfall side, the root contract is updated (updateContract), so we need to specify this one.
     const rootContract = contractAndAmendments.find(c => !c.rootId);
@@ -330,7 +331,7 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
         medias: i.medias
       })
     );
-  });
+  };
 
   return actions;
 }
@@ -338,17 +339,18 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
 export function expensesToActions(expenses: Expense[]) {
   const actions: Action[] = [];
 
-  expenses.forEach(e => {
+  for (const e of expenses.filter(e => e.status === 'received')) {
     const { [mainCurrency]: amount } = convertCurrenciesTo({ [e.currency]: e.price }, mainCurrency);
     actions.push(
       action('expense', {
+        id: e.id,
         orgId: e.rightholderId,
         amount,
         type: e.type,
         date: e.date
       })
     );
-  });
+  };
 
   return actions;
 }
@@ -586,15 +588,20 @@ function invest(state: TitleState, payload: Investment) {
 }
 
 interface ExpenseAction extends BaseAction {
+  id: string;
   orgId: OrgState['id'];
+  date: Date;
   amount: number;
   type: string;
 }
 function expense(state: TitleState, payload: ExpenseAction) {
-  const { amount, orgId, type } = payload;
+  const { id, amount, orgId, type } = payload;
 
   state.expense[type] ||= 0;
   state.expense[type] += amount;
+
+  if (state.expenses[id]) throw new Error(`Expense "${id}" already exists`);
+  state.expenses[id] = createExpenseState(payload);
 
   state.orgs[orgId] ||= createOrg({ id: orgId });
   state.orgs[orgId].expense += amount;

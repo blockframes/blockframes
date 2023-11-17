@@ -171,14 +171,31 @@ export const createPoolState = (pool: Partial<PoolState>): PoolState => ({
 
 export interface IncomeState {
   id: string;
-  date?: Date;
-  from?: string;
+  date?: Date; // TODO #9336 : once fixtures are removed, this should be required (remove "?")
+  from?: string; // TODO #9336 : once fixtures are removed, this should be required (remove "?")
   to: string;
   amount: number;
   territories: Territory[];
   medias: Media[];
   isCompensation?: boolean;
   contractId?: string;
+}
+
+interface ExpenseState {
+  id: string;
+  orgId: string;
+  date: Date;
+  amount: number;
+  type: string;
+}
+export function createExpenseState(expense: Partial<ExpenseState> & { id: string }): ExpenseState {
+  return {
+    orgId: '',
+    date: new Date(),
+    type: '',
+    amount: 0,
+    ...expense
+  }
 }
 
 type PaymentState = PaymentAction;
@@ -191,7 +208,7 @@ export interface ContractState {
   start?: Date;
   end?: Date;
 }
-export function createContractState(contract: Partial<ContractState> & { id: string }) {
+export function createContractState(contract: Partial<ContractState> & { id: string }): ContractState {
   return {
     amount: 0,
     paid: 0,
@@ -273,6 +290,9 @@ export interface TitleState {
   incomes: {
     [id: string]: IncomeState;
   }
+  expenses: {
+    [id: string]: ExpenseState;
+  }
   contracts: {
     [id: string]: ContractState;
   }
@@ -319,6 +339,7 @@ export const createTitleState = (id: string): TitleState => ({
   declarations: {},
   transfers: {},
   incomes: {},
+  expenses: {},
   contracts: {},
   events: {},
   onEvents: {},

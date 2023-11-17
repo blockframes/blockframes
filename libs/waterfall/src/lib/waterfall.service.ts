@@ -25,7 +25,6 @@ import {
   Expense,
   Statement,
   Block,
-  WaterfallDocument,
   investmentsToActions,
   buildBlock,
   sourcesToAction
@@ -48,14 +47,12 @@ export interface WaterfallState {
 
 export interface WaterfallData {
   waterfall: Waterfall;
-  documents: WaterfallDocument[];
   contracts: WaterfallContract[];
   terms: Term[];
   rights: Right[];
   incomes: Income[];
   expenses: Expense[];
   statements: Statement[];
-  blocks: Block[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -172,7 +169,6 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
   public async removeVersion(data: WaterfallData, versionId: string) {
     const blockIds = data.waterfall.versions.find(v => v.id === versionId).blockIds;
     data.waterfall.versions = data.waterfall.versions.filter(v => v.id !== versionId);
-    data.blocks = data.blocks.filter(b => !blockIds.includes(b.id));
     await this.update(data.waterfall);
     return this.blockService.remove(blockIds, { params: { waterfallId: data.waterfall.id } });
   }
@@ -264,13 +260,13 @@ function waterfallToDate(build: WaterfallState, date?: Date) {
 }
 
 function groupActions(data: WaterfallData, isSimulation = false) {
-  // TODO #9485 this may be activated for real waterfall also (generate bad display for graph generated with G6 but not with new one)
+  // @dev "sourcesToAction" may be activated for real waterfall also (generate bad display for graph generated with G6 but not with new one)
   const sourceActions = isSimulation ? sourcesToAction(data.waterfall.sources) : [];
   const contractActions = contractsToActions(data.contracts, data.terms);
   const investmentActions = investmentsToActions(data.contracts, data.terms);
   const rightActions = rightsToActions(data.rights);
-  const incomeActions = incomesToActions(data.contracts, data.incomes, data.waterfall.sources); // TODO #9485 only if statement is reported
-  const expenseActions = expensesToActions(data.expenses); // TODO #9485 only if statement is reported
+  const incomeActions = incomesToActions(data.contracts, data.incomes, data.waterfall.sources);
+  const expenseActions = expensesToActions(data.expenses);
   const paymentActions = statementsToActions(data.statements);
 
   const groupedActions = groupByDate([

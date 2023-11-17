@@ -88,7 +88,7 @@ export async function formatStatement(
         delete i.salesContractId;
       }
 
-      const income = createIncome({ ...i, territories, status: 'received' });
+      const income = createIncome({ ...i, territories });
 
       statement.incomeIds.push(income.id);
 

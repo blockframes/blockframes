@@ -5,7 +5,7 @@
       <span>Remove all incomes</span>
     </button>
   </section>
-  <bf-table [source]="incomes" clickable useFilter pagination="50">
+  <bf-table [source]="incomes" useFilter pagination="50">
     <ng-template colRef="id" label="Id" let-id sort>
       {{ id }}
     </ng-template>
@@ -22,6 +22,9 @@
       <ng-container *ngIf="toPricePerCurrency(item) as amount">
         <price-per-currency [price]="amount"></price-per-currency>
       </ng-container>
+    </ng-template>
+    <ng-template colRef="status" label="Status" let-status sort>
+      {{ status | toLabel: 'paymentStatus' }}
     </ng-template>
     <ng-template colRef="" label="Action" let-income sticky>
       <button mat-icon-button (click)="removeIncomes([income])">

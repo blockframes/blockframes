@@ -47,7 +47,7 @@ export interface RightPayment extends Payment {
   mode: 'internal' | 'external';
   incomeIds: string[]; // Incomes related to this payment
   to: string; // rightId
-  details: { incomeId: string, amount: number }[]; // amount paid per incomeId
+  details: { incomeId: string, amount: number }[]; // amount paid per incomeId // TODO #9485 not really used ?
 }
 
 function createPaymentBase(params: Partial<Payment> = {}): Payment {
@@ -106,6 +106,7 @@ export interface Statement {
   receiverId: string, // rightholderId of statement receiver
   duration: Duration;
   incomeIds: string[];
+  expenseIds?: string[];
   payments: {
     income?: IncomePayment[];
     right: RightPayment[]
@@ -353,17 +354,13 @@ export function getStatementRights(statement: Statement, _rights: Right[]) {
 
 export function getStatementSources(statement: Statement, sources: WaterfallSource[], incomes: Income[], rights?: Right[], state?: TitleState) {
 
-  if (statement.status === 'reported') {
+  if (statement.status === 'reported' || isProducerStatement(statement)) {
     const statementIncomes = statement.incomeIds.map(id => incomes.find(i => i.id === id));
     return getIncomesSources(statementIncomes, sources);
   }
 
   let topLevelRights: Right[] = [];
-  // TODO #9485 better factorization with getStatementRights ? 
-  if (isProducerStatement(statement)) {
-    // TODO #9531 sources (incomeIds) will come from distributor statements above (created automatically)
-    /*rightholderRights = rights.filter(r => r.rightholderId === statement.receiverId && r.contractId === statement.contractId);*/
-  } else if (isDistributorStatement(statement)) {
+  if (isDistributorStatement(statement)) {
     const rightholderRights = rights.filter(r => r.rightholderId === statement.senderId && r.contractId === statement.contractId);
     topLevelRights = getTopLevelRights(rightholderRights, state);
   } else if (isDirectSalesStatement(statement)) {

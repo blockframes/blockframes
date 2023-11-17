@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { IncomesComponent } from './incomes.component';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -19,6 +20,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
     TableModule,
     PricePerCurrencyModule,
+    ToLabelModule,
 
     MatIconModule,
     MatButtonModule,
