@@ -47,7 +47,7 @@ export interface RightPayment extends Payment {
   mode: 'internal' | 'external';
   incomeIds: string[]; // Incomes related to this payment
   to: string; // rightId
-  details: { incomeId: string, amount: number }[]; // amount paid per incomeId // TODO #9485 not really used ?
+  details: { incomeId: string, amount: number }[]; // amount paid per incomeId // TODO #9524 not really used ?
 }
 
 function createPaymentBase(params: Partial<Payment> = {}): Payment {

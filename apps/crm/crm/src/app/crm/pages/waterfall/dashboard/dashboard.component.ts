@@ -18,8 +18,6 @@ import {
   createDuration,
   createProducerStatement,
   getAssociatedSource,
-  getContractAndAmendments,
-  getCurrentContract,
   getIncomesSources,
   getOutgoingStatementPrerequists,
   hasContractWith,
@@ -154,13 +152,6 @@ export class DashboardComponent implements OnInit {
 
   public getRightholder(id: string) {
     return this.waterfall.rightholders.find(r => r.id === id);
-  }
-
-  public getCurrentContract(item: Statement) { // TODO #9485 create pipe
-    const contracts = getContractAndAmendments(item.contractId, this.contracts);
-    const current = getCurrentContract(contracts, item.duration.from);
-    if (!current) return '--';
-    return current.rootId ? `${current.id} (${current.rootId})` : current.id;
   }
 
   public getPendingRevenue(rightholderId: string): PricePerCurrency {

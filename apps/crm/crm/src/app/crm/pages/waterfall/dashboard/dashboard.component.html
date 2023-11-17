@@ -63,7 +63,7 @@
         {{ type | toLabel: 'statementType' }}
       </ng-template>
       <ng-template colRef="" label="Contract Id" let-item sort>
-        {{ getCurrentContract(item) }}
+        {{ item.contractId | getCurrentContract: contracts : item.duration.from }}
       </ng-template>
       <ng-template colRef="duration.from" label="From" let-from sort defaultSort>
         {{ from | date: 'dd/MM/yyyy' }}
@@ -92,7 +92,7 @@
         {{ type | toLabel: 'statementType' }}
       </ng-template>
       <ng-template colRef="" label="Contract Id" let-item sort>
-        {{ getCurrentContract(item) }}
+        {{ item.contractId | getCurrentContract: contracts : item.duration.from }}
       </ng-template>
       <ng-template colRef="status" label="Status" let-status sort>
         {{ status | toLabel: 'statementStatus' }}

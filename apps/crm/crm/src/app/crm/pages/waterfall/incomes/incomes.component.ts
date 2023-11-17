@@ -1,13 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { IncomeService } from '@blockframes/contract/income/service';
-import {
-  Income,
-  PricePerCurrency,
-  WaterfallContract,
-  getAssociatedSource,
-  getContractAndAmendments,
-  getCurrentContract,
-} from '@blockframes/model';
+import { Income, PricePerCurrency, getAssociatedSource } from '@blockframes/model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 
@@ -17,9 +10,9 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
   styleUrls: ['./incomes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class IncomesComponent implements OnInit {
+export class IncomesComponent {
   public incomes$ = this.shell.incomes$;
-  private contracts: WaterfallContract[] = [];
+  public contracts$ = this.shell.contracts$;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
@@ -27,23 +20,12 @@ export class IncomesComponent implements OnInit {
     private snackBar: MatSnackBar
   ) { }
 
-  async ngOnInit() {
-    this.contracts = await this.shell.contracts();
-  }
-
   public getAssociatedSource(income: Income) {
     try {
       return getAssociatedSource(income, this.shell.waterfall.sources).name;
     } catch (error) {
       if (this.snackBar._openedSnackBarRef === null) this.snackBar.open(error, 'close', { duration: 5000 });
     }
-  }
-
-  public getCurrentContract(item: { contractId: string, date: Date }) {
-    const contracts = getContractAndAmendments(item.contractId, this.contracts);
-    const current = getCurrentContract(contracts, item.date);
-    if (!current) return '--';
-    return current.rootId ? `${current.id} (${current.rootId})` : current.id;
   }
 
   public toPricePerCurrency(item: Income): PricePerCurrency {

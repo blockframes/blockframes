@@ -16,7 +16,7 @@
       {{ status | toLabel: 'statementStatus' }}
     </ng-template>
     <ng-template colRef="" label="Contract Id" let-item sort>
-      {{ getCurrentContract({ contractId: item.contractId, date: item.duration.from }) }}
+      {{ item.contractId | getCurrentContract: (contracts$ | async) : item.duration.from }}
     </ng-template>
     <ng-template colRef="senderId" label="Rightholder" let-senderId sort>
       {{ senderId | rightholderName: waterfall }}
