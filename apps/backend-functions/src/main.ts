@@ -47,7 +47,8 @@ import {
   onWaterfallStatementDelete,
   onWaterfallRightDelete,
   onWaterfallUpdate,
-  removeWaterfallFile
+  removeWaterfallFile,
+  onWaterfallStatementUpdate
 } from './waterfall';
 import { projectId, storageBucket } from './environments/environment';
 
@@ -321,7 +322,10 @@ export const onWaterfallDocumentDeleteEvent = onDocumentDelete('waterfall/{water
  */
 export const onWaterfallStatementDeleteEvent = onDocumentDelete('waterfall/{waterfallID}/statements/{statementID}', onWaterfallStatementDelete);
 
-// TODO #9485 on onWaterfallStatementUpdateEvent remove expenses & incomes that are not in the statement anymore
+/**
+ * Trigger: when a waterfallStatement is updated
+ */
+export const onWaterfallStatementUpdateEvent = onDocumentUpdate('waterfall/{waterfallID}/statements/{statementID}', onWaterfallStatementUpdate);
 
 /**
  * Trigger: when a waterfallRight is deleted

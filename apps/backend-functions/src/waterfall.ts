@@ -26,7 +26,7 @@ export async function onWaterfallUpdate(change: BlockframesChange<Waterfall>) {
 
   if (!before || !after) {
     console.error('Invalid waterfall data, before:', before, 'after:', after);
-    throw new Error('waterfall update function got invalid org data');
+    throw new Error('waterfall update function got invalid data');
   }
 
   cleanWaterfallMedias(before, after);
@@ -108,6 +108,32 @@ export async function onWaterfallDocumentDelete(docSnapshot: BlockframesSnapshot
   }
 
   return true;
+}
+
+export async function onWaterfallStatementUpdate(change: BlockframesChange<Statement>) {
+  const before = change.before.data();
+  const after = change.after.data();
+
+  if (!before || !after) {
+    console.error('Invalid statement data, before:', before, 'after:', after);
+    throw new Error('Statement update function got invalid data');
+  }
+
+  const batch = db.batch();
+
+  if (isDistributorStatement(after) || isDirectSalesStatement(after)) {
+    // If incomeId is removed from distributor or direct sales statement document, we also remove income document
+    const incomeRemovedIds = difference(before.incomeIds, after.incomeIds);
+    const incomes = await Promise.all(incomeRemovedIds.map(id => getDocumentSnap(`incomes/${id}`, db)));
+    incomes.forEach(doc => batch.delete(doc.ref));
+
+    // Same for expenses
+    const expenseRemovedIds = difference(before.expenseIds, after.expenseIds);
+    const expenses = await Promise.all(expenseRemovedIds.map(id => getDocumentSnap(`expenses/${id}`, db)));
+    expenses.forEach(doc => batch.delete(doc.ref));
+  }
+
+  return batch.commit();
 }
 
 export async function onWaterfallStatementDelete(docSnapshot: BlockframesSnapshot<Statement>) {
