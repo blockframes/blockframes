@@ -5,58 +5,79 @@
     <mat-divider></mat-divider>
     <p class="mat-body-2">Here is the <strong>Summary of your Statement</strong>. Please verify the information below.</p>
   
-
     <ng-container *ngIf="statement.payments.rightholder as payment">
       <article class="participation" *ngIf="statement.type === 'mainDistributor' || statement.type ==='salesAgent'">
         <span>Producer’s net participation:</span>
-        <price-per-currency [price]="payment.price | formatPair: payment.currency"></price-per-currency>
+        <price-per-currency [price]="payment.price | formatPair: payment.currency" default="€ 0"></price-per-currency>
       </article>  
     </ng-container>
 
-    <article class="breakdown" *ngIf="breakdown$ | async as breakdown">
+    <article class="breakdown">
       <header>
         <span>Calculation breakdown</span>
         <div>Net Receipts</div>
       </header>
 
-      <div class="surface" *ngFor="let item of breakdown">
-        <mat-expansion-panel >
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <span>{{ item.source.name }}</span>
-              <price-per-currency [price]="10 | formatPair"></price-per-currency>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <bf-table [source]="item.rows">
-            <ng-template colRef="section" label="Section" let-section>
-              {{ section }}
-            </ng-template>
-            <ng-template colRef="previous" label="Prior Period" let-previous >
-              <price-per-currency [price]="previous"></price-per-currency>
-            </ng-template>
-            <ng-template colRef="current" label="Current Period" let-current >
-              <price-per-currency [price]="current"></price-per-currency>
-            </ng-template>
-            <ng-template colRef="cumulated" label="Cumulative" let-cumulated >
-              <price-per-currency [price]="cumulated"></price-per-currency>
-            </ng-template>
-          </bf-table>
-        </mat-expansion-panel>
-      </div>
+      <ng-container *ngIf="sourcesBreakdown$ | async as breakdown">
+        <div class="surface" *ngFor="let item of breakdown; let isFirst = first">
+          <mat-expansion-panel [expanded]="isFirst">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <span>{{ item.name }}</span>
+                <price-per-currency [price]="item.net" default="€ 0"></price-per-currency>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <bf-table [source]="item.rows">
+              <ng-template colRef="" label="Section" let-item>
+                <span [class]="item.type">{{ item.section }}</span>
+              </ng-template>
+              <ng-template colRef="" label="Prior Period" let-item>
+                <price-per-currency [class]="item.type" [price]="item.previous" default="€ 0"></price-per-currency>
+              </ng-template>
+              <ng-template colRef="" label="Current Period" let-item>
+                <price-per-currency [class]="item.type" [price]="item.current" default="€ 0"></price-per-currency>
+              </ng-template>
+              <ng-template colRef="" label="Cumulative" let-item>
+                <price-per-currency [class]="item.type" [price]="item.cumulated" default="€ 0"></price-per-currency>
+              </ng-template>
+            </bf-table>
+          </mat-expansion-panel>
+        </div>
+      </ng-container>
 
+      <div class="total-net">
+        Total Net Receipts:
+        <price-per-currency *ngIf="totalNetReceipt$ | async as totalNet" [price]="totalNet" default="€ 0"></price-per-currency>
+      </div>
       <mat-divider></mat-divider>
 
-      <div class="surface">
-        <mat-expansion-panel >
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <span>Expenses</span>
-              <price-per-currency [price]="10 | formatPair"></price-per-currency>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          expenses
-        </mat-expansion-panel>
-      </div>
+      <ng-container *ngIf="rightsBreakdown$ | async as breakdown">
+        <div class="surface" *ngFor="let item of breakdown">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <span>{{ item.name }}</span>
+                <span>(<price-per-currency [price]="item.row.current" default="€ 0"></price-per-currency>)</span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <bf-table [source]="[item.row]">
+              <ng-template colRef="" label="Section" let-item>
+                {{ item.section }}
+              </ng-template>
+              <ng-template colRef="" label="Prior Period" let-item>
+                <price-per-currency class="right" [price]="item.previous" default="€ 0"></price-per-currency>
+              </ng-template>
+              <ng-template colRef="" label="Current Period" let-item>
+                <price-per-currency class="right" [price]="item.current" default="€ 0"></price-per-currency>
+              </ng-template>
+              <ng-template colRef="" label="Cumulative" let-item>
+                <price-per-currency class="right" [price]="item.cumulated" default="€ 0"></price-per-currency>
+              </ng-template>
+            </bf-table>
+          </mat-expansion-panel>
+        </div>
+      </ng-container>
+
     </article>
   </section>
 </ng-container>

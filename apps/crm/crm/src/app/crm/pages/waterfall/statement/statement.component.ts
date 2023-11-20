@@ -34,6 +34,8 @@ import {
   getCalculatedAmount,
   getStatementSources,
   createIncome,
+  getAssociatedRights,
+  getStatementRightsToDisplay,
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
@@ -166,7 +168,8 @@ export class StatementComponent implements OnInit {
       this.statement = statement;
     }
 
-    const rightIds = unique(this.sources.map(s => this.getAssociatedRights(s.id)).flat().map(r => r.id));
+    const rights = getStatementRights(this.statement, this.allRights);
+    const rightIds = unique(this.sources.map(s => getAssociatedRights(s.id, rights, this.simulation.waterfall.state)).flat().map(r => r.id));
     this.rights = this.allRights.filter(r => rightIds.includes(r.id));
 
     this.generatePayments();
@@ -227,24 +230,6 @@ export class StatementComponent implements OnInit {
   private getAssociatedSourceIds(rightId: string) {
     const rightSources = getSources(this.simulation.waterfall.state, rightId).map(i => i.id);
     return rightSources.filter(s => this.sources.map(s => s.id).includes(s));
-  }
-
-  private getAssociatedRights(sourceId: string) {
-    const rightholderRights = getStatementRights(this.statement, this.allRights);
-
-    if (!this.simulation.waterfall.state.sources[sourceId]) {
-      this.snackBar.open(`Source "${sourceId}" not found in waterfall.`, 'close', { duration: 5000 });
-      console.log(`Source "${sourceId}" not found in waterfall. Check incomes and statement dates.`);
-      return [];
-    }
-
-    const rightsFromSource: Right[] = [];
-    for (const right of rightholderRights) {
-      const sources = getSources(this.simulation.waterfall.state, right.id);
-      if (sources.find(s => s.id === sourceId)) rightsFromSource.push(right);
-    }
-
-    return rightsFromSource;
   }
 
   public getRightPayment(rightId: string) {
@@ -357,7 +342,6 @@ export class StatementComponent implements OnInit {
         currency: mainCurrency,
         date: isInternal ? this.statement.duration.to : undefined,
         incomeIds: amountPerIncome.map(i => i.incomeId),
-        details: amountPerIncome,
         mode: isInternal ? 'internal' : 'external'
       });
 
@@ -442,9 +426,8 @@ export class StatementComponent implements OnInit {
 }
 
 @Pipe({ name: 'filterRights' })
-export class FilterRightsPipe implements PipeTransform { // TODO #9524 #9525 #9532 #9531
+export class FilterRightsPipe implements PipeTransform {
   transform(rights: Right[], statement: Statement) {
-    if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) return rights.filter(r => r.rightholderId === statement.senderId);
-    if (isProducerStatement(statement)) return rights;
+    return getStatementRightsToDisplay(statement, rights);
   }
 }

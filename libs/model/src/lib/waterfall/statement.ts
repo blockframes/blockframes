@@ -47,7 +47,6 @@ export interface RightPayment extends Payment {
   mode: 'internal' | 'external';
   incomeIds: string[]; // Incomes related to this payment
   to: string; // rightId
-  details: { incomeId: string, amount: number }[]; // amount paid per incomeId // TODO #9524 not really used ?
 }
 
 function createPaymentBase(params: Partial<Payment> = {}): Payment {
@@ -90,8 +89,7 @@ export function createRightPayment(params: Partial<RightPayment> = {}): RightPay
     ...payment,
     incomeIds: params.incomeIds || [],
     type: 'right',
-    mode: params.mode,
-    details: params.details || [],
+    mode: params.mode
   }
 }
 
@@ -352,6 +350,18 @@ export function getStatementRights(statement: Statement, _rights: Right[]) {
   }
 }
 
+/**
+ * Return the rights that should be displayed on the statement view
+ * @param statement 
+ * @param _rights 
+ * @returns 
+ */
+export function getStatementRightsToDisplay(statement: Statement, _rights: Right[]) {
+  const rights = getStatementRights(statement, _rights);
+  if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) return rights.filter(r => r.rightholderId === statement.senderId);
+  if (isProducerStatement(statement)) return rights;
+}
+
 export function getStatementSources(statement: Statement, sources: WaterfallSource[], incomes: Income[], rights?: Right[], state?: TitleState) {
 
   if (statement.status === 'reported' || isProducerStatement(statement)) {
@@ -371,6 +381,28 @@ export function getStatementSources(statement: Statement, sources: WaterfallSour
   const sourceNodes = getSources(state, topLevelRights.map(r => r.id));
   const sourceIds = Array.from(sourceNodes.map(node => node.id));
   return sourceIds.map(id => sources.find(s => s.id === id));
+}
+
+export function getAssociatedRights(sourceId: string, rights: Right[], state: TitleState) {
+  if (!state.sources[sourceId]) return [];
+  const rightsFromSource: Right[] = [];
+  for (const right of rights) {
+    const sources = getSources(state, right.id);
+    if (sources.find(s => s.id === sourceId)) rightsFromSource.push(right);
+  }
+
+  return rightsFromSource;
+}
+
+/**
+ * Order a subset of rights by their position between each others
+ * @param rights 
+ * @param state 
+ * @returns 
+ */
+export function getOrderedRights(rights: Right[], state: TitleState) {
+  if (rights.length === 1) return rights;
+  return rights.sort((a, b) => pathExists(a.id, b.id, state) ? 1 : -1);
 }
 
 /**
