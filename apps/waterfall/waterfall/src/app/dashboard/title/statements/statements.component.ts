@@ -132,6 +132,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
   }
 
   public changeType(key: StatementType) {
+    if (this.selected === key) return;
     this.statementTypes = this.statementTypes.map(type => type.key === key ? { ...type, selected: !type.selected } : { ...type, selected: false });
     const selected = this.statementTypes.find(type => type.selected);
     this.selected = selected.key;
