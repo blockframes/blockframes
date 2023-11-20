@@ -57,10 +57,10 @@
             <mat-expansion-panel-header>
               <mat-panel-title>
                 <span>{{ item.name }}</span>
-                <span>(<price-per-currency [price]="item.row.current" default="€ 0"></price-per-currency>)</span>
+                <span>(<price-per-currency [price]="item.total" default="€ 0"></price-per-currency>)</span>
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <bf-table [source]="[item.row]">
+            <bf-table [source]="item.rows">
               <ng-template colRef="" label="Section" let-item>
                 {{ item.section }}
               </ng-template>

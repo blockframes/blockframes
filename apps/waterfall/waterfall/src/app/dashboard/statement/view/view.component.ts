@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  PricePerCurrency,
   RightPayment,
   getAssociatedSource,
   getOrderedRights,
@@ -12,6 +13,7 @@ import {
   toLabel
 } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { combineLatest, map, pluck, tap } from 'rxjs';
 
@@ -55,7 +57,7 @@ export class StatementViewComponent {
       const orderedRights = getOrderedRights(displayedRights, simulation.waterfall.state);
 
       return sources.map(source => {
-        const rows = [];
+        const rows: { section: string, type?: 'right' | 'net', previous: PricePerCurrency, current: PricePerCurrency, cumulated: PricePerCurrency }[] = [];
 
         // Incomes declared by statement.senderId
         const previousSourcePayments = previous?.payments.income.filter(income => getAssociatedSource(incomes.find(i => i.id === income.incomeId), this.waterfall.sources).id === source.id) || [];
@@ -115,8 +117,7 @@ export class StatementViewComponent {
         acc[currency] = (acc[currency] || 0) + curr[currency];
       }
       return acc;
-    })
-    )
+    }, {}))
   );
 
   public rightsBreakdown$ = combineLatest([this.statementsHistory$, this.statement$, this.shell.rights$, this.shell.simulation$]).pipe(
@@ -129,21 +130,34 @@ export class StatementViewComponent {
       const orderedRights = getOrderedRights(displayedRights, simulation.waterfall.state);
       const rightsWithManySources = orderedRights.filter(right => getSources(simulation.waterfall.state, right.id).length > 1);
 
-      return rightsWithManySources.map(right => {
-        const name = right.type ? toLabel(right.type, 'rightTypes') : 'Unkown right type';
-        const section = `${right.name} (${right.percent}%)`;
-        const previousRightPayment = previous?.payments.right.filter(p => p.to === right.id) || [];
-        const currentRightPayment = current.payments.right.filter(p => p.to === right.id);
-        const cumulatedRightPayment = history.map(s => s.payments.right).flat().filter(p => p.to === right.id);
-        return {
-          name,
-          row: {
+      const rightTypes = unique(rightsWithManySources.map(right => right.type));
+
+      return rightTypes.map(type => {
+        const rows: { section: string, previous: PricePerCurrency, current: PricePerCurrency, cumulated: PricePerCurrency }[] = [];
+
+        for (const right of rightsWithManySources) {
+          if (right.type !== type) continue;
+
+          const section = `${right.name} (${right.percent}%)`;
+          const previousRightPayment = previous?.payments.right.filter(p => p.to === right.id) || [];
+          const currentRightPayment = current.payments.right.filter(p => p.to === right.id);
+          const cumulatedRightPayment = history.map(s => s.payments.right).flat().filter(p => p.to === right.id);
+          rows.push({
             section,
             previous: getTotalPerCurrency(previousRightPayment),
             current: getTotalPerCurrency(currentRightPayment),
             cumulated: getTotalPerCurrency(cumulatedRightPayment)
+          });
+        }
+
+        const total = rows.map(r => r.current).reduce((acc, curr) => {
+          for (const currency of Object.keys(curr)) {
+            acc[currency] = (acc[currency] || 0) + curr[currency];
           }
-        };
+          return acc;
+        }, {});
+
+        return { name: toLabel(type, 'rightTypes'), rows, total };
       });
     })
   );
