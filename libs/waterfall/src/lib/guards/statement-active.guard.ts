@@ -12,8 +12,14 @@ export class StatementActiveGuard implements CanActivate {
     private router: Router,
   ) { }
 
+  /**
+   * TODO #9553
+   * check if current user can read statement : not waterfall admin users should be allowed to see only their own statements 
+   * and the ones of contracts (right.contractId) located above in the waterfall
+   * @param next 
+   * @returns 
+   */
   async canActivate(next: ActivatedRouteSnapshot) {
-    // TODO #9485 check if current user can read statement
     this.statement = await this.statementService.getValue(next.params.statementId as string, { waterfallId: next.params.movieId });
     if (this.statement) {
       return true;

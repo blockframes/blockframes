@@ -467,11 +467,16 @@ export function valueToId(value: string) {
   return value
     .trim()
     .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[\])}[{(]/g, '')
-    .replace('-', ' ')
-    .replace('.', ' ')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove accents
+    .replace(/[\])}[{(]/g, '') // remove brackets
+    .replace(/[-.,/\\()]/g, ' ') // replace special characters by space
+    .replace(/&/g, 'AND')
+    .replace(/<=/g, 'lte')
+    .replace(/>=/g, 'gte')
+    .replace(/!=/g, 'neq')
+    .replace(/</g, 'lt')
+    .replace(/>/g, 'gt')
+    .replace(/=/g, 'eq')
     .split(' ')
     .filter(v => !!v)
     .join('_');

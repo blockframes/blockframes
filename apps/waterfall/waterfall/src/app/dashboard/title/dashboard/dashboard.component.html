@@ -76,8 +76,8 @@
           <h3>Net Revenue Over Time</h3>
           <mat-divider></mat-divider>
           <waterfall-rightholder-select
-            *ngIf="rightholdersState$ | async as rightholders"
-            [rightholders]="rightholders"
+            *ngIf="(rightholdersState$ | async) && (currentRightholder$ | async)"
+            [rightholders]="rightholdersState$ | async"
             [value]="currentRightholder$ | async"
             [control]="rightholderControl">
             <mat-label>Highlight Right Holder</mat-label>

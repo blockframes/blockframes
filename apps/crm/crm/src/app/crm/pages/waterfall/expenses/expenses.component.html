@@ -13,7 +13,7 @@
       {{ rightholderId | rightholderName: waterfall }}
     </ng-template>
     <ng-template colRef="" label="Contract Id" let-item sort>
-      {{ getCurrentContract({ contractId: item.contractId, date: item.date }) }}
+      {{ item.contractId | getCurrentContract: (contracts$ | async) : item.date }}
     </ng-template>
     <ng-template colRef="date" label="Date" let-date sort defaultSort>
       {{ date | date: 'dd/MM/yyyy' }}
@@ -25,9 +25,10 @@
       {{ type }}
     </ng-template>
     <ng-template colRef="" label="Price" let-item sort>
-      <ng-container *ngIf="toPricePerCurrency(item) as amount">
-        <price-per-currency [price]="amount"></price-per-currency>
-      </ng-container>
+      <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
+    </ng-template>
+    <ng-template colRef="status" label="Status" let-status sort>
+      {{ status | toLabel: 'paymentStatus' }}
     </ng-template>
     <ng-template colRef="" label="Action" let-expense sticky>
       <button mat-icon-button (click)="removeExpenses([expense])">

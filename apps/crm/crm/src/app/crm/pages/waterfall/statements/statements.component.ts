@@ -1,9 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { getContractAndAmendments, getCurrentContract, Statement, WaterfallContract } from '@blockframes/model';
+import { Statement } from '@blockframes/model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StatementService } from '@blockframes/waterfall/statement.service';
-import { firstValueFrom } from 'rxjs';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 
 @Component({
@@ -12,11 +11,11 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
   styleUrls: ['./statements.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StatementsComponent implements OnInit {
+export class StatementsComponent {
 
   public statements$ = this.shell.statements$;
   public waterfall = this.shell.waterfall;
-  private contracts: WaterfallContract[] = [];
+  public contracts$ = this.shell.contracts$;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
@@ -26,19 +25,8 @@ export class StatementsComponent implements OnInit {
     private router: Router
   ) { }
 
-  async ngOnInit() {
-    this.contracts = await firstValueFrom(this.shell.contracts$);
-  }
-
   public goTo(id: string) {
     this.router.navigate([id], { relativeTo: this.route });
-  }
-
-  public getCurrentContract(item: { contractId: string, date: Date }) {
-    const contracts = getContractAndAmendments(item.contractId, this.contracts);
-    const current = getCurrentContract(contracts, item.date);
-    if (!current) return '--';
-    return current.rootId ? `${current.id} (${current.rootId})` : current.id;
   }
 
   public async removeStatements(statements: Statement[]) {

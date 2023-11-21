@@ -36,7 +36,7 @@
             </ng-container>
           </span>
           <div>
-            <a mat-button [disabled]="!canCreateStatement" [routerLink]="['// TODO #9485']">
+            <a mat-button [disabled]="!canCreateStatement" [routerLink]="['// TODO #9524 #9525 #9532 #9531']">
               <span>Add statement for {{ rightholderControl.value | rightholderName: waterfall }}</span>
             </a>
           </div>
@@ -80,9 +80,14 @@
                 <mat-icon svgIcon="edit" matTooltip="Edit Statement"></mat-icon>
               </a>
             </ng-container>
-            <a mat-icon-button *ngIf="statement.status === 'reported'" target="_blank" [routerLink]="['..', 'statement', statement.id]">
-              <mat-icon svgIcon="visibility" matTooltip="View Statement"></mat-icon>
-            </a>
+            <ng-container *ngIf="statement.status === 'reported'">
+              <button mat-icon-button target="_blank" >
+                <mat-icon svgIcon="cloud_download" matTooltip="Download Statement"></mat-icon>
+              </button>
+              <a mat-icon-button  target="_blank" [routerLink]="['..', 'statement', statement.id]">
+                <mat-icon svgIcon="visibility" matTooltip="View Statement"></mat-icon>
+              </a>
+            </ng-container>
           </ng-template>
         </bf-table>
         <ng-template #noStatement>
@@ -94,7 +99,7 @@
       </section>
 
       <section *ngIf="rightholderStatements.length > 0" class="flex-center">
-        <a mat-button [routerLink]="['// TODO #9485']">
+        <a mat-button [routerLink]="['// TODO #9524 #9531']">
           <span>Add New Distributor</span>
         </a>
       </section>

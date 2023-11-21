@@ -16,7 +16,7 @@ export class StatementViewComponent {
 
   public statement$ = combineLatest([this.route.params.pipe(pluck('statementId')), this.shell.statements$]).pipe(
     map(([statementId, statements]) => statements.find(s => s.id === statementId)),
-    // tap(statement => this.shell.setDate(statement.duration.to)), TODO #9485 if state or simulation is needed here
+    // tap(statement => this.shell.setDate(statement.duration.to)), TODO #9524 #9525 #9532 #9531 if state or simulation is needed here
   );
 
   private statementsHistory$ = combineLatest([this.statement$, this.shell.statements$]).pipe(
@@ -33,6 +33,7 @@ export class StatementViewComponent {
     map(([statement, incomes]) => getStatementSources(statement, this.waterfall.sources, incomes)),
   );
 
+  // TODO #9524 for rights that have only one source
   public breakdown$ = combineLatest([this.sources$, this.shell.incomes$, this.statementsHistory$, this.statement$]).pipe(
     map(([sources, incomes, _history, current]) => {
       const indexOfCurrent = _history.findIndex(s => s.id === current.id);
@@ -46,7 +47,7 @@ export class StatementViewComponent {
         return {
           source,
           rows: [{
-            section: 'Amount Invoiced',
+            section: 'Gross Receipts',
             previous: getTotalPerCurrency(previousSourcePayments),
             current: getTotalPerCurrency(currentSourcePayments),
             cumulated: getTotalPerCurrency(cumulatedSourcePayments)
@@ -54,7 +55,10 @@ export class StatementViewComponent {
         }
       });
     })
-  )
+  );
+
+  // TODO #9524 rights that have many sources have a dedicated breakdown
+  public todo$;
 
   public waterfall = this.shell.waterfall;
 

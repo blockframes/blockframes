@@ -1,5 +1,5 @@
 import { DocumentMeta } from './meta';
-import type { MovieCurrency } from './static/types';
+import type { MovieCurrency, PaymentStatus } from './static/types';
 
 export interface Expense {
   _meta?: DocumentMeta;
@@ -9,6 +9,7 @@ export interface Expense {
   contractId: string;
   rightholderId: string;
   titleId: string; // equals waterfallId
+  status: PaymentStatus;
   price: number;
   currency: MovieCurrency;
   type: string;
@@ -21,6 +22,7 @@ export function createExpense(params: Partial<Expense> = {}): Expense {
     contractId: '',
     rightholderId: '',
     titleId: '',
+    status: 'pending',
     price: 0,
     currency: 'EUR',
     date: new Date(),

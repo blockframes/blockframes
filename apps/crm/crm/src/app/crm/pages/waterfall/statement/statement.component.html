@@ -5,39 +5,37 @@
 </ng-container>
 <ng-template #showStatement>
   <ng-container *ngIf="statement">
-    <h3>{{ statement.type | toLabel: 'statementType' }} Statement - {{ statement.id }}</h3>
-  
-    <section *ngIf="state$ | async as state">
-      <mat-form-field *ngIf="waterfall$ | async as waterfall" appearance="fill">
-        <mat-label>Waterfall Version</mat-label>
-        <mat-select (selectionChange)="switchToVersion($event.value)" [(value)]="state.version.id">
-          <mat-option *ngFor="let versions of waterfall.versions" [value]="versions.id">
-            {{ versions.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </section>
-  
-    <section>
-      <ul *ngIf="waterfall$ | async as waterfall">
-        <li><strong>Rightholder :</strong> {{ statement.senderId | rightholderName: waterfall }}</li>
-        <li *ngIf="statement.type !== 'directSales'"><strong>Receiver :</strong> {{ statement.receiverId | rightholderName: waterfall }}</li>
-        <li><strong>From :</strong> {{ statement.duration.from | date: 'MM/dd/yyyy' }}</li>
-        <li><strong>To :</strong> {{ statement.duration.to | date: 'MM/dd/yyyy' }}</li>
-        <li *ngIf="statement.contractId"><strong>Contract :</strong> {{ statement.contractId }}</li>
-        <li><strong>Status: </strong> {{ statement.status | toLabel: 'statementStatus' }}</li>
-        <li><strong>Turnover :</strong> <price-per-currency [price]="getRightholderActual('turnover')"></price-per-currency></li>
-        <li><strong>Revenue :</strong> <price-per-currency [price]="getRightholderActual('revenu')"></price-per-currency></li>
-      </ul>
-      <ng-container *ngIf="graph$ | async as options">
-        <apx-chart *ngIf="options.series.length"
-          [chart]="{ type: 'bar' }" 
-          [series]="options.series"
-          [xaxis]="options.xAxis"
-          [tooltip]="{ y: formatter }">
-        </apx-chart>
-      </ng-container>
-    </section>
+    <waterfall-statement-header *ngIf="sources" [statement]="statement" [sources]="sources"></waterfall-statement-header>
+    <ng-container *ngIf="waterfall$ | async as waterfall">
+      <section *ngIf="waterfall.versions.length">
+        <mat-form-field appearance="fill">
+          <mat-label>Waterfall Version</mat-label>
+          <mat-select (selectionChange)="switchToVersion($event.value)" [(value)]="waterfall.versions[0].id">
+            <mat-option *ngFor="let versions of waterfall.versions" [value]="versions.id">
+              {{ versions.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </section>
+    
+      <section>
+        <ul>
+          <li *ngIf="statement.type !== 'directSales'"><strong>Receiver :</strong> {{ statement.receiverId | rightholderName: waterfall }}</li>
+          <li *ngIf="statement.contractId"><strong>Contract :</strong> {{ statement.contractId }}</li>
+          <li><strong>Status: </strong> {{ statement.status | toLabel: 'statementStatus' }}</li>
+          <li><strong>Turnover :</strong> <price-per-currency [price]="getRightholderActual('turnover')"></price-per-currency></li>
+          <li><strong>Revenue :</strong> <price-per-currency [price]="getRightholderActual('revenu')"></price-per-currency></li>
+        </ul>
+        <ng-container *ngIf="graph$ | async as options">
+          <apx-chart *ngIf="options.series.length"
+            [chart]="{ type: 'bar' }" 
+            [series]="options.series"
+            [xaxis]="options.xAxis"
+            [tooltip]="{ y: formatter }">
+          </apx-chart>
+        </ng-container>
+      </section>
+    </ng-container>
   
     <h3>Incomes</h3>
     <bf-table [source]="incomes" useFilter pagination="50">
@@ -46,6 +44,9 @@
       </ng-template>
       <ng-template colRef="" label="Source" let-item sort>
         {{ getAssociatedSource(item) }}
+      </ng-template>
+      <ng-template colRef="status" label="Status" let-status sort>
+        {{ status | toLabel: 'paymentStatus' }}
       </ng-template>
       <ng-template colRef="" label="Price" let-item sort>
         <ng-container *ngIf="toPricePerCurrency(item) as amount">
@@ -65,6 +66,9 @@
         </ng-template>
         <ng-template colRef="type" label="Type" let-type sort>
           {{ type }}
+        </ng-template>
+        <ng-template colRef="status" label="Status" let-status sort>
+          {{ status | toLabel: 'paymentStatus' }}
         </ng-template>
         <ng-template colRef="" label="Price" let-item sort>
           <ng-container *ngIf="toPricePerCurrency(item) as amount">
@@ -124,13 +128,15 @@
             {{ to }}
           </ng-template>
           <ng-template colRef="amount" label="Amount" let-amount>
-            {{ amount | currency:currency }}
+            <price-per-currency [price]="amount | formatPair"></price-per-currency>
           </ng-template>
           <ng-template colRef="percent" label="%" let-percent>
             {{ percent }}
           </ng-template>
           <ng-template colRef="taken" label="Taken" let-taken>
-            <strong>{{ taken | currency:currency }}</strong>
+            <strong>
+              <price-per-currency [price]="taken | formatPair"></price-per-currency>
+            </strong>
           </ng-template>
         </bf-table>
       </ng-container>

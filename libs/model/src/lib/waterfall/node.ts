@@ -187,7 +187,7 @@ export function pathExists(from: string, to: string, state: TitleState) {
  * @returns 
  */
 function getParentNodes(state: TitleState, id: string) {
-  const sources = Object.values(state.sources).filter(s => s.destinationIds.includes(id)).map(s => state.rights[s.id]);
+  const sources = Object.values(state.sources).filter(s => s.destinationId === id).map(s => state.rights[s.id]);
   const rights = Object.values(state.rights).filter(r => r.previous.includes(id));
   const horizontals = Object.values(state.horizontals).filter(h => h.previous.includes(id));
   const verticals = Object.values(state.verticals).filter(v => v.previous.includes(id));

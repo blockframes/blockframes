@@ -116,7 +116,7 @@ describe('Test standalone conditions', () => {
           ])
         }),
         action('income', { id: 'income-1', amount: 1_000_100, from: 'row_all', to: 'mg-author-1', territories: [], medias: [] }),
-        action('income', { id: 'income-2', amount: 1_000, from: 'row_all', to: 'mg-author-2', territories: [], medias: [] }),
+        action('income', { id: 'income-2', amount: 1_000, from: 'fr_tv', to: 'mg-author-2', territories: [], medias: [] }),
       ];
 
       const { state } = waterfall('foo-title', actions);

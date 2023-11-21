@@ -11,6 +11,7 @@ import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { JoinPipeModule, MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
+import { ContractPipeModule } from '@blockframes/contract/contract/pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -34,6 +35,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ToLabelModule,
     JoinPipeModule,
     MaxLengthModule,
+    ContractPipeModule,
 
     MatIconModule,
     MatButtonModule,
