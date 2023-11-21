@@ -50,7 +50,7 @@ export class StatementViewComponent {
   ]).pipe(
     map(([sources, incomes, _history, current, rights, simulation]) => {
       const indexOfCurrent = _history.findIndex(s => s.id === current.id);
-      const previous = _history[indexOfCurrent + 1];
+      const previous = _history.slice(indexOfCurrent + 1);
       const history = _history.slice(indexOfCurrent);
 
       const displayedRights = getStatementRightsToDisplay(current, rights);
@@ -60,7 +60,7 @@ export class StatementViewComponent {
         const rows: { section: string, type?: 'right' | 'net', previous: PricePerCurrency, current: PricePerCurrency, cumulated: PricePerCurrency }[] = [];
 
         // Incomes declared by statement.senderId
-        const previousSourcePayments = previous?.payments.income.filter(income => getAssociatedSource(incomes.find(i => i.id === income.incomeId), this.waterfall.sources).id === source.id) || [];
+        const previousSourcePayments = previous.map(s => s.payments.income).flat().filter(income => getAssociatedSource(incomes.find(i => i.id === income.incomeId), this.waterfall.sources).id === source.id);
         const currentSourcePayments = current.payments.income.filter(income => getAssociatedSource(incomes.find(i => i.id === income.incomeId), this.waterfall.sources).id === source.id);
         const cumulatedSourcePayments = history.map(s => s.payments.income).flat().filter(income => getAssociatedSource(incomes.find(i => i.id === income.incomeId), this.waterfall.sources).id === source.id);
         rows.push({
@@ -81,7 +81,7 @@ export class StatementViewComponent {
         const cumulatedSum: RightPayment[] = [];
         for (const right of rights) {
           const section = right.type ? `${right.name} (${toLabel(right.type, 'rightTypes')} - ${right.percent}%)` : `${right.name} (${right.percent}%)`;
-          const previousRightPayment = previous?.payments.right.filter(p => p.to === right.id) || [];
+          const previousRightPayment = previous.map(s => s.payments.right).flat().filter(p => p.to === right.id);
           previousSum.push(...previousRightPayment.map(r => ({ ...r, price: -r.price })));
           const currentRightPayment = current.payments.right.filter(p => p.to === right.id);
           currentSum.push(...currentRightPayment.map(r => ({ ...r, price: -r.price })));
@@ -123,7 +123,7 @@ export class StatementViewComponent {
   public rightsBreakdown$ = combineLatest([this.statementsHistory$, this.statement$, this.shell.rights$, this.shell.simulation$]).pipe(
     map(([_history, current, rights, simulation]) => {
       const indexOfCurrent = _history.findIndex(s => s.id === current.id);
-      const previous = _history[indexOfCurrent + 1];
+      const previous = _history.slice(indexOfCurrent + 1);
       const history = _history.slice(indexOfCurrent);
 
       const displayedRights = getStatementRightsToDisplay(current, rights);
@@ -139,7 +139,7 @@ export class StatementViewComponent {
           if (right.type !== type) continue;
 
           const section = `${right.name} (${right.percent}%)`;
-          const previousRightPayment = previous?.payments.right.filter(p => p.to === right.id) || [];
+          const previousRightPayment = previous.map(s => s.payments.right).flat().filter(p => p.to === right.id);
           const currentRightPayment = current.payments.right.filter(p => p.to === right.id);
           const cumulatedRightPayment = history.map(s => s.payments.right).flat().filter(p => p.to === right.id);
           rows.push({

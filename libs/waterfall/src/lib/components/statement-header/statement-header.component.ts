@@ -1,7 +1,7 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 
-import { Statement, WaterfallSource, isDirectSalesStatement, isDistributorStatement, isProducerStatement } from '@blockframes/model';
+import { Statement, WaterfallSource, isDirectSalesStatement, isDistributorStatement, isProducerStatement, sortByDate } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 
 @Component({
@@ -15,23 +15,30 @@ export class StatementHeaderComponent implements OnInit {
   @Input() sources: WaterfallSource[] = [];
   public rightholderTag: string;
   public rightholderName: string;
+  public statementNumber: number;
 
   constructor(
     public shell: DashboardWaterfallShellComponent,
     private cdr: ChangeDetectorRef
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    const statements = await this.shell.statements();
+    const rightholderKey = this.statement.type === 'producer' ? 'receiverId' : 'senderId';
+    this.rightholderName = this.shell.waterfall.rightholders.find(r => r.id === this.statement[rightholderKey]).name;
+
     if (isProducerStatement(this.statement)) {
       this.rightholderTag = 'Beneficiary';
-      this.rightholderName = this.shell.waterfall.rightholders.find(r => r.id === this.statement.receiverId).name;
     } else if (isDistributorStatement(this.statement)) {
       this.rightholderTag = 'Distributor';
-      this.rightholderName = this.shell.waterfall.rightholders.find(r => r.id === this.statement.senderId).name;
     } else if (isDirectSalesStatement(this.statement)) {
       this.rightholderTag = 'Producer';
-      this.rightholderName = this.shell.waterfall.rightholders.find(r => r.id === this.statement.senderId).name;
     }
+
+    const filteredStatements = statements.filter(statement => statement[rightholderKey] === this.statement[rightholderKey] && statement.type === this.statement.type);
+    const sortedStatements = sortByDate(filteredStatements, 'duration.to').map((s, i) => ({ ...s, order: i + 1 })).reverse();
+    this.statementNumber = sortedStatements.find(s => s.id === this.statement.id)?.order || 1;
+
     this.cdr.markForCheck();
   }
 }

@@ -79,5 +79,12 @@
       </ng-container>
 
     </article>
+
+    <ng-container *ngIf="statement.payments.rightholder as payment">
+      <article class="participation" *ngIf="statement.type === 'mainDistributor' || statement.type ==='salesAgent'">
+        <span>Producer’s net participation:</span>
+        <price-per-currency [price]="payment.price | formatPair: payment.currency" default="€ 0"></price-per-currency>
+      </article>  
+    </ng-container>
   </section>
 </ng-container>
