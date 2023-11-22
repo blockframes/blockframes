@@ -4,24 +4,11 @@
   margin: 40px;
 }
 
-section {
+form {
   display: flex;
   gap: 16px;
-  justify-content: space-between;
-
-  form {
-    width: 60%;
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    gap: 16px;
-    static-select {
-      width: 30%
-    }
-  }
-
-  apx-chart {
-    width: 30%;
+  static-select {
+    width: 30%
   }
 }
 

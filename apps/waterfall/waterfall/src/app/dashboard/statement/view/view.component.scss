@@ -29,6 +29,7 @@ section {
     border: 1px solid var(--foreground-divider);
     border-radius: 4px;
     margin-top: 24px;
+    margin-bottom: 24px;
 
     mat-panel-title {
       font-weight: 800;
@@ -90,4 +91,10 @@ section {
       padding-top: 32px;
     }
   }
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  margin: 32px 0;
 }

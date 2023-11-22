@@ -1,27 +1,18 @@
 <ng-container *ngIf="rightholder$ | async as rightholder">
   <h3>{{ rightholder.name }}</h3>
 
-  <section>
-    <form [formGroup]="rightholderForm">
-      <static-select [control]="rightholderForm.get('roles')" multiple scope="rightholderRoles">
-        <mat-label>Waterfall Role</mat-label>
-        <mat-error>This field is mandatory</mat-error>
-      </static-select>
+  <form [formGroup]="rightholderForm">
+    <static-select [control]="rightholderForm.get('roles')" required multiple scope="rightholderRoles">
+      <mat-label>Waterfall Role</mat-label>
+      <mat-error>This field is mandatory</mat-error>
+    </static-select>
+    <article>
       <button mat-button color="primary" [disabled]=!rightholderForm.valid (click)="save()">
         <mat-icon svgIcon="edit"></mat-icon>
         <span>Update</span>
       </button>
-    </form>
-  
-    <ng-container *ngIf="graph$ | async as options">
-      <apx-chart *ngIf="options.series.length"
-        [chart]="{ type: 'bar', stacked: true }" 
-        [series]="options.series"
-        [xaxis]="options.xAxis"
-        [tooltip]="{ y: formatter }">
-      </apx-chart>
-    </ng-container>
-  </section>
+    </article>
+  </form>
 
   <h3>Rightholder Rights</h3>
   <bf-table [source]="rights$ | async" clickable useFilter pagination="50">

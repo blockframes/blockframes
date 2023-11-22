@@ -5,12 +5,14 @@ import { RouterModule } from '@angular/router';
 
 // Blockframes
 import { StatementHeaderModule } from '@blockframes/waterfall/components/statement-header/statement-header.module';
+import { StatementPeriodModule } from '@blockframes/waterfall/components/statement-period/statement-period.module';
 
 // Components
 import { StatementEditComponent } from './edit.component';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [StatementEditComponent],
@@ -19,9 +21,11 @@ import { MatButtonModule } from '@angular/material/button';
 
     // Blockframes
     StatementHeaderModule,
+    StatementPeriodModule,
 
     // Material
     MatButtonModule,
+    MatIconModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: StatementEditComponent }]),

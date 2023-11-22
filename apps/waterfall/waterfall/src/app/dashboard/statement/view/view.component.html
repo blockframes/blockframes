@@ -79,5 +79,30 @@
       </ng-container>
 
     </article>
+
+    <ng-container *ngIf="statement.payments.rightholder as payment">
+      <article class="participation" *ngIf="statement.type === 'mainDistributor' || statement.type ==='salesAgent'">
+        <span>Producer’s net participation:</span>
+        <price-per-currency [price]="payment.price | formatPair: payment.currency" default="€ 0"></price-per-currency>
+      </article>  
+    </ng-container>
   </section>
+
+  <footer>
+    <a mat-flat-button routerLink="edit">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+      <span>Back</span>
+    </a>
+    <a mat-flat-button color="primary" routerLink="..">
+      <span>Report Statement</span>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
+    </a>
+  </footer>
+
+  <footer>
+    <button mat-button>
+      <mat-icon svgIcon="save"></mat-icon>
+      <span>Save & Come back later</span>
+    </button>
+  </footer>
 </ng-container>

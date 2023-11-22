@@ -19,7 +19,6 @@ import {
   sum,
   isSource,
   isGroup,
-  movieCurrencies,
   WaterfallSource,
   isProducerStatement,
   WaterfallContract,
@@ -28,7 +27,6 @@ import {
   createIncomePayment,
   getPath,
   isDirectSalesStatement,
-  getStatementsHistory,
   pathExists,
   getStatementRights,
   getCalculatedAmount,
@@ -79,15 +77,6 @@ export class StatementComponent implements OnInit {
     filter(statement => !!statement),
   );
   public statement: Statement;
-
-  private contract$ = combineLatest([this.statement$, this.shell.contracts$]).pipe(
-    map(([statement, contracts]) => contracts.find(c => c.id === statement.contractId))
-  );
-
-  public graph$ = combineLatest([this.shell.simulation$, this.statement$, this.shell.statements$, this.contract$]).pipe(
-    map(([state, statement, statements, contract]) => this.buildGraph(state, statement, statements, contract))
-  );
-  public formatter = { formatter: (value: number) => `${value} ${movieCurrencies[mainCurrency]}` };
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
@@ -254,29 +243,6 @@ export class StatementComponent implements OnInit {
       const currentCalculatedRevenue = sum(history, i => i.amount * i.percent);
       return { [mainCurrency]: currentCalculatedRevenue };
     }
-  }
-
-  private buildGraph(state: WaterfallState, statement: Statement, statements: Statement[], contract: WaterfallContract) {
-    if (!state?.version.id) return;
-    const history = getStatementsHistory(
-      state.waterfall.history,
-      statements.filter(s => s.type === statement.type),
-      statement.senderId,
-      contract?.id
-    );
-
-    const categories = history.map(h => new Date(h.date).toISOString().slice(0, 10));
-    const series = [
-      {
-        name: 'Revenue',
-        data: history.map(h => Math.round(h.orgs[statement.senderId].revenu.actual))
-      },
-      {
-        name: 'Turnover',
-        data: history.map(h => Math.round(h.orgs[statement.senderId].turnover.actual))
-      }
-    ];
-    return { xAxis: { categories }, series };
   }
 
   public showRightDetails({ id: rightId }: { id: string }) {
