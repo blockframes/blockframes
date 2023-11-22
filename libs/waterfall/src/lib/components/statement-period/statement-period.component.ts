@@ -22,7 +22,8 @@ export class StatementPeriodComponent implements OnInit, OnChanges, OnDestroy {
     '12': 'Yearly',
     '6': 'Semesterly',
     '3': 'Quarterly',
-    '1': 'Monthly'
+    '1': 'Monthly',
+    '0': 'Custom'
   };
 
   public previousStatementId: string;
@@ -38,11 +39,13 @@ export class StatementPeriodComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     this.sub = this.periodicity.valueChanges.subscribe(value => {
-      if (this.form.get('duration').value.from) {
+      if (this.form.get('duration').value.from && value !== '0') {
         const to = add(this.form.get('duration').value.from, { months: +value - 1 });
         this.form.get('duration').get('to').setValue(endOfMonth(to));
       }
     });
+
+    // TODO #9524 subscribe on form duration changes to update periodicity
   }
 
   ngOnDestroy() {
@@ -65,7 +68,12 @@ export class StatementPeriodComponent implements OnInit, OnChanges, OnDestroy {
       let difference = differenceInMonths(currentDuration.to, currentDuration.from);
       if (isFirstDayOfMonth(currentDuration.from) && isLastDayOfMonth(currentDuration.to)) difference++;
 
-      this.periodicity.setValue(difference.toString(), { emitEvent: false });
+      if(this.periods[difference.toString()]) {
+        this.periodicity.setValue(difference.toString(), { emitEvent: false });
+      } else {
+        this.periodicity.setValue('0', { emitEvent: false });
+      }
+      
     }
 
     this.cdr.markForCheck();
