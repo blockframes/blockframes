@@ -4,6 +4,7 @@ import { FormControl } from '@angular/forms';
 import { Statement, filterStatements, sortStatements } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { StatementForm } from '@blockframes/waterfall/form/statement.form';
+import { differenceInMonths, isFirstDayOfMonth, isLastDayOfMonth } from 'date-fns';
 
 @Component({
   selector: 'waterfall-statement-period',
@@ -15,8 +16,13 @@ export class StatementPeriodComponent implements OnChanges {
   @Input() form: StatementForm;
   @Input() statement: Statement;
 
-  public periodicity = new FormControl<string>('semesterly');
-  public periods: string[] = ['semesterly', 'yearly', 'quarterly', 'monthly'];
+  public periodicity = new FormControl<string>('');
+  public periods: Record<string, string> = {
+    '12': 'Yearly',
+    '6': 'Semesterly',
+    '3': 'Quarterly',
+    '1': 'Monthly'
+  };
 
   public previousStatementId: string;
   public nextStatementId: string;
@@ -39,6 +45,13 @@ export class StatementPeriodComponent implements OnChanges {
     if (current < sortedStatements.length) this.nextStatementId = sortedStatements.find(s => s.number === current + 1).id;
 
     // TODO #9524 set periodicity from previous statement if current does not have dates
+    const currentDuration = this.statement.duration;
+    if (currentDuration.from && currentDuration.to) {
+      let difference = differenceInMonths(currentDuration.to, currentDuration.from);
+      if (isFirstDayOfMonth(currentDuration.from) && isLastDayOfMonth(currentDuration.to)) difference++;
+    
+      this.periodicity.setValue(difference.toString());
+    }
 
     this.cdr.markForCheck();
   }
