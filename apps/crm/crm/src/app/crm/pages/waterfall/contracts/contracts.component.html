@@ -9,6 +9,9 @@
     <ng-template colRef="id" label="Id" let-id sort>
       {{ id }}
     </ng-template>
+    <ng-template colRef="name" label="Name" let-name sort>
+      {{ name }}
+    </ng-template>
     <ng-template colRef="signatureDate" label="Signature Date" let-signatureDate sort defaultSort>
       {{ signatureDate | date: 'dd/MM/yyyy' }}
     </ng-template>

@@ -7,7 +7,8 @@ import {
   getTerm,
   getOrgId,
   getRightholderId,
-  getDate
+  getDate,
+  valueToId
 } from '../../utils';
 import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
 import {
@@ -32,7 +33,8 @@ export interface FieldsConfig {
   document: {
     waterfallId: string;
     type: 'financingPlan' | 'budget' | 'contract';
-    id?: string;
+    name: string;
+    id: string;
     ownerId: string;
     rootId: string;
     signatureDate: Date;
@@ -112,9 +114,11 @@ export function getDocumentConfig(option: DocumentConfig) {
         if (!value) throw mandatoryError(value, 'Type');
         return value;
       },
-        /* c */ 'document.id': async (value: string, data: FieldsConfig) => {
-        if (!value) return waterfallDocumentsService.createId();
-        const exist = await getWaterfallDocument(value, waterfallDocumentsService, documentCache, data.document.waterfallId);
+        /* c */ 'document.name': async (value: string, data: FieldsConfig) => {
+        if (!value) throw mandatoryError(value, 'Document name');
+        // Create ID from name
+        data.document.id = valueToId(value);
+        const exist = await getWaterfallDocument(data.document.id, waterfallDocumentsService, documentCache, data.document.waterfallId);
 
         if (exist) throw alreadyExistError(value, 'Document ID');
         return value;
@@ -130,7 +134,7 @@ export function getDocumentConfig(option: DocumentConfig) {
         return orgId;
       },
         /* e */ 'document.rootId': (value: string) => {
-        return value;
+        return valueToId(value);
       },
         /* f */ 'document.signatureDate': (value: string) => {
         if (!value) throw mandatoryError(value, 'Signature Date');

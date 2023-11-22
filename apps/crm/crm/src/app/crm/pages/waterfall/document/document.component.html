@@ -1,6 +1,6 @@
 <ng-container *ngIf="contract$ | async as contract">
-  <h3>Contract from {{  contract.duration.from | date: 'MM/dd/yyyy' }} to {{  contract.duration.to | date: 'MM/dd/yyyy' }}</h3>
-  <h4 *ngIf="rootContract$ | async as rootContract">Amendment of <a [routerLink]="['../',rootContract.id]" target="_blank">{{ rootContract.id }}</a></h4>
+  <h3>Contract "{{ contract.name }}" from {{  contract.duration.from | date: 'MM/dd/yyyy' }} to {{  contract.duration.to | date: 'MM/dd/yyyy' }}</h3>
+  <h4 *ngIf="rootContract$ | async as rootContract">Amendment of <a [routerLink]="['../',rootContract.id]" target="_blank">{{ rootContract.name }}</a></h4>
   <h4 *ngIf="(childContracts$ | async)?.length as length">{{ length }} amendment(s)</h4>
 
   <section>
@@ -18,6 +18,9 @@
     <bf-table [source]="childContracts" useFilter pagination="50">
       <ng-template colRef="id" label="Id" let-id sort>
         {{ id }}
+      </ng-template>
+      <ng-template colRef="name" label="Name" let-name sort>
+        {{ name }}
       </ng-template>
       <ng-template colRef="signatureDate" label="Signature Date" let-signatureDate sort defaultSort>
         {{ signatureDate | date: 'MM/dd/yyyy' }}
