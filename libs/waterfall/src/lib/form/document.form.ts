@@ -12,6 +12,7 @@ import { RightholderRole, Term, WaterfallFile } from '@blockframes/model';
 
 export interface WaterfallDocumentFormValue {
   id: string;
+  name: string;
   licenseeName: string;
   licenseeRole: RightholderRole[];
 
@@ -32,6 +33,7 @@ export interface WaterfallDocumentFormValue {
 function createWaterfallDocumentFormControl(contract: (Partial<WaterfallDocumentFormValue> & { id: string })) {
   return {
     id: new FormControl(contract.id),
+    name: new FormControl(contract.name ?? ''),
     licenseeName: new FormControl(contract.licenseeName ?? ''),
     licenseeRole: new FormControl<RightholderRole[]>(contract.licenseeRole ?? []),
 
@@ -62,6 +64,7 @@ export class WaterfallDocumentForm extends FormEntity<WaterfallDocumentFormContr
     super.reset();
     this.patchValue({
       id: data.id,
+      name: data.name || '',
       licenseeName: data.licenseeName || '',
       licenseeRole: data.licenseeRole || [],
       licensorName: data.licensorName || '',

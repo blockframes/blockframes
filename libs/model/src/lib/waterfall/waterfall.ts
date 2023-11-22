@@ -133,11 +133,14 @@ export function createWaterfallDocument<Meta extends WaterfallDocumentMeta>(para
   delete (meta as any).rootId;
   delete (meta as any).signatureDate;
   delete (meta as any).titleId;
+  delete (meta as any).name;
+
 
   return {
     _meta: (params.meta as any)._meta || createDocumentMeta({ createdAt: new Date() }),
     id: (params.meta as any).id ?? '',
     type: 'contract',
+    name: (params.meta as any).name ?? '',
     folder: '',
     waterfallId: '',
     ownerId: '',
@@ -152,6 +155,7 @@ export function createWaterfallContract(params: Partial<WaterfallContract>): Wat
   return {
     _meta: createDocumentMeta({}),
     id: '',
+    name: '',
     titleId: '',
     termIds: [],
     buyerId: '',
@@ -184,6 +188,7 @@ export function convertDocumentTo<T>(document: WaterfallDocument): T {
         rootId: document.rootId,
         signatureDate: document.signatureDate,
         titleId: document.waterfallId,
+        name: document.name,
         ...document.meta as T,
         _meta: document._meta
       };
@@ -199,6 +204,7 @@ export interface WaterfallDocument<Meta extends WaterfallDocumentMeta = unknown>
   id: string; // Same as the WaterfallFile id
   /** If document is an amendment, provide root document Id */
   rootId: string;
+  name: string;
   signatureDate?: Date;
   type: 'financingPlan' | 'budget' | 'contract';
   folder: string; // TODO #9389 we might want to drop that for a sub-type, TO BE CONFIRMED WITH THE TEAM
@@ -214,6 +220,7 @@ interface WaterfallBudget {
 
 export interface WaterfallContract extends BaseContract {
   type: RightholderRole;
+  name: string;
 };
 
 export interface WaterfallSale extends WaterfallContract {

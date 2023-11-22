@@ -99,6 +99,7 @@ export class ContractsFormComponent implements OnInit {
     const file = this.waterfall.documents.find(f => f.id === contract.id);
     this.documentForm.reset({
       id: contract.id,
+      name: contract.name,
       licenseeName: licensee?.name,
       licenseeRole: licensee?.roles,
       licensorName: licensor?.name,
@@ -155,6 +156,7 @@ export class ContractsFormComponent implements OnInit {
 
     const document = createWaterfallDocument<WaterfallContract>({
       id: this.documentForm.controls.id.value,
+      name: this.documentForm.controls.name.value,
       type: 'contract',
       waterfallId: this.movieId,
       signatureDate: this.documentForm.controls.signatureDate.value,
