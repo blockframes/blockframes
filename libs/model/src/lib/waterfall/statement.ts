@@ -103,6 +103,7 @@ export interface Statement {
   senderId: string, // rightholderId of statement creator
   receiverId: string, // rightholderId of statement receiver
   duration: Duration;
+  reported: Date;
   incomeIds: string[];
   expenseIds?: string[];
   payments: {
@@ -157,6 +158,7 @@ function createStatementBase(params: Partial<Statement> = {}): Statement {
     senderId: '',
     receiverId: '',
     incomeIds: params.incomeIds || [],
+    reported: new Date(), // TODO #9524 update import excel
     payments: {
       right: params.payments?.right ? params.payments.right.map(createRightPayment) : []
     },

@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnChanges } from '@angular/core';
 
 import {
   Statement,
@@ -18,20 +18,22 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
   styleUrls: ['./statement-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StatementHeaderComponent implements OnInit {
+export class StatementHeaderComponent implements OnChanges {
   @Input() statement: Statement;
   @Input() sources: WaterfallSource[] = [];
   public rightholderTag: string;
   public rightholderName: string;
   public statementNumber: number;
 
+  private statements: Statement[] = [];
+
   constructor(
     public shell: DashboardWaterfallShellComponent,
     private cdr: ChangeDetectorRef
   ) { }
 
-  async ngOnInit() {
-    const statements = await this.shell.statements();
+  async ngOnChanges() {
+    if (!this.statements.length) this.statements = await this.shell.statements();
     const rightholderKey = this.statement.type === 'producer' ? 'receiverId' : 'senderId';
     this.rightholderName = this.shell.waterfall.rightholders.find(r => r.id === this.statement[rightholderKey]).name;
 
@@ -43,7 +45,7 @@ export class StatementHeaderComponent implements OnInit {
       this.rightholderTag = 'Producer';
     }
 
-    const filteredStatements = filterStatements(this.statement.type, [this.statement.senderId, this.statement.receiverId], this.statement.contractId, statements);
+    const filteredStatements = filterStatements(this.statement.type, [this.statement.senderId, this.statement.receiverId], this.statement.contractId, this.statements);
     this.statementNumber = getStatementNumber(this.statement, filteredStatements);
 
     this.cdr.markForCheck();
