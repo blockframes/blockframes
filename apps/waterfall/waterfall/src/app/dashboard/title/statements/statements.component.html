@@ -30,8 +30,7 @@
               
               <mat-menu #contractsMenu="matMenu">
                 <a mat-menu-item *ngFor="let rightholderContract of rightholderContracts" [routerLink]="['..', 'documents', rightholderContract.id]">
-                  {{ rightholderContract.duration.from | date: 'dd/MM/yyyy' }} -  {{ rightholderContract.duration.to | date: 'dd/MM/yyyy' }}
-                  <!-- TODO #9556 contract name -->
+                  {{ rightholderContract.name }}
                 </a>
               </mat-menu>
             </ng-container>
@@ -47,8 +46,7 @@
       <section *ngFor="let rightholderContract of rightholderContracts">
         <ng-container *ngIf="rightholderContract.statements.length > 0">
           <ng-container *ngIf="selected !== 'directSales' && rightholderContracts.length > 1">
-            <!-- TODO #9556 contract name -->
-            {{ rightholderContract.duration.from | date: 'dd/MM/yyyy' }} -  {{ rightholderContract.duration.to | date: 'dd/MM/yyyy' }}
+            {{ rightholderContract.name }}
           </ng-container>
           <bf-table [source]="rightholderContract.statements" pagination="50">
             <ng-template colRef="number" label="#" let-number>

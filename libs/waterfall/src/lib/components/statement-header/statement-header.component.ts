@@ -8,7 +8,8 @@ import {
   filterStatements,
   isDirectSalesStatement,
   isDistributorStatement,
-  isProducerStatement
+  isProducerStatement,
+  WaterfallContract
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 
@@ -24,6 +25,7 @@ export class StatementHeaderComponent implements OnChanges {
   public rightholderTag: string;
   public rightholderName: string;
   public statementNumber: number;
+  public contract: WaterfallContract;
 
   private statements: Statement[] = [];
 
@@ -34,6 +36,7 @@ export class StatementHeaderComponent implements OnChanges {
 
   async ngOnChanges() {
     if (!this.statements.length) this.statements = await this.shell.statements();
+    if (!this.contract && !!this.statement.contractId) this.contract = (await this.shell.contracts([this.statement.contractId]))[0];
     const rightholderKey = this.statement.type === 'producer' ? 'receiverId' : 'senderId';
     this.rightholderName = this.shell.waterfall.rightholders.find(r => r.id === this.statement[rightholderKey]).name;
 
