@@ -1,10 +1,11 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnChanges } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnChanges, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Statement, filterStatements, sortStatements } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { StatementForm } from '@blockframes/waterfall/form/statement.form';
-import { differenceInMonths, isFirstDayOfMonth, isLastDayOfMonth } from 'date-fns';
+import { add, differenceInMonths, endOfMonth, isFirstDayOfMonth, isLastDayOfMonth } from 'date-fns';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'waterfall-statement-period',
@@ -12,7 +13,7 @@ import { differenceInMonths, isFirstDayOfMonth, isLastDayOfMonth } from 'date-fn
   styleUrls: ['./statement-period.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StatementPeriodComponent implements OnChanges {
+export class StatementPeriodComponent implements OnInit, OnChanges, OnDestroy {
   @Input() form: StatementForm;
   @Input() statement: Statement;
 
@@ -28,11 +29,25 @@ export class StatementPeriodComponent implements OnChanges {
   public nextStatementId: string;
 
   private statements: Statement[] = [];
+  private sub: Subscription;
 
   constructor(
     public shell: DashboardWaterfallShellComponent,
     private cdr: ChangeDetectorRef
   ) { }
+
+  ngOnInit() {
+    this.sub = this.periodicity.valueChanges.subscribe(value => {
+      if (this.form.get('duration').value.from) {
+        const to = add(this.form.get('duration').value.from, { months: +value - 1 });
+        this.form.get('duration').get('to').setValue(endOfMonth(to));
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
+  }
 
   async ngOnChanges() {
     this.previousStatementId = undefined;
@@ -49,8 +64,8 @@ export class StatementPeriodComponent implements OnChanges {
     if (currentDuration.from && currentDuration.to) {
       let difference = differenceInMonths(currentDuration.to, currentDuration.from);
       if (isFirstDayOfMonth(currentDuration.from) && isLastDayOfMonth(currentDuration.to)) difference++;
-    
-      this.periodicity.setValue(difference.toString());
+
+      this.periodicity.setValue(difference.toString(), { emitEvent: false });
     }
 
     this.cdr.markForCheck();
