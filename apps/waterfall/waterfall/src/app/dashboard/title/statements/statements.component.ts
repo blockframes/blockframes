@@ -14,11 +14,12 @@ import {
   WaterfallContract,
   WaterfallRightholder,
   canCreateOutgoingStatement,
+  filterStatements,
   getContractsWith,
   hasContractWith,
   isProducerStatement,
   rightholderGroups,
-  sortByDate,
+  sortStatements,
   statementType
 } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -57,10 +58,10 @@ export class StatementsComponent implements OnInit, OnDestroy {
   public currentStateDate = new Date();
 
   public statements: Statement[] = [];
-  public rightholderStatements: (Statement & { order: number })[] = [];
-  public rightholderContracts: WaterfallContract[] = [];
+  public rightholderContracts: (Partial<WaterfallContract> & { statements: (Statement & { number: number })[] })[] = [];
   public statementSender: WaterfallRightholder;
   public canCreateStatement: boolean;
+  public haveStatements: boolean;
 
   public rightholders: WaterfallRightholder[] = [];
   public rightholderControl = new FormControl<string>('');
@@ -103,8 +104,20 @@ export class StatementsComponent implements OnInit, OnDestroy {
     this.changeType('mainDistributor');
 
     this.sub = this.rightholderControl.valueChanges.pipe(startWith(this.rightholderControl.value)).subscribe(value => {
-      const filteredStatements = this.statements.filter(statement => statement[this.selected === 'producer' ? 'receiverId' : 'senderId'] === value && statement.type === this.selected);
-      this.rightholderStatements = sortByDate(filteredStatements, 'duration.to').map((s, i) => ({ ...s, order: i + 1 })).reverse();
+
+      if (this.selected !== 'directSales') {
+        this.rightholderContracts = getContractsWith([this.statementSender.id, value], this.contracts, this.currentStateDate)
+          .filter(c => this.rights.some(r => r.contractId === c.id))
+          .map(c => {
+            const statements = filterStatements(this.selected, [this.statementSender.id, value], c.id, this.statements);
+            return { ...c, statements: sortStatements(statements) };
+          });
+      } else {
+        const statements = filterStatements(this.selected, [this.statementSender.id, value], undefined, this.statements);
+        this.rightholderContracts = [{ id: '', statements: sortStatements(statements) }];
+      }
+
+      this.haveStatements = this.rightholderContracts.some(c => c.statements.length > 0);
 
       const config = {
         senderId: this.statementSender.id,
@@ -119,9 +132,6 @@ export class StatementsComponent implements OnInit, OnDestroy {
       };
 
       this.canCreateStatement = this.selected === 'producer' ? canCreateOutgoingStatement(config) : true;
-
-      this.rightholderContracts = getContractsWith([this.statementSender.id, value], this.contracts, this.currentStateDate)
-        .filter(c => this.rights.some(r => r.contractId === c.id));
 
       this.cdr.markForCheck();
     });

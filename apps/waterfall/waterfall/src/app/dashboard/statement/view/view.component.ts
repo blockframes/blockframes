@@ -3,13 +3,14 @@ import { ActivatedRoute } from '@angular/router';
 import {
   PricePerCurrency,
   RightPayment,
+  filterStatements,
   getAssociatedSource,
   getOrderedRights,
   getSources,
   getStatementRightsToDisplay,
   getStatementSources,
   getTotalPerCurrency,
-  sortByDate,
+  sortStatements,
   toLabel
 } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -31,13 +32,8 @@ export class StatementViewComponent {
   );
 
   private statementsHistory$ = combineLatest([this.statement$, this.shell.statements$]).pipe(
-    map(([current, statements]) => statements.filter(s =>
-      s.receiverId === current.receiverId &&
-      s.senderId === current.senderId &&
-      s.type === current.type &&
-      ((!s.contractId && !current.contractId) || s.contractId === current.contractId)
-    )),
-    map(statements => sortByDate(statements, 'duration.to').reverse())
+    map(([current, statements]) => filterStatements(current.type, [current.senderId, current.receiverId], current.contractId, statements)),
+    map(statements => sortStatements(statements))
   );
 
   public sources$ = combineLatest([this.statement$, this.shell.incomes$]).pipe(

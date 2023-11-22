@@ -1,7 +1,15 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 
-import { Statement, WaterfallSource, isDirectSalesStatement, isDistributorStatement, isProducerStatement, sortByDate } from '@blockframes/model';
+import {
+  Statement,
+  WaterfallSource,
+  getStatementNumber,
+  filterStatements,
+  isDirectSalesStatement,
+  isDistributorStatement,
+  isProducerStatement
+} from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 
 @Component({
@@ -35,9 +43,8 @@ export class StatementHeaderComponent implements OnInit {
       this.rightholderTag = 'Producer';
     }
 
-    const filteredStatements = statements.filter(statement => statement[rightholderKey] === this.statement[rightholderKey] && statement.type === this.statement.type);
-    const sortedStatements = sortByDate(filteredStatements, 'duration.to').map((s, i) => ({ ...s, order: i + 1 })).reverse();
-    this.statementNumber = sortedStatements.find(s => s.id === this.statement.id)?.order || 1;
+    const filteredStatements = filterStatements(this.statement.type, [this.statement.senderId, this.statement.receiverId], this.statement.contractId, statements);
+    this.statementNumber = getStatementNumber(this.statement, filteredStatements);
 
     this.cdr.markForCheck();
   }
