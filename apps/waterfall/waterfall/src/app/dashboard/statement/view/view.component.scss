@@ -1,7 +1,7 @@
 section {
   padding: 24px;
   mat-divider {
-    padding-bottom: 16px;
+    margin: 32px 0;
   }
 
   p.mat-body-2 {
@@ -29,6 +29,7 @@ section {
     border: 1px solid var(--foreground-divider);
     border-radius: 4px;
     margin-top: 24px;
+    margin-bottom: 24px;
 
     mat-panel-title {
       font-weight: 800;
@@ -64,7 +65,36 @@ section {
       bf-table {
         padding: 0;
         border: none;
+
+        price-per-currency.right::before {
+          content: '(';
+        }
+
+        price-per-currency.right::after {
+          content: ')';
+        }
+
+        price-per-currency.net, span.net {
+          font-weight: bold;
+        }
+
       }
     }
+
+    div.total-net {
+      font-weight: 800;
+      font-size: 26px;
+      line-height: 24px;
+      text-align: right;
+      color: var(--foreground-third-text);
+      margin-right: 66px;
+      padding-top: 32px;
+    }
   }
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  margin: 32px 0;
 }

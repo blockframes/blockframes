@@ -19,7 +19,6 @@ import {
   sum,
   isSource,
   isGroup,
-  movieCurrencies,
   WaterfallSource,
   isProducerStatement,
   WaterfallContract,
@@ -28,12 +27,13 @@ import {
   createIncomePayment,
   getPath,
   isDirectSalesStatement,
-  getStatementsHistory,
   pathExists,
   getStatementRights,
   getCalculatedAmount,
   getStatementSources,
   createIncome,
+  getAssociatedRights,
+  getStatementRightsToDisplay,
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
@@ -77,15 +77,6 @@ export class StatementComponent implements OnInit {
     filter(statement => !!statement),
   );
   public statement: Statement;
-
-  private contract$ = combineLatest([this.statement$, this.shell.contracts$]).pipe(
-    map(([statement, contracts]) => contracts.find(c => c.id === statement.contractId))
-  );
-
-  public graph$ = combineLatest([this.shell.simulation$, this.statement$, this.shell.statements$, this.contract$]).pipe(
-    map(([state, statement, statements, contract]) => this.buildGraph(state, statement, statements, contract))
-  );
-  public formatter = { formatter: (value: number) => `${value} ${movieCurrencies[mainCurrency]}` };
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
@@ -166,7 +157,8 @@ export class StatementComponent implements OnInit {
       this.statement = statement;
     }
 
-    const rightIds = unique(this.sources.map(s => this.getAssociatedRights(s.id)).flat().map(r => r.id));
+    const rights = getStatementRights(this.statement, this.allRights);
+    const rightIds = unique(this.sources.map(s => getAssociatedRights(s.id, rights, this.simulation.waterfall.state)).flat().map(r => r.id));
     this.rights = this.allRights.filter(r => rightIds.includes(r.id));
 
     this.generatePayments();
@@ -229,24 +221,6 @@ export class StatementComponent implements OnInit {
     return rightSources.filter(s => this.sources.map(s => s.id).includes(s));
   }
 
-  private getAssociatedRights(sourceId: string) {
-    const rightholderRights = getStatementRights(this.statement, this.allRights);
-
-    if (!this.simulation.waterfall.state.sources[sourceId]) {
-      this.snackBar.open(`Source "${sourceId}" not found in waterfall.`, 'close', { duration: 5000 });
-      console.log(`Source "${sourceId}" not found in waterfall. Check incomes and statement dates.`);
-      return [];
-    }
-
-    const rightsFromSource: Right[] = [];
-    for (const right of rightholderRights) {
-      const sources = getSources(this.simulation.waterfall.state, right.id);
-      if (sources.find(s => s.id === sourceId)) rightsFromSource.push(right);
-    }
-
-    return rightsFromSource;
-  }
-
   public getRightPayment(rightId: string) {
     const payment = this.statement.payments.right.find(p => p.to === rightId);
     return payment ? this.toPricePerCurrency(payment) : { [mainCurrency]: 0 };
@@ -269,29 +243,6 @@ export class StatementComponent implements OnInit {
       const currentCalculatedRevenue = sum(history, i => i.amount * i.percent);
       return { [mainCurrency]: currentCalculatedRevenue };
     }
-  }
-
-  private buildGraph(state: WaterfallState, statement: Statement, statements: Statement[], contract: WaterfallContract) {
-    if (!state?.version.id) return;
-    const history = getStatementsHistory(
-      state.waterfall.history,
-      statements.filter(s => s.type === statement.type),
-      statement.senderId,
-      contract?.id
-    );
-
-    const categories = history.map(h => new Date(h.date).toISOString().slice(0, 10));
-    const series = [
-      {
-        name: 'Revenue',
-        data: history.map(h => Math.round(h.orgs[statement.senderId].revenu.actual))
-      },
-      {
-        name: 'Turnover',
-        data: history.map(h => Math.round(h.orgs[statement.senderId].turnover.actual))
-      }
-    ];
-    return { xAxis: { categories }, series };
   }
 
   public showRightDetails({ id: rightId }: { id: string }) {
@@ -357,7 +308,6 @@ export class StatementComponent implements OnInit {
         currency: mainCurrency,
         date: isInternal ? this.statement.duration.to : undefined,
         incomeIds: amountPerIncome.map(i => i.incomeId),
-        details: amountPerIncome,
         mode: isInternal ? 'internal' : 'external'
       });
 
@@ -442,9 +392,8 @@ export class StatementComponent implements OnInit {
 }
 
 @Pipe({ name: 'filterRights' })
-export class FilterRightsPipe implements PipeTransform { // TODO #9524 #9525 #9532 #9531
+export class FilterRightsPipe implements PipeTransform {
   transform(rights: Right[], statement: Statement) {
-    if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) return rights.filter(r => r.rightholderId === statement.senderId);
-    if (isProducerStatement(statement)) return rights;
+    return getStatementRightsToDisplay(statement, rights);
   }
 }

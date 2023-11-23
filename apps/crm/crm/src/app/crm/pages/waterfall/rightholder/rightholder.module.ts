@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NgApexchartsModule } from 'ng-apexcharts';
 
 import { RightholderComponent } from './rightholder.component';
 
@@ -26,7 +25,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     CommonModule,
     ReactiveFormsModule,
     ClipboardModule,
-    NgApexchartsModule,
     
     StaticSelectModule,
     TableModule,

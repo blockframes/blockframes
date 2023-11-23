@@ -12,4 +12,25 @@
       }
     }
   }
+
+  .bf-tabs {
+    .mat-tab-header {
+      border-bottom: none;
+      margin: 0 auto;
+    }
+    .mat-tab-label-active {
+      background-color: var(--primary);
+      .mat-tab-label-content {
+        color: #ffffff;
+      }
+    }
+    .mat-tab-label:not(.mat-tab-label-active) {
+      color: #ffffff;
+      border: 1px solid var(--primary);
+      .mat-tab-label-content {
+        color: var(--primary);
+      }
+    }
+    
+  }
 }

@@ -1,7 +1,21 @@
 <ng-container *ngIf="statement$ | async as statement">
-  <ng-container *ngIf="sources$ | async as sources">
-    <waterfall-statement-header [statement]="statement" [sources]="sources"></waterfall-statement-header>
+  <waterfall-statement-header *ngIf="sources$ | async as sources" [statement]="statement" [sources]="sources"></waterfall-statement-header>
 
-    <button mat-button (click)="testSimulation()">simulate</button>
-  </ng-container>
+  <waterfall-statement-period [statement]="statement" [form]="form"></waterfall-statement-period>
+  <button mat-button (click)="testSimulation()">simulate</button>
+
+  <footer>
+    <a mat-flat-button color="primary" routerLink="..">
+      <span>Continue</span>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
+    </a>
+  </footer>
+
+  <footer>
+    <button mat-button>
+      <mat-icon svgIcon="save"></mat-icon>
+      <span>Save & Come back later</span>
+    </button>
+  </footer>
+
 </ng-container>

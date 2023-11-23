@@ -7,34 +7,21 @@
   <ng-container *ngIf="statement">
     <waterfall-statement-header *ngIf="sources" [statement]="statement" [sources]="sources"></waterfall-statement-header>
     <ng-container *ngIf="waterfall$ | async as waterfall">
-      <section *ngIf="waterfall.versions.length">
-        <mat-form-field appearance="fill">
-          <mat-label>Waterfall Version</mat-label>
-          <mat-select (selectionChange)="switchToVersion($event.value)" [(value)]="waterfall.versions[0].id">
-            <mat-option *ngFor="let versions of waterfall.versions" [value]="versions.id">
-              {{ versions.name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </section>
-    
-      <section>
-        <ul>
-          <li *ngIf="statement.type !== 'directSales'"><strong>Receiver :</strong> {{ statement.receiverId | rightholderName: waterfall }}</li>
-          <li *ngIf="statement.contractId"><strong>Contract :</strong> {{ statement.contractId }}</li>
-          <li><strong>Status: </strong> {{ statement.status | toLabel: 'statementStatus' }}</li>
-          <li><strong>Turnover :</strong> <price-per-currency [price]="getRightholderActual('turnover')"></price-per-currency></li>
-          <li><strong>Revenue :</strong> <price-per-currency [price]="getRightholderActual('revenu')"></price-per-currency></li>
-        </ul>
-        <ng-container *ngIf="graph$ | async as options">
-          <apx-chart *ngIf="options.series.length"
-            [chart]="{ type: 'bar' }" 
-            [series]="options.series"
-            [xaxis]="options.xAxis"
-            [tooltip]="{ y: formatter }">
-          </apx-chart>
-        </ng-container>
-      </section>
+      <mat-form-field *ngIf="waterfall.versions.length" appearance="outline">
+        <mat-label>Waterfall Version</mat-label>
+        <mat-select (selectionChange)="switchToVersion($event.value)" [(value)]="waterfall.versions[0].id">
+          <mat-option *ngFor="let versions of waterfall.versions" [value]="versions.id">
+            {{ versions.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <ul>
+        <li *ngIf="statement.type !== 'directSales'"><strong>Receiver :</strong> {{ statement.receiverId | rightholderName: waterfall }}</li>
+        <li *ngIf="statement.contractId"><strong>Contract :</strong> {{ statement.contractId }}</li>
+        <li><strong>Status: </strong> {{ statement.status | toLabel: 'statementStatus' }}</li>
+        <li><strong>Turnover :</strong> <price-per-currency [price]="getRightholderActual('turnover')"></price-per-currency></li>
+        <li><strong>Revenue :</strong> <price-per-currency [price]="getRightholderActual('revenu')"></price-per-currency></li>
+      </ul>
     </ng-container>
   
     <h3>Incomes</h3>

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClipboardModule } from '@angular/cdk/clipboard';
-import { NgApexchartsModule } from 'ng-apexcharts';
 
 import { FilterRightsPipe, StatementComponent } from './statement.component';
 
@@ -32,7 +31,6 @@ import { MatInputModule } from '@angular/material/input';
     ClipboardModule,
     FormsModule,
     ReactiveFormsModule,
-    NgApexchartsModule,
 
     TableModule,
     PricePerCurrencyModule,

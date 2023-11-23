@@ -8,14 +8,8 @@ waterfall-statement-header {
   margin-bottom: 24px;
 }
 
-section {
-  display: flex;
-  gap: 16px;
-  justify-content: space-between;
-
-  apx-chart {
-    width: 30%;
-  }
+mat-form-field {
+  width: 30%;
 }
 
 h3 {

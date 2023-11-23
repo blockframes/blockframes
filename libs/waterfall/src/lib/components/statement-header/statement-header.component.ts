@@ -1,7 +1,16 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnChanges } from '@angular/core';
 
-import { Statement, WaterfallSource, isDirectSalesStatement, isDistributorStatement, isProducerStatement } from '@blockframes/model';
+import {
+  Statement,
+  WaterfallSource,
+  getStatementNumber,
+  filterStatements,
+  isDirectSalesStatement,
+  isDistributorStatement,
+  isProducerStatement,
+  WaterfallContract
+} from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 
 @Component({
@@ -10,28 +19,38 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
   styleUrls: ['./statement-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StatementHeaderComponent implements OnInit {
+export class StatementHeaderComponent implements OnChanges {
   @Input() statement: Statement;
   @Input() sources: WaterfallSource[] = [];
   public rightholderTag: string;
   public rightholderName: string;
+  public statementNumber: number;
+  public contract: WaterfallContract;
+
+  private statements: Statement[] = [];
 
   constructor(
     public shell: DashboardWaterfallShellComponent,
     private cdr: ChangeDetectorRef
   ) { }
 
-  ngOnInit() {
+  async ngOnChanges() {
+    if (!this.statements.length) this.statements = await this.shell.statements();
+    if (!this.contract && !!this.statement.contractId) this.contract = (await this.shell.contracts([this.statement.contractId]))[0];
+    const rightholderKey = this.statement.type === 'producer' ? 'receiverId' : 'senderId';
+    this.rightholderName = this.shell.waterfall.rightholders.find(r => r.id === this.statement[rightholderKey]).name;
+
     if (isProducerStatement(this.statement)) {
       this.rightholderTag = 'Beneficiary';
-      this.rightholderName = this.shell.waterfall.rightholders.find(r => r.id === this.statement.receiverId).name;
     } else if (isDistributorStatement(this.statement)) {
       this.rightholderTag = 'Distributor';
-      this.rightholderName = this.shell.waterfall.rightholders.find(r => r.id === this.statement.senderId).name;
     } else if (isDirectSalesStatement(this.statement)) {
       this.rightholderTag = 'Producer';
-      this.rightholderName = this.shell.waterfall.rightholders.find(r => r.id === this.statement.senderId).name;
     }
+
+    const filteredStatements = filterStatements(this.statement.type, [this.statement.senderId, this.statement.receiverId], this.statement.contractId, this.statements);
+    this.statementNumber = getStatementNumber(this.statement, filteredStatements);
+
     this.cdr.markForCheck();
   }
 }
