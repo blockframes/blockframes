@@ -23,11 +23,11 @@ article.right-details {
 }
 
 article.payment-date {
+  width: 100%;
   display: flex;
   gap: 8px;
   flex-direction: column;
-  width: 300px;
-  margin-bottom: 32px;
+  margin: 32px 0;
 }
 
 button[mat-button] {

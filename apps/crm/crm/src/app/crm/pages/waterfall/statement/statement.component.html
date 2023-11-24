@@ -141,20 +141,30 @@
       <article *ngIf="statement.status === 'reported' && rightholderPayment.status === 'pending'" class="payment-date">
         <strong>Received on :</strong>
         <mat-form-field appearance="fill">
-          <input matInput [formControl]="paymentDateControl" [matDatepicker]="datePicker" placeholder="MM/DD/YYYY">
-          <mat-datepicker-toggle matSuffix [for]="datePicker">
+          <input matInput [formControl]="paymentDateControl" [matDatepicker]="datePickerPayment" placeholder="MM/DD/YYYY">
+          <mat-datepicker-toggle matSuffix [for]="datePickerPayment">
             <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
           </mat-datepicker-toggle>
-          <mat-datepicker #datePicker></mat-datepicker>
+          <mat-datepicker #datePickerPayment></mat-datepicker>
         </mat-form-field>
-        <button mat-flat-button color="primary" [disabled]="rightholderPayment.status !== 'pending' || !paymentDateControl.value" (click)="markPaymentAsReceived(paymentDateControl.value)">
+        <button mat-button color="primary" [disabled]="rightholderPayment.status !== 'pending' || !paymentDateControl.value" (click)="markPaymentAsReceived(paymentDateControl.value)">
           Mark payment as received
         </button>
       </article>
     </ng-container>
   
-    <button mat-button color="primary" [disabled]="statement.status === 'reported'" (click)="reportStatement()">
-      Report statement
-    </button>
+    <article class="payment-date" *ngIf="statement.status === 'draft'">
+      <strong>Reported on :</strong>
+      <mat-form-field appearance="fill">
+        <input matInput [formControl]="reportDateControl" [matDatepicker]="datePickerReport" placeholder="MM/DD/YYYY">
+        <mat-datepicker-toggle matSuffix [for]="datePickerReport">
+          <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
+        </mat-datepicker-toggle>
+        <mat-datepicker #datePickerReport></mat-datepicker>
+      </mat-form-field>
+      <button mat-button color="primary" [disabled]="!reportDateControl.value" (click)="reportStatement(reportDateControl.value)">
+        Report statement
+      </button>
+    </article>
   </ng-container>
 </ng-template>

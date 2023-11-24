@@ -2,62 +2,62 @@
   <h3>Statement Period</h3>
   <p class="mat-body-1">Please provide us with the following information so we can calculate the waterfall.</p>
 
-    <form [formGroup]="form">
-      <article>
-        <a *ngIf="previousStatementId else noPrevious" mat-icon-button matTooltip="Go to previous statement" [routerLink]="['../..', previousStatementId, 'edit']">
+  <form [formGroup]="form">
+    <article>
+      <a *ngIf="previousStatementId else noPrevious" mat-icon-button matTooltip="Go to previous statement" [routerLink]="['../..', previousStatementId, 'edit']">
+        <mat-icon svgIcon="arrow_back"></mat-icon>
+      </a>
+      <ng-template #noPrevious>
+        <button mat-icon-button disabled matTooltip="There is no previous statement">
           <mat-icon svgIcon="arrow_back"></mat-icon>
-        </a>
-        <ng-template #noPrevious>
-          <button mat-icon-button disabled matTooltip="There is no previous statement">
-            <mat-icon svgIcon="arrow_back"></mat-icon>
-          </button>
-        </ng-template>
-        <section>
-          <mat-form-field appearance="outline">
-            <mat-icon svgIcon="timer" matPrefix></mat-icon>
-            <mat-label>Duration Period</mat-label>
-            <mat-select [formControl]="periodicity" placeholder="Duration Period">
-              <mat-option *ngFor="let period of periods | keyvalue" [value]="period.key">{{ period.value }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-          
-          <mat-form-field appearance="outline">
-            <mat-label>From</mat-label>
-            <input matInput [formControl]="form.get('duration').get('from')" [matDatepicker]="datePickerFrom" placeholder="MM/DD/YYYY">
-            <mat-datepicker-toggle matPrefix [for]="datePickerFrom">
-              <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
-            </mat-datepicker-toggle>
-            <mat-datepicker #datePickerFrom></mat-datepicker>
-          </mat-form-field>
-        
-          <mat-form-field appearance="outline">
-            <mat-label>To</mat-label>
-            <input matInput [formControl]="form.get('duration').get('to')" [matDatepicker]="datePickerTo" placeholder="MM/DD/YYYY">
-            <mat-datepicker-toggle matPrefix [for]="datePickerTo">
-              <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
-            </mat-datepicker-toggle>
-            <mat-datepicker #datePickerTo></mat-datepicker>
-          </mat-form-field>
-        </section>
-        <a *ngIf="nextStatementId else noNext" mat-icon-button matTooltip="Go to next statement" [routerLink]="['../..', nextStatementId, 'edit']">
-          <mat-icon svgIcon="arrow_forward"></mat-icon>
-        </a>
-        <ng-template #noNext>
-          <button mat-icon-button disabled matTooltip="There is no next statement">
-            <mat-icon svgIcon="arrow_forward"></mat-icon>
-          </button>
-        </ng-template>
-      </article>
-      <div>
-        <p class="mat-body-1">You can change the date when the issue has been issued (useful for old films).</p>
+        </button>
+      </ng-template>
+      <section>
         <mat-form-field appearance="outline">
-          <mat-label>To</mat-label>
-          <input matInput [formControl]="form.get('reported')" [matDatepicker]="datePickerReported" placeholder="MM/DD/YYYY">
-          <mat-datepicker-toggle matPrefix [for]="datePickerReported">
+          <mat-icon svgIcon="timer" matPrefix></mat-icon>
+          <mat-label>Duration Period</mat-label>
+          <mat-select [formControl]="periodicity" placeholder="Duration Period">
+            <mat-option *ngFor="let period of periods | keyvalue" [value]="period.key">{{ period.value }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline">
+          <mat-label>From</mat-label>
+          <input matInput [formControl]="form.get('duration').get('from')" [matDatepicker]="datePickerFrom" placeholder="MM/DD/YYYY">
+          <mat-datepicker-toggle matPrefix [for]="datePickerFrom">
             <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
           </mat-datepicker-toggle>
-          <mat-datepicker #datePickerReported></mat-datepicker>
+          <mat-datepicker #datePickerFrom></mat-datepicker>
         </mat-form-field>
-      </div>
-    </form>
+      
+        <mat-form-field appearance="outline">
+          <mat-label>To</mat-label>
+          <input matInput [formControl]="form.get('duration').get('to')" [matDatepicker]="datePickerTo" placeholder="MM/DD/YYYY">
+          <mat-datepicker-toggle matPrefix [for]="datePickerTo">
+            <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
+          </mat-datepicker-toggle>
+          <mat-datepicker #datePickerTo></mat-datepicker>
+        </mat-form-field>
+      </section>
+      <a *ngIf="nextStatementId else noNext" mat-icon-button matTooltip="Go to next statement" [routerLink]="['../..', nextStatementId, 'edit']">
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </a>
+      <ng-template #noNext>
+        <button mat-icon-button disabled matTooltip="There is no next statement">
+          <mat-icon svgIcon="arrow_forward"></mat-icon>
+        </button>
+      </ng-template>
+    </article>
+    <div>
+      <p class="mat-body-1">You can change the date when the issue has been issued (useful for old films).</p>
+      <mat-form-field appearance="outline">
+        <mat-label>To</mat-label>
+        <input matInput [formControl]="form.get('reported')" [matDatepicker]="datePickerReported" placeholder="MM/DD/YYYY">
+        <mat-datepicker-toggle matPrefix [for]="datePickerReported">
+          <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
+        </mat-datepicker-toggle>
+        <mat-datepicker #datePickerReported></mat-datepicker>
+      </mat-form-field>
+    </div>
+  </form>
 </section>

@@ -4,14 +4,21 @@
     <span>
       <mat-icon svgIcon="movie"></mat-icon><span matLine><strong>Movie: </strong>{{ shell.movie.title.international }}</span>
     </span>
-    <span *ngIf="statement.status === 'reported'">
+    <span>
       <mat-icon svgIcon="calendar_today"></mat-icon><span matLine><strong>Covered Period: </strong>{{ statement.duration.from | date: 'dd/MM/yyyy' }} -  {{ statement.duration.to | date: 'dd/MM/yyyy' }}</span>
     </span>
     <span *ngIf="contract">
       <mat-icon svgIcon="document"></mat-icon><span matLine><strong>Contract: </strong>{{ contract.name }}</span>
     </span>
-    <span *ngIf="sources">
-      <mat-icon svgIcon="business"></mat-icon><span matLine><strong>{{ rightholderTag }}: </strong>{{ rightholderName }} ({{ sources | join:'name' }})</span>
-    </span>
+    <section>
+      <span>
+        <mat-icon svgIcon="business"></mat-icon><span matLine><strong>{{ rightholderTag }}: </strong>{{ rightholderName }} <ng-container *ngIf="sources">({{ sources | join:'name' }})</ng-container></span>
+      </span>
+      <span>
+        <span *ngIf="statement.status === 'reported' && !!statement.reported">
+          Statement reported: {{ statement.reported | date: 'dd/MM/yyyy' }}
+        </span>
+      </span>
+    </section>
   </article>
 </header>

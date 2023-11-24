@@ -2,12 +2,13 @@ import { DocumentMeta } from '../meta';
 import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups, RightType } from '../static';
 import { Duration, createDuration } from '../terms';
 import { sortByDate, sum } from '../utils';
-import { History, TitleState, TransferState } from './state';
+import { TitleState, TransferState } from './state';
 import { WaterfallContract, WaterfallSource, getAssociatedSource, getIncomesSources } from './waterfall';
 import { Right } from './right';
 import { getSources, pathExists } from './node';
 import { Income } from '../income';
 import { getContractsWith } from '../contract';
+import { mainCurrency } from './action';
 
 export interface Payment {
   id: string;
@@ -26,6 +27,7 @@ export interface IncomePayment extends Payment {
   type: 'income';
   incomeId: string; // Income related to this payment
   status: 'received';
+  mode: 'internal';
 }
 
 /**
@@ -69,6 +71,7 @@ export function createIncomePayment(params: Partial<IncomePayment> = {}): Income
     ...payment,
     type: 'income',
     status: 'received',
+    mode: 'internal',
   }
 }
 
@@ -103,7 +106,7 @@ export interface Statement {
   senderId: string, // rightholderId of statement creator
   receiverId: string, // rightholderId of statement receiver
   duration: Duration;
-  reported: Date;
+  reported?: Date;
   incomeIds: string[];
   expenseIds?: string[];
   payments: {
@@ -158,7 +161,6 @@ function createStatementBase(params: Partial<Statement> = {}): Statement {
     senderId: '',
     receiverId: '',
     incomeIds: params.incomeIds || [],
-    reported: new Date(), // TODO #9524 update import excel
     payments: {
       right: params.payments?.right ? params.payments.right.map(createRightPayment) : []
     },
@@ -444,4 +446,89 @@ export function getCalculatedAmount(rightId: string, _incomeIds: string[] | stri
   const transfers = Object.values(transferState).filter(t => t.to === rightId);
   const history = transfers.map(t => t.history.filter(h => h.checked && incomeIds.includes(h.incomeId))).flat();
   return sum(history, i => i.amount * i.percent);
+}
+
+/**
+ * Add payements to statement if missing
+ * @param statement 
+ * @param state 
+ * @param rights 
+ * @param incomes 
+ * @param sources 
+ * @param currency 
+ * @returns 
+ */
+export function generatePayments(statement: Statement, state: TitleState, rights: Right[], incomes: Income[], sources: WaterfallSource[], currency = mainCurrency) {
+
+  // Income payments 
+  if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
+    for (const incomeId of statement.incomeIds) {
+      if (statement.payments.income.find(p => p.incomeId === incomeId)) continue;
+      const income = incomes.find(i => i.id === incomeId);
+      statement.payments.income.push(createIncomePayment({
+        incomeId,
+        price: income.price,
+        currency: income.currency,
+        date: statement.duration.to,
+      }));
+    }
+  }
+
+  // Right Payments
+  for (const right of rights) {
+    const paymentExists = statement.payments.right.find(p => p.to === right.id);
+    if (paymentExists) continue;
+
+    const isInternal = right.rightholderId === statement.senderId;
+    const amountPerIncome = statement.incomeIds.map(incomeId => ({ incomeId, amount: getCalculatedAmount(right.id, incomeId, state.transfers) }));
+    const payment = createRightPayment({
+      to: right.id,
+      price: sum(amountPerIncome, i => i.amount),
+      currency,
+      date: isInternal ? statement.duration.to : undefined,
+      incomeIds: amountPerIncome.map(i => i.incomeId).filter(id => {
+        const income = incomes.find(i => i.id === id);
+        const source = getAssociatedSource(income, sources);
+        return pathExists(right.id, source.id, state);
+      }),
+      mode: isInternal ? 'internal' : 'external'
+    });
+
+    statement.payments.right.push(payment);
+  }
+
+  // Rightholder Payments
+  if ((isDistributorStatement(statement) || isProducerStatement(statement)) && !statement.payments.rightholder) {
+    const price = getRightholderPaymentPrice(statement, state);
+    const externalRights = rights.filter(r => r.rightholderId !== statement.senderId);
+
+    // Sum of external right payments
+    statement.payments.rightholder = createRightholderPayment({
+      price: price,
+      currency,
+      date: undefined,
+      incomeIds: statement.incomeIds.filter(id => {
+        const income = incomes.find(i => i.id === id);
+        const source = getAssociatedSource(income, sources);
+        return income.price > 0 && externalRights.some(r => pathExists(r.id, source.id, state)); // TODO #9524 remove price check ?
+      })
+    });
+  }
+
+  return statement;
+}
+
+function getRightholderPaymentPrice(statement: Statement, state: TitleState) {
+  if (isDistributorStatement(statement)) {
+    // Total income received
+    const incomes = statement.incomeIds.map(id => state.incomes[id]);
+    const incomeSum = sum(incomes, i => i.amount);
+    // Total price of interal right payments
+    const internalRightPaymentSum = sum(statement.payments.right.filter(r => r.mode === 'internal'), p => p.price);
+    // What the rightholder did not take
+    return incomeSum - internalRightPaymentSum;
+  } else if (isProducerStatement(statement)) {
+    // Total price of external right payments
+    return sum(statement.payments.right.filter(r => r.mode === 'external'), p => p.price);
+  }
 }

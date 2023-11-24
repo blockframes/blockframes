@@ -61,6 +61,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   private countRouteEvents = 1;
   private versionId$ = new BehaviorSubject<string>(undefined);
   private date$ = new BehaviorSubject<Date>(undefined);
+  private _date = new Date();
   public isRefreshing$ = new BehaviorSubject<boolean>(false);
 
   public movie$ = this.route.params.pipe(
@@ -282,7 +283,10 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   }
 
   setDate(date: Date) {
+    if(this._date?.getTime() === date?.getTime()) return false;
     this.date$.next(date);
+    this._date = date;
+    return true;
   }
 
   async initWaterfall(version: Partial<Version> = { id: `version_${this.waterfall.versions.length + 1}`, description: `Version ${this.waterfall.versions.length + 1}` }) {
