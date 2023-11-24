@@ -3,10 +3,10 @@ import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStat
 import { Duration, createDuration } from '../terms';
 import { sortByDate, sum } from '../utils';
 import { TitleState, TransferState } from './state';
-import { WaterfallContract, WaterfallSource, getAssociatedSource, getIncomesSources } from './waterfall';
+import { Waterfall, WaterfallContract, WaterfallSource, getAssociatedSource, getIncomesSources } from './waterfall';
 import { Right } from './right';
 import { getSources, pathExists } from './node';
-import { Income } from '../income';
+import { Income, createIncome } from '../income';
 import { getContractsWith } from '../contract';
 import { mainCurrency } from './action';
 
@@ -15,7 +15,7 @@ export interface Payment {
   type: PaymentType;
   price: number;
   currency: MovieCurrency;
-  date: Date;
+  date?: Date;
   status: PaymentStatus;
   mode: 'internal' | 'external';
 }
@@ -57,7 +57,6 @@ function createPaymentBase(params: Partial<Payment> = {}): Payment {
     type: 'rightholder',
     price: 0,
     currency: 'EUR',
-    date: new Date(),
     status: 'pending',
     mode: 'internal',
     ...params,
@@ -259,7 +258,7 @@ function getIncomingStatements(receiverId: string, statements: Statement[], inco
   const distributorStatements = statements
     .filter(s => isDistributorStatement(s) && s.payments.rightholder)
     .filter(s => s.duration.to.getTime() <= date.getTime())
-    .filter((s: DistributorStatement) => s.receiverId === receiverId && s.payments.rightholder.status === 'received') as DistributorStatement[];
+    .filter((s: DistributorStatement) => s.receiverId === receiverId && s.payments.rightholder.status === 'received' && s.payments.rightholder.date?.getTime() <= date.getTime()) as DistributorStatement[];
 
   // Fetch active direct sales statements created by the rightholder
   const directSalesStatements = statements
@@ -418,6 +417,7 @@ export function getOrderedRights(rights: Right[], state: TitleState) {
  * @returns 
  */
 function getTopLevelRights(_rights: Right[], state: TitleState) {
+  if (!state) return [];
   const rights = skipGroups(_rights).filter(r => state.rights[r.id].enabled);
   const topLevelRights: Right[] = [];
   for (const right of rights) {
@@ -531,4 +531,30 @@ function getRightholderPaymentPrice(statement: Statement, state: TitleState) {
     // Total price of external right payments
     return sum(statement.payments.right.filter(r => r.mode === 'external'), p => p.price);
   }
+}
+
+export function createMissingIncomes(incomeSources: WaterfallSource[], statementIncomes: Income[], statement: Statement, waterfall: Waterfall) {
+  // TODO #9532 this should not be used for directSales incomes as producer can make a statement for any source, even the ones he does not have rights on
+  const sourcesWithoutIncome = incomeSources.filter(s => !statementIncomes.find(i => getAssociatedSource(i, waterfall.sources).id === s.id));
+  const missingIncomes: Income[] = [];
+  for (const sourceWithoutIncome of sourcesWithoutIncome) {
+    const income = createIncome({
+      contractId: statement.contractId,
+      price: 0,
+      currency: mainCurrency,
+      titleId: waterfall.id,
+      date: statement.duration.to,
+      medias: sourceWithoutIncome.medias,
+      territories: sourceWithoutIncome.territories
+    });
+
+    // If the source has no territories or no medias, we set the sourceId to the income
+    if (sourceWithoutIncome.medias.length === 0 || sourceWithoutIncome.territories.length === 0) {
+      income.sourceId = sourceWithoutIncome.id;
+    }
+
+    missingIncomes.push(income);
+  }
+
+  return missingIncomes;
 }

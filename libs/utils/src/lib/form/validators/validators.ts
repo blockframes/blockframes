@@ -219,3 +219,13 @@ export function isDateInFuture(form: UntypedFormControl) {
   now.setHours(0, 0, 0, 0);
   return form.value < now ? { inPast: true } : null;
 }
+
+/**
+ * Check if date is not before another date
+ */
+export function isDateAfter(date: Date): ValidatorFn {
+  return (control: UntypedFormControl): ValidationErrors => {
+    date.setHours(0, 0, 0, 0);
+    return control.value < date ? { isBefore: true } : null;
+  };
+}

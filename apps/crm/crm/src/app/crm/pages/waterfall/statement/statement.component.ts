@@ -27,10 +27,10 @@ import {
   getStatementRights,
   getCalculatedAmount,
   getStatementSources,
-  createIncome,
   getAssociatedRights,
   getStatementRightsToDisplay,
   generatePayments,
+  createMissingIncomes,
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
@@ -121,7 +121,7 @@ export class StatementComponent implements OnInit {
 
     if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
       // Create missing incomes for the sources that are in the statement but do not have an income associated
-      this.incomes = await this.addMissingIncomes(this.sources, incomes, statement, this.waterfall.sources);
+      this.incomes = await this.addMissingIncomes(this.sources, incomes, statement);
       this.statement = statement;
 
       // Refresh waterfall if some incomes or expenses are not in the simulated waterfall
@@ -152,30 +152,10 @@ export class StatementComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  private async addMissingIncomes(incomeSources: WaterfallSource[], incomeStatements: Income[], statement: Statement, waterfallSources: WaterfallSource[]) {
+  private async addMissingIncomes(incomeSources: WaterfallSource[], incomeStatements: Income[], statement: Statement) {
     let incomes: Income[] = [...incomeStatements];
 
-    // TODO #9532 this should not be used for directSales incomes as producer can make a statement for any source, even the ones he does not have rights on
-    const sourcesWithoutIncome = incomeSources.filter(s => !incomeStatements.find(i => getAssociatedSource(i, waterfallSources).id === s.id));
-    const missingIncomes: Income[] = [];
-    for (const sourceWithoutIncome of sourcesWithoutIncome) {
-      const income = createIncome({
-        contractId: statement.contractId,
-        price: 0,
-        currency: mainCurrency,
-        titleId: this.waterfall.id,
-        date: statement.duration.to,
-        medias: sourceWithoutIncome.medias,
-        territories: sourceWithoutIncome.territories
-      });
-
-      // If the source has no territories or no medias, we set the sourceId to the income
-      if (sourceWithoutIncome.medias.length === 0 || sourceWithoutIncome.territories.length === 0) {
-        income.sourceId = sourceWithoutIncome.id;
-      }
-
-      missingIncomes.push(income);
-    }
+    const missingIncomes = createMissingIncomes(incomeSources, incomeStatements, statement, this.waterfall);
 
     if (missingIncomes.length) {
       const newIncomeIds = await this.incomeService.add(missingIncomes);
