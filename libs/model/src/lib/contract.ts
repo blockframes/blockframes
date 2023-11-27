@@ -171,6 +171,7 @@ export function getContractDurationStatus(contract: BaseContract): 'future' | 'p
  * @returns 
  */
 export function getContractsWith<T extends BaseContract>(parties: string[], _contracts: T[], date = new Date()) {
+  if (parties.length === 0 || parties.length > 2) throw new Error('Parties must be an array of 1 or 2 elements');
   const filteredContracts = _contracts.filter(c => !c.rootId);
   const contracts = filteredContracts.map(c => getCurrentContract<T>(getContractAndAmendments<T>(c.id, filteredContracts), date));
   return contracts
@@ -178,6 +179,7 @@ export function getContractsWith<T extends BaseContract>(parties: string[], _con
     .filter(contract => {
       if (parties.length === 1) return contract.buyerId === parties[0] || contract.sellerId === parties[0];
       const contractParties = [contract.buyerId, contract.sellerId];
+      if (parties[0] === parties[1]) return false; // Party cannot have a contract with itself
       return contractParties.includes(parties[0]) && contractParties.includes(parties[1]);
     });
 }
