@@ -40,6 +40,16 @@
               <ng-template colRef="" label="Cumulative" let-item>
                 <price-per-currency [class]="item.type" [price]="item.cumulated" default="€ 0"></price-per-currency>
               </ng-template>
+              <ng-template colRef="" label="" let-item>
+                <button mat-icon-button 
+                  *ngIf="item.type === 'right'"
+                  [disabled]="statement.status === 'reported'"
+                  [matTooltip]="statement.status === 'reported' ? 'Statement is already reported.' : 'Change current value'"
+                  (click)="editRightPayment(item)"
+                >
+                  <mat-icon svgIcon="statement_warning"></mat-icon>
+                </button>
+              </ng-template>
             </bf-table>
           </mat-expansion-panel>
         </div>
@@ -73,6 +83,15 @@
               <ng-template colRef="" label="Cumulative" let-item>
                 <price-per-currency class="right" [price]="item.cumulated" default="€ 0"></price-per-currency>
               </ng-template>
+              <ng-template colRef="" label="" let-item>
+                <button mat-icon-button 
+                  [disabled]="statement.status === 'reported'"
+                  [matTooltip]="statement.status === 'reported' ? 'Statement is already reported.' : 'Change current value'"
+                  (click)="editRightPayment(item)"
+                >
+                  <mat-icon svgIcon="statement_warning"></mat-icon>
+                </button>
+              </ng-template>
             </bf-table>
           </mat-expansion-panel>
         </div>
@@ -103,7 +122,12 @@
       <mat-icon svgIcon="arrow_back"></mat-icon>
       <span>Back</span>
     </a>
-    <button mat-flat-button color="primary" (click)="report(statement)">
+    <button mat-flat-button 
+      color="primary"
+      [disabled]="statement.status === 'reported'"
+      (click)="report(statement)"
+      [matTooltip]="statement.status === 'reported' ? 'Statement is already reported.' : 'Report Statement'"
+    >
       <span>Report Statement</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>

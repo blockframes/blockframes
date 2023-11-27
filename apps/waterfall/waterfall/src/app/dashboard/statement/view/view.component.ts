@@ -108,7 +108,7 @@ export class StatementViewComponent {
       const orderedRights = getOrderedRights(displayedRights, simulation.waterfall.state);
 
       return sources.map(source => {
-        const rows: { section: string, type?: 'right' | 'net', previous: PricePerCurrency, current: PricePerCurrency, cumulated: PricePerCurrency }[] = [];
+        const rows: { section: string, type?: 'right' | 'net', previous: PricePerCurrency, current: PricePerCurrency, cumulated: PricePerCurrency, rightId?: string }[] = [];
 
         // Incomes declared by statement.senderId
         const previousSourcePayments = previous.map(s => s.payments.income).flat().filter(income => getAssociatedSource(incomes.find(i => i.id === income.incomeId), this.waterfall.sources).id === source.id);
@@ -141,6 +141,7 @@ export class StatementViewComponent {
           rows.push({
             section,
             type: 'right',
+            rightId: right.id,
             previous: getTotalPerCurrency(previousRightPayment),
             current: getTotalPerCurrency(currentRightPayment),
             cumulated: getTotalPerCurrency(cumulatedRightPayment)
@@ -184,7 +185,7 @@ export class StatementViewComponent {
       const rightTypes = unique(rightsWithManySources.map(right => right.type));
 
       return rightTypes.map(type => {
-        const rows: { section: string, previous: PricePerCurrency, current: PricePerCurrency, cumulated: PricePerCurrency }[] = [];
+        const rows: { section: string, previous: PricePerCurrency, current: PricePerCurrency, cumulated: PricePerCurrency, rightId: string }[] = [];
 
         for (const right of rightsWithManySources) {
           if (right.type !== type) continue;
@@ -195,6 +196,7 @@ export class StatementViewComponent {
           const cumulatedRightPayment = history.map(s => s.payments.right).flat().filter(p => p.to === right.id);
           rows.push({
             section,
+            rightId: right.id,
             previous: getTotalPerCurrency(previousRightPayment),
             current: getTotalPerCurrency(currentRightPayment),
             cumulated: getTotalPerCurrency(cumulatedRightPayment)
@@ -229,6 +231,13 @@ export class StatementViewComponent {
     this.dynTitle.setPageTitle(this.shell.movie.title.international, 'View Statement');
 
     this.form = new StatementForm();
+  }
+
+  public editRightPayment(payment: RightPayment) {
+    console.log(payment);
+
+    this.shell.simulateWaterfall();
+    // TODO #9524 update form, regenerate payments, update simulation ...
   }
 
   public report(statement: Statement) {

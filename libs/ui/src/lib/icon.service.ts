@@ -135,6 +135,7 @@ export const icons = [
   { name: 'specific_delivery_list', url: 'assets/icons/specific_delivery_list.svg' },
   { name: 'star', url: 'assets/icons/star.svg' },
   { name: 'star_fill', url: 'assets/icons/star_fill.svg' },
+  { name: 'statement_warning', url: 'assets/icons/statement_warning.svg' },
   { name: 'style', url: 'assets/icons/style.svg' },
   { name: 'supervisor', url: 'assets/icons/supervisor_account.svg' },
   { name: 'switch_access_shortcut', url: 'assets/icons/switch_access_shortcut.svg' },

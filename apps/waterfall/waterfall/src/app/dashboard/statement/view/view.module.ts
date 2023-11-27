@@ -20,6 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [StatementViewComponent],
@@ -40,6 +41,7 @@ import { MatInputModule } from '@angular/material/input';
     MatSnackBarModule,
     MatFormFieldModule,
     MatInputModule,
+    MatTooltipModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: StatementViewComponent }]),
