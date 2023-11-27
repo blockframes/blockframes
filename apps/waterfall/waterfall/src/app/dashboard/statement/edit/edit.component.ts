@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExpenseService } from '@blockframes/contract/expense/service';
 import { IncomeService } from '@blockframes/contract/income/service';
-import { Territory, WaterfallSource, createIncome, getStatementSources, Statement, createMissingIncomes } from '@blockframes/model';
+import { Territory, WaterfallSource, createIncome, getStatementSources, Statement, createMissingIncomes, createExpense } from '@blockframes/model';
 import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
@@ -21,6 +21,12 @@ const incomeColumns = {
   '': 'Price',
 }
 
+const expenseColumns = {
+  type: 'Type',
+  category: 'Category',
+  '': 'Price',
+}
+
 @Component({
   selector: 'waterfall-statement-edit',
   templateUrl: './edit.component.html',
@@ -30,6 +36,7 @@ const incomeColumns = {
 export class StatementEditComponent implements OnInit, OnDestroy {
 
   public incomeColumns = incomeColumns;
+  public expenseColumns = expenseColumns;
 
   private _statement$ = combineLatest([this.route.params.pipe(pluck('statementId')), this.shell.statements$]).pipe(
     map(([statementId, statements]) => statements.find(s => s.id === statementId))
@@ -95,6 +102,10 @@ export class StatementEditComponent implements OnInit, OnDestroy {
     return { medias: source.medias, territories: source.territories };
   }
 
+  public defaultExpenseValue() {
+    return { type: 'type', category: 'category' };
+  }
+
   public async save(sources: WaterfallSource[], statement: Statement, redirect = false) {
     if (this.form.invalid) {
       this.snackBar.open('Information not valid', 'close', { duration: 5000 });
@@ -114,21 +125,32 @@ export class StatementEditComponent implements OnInit, OnDestroy {
     }));
 
     await this.incomeService.update(incomes.filter(i => i.id));
-    const newIds = await this.incomeService.add(incomes.filter(i => !i.id));
+    const newIncomeIds = await this.incomeService.add(incomes.filter(i => !i.id));
 
     // If incomeIds are removed from the statement, backend-function will remove them from the income collection
-    statement.incomeIds = unique([...incomes.filter(i => i.id).map(i => i.id), ...newIds]);
+    statement.incomeIds = unique([...incomes.filter(i => i.id).map(i => i.id), ...newIncomeIds]);
 
-    // TODO #9524 expenses
+    const expenses = value.expenses.map(expense => createExpense({
+      ...expense,
+      titleId: this.waterfall.id,
+      contractId: statement.contractId,
+      rightholderId: statement.senderId,
+      date: statement.duration.to,
+    }));
+
+    await this.expenseService.update(expenses.filter(e => e.id));
+    const newExpenseIds = await this.expenseService.add(expenses.filter(e => !e.id));
+
+    // If expenseIds are removed from the statement, backend-function will remove them from the expense collection
+    statement.expenseIds = unique([...expenses.filter(e => e.id).map(e => e.id), ...newExpenseIds]);
 
     if (statement.status === 'draft') {
       // Put back incomes and expenses to pending
-      await this.incomeService.update(incomes.filter(i => i.status === 'received').map(i => i.id), (i) => {
+      await this.incomeService.update(incomes.filter(i => i.status === 'received').map(i => i.id), i => {
         return { ...i, status: 'pending' };
       });
 
-      // TODO #9524 update only expenses to received status
-      await this.expenseService.update(statement.expenseIds, (e) => {
+      await this.expenseService.update(expenses.filter(e => e.status === 'received').map(e => e.id), e => {
         return { ...e, status: 'pending' };
       });
 

@@ -75,7 +75,50 @@
       <mat-tab label="Expenses">
         <ng-template matTabContent>
           <section class="surface">
+            <h3>Expenses</h3>
+            <p class="mat-body-1">Please note, only the capped sums will be used for the calculation.</p>
+            <bf-form-table [columns]="expenseColumns" [form]="form.get('expenses')" [defaultFormValue]="defaultExpenseValue()">
+              <!-- Columns -->
+              <ng-template colRef="" label="Amount" let-item>
+                <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
+              </ng-template>
+              <ng-template colRef="type" label="Type" let-type>
+                {{ type }}
+              </ng-template>
+              <ng-template colRef="category" label="Category" let-category>
+                {{ category }}
+              </ng-template>
+      
+              <!-- Local Form -->
+              <ng-template formView let-expenseForm>
+                <form [formGroup]="expenseForm" class="group" fxLayout="column" fxLayoutGap="8px">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Type</mat-label>
+                    <input matInput [formControl]="expenseForm.get('type')" required/>
+                  </mat-form-field>
+            
+                  <mat-form-field appearance="outline">
+                    <mat-label>Category</mat-label>
+                    <input matInput [formControl]="expenseForm.get('category')" required/>
+                  </mat-form-field>
   
+                  <static-select [control]="expenseForm.get('currency')" [only]="['USD', 'EUR']" required scope="movieCurrencies">
+                    <mat-label>Currency</mat-label>
+                  </static-select>
+  
+                  <mat-form-field appearance="outline">
+                    <mat-label>Amount</mat-label>
+                    <input type="number" matInput [formControl]="expenseForm.get('price')" required/>
+                    <mat-icon matPrefix *ngIf="expenseForm.get('currency').value" [svgIcon]="expenseForm.get('currency').value"></mat-icon>
+                  </mat-form-field>
+                </form>
+      
+              </ng-template>
+      
+              <ng-template saveButtonText>Save Expense</ng-template>
+              <ng-template addButtonText>Add Expense</ng-template>
+      
+            </bf-form-table>
           </section>
         </ng-template>
       </mat-tab>
