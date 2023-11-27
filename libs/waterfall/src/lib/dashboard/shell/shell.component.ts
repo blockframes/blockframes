@@ -25,7 +25,6 @@ import {
   sortContracts,
   Expense,
   Income,
-  Statement
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { filter, map, pluck, switchMap, tap } from 'rxjs/operators';
@@ -197,6 +196,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
 
   private _simulation$ = new BehaviorSubject<WaterfallState>(undefined);
   public simulation$ = this._simulation$.asObservable().pipe(filter(state => !!state));
+  private simulationData: WaterfallData;
 
   @Input() routes: RouteDescription[];
   @Input() editRoute?: string | string[];
@@ -227,7 +227,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
       .subscribe(() => this.countRouteEvents++);
   }
 
-  private async loadData(): Promise<WaterfallData> {
+  private async loadData() {
     const versionId = await firstValueFrom(this.versionId$);
     const contracts = await this.contracts();
     const rights = await this.rights(versionId);
@@ -236,15 +236,25 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     const statements = await this.statements();
     const terms = await this.terms();
 
-    return {
+    const data: WaterfallData = {
       waterfall: this.waterfall,
       contracts,
       rights,
-      incomes,
-      expenses,
+      incomes: {},
+      expenses: {},
       statements,
       terms
     };
+
+    for (const income of incomes) {
+      data.incomes[income.id] = income;
+    }
+
+    for (const expense of expenses) {
+      data.expenses[expense.id] = expense;
+    }
+
+    return data;
   }
 
   async contracts(ids: string[] = []) {
@@ -283,7 +293,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   }
 
   setDate(date: Date) {
-    if(this._date?.getTime() === date?.getTime()) return false;
+    if (this._date?.getTime() === date?.getTime()) return false;
     this.date$.next(date);
     this._date = date;
     return true;
@@ -329,21 +339,37 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Simulates a waterfall with the given incomes, expenses and statements in addition to existing data
+   * Starts a waterfall simulation with existing db data
+   */
+  async simulateWaterfall() {
+    this.isRefreshing$.next(true);
+    this.simulationData = await this.loadData();
+    const date = await firstValueFrom(this.date$);
+    const waterfall = await this.waterfallService.simulateWaterfall(this.simulationData, date);
+    this._simulation$.next(waterfall);
+    this.isRefreshing$.next(false);
+    return waterfall;
+  }
+
+  /**
+   * Simulates a waterfall with the given incomes and expenses in addition to existing simulation data
    * @param incomes 
    * @param expenses 
-   * @param statements 
    */
-  async simulateWaterfall(append: { incomes?: Income[], expenses?: Expense[], statements?: Statement[] } = { incomes: [], expenses: [], statements: [] }) {
+  async appendToSimulation(append: { incomes?: Income[], expenses?: Expense[] } = { incomes: [], expenses: [] }) {
     this.isRefreshing$.next(true);
-    const data = await this.loadData();
+    if (!this.simulationData) this.simulationData = await this.loadData();
+
+    for (const income of append.incomes || []) {
+      this.simulationData.incomes[income.id] = income;
+    }
+
+    for (const expense of append.expenses || []) {
+      this.simulationData.expenses[expense.id] = expense;
+    }
+
     const date = await firstValueFrom(this.date$);
-    const waterfall = await this.waterfallService.simulateWaterfall({
-      ...data,
-      incomes: [...data.incomes, ...append.incomes || []],
-      expenses: [...data.expenses, ...append.expenses || []],
-      statements: [...data.statements, ...append.statements || []]
-    }, date);
+    const waterfall = await this.waterfallService.simulateWaterfall(this.simulationData, date);
     this._simulation$.next(waterfall);
     this.isRefreshing$.next(false);
     return waterfall;

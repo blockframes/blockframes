@@ -132,7 +132,7 @@ export class StatementComponent implements OnInit {
         const missingIncomes = this.incomes.filter(i => missingIncomeIds.includes(i.id));
         const missingExpenses = this.expenses.filter(e => missingExpenseIds.includes(e.id));
 
-        this.simulation = await this.shell.simulateWaterfall({
+        this.simulation = await this.shell.appendToSimulation({
           incomes: missingIncomes.map(i => ({ ...i, status: 'received' })),
           expenses: missingExpenses.map(e => ({ ...e, status: 'received' })),
         });
