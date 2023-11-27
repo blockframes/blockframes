@@ -243,6 +243,8 @@ export class StatementViewComponent {
 
     const value = this.form.value;
 
+    statement.comment = value.comment;
+
     // Add an id to the payments if they don't have one and update interal right payments status
     if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
       const incomePayments = value.incomePayments.map(p => createIncomePayment({
@@ -283,11 +285,17 @@ export class StatementViewComponent {
 
     await this.statementService.update(statement, { params: { waterfallId: this.waterfall.id } });
 
-    // Update the simulation for
+    // Update the simulation
     await this.shell.simulateWaterfall();
 
-    if (reported) this.snackBar.open('Statement reported !', 'close', { duration: 5000 })
-    else this.snackBar.open('Statement updated !', 'close', { duration: 5000 });
+    if (reported) {
+      this.snackBar.open('Statement reported !', 'close', { duration: 5000 });
+      // Statement is reported, actual waterfall is refreshed
+      await this.shell.refreshWaterfall();
+    } else {
+      this.snackBar.open('Statement updated !', 'close', { duration: 5000 });
+    }
+
   }
 
 }

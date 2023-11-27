@@ -160,7 +160,8 @@ function createStatementFormControl(statement?: Partial<FullStatement>) {
 
     incomePayments: FormList.factory(statement?.payments.income, (el) => new IncomePaymentForm(el)),
     rightPayments: FormList.factory(statement?.payments.right, (el) => new RightPaymentForm(el)),
-    rightholderPayment: new RightholderPaymentForm(statement?.payments.rightholder)
+    rightholderPayment: new RightholderPaymentForm(statement?.payments.rightholder),
+    comment: new FormControl<string>(statement?.comment ?? ''),
   }
 
   for (const source of statement?.sources ?? []) {

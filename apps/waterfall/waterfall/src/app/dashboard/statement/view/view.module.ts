@@ -2,6 +2,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
 
 // Blockframes
 import { StatementHeaderModule } from '@blockframes/waterfall/components/statement-header/statement-header.module';
@@ -17,11 +18,14 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [StatementViewComponent],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
 
     // Blockframes
     StatementHeaderModule,
@@ -34,6 +38,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatIconModule,
     MatButtonModule,
     MatSnackBarModule,
+    MatFormFieldModule,
+    MatInputModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: StatementViewComponent }]),

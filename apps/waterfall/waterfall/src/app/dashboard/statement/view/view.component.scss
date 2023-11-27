@@ -93,6 +93,29 @@ section {
   }
 }
 
+div.comment {
+  margin-top: 24px;
+  h3 {
+    font-weight: 800;
+    font-size: 26px;
+    line-height: 24px;
+    color: var(--foreground-third-text);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  h4 {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 24px;
+    margin: 32px 0 0 0;
+  }
+
+  mat-form-field.full-width {
+    width: 100%;
+  }
+}
+
 footer {
   display: flex;
   justify-content: center;

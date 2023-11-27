@@ -86,6 +86,16 @@
         <price-per-currency [price]="payment.price | formatPair: payment.currency" default="€ 0"></price-per-currency>
       </article>  
     </ng-container>
+
+    <div class="surface comment">
+      <h3>Comment</h3>
+      <h4 class="mat-display-1">Need to add more information?</h4>
+      <p class="mat-body-2">You can add the comment that you’ll be seen by other waterfall members.</p>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Comment</mat-label>
+        <textarea matInput [formControl]="form.get('comment')" placeholder="Comment" type="string" cdkTextareaAutosize cdkAutosizeMinRows="6" ></textarea>
+      </mat-form-field>
+    </div>
   </section>
 
   <footer>

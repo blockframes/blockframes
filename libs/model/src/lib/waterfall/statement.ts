@@ -113,6 +113,7 @@ export interface Statement {
     right: RightPayment[]
     rightholder?: RightholderPayment;
   };
+  comment: string;
 }
 
 export interface DistributorStatement extends Statement {
@@ -163,6 +164,7 @@ function createStatementBase(params: Partial<Statement> = {}): Statement {
     payments: {
       right: params.payments?.right ? params.payments.right.map(createRightPayment) : []
     },
+    comment: params.comment || '',
     ...params,
     duration: createDuration(params?.duration),
   };
