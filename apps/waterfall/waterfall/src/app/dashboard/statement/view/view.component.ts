@@ -101,6 +101,7 @@ export class StatementViewComponent {
   ]).pipe(
     map(([sources, incomes, _history, current, rights, simulation]) => {
       const indexOfCurrent = _history.findIndex(s => s.id === current.id);
+      _history[indexOfCurrent] = { ...current, number: _history[indexOfCurrent].number };
       const previous = _history.slice(indexOfCurrent + 1);
       const history = _history.slice(indexOfCurrent);
 
@@ -175,6 +176,7 @@ export class StatementViewComponent {
   public rightsBreakdown$ = combineLatest([this.statementsHistory$, this.statement$, this.shell.rights$, this.shell.simulation$]).pipe(
     map(([_history, current, rights, simulation]) => {
       const indexOfCurrent = _history.findIndex(s => s.id === current.id);
+      _history[indexOfCurrent] = { ...current, number: _history[indexOfCurrent].number };
       const previous = _history.slice(indexOfCurrent + 1);
       const history = _history.slice(indexOfCurrent);
 
