@@ -235,13 +235,6 @@ export class StatementViewComponent {
     this.form = new StatementForm();
   }
 
-  public editRightPayment(payment: RightPayment) {
-    console.log(payment);
-
-    this.shell.simulateWaterfall();
-    // TODO #9524 update form, regenerate payments, update simulation ...
-  }
-
   public report(statement: Statement) {
     return this.save(statement, true);
   }

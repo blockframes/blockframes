@@ -154,7 +154,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
       .filter(r => r.roles.some(role => selected.roles.includes(role))) // Rightholder have the selected role
       .filter(r => this.statements.some(stm => stm[rightholderKey] === r.id && stm.type === selected.key)); // Rightholder have statements of the selected type (meaning he already have rights in the waterfall)
 
-    this.rightholderControl.setValue(this.rightholders[0]?.id);
+    this.rightholderControl.setValue(this.selected !== 'directSales' ? this.rightholders[0]?.id : this.statementSender.id);
     this.cdr.markForCheck();
   }
 }
