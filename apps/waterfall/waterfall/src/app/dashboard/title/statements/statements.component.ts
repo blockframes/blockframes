@@ -149,6 +149,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
     if (!selected) this.rightholders = [];
     const rightholderKey = this.selected === 'producer' ? 'receiverId' : 'senderId';
     this.rightholders = this.waterfall.rightholders
+      .filter(r => r.id !== this.statementSender.id) // Rightholder is not the statement sender (current rightholder)
       .filter(r => hasContractWith([this.statementSender.id, r.id], this.contracts, this.currentStateDate)) // Rightholder have at least one contract with the statement sender (current rightholder)
       .filter(r => r.roles.some(role => selected.roles.includes(role))) // Rightholder have the selected role
       .filter(r => this.statements.some(stm => stm[rightholderKey] === r.id && stm.type === selected.key)); // Rightholder have statements of the selected type (meaning he already have rights in the waterfall)
