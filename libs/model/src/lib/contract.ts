@@ -171,6 +171,7 @@ export function getContractDurationStatus(contract: BaseContract): 'future' | 'p
  * @returns 
  */
 export function getContractsWith<T extends BaseContract>(parties: string[], _contracts: T[], date = new Date()) {
+  if (parties.length === 0 || parties.length > 2 || (parties.length === 2 && parties[0] === parties[1])) throw new Error('Parties must be an array of 1 or 2 unique elements');
   const filteredContracts = _contracts.filter(c => !c.rootId);
   const contracts = filteredContracts.map(c => getCurrentContract<T>(getContractAndAmendments<T>(c.id, filteredContracts), date));
   return contracts
