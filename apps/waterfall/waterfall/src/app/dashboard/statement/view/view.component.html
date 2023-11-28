@@ -45,7 +45,7 @@
                   *ngIf="item.type === 'right'"
                   [disabled]="statement.status === 'reported'"
                   [matTooltip]="statement.status === 'reported' ? 'Statement is already reported.' : 'Change current value'"
-                  (click)="editRightPayment(item)"
+                  (click)="editRightPayment(item, statement)"
                 >
                   <mat-icon svgIcon="statement_warning"></mat-icon>
                 </button>
@@ -87,7 +87,7 @@
                 <button mat-icon-button 
                   [disabled]="statement.status === 'reported'"
                   [matTooltip]="statement.status === 'reported' ? 'Statement is already reported.' : 'Change current value'"
-                  (click)="editRightPayment(item)"
+                  (click)="editRightPayment(item, statement)"
                 >
                   <mat-icon svgIcon="statement_warning"></mat-icon>
                 </button>

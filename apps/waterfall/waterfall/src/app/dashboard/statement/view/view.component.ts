@@ -7,6 +7,7 @@ import {
   PricePerCurrency,
   RightPayment,
   Statement,
+  createCompensation,
   createIncomePayment,
   createRightPayment,
   createRightholderPayment,
@@ -32,6 +33,15 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
 import { StatementForm } from '@blockframes/waterfall/form/statement.form';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 import { combineLatest, map, pluck, switchMap, tap } from 'rxjs';
+
+interface BreakdownRow {
+  section: string,
+  type?: 'right' | 'net',
+  previous: PricePerCurrency,
+  current: PricePerCurrency,
+  cumulated: PricePerCurrency,
+  rightId?: string
+}
 
 @Component({
   selector: 'waterfall-statement-view',
@@ -70,13 +80,14 @@ export class StatementViewComponent {
       // Refresh waterfall if some incomes or expenses are not in the simulated waterfall
       const missingIncomeIds = statement.incomeIds.filter(i => !simulation.waterfall.state.incomes[i]);
       const missingExpenseIds = statement.expenseIds.filter(i => !simulation.waterfall.state.expenses[i]);
-      if (missingIncomeIds.length || missingExpenseIds.length) {
+      const missingCompensations = statement.compensations.filter(c => !simulation.waterfall.state.incomes[c.id]);
 
+      if (missingIncomeIds.length || missingExpenseIds.length || missingCompensations.length) {
         const missingIncomes = incomes.filter(i => missingIncomeIds.includes(i.id));
         const missingExpenses = expenses.filter(e => missingExpenseIds.includes(e.id));
 
-        await this.shell.simulateWaterfall({
-          incomes: missingIncomes.map(i => ({ ...i, status: 'received' })),
+        await this.shell.appendToSimulation({
+          incomes: [...missingIncomes, ...missingCompensations].map(i => ({ ...i, status: 'received' })),
           expenses: missingExpenses.map(e => ({ ...e, status: 'received' })),
         });
 
@@ -101,6 +112,7 @@ export class StatementViewComponent {
   ]).pipe(
     map(([sources, incomes, _history, current, rights, simulation]) => {
       const indexOfCurrent = _history.findIndex(s => s.id === current.id);
+      _history[indexOfCurrent] = { ...current, number: _history[indexOfCurrent].number };
       const previous = _history.slice(indexOfCurrent + 1);
       const history = _history.slice(indexOfCurrent);
 
@@ -108,7 +120,7 @@ export class StatementViewComponent {
       const orderedRights = getOrderedRights(displayedRights, simulation.waterfall.state);
 
       return sources.map(source => {
-        const rows: { section: string, type?: 'right' | 'net', previous: PricePerCurrency, current: PricePerCurrency, cumulated: PricePerCurrency, rightId?: string }[] = [];
+        const rows: BreakdownRow[] = [];
 
         // Incomes declared by statement.senderId
         const previousSourcePayments = previous.map(s => s.payments.income).flat().filter(income => getAssociatedSource(incomes.find(i => i.id === income.incomeId), this.waterfall.sources).id === source.id);
@@ -175,6 +187,7 @@ export class StatementViewComponent {
   public rightsBreakdown$ = combineLatest([this.statementsHistory$, this.statement$, this.shell.rights$, this.shell.simulation$]).pipe(
     map(([_history, current, rights, simulation]) => {
       const indexOfCurrent = _history.findIndex(s => s.id === current.id);
+      _history[indexOfCurrent] = { ...current, number: _history[indexOfCurrent].number };
       const previous = _history.slice(indexOfCurrent + 1);
       const history = _history.slice(indexOfCurrent);
 
@@ -185,7 +198,7 @@ export class StatementViewComponent {
       const rightTypes = unique(rightsWithManySources.map(right => right.type));
 
       return rightTypes.map(type => {
-        const rows: { section: string, previous: PricePerCurrency, current: PricePerCurrency, cumulated: PricePerCurrency, rightId: string }[] = [];
+        const rows: BreakdownRow[] = [];
 
         for (const right of rightsWithManySources) {
           if (right.type !== type) continue;
@@ -233,11 +246,17 @@ export class StatementViewComponent {
     this.form = new StatementForm();
   }
 
-  public editRightPayment(payment: RightPayment) {
-    console.log(payment);
+  public async editRightPayment(row: BreakdownRow, statement: Statement) {
 
-    this.shell.simulateWaterfall();
-    // TODO #9524 update form, regenerate payments, update simulation ...
+    if(!statement.compensations.find(c => c.id === 'compensation')) {
+      // TODO #9524 update form, regenerate payments, update simulation ...
+      const compensation = createCompensation({ id: 'compensation', price: 1000, currency: 'EUR', date: statement.duration.to, to: row.rightId, from: 'playtime_com_cine'});
+
+      await this.statementService.update(statement.id, { compensations: [compensation] }, { params: { waterfallId: this.waterfall.id } });
+    } else {
+      // tmp remove compensation
+      await this.statementService.update(statement.id, { compensations: [] }, { params: { waterfallId: this.waterfall.id } });
+    }
   }
 
   public report(statement: Statement) {

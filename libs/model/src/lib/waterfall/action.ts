@@ -19,7 +19,7 @@ import {
 import { getMinThreshold } from './threshold';
 import { assertNode, getChildRights, getGroup, getNode, getNodeOrg, isGroupChild, isRight, updateNode } from './node';
 import { WaterfallContract, WaterfallSource, getAssociatedSource } from './waterfall';
-import { Income } from '../income';
+import { Compensation, Income, isCompensation } from '../income';
 import { Expense } from '../expense';
 import { Term } from '../terms';
 import { getContractAndAmendments, getDeclaredAmount } from '../contract';
@@ -308,10 +308,10 @@ export function sourcesToAction(waterfallSources: WaterfallSource[]) {
   return actions;
 }
 
-export function incomesToActions(contracts: WaterfallContract[], incomes: Income[], sources: WaterfallSource[]) {
+export function incomesToActions(contracts: WaterfallContract[], incomes: (Income | Compensation)[], sources: WaterfallSource[]) {
   const actions: Action[] = [];
 
-  for (const i of incomes.filter(i => i.status === 'received')) {
+  for (const i of incomes.filter(i => !isCompensation(i) && i.status === 'received')) {
     const contractAndAmendments = getContractAndAmendments(i.contractId, contracts);
     // On waterfall side, the root contract is updated (updateContract), so we need to specify this one.
     const rootContract = contractAndAmendments.find(c => !c.rootId);
@@ -329,6 +329,22 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
         date: i.date,
         territories: i.territories,
         medias: i.medias
+      })
+    );
+  };
+
+  for (const c of incomes.filter(i => isCompensation(i) && i.status === 'received').map(i => i as Compensation)) {
+    const { [mainCurrency]: amount } = convertCurrenciesTo({ [c.currency]: c.price }, mainCurrency);
+    actions.push(
+      action('income', {
+        id: c.id,
+        from: 'compensations', // TODO #9524 from should be producer ?
+        isCompensation: true,
+        to: c.to, // Destination right id
+        amount,
+        date: c.date,
+        territories: [],
+        medias: []
       })
     );
   };
@@ -737,6 +753,8 @@ function income(state: TitleState, payload: IncomeAction) {
       state.sources[payload.from].incomeIds = Array.from(new Set([...state.sources[payload.from].incomeIds, payload.id]));
     }
   }
+
+  // TODO #9524 prevent compensation applied to a group ?
 
 
   state.incomes[payload.id] = payload;
