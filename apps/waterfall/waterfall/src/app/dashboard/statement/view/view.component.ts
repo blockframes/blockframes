@@ -75,7 +75,7 @@ export class StatementViewComponent {
         const missingIncomes = incomes.filter(i => missingIncomeIds.includes(i.id));
         const missingExpenses = expenses.filter(e => missingExpenseIds.includes(e.id));
 
-        await this.shell.simulateWaterfall({
+        await this.shell.appendToSimulation({
           incomes: missingIncomes.map(i => ({ ...i, status: 'received' })),
           expenses: missingExpenses.map(e => ({ ...e, status: 'received' })),
         });
