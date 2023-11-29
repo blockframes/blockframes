@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Territory, WaterfallSource } from '@blockframes/model';
+import { Statement, Territory, WaterfallSource } from '@blockframes/model';
 import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { StatementForm } from '@blockframes/waterfall/form/statement.form';
@@ -25,6 +25,7 @@ const expenseColumns = {
 })
 export class StatementDistributorEditComponent {
 
+  @Input() statement: Statement;
   @Input() form: StatementForm;
   @Input() sources: WaterfallSource[];
 

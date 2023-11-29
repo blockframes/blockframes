@@ -9,6 +9,7 @@ import { JoinPipeModule, MaxLengthModule, ToGroupLabelPipeModule } from '@blockf
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
+import { StatementPeriodModule } from '@blockframes/waterfall/components/statement-period/statement-period.module';
 
 // Components
 import { StatementDistributorEditComponent } from './edit.component';
@@ -35,6 +36,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     PricePerCurrencyModule,
     GroupMultiselectModule,
     StaticSelectModule,
+    StatementPeriodModule,
 
     // Material
     MatInputModule,

@@ -14,6 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 // Guards
 import { StatementActiveGuard } from '@blockframes/waterfall/guards/statement-active.guard';
+import { StatementFormGuard } from '@blockframes/waterfall/guards/statement-form.guard';
 
 const routes: Routes = [{
   path: '',
@@ -30,7 +31,7 @@ const routes: Routes = [{
     },
     {
       path: ':statementId',
-      canActivate: [StatementActiveGuard],
+      canActivate: [StatementActiveGuard, StatementFormGuard],
       children: [
         {
           path: '',

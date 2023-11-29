@@ -5,8 +5,10 @@ import { RouterModule } from '@angular/router';
 
 // Blockframes
 import { StatementHeaderModule } from '@blockframes/waterfall/components/statement-header/statement-header.module';
-import { StatementPeriodModule } from '@blockframes/waterfall/components/statement-period/statement-period.module';
 import { StatementDistributorEditModule } from '@blockframes/waterfall/components/statement-distributor/edit/edit.module';
+
+// Guards
+import { StatementFormGuard } from '@blockframes/waterfall/guards/statement-form.guard';
 
 // Components
 import { StatementEditComponent } from './edit.component';
@@ -23,7 +25,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
     // Blockframes
     StatementHeaderModule,
-    StatementPeriodModule,
     StatementDistributorEditModule,
 
     // Material
@@ -32,7 +33,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatSnackBarModule,
 
     // Routing
-    RouterModule.forChild([{ path: '', component: StatementEditComponent }]),
+    RouterModule.forChild([{ path: '', component: StatementEditComponent, canDeactivate: [StatementFormGuard] }]),
   ],
 })
 export class StatementEditModule { }

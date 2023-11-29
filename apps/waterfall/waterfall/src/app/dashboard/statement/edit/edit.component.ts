@@ -9,9 +9,9 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { StatementForm } from '@blockframes/waterfall/form/statement.form';
+import { StartementFormGuardedComponent } from '@blockframes/waterfall/guards/statement-form.guard';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 import { Subscription, combineLatest, debounceTime, map, pluck, shareReplay, tap } from 'rxjs';
-
 
 @Component({
   selector: 'waterfall-statement-edit',
@@ -19,7 +19,7 @@ import { Subscription, combineLatest, debounceTime, map, pluck, shareReplay, tap
   styleUrls: ['./edit.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StatementEditComponent implements OnInit, OnDestroy {
+export class StatementEditComponent implements OnInit, OnDestroy, StartementFormGuardedComponent {
 
   private statementId = this.route.params.pipe(
     pluck('statementId'),
@@ -137,6 +137,8 @@ export class StatementEditComponent implements OnInit, OnDestroy {
 
     // Update the simulation for next step
     await this.shell.simulateWaterfall();
+
+    this.form.markAsPristine();
 
     if (redirect) this.router.navigate(['..'], { relativeTo: this.route });
     else this.snackBar.open('Statement updated !', 'close', { duration: 5000 });

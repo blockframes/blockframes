@@ -1,7 +1,6 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Blockframes
@@ -40,9 +39,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatFormFieldModule,
     MatInputModule,
     MatTooltipModule,
-
-    // Routing
-    RouterModule,
   ],
   exports: [StatementDistributorSummaryComponent]
 })

@@ -2,9 +2,7 @@
   <ng-container *ngIf="sources$ | async as sources">
     <waterfall-statement-header [statement]="statement" [sources]="sources"></waterfall-statement-header>
 
-    <waterfall-statement-period [statement]="statement" [form]="form"></waterfall-statement-period>
-
-    <waterfall-statement-distributor-edit [sources]="sources" [form]="form"></waterfall-statement-distributor-edit>
+    <waterfall-statement-distributor-edit [statement]="statement" [sources]="sources" [form]="form"></waterfall-statement-distributor-edit>
   
     <footer>
       <button mat-flat-button color="primary" (click)="save(sources, statement, true)">

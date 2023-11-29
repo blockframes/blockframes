@@ -162,6 +162,7 @@ function createStatementFormControl(statement?: Partial<FullStatement>) {
     rightPayments: FormList.factory(statement?.payments.right, (el) => new RightPaymentForm(el)),
     rightholderPayment: new RightholderPaymentForm(statement?.payments.rightholder),
     comment: new FormControl<string>(statement?.comment ?? ''),
+    incomeIds: new FormControl<string[]>(statement?.incomeIds ?? []),
   }
 
   for (const source of statement?.sources ?? []) {

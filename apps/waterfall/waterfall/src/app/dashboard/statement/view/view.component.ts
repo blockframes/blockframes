@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ExpenseService } from '@blockframes/contract/expense/service';
 import { IncomeService } from '@blockframes/contract/income/service';
 import {
+  Expense,
   Statement,
   createIncomePayment,
   createRightPayment,
@@ -20,6 +21,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { StatementForm } from '@blockframes/waterfall/form/statement.form';
+import { StartementFormGuardedComponent } from '@blockframes/waterfall/guards/statement-form.guard';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 import { combineLatest, map, pluck, shareReplay, switchMap, tap } from 'rxjs';
 
@@ -29,7 +31,7 @@ import { combineLatest, map, pluck, shareReplay, switchMap, tap } from 'rxjs';
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StatementViewComponent {
+export class StatementViewComponent implements StartementFormGuardedComponent {
 
   private _statement$ = combineLatest([this.route.params.pipe(pluck('statementId')), this.shell.statements$]).pipe(
     map(([statementId, statements]) => statements.find(s => s.id === statementId)),
@@ -51,23 +53,26 @@ export class StatementViewComponent {
   ]).pipe(
     switchMap(async ([statement, _incomes, _expenses, sources, _rights, simulation]) => {
       const incomes = statement.incomeIds.map(id => _incomes.find(i => i.id === id));
-      const expenses = statement.expenseIds.map(id => _expenses.find(i => i.id === id));
+      const expenses: Expense[] = [];
+      if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
+        expenses.push(...statement.expenseIds.map(id => _expenses.find(i => i.id === id)));
 
-      // Refresh waterfall if some incomes or expenses are not in the simulated waterfall
-      const missingIncomeIds = statement.incomeIds.filter(i => !simulation.waterfall.state.incomes[i]);
-      const missingExpenseIds = statement.expenseIds.filter(i => !simulation.waterfall.state.expenses[i]);
-      if (missingIncomeIds.length || missingExpenseIds.length) {
+        // Refresh waterfall if some incomes or expenses are not in the simulated waterfall
+        const missingIncomeIds = statement.incomeIds.filter(i => !simulation.waterfall.state.incomes[i]);
+        const missingExpenseIds = statement.expenseIds.filter(i => !simulation.waterfall.state.expenses[i]);
+        if (missingIncomeIds.length || missingExpenseIds.length) {
 
-        const missingIncomes = incomes.filter(i => missingIncomeIds.includes(i.id));
-        const missingExpenses = expenses.filter(e => missingExpenseIds.includes(e.id));
+          const missingIncomes = incomes.filter(i => missingIncomeIds.includes(i.id));
+          const missingExpenses = expenses.filter(e => missingExpenseIds.includes(e.id));
 
-        await this.shell.appendToSimulation({
-          incomes: missingIncomes.map(i => ({ ...i, status: 'received' })),
-          expenses: missingExpenses.map(e => ({ ...e, status: 'received' })),
-        });
+          await this.shell.appendToSimulation({
+            incomes: missingIncomes.map(i => ({ ...i, status: 'received' })),
+            expenses: missingExpenses.map(e => ({ ...e, status: 'received' })),
+          });
 
-        // Observable will re-emit with the new simulation
-        return;
+          // Observable will re-emit with the new simulation
+          return;
+        }
       }
 
       const statementRights = getStatementRights(statement, _rights);
@@ -111,6 +116,9 @@ export class StatementViewComponent {
 
     const value = this.form.value;
 
+    statement.reported = value.reported;
+    statement.duration = value.duration;
+
     statement.comment = value.comment;
 
     // Add an id to the payments if they don't have one and update interal right payments status
@@ -141,14 +149,15 @@ export class StatementViewComponent {
       statement.status = 'reported';
       statement.reported = value.reported;
 
-      await this.incomeService.update(statement.incomeIds, (i) => {
-        return { ...i, status: 'received' };
-      });
+      if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
+        await this.incomeService.update(statement.incomeIds, (i) => {
+          return { ...i, status: 'received' };
+        });
 
-      await this.expenseService.update(statement.expenseIds, (e) => {
-        return { ...e, status: 'received' };
-      });
-
+        await this.expenseService.update(statement.expenseIds, (e) => {
+          return { ...e, status: 'received' };
+        });
+      }
     };
 
     await this.statementService.update(statement, { params: { waterfallId: this.waterfall.id } });
@@ -164,6 +173,7 @@ export class StatementViewComponent {
       this.snackBar.open('Statement updated !', 'close', { duration: 5000 });
     }
 
+    this.form.markAsPristine();
   }
 
 }
