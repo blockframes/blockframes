@@ -2,11 +2,11 @@
 import { Observable, map, startWith, tap } from 'rxjs';
 import { Component, ChangeDetectionStrategy, ViewChild, Input, OnInit, Pipe, PipeTransform, Output, EventEmitter } from '@angular/core';
 
-import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
+import { WaterfallService } from '../../waterfall.service';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
-import { WaterfallDocumentForm } from '@blockframes/waterfall/form/document.form';
+import { WaterfallDocumentForm } from '../../form/document.form';
 import { CardModalComponent } from '@blockframes/ui/card-modal/card-modal.component';
-import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
+import { WaterfallDocumentsService } from '../../documents.service';
 import {
   RightholderRole,
   Waterfall,

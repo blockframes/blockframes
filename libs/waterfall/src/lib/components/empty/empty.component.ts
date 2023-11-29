@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 // Blockframes
-import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
+import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 
 @Component({
   selector: 'waterfall-empty',

@@ -4,9 +4,8 @@ import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core
 // Blockframes
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { AuthService } from '@blockframes/auth/service';
-import { WaterfallPermissionsService } from '@blockframes/waterfall/permissions.service';
+import { WaterfallPermissionsService } from '../../../permissions.service';
 import { combineLatest, map, tap } from 'rxjs';
-
 
 @Component({
   selector: '[movieId] waterfall-title-form',

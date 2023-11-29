@@ -5,7 +5,7 @@ import { setupTreeGraph } from './../utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { sha1 } from 'object-hash';
 import { Block, Version, Waterfall } from '@blockframes/model';
-import { BlockService } from '@blockframes/waterfall/block.service';
+import { BlockService } from '../../../block.service';
 
 
 interface TreeItem {

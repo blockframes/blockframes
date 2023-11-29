@@ -9,7 +9,7 @@ import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy, Output, E
 // Blockframes
 import { rightholderGroups, RightholderRole, Waterfall } from '@blockframes/model';
 import { BucketTermForm, createBucketTermControl } from '@blockframes/contract/bucket/form';
-import { WaterfallDocumentForm, WaterfallDocumentFormValue } from '@blockframes/waterfall/form/document.form';
+import { WaterfallDocumentForm, WaterfallDocumentFormValue } from '../../../form/document.form';
 
 @Component({
   selector: '[waterfall][form] waterfall-document-form',

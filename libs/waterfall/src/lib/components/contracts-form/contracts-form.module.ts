@@ -10,9 +10,9 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { CardModalModule } from '@blockframes/ui/card-modal/card-modal.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
-import { DocumentFormModule } from '@blockframes/waterfall/components/forms/document-form/form.module';
+import { DocumentFormModule } from '../forms/document-form/form.module';
 import { DownloadPipeModule } from '@blockframes/media/file/pipes/download.pipe';
-import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
+import { RightHolderNamePipeModule } from '../../pipes/rightholder-name.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
