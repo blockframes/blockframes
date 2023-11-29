@@ -137,6 +137,7 @@ export const icons = [
   { name: 'star_fill', url: 'assets/icons/star_fill.svg' },
   { name: 'statement_warning', url: 'assets/icons/statement_warning.svg' },
   { name: 'style', url: 'assets/icons/style.svg' },
+  { name: 'summarize', url: 'assets/icons/summarize.svg' },
   { name: 'supervisor', url: 'assets/icons/supervisor_account.svg' },
   { name: 'switch_access_shortcut', url: 'assets/icons/switch_access_shortcut.svg' },
   { name: 'territories_avails', url: 'assets/icons/territories_avails.svg' },
