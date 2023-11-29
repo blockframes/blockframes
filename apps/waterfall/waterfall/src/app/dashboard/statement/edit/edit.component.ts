@@ -1,31 +1,17 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExpenseService } from '@blockframes/contract/expense/service';
 import { IncomeService } from '@blockframes/contract/income/service';
-import { Territory, WaterfallSource, createIncome, getStatementSources, Statement, createMissingIncomes, createExpense } from '@blockframes/model';
-import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
-import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { WaterfallSource, createIncome, getStatementSources, Statement, createMissingIncomes, createExpense } from '@blockframes/model';
 
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { StatementForm } from '@blockframes/waterfall/form/statement.form';
 import { StatementService } from '@blockframes/waterfall/statement.service';
-import { Subscription, combineLatest, debounceTime, map, pluck } from 'rxjs';
+import { Subscription, combineLatest, debounceTime, map, pluck, shareReplay, tap } from 'rxjs';
 
-const incomeColumns = {
-  medias: 'Medias',
-  territories: 'Territories',
-  '': 'Price',
-}
-
-const expenseColumns = {
-  type: 'Type',
-  category: 'Category',
-  '': 'Price',
-}
 
 @Component({
   selector: 'waterfall-statement-edit',
@@ -35,15 +21,18 @@ const expenseColumns = {
 })
 export class StatementEditComponent implements OnInit, OnDestroy {
 
-  public incomeColumns = incomeColumns;
-  public expenseColumns = expenseColumns;
+  private statementId = this.route.params.pipe(
+    pluck('statementId'),
+    tap(_ => this.form.reset()) // Statement Id has changed, reset form
+  );
 
-  private _statement$ = combineLatest([this.route.params.pipe(pluck('statementId')), this.shell.statements$]).pipe(
+  private _statement$ = combineLatest([this.statementId, this.shell.statements$]).pipe(
     map(([statementId, statements]) => statements.find(s => s.id === statementId))
   );
 
   public sources$ = combineLatest([this._statement$, this.shell.incomes$, this.shell.rights$, this.shell.simulation$]).pipe(
     map(([statement, incomes, rights, simulation]) => getStatementSources(statement, this.waterfall.sources, incomes, rights, simulation.waterfall.state)),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   public statement$ = combineLatest([this._statement$, this.shell.incomes$, this.shell.expenses$, this.sources$]).pipe(
@@ -57,7 +46,7 @@ export class StatementEditComponent implements OnInit, OnDestroy {
     })
   );
 
-  public waterfall = this.shell.waterfall;
+  private waterfall = this.shell.waterfall;
 
   public form: StatementForm;
   private sub: Subscription;
@@ -67,7 +56,6 @@ export class StatementEditComponent implements OnInit, OnDestroy {
     private dynTitle: DynamicTitleService,
     private router: Router,
     private route: ActivatedRoute,
-    private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private incomeService: IncomeService,
     private statementService: StatementService,
@@ -89,21 +77,6 @@ export class StatementEditComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub?.unsubscribe();
-  }
-
-  public openTerritoryModal(territories: Territory[]) {
-    this.dialog.open(DetailedGroupComponent, {
-      data: createModalData({ items: territories, scope: 'territories' }),
-      autoFocus: false
-    });
-  }
-
-  public defaultIncomeValue(source: WaterfallSource) {
-    return { medias: source.medias, territories: source.territories };
-  }
-
-  public defaultExpenseValue() {
-    return { type: 'type', category: 'category' };
   }
 
   public async save(sources: WaterfallSource[], statement: Statement, redirect = false) {
