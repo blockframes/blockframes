@@ -1,0 +1,111 @@
+<mat-divider></mat-divider>
+<p class="mat-body-2">Here is the <strong>Summary of your Statement</strong>. Please verify the information below.</p>
+
+<ng-container *ngIf="statement.payments.rightholder as payment">
+  <article class="participation" *ngIf="statement.type === 'mainDistributor' || statement.type ==='salesAgent'">
+    <span>Producer’s net participation:</span>
+    <price-per-currency [price]="payment.price | formatPair: payment.currency" default="€ 0"></price-per-currency>
+  </article>  
+</ng-container>
+
+<article class="breakdown">
+  <header>
+    <span>Calculation breakdown</span>
+    <div>Net Receipts</div>
+  </header>
+
+  <ng-container *ngIf="sourcesBreakdown$ | async as breakdown">
+    <div class="surface" *ngFor="let item of breakdown; let isFirst = first">
+      <mat-expansion-panel [expanded]="isFirst">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <span>{{ item.name }}</span>
+            <price-per-currency [price]="item.net" default="€ 0"></price-per-currency>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <bf-table [source]="item.rows">
+          <ng-template colRef="" label="Section" let-item>
+            <span [class]="item.type">{{ item.section }}</span>
+          </ng-template>
+          <ng-template colRef="" label="Prior Period" let-item>
+            <price-per-currency [class]="item.type" [price]="item.previous" default="€ 0"></price-per-currency>
+          </ng-template>
+          <ng-template colRef="" label="Current Period" let-item>
+            <price-per-currency [class]="item.type" [price]="item.current" default="€ 0"></price-per-currency>
+          </ng-template>
+          <ng-template colRef="" label="Cumulative" let-item>
+            <price-per-currency [class]="item.type" [price]="item.cumulated" default="€ 0"></price-per-currency>
+          </ng-template>
+          <ng-template colRef="" label="" let-item>
+            <button mat-icon-button 
+              *ngIf="item.type === 'right'"
+              [disabled]="statement.status === 'reported'"
+              [matTooltip]="statement.status === 'reported' ? 'Statement is already reported.' : 'Change current value'"
+            >
+              <mat-icon svgIcon="statement_warning"></mat-icon>
+            </button>
+          </ng-template>
+        </bf-table>
+      </mat-expansion-panel>
+    </div>
+  </ng-container>
+
+  <div class="total-net">
+    Total Net Receipts:
+    <price-per-currency *ngIf="totalNetReceipt$ | async as totalNet" [price]="totalNet" default="€ 0"></price-per-currency>
+  </div>
+  <mat-divider></mat-divider>
+
+  <ng-container *ngIf="rightsBreakdown$ | async as breakdown">
+    <div class="surface" *ngFor="let item of breakdown">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <span>{{ item.name }}</span>
+            <span>(<price-per-currency [price]="item.total" default="€ 0"></price-per-currency>)</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <bf-table [source]="item.rows">
+          <ng-template colRef="" label="Section" let-item>
+            {{ item.section }}
+          </ng-template>
+          <ng-template colRef="" label="Prior Period" let-item>
+            <price-per-currency class="right" [price]="item.previous" default="€ 0"></price-per-currency>
+          </ng-template>
+          <ng-template colRef="" label="Current Period" let-item>
+            <price-per-currency class="right" [price]="item.current" default="€ 0"></price-per-currency>
+          </ng-template>
+          <ng-template colRef="" label="Cumulative" let-item>
+            <price-per-currency class="right" [price]="item.cumulated" default="€ 0"></price-per-currency>
+          </ng-template>
+          <ng-template colRef="" label="" let-item>
+            <button mat-icon-button 
+              [disabled]="statement.status === 'reported'"
+              [matTooltip]="statement.status === 'reported' ? 'Statement is already reported.' : 'Change current value'"
+            >
+              <mat-icon svgIcon="statement_warning"></mat-icon>
+            </button>
+          </ng-template>
+        </bf-table>
+      </mat-expansion-panel>
+    </div>
+  </ng-container>
+
+</article>
+
+<ng-container *ngIf="statement.payments.rightholder as payment">
+  <article class="participation" *ngIf="statement.type === 'mainDistributor' || statement.type ==='salesAgent'">
+    <span>Producer’s net participation:</span>
+    <price-per-currency [price]="payment.price | formatPair: payment.currency" default="€ 0"></price-per-currency>
+  </article>  
+</ng-container>
+
+<div class="surface comment">
+  <h3>Comment</h3>
+  <h4 class="mat-display-1">Need to add more information?</h4>
+  <p class="mat-body-2">You can add the comment that you’ll be seen by other waterfall members.</p>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Comment</mat-label>
+    <textarea matInput [formControl]="form.get('comment')" placeholder="Comment" type="string" cdkTextareaAutosize cdkAutosizeMinRows="6" ></textarea>
+  </mat-form-field>
+</div>
