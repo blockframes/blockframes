@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 // Blockframes
-import { StatementHeaderModule } from '@blockframes/waterfall/components/statement-header/statement-header.module';
 import { StatementDistributorEditModule } from '@blockframes/waterfall/components/statement-distributor/edit/edit.module';
+import { StatementDirectSalesEditModule } from '@blockframes/waterfall/components/statement-direct-sales/edit/edit.module';
 
 // Guards
 import { StatementFormGuard } from '@blockframes/waterfall/guards/statement-form.guard';
@@ -24,8 +24,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     CommonModule,
 
     // Blockframes
-    StatementHeaderModule,
     StatementDistributorEditModule,
+    StatementDirectSalesEditModule,
 
     // Material
     MatButtonModule,

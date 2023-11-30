@@ -57,6 +57,7 @@ export class FormTableComponent<T> implements OnInit, OnDestroy {
   }
 
   @Output() itemSelected = new EventEmitter();
+  @Output() itemSaved = new EventEmitter();
 
   @ContentChildren(ColumnDirective, { descendants: false }) cols: QueryList<ColumnDirective<T>>;
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
@@ -82,11 +83,11 @@ export class FormTableComponent<T> implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.formItem?.dirty) this.save()
+    if (this.formItem?.dirty) this.save();
   }
 
   get isFormEmpty() {
-    return !this.form.length
+    return !this.form.length;
   }
 
   add() {
@@ -102,6 +103,8 @@ export class FormTableComponent<T> implements OnInit, OnDestroy {
       } else {
         this.form.push(this.formItem);
       }
+
+      this.itemSaved.emit(this.formItem.value);
       delete this.formItem;
       this.cdr.markForCheck();
     }
@@ -122,7 +125,7 @@ export class FormTableComponent<T> implements OnInit, OnDestroy {
     this.activeValue = this.formItem.value;
     this.cdr.markForCheck();
     this.itemSelected.emit(this.formItem.value);
-    if(this.scrollAnchor){
+    if (this.scrollAnchor) {
       const anchor = document.querySelector(this.scrollAnchor);
       scrollIntoView(anchor);
     }

@@ -4,9 +4,9 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 // Blockframes
-import { StatementHeaderModule } from '@blockframes/waterfall/components/statement-header/statement-header.module';
 import { StatementDistributorSummaryModule } from '@blockframes/waterfall/components/statement-distributor/summary/summary.module';
 import { StatementProducerSummaryModule } from '@blockframes/waterfall/components/statement-producer/summary/summary.module';
+import { StatementDirectSalesSummaryModule } from '@blockframes/waterfall/components/statement-direct-sales/summary/summary.module';
 
 // Guards
 import { StatementFormGuard } from '@blockframes/waterfall/guards/statement-form.guard';
@@ -26,9 +26,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CommonModule,
 
     // Blockframes
-    StatementHeaderModule,
     StatementDistributorSummaryModule,
     StatementProducerSummaryModule,
+    StatementDirectSalesSummaryModule,
 
     // Material
     MatIconModule,

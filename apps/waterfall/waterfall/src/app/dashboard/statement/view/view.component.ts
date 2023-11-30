@@ -4,26 +4,20 @@ import { ActivatedRoute } from '@angular/router';
 import { ExpenseService } from '@blockframes/contract/expense/service';
 import { IncomeService } from '@blockframes/contract/income/service';
 import {
-  Expense,
   Statement,
   createIncomePayment,
   createRightPayment,
   createRightholderPayment,
-  generatePayments,
-  getAssociatedRights,
-  getStatementRights,
-  getStatementSources,
   isDirectSalesStatement,
   isDistributorStatement,
   isProducerStatement
 } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { StatementForm } from '@blockframes/waterfall/form/statement.form';
 import { StartementFormGuardedComponent } from '@blockframes/waterfall/guards/statement-form.guard';
 import { StatementService } from '@blockframes/waterfall/statement.service';
-import { combineLatest, map, pluck, shareReplay, switchMap, tap } from 'rxjs';
+import { combineLatest, map, pluck, tap } from 'rxjs';
 
 @Component({
   selector: 'waterfall-statement-view',
@@ -33,57 +27,14 @@ import { combineLatest, map, pluck, shareReplay, switchMap, tap } from 'rxjs';
 })
 export class StatementViewComponent implements StartementFormGuardedComponent {
 
-  private _statement$ = combineLatest([this.route.params.pipe(pluck('statementId')), this.shell.statements$]).pipe(
+  public statement$ = combineLatest([this.route.params.pipe(pluck('statementId')), this.shell.statements$]).pipe(
     map(([statementId, statements]) => statements.find(s => s.id === statementId)),
     tap(statement => {
       if (this.shell.setDate(statement.duration.to)) {
         this.shell.simulateWaterfall();
+        this.form.setAllValue(statement);
       }
     })
-  );
-
-  public sources$ = combineLatest([this._statement$, this.shell.incomes$, this.shell.rights$, this.shell.simulation$]).pipe(
-    map(([statement, incomes, rights, simulation]) => getStatementSources(statement, this.waterfall.sources, incomes, rights, simulation.waterfall.state)),
-    shareReplay({ bufferSize: 1, refCount: true })
-  );
-
-  public statement$ = combineLatest([
-    this._statement$, this.shell.incomes$, this.shell.expenses$,
-    this.sources$, this.shell.rights$, this.shell.simulation$
-  ]).pipe(
-    switchMap(async ([statement, _incomes, _expenses, sources, _rights, simulation]) => {
-      const incomes = statement.incomeIds.map(id => _incomes.find(i => i.id === id));
-      const expenses: Expense[] = [];
-      if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
-        expenses.push(...statement.expenseIds.map(id => _expenses.find(i => i.id === id)));
-
-        // Refresh waterfall if some incomes or expenses are not in the simulated waterfall
-        const missingIncomeIds = statement.incomeIds.filter(i => !simulation.waterfall.state.incomes[i]);
-        const missingExpenseIds = statement.expenseIds.filter(i => !simulation.waterfall.state.expenses[i]);
-        if (missingIncomeIds.length || missingExpenseIds.length) {
-
-          const missingIncomes = incomes.filter(i => missingIncomeIds.includes(i.id));
-          const missingExpenses = expenses.filter(e => missingExpenseIds.includes(e.id));
-
-          await this.shell.appendToSimulation({
-            incomes: missingIncomes.map(i => ({ ...i, status: 'received' })),
-            expenses: missingExpenses.map(e => ({ ...e, status: 'received' })),
-          });
-
-          // Observable will re-emit with the new simulation
-          return;
-        }
-      }
-
-      const statementRights = getStatementRights(statement, _rights);
-      const rightIds = unique(sources.map(s => getAssociatedRights(s.id, statementRights, simulation.waterfall.state)).flat().map(r => r.id));
-      const rights = statementRights.filter(r => rightIds.includes(r.id));
-
-      statement = generatePayments(statement, simulation.waterfall.state, rights, incomes, sources);
-      this.form.setAllValue({ ...statement, incomes, expenses, sources });
-
-      return statement;
-    }),
   );
 
   private waterfall = this.shell.waterfall;

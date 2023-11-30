@@ -22,12 +22,12 @@ import { StatementForm } from '../../../form/statement.form';
 import { combineLatest, map, shareReplay, switchMap } from 'rxjs';
 
 @Component({
-  selector: 'waterfall-statement-distributor-summary',
+  selector: 'waterfall-statement-direct-sales-summary',
   templateUrl: './summary.component.html',
   styleUrls: ['./summary.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StatementDistributorSummaryComponent {
+export class StatementDirectSalesSummaryComponent {
 
   @Input() form: StatementForm;
   @Input() public statement: Statement;

@@ -3,15 +3,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExpenseService } from '@blockframes/contract/expense/service';
 import { IncomeService } from '@blockframes/contract/income/service';
-import { WaterfallSource, createIncome, getStatementSources, Statement, createMissingIncomes, createExpense } from '@blockframes/model';
-
+import { createIncome, Statement, createExpense, Income } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { StatementForm } from '@blockframes/waterfall/form/statement.form';
 import { StartementFormGuardedComponent } from '@blockframes/waterfall/guards/statement-form.guard';
 import { StatementService } from '@blockframes/waterfall/statement.service';
-import { Subscription, combineLatest, debounceTime, map, pluck, shareReplay, tap } from 'rxjs';
+import { Subscription, combineLatest, debounceTime, map, pluck, tap } from 'rxjs';
 
 @Component({
   selector: 'waterfall-statement-edit',
@@ -26,24 +25,8 @@ export class StatementEditComponent implements OnInit, OnDestroy, StartementForm
     tap(_ => this.form.reset()) // Statement Id has changed, reset form
   );
 
-  private _statement$ = combineLatest([this.statementId, this.shell.statements$]).pipe(
+  public statement$ = combineLatest([this.statementId, this.shell.statements$]).pipe(
     map(([statementId, statements]) => statements.find(s => s.id === statementId))
-  );
-
-  public sources$ = combineLatest([this._statement$, this.shell.incomes$, this.shell.rights$, this.shell.simulation$]).pipe(
-    map(([statement, incomes, rights, simulation]) => getStatementSources(statement, this.waterfall.sources, incomes, rights, simulation.waterfall.state)),
-    shareReplay({ bufferSize: 1, refCount: true })
-  );
-
-  public statement$ = combineLatest([this._statement$, this.shell.incomes$, this.shell.expenses$, this.sources$]).pipe(
-    map(([statement, _incomes, _expenses, sources]) => {
-      const incomes = statement.incomeIds.map(id => _incomes.find(i => i.id === id));
-      const expenses = statement.expenseIds.map(id => _expenses.find(i => i.id === id));
-
-      const missingIncomes = createMissingIncomes(sources, incomes, statement, this.waterfall);
-      if (this.form.pristine) this.form.setAllValue({ ...statement, incomes: [...incomes, ...missingIncomes], expenses, sources });
-      return statement;
-    })
   );
 
   private waterfall = this.shell.waterfall;
@@ -79,7 +62,7 @@ export class StatementEditComponent implements OnInit, OnDestroy, StartementForm
     this.sub?.unsubscribe();
   }
 
-  public async save(sources: WaterfallSource[], statement: Statement, redirect = false) {
+  public async save(statement: Statement, redirect = false) {
     if (this.form.invalid) {
       this.snackBar.open('Information not valid', 'close', { duration: 5000 });
       return;
@@ -90,12 +73,27 @@ export class StatementEditComponent implements OnInit, OnDestroy, StartementForm
     statement.reported = value.reported;
     statement.duration = value.duration;
 
-    const incomes = sources.map(source => value[source.id]).flat().map(income => createIncome({
-      ...income,
-      titleId: this.waterfall.id,
-      contractId: statement.contractId,
-      date: statement.duration.to,
-    }));
+    const declaredIncomes = this.waterfall.sources
+      .map(source => ({ source, incomes: value[source.id] as Income[] }))
+      .filter(v => v.incomes?.length);
+
+    const incomes = declaredIncomes.map(value => {
+      return value.incomes.map(i => {
+        const income = createIncome({
+          ...i,
+          medias: i.medias.filter(m => value.source.medias.includes(m)),
+          territories: i.territories.filter(m => value.source.territories.includes(m)),
+          titleId: this.waterfall.id,
+          contractId: statement.contractId,
+          date: statement.duration.to,
+        });
+
+        if (!income.medias.length) income.medias = value.source.medias;
+        if (!income.territories.length) income.territories = value.source.territories;
+        if (!income.medias.length || !income.territories.length) income.sourceId = value.source.id;
+        return income;
+      });
+    }).flat();
 
     await this.incomeService.update(incomes.filter(i => i.id));
     const newIncomeIds = await this.incomeService.add(incomes.filter(i => !i.id));

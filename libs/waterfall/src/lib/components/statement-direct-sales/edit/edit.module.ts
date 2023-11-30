@@ -13,7 +13,7 @@ import { StatementPeriodModule } from '../../statement-period/statement-period.m
 import { StatementHeaderModule } from '../../statement-header/statement-header.module';
 
 // Components
-import { StatementDistributorEditComponent } from './edit.component';
+import { StatementDirectSalesEditComponent } from './edit.component';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -22,9 +22,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
-  declarations: [StatementDistributorEditComponent],
+  declarations: [StatementDirectSalesEditComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -43,11 +45,13 @@ import { MatDialogModule } from '@angular/material/dialog';
     // Material
     MatInputModule,
     MatFormFieldModule,
+    MatButtonModule,
     MatIconModule,
     MatTabsModule,
     MatChipsModule,
     MatDialogModule,
+    MatSelectModule,
   ],
-  exports: [StatementDistributorEditComponent]
+  exports: [StatementDirectSalesEditComponent]
 })
-export class StatementDistributorEditModule { }
+export class StatementDirectSalesEditModule { }

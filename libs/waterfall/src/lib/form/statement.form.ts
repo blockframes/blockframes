@@ -161,8 +161,7 @@ function createStatementFormControl(statement?: Partial<FullStatement>) {
     incomePayments: FormList.factory(statement?.payments.income, (el) => new IncomePaymentForm(el)),
     rightPayments: FormList.factory(statement?.payments.right, (el) => new RightPaymentForm(el)),
     rightholderPayment: new RightholderPaymentForm(statement?.payments.rightholder),
-    comment: new FormControl<string>(statement?.comment ?? ''),
-    incomeIds: new FormControl<string[]>(statement?.incomeIds ?? []),
+    comment: new FormControl<string>(statement?.comment ?? '')
   }
 
   for (const source of statement?.sources ?? []) {
@@ -194,6 +193,19 @@ export class StatementForm extends FormEntity<StatementFormControl> {
       } else {
         this.addControl(key, controls[key]);
       }
+    }
+  }
+
+  addIncomes(incomes: Income[], sources: WaterfallSource[]) {
+    for (const income of incomes) {
+      this.addIncome(income, sources);
+    }
+  }
+
+  addIncome(income: Income, sources: WaterfallSource[]) {
+    const source = getAssociatedSource(income, sources);
+    if (!this.controls[source.id]) {
+      this.controls[source.id] = FormList.factory([income], (el) => new IncomeForm(el));
     }
   }
 

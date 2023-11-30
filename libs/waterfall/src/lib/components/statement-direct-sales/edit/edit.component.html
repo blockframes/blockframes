@@ -2,13 +2,33 @@
   <waterfall-statement-header *ngIf="sources$ | async as sources" [statement]="statement" [sources]="sources"></waterfall-statement-header>
   <waterfall-statement-period [statement]="statement" [form]="form"></waterfall-statement-period>
 
-  <mat-tab-group class="bf-tabs" *ngIf="(sources$ | async).length">
-    <mat-tab *ngFor="let source of (sources$ | async)" [label]="source.name">
+  <mat-tab-group class="bf-tabs">
+    <mat-tab label="Direct Revenues">
       <ng-template matTabContent>
         <section class="surface">
+          <h3>Direct Revenues</h3>
+          <p class="mat-body-1">Specify the sources you would like to declare. We will personalize the Statement accordingly.</p>
+          <article>
+            <mat-form-field appearance="outline">
+              <mat-icon svgIcon="play_arrow" matPrefix></mat-icon>
+              <mat-label>Specify sources</mat-label>
+              <mat-select [formControl]="sourcesControl" placeholder="Specify sources" multiple>
+                <mat-option *ngFor="let source of waterfallSources" [value]="source.id" [disabled]="source.disabled">{{ source.name }}</mat-option>
+              </mat-select>
+              <mat-hint>You can select as many rights as you need</mat-hint>
+            </mat-form-field>
+            <div>
+              <button mat-button (click)="declare()">
+                <mat-icon svgIcon="summarize"></mat-icon>
+                <span>Declare</span>
+              </button>
+            </div>
+          </article>
+        </section>
+        <section *ngFor="let source of (sources$ | async)" class="surface">
           <h3>{{ source.name }}</h3>
           <p class="mat-body-1">You can personalise your receipts using the following elements.</p>
-          <bf-form-table [columns]="incomeColumns" [form]="form.get(source.id)" [defaultFormValue]="defaultIncomeValue(source)">
+          <bf-form-table *ngIf="form.get(source.id)" [columns]="incomeColumns" [form]="form.get(source.id)" [defaultFormValue]="defaultIncomeValue(source)" (itemSaved)="form.markAsDirty()">
             <!-- Columns -->
             <ng-template colRef="" label="Gross Receipts" let-item>
               <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
@@ -27,7 +47,7 @@
               </span>
               <ng-template #noTerritories>--</ng-template>
             </ng-template>
-    
+
             <!-- Local Form -->
             <ng-template formView let-incomeForm>
               <form [formGroup]="incomeForm" class="group" fxLayout="column" fxLayoutGap="8px">
@@ -39,7 +59,7 @@
                   selectIcon="play_arrow"
                   [control]="incomeForm.get('medias')">
                 </group-multiselect>
-          
+
                 <group-multiselect *ngIf="incomeForm.get('territories')?.value"
                   scope="territories"
                   label="Select Territories"
@@ -58,22 +78,22 @@
                   <mat-icon matPrefix *ngIf="incomeForm.get('currency').value" [svgIcon]="incomeForm.get('currency').value"></mat-icon>
                 </mat-form-field>
               </form>
-    
+
             </ng-template>
-    
+
             <ng-template saveButtonText>Save Receipt</ng-template>
             <ng-template addButtonText>Add Receipt</ng-template>
-    
+
           </bf-form-table>
         </section>
       </ng-template>
     </mat-tab>
-    <mat-tab label="Expenses">
+    <mat-tab label="Direct Expenses">
       <ng-template matTabContent>
         <section class="surface">
-          <h3>Expenses</h3>
+          <h3>Direct Expenses</h3>
           <p class="mat-body-1">Please note, only the capped sums will be used for the calculation.</p>
-          <bf-form-table [columns]="expenseColumns" [form]="form.get('expenses')" [defaultFormValue]="defaultExpenseValue()">
+          <bf-form-table [columns]="expenseColumns" [form]="form.get('expenses')" [defaultFormValue]="defaultExpenseValue()" (itemSaved)="form.markAsDirty()">
             <!-- Columns -->
             <ng-template colRef="" label="Amount" let-item>
               <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
@@ -84,7 +104,7 @@
             <ng-template colRef="category" label="Category" let-category>
               {{ category }}
             </ng-template>
-    
+
             <!-- Local Form -->
             <ng-template formView let-expenseForm>
               <form [formGroup]="expenseForm" class="group" fxLayout="column" fxLayoutGap="8px">
@@ -92,7 +112,7 @@
                   <mat-label>Type</mat-label>
                   <input matInput [formControl]="expenseForm.get('type')" required/>
                 </mat-form-field>
-          
+
                 <mat-form-field appearance="outline">
                   <mat-label>Category</mat-label>
                   <input matInput [formControl]="expenseForm.get('category')" required/>
@@ -108,12 +128,12 @@
                   <mat-icon matPrefix *ngIf="expenseForm.get('currency').value" [svgIcon]="expenseForm.get('currency').value"></mat-icon>
                 </mat-form-field>
               </form>
-    
+
             </ng-template>
-    
+
             <ng-template saveButtonText>Save Expense</ng-template>
             <ng-template addButtonText>Add Expense</ng-template>
-    
+
           </bf-form-table>
         </section>
       </ng-template>

@@ -1,9 +1,8 @@
 <ng-container *ngIf="statement$ | async as statement">
-  <ng-container *ngIf="sources$ | async as sources">
-    <waterfall-statement-header [statement]="statement" [sources]="sources"></waterfall-statement-header>
-    <waterfall-statement-distributor-summary *ngIf="statement.type !== 'producer'" [sources]="sources" [form]="form" [statement]="statement"></waterfall-statement-distributor-summary>  
-    <waterfall-statement-producer-summary *ngIf="statement.type === 'producer'" [statement]="statement" [form]="form"></waterfall-statement-producer-summary>
-  </ng-container>
+
+  <waterfall-statement-distributor-summary *ngIf="['salesAgent', 'mainDistributor'].includes(statement.type)"  [form]="form" [statement]="statement"></waterfall-statement-distributor-summary>  
+  <waterfall-statement-direct-sales-summary *ngIf="statement.type === 'directSales'" [form]="form" [statement]="statement"></waterfall-statement-direct-sales-summary>
+  <waterfall-statement-producer-summary *ngIf="statement.type === 'producer'" [statement]="statement" [form]="form"></waterfall-statement-producer-summary>
 
   <footer>
     <a mat-flat-button routerLink="edit" *ngIf="statement.type !== 'producer'">

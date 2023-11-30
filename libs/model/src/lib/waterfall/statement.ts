@@ -369,24 +369,16 @@ export function getStatementRightsToDisplay(statement: Statement, _rights: Right
 }
 
 export function getStatementSources(statement: Statement, sources: WaterfallSource[], incomes: Income[], rights?: Right[], state?: TitleState) {
-
-  if (statement.status === 'reported' || isProducerStatement(statement)) {
+  if (statement.status === 'reported' || isProducerStatement(statement) || isDirectSalesStatement(statement)) {
     const statementIncomes = statement.incomeIds.map(id => incomes.find(i => i.id === id));
     return getIncomesSources(statementIncomes, sources);
-  }
-
-  let topLevelRights: Right[] = [];
-  if (isDistributorStatement(statement)) {
+  } else if (isDistributorStatement(statement)) {
     const rightholderRights = rights.filter(r => r.rightholderId === statement.senderId && r.contractId === statement.contractId);
-    topLevelRights = getTopLevelRights(rightholderRights, state);
-  } else if (isDirectSalesStatement(statement)) {
-    const rightholderRights = rights.filter(r => r.rightholderId === statement.senderId);
-    topLevelRights = getTopLevelRights(rightholderRights, state);
+    const topLevelRights = getTopLevelRights(rightholderRights, state);
+    const sourceNodes = getSources(state, topLevelRights.map(r => r.id));
+    const sourceIds = Array.from(sourceNodes.map(node => node.id));
+    return sourceIds.map(id => sources.find(s => s.id === id));
   }
-
-  const sourceNodes = getSources(state, topLevelRights.map(r => r.id));
-  const sourceIds = Array.from(sourceNodes.map(node => node.id));
-  return sourceIds.map(id => sources.find(s => s.id === id));
 }
 
 export function getAssociatedRights(sourceId: string, rights: Right[], state: TitleState) {
@@ -536,7 +528,6 @@ function getRightholderPaymentPrice(statement: Statement, state: TitleState) {
 }
 
 export function createMissingIncomes(incomeSources: WaterfallSource[], statementIncomes: Income[], statement: Statement, waterfall: Waterfall) {
-  // TODO #9532 this should not be used for directSales incomes as producer can make a statement for any source, even the ones he does not have rights on
   const sourcesWithoutIncome = incomeSources.filter(s => !statementIncomes.find(i => getAssociatedSource(i, waterfall.sources).id === s.id));
   const missingIncomes: Income[] = [];
   for (const sourceWithoutIncome of sourcesWithoutIncome) {

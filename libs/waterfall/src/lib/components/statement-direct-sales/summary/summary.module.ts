@@ -9,7 +9,7 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { StatementHeaderModule } from '../../statement-header/statement-header.module';
 
 // Components
-import { StatementDistributorSummaryComponent } from './summary.component';
+import { StatementDirectSalesSummaryComponent } from './summary.component';
 
 // Material
 import { MatDividerModule } from '@angular/material/divider';
@@ -22,7 +22,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
-  declarations: [StatementDistributorSummaryComponent],
+  declarations: [StatementDirectSalesSummaryComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -42,6 +42,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatInputModule,
     MatTooltipModule,
   ],
-  exports: [StatementDistributorSummaryComponent]
+  exports: [StatementDirectSalesSummaryComponent]
 })
-export class StatementDistributorSummaryModule { }
+export class StatementDirectSalesSummaryModule { }
