@@ -37,6 +37,10 @@ export function isGroup(state: TitleState, node: Partial<NodeState>): node is Gr
   return ['horizontal', 'vertical'].includes(getNodeType(state, node.id));
 }
 
+export function isVerticalGroup(state: TitleState, node: Partial<NodeState>): node is VerticalState {
+  return getNodeType(state, node.id) === 'vertical';
+}
+
 export function getNodeOrg(state: TitleState, id: string) {
   const node = getNode(state, id);
   const type = getNodeType(state, id);

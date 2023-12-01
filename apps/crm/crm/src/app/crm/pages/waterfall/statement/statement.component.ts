@@ -220,7 +220,7 @@ export class StatementComponent implements OnInit {
     }
   }
 
-  public showRightDetails({ id: rightId }: { id: string }) {
+  public showRightDetails({ id: rightId }: { id: string }) { // TODO #9531 factorize with front
     const sources = this.getAssociatedSourceIds(rightId);
 
     this.rightDetails = sources.map(sourceId => {

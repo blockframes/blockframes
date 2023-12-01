@@ -1,3 +1,29 @@
 <waterfall-statement-header *ngIf="sources$ | async as sources" [statement]="statement" [sources]="sources"></waterfall-statement-header>
 <waterfall-statement-period [statement]="statement" [form]="form"></waterfall-statement-period>
 <waterfall-incoming-statements [statement]="statement" [form]="form" (incomeIds)="incomeIds$.next($event)"></waterfall-incoming-statements>
+
+<section>
+  <article class="breakdown">
+    <header>
+      <span>Calculation breakdown</span>
+      <div>Net Receipts</div>
+    </header>
+
+    <ng-container *ngIf="groupsBreakdown$ | async as breakdown">
+      <div class="surface" *ngFor="let item of breakdown; let isFirst = first">
+        <mat-expansion-panel [expanded]="isFirst">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <span>{{ item.group.name }}</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <bf-table [source]="item.sources">
+            <ng-template colRef="name" label="Section" let-name>
+              {{ name }}
+            </ng-template>
+          </bf-table>
+        </mat-expansion-panel>
+      </div>
+    </ng-container>
+  </article>
+</section>
