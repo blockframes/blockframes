@@ -103,6 +103,7 @@ export class IncomingStatementComponent implements OnInit, OnChanges, OnDestroy 
       }
     }
 
+    this.reportableStatements = [];
     for (const distributor of this.distributors) {
       if (!this.distributorContracts[distributor.id]) {
         const distributorStatements = sortStatements(reportableStatements.filter(s => s.senderId === distributor.id), false);
@@ -121,6 +122,8 @@ export class IncomingStatementComponent implements OnInit, OnChanges, OnDestroy 
         checked: new FormControl<boolean>(distributorStatements.some(s => s.id === statement.id))
       }), { emitEvent: false });
     }
+
+    this.formArray.updateValueAndValidity({ emitEvent: true });
 
     this.onTabChanged({ index: 0 });
     this.cdr.markForCheck();
