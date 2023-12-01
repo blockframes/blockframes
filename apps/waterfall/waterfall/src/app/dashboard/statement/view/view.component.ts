@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { ExpenseService } from '@blockframes/contract/expense/service';
@@ -17,7 +17,7 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
 import { StatementForm } from '@blockframes/waterfall/form/statement.form';
 import { StartementFormGuardedComponent } from '@blockframes/waterfall/guards/statement-form.guard';
 import { StatementService } from '@blockframes/waterfall/statement.service';
-import { combineLatest, map, pluck, tap } from 'rxjs';
+import { Subscription, combineLatest, debounceTime, map, pluck, tap } from 'rxjs';
 
 @Component({
   selector: 'waterfall-statement-view',
@@ -25,7 +25,7 @@ import { combineLatest, map, pluck, tap } from 'rxjs';
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StatementViewComponent implements StartementFormGuardedComponent {
+export class StatementViewComponent implements OnInit, OnDestroy, StartementFormGuardedComponent {
 
   public statement$ = combineLatest([this.route.params.pipe(pluck('statementId')), this.shell.statements$]).pipe(
     map(([statementId, statements]) => statements.find(s => s.id === statementId)),
@@ -40,6 +40,7 @@ export class StatementViewComponent implements StartementFormGuardedComponent {
   private waterfall = this.shell.waterfall;
 
   public form: StatementForm;
+  private sub: Subscription;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
@@ -53,6 +54,18 @@ export class StatementViewComponent implements StartementFormGuardedComponent {
     this.dynTitle.setPageTitle(this.shell.movie.title.international, 'View Statement');
 
     this.form = new StatementForm();
+  }
+
+  ngOnInit() {
+    this.sub = this.form.get('duration').get('to').valueChanges.pipe(debounceTime(500)).subscribe(date => {
+      const control = this.form.get('duration').get('to');
+      const inError = control.hasError('startOverEnd') || control.hasError('isBefore');
+      if (!inError && this.shell.setDate(date)) this.shell.simulateWaterfall();
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
   }
 
   public report(statement: Statement) {

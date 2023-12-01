@@ -3,7 +3,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // Blockframes
-import { StatementPeriodModule } from '@blockframes/waterfall/components/statement-period/statement-period.module';
+import { StatementPeriodModule } from '../../statement-period/statement-period.module';
+import { StatementHeaderModule } from '../../statement-header/statement-header.module';
+import { IncomingStatementModule } from '../incoming-statements/incoming-statements.module';
 
 // Components
 import { StatementProducerSummaryComponent } from './summary.component';
@@ -17,6 +19,8 @@ import { StatementProducerSummaryComponent } from './summary.component';
 
     // Blockframes
     StatementPeriodModule,
+    StatementHeaderModule,
+    IncomingStatementModule,
 
     // Material
 
