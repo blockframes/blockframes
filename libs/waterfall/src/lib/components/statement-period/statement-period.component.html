@@ -4,9 +4,9 @@
 
   <form [formGroup]="form">
     <article>
-      <a *ngIf="previousStatementId else noPrevious" mat-icon-button matTooltip="Go to previous statement" [routerLink]="['../..', previousStatementId, 'edit']">
+      <button *ngIf="previousStatementId else noPrevious" mat-icon-button matTooltip="Go to previous statement" (click)="goTo(previousStatementId)">
         <mat-icon svgIcon="arrow_back"></mat-icon>
-      </a>
+      </button>
       <ng-template #noPrevious>
         <button mat-icon-button disabled matTooltip="There is no previous statement">
           <mat-icon svgIcon="arrow_back"></mat-icon>
@@ -43,9 +43,9 @@
           <mat-error *ngIf="form.get('duration').get('to').hasError('isBefore')">Date must before waterfall initialization date</mat-error>
         </mat-form-field>
       </section>
-      <a *ngIf="nextStatementId else noNext" mat-icon-button matTooltip="Go to next statement" [routerLink]="['../..', nextStatementId, 'edit']">
+      <button *ngIf="nextStatementId else noNext" mat-icon-button matTooltip="Go to next statement" (click)="goTo(nextStatementId)">
         <mat-icon svgIcon="arrow_forward"></mat-icon>
-      </a>
+      </button>
       <ng-template #noNext>
         <button mat-icon-button disabled matTooltip="There is no next statement">
           <mat-icon svgIcon="arrow_forward"></mat-icon>
