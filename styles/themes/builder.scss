@@ -29,7 +29,7 @@
 @use '../components/mat-tabs' as tabs;
 @use '../components/mat-tooltip' as tooltip;
 @use '../components/mat-datepicker' as datepicker;
-
+@use '../components/mat-checkbox' as checkbox;
 
 @include mat.core(typography.$bf-typography);
 // While density is private we need to set it here to avoid duplicated themes
@@ -200,6 +200,7 @@
   @include datepicker.color($theme);
   @include table.color($theme);
   @include tooltip.color($theme);
+  @include checkbox.color($theme);
 
   $config: mat.get-color-config($theme);
   $background: map.get($config, 'background');
