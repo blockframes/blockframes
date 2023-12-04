@@ -231,3 +231,11 @@ export function getTransferDetails(statementIncomeIds: string[], sourceId: strin
     percent: percent * 100,
   };
 }
+
+export function getPathDetails(statementIncomeIds: string[], right: string, sourceId: string, state: TitleState) {
+  const path = getPath(right, sourceId, state);
+  return path.map((item, index) => {
+    if (!path[index + 1]) return;
+    return getTransferDetails(statementIncomeIds, sourceId, item, path[index + 1], state);
+  }).filter(i => !!i);
+}

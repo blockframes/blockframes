@@ -41,6 +41,45 @@
     </ng-container>
   </article>
 
+  <ng-container *ngIf="details$ | async as details">
+    <article *ngIf="details.length" class="breakdown">
+      <header>
+        <span>Calculation details</span>
+      </header>
+      <div class="surface" *ngFor="let item of details">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <span>{{ item.name }}</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <bf-table [source]="item.details" pagination="50">
+            <ng-template colRef="" label="#" let-index="index">
+              {{ index + 1 }}
+            </ng-template>
+            <ng-template colRef="from" label="From" let-from>
+              {{ from }}
+            </ng-template>
+            <ng-template colRef="to" label="To" let-to>
+              {{ to }}
+            </ng-template>
+            <ng-template colRef="amount" label="Amount" let-amount>
+              <price-per-currency [price]="amount | formatPair"></price-per-currency>
+            </ng-template>
+            <ng-template colRef="percent" label="%" let-percent>
+              {{ percent }}
+            </ng-template>
+            <ng-template colRef="taken" label="Taken" let-taken>
+              <strong>
+                <price-per-currency [price]="taken | formatPair"></price-per-currency>
+              </strong>
+            </ng-template>
+          </bf-table>
+        </mat-expansion-panel>
+      </div>
+    </article>
+  </ng-container>
+
   <article class="participation" *ngIf="statement.payments.rightholder as payment">
     <span>Total Participation:</span>
     <price-per-currency [price]="payment.price | formatPair: payment.currency" default="€ 0"></price-per-currency>

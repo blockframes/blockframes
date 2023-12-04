@@ -20,7 +20,6 @@ import {
   WaterfallSource,
   isProducerStatement,
   WaterfallContract,
-  getPath,
   isDirectSalesStatement,
   getStatementRights,
   getCalculatedAmount,
@@ -29,7 +28,7 @@ import {
   getStatementRightsToDisplay,
   generatePayments,
   createMissingIncomes,
-  getTransferDetails,
+  getPathDetails,
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
@@ -218,26 +217,16 @@ export class StatementComponent implements OnInit {
     }
   }
 
-  public showRightDetails({ id: rightId }: { id: string }) { // TODO #9531 factorize with front
+  public showRightDetails({ id: rightId }: { id: string }) {
     const sources = this.getAssociatedSourceIds(rightId);
 
     this.rightDetails = sources.map(sourceId => {
-      const sourceDetails: RightDetails[] = [];
-
-      const path = getPath(rightId, sourceId, this.simulation.waterfall.state);
-      path.forEach((item, index) => {
-        if (path[index + 1]) {
-          const details = getTransferDetails(this.statement.incomeIds, sourceId, item, path[index + 1], this.simulation.waterfall.state);
-
-          sourceDetails.push({
-            ...details,
-            from: isSource(this.simulation.waterfall.state, details.from) ? this.waterfall.sources.find(s => s.id === details.from.id).name : this.allRights.find(r => r.id === details.from.id).name,
-            to: this.allRights.find(r => r.id === details.to.id).name,
-          });
-        }
-      });
-
-      return sourceDetails;
+      const details = getPathDetails(this.statement.incomeIds, rightId, sourceId, this.simulation.waterfall.state);
+      return details.map(d => ({
+        ...d,
+        from: isSource(this.simulation.waterfall.state, d.from) ? this.waterfall.sources.find(s => s.id === d.from.id).name : this.allRights.find(r => r.id === d.from.id).name,
+        to: this.allRights.find(r => r.id === d.to.id).name,
+      }));
     });
 
     this.cdRef.markForCheck();

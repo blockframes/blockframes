@@ -12,11 +12,13 @@ import {
   getGroup,
   getOrderedRights,
   getPath,
+  getPathDetails,
   getSources,
   getStatementRights,
   getStatementRightsToDisplay,
   getStatementSources,
   getTransferDetails,
+  isSource,
   isVerticalGroup
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
@@ -24,7 +26,7 @@ import { StatementForm } from '../../../form/statement.form';
 import { BehaviorSubject, Subscription, combineLatest, debounceTime, map, shareReplay } from 'rxjs';
 import { unique } from '@blockframes/utils/helpers';
 
-function getSourcesWithRemainsOf(incomeIds: string[], state: TitleState, rightId: string, sources: WaterfallSource[]) {
+function getSourcesWithRemainsOf(incomeIds: string[], state: TitleState, rightId: string, sources: WaterfallSource[]): (WaterfallSource & { taken: number })[] {
   const sourceIds = getSources(state, rightId).map(i => i.id);
 
   return sources.filter(s => sourceIds.includes(s.id)).map(s => {
@@ -60,6 +62,8 @@ interface Row {
   percent?: number;
   taken: number;
   type?: 'source' | 'total' | 'right';
+  right?: Right;
+  source?: WaterfallSource & { taken: number };
 }
 
 @Component({
@@ -123,7 +127,9 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
           const group = rights.find(r => r.id === groupState.id);
           if (!groups[group.id]) {
             // Sources remains 
-            const rows: Row[] = getSourcesWithRemainsOf(statement.incomeIds, simulation.waterfall.state, group.id, sources).map(r => ({ ...r, type: 'source' }));
+            const rows: Row[] = getSourcesWithRemainsOf(statement.incomeIds, simulation.waterfall.state, group.id, sources)
+              .map(source => ({ name: source.name, taken: source.taken, type: 'source', source, right: group }));
+
             const remainTotal = rows.reduce((acc, s) => acc + s.taken, 0);
 
             // Total
@@ -141,7 +147,9 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
           groups[group.id].rights.push(right);
         } else {
           // Sources remains 
-          const rows: Row[] = getSourcesWithRemainsOf(statement.incomeIds, simulation.waterfall.state, right.id, sources).map(r => ({ ...r, type: 'source' }));
+          const rows: Row[] = getSourcesWithRemainsOf(statement.incomeIds, simulation.waterfall.state, right.id, sources)
+            .map(source => ({ name: source.name, taken: source.taken, type: 'source', source, right }));
+
           const remainTotal = rows.reduce((acc, s) => acc + s.taken, 0);
 
           // Total
@@ -156,6 +164,31 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
       }
 
       return Object.values(groups).filter(g => g.rows.filter(r => r.type === 'source').length);
+    })
+  );
+
+  public details$ = combineLatest([
+    this.groupsBreakdown$, this.shell.simulation$,
+    this.statement$, this.shell.rights$
+  ]).pipe(
+    map(([groups, simulation, statement, rights]) => {
+      const sourcesDetails = groups.map(g => g.rows.filter(r => r.type === 'source')).flat();
+
+      return sourcesDetails.map(row => {
+        const source = this.shell.waterfall.sources.find(s => s.id === row.source.id);
+        const path = getPath(row.right.id, row.source.id, simulation.waterfall.state);
+
+        const rightId = path[path.indexOf(row.right.id) - 1];
+        const details = getPathDetails(statement.incomeIds, rightId, row.source.id, simulation.waterfall.state);
+        return {
+          name: source.name,
+          details: details.map(d => ({
+            ...d,
+            from: isSource(simulation.waterfall.state, d.from) ? this.shell.waterfall.sources.find(s => s.id === d.from.id).name : rights.find(r => r.id === d.from.id).name,
+            to: rights.find(r => r.id === d.to.id).name
+          }))
+        }
+      });
     })
   );
 
