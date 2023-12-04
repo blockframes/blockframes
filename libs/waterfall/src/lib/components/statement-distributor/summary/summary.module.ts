@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { StatementHeaderModule } from '../../statement-header/statement-header.module';
+import { StatementParticipationModule } from '../../statement-participation/statement-participation.module';
 
 // Components
 import { StatementDistributorSummaryComponent } from './summary.component';
@@ -31,6 +32,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     PricePerCurrencyModule,
     TableModule,
     StatementHeaderModule,
+    StatementParticipationModule,
 
     // Material
     MatDividerModule,

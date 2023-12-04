@@ -2,10 +2,7 @@
 <waterfall-statement-period [statement]="statement" [form]="form"></waterfall-statement-period>
 
 <section>
-  <article class="participation" *ngIf="statement.payments.rightholder as payment">
-    <span>Total Participation:</span> <!-- TODO #9531 dedicated component-->
-    <price-per-currency [price]="payment.price | formatPair: payment.currency" default="€ 0"></price-per-currency>
-  </article>  
+  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment" label="Total Participation"></waterfall-statement-participation>
 </section>
 
 <waterfall-incoming-statements [statement]="statement" [form]="form" (incomeIds)="incomeIds$.next($event)"></waterfall-incoming-statements>
@@ -80,8 +77,5 @@
     </article>
   </ng-container>
 
-  <article class="participation" *ngIf="statement.payments.rightholder as payment">
-    <span>Total Participation:</span>
-    <price-per-currency [price]="payment.price | formatPair: payment.currency" default="€ 0"></price-per-currency>
-  </article> 
+  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment" label="Total Participation"></waterfall-statement-participation>
 </section>

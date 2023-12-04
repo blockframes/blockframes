@@ -8,6 +8,7 @@ import { StatementHeaderModule } from '../../statement-header/statement-header.m
 import { IncomingStatementModule } from '../incoming-statements/incoming-statements.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
+import { StatementParticipationModule } from '../../statement-participation/statement-participation.module';
 
 // Components
 import { StatementProducerSummaryComponent } from './summary.component';
@@ -28,6 +29,7 @@ import { MatIconModule } from '@angular/material/icon';
     IncomingStatementModule,
     TableModule,
     PricePerCurrencyModule,
+    StatementParticipationModule,
 
     // Material
     MatExpansionModule,
