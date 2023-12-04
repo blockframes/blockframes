@@ -1,5 +1,13 @@
 <waterfall-statement-header *ngIf="sources$ | async as sources" [statement]="statement" [sources]="sources"></waterfall-statement-header>
 <waterfall-statement-period [statement]="statement" [form]="form"></waterfall-statement-period>
+
+<section>
+  <article class="participation" *ngIf="statement.payments.rightholder as payment">
+    <span>Total Participation:</span> <!-- TODO #9531 dedicated component-->
+    <price-per-currency [price]="payment.price | formatPair: payment.currency" default="€ 0"></price-per-currency>
+  </article>  
+</section>
+
 <waterfall-incoming-statements [statement]="statement" [form]="form" (incomeIds)="incomeIds$.next($event)"></waterfall-incoming-statements>
 
 <section>
@@ -17,13 +25,24 @@
               <span>{{ item.group.name }}</span>
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <bf-table [source]="item.sources">
-            <ng-template colRef="name" label="Section" let-name>
-              {{ name }}
+          <bf-table [source]="item.rows">
+            <ng-template colRef="" label="Section" let-item>
+              <span [class]="item.type">{{ item.name }}</span>
+            </ng-template>
+            <ng-template colRef="" label="" let-item>
+              <span *ngIf="item.type === 'right'" [class]="item.type">{{ item.percent }} %</span>
+            </ng-template>
+            <ng-template colRef="" label="Net Receipts" let-item>
+              <price-per-currency [class]="item.type" [price]="item.taken | formatPair"></price-per-currency>
             </ng-template>
           </bf-table>
         </mat-expansion-panel>
       </div>
     </ng-container>
   </article>
+
+  <article class="participation" *ngIf="statement.payments.rightholder as payment">
+    <span>Total Participation:</span>
+    <price-per-currency [price]="payment.price | formatPair: payment.currency" default="€ 0"></price-per-currency>
+  </article> 
 </section>

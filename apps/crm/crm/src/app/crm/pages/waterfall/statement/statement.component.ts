@@ -15,10 +15,8 @@ import {
   mainCurrency,
   isDistributorStatement,
   getSources,
-  getNode,
   sum,
   isSource,
-  isGroup,
   WaterfallSource,
   isProducerStatement,
   WaterfallContract,
@@ -31,6 +29,7 @@ import {
   getStatementRightsToDisplay,
   generatePayments,
   createMissingIncomes,
+  getTransferDetails,
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
@@ -61,7 +60,6 @@ export class StatementComponent implements OnInit {
   public expenses: Expense[] = [];
   public rights: Right[] = [];
   public rightDetails: RightDetails[][] = [];
-  public currency = mainCurrency;
   public paymentDateControl = new FormControl<Date>(new Date());
   public reportDateControl = new FormControl<Date>(new Date());
   private allRights: Right[];
@@ -225,38 +223,16 @@ export class StatementComponent implements OnInit {
 
     this.rightDetails = sources.map(sourceId => {
       const sourceDetails: RightDetails[] = [];
-      // Fetch incomes that are in the statement duration
-      const incomeIds = this.simulation.waterfall.state.sources[sourceId].incomeIds.filter(i => this.statement.incomeIds.includes(i));
 
       const path = getPath(rightId, sourceId, this.simulation.waterfall.state);
       path.forEach((item, index) => {
         if (path[index + 1]) {
-          const to = getNode(this.simulation.waterfall.state, path[index + 1]);
-          const from = getNode(this.simulation.waterfall.state, item);
-          const transfer = this.simulation.waterfall.state.transfers[`${from.id}->${to.id}`];
-          let amount = 0;
-          if (transfer) {
-            const incomes = transfer.history.filter(h => incomeIds.includes(h.incomeId));
-            amount = sum(incomes.filter(i => i.checked), i => i.amount);
-          }
-
-          let taken = 0;
-          if (isGroup(this.simulation.waterfall.state, to)) {
-            const innerTransfers = to.children.map(c => this.simulation.waterfall.state.transfers[`${to.id}->${c}`]).filter(t => !!t);
-            const innerIncomes = innerTransfers.map(t => t.history.filter(h => incomeIds.includes(h.incomeId))).flat();
-            taken = sum(innerIncomes.filter(i => i.checked), i => i.amount * i.percent);
-          } else {
-            taken = amount * to.percent;
-          }
-
-          const percent = isGroup(this.simulation.waterfall.state, to) && amount ? (taken / amount) : to.percent;
+          const details = getTransferDetails(this.statement.incomeIds, sourceId, item, path[index + 1], this.simulation.waterfall.state);
 
           sourceDetails.push({
-            from: isSource(this.simulation.waterfall.state, from) ? this.waterfall.sources.find(s => s.id === from.id).name : this.allRights.find(r => r.id === from.id).name,
-            to: this.allRights.find(r => r.id === to.id).name,
-            amount,
-            taken,
-            percent: percent * 100,
+            ...details,
+            from: isSource(this.simulation.waterfall.state, details.from) ? this.waterfall.sources.find(s => s.id === details.from.id).name : this.allRights.find(r => r.id === details.from.id).name,
+            to: this.allRights.find(r => r.id === details.to.id).name,
           });
         }
       });
