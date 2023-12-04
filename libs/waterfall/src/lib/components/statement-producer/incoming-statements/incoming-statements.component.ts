@@ -104,12 +104,14 @@ export class IncomingStatementComponent implements OnInit, OnChanges, OnDestroy 
     this.reportableStatements = [];
     for (const distributor of this.distributors) {
       if (!this.distributorContracts[distributor.id]) {
-        const distributorStms = sortStatements(reportableStatements.filter(s => s.senderId === distributor.id), false);
-        this.reportableStatements = [...this.reportableStatements, ...distributorStms];
+        const distributorStms = sortStatements(filteredStatements.filter(s => s.senderId === distributor.id), false);
+        const filteredDistributorStatements = distributorStms.filter(s => reportableStatements.some(stm => stm.id === s.id));
+        this.reportableStatements = [...this.reportableStatements, ...filteredDistributorStatements];
       } else {
         for (const contract of this.distributorContracts[distributor.id]) {
-          const distributorStms = sortStatements(reportableStatements.filter(s => s.senderId === distributor.id && s.contractId === contract.id), false);
-          this.reportableStatements = [...this.reportableStatements, ...distributorStms];
+          const distributorStms = sortStatements(filteredStatements.filter(s => s.senderId === distributor.id && s.contractId === contract.id), false);
+          const filteredDistributorStatements = distributorStms.filter(s => reportableStatements.some(stm => stm.id === s.id));
+          this.reportableStatements = [...this.reportableStatements, ...filteredDistributorStatements];
         }
       }
     }
