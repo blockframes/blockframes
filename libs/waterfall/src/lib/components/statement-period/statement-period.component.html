@@ -16,14 +16,14 @@
         <mat-form-field appearance="outline">
           <mat-icon svgIcon="timer" matPrefix></mat-icon>
           <mat-label>Duration Period</mat-label>
-          <mat-select [disabled]="statement.status ==='reported'" [formControl]="periodicity" placeholder="Duration Period">
+          <mat-select [disabled]="statement.status === 'reported'" [formControl]="periodicity" placeholder="Duration Period">
             <mat-option *ngFor="let period of periods | keyvalue" [value]="period.key">{{ period.value }}</mat-option>
           </mat-select>
         </mat-form-field>
         
         <mat-form-field appearance="outline">
           <mat-label>From</mat-label>
-          <input matInput [disabled]="statement.status ==='reported'" [formControl]="form.get('duration').get('from')" [matDatepicker]="datePickerFrom" required placeholder="MM/DD/YYYY">
+          <input matInput [disabled]="statement.status === 'reported'" [formControl]="form.get('duration').get('from')" [matDatepicker]="datePickerFrom" required placeholder="MM/DD/YYYY">
           <mat-datepicker-toggle matPrefix [for]="datePickerFrom">
             <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
           </mat-datepicker-toggle>
@@ -34,7 +34,7 @@
       
         <mat-form-field appearance="outline">
           <mat-label>To</mat-label>
-          <input matInput [disabled]="statement.status ==='reported'" [formControl]="form.get('duration').get('to')" [matDatepicker]="datePickerTo" required placeholder="MM/DD/YYYY">
+          <input matInput [disabled]="statement.status === 'reported'" [formControl]="form.get('duration').get('to')" [matDatepicker]="datePickerTo" required placeholder="MM/DD/YYYY">
           <mat-datepicker-toggle matPrefix [for]="datePickerTo">
             <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
           </mat-datepicker-toggle>
@@ -56,7 +56,7 @@
       <p class="mat-body-1">You can change the date when the issue has been issued (useful for old films).</p>
       <mat-form-field appearance="outline">
         <mat-label>Reported on</mat-label>
-        <input [disabled]="statement.status ==='reported'" matInput [formControl]="form.get('reported')" [matDatepicker]="datePickerReported" required placeholder="MM/DD/YYYY">
+        <input [disabled]="statement.status === 'reported'" matInput [formControl]="form.get('reported')" [matDatepicker]="datePickerReported" required placeholder="MM/DD/YYYY">
         <mat-datepicker-toggle matPrefix [for]="datePickerReported">
           <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
         </mat-datepicker-toggle>
