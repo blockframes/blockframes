@@ -23,7 +23,7 @@
           <ng-container *ngFor="let statement of reportableStatements; let i = index">
             <ng-container *ngIf="contractControl.value else directSales">
               <li [formGroupName]="i" *ngIf="statement.senderId === distributor.id && statement.contractId === contractControl.value">
-                <mat-checkbox class="bf-checkbox" color="primary" [formControl]="formArray.controls[i].get('checked')">
+                <mat-checkbox [disabled]="statement.status ==='reported'" class="bf-checkbox" color="primary" [formControl]="formArray.controls[i].get('checked')">
                   <article class="surface" *ngIf="reportableStatements[i] as statement">
                     <div class="circle">
                       {{ statement.number }}
@@ -50,7 +50,7 @@
             </ng-container>
             <ng-template #directSales>
               <li [formGroupName]="i" *ngIf="statement.senderId === distributor.id">
-                <mat-checkbox class="bf-checkbox" color="primary" [formControl]="formArray.controls[i].get('checked')">
+                <mat-checkbox [disabled]="statement.status ==='reported'" class="bf-checkbox" color="primary" [formControl]="formArray.controls[i].get('checked')">
                   <article class="surface" *ngIf="reportableStatements[i] as statement">
                     <div class="circle">
                       {{ statement.number }}

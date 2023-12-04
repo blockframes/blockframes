@@ -48,7 +48,7 @@ export class StatementPeriodComponent implements OnInit, OnChanges, OnDestroy {
       }
     });
 
-    // TODO #9524 subscribe on form duration changes to update periodicity
+    // TODO #9524 #9525 #9532 #9531 subscribe on form duration changes to update periodicity
   }
 
   ngOnDestroy() {
@@ -65,7 +65,7 @@ export class StatementPeriodComponent implements OnInit, OnChanges, OnDestroy {
     if (current > 1) this.previousStatementId = sortedStatements.find(s => s.number === current - 1).id;
     if (current < sortedStatements.length) this.nextStatementId = sortedStatements.find(s => s.number === current + 1).id;
 
-    // TODO #9524 set periodicity from previous statement if current does not have dates
+    // TODO #9524 #9525 #9532 #9531 set periodicity from previous statement if current does not have dates
     const currentDuration = this.statement.duration;
     if (currentDuration.from && currentDuration.to) {
       let difference = differenceInMonths(currentDuration.to, currentDuration.from);

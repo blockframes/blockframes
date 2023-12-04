@@ -12,13 +12,13 @@
             <mat-form-field appearance="outline">
               <mat-icon svgIcon="play_arrow" matPrefix></mat-icon>
               <mat-label>Specify sources</mat-label>
-              <mat-select [formControl]="sourcesControl" placeholder="Specify sources" multiple>
+              <mat-select [disabled]="statement.status ==='reported'" [formControl]="sourcesControl" placeholder="Specify sources" multiple>
                 <mat-option *ngFor="let source of waterfallSources" [value]="source.id" [disabled]="source.disabled">{{ source.name }}</mat-option>
               </mat-select>
               <mat-hint>You can select as many rights as you need</mat-hint>
             </mat-form-field>
             <div>
-              <button mat-button (click)="declare()">
+              <button [disabled]="statement.status ==='reported'" mat-button (click)="declare()">
                 <mat-icon svgIcon="summarize"></mat-icon>
                 <span>Declare</span>
               </button>

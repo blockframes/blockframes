@@ -21,7 +21,11 @@
   </footer>
 
   <footer>
-    <button mat-button (click)="save(statement)">
+    <button mat-button 
+      (click)="save(statement)"
+      [disabled]="statement.status === 'reported'"
+      [matTooltip]="statement.status === 'reported' ? 'Reported statement cannot be edited.' : 'Save & Come back later'"
+    >
       <mat-icon svgIcon="save"></mat-icon>
       <span>Save & Come back later</span>
     </button>
