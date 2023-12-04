@@ -172,6 +172,7 @@ export class DashboardComponent implements OnInit {
 
     const outgoingStatementBeneficiaries = Object.keys(rightholderGroups.beneficiaries) as RightholderRole[];
     const rightholders = this.waterfall.rightholders
+      .filter(r => r.id !== this.producer.id)
       .filter(r => hasContractWith([this.producer.id, r.id], this.contracts, currentStateDate)) // Rightholder have a contract with the statement sender
       .filter(r => r.roles.some(role => outgoingStatementBeneficiaries.includes(role))) // Rightholder can receive an outgoing statement
 

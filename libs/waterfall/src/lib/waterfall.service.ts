@@ -50,8 +50,8 @@ export interface WaterfallData {
   contracts: WaterfallContract[];
   terms: Term[];
   rights: Right[];
-  incomes: Income[];
-  expenses: Expense[];
+  incomes: Record<string, Income>;
+  expenses: Record<string, Expense>;
   statements: Statement[];
 }
 
@@ -265,8 +265,8 @@ function groupActions(data: WaterfallData, isSimulation = false) {
   const contractActions = contractsToActions(data.contracts, data.terms);
   const investmentActions = investmentsToActions(data.contracts, data.terms);
   const rightActions = rightsToActions(data.rights);
-  const incomeActions = incomesToActions(data.contracts, data.incomes, data.waterfall.sources);
-  const expenseActions = expensesToActions(data.expenses);
+  const incomeActions = incomesToActions(data.contracts, Object.values(data.incomes), data.waterfall.sources);
+  const expenseActions = expensesToActions(Object.values(data.expenses));
   const paymentActions = statementsToActions(data.statements);
 
   const groupedActions = groupByDate([

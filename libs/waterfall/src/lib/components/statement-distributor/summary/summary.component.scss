@@ -1,0 +1,124 @@
+section {
+  padding: 24px;
+  display: block;
+  mat-divider {
+    margin: 32px 0;
+  }
+
+  p.mat-body-2 {
+    padding: 16px 0;
+  }
+
+  article {
+    padding: 24px;
+  }
+
+  article.participation {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--dashboard-cta);
+    color: var(--primary);
+    font-weight: 800;
+    font-size: 28px;
+    text-transform: uppercase;
+    line-height: 24px;
+    border-bottom: 1px solid #C0C0C0;
+  }
+
+  article.breakdown {
+    background-color: rgba(#D3D5DC, 0.2);
+    border: 1px solid var(--foreground-divider);
+    border-radius: 4px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+
+    mat-panel-title {
+      font-weight: 800;
+      font-size: 26px;
+      line-height: 24px;
+      color: var(--foreground-third-text);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      span, div {
+        font-weight: 800;
+        font-size: 28px;
+        line-height: 24px;
+      }
+
+      span {
+        color: var(--foreground-text);
+      }
+
+      div {
+        color: var(--foreground-third-text);
+      }
+    }
+
+    div.surface {
+      margin-top: 24px;
+
+      bf-table {
+        padding: 0;
+        border: none;
+
+        price-per-currency.right::before {
+          content: '(';
+        }
+
+        price-per-currency.right::after {
+          content: ')';
+        }
+
+        price-per-currency.net, span.net {
+          font-weight: bold;
+        }
+
+        mat-icon {
+          color: var(--primary);
+          vertical-align: middle;
+          margin-top: -2px;
+        }
+
+      }
+    }
+
+    div.total-net {
+      font-weight: 800;
+      font-size: 26px;
+      line-height: 24px;
+      text-align: right;
+      color: var(--foreground-third-text);
+      margin-right: 66px;
+      padding-top: 32px;
+    }
+  }
+}
+
+div.comment {
+  margin-top: 24px;
+  h3 {
+    font-weight: 800;
+    font-size: 26px;
+    line-height: 24px;
+    color: var(--foreground-third-text);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  h4 {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 24px;
+    margin: 32px 0 0 0;
+  }
+
+  mat-form-field.full-width {
+    width: 100%;
+  }
+}

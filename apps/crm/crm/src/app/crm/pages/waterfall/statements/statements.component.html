@@ -12,8 +12,11 @@
     <ng-template colRef="type" label="Type" let-type sort>
       {{ type | toLabel: 'statementType' }}
     </ng-template>
-    <ng-template colRef="status" label="Status" let-status sort>
-      {{ status | toLabel: 'statementStatus' }}
+    <ng-template colRef="" label="Status" let-item sort>
+      {{ item.status | toLabel: 'statementStatus' }}
+      <ng-container *ngIf="item.status === 'reported' && !!item.payments.rightholder && item.payments.rightholder.status !== 'received'">
+        <mat-icon class="warning" svgIcon="warning" matTooltip="Pending payments"></mat-icon>
+      </ng-container>
     </ng-template>
     <ng-template colRef="" label="Contract Id" let-item sort>
       {{ item.contractId | getCurrentContract: (contracts$ | async) : item.duration.from }}

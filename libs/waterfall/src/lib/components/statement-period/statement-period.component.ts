@@ -2,8 +2,8 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnChanges, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Statement, filterStatements, sortStatements } from '@blockframes/model';
-import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
-import { StatementForm } from '@blockframes/waterfall/form/statement.form';
+import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
+import { StatementForm } from '../../form/statement.form';
 import { add, differenceInMonths, endOfMonth, isFirstDayOfMonth, isLastDayOfMonth } from 'date-fns';
 import { Subscription } from 'rxjs';
 

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Pipe, PipeTransform } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { ExpenseService } from '@blockframes/contract/expense/service';
@@ -22,18 +22,15 @@ import {
   WaterfallSource,
   isProducerStatement,
   WaterfallContract,
-  createRightPayment,
-  createRightholderPayment,
-  createIncomePayment,
   getPath,
   isDirectSalesStatement,
-  pathExists,
   getStatementRights,
   getCalculatedAmount,
   getStatementSources,
-  createIncome,
   getAssociatedRights,
   getStatementRightsToDisplay,
+  generatePayments,
+  createMissingIncomes,
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
@@ -65,7 +62,8 @@ export class StatementComponent implements OnInit {
   public rights: Right[] = [];
   public rightDetails: RightDetails[][] = [];
   public currency = mainCurrency;
-  public paymentDateControl = new UntypedFormControl();
+  public paymentDateControl = new FormControl<Date>(new Date());
+  public reportDateControl = new FormControl<Date>(new Date());
   private allRights: Right[];
   private contract: WaterfallContract;
 
@@ -123,20 +121,8 @@ export class StatementComponent implements OnInit {
 
     if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
       // Create missing incomes for the sources that are in the statement but do not have an income associated
-      this.incomes = await this.addMissingIncomes(this.sources, incomes, statement, this.waterfall.sources);
+      this.incomes = await this.addMissingIncomes(this.sources, incomes, statement);
       this.statement = statement;
-
-      // Create income payments on the statement
-      for (const income of this.incomes) {
-        if (this.statement.payments.income.find(p => p.incomeId === income.id)) continue;
-        this.statement.payments.income.push(createIncomePayment({
-          id: this.statementService.createId(),
-          incomeId: income.id,
-          price: income.price,
-          currency: income.currency,
-          date: this.statement.duration.to,
-        }));
-      }
 
       // Refresh waterfall if some incomes or expenses are not in the simulated waterfall
       const missingIncomeIds = this.statement.incomeIds.filter(i => !this.simulation.waterfall.state.incomes[i]);
@@ -146,7 +132,7 @@ export class StatementComponent implements OnInit {
         const missingIncomes = this.incomes.filter(i => missingIncomeIds.includes(i.id));
         const missingExpenses = this.expenses.filter(e => missingExpenseIds.includes(e.id));
 
-        this.simulation = await this.shell.simulateWaterfall({
+        this.simulation = await this.shell.appendToSimulation({
           incomes: missingIncomes.map(i => ({ ...i, status: 'received' })),
           expenses: missingExpenses.map(e => ({ ...e, status: 'received' })),
         });
@@ -159,28 +145,17 @@ export class StatementComponent implements OnInit {
 
     const rights = getStatementRights(this.statement, this.allRights);
     const rightIds = unique(this.sources.map(s => getAssociatedRights(s.id, rights, this.simulation.waterfall.state)).flat().map(r => r.id));
-    this.rights = this.allRights.filter(r => rightIds.includes(r.id));
+    this.rights = rights.filter(r => rightIds.includes(r.id));
 
-    this.generatePayments();
+    this.statement = generatePayments(this.statement, this.simulation.waterfall.state, this.rights, this.incomes, this.waterfall.sources);
 
     this.cdRef.markForCheck();
   }
 
-  private async addMissingIncomes(incomeSources: WaterfallSource[], incomeStatements: Income[], statement: Statement, waterfallSources: WaterfallSource[]) {
+  private async addMissingIncomes(incomeSources: WaterfallSource[], incomeStatements: Income[], statement: Statement) {
     let incomes: Income[] = [...incomeStatements];
 
-    const sourcesWithoutIncome = incomeSources.filter(s => !incomeStatements.find(i => getAssociatedSource(i, waterfallSources).id === s.id));
-    const missingIncomes: Income[] = [];
-    for (const sourceWithoutIncome of sourcesWithoutIncome) {
-      missingIncomes.push(createIncome({
-        contractId: statement.contractId,
-        price: 0,
-        currency: mainCurrency,
-        titleId: this.waterfall.id,
-        date: statement.duration.to,
-        sourceId: sourceWithoutIncome.id,
-      }));
-    }
+    const missingIncomes = createMissingIncomes(incomeSources, incomeStatements, statement, this.waterfall);
 
     if (missingIncomes.length) {
       const newIncomeIds = await this.incomeService.add(missingIncomes);
@@ -292,69 +267,27 @@ export class StatementComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  private generatePayments() {
-
-    // Right Payments
-    for (const right of this.rights) {
-      const paymentExists = this.statement.payments.right.find(p => p.to === right.id);
-      if (paymentExists) continue;
-
-      const isInternal = right.rightholderId === this.statement.senderId;
-      const amountPerIncome = this.statement.incomeIds.map(incomeId => ({ incomeId, amount: getCalculatedAmount(right.id, incomeId, this.simulation.waterfall.state.transfers) }));
-      const payment = createRightPayment({
-        id: this.statementService.createId(),
-        to: right.id,
-        price: sum(amountPerIncome, i => i.amount),
-        currency: mainCurrency,
-        date: isInternal ? this.statement.duration.to : undefined,
-        incomeIds: amountPerIncome.map(i => i.incomeId),
-        mode: isInternal ? 'internal' : 'external'
-      });
-
-      this.statement.payments.right.push(payment);
-    }
-
-    // Rightholder Payments
-    if ((isDistributorStatement(this.statement) || isProducerStatement(this.statement)) && !this.statement.payments.rightholder) {
-      const price = this.getRightholderPaymentPrice();
-      const externalRights = this.rights.filter(r => r.rightholderId !== this.statement.senderId);
-
-      // Sum of external right payments
-      this.statement.payments.rightholder = createRightholderPayment({
-        id: this.statementService.createId(),
-        price: price,
-        currency: mainCurrency,
-        date: undefined,
-        incomeIds: this.statement.incomeIds.filter(id => {
-          const income = this.incomes.find(i => i.id === id);
-          const source = getAssociatedSource(income, this.waterfall.sources);
-          return income.price > 0 && externalRights.some(r => pathExists(r.id, source.id, this.simulation.waterfall.state));
-        })
-      });
-    }
-
-  }
-
-  private getRightholderPaymentPrice() {
-    if (isDistributorStatement(this.statement)) {
-      // Total income received
-      const incomes = this.statement.incomeIds.map(id => this.simulation.waterfall.state.incomes[id]);
-      const incomeSum = sum(incomes, i => i.amount);
-      // Total price of interal right payments
-      const internalRightPaymentSum = sum(this.statement.payments.right.filter(r => r.mode === 'internal'), p => p.price);
-      // What the rightholder did not take
-      return incomeSum - internalRightPaymentSum;
-    } else if (isProducerStatement(this.statement)) {
-      // Total price of external right payments
-      return sum(this.statement.payments.right.filter(r => r.mode === 'external'), p => p.price);
-    }
-  }
-
-  public async reportStatement() {
+  public async reportStatement(reported: Date) {
     this.statement.status = 'reported';
+    this.statement.reported = reported;
 
-    // Validate all internal "right" payments
-    this.statement.payments.right = this.statement.payments.right.map(p => ({ ...p, status: p.mode === 'internal' ? 'received' : p.status }));
+    // Add an id to the income payments if missing
+    if (isDistributorStatement(this.statement) || isDirectSalesStatement(this.statement)) {
+      this.statement.payments.income = this.statement.payments.income.map(p => ({ ...p, id: p.id || this.statementService.createId() }));
+    }
+
+    // Validate all internal "right" payments and add an id if missing
+    this.statement.payments.right = this.statement.payments.right.map(p => ({
+      ...p,
+      status: p.mode === 'internal' ? 'received' : p.status,
+      id: p.id || this.statementService.createId()
+    }));
+
+    // Add an id to the rightholder payment if missing
+    if (isDistributorStatement(this.statement) || isProducerStatement(this.statement)) {
+      this.statement.payments.rightholder.id = this.statement.payments.rightholder.id || this.statementService.createId();
+    }
+
     const promises = [];
     promises.push(this.statementService.update(this.statement, { params: { waterfallId: this.waterfall.id } }));
     this.incomes = this.incomes.map(i => ({ ...i, status: 'received' }));

@@ -11,7 +11,7 @@ import {
   isProducerStatement,
   WaterfallContract
 } from '@blockframes/model';
-import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
+import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 
 @Component({
   selector: 'waterfall-statement-header',

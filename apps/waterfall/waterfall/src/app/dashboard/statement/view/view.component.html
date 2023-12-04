@@ -1,106 +1,27 @@
 <ng-container *ngIf="statement$ | async as statement">
-  <waterfall-statement-header *ngIf="sources$ | async as sources" [statement]="statement" [sources]="sources"></waterfall-statement-header>
 
-  <section>
-    <mat-divider></mat-divider>
-    <p class="mat-body-2">Here is the <strong>Summary of your Statement</strong>. Please verify the information below.</p>
-  
-    <ng-container *ngIf="statement.payments.rightholder as payment">
-      <article class="participation" *ngIf="statement.type === 'mainDistributor' || statement.type ==='salesAgent'">
-        <span>Producer’s net participation:</span>
-        <price-per-currency [price]="payment.price | formatPair: payment.currency" default="€ 0"></price-per-currency>
-      </article>  
-    </ng-container>
-
-    <article class="breakdown">
-      <header>
-        <span>Calculation breakdown</span>
-        <div>Net Receipts</div>
-      </header>
-
-      <ng-container *ngIf="sourcesBreakdown$ | async as breakdown">
-        <div class="surface" *ngFor="let item of breakdown; let isFirst = first">
-          <mat-expansion-panel [expanded]="isFirst">
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                <span>{{ item.name }}</span>
-                <price-per-currency [price]="item.net" default="€ 0"></price-per-currency>
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <bf-table [source]="item.rows">
-              <ng-template colRef="" label="Section" let-item>
-                <span [class]="item.type">{{ item.section }}</span>
-              </ng-template>
-              <ng-template colRef="" label="Prior Period" let-item>
-                <price-per-currency [class]="item.type" [price]="item.previous" default="€ 0"></price-per-currency>
-              </ng-template>
-              <ng-template colRef="" label="Current Period" let-item>
-                <price-per-currency [class]="item.type" [price]="item.current" default="€ 0"></price-per-currency>
-              </ng-template>
-              <ng-template colRef="" label="Cumulative" let-item>
-                <price-per-currency [class]="item.type" [price]="item.cumulated" default="€ 0"></price-per-currency>
-              </ng-template>
-            </bf-table>
-          </mat-expansion-panel>
-        </div>
-      </ng-container>
-
-      <div class="total-net">
-        Total Net Receipts:
-        <price-per-currency *ngIf="totalNetReceipt$ | async as totalNet" [price]="totalNet" default="€ 0"></price-per-currency>
-      </div>
-      <mat-divider></mat-divider>
-
-      <ng-container *ngIf="rightsBreakdown$ | async as breakdown">
-        <div class="surface" *ngFor="let item of breakdown">
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                <span>{{ item.name }}</span>
-                <span>(<price-per-currency [price]="item.total" default="€ 0"></price-per-currency>)</span>
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <bf-table [source]="item.rows">
-              <ng-template colRef="" label="Section" let-item>
-                {{ item.section }}
-              </ng-template>
-              <ng-template colRef="" label="Prior Period" let-item>
-                <price-per-currency class="right" [price]="item.previous" default="€ 0"></price-per-currency>
-              </ng-template>
-              <ng-template colRef="" label="Current Period" let-item>
-                <price-per-currency class="right" [price]="item.current" default="€ 0"></price-per-currency>
-              </ng-template>
-              <ng-template colRef="" label="Cumulative" let-item>
-                <price-per-currency class="right" [price]="item.cumulated" default="€ 0"></price-per-currency>
-              </ng-template>
-            </bf-table>
-          </mat-expansion-panel>
-        </div>
-      </ng-container>
-
-    </article>
-
-    <ng-container *ngIf="statement.payments.rightholder as payment">
-      <article class="participation" *ngIf="statement.type === 'mainDistributor' || statement.type ==='salesAgent'">
-        <span>Producer’s net participation:</span>
-        <price-per-currency [price]="payment.price | formatPair: payment.currency" default="€ 0"></price-per-currency>
-      </article>  
-    </ng-container>
-  </section>
+  <waterfall-statement-distributor-summary *ngIf="['salesAgent', 'mainDistributor'].includes(statement.type)"  [form]="form" [statement]="statement"></waterfall-statement-distributor-summary>  
+  <waterfall-statement-direct-sales-summary *ngIf="statement.type === 'directSales'" [form]="form" [statement]="statement"></waterfall-statement-direct-sales-summary>
+  <waterfall-statement-producer-summary *ngIf="statement.type === 'producer'" [statement]="statement" [form]="form"></waterfall-statement-producer-summary>
 
   <footer>
-    <a mat-flat-button routerLink="edit">
+    <a mat-flat-button routerLink="edit" *ngIf="statement.type !== 'producer'">
       <mat-icon svgIcon="arrow_back"></mat-icon>
       <span>Back</span>
     </a>
-    <a mat-flat-button color="primary" routerLink="..">
+    <button mat-flat-button 
+      color="primary"
+      [disabled]="statement.status === 'reported'"
+      (click)="report(statement)"
+      [matTooltip]="statement.status === 'reported' ? 'Statement is already reported.' : 'Report Statement'"
+    >
       <span>Report Statement</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
-    </a>
+    </button>
   </footer>
 
   <footer>
-    <button mat-button>
+    <button mat-button (click)="save(statement)">
       <mat-icon svgIcon="save"></mat-icon>
       <span>Save & Come back later</span>
     </button>

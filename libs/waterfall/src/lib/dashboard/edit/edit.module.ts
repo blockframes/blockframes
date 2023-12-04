@@ -9,11 +9,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatStepperModule } from '@angular/material/stepper';
 
 // Blockframes
-import { WaterfallFormGuard } from '@blockframes/waterfall/guards/waterfall-form-guard';
+import { WaterfallFormGuard } from '../../guards/waterfall-form-guard';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
-import { TitleFormModule } from '@blockframes/waterfall/components/forms/title-form/form.module';
-import { ContractsFormModule } from '@blockframes/waterfall/components/contracts-form/contracts-form.module';
-import { RightHolderFormModule } from '@blockframes/waterfall/components/right-holder-form/right-holder-form.module';
+import { TitleFormModule } from '../../components/forms/title-form/form.module';
+import { ContractsFormModule } from '../../components/contracts-form/contracts-form.module';
+import { RightHolderFormModule } from '../../components/right-holder-form/right-holder-form.module';
 
 // Pages
 import { WaterfallEditFormComponent } from './edit.component';

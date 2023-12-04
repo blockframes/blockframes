@@ -21,7 +21,7 @@
       <ng-template #noMedias>--</ng-template>
     </ng-template>
     <ng-template colRef="territories" label="Territories" let-territories sort>
-      <span *ngIf="territories.length else noTerritories" class="group-label" (click)="openTerritoryModal(territories)">
+      <span *ngIf="territories.length else noTerritories" (click)="openTerritoryModal(territories)">
         {{ territories | toGroupLabel:'territories':'World' | join | maxLength:30 }}
       </span>
       <ng-template #noTerritories>--</ng-template>

@@ -1,0 +1,3 @@
+<waterfall-statement-header *ngIf="sources$ | async as sources" [statement]="statement" [sources]="sources"></waterfall-statement-header>
+<waterfall-statement-period [statement]="statement" [form]="form"></waterfall-statement-period>
+<waterfall-incoming-statements [statement]="statement" [form]="form" (incomeIds)="incomeIds$.next($event)"></waterfall-incoming-statements>

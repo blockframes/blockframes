@@ -1,21 +1,19 @@
 <ng-container *ngIf="statement$ | async as statement">
-  <waterfall-statement-header *ngIf="sources$ | async as sources" [statement]="statement" [sources]="sources"></waterfall-statement-header>
-
-  <waterfall-statement-period [statement]="statement" [form]="form"></waterfall-statement-period>
-  <button mat-button (click)="testSimulation()">simulate</button>
+  
+  <waterfall-statement-distributor-edit *ngIf="['salesAgent', 'mainDistributor'].includes(statement.type)" [statement]="statement" [form]="form"></waterfall-statement-distributor-edit>
+  <waterfall-statement-direct-sales-edit *ngIf="statement.type === 'directSales'" [statement]="statement" [form]="form"></waterfall-statement-direct-sales-edit>
 
   <footer>
-    <a mat-flat-button color="primary" routerLink="..">
+    <button mat-flat-button color="primary" (click)="save(statement, true)">
       <span>Continue</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
-    </a>
+    </button>
   </footer>
 
   <footer>
-    <button mat-button>
+    <button mat-button (click)="save(statement)">
       <mat-icon svgIcon="save"></mat-icon>
       <span>Save & Come back later</span>
     </button>
   </footer>
-
 </ng-container>

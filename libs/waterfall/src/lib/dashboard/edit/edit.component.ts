@@ -12,12 +12,12 @@ import { FormList } from '@blockframes/utils/form';
 import { MovieService } from '@blockframes/movie/service';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { OrganizationService } from '@blockframes/organization/service';
-import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
-import { WaterfallFormGuardedComponent } from '@blockframes/waterfall/guards/waterfall-form-guard';
+import { WaterfallService } from '../../waterfall.service';
+import { WaterfallFormGuardedComponent } from '../../guards/waterfall-form-guard';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 import { WaterfallRightholder, createAppConfig, createMovieAppConfig, createWaterfallRightholder } from '@blockframes/model';
-import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '@blockframes/waterfall/form/right-holder.form';
-import { WaterfallDocumentForm } from '@blockframes/waterfall/form/document.form';
+import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '../../form/right-holder.form';
+import { WaterfallDocumentForm } from '../../form/document.form';
 
 @Component({
   selector: 'waterfall-title-edit-form',

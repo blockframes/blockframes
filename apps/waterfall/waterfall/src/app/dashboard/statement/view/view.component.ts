@@ -1,22 +1,23 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
+import { ExpenseService } from '@blockframes/contract/expense/service';
+import { IncomeService } from '@blockframes/contract/income/service';
 import {
-  PricePerCurrency,
-  RightPayment,
-  filterStatements,
-  getAssociatedSource,
-  getOrderedRights,
-  getSources,
-  getStatementRightsToDisplay,
-  getStatementSources,
-  getTotalPerCurrency,
-  sortStatements,
-  toLabel
+  Statement,
+  createIncomePayment,
+  createRightPayment,
+  createRightholderPayment,
+  isDirectSalesStatement,
+  isDistributorStatement,
+  isProducerStatement
 } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
-import { combineLatest, map, pluck, tap } from 'rxjs';
+import { StatementForm } from '@blockframes/waterfall/form/statement.form';
+import { StartementFormGuardedComponent } from '@blockframes/waterfall/guards/statement-form.guard';
+import { StatementService } from '@blockframes/waterfall/statement.service';
+import { Subscription, combineLatest, debounceTime, map, pluck, tap } from 'rxjs';
 
 @Component({
   selector: 'waterfall-statement-view',
@@ -24,149 +25,119 @@ import { combineLatest, map, pluck, tap } from 'rxjs';
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StatementViewComponent {
+export class StatementViewComponent implements OnInit, OnDestroy, StartementFormGuardedComponent {
 
   public statement$ = combineLatest([this.route.params.pipe(pluck('statementId')), this.shell.statements$]).pipe(
     map(([statementId, statements]) => statements.find(s => s.id === statementId)),
-    tap(statement => this.shell.setDate(statement.duration.to)),
-  );
-
-  private statementsHistory$ = combineLatest([this.statement$, this.shell.statements$]).pipe(
-    map(([current, statements]) => filterStatements(current.type, [current.senderId, current.receiverId], current.contractId, statements)),
-    map(statements => sortStatements(statements))
-  );
-
-  public sources$ = combineLatest([this.statement$, this.shell.incomes$]).pipe(
-    map(([statement, incomes]) => getStatementSources(statement, this.waterfall.sources, incomes)),
-  );
-
-  public sourcesBreakdown$ = combineLatest([
-    this.sources$, this.shell.incomes$, this.statementsHistory$,
-    this.statement$, this.shell.rights$, this.shell.simulation$
-  ]).pipe(
-    map(([sources, incomes, _history, current, rights, simulation]) => {
-      const indexOfCurrent = _history.findIndex(s => s.id === current.id);
-      const previous = _history.slice(indexOfCurrent + 1);
-      const history = _history.slice(indexOfCurrent);
-
-      const displayedRights = getStatementRightsToDisplay(current, rights);
-      const orderedRights = getOrderedRights(displayedRights, simulation.waterfall.state);
-
-      return sources.map(source => {
-        const rows: { section: string, type?: 'right' | 'net', previous: PricePerCurrency, current: PricePerCurrency, cumulated: PricePerCurrency }[] = [];
-
-        // Incomes declared by statement.senderId
-        const previousSourcePayments = previous.map(s => s.payments.income).flat().filter(income => getAssociatedSource(incomes.find(i => i.id === income.incomeId), this.waterfall.sources).id === source.id);
-        const currentSourcePayments = current.payments.income.filter(income => getAssociatedSource(incomes.find(i => i.id === income.incomeId), this.waterfall.sources).id === source.id);
-        const cumulatedSourcePayments = history.map(s => s.payments.income).flat().filter(income => getAssociatedSource(incomes.find(i => i.id === income.incomeId), this.waterfall.sources).id === source.id);
-        rows.push({
-          section: 'Gross Receipts',
-          previous: getTotalPerCurrency(previousSourcePayments),
-          current: getTotalPerCurrency(currentSourcePayments),
-          cumulated: getTotalPerCurrency(cumulatedSourcePayments)
-        });
-
-        const rights = orderedRights.filter(right => {
-          const rightSources = getSources(simulation.waterfall.state, right.id);
-          return rightSources.length === 1 && rightSources[0].id === source.id;
-        });
-
-        // What senderId took from source to pay his rights
-        const previousSum: RightPayment[] = [];
-        const currentSum: RightPayment[] = [];
-        const cumulatedSum: RightPayment[] = [];
-        for (const right of rights) {
-          const section = right.type ? `${right.name} (${toLabel(right.type, 'rightTypes')} - ${right.percent}%)` : `${right.name} (${right.percent}%)`;
-          const previousRightPayment = previous.map(s => s.payments.right).flat().filter(p => p.to === right.id);
-          previousSum.push(...previousRightPayment.map(r => ({ ...r, price: -r.price })));
-          const currentRightPayment = current.payments.right.filter(p => p.to === right.id);
-          currentSum.push(...currentRightPayment.map(r => ({ ...r, price: -r.price })));
-          const cumulatedRightPayment = history.map(s => s.payments.right).flat().filter(p => p.to === right.id);
-          cumulatedSum.push(...cumulatedRightPayment.map(r => ({ ...r, price: -r.price })));
-          rows.push({
-            section,
-            type: 'right',
-            previous: getTotalPerCurrency(previousRightPayment),
-            current: getTotalPerCurrency(currentRightPayment),
-            cumulated: getTotalPerCurrency(cumulatedRightPayment)
-          });
-        }
-
-        // Net receipts
-        const currentNet = getTotalPerCurrency([...currentSourcePayments, ...currentSum]);
-        rows.push({
-          section: `${source.name} (Net Receipts)`,
-          type: 'net',
-          previous: getTotalPerCurrency([...previousSourcePayments, ...previousSum]),
-          current: currentNet,
-          cumulated: getTotalPerCurrency([...cumulatedSourcePayments, ...cumulatedSum])
-        });
-
-        return { name: source.name, rows, net: currentNet };
-      });
-    })
-  );
-
-  public totalNetReceipt$ = this.sourcesBreakdown$.pipe(
-    map(sources => sources.map(s => s.net).reduce((acc, curr) => {
-      for (const currency of Object.keys(curr)) {
-        acc[currency] = (acc[currency] || 0) + curr[currency];
+    tap(statement => {
+      if (this.shell.setDate(statement.duration.to)) {
+        this.shell.simulateWaterfall();
+        this.form.setAllValue(statement);
       }
-      return acc;
-    }, {}))
-  );
-
-  public rightsBreakdown$ = combineLatest([this.statementsHistory$, this.statement$, this.shell.rights$, this.shell.simulation$]).pipe(
-    map(([_history, current, rights, simulation]) => {
-      const indexOfCurrent = _history.findIndex(s => s.id === current.id);
-      const previous = _history.slice(indexOfCurrent + 1);
-      const history = _history.slice(indexOfCurrent);
-
-      const displayedRights = getStatementRightsToDisplay(current, rights);
-      const orderedRights = getOrderedRights(displayedRights, simulation.waterfall.state);
-      const rightsWithManySources = orderedRights.filter(right => getSources(simulation.waterfall.state, right.id).length > 1);
-
-      const rightTypes = unique(rightsWithManySources.map(right => right.type));
-
-      return rightTypes.map(type => {
-        const rows: { section: string, previous: PricePerCurrency, current: PricePerCurrency, cumulated: PricePerCurrency }[] = [];
-
-        for (const right of rightsWithManySources) {
-          if (right.type !== type) continue;
-
-          const section = `${right.name} (${right.percent}%)`;
-          const previousRightPayment = previous.map(s => s.payments.right).flat().filter(p => p.to === right.id);
-          const currentRightPayment = current.payments.right.filter(p => p.to === right.id);
-          const cumulatedRightPayment = history.map(s => s.payments.right).flat().filter(p => p.to === right.id);
-          rows.push({
-            section,
-            previous: getTotalPerCurrency(previousRightPayment),
-            current: getTotalPerCurrency(currentRightPayment),
-            cumulated: getTotalPerCurrency(cumulatedRightPayment)
-          });
-        }
-
-        const total = rows.map(r => r.current).reduce((acc, curr) => {
-          for (const currency of Object.keys(curr)) {
-            acc[currency] = (acc[currency] || 0) + curr[currency];
-          }
-          return acc;
-        }, {});
-
-        return { name: toLabel(type, 'rightTypes'), rows, total };
-      });
     })
   );
 
   private waterfall = this.shell.waterfall;
 
+  public form: StatementForm;
+  private sub: Subscription;
+
   constructor(
     private shell: DashboardWaterfallShellComponent,
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
+    private statementService: StatementService,
+    private expenseService: ExpenseService,
+    private incomeService: IncomeService,
+    private snackBar: MatSnackBar,
   ) {
     this.dynTitle.setPageTitle(this.shell.movie.title.international, 'View Statement');
-    this.shell.simulateWaterfall();
+
+    this.form = new StatementForm();
+  }
+
+  ngOnInit() {
+    this.sub = this.form.get('duration').get('to').valueChanges.pipe(debounceTime(500)).subscribe(date => {
+      const control = this.form.get('duration').get('to');
+      const inError = control.hasError('startOverEnd') || control.hasError('isBefore');
+      if (!inError && this.shell.setDate(date)) this.shell.simulateWaterfall();
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
+  }
+
+  public report(statement: Statement) {
+    return this.save(statement, true);
+  }
+
+  public async save(statement: Statement, reported = false) {
+    if (this.form.invalid) {
+      this.snackBar.open('Information not valid', 'close', { duration: 5000 });
+      return;
+    }
+
+    const value = this.form.value;
+
+    statement.reported = value.reported;
+    statement.duration = value.duration;
+
+    statement.comment = value.comment;
+
+    // Add an id to the payments if they don't have one and update interal right payments status
+    if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
+      const incomePayments = value.incomePayments.map(p => createIncomePayment({
+        ...p,
+        id: p.id || this.statementService.createId()
+      }));
+      statement.payments.income = incomePayments;
+    }
+
+    const rightPayments = value.rightPayments.map(p => createRightPayment({
+      ...p,
+      id: p.id || this.statementService.createId(),
+      status: p.mode === 'internal' ? 'received' : p.status
+    }));
+    statement.payments.right = rightPayments;
+
+    if (isDistributorStatement(statement) || isProducerStatement(statement)) {
+      const rightholderPayment = createRightholderPayment({
+        ...value.rightholderPayment,
+        id: value.rightholderPayment.id || this.statementService.createId()
+      });
+      statement.payments.rightholder = rightholderPayment;
+    }
+
+    if (reported) {
+      statement.status = 'reported';
+      statement.reported = value.reported;
+
+      if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
+        await this.incomeService.update(statement.incomeIds, (i) => {
+          return { ...i, status: 'received' };
+        });
+
+        await this.expenseService.update(statement.expenseIds, (e) => {
+          return { ...e, status: 'received' };
+        });
+      }
+    };
+
+    await this.statementService.update(statement, { params: { waterfallId: this.waterfall.id } });
+
+    // Update the simulation
+    await this.shell.simulateWaterfall();
+
+    if (reported) {
+      this.snackBar.open('Statement reported !', 'close', { duration: 5000 });
+      // Statement is reported, actual waterfall is refreshed
+      await this.shell.refreshWaterfall();
+    } else {
+      this.snackBar.open('Statement updated !', 'close', { duration: 5000 });
+    }
+
+    this.form.markAsPristine();
   }
 
 }

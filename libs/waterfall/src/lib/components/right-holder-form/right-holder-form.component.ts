@@ -3,10 +3,9 @@ import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from 
 
 import { FormList } from '@blockframes/utils/form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
-import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '@blockframes/waterfall/form/right-holder.form';
+import { WaterfallService } from '../../waterfall.service';
+import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '../../form/right-holder.form';
 import { createWaterfallRightholder } from '@blockframes/model';
-
 
 @Component({
   selector: '[rightholdersForm]waterfall-right-holder-form',

@@ -1,0 +1,69 @@
+:host {
+  padding: 0 24px;
+  display: block;
+
+  section {
+    background-color: rgba(#D3D5DC, 0.2);
+    border: 1px solid var(--foreground-divider);
+    border-radius: 4px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    padding: 24px;
+
+    h3 {
+      font-weight: 800;
+      font-size: 26px;
+      line-height: 24px;
+      color: var(--foreground-third-text);
+    }
+
+    span {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      flex-grow: 2;
+      mat-form-field {
+        width: 30%;
+      }
+      button, a {
+        mat-icon {
+          vertical-align: inherit;
+        }
+      }
+    }
+
+    mat-checkbox {
+      margin-top: 24px;
+      article {
+        justify-content: space-between;
+        display: flex;
+        align-items: center;
+        .circle {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          font-weight: 700;
+          font-size: 20px;
+          line-height: 40px;
+          color: var(--primary);
+          text-align: center;
+          background-color: rgba(#3C64F7, 0.1);
+        }
+
+        .statement-info {
+          flex-grow: 1;
+          padding: 12px 24px;
+          span {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+          }
+        }
+
+        .statement-price {
+          margin-right: 64px;
+        }
+      }
+    }
+  }
+}
