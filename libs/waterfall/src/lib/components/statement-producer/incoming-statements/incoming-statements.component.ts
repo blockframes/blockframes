@@ -59,10 +59,7 @@ export class IncomingStatementComponent implements OnInit, OnChanges, OnDestroy 
 
   async ngOnChanges() {
 
-    if (!this.statements.length) {
-      const statements = await this.shell.statements();
-      this.statements = statements.filter(s => s.id !== this.statement.id && !isProducerStatement(s))
-    };
+    if (!this.statements.length) this.statements = await this.shell.statements();
     if (!this.contracts.length) this.contracts = await this.shell.contracts();
     if (!this.rights.length) this.rights = await this.shell.rights();
     if (!this.incomes.length) this.incomes = await this.shell.incomes();
@@ -72,7 +69,7 @@ export class IncomingStatementComponent implements OnInit, OnChanges, OnDestroy 
     const config = {
       senderId: this.statement.senderId,
       receiverId: this.statement.receiverId,
-      statements: this.statements,
+      statements: this.statements.filter(s => s.id !== this.statement.id),
       contracts: this.contracts,
       rights: this.rights,
       titleState: state.waterfall.state,
@@ -84,8 +81,9 @@ export class IncomingStatementComponent implements OnInit, OnChanges, OnDestroy 
     const prerequists = getOutgoingStatementPrerequists(config);
     const reportableIncomes = prerequists[this.statement.contractId].incomeIds;
 
-    const reportableStatements = this.statements.filter(s => s.incomeIds.some(id => reportableIncomes.includes(id)));
-    const distributorStatements = this.statements.filter(s => s.incomeIds.some(id => this.statement.incomeIds.includes(id)));
+    const filteredStatements = this.statements.filter(s => s.id !== this.statement.id && !isProducerStatement(s));
+    const reportableStatements = filteredStatements.filter(s => s.incomeIds.some(id => reportableIncomes.includes(id)));
+    const distributorStatements = filteredStatements.filter(s => s.incomeIds.some(id => this.statement.incomeIds.includes(id)));
 
     const distributorsIds = unique(reportableStatements.map(s => s.senderId));
     this.distributors = this.shell.waterfall.rightholders.filter(r => distributorsIds.includes(r.id));
@@ -106,12 +104,12 @@ export class IncomingStatementComponent implements OnInit, OnChanges, OnDestroy 
     this.reportableStatements = [];
     for (const distributor of this.distributors) {
       if (!this.distributorContracts[distributor.id]) {
-        const distributorStatements = sortStatements(reportableStatements.filter(s => s.senderId === distributor.id), false);
-        this.reportableStatements = [...this.reportableStatements, ...distributorStatements];
+        const distributorStms = sortStatements(reportableStatements.filter(s => s.senderId === distributor.id), false);
+        this.reportableStatements = [...this.reportableStatements, ...distributorStms];
       } else {
         for (const contract of this.distributorContracts[distributor.id]) {
-          const distributorStatements = sortStatements(reportableStatements.filter(s => s.senderId === distributor.id && s.contractId === contract.id), false);
-          this.reportableStatements = [...this.reportableStatements, ...distributorStatements];
+          const distributorStms = sortStatements(reportableStatements.filter(s => s.senderId === distributor.id && s.contractId === contract.id), false);
+          this.reportableStatements = [...this.reportableStatements, ...distributorStms];
         }
       }
     }
