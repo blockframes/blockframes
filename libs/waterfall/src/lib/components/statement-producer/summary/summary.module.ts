@@ -7,6 +7,7 @@ import { StatementPeriodModule } from '../../statement-period/statement-period.m
 import { StatementHeaderModule } from '../../statement-header/statement-header.module';
 import { IncomingStatementModule } from '../incoming-statements/incoming-statements.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 
 // Components
 import { StatementProducerSummaryComponent } from './summary.component';
@@ -26,6 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
     StatementHeaderModule,
     IncomingStatementModule,
     TableModule,
+    PricePerCurrencyModule,
 
     // Material
     MatExpansionModule,

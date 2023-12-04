@@ -1,3 +1,4 @@
+import { sum } from '../utils';
 import { GroupState, HorizontalState, NodeState, RightState, SourceState, TitleState, VerticalState, createOrg } from './state';
 
 export function nodeExists(state: TitleState, id: string) {
@@ -196,4 +197,37 @@ function getParentNodes(state: TitleState, id: string) {
   const horizontals = Object.values(state.horizontals).filter(h => h.previous.includes(id));
   const verticals = Object.values(state.verticals).filter(v => v.previous.includes(id));
   return [...sources, ...rights, ...horizontals, ...verticals];
+}
+
+export function getTransferDetails(statementIncomeIds: string[], sourceId: string, fromId: string, toId: string, state: TitleState) {
+  // Fetch incomes that are in the statement duration
+  const incomeIds = state.sources[sourceId].incomeIds.filter(i => statementIncomeIds.includes(i));
+
+  const to = getNode(state, toId);
+  const from = getNode(state, fromId);
+  const transfer = state.transfers[`${from.id}->${to.id}`];
+  let amount = 0;
+  if (transfer) {
+    const incomes = transfer.history.filter(h => incomeIds.includes(h.incomeId));
+    amount = sum(incomes.filter(i => i.checked), i => i.amount);
+  }
+
+  let taken = 0;
+  if (isGroup(state, to)) {
+    const innerTransfers = to.children.map(c => state.transfers[`${to.id}->${c}`]).filter(t => !!t);
+    const innerIncomes = innerTransfers.map(t => t.history.filter(h => incomeIds.includes(h.incomeId))).flat();
+    taken = sum(innerIncomes.filter(i => i.checked), i => i.amount * i.percent);
+  } else {
+    taken = amount * to.percent;
+  }
+
+  const percent = isGroup(state, to) && amount ? (taken / amount) : to.percent;
+
+  return {
+    from,
+    to,
+    amount,
+    taken,
+    percent: percent * 100,
+  };
 }

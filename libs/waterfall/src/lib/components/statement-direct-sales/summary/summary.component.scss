@@ -13,18 +13,6 @@ section {
     padding: 24px;
   }
 
-  article.participation {
-    display: flex;
-    justify-content: space-between;
-    background-color: var(--dashboard-cta);
-    color: var(--primary);
-    font-weight: 800;
-    font-size: 28px;
-    text-transform: uppercase;
-    line-height: 24px;
-    border-bottom: 1px solid #C0C0C0;
-  }
-
   article.breakdown {
     background-color: rgba(#D3D5DC, 0.2);
     border: 1px solid var(--foreground-divider);
