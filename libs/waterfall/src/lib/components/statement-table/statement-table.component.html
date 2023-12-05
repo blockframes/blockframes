@@ -17,7 +17,7 @@
   <ng-template *ngIf="columns.receiver" colRef="receiverId" [label]="columns.receiver" let-receiverId sort>
     {{ receiverId | rightholderName: waterfall }}
   </ng-template>
-  <ng-template *ngIf="columns.duration" colRef="duration" [label]="columns.duration" let-duration [sort]="sorts.byDuration" defaultSort>
+  <ng-template *ngIf="columns.duration" colRef="duration" [label]="columns.duration" let-duration [sort]="sorts.byDuration" [defaultSort]="defaultSort">
     {{ duration.from | date: 'dd/MM/yyyy' }} -  {{ duration.to | date: 'dd/MM/yyyy' }}
   </ng-template>
   <ng-template *ngIf="columns.due" colRef="payments" [label]="columns.due" let-payments>

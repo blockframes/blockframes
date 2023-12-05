@@ -8,6 +8,7 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
 import { StatementService } from '@blockframes/waterfall/statement.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { sorts } from '@blockframes/ui/list/table/sorts';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
   selector: 'waterfall-statement-table',
@@ -34,6 +35,7 @@ export class StatementTableComponent {
     payment: true
   };
   @Output() delete = new EventEmitter<Statement>();
+  @Input() @boolean defaultSort = false;
 
   public waterfall = this.shell.waterfall;
   public contracts$ = this.shell.contracts$;

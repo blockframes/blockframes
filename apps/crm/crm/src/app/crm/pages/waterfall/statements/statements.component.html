@@ -5,5 +5,5 @@
       <span>Remove all statements</span>
     </button>
   </section>
-  <waterfall-statement-table [columns]="columns" [actions]="actions" [statements]="statements" (delete)="removeStatements([$event])"></waterfall-statement-table>
+  <waterfall-statement-table defaultSort [columns]="columns" [actions]="actions" [statements]="statements" (delete)="removeStatements([$event])"></waterfall-statement-table>
 </ng-container>
