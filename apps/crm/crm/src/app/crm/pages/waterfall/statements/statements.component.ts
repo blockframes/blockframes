@@ -23,7 +23,7 @@ export class StatementsComponent {
     duration: 'Statement period',
     status: 'Status',
     actions: 'Actions',
-  }
+  };
 
   public actions: Record<string, boolean> = {
     notify: false,
