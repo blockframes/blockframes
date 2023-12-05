@@ -5,41 +5,5 @@
       <span>Remove all statements</span>
     </button>
   </section>
-  <bf-table [source]="statements" clickable useFilter pagination="50" (rowClick)="goTo($event.id)">
-    <ng-template colRef="id" label="Id" let-id sort>
-      {{ id }}
-    </ng-template>
-    <ng-template colRef="type" label="Type" let-type sort>
-      {{ type | toLabel: 'statementType' }}
-    </ng-template>
-    <ng-template colRef="" label="Status" let-item sort>
-      {{ item.status | toLabel: 'statementStatus' }}
-      <ng-container *ngIf="item.status === 'reported' && !!item.payments.rightholder && item.payments.rightholder.status !== 'received'">
-        <mat-icon class="warning" svgIcon="warning" matTooltip="Pending payments"></mat-icon>
-      </ng-container>
-    </ng-template>
-    <ng-template colRef="" label="Contract Id" let-item sort>
-      {{ item.contractId | getCurrentContract: (contracts$ | async) : item.duration.from }}
-    </ng-template>
-    <ng-template colRef="senderId" label="Rightholder" let-senderId sort>
-      {{ senderId | rightholderName: waterfall }}
-    </ng-template>
-    <ng-template colRef="receiverId" label="Receiver" let-receiverId sort>
-      {{ receiverId | rightholderName: waterfall }}
-    </ng-template>
-    <ng-template colRef="duration.from" label="From" let-from sort>
-      {{ from | date: 'dd/MM/yyyy' }}
-    </ng-template>
-    <ng-template colRef="duration.to" label="To" let-to sort defaultSort>
-      {{ to | date: 'dd/MM/yyyy' }}
-    </ng-template>
-    <ng-template colRef="" label="Actions" let-statement sticky>
-      <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', statement.waterfallId, 'statements', statement.id]" (click)="$event.stopPropagation()">
-        <mat-icon svgIcon="launch" matTooltip="Go to statement"></mat-icon>
-      </a>
-      <button mat-icon-button (click)="removeStatements([statement]);$event.stopPropagation()">
-        <mat-icon svgIcon="delete" matTooltip="Delete statement"></mat-icon>
-      </button>
-    </ng-template>
-  </bf-table>
+  <waterfall-statement-table [columns]="columns" [actions]="actions" [statements]="statements" (delete)="removeStatements([$event])"></waterfall-statement-table>
 </ng-container>

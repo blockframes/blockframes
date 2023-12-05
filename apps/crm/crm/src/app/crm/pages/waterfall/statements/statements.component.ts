@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Statement } from '@blockframes/model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StatementService } from '@blockframes/waterfall/statement.service';
@@ -14,20 +13,33 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
 export class StatementsComponent {
 
   public statements$ = this.shell.statements$;
-  public waterfall = this.shell.waterfall;
-  public contracts$ = this.shell.contracts$;
+
+  public columns: Record<string, string> = {
+    id: 'Id',
+    type: 'Type',
+    contract: 'Contract',
+    sender: 'Sender',
+    receiver: 'Receiver',
+    duration: 'Statement period',
+    status: 'Status',
+    actions: 'Actions',
+  }
+
+  public actions: Record<string, boolean> = {
+    notify: false,
+    edit: false,
+    download: false,
+    view: false,
+    payment: true,
+    delete: true,
+    crm: true,
+  };
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
     private statementService: StatementService,
-    private route: ActivatedRoute,
-    private snackBar: MatSnackBar,
-    private router: Router
+    private snackBar: MatSnackBar
   ) { }
-
-  public goTo(id: string) {
-    this.router.navigate([id], { relativeTo: this.route });
-  }
 
   public async removeStatements(statements: Statement[]) {
     const promises = statements.map(statement => this.statementService.remove(statement.id, { params: { waterfallId: statement.waterfallId } }));
