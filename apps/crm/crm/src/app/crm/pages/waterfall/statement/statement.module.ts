@@ -13,6 +13,7 @@ import { JoinPipeModule, MaxLengthModule, ToLabelModule } from '@blockframes/uti
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 import { StatementHeaderModule } from '@blockframes/waterfall/components/statement-header/statement-header.module';
+import { StatementParticipationModule } from '@blockframes/waterfall/components/statement-participation/statement-participation.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -40,6 +41,7 @@ import { MatInputModule } from '@angular/material/input';
     LogoSpinnerModule,
     RightHolderNamePipeModule,
     StatementHeaderModule,
+    StatementParticipationModule,
 
     MatIconModule,
     MatButtonModule,

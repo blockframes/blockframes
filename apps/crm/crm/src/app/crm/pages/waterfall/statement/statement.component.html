@@ -24,6 +24,8 @@
       </ul>
     </ng-container>
   
+    <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment" label="Total Participation"></waterfall-statement-participation>
+
     <h3>Incomes</h3>
     <bf-table [source]="incomes" useFilter pagination="50">
       <ng-template colRef="id" label="Id" let-id sort>
@@ -128,7 +130,7 @@
         </bf-table>
       </ng-container>
     </article>
-  
+
     <article class="payment-date" *ngIf="statement.status === 'draft'">
       <strong>Reported on :</strong>
       <mat-form-field appearance="fill">
