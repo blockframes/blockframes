@@ -79,7 +79,7 @@ export class IncomingStatementComponent implements OnInit, OnChanges, OnDestroy 
     };
 
     const prerequists = getOutgoingStatementPrerequists(config);
-    const reportableIncomes = prerequists[this.statement.contractId].incomeIds;
+    const reportableIncomes = prerequists[this.statement.contractId]?.incomeIds || [];
 
     const filteredStatements = this.statements.filter(s => s.id !== this.statement.id && !isProducerStatement(s));
     const reportableStatements = filteredStatements.filter(s => s.incomeIds.some(id => reportableIncomes.includes(id)));
@@ -130,6 +130,7 @@ export class IncomingStatementComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   onTabChanged({ index }: { index: number }) {
+    if (!this.distributors[index]) return;
     const distributor = this.distributors[index];
     if (this.distributorContracts[distributor.id]?.length) {
       this.contractControl.setValue(this.distributorContracts[distributor.id][0].id);

@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {
+  Duration,
   Right,
   Statement,
   TitleState,
@@ -109,6 +110,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
       const rights = statementRights.filter(r => rightIds.includes(r.id));
 
       const statement = generatePayments(this.statement, simulation.waterfall.state, rights, incomes, sources);
+      statement.duration = this.form.get('duration').value as Duration;
       this.form.setAllValue({ ...statement, incomes, sources });
       return statement;
     })

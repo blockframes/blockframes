@@ -35,10 +35,10 @@
               </mat-menu>
             </ng-container>
           </span>
-          <div>
-            <a mat-button [disabled]="!canCreateStatement" [routerLink]="['// TODO #9524 #9525 #9532 #9531']">
+          <div *ngIf="rightholderContracts.length === 1">
+            <button mat-button (click)="createStatement(rightholderControl.value, rightholderContracts[0].id)">
               <span>Add statement for {{ rightholderControl.value | rightholderName: waterfall }}</span>
-            </a>
+            </button>
           </div>
         </article>
       </header>
@@ -48,6 +48,11 @@
           <ng-container *ngFor="let rightholderContract of rightholderContracts">
             <mat-tab *ngIf="rightholderContract.statements.length > 0" [label]="rightholderContract.name">
               <ng-template matTabContent>
+                <div>
+                  <button mat-button (click)="createStatement(rightholderControl.value, rightholderContract.id)">
+                    <span>Add statement for {{ rightholderControl.value | rightholderName: waterfall }} ({{ rightholderContract.name }})</span>
+                  </button>
+                </div>
                 <waterfall-statement-table [statements]="rightholderContract.statements"></waterfall-statement-table>
               </ng-template>
             </mat-tab>

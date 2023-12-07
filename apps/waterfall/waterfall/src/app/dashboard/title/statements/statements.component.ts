@@ -2,6 +2,8 @@
 import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription, firstValueFrom, startWith } from 'rxjs';
+import { add } from 'date-fns';
+import { Router } from '@angular/router';
 
 // Blockframes
 import {
@@ -13,9 +15,11 @@ import {
   StatementTypeValue,
   WaterfallContract,
   WaterfallRightholder,
-  canCreateOutgoingStatement,
+  createDuration,
+  createProducerStatement,
   filterStatements,
   getContractsWith,
+  getOutgoingStatementPrerequists,
   hasContractWith,
   isProducerStatement,
   rightholderGroups,
@@ -25,6 +29,7 @@ import {
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { WaterfallState } from '@blockframes/waterfall/waterfall.service';
+import { StatementService } from '@blockframes/waterfall/statement.service';
 
 interface StatementRolesConfig {
   roles: RightholderRole[],
@@ -60,7 +65,6 @@ export class StatementsComponent implements OnInit, OnDestroy {
   public statements: Statement[] = [];
   public rightholderContracts: (Partial<WaterfallContract> & { statements: (Statement & { number: number })[] })[] = [];
   public statementSender: WaterfallRightholder;
-  public canCreateStatement: boolean;
   public haveStatements: boolean;
 
   public rightholders: WaterfallRightholder[] = [];
@@ -78,7 +82,9 @@ export class StatementsComponent implements OnInit, OnDestroy {
   constructor(
     private shell: DashboardWaterfallShellComponent,
     private dynTitle: DynamicTitleService,
-    private cdr: ChangeDetectorRef
+    private statementService: StatementService,
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {
     this.shell.setDate(this.currentStateDate);
     this.dynTitle.setPageTitle(this.shell.movie.title.international, 'Statements');
@@ -119,19 +125,6 @@ export class StatementsComponent implements OnInit, OnDestroy {
 
       this.haveStatements = this.rightholderContracts.some(c => c.statements.length > 0);
 
-      const config = {
-        senderId: this.statementSender.id,
-        receiverId: value,
-        statements: this.statements,
-        contracts: this.contracts,
-        rights: this.rights,
-        titleState: this.state.waterfall.state,
-        incomes: this.incomes,
-        sources: this.waterfall.sources,
-        date: this.currentStateDate
-      };
-
-      this.canCreateStatement = this.selected === 'producer' ? canCreateOutgoingStatement(config) : true;
 
       this.cdr.markForCheck();
     });
@@ -156,5 +149,58 @@ export class StatementsComponent implements OnInit, OnDestroy {
 
     this.rightholderControl.setValue(this.selected !== 'directSales' ? this.rightholders[0]?.id : this.statementSender.id);
     this.cdr.markForCheck();
+  }
+
+  public async createStatement(receiverId: string, contractId: string) {
+    switch (this.selected) {
+      case 'mainDistributor':
+      case 'salesAgent': {
+        break;
+      }
+      case 'directSales': {
+        break;
+      }
+      case 'producer': {
+        const incomeIds = this.getIncomeIds(receiverId, contractId);
+
+        const producerStatement = createProducerStatement({
+          id: this.statementService.createId(),
+          contractId,
+          senderId: this.statementSender.id,
+          receiverId,
+          waterfallId: this.waterfall.id,
+          incomeIds,
+          duration: createDuration({
+            from: add(this.currentStateDate, { days: 1 }),
+            to: add(this.currentStateDate, { days: 1, months: 6 }),
+          })
+        });
+
+        const id = await this.statementService.add(producerStatement, { params: { waterfallId: this.waterfall.id } });
+        return this.router.navigate(['/c/o/dashboard/title/', this.waterfall.id, 'statement', id]);
+      }
+    }
+  }
+
+  private getIncomeIds(receiverId: string, contractId: string) {
+    // should create an outgoing statement.
+    const config = {
+      senderId: this.statementSender.id,
+      receiverId,
+      statements: this.statements,
+      contracts: this.contracts,
+      rights: this.rights,
+      titleState: this.state.waterfall.state,
+      incomes: this.incomes,
+      sources: this.waterfall.sources,
+      date: this.currentStateDate
+    };
+
+    const prerequists = getOutgoingStatementPrerequists(config);
+
+    if (!Object.keys(prerequists).length) return [];
+    if (!prerequists[contractId]) return [];
+    const prerequist = prerequists[contractId];
+    return prerequist.incomeIds;
   }
 }

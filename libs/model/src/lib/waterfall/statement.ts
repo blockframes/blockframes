@@ -332,10 +332,6 @@ export function getOutgoingStatementPrerequists({ senderId, receiverId, statemen
   return prerequists;
 }
 
-export function canCreateOutgoingStatement(data: OutgoingStatementPrerequistsConfig) {
-  return Object.keys(getOutgoingStatementPrerequists(data)).length > 0;
-}
-
 /**
  * Return the rights that should be used during statement creation
  * Will include rights of senderId and/or receiverId depending of the statement type.
