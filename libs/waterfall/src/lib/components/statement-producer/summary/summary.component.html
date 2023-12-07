@@ -1,3 +1,81 @@
 <waterfall-statement-header *ngIf="sources$ | async as sources" [statement]="statement" [sources]="sources"></waterfall-statement-header>
 <waterfall-statement-period [statement]="statement" [form]="form"></waterfall-statement-period>
+
+<section>
+  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment" label="Total Participation"></waterfall-statement-participation>
+</section>
+
 <waterfall-incoming-statements [statement]="statement" [form]="form" (incomeIds)="incomeIds$.next($event)"></waterfall-incoming-statements>
+
+<section>
+  <article class="breakdown">
+    <header>
+      <span>Calculation breakdown</span>
+      <div>Net Receipts</div>
+    </header>
+
+    <ng-container *ngIf="groupsBreakdown$ | async as breakdown">
+      <div class="surface" *ngFor="let item of breakdown; let isFirst = first">
+        <mat-expansion-panel [expanded]="isFirst">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <span>{{ item.group.name }}</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <bf-table [source]="item.rows">
+            <ng-template colRef="" label="Section" let-item>
+              <span [class]="item.type">{{ item.name }}</span>
+            </ng-template>
+            <ng-template colRef="" label="" let-item>
+              <span *ngIf="item.type === 'right'" [class]="item.type">{{ item.percent }} %</span>
+            </ng-template>
+            <ng-template colRef="" label="Net Receipts" let-item>
+              <price-per-currency [class]="item.type" [price]="item.taken | formatPair"></price-per-currency>
+            </ng-template>
+          </bf-table>
+        </mat-expansion-panel>
+      </div>
+    </ng-container>
+  </article>
+
+  <ng-container *ngIf="details$ | async as details">
+    <article *ngIf="details.length" class="breakdown">
+      <header>
+        <span>Calculation details</span>
+      </header>
+      <div class="surface" *ngFor="let item of details">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <span>{{ item.name }}</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <bf-table [source]="item.details" pagination="50">
+            <ng-template colRef="" label="#" let-index="index">
+              {{ index + 1 }}
+            </ng-template>
+            <ng-template colRef="from" label="From" let-from>
+              {{ from }}
+            </ng-template>
+            <ng-template colRef="to" label="To" let-to>
+              {{ to }}
+            </ng-template>
+            <ng-template colRef="amount" label="Amount" let-amount>
+              <price-per-currency [price]="amount | formatPair"></price-per-currency>
+            </ng-template>
+            <ng-template colRef="percent" label="%" let-percent>
+              {{ percent }}
+            </ng-template>
+            <ng-template colRef="taken" label="Taken" let-taken>
+              <strong>
+                <price-per-currency [price]="taken | formatPair"></price-per-currency>
+              </strong>
+            </ng-template>
+          </bf-table>
+        </mat-expansion-panel>
+      </div>
+    </article>
+  </ng-container>
+
+  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment" label="Total Participation"></waterfall-statement-participation>
+</section>

@@ -15,14 +15,11 @@ import {
   mainCurrency,
   isDistributorStatement,
   getSources,
-  getNode,
   sum,
   isSource,
-  isGroup,
   WaterfallSource,
   isProducerStatement,
   WaterfallContract,
-  getPath,
   isDirectSalesStatement,
   getStatementRights,
   getCalculatedAmount,
@@ -31,6 +28,7 @@ import {
   getStatementRightsToDisplay,
   generatePayments,
   createMissingIncomes,
+  getPathDetails,
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
@@ -61,8 +59,6 @@ export class StatementComponent implements OnInit {
   public expenses: Expense[] = [];
   public rights: Right[] = [];
   public rightDetails: RightDetails[][] = [];
-  public currency = mainCurrency;
-  public paymentDateControl = new FormControl<Date>(new Date());
   public reportDateControl = new FormControl<Date>(new Date());
   private allRights: Right[];
   private contract: WaterfallContract;
@@ -100,9 +96,6 @@ export class StatementComponent implements OnInit {
         this.snackBar.open(`Contract "${statement.contractId}" not found in waterfall.`, 'close', { duration: 5000 });
         return;
       }
-
-      // Set default payment date to statement end date if no payment date is set
-      this.paymentDateControl.setValue(statement.payments.rightholder?.date || statement.duration.to);
     }
 
     if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
@@ -224,44 +217,12 @@ export class StatementComponent implements OnInit {
     const sources = this.getAssociatedSourceIds(rightId);
 
     this.rightDetails = sources.map(sourceId => {
-      const sourceDetails: RightDetails[] = [];
-      // Fetch incomes that are in the statement duration
-      const incomeIds = this.simulation.waterfall.state.sources[sourceId].incomeIds.filter(i => this.statement.incomeIds.includes(i));
-
-      const path = getPath(rightId, sourceId, this.simulation.waterfall.state);
-      path.forEach((item, index) => {
-        if (path[index + 1]) {
-          const to = getNode(this.simulation.waterfall.state, path[index + 1]);
-          const from = getNode(this.simulation.waterfall.state, item);
-          const transfer = this.simulation.waterfall.state.transfers[`${from.id}->${to.id}`];
-          let amount = 0;
-          if (transfer) {
-            const incomes = transfer.history.filter(h => incomeIds.includes(h.incomeId));
-            amount = sum(incomes.filter(i => i.checked), i => i.amount);
-          }
-
-          let taken = 0;
-          if (isGroup(this.simulation.waterfall.state, to)) {
-            const innerTransfers = to.children.map(c => this.simulation.waterfall.state.transfers[`${to.id}->${c}`]).filter(t => !!t);
-            const innerIncomes = innerTransfers.map(t => t.history.filter(h => incomeIds.includes(h.incomeId))).flat();
-            taken = sum(innerIncomes.filter(i => i.checked), i => i.amount * i.percent);
-          } else {
-            taken = amount * to.percent;
-          }
-
-          const percent = isGroup(this.simulation.waterfall.state, to) && amount ? (taken / amount) : to.percent;
-
-          sourceDetails.push({
-            from: isSource(this.simulation.waterfall.state, from) ? this.waterfall.sources.find(s => s.id === from.id).name : this.allRights.find(r => r.id === from.id).name,
-            to: this.allRights.find(r => r.id === to.id).name,
-            amount,
-            taken,
-            percent: percent * 100,
-          });
-        }
-      });
-
-      return sourceDetails;
+      const details = getPathDetails(this.statement.incomeIds, rightId, sourceId, this.simulation.waterfall.state);
+      return details.map(d => ({
+        ...d,
+        from: isSource(this.simulation.waterfall.state, d.from) ? this.waterfall.sources.find(s => s.id === d.from.id).name : this.allRights.find(r => r.id === d.from.id).name,
+        to: this.allRights.find(r => r.id === d.to.id).name,
+      }));
     });
 
     this.cdRef.markForCheck();
@@ -303,25 +264,6 @@ export class StatementComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  public async markPaymentAsReceived(paymentDate: Date) {
-    if (!isDistributorStatement(this.statement) && !isProducerStatement(this.statement)) return;
-    this.statement.payments.rightholder.status = 'received';
-    this.statement.payments.rightholder.date = paymentDate;
-
-    // Validate all external "right" payments and set payment date
-    this.statement.payments.right = this.statement.payments.right.map(p => ({
-      ...p,
-      status: p.mode === 'external' ? 'received' : p.status,
-      date: p.mode === 'external' ? paymentDate : p.date
-    }));
-
-    await this.statementService.update(this.statement, { params: { waterfallId: this.waterfall.id } });
-
-    this.snackBar.open('Refreshing waterfall... Please wait', 'close', { duration: 5000 });
-    await this.shell.refreshWaterfall();
-    this.snackBar.open('Waterfall refreshed!', 'close', { duration: 5000 });
-    this.cdRef.markForCheck();
-  }
 }
 
 @Pipe({ name: 'filterRights' })

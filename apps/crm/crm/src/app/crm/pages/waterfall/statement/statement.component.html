@@ -24,6 +24,8 @@
       </ul>
     </ng-container>
   
+    <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment" label="Total Participation"></waterfall-statement-participation>
+
     <h3>Incomes</h3>
     <bf-table [source]="incomes" useFilter pagination="50">
       <ng-template colRef="id" label="Id" let-id sort>
@@ -128,31 +130,7 @@
         </bf-table>
       </ng-container>
     </article>
-  
-    <ng-container *ngIf="statement.payments.rightholder as rightholderPayment">
-      <h3>Payment</h3>
-      <ul *ngIf="waterfall$ | async as waterfall">
-        <li><strong>To :</strong> {{ statement.receiverId | rightholderName: waterfall }}</li>
-        <li><strong>Amount :</strong> <price-per-currency [price]="toPricePerCurrency(rightholderPayment)"></price-per-currency></li>
-        <li><strong>Status :</strong> {{ rightholderPayment.status | toLabel: 'paymentStatus' }}</li>
-        <li><strong>Related to: </strong> {{ rightholderPayment.incomeIds | join }}</li>
-        <li *ngIf="rightholderPayment.date"><strong>Date :</strong> {{ rightholderPayment.date | date: 'MM/dd/yyyy' }}</li>
-      </ul>
-      <article *ngIf="statement.status === 'reported' && rightholderPayment.status === 'pending'" class="payment-date">
-        <strong>Received on :</strong>
-        <mat-form-field appearance="fill">
-          <input matInput [formControl]="paymentDateControl" [matDatepicker]="datePickerPayment" placeholder="MM/DD/YYYY">
-          <mat-datepicker-toggle matSuffix [for]="datePickerPayment">
-            <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
-          </mat-datepicker-toggle>
-          <mat-datepicker #datePickerPayment></mat-datepicker>
-        </mat-form-field>
-        <button mat-button color="primary" [disabled]="rightholderPayment.status !== 'pending' || !paymentDateControl.value" (click)="markPaymentAsReceived(paymentDateControl.value)">
-          Mark payment as received
-        </button>
-      </article>
-    </ng-container>
-  
+
     <article class="payment-date" *ngIf="statement.status === 'draft'">
       <strong>Reported on :</strong>
       <mat-form-field appearance="fill">

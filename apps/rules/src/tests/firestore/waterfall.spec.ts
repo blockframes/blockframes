@@ -46,8 +46,8 @@ describe('Movie Owner', () => {
 
   describe('Blocks', () => {
     test('Should not be able to create block document', async () => {
-      const ref = db.doc('waterfall/M001/blocks/B001');
-      await assertFails(ref.set({ id: 'B001', actions: {} }));
+      const ref = db.doc('waterfall/M001/blocks/B002');
+      await assertFails(ref.set({ id: 'B002', actions: {} }));
     });
 
     test('Should not be able to update block document', async () => {
@@ -68,6 +68,11 @@ describe('Movie Owner', () => {
     test('Should be able to list block documents', async () => {
       const ref = db.collection('waterfall/M001/blocks');
       await assertSucceeds(ref.get());
+    });
+
+    test('Should not be able to delete block document', async () => {
+      const ref = db.doc('waterfall/M001/blocks/B001');
+      await assertFails(ref.delete());
     });
   });
 
@@ -163,8 +168,8 @@ describe('User that is not owner of movie', () => {
   describe('Blocks', () => {
 
     test('Should not be able to create block document', async () => {
-      const ref = db.doc('waterfall/M001/blocks/B001');
-      await assertFails(ref.set({ id: 'B001', actions: {} }));
+      const ref = db.doc('waterfall/M001/blocks/B002');
+      await assertFails(ref.set({ id: 'B002', actions: {} }));
     });
 
     test('Should not be able to update block document', async () => {
@@ -180,6 +185,11 @@ describe('User that is not owner of movie', () => {
     test('Should not be able to list block documents', async () => {
       const ref = db.collection('waterfall/M001/blocks');
       await assertFails(ref.get());
+    });
+
+    test('Should not be able to delete block document', async () => {
+      const ref = db.doc('waterfall/M001/blocks/B001');
+      await assertFails(ref.delete());
     });
   });
 
@@ -336,6 +346,11 @@ describe('User that is linked to waterfall but not admin', () => {
     test('Should be able to list block documents', async () => {
       const ref = db.collection('waterfall/MI-0d7/blocks');
       await assertSucceeds(ref.get());
+    });
+
+    test('Should not be able to delete block document', async () => {
+      const ref = db.doc('waterfall/MI-0d7/blocks/B001');
+      await assertFails(ref.delete());
     });
   });
 
@@ -699,6 +714,11 @@ describe('User that is linked to waterfall with admin level', () => {
     test('Should be able to list block documents', async () => {
       const ref = db.collection('waterfall/WF-001/blocks');
       await assertSucceeds(ref.get());
+    });
+
+    test('Should be able to delete block document', async () => {
+      const ref = db.doc('waterfall/WF-001/blocks/B001');
+      await assertSucceeds(ref.delete());
     });
   });
 

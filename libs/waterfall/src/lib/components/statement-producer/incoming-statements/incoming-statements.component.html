@@ -20,26 +20,26 @@
       </span>
       <form [formGroup]="formArray" *ngIf="reportableStatements?.length">
         <ul>
-          <ng-container *ngFor="let statement of reportableStatements; let i = index">
+          <ng-container *ngFor="let stm of reportableStatements; let i = index">
             <ng-container *ngIf="contractControl.value else directSales">
-              <li [formGroupName]="i" *ngIf="statement.senderId === distributor.id && statement.contractId === contractControl.value">
-                <mat-checkbox class="bf-checkbox" color="primary" [formControl]="formArray.controls[i].get('checked')">
-                  <article class="surface" *ngIf="reportableStatements[i] as statement">
+              <li [formGroupName]="i" *ngIf="stm.senderId === distributor.id && stm.contractId === contractControl.value">
+                <mat-checkbox [disabled]="statement.status === 'reported'" class="bf-checkbox" color="primary" [formControl]="formArray.controls[i].get('checked')">
+                  <article class="surface">
                     <div class="circle">
-                      {{ statement.number }}
+                      {{ stm.number }}
                     </div>
                     <div class="statement-info">
                       <span>
-                        <h3>{{ statement.duration.from | date: 'dd/MM/yyyy' }} -  {{ statement.duration.to | date: 'dd/MM/yyyy' }}</h3>
-                        <a mat-icon-button [routerLink]="['..', statement.id]" target="_blank">
+                        <h3>{{ stm.duration.from | date: 'dd/MM/yyyy' }} -  {{ stm.duration.to | date: 'dd/MM/yyyy' }}</h3>
+                        <a mat-icon-button [routerLink]="['..', stm.id]" target="_blank">
                           <mat-icon svgIcon="document" matTooltip="View statement"></mat-icon>
                         </a>
                       </span>
-                      <p class="mat-body-1">Payment Date:  {{ statement.payments.rightholder.date | date: 'dd/MM/yyyy' }}
+                      <p class="mat-body-1">Payment Date:  {{ stm.payments.rightholder.date | date: 'dd/MM/yyyy' }}
                       </p>
                     </div>
                     <div class="statement-price">
-                      <h3 *ngIf="statement.payments.rightholder as payment">
+                      <h3 *ngIf="stm.payments.rightholder as payment">
                         Net Receipts Paid:
                         <price-per-currency [price]="payment.price | formatPair:payment.currency"></price-per-currency>
                       </h3>
@@ -49,22 +49,22 @@
               </li>
             </ng-container>
             <ng-template #directSales>
-              <li [formGroupName]="i" *ngIf="statement.senderId === distributor.id">
-                <mat-checkbox class="bf-checkbox" color="primary" [formControl]="formArray.controls[i].get('checked')">
-                  <article class="surface" *ngIf="reportableStatements[i] as statement">
+              <li [formGroupName]="i" *ngIf="stm.senderId === distributor.id">
+                <mat-checkbox [disabled]="statement.status === 'reported'" class="bf-checkbox" color="primary" [formControl]="formArray.controls[i].get('checked')">
+                  <article class="surface">
                     <div class="circle">
-                      {{ statement.number }}
+                      {{ stm.number }}
                     </div> 
                     <div class="statement-info">
                       <span>
-                        <h3>{{ statement.duration.from | date: 'dd/MM/yyyy' }} -  {{ statement.duration.to | date: 'dd/MM/yyyy' }}</h3>
-                        <a mat-icon-button [routerLink]="['..', statement.id]" target="_blank">
+                        <h3>{{ stm.duration.from | date: 'dd/MM/yyyy' }} -  {{ stm.duration.to | date: 'dd/MM/yyyy' }}</h3>
+                        <a mat-icon-button [routerLink]="['..', stm.id]" target="_blank">
                           <mat-icon svgIcon="document" matTooltip="View statement"></mat-icon>
                         </a>
                       </span>
                       <p class="mat-body-1">
                         Payment Date: 
-                        <ng-container *ngIf="statement.payments.right[0] as payment">
+                        <ng-container *ngIf="stm.payments.right[0] as payment">
                           {{ payment.date | date: 'dd/MM/yyyy' }}
                         </ng-container>
                       </p>

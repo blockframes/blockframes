@@ -6,6 +6,7 @@ import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.co
 import { StatementForm } from '../../form/statement.form';
 import { add, differenceInMonths, endOfMonth, isFirstDayOfMonth, isLastDayOfMonth } from 'date-fns';
 import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'waterfall-statement-period',
@@ -34,7 +35,9 @@ export class StatementPeriodComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(
     public shell: DashboardWaterfallShellComponent,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -45,7 +48,7 @@ export class StatementPeriodComponent implements OnInit, OnChanges, OnDestroy {
       }
     });
 
-    // TODO #9524 subscribe on form duration changes to update periodicity
+    // TODO #9524 #9525 #9532 #9531 subscribe on form duration changes to update periodicity
   }
 
   ngOnDestroy() {
@@ -62,21 +65,32 @@ export class StatementPeriodComponent implements OnInit, OnChanges, OnDestroy {
     if (current > 1) this.previousStatementId = sortedStatements.find(s => s.number === current - 1).id;
     if (current < sortedStatements.length) this.nextStatementId = sortedStatements.find(s => s.number === current + 1).id;
 
-    // TODO #9524 set periodicity from previous statement if current does not have dates
+    // TODO #9524 #9525 #9532 #9531 set periodicity from previous statement if current does not have dates
     const currentDuration = this.statement.duration;
     if (currentDuration.from && currentDuration.to) {
       let difference = differenceInMonths(currentDuration.to, currentDuration.from);
       if (isFirstDayOfMonth(currentDuration.from) && isLastDayOfMonth(currentDuration.to)) difference++;
 
-      if(this.periods[difference.toString()]) {
+      if (this.periods[difference.toString()]) {
         this.periodicity.setValue(difference.toString(), { emitEvent: false });
       } else {
         this.periodicity.setValue('0', { emitEvent: false });
       }
-      
+
     }
 
     this.cdr.markForCheck();
+  }
+
+  public goTo(id: string) {
+    const statementType = this.statement.type;
+
+    if (statementType === 'producer') {
+      this.router.navigate(['..', id], { relativeTo: this.route });
+    } else {
+      this.router.navigate(['../..', id, 'edit'], { relativeTo: this.route });
+    }
+
   }
 
 }

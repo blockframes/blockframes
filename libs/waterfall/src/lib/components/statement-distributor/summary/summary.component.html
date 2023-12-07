@@ -3,12 +3,7 @@
   <mat-divider></mat-divider>
   <p class="mat-body-2">Here is the <strong>Summary of your Statement</strong>. Please verify the information below.</p>
 
-  <ng-container *ngIf="statement.payments.rightholder as payment">
-    <article class="participation" *ngIf="statement.type === 'mainDistributor' || statement.type ==='salesAgent'">
-      <span>Producer’s net participation:</span>
-      <price-per-currency [price]="payment.price | formatPair: payment.currency" default="€ 0"></price-per-currency>
-    </article>  
-  </ng-container>
+  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment"></waterfall-statement-participation>
 
   <article class="breakdown">
     <header>
@@ -92,15 +87,9 @@
         </mat-expansion-panel>
       </div>
     </ng-container>
-
   </article>
 
-  <ng-container *ngIf="statement.payments.rightholder as payment">
-    <article class="participation" *ngIf="statement.type === 'mainDistributor' || statement.type ==='salesAgent'">
-      <span>Producer’s net participation:</span>
-      <price-per-currency [price]="payment.price | formatPair: payment.currency" default="€ 0"></price-per-currency>
-    </article>  
-  </ng-container>
+  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment"></waterfall-statement-participation>
 
   <div class="surface comment">
     <h3>Comment</h3>

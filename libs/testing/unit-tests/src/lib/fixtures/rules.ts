@@ -417,6 +417,9 @@ export const rulesFixtures = {
   'waterfall/WF-001/blocks/B001': {
     id: 'B001',
   },
+  'waterfall/M001/blocks/B001': {
+    id: 'B001',
+  },
   'waterfall/MI-0d7/permissions/O002': {
     id: 'O002',
     isAdmin: false,
