@@ -15,6 +15,8 @@ import {
   StatementTypeValue,
   WaterfallContract,
   WaterfallRightholder,
+  createDirectSalesStatement,
+  createDistributorStatement,
   createDuration,
   createProducerStatement,
   filterStatements,
@@ -22,14 +24,17 @@ import {
   getOutgoingStatementPrerequists,
   hasContractWith,
   isProducerStatement,
-  rightholderGroups,
   sortStatements,
-  statementType
+  statementType,
+  statementsRolesMapping
 } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { WaterfallState } from '@blockframes/waterfall/waterfall.service';
 import { StatementService } from '@blockframes/waterfall/statement.service';
+import { MatDialog } from '@angular/material/dialog';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { StatementNewComponent } from '@blockframes/waterfall/components/statement-new/statement-new.component';
 
 interface StatementRolesConfig {
   roles: RightholderRole[],
@@ -45,11 +50,11 @@ interface StatementChipConfig {
   value: StatementTypeValue;
 }
 
-const statementsRolesMapping: Record<StatementType, StatementRolesConfig> = {
-  mainDistributor: { roles: ['mainDistributor'], divider: false, visible: true },
-  salesAgent: { roles: ['salesAgent'], divider: false, visible: true },
-  directSales: { roles: ['producer'], divider: true, visible: true },
-  producer: { roles: Object.keys(rightholderGroups.beneficiaries) as RightholderRole[], divider: true, visible: true },
+const statementsRolesConfig: Record<StatementType, StatementRolesConfig> = {
+  mainDistributor: { roles: statementsRolesMapping.mainDistributor, divider: false, visible: true },
+  salesAgent: { roles: statementsRolesMapping.salesAgent, divider: false, visible: true },
+  directSales: { roles: statementsRolesMapping.directSales, divider: true, visible: true },
+  producer: { roles: statementsRolesMapping.producer, divider: true, visible: true },
 }
 
 @Component({
@@ -70,8 +75,8 @@ export class StatementsComponent implements OnInit, OnDestroy {
   public rightholders: WaterfallRightholder[] = [];
   public rightholderControl = new FormControl<string>('');
 
-  private contracts: WaterfallContract[] = [];
-  private rights: Right[] = [];
+  public contracts: WaterfallContract[] = [];
+  public rights: Right[] = [];
   private incomes: Income[] = [];
   private state: WaterfallState;
   public statementTypes: StatementChipConfig[] = [];
@@ -84,7 +89,8 @@ export class StatementsComponent implements OnInit, OnDestroy {
     private dynTitle: DynamicTitleService,
     private statementService: StatementService,
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog,
   ) {
     this.shell.setDate(this.currentStateDate);
     this.dynTitle.setPageTitle(this.shell.movie.title.international, 'Statements');
@@ -97,7 +103,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
     this.statementSender = await firstValueFrom(this.shell.currentRightholder$);
     this.contracts = await this.shell.contracts();
     this.incomes = await this.shell.incomes();
-    this.statementTypes = Object.entries(statementsRolesMapping).map(([key, value]: [StatementType, StatementRolesConfig]) => (
+    this.statementTypes = Object.entries(statementsRolesConfig).map(([key, value]: [StatementType, StatementRolesConfig]) => (
       {
         selected: false,
         key,
@@ -125,7 +131,6 @@ export class StatementsComponent implements OnInit, OnDestroy {
 
       this.haveStatements = this.rightholderContracts.some(c => c.statements.length > 0);
 
-
       this.cdr.markForCheck();
     });
   }
@@ -151,23 +156,49 @@ export class StatementsComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
-  public async createStatement(receiverId: string, contractId: string) {
+  public async createStatement(rightholderId: string, contractId?: string) {
     switch (this.selected) {
       case 'mainDistributor':
       case 'salesAgent': {
-        break;
+        const statement = createDistributorStatement({
+          id: this.statementService.createId(),
+          contractId,
+          senderId: rightholderId,
+          receiverId: this.statementSender.id, // Statement sender is the producer
+          waterfallId: this.waterfall.id,
+          duration: createDuration({
+            from: add(this.currentStateDate, { days: 1 }),
+            to: add(this.currentStateDate, { days: 1, months: 6 }),
+          }),
+          type: this.selected
+        });
+
+        const id = await this.statementService.add(statement, { params: { waterfallId: this.waterfall.id } });
+        return this.router.navigate(['/c/o/dashboard/title/', this.waterfall.id, 'statement', id, 'edit']);
       }
       case 'directSales': {
-        break;
+        const statement = createDirectSalesStatement({
+          id: this.statementService.createId(),
+          senderId: this.statementSender.id,
+          receiverId: rightholderId,
+          waterfallId: this.waterfall.id,
+          duration: createDuration({
+            from: add(this.currentStateDate, { days: 1 }),
+            to: add(this.currentStateDate, { days: 1, months: 6 }),
+          })
+        });
+
+        const id = await this.statementService.add(statement, { params: { waterfallId: this.waterfall.id } });
+        return this.router.navigate(['/c/o/dashboard/title/', this.waterfall.id, 'statement', id, 'edit']);
       }
       case 'producer': {
-        const incomeIds = this.getIncomeIds(receiverId, contractId);
+        const incomeIds = this.getIncomeIds(rightholderId, contractId);
 
-        const producerStatement = createProducerStatement({
+        const statement = createProducerStatement({
           id: this.statementService.createId(),
           contractId,
           senderId: this.statementSender.id,
-          receiverId,
+          receiverId: rightholderId,
           waterfallId: this.waterfall.id,
           incomeIds,
           duration: createDuration({
@@ -176,7 +207,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
           })
         });
 
-        const id = await this.statementService.add(producerStatement, { params: { waterfallId: this.waterfall.id } });
+        const id = await this.statementService.add(statement, { params: { waterfallId: this.waterfall.id } });
         return this.router.navigate(['/c/o/dashboard/title/', this.waterfall.id, 'statement', id]);
       }
     }
@@ -202,5 +233,22 @@ export class StatementsComponent implements OnInit, OnDestroy {
     if (!prerequists[contractId]) return [];
     const prerequist = prerequists[contractId];
     return prerequist.incomeIds;
+  }
+
+  public addNew(type: StatementType) {
+    this.dialog.open(StatementNewComponent, {
+      data: createModalData({
+        type,
+        waterfall: this.shell.waterfall,
+        producer: this.statementSender,
+        contracts: this.contracts,
+        statements: this.statements,
+        date: this.currentStateDate,
+        rights: this.rights,
+        onConfirm: async (statementId: string, contractId: string) => {
+          await this.createStatement(statementId, contractId);
+        }
+      })
+    });
   }
 }

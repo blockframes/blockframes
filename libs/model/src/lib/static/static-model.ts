@@ -898,6 +898,13 @@ export const rightholderRoles = {
   ...rightholderGroups.beneficiaries,
 } as const
 
+export const statementsRolesMapping: Record<keyof typeof statementType, (keyof typeof rightholderRoles)[]> = {
+  mainDistributor: ['mainDistributor'],
+  salesAgent: ['salesAgent'],
+  directSales: ['producer'],
+  producer: Object.keys(rightholderGroups.beneficiaries) as (keyof typeof rightholderRoles)[],
+}
+
 export const rightTypes = {
   commission: 'Commission',
   expenses: 'Expenses Recoupment',

@@ -26,10 +26,6 @@ const routes: Routes = [{
       pathMatch: 'full'
     },
     {
-      path: 'create',
-      loadChildren: () => import('./view/view.module').then(m => m.StatementViewModule), // TODO #9524 #9525 #9532 #9531
-    },
-    {
       path: ':statementId',
       canActivate: [StatementActiveGuard, StatementFormGuard],
       children: [

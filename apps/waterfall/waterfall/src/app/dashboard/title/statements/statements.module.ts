@@ -8,10 +8,9 @@ import { RightholderSelectModule } from '@blockframes/waterfall/components/right
 import { EmptyWaterfallModule } from '@blockframes/waterfall/components/empty/empty.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { EmptyStatementCardModule } from '@blockframes/waterfall/components/empty-statement-card/empty-statement-card.module';
-import { TagModule } from '@blockframes/ui/tag/tag.module';
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 import { StatementTableModule } from '@blockframes/waterfall/components/statement-table/statement-table.module';
+import { StatementNewModule } from '@blockframes/waterfall/components/statement-new/statement-new.module';
 
 // Pages
 import { StatementsComponent } from './statements.component';
@@ -25,6 +24,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [StatementsComponent],
@@ -35,10 +35,9 @@ import { MatTabsModule } from '@angular/material/tabs';
     EmptyWaterfallModule,
     ToLabelModule,
     EmptyStatementCardModule,
-    TagModule,
-    PricePerCurrencyModule,
     RightHolderNamePipeModule,
     StatementTableModule,
+    StatementNewModule,
 
     // Material
     MatFormFieldModule,
@@ -49,6 +48,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatButtonModule,
     MatMenuModule,
     MatTabsModule,
+    MatDialogModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: StatementsComponent }]),

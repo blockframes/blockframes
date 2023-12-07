@@ -12,32 +12,39 @@
           </ng-container>
         </mat-chip-list>
         
-        <article *ngIf="rightholders.length > 0">
+        <article>
           <span>
-            <waterfall-rightholder-select *ngIf="selected !== 'directSales'"
-              [rightholders]="rightholders"
-              [control]="rightholderControl">
-              <mat-label>Right Holder</mat-label>
-            </waterfall-rightholder-select>
-            <ng-container *ngIf="selected !== 'directSales'">
-              <a *ngIf="rightholderContracts.length === 1 && rightholderContracts[0].id" mat-icon-button [routerLink]="['..', 'documents', rightholderContracts[0].id]">
-                <mat-icon svgIcon="contract" matTooltip="See contract"></mat-icon>
-              </a>
-
-              <button *ngIf="rightholderContracts.length > 1" mat-icon-button [matMenuTriggerFor]="contractsMenu">
-                <mat-icon svgIcon="contract" matTooltip="See contracts"></mat-icon>
-              </button>
-              
-              <mat-menu #contractsMenu="matMenu">
-                <a mat-menu-item *ngFor="let rightholderContract of rightholderContracts" [routerLink]="['..', 'documents', rightholderContract.id]">
-                  {{ rightholderContract.name }}
+            <ng-container *ngIf="rightholders.length > 0">
+              <waterfall-rightholder-select *ngIf="selected !== 'directSales'"
+                [rightholders]="rightholders"
+                [control]="rightholderControl">
+                <mat-label>Right Holder</mat-label>
+              </waterfall-rightholder-select>
+              <ng-container *ngIf="selected !== 'directSales'">
+                <a *ngIf="rightholderContracts.length === 1 && rightholderContracts[0].id" mat-icon-button [routerLink]="['..', 'documents', rightholderContracts[0].id]">
+                  <mat-icon svgIcon="contract" matTooltip="See contract"></mat-icon>
                 </a>
-              </mat-menu>
+
+                <button *ngIf="rightholderContracts.length > 1" mat-icon-button [matMenuTriggerFor]="contractsMenu">
+                  <mat-icon svgIcon="contract" matTooltip="See contracts"></mat-icon>
+                </button>
+                
+                <mat-menu #contractsMenu="matMenu">
+                  <a mat-menu-item *ngFor="let rightholderContract of rightholderContracts" [routerLink]="['..', 'documents', rightholderContract.id]">
+                    {{ rightholderContract.name }}
+                  </a>
+                </mat-menu>
+              </ng-container>
             </ng-container>
           </span>
-          <div *ngIf="rightholderContracts.length === 1">
+          <div *ngIf="selected !== 'directSales' && rightholderContracts.length === 1">
             <button mat-button (click)="createStatement(rightholderControl.value, rightholderContracts[0].id)">
               <span>Add statement for {{ rightholderControl.value | rightholderName: waterfall }}</span>
+            </button>
+          </div>
+          <div *ngIf="selected === 'directSales' && haveStatements">
+            <button mat-button (click)="createStatement(rightholderControl.value)">
+              <span>Add Direct Sales statement</span>
             </button>
           </div>
         </article>
@@ -66,26 +73,25 @@
       </section>
 
       <section *ngIf="!haveStatements">
-        <waterfall-empty-statement-card [type]="selected"></waterfall-empty-statement-card>
+        <waterfall-empty-statement-card [type]="selected" (click)="addNew(selected)"></waterfall-empty-statement-card>
       </section>
 
-      <section *ngIf="haveStatements" class="flex-center">
-        <a mat-button [routerLink]="['// TODO #9524 #9531']">
-          <span>Add New Distributor</span>
-        </a>
+      <section *ngIf="haveStatements && selected !== 'directSales'" class="flex-center">
+        <button mat-button (click)="addNew(selected)">
+          <span>Add New {{ selected | toLabel: 'statementType' }}</span>
+        </button>
       </section>
     </ng-container>
   </ng-container>
+  <ng-template #noStatements>
+    <section class="flex-center">
+      <waterfall-empty-statement-card type="mainDistributor" (click)="addNew('mainDistributor')"></waterfall-empty-statement-card>
+      <waterfall-empty-statement-card type="salesAgent" (click)="addNew('mainDistributor')"></waterfall-empty-statement-card>
+      <waterfall-empty-statement-card type="producer" disabled></waterfall-empty-statement-card>
+    </section>
+  </ng-template>
 </ng-container>
 
 <ng-template #noWaterfall>
   <waterfall-empty></waterfall-empty>
-</ng-template>
-
-<ng-template #noStatements>
-  <section class="flex-center">
-    <waterfall-empty-statement-card type="mainDistributor"></waterfall-empty-statement-card>
-    <waterfall-empty-statement-card type="salesAgent"></waterfall-empty-statement-card>
-    <waterfall-empty-statement-card type="producer" disabled></waterfall-empty-statement-card>
-  </section>
 </ng-template>

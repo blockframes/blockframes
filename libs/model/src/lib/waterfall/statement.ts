@@ -188,7 +188,7 @@ export function isDirectSalesStatement(statement: Partial<Statement>): statement
   return statement.type === 'directSales';
 }
 
-function createDistributorStatement(params: Partial<DistributorStatement> = {}): DistributorStatement {
+export function createDistributorStatement(params: Partial<DistributorStatement> = {}): DistributorStatement {
   const statement = createStatementBase(params);
   return {
     contractId: '',

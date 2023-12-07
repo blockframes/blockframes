@@ -49,6 +49,7 @@ export class StatementPeriodComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     // TODO #9524 #9525 #9532 #9531 subscribe on form duration changes to update periodicity
+    // TODO #9524 #9525 #9532 #9531 should not be possible to set "to" date outside contract scope duration
   }
 
   ngOnDestroy() {
