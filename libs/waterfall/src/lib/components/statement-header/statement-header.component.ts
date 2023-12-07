@@ -6,10 +6,8 @@ import {
   WaterfallSource,
   getStatementNumber,
   filterStatements,
-  isDirectSalesStatement,
-  isDistributorStatement,
-  isProducerStatement,
-  WaterfallContract
+  WaterfallContract,
+  getStatementRightholderTag
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 
@@ -40,13 +38,7 @@ export class StatementHeaderComponent implements OnChanges {
     const rightholderKey = this.statement.type === 'producer' ? 'receiverId' : 'senderId';
     this.rightholderName = this.shell.waterfall.rightholders.find(r => r.id === this.statement[rightholderKey]).name;
 
-    if (isProducerStatement(this.statement)) {
-      this.rightholderTag = 'Beneficiary';
-    } else if (isDistributorStatement(this.statement)) {
-      this.rightholderTag = 'Distributor';
-    } else if (isDirectSalesStatement(this.statement)) {
-      this.rightholderTag = 'Producer';
-    }
+    this.rightholderTag = getStatementRightholderTag(this.statement);
 
     const filteredStatements = filterStatements(this.statement.type, [this.statement.senderId, this.statement.receiverId], this.statement.contractId, this.statements);
     this.statementNumber = getStatementNumber(this.statement, filteredStatements);

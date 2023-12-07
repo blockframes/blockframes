@@ -59,7 +59,6 @@ export class StatementComponent implements OnInit {
   public expenses: Expense[] = [];
   public rights: Right[] = [];
   public rightDetails: RightDetails[][] = [];
-  public paymentDateControl = new FormControl<Date>(new Date());
   public reportDateControl = new FormControl<Date>(new Date());
   private allRights: Right[];
   private contract: WaterfallContract;
@@ -97,9 +96,6 @@ export class StatementComponent implements OnInit {
         this.snackBar.open(`Contract "${statement.contractId}" not found in waterfall.`, 'close', { duration: 5000 });
         return;
       }
-
-      // Set default payment date to statement end date if no payment date is set
-      this.paymentDateControl.setValue(statement.payments.rightholder?.date || statement.duration.to);
     }
 
     if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
@@ -268,25 +264,6 @@ export class StatementComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  public async markPaymentAsReceived(paymentDate: Date) {
-    if (!isDistributorStatement(this.statement) && !isProducerStatement(this.statement)) return;
-    this.statement.payments.rightholder.status = 'received';
-    this.statement.payments.rightholder.date = paymentDate;
-
-    // Validate all external "right" payments and set payment date
-    this.statement.payments.right = this.statement.payments.right.map(p => ({
-      ...p,
-      status: p.mode === 'external' ? 'received' : p.status,
-      date: p.mode === 'external' ? paymentDate : p.date
-    }));
-
-    await this.statementService.update(this.statement, { params: { waterfallId: this.waterfall.id } });
-
-    this.snackBar.open('Refreshing waterfall... Please wait', 'close', { duration: 5000 });
-    await this.shell.refreshWaterfall();
-    this.snackBar.open('Waterfall refreshed!', 'close', { duration: 5000 });
-    this.cdRef.markForCheck();
-  }
 }
 
 @Pipe({ name: 'filterRights' })

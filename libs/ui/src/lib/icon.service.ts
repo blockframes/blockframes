@@ -108,6 +108,7 @@ export const icons = [
   { name: 'NZD', url: 'assets/icons/NZD.svg' },
   { name: 'paid', url: 'assets/icons/paid.svg' }, // can be used in static model
   { name: 'pause_circle', url: 'assets/icons/pause_circle.svg' },
+  { name: 'payment', url: 'assets/icons/payment.svg' },
   { name: 'pdf', url: 'assets/icons/PDF.svg' },
   { name: 'pending', url: 'assets/icons/pending.svg' },
   { name: 'percent', url: 'assets/icons/percent.svg' },

@@ -551,3 +551,13 @@ export function createMissingIncomes(incomeSources: WaterfallSource[], statement
 
   return missingIncomes;
 }
+
+export function getStatementRightholderTag(statement: Statement) {
+  if (isProducerStatement(statement)) {
+    return 'Beneficiary';
+  } else if (isDistributorStatement(statement)) {
+    return 'Distributor';
+  } else if (isDirectSalesStatement(statement)) {
+    return 'Producer';
+  }
+}
