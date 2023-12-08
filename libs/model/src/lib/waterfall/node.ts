@@ -67,8 +67,12 @@ export function getNodeOrg(state: TitleState, id: string) {
  */
 export function isGroupChild(state: TitleState, id: string) {
   if (Object.values(state.horizontals).find(g => g.children.includes(id))) return true;
-  if (Object.values(state.verticals).find(g => g.children.includes(id))) return true;
+  if (isVerticalGroupChild(state, id)) return true;
   return false;
+}
+
+export function isVerticalGroupChild(state: TitleState, id: string) {
+  return Object.values(state.verticals).find(g => g.children.includes(id));
 }
 
 /**

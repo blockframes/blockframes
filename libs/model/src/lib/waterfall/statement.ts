@@ -5,7 +5,7 @@ import { sortByDate, sum } from '../utils';
 import { TitleState, TransferState } from './state';
 import { Waterfall, WaterfallContract, WaterfallSource, getAssociatedSource, getIncomesSources } from './waterfall';
 import { Right } from './right';
-import { getSources, pathExists } from './node';
+import { getSources, isVerticalGroupChild, pathExists } from './node';
 import { Income, createIncome } from '../income';
 import { getContractsWith } from '../contract';
 import { mainCurrency } from './action';
@@ -408,7 +408,13 @@ export function getOrderedRights(rights: Right[], state: TitleState) {
  */
 function getTopLevelRights(_rights: Right[], state: TitleState) {
   if (!state) return [];
-  const rights = skipGroups(_rights).filter(r => state.rights[r.id].enabled);
+  // Skip groups and keep only enabled rights
+  const enabledRights = skipGroups(_rights).filter(r => state.rights[r.id].enabled);
+
+  // Keep only first child of vertical groups
+  const firstChilds = getFirstChildOfVerticalGroups(enabledRights, state);
+  const rights = enabledRights.filter(r => !isVerticalGroupChild(state, r.id)).concat(firstChilds);
+
   const topLevelRights: Right[] = [];
   for (const right of rights) {
     if (!rights.filter(r => r.id !== right.id).some(r => pathExists(right.id, r.id, state))) {
@@ -416,6 +422,18 @@ function getTopLevelRights(_rights: Right[], state: TitleState) {
     }
   }
   return topLevelRights;
+}
+
+function getFirstChildOfVerticalGroups(rights: Right[], state: TitleState) {
+  const verticalRights = rights.filter(r => isVerticalGroupChild(state, r.id));
+  const verticalGroupIds = Array.from(new Set(verticalRights.map(r => r.groupId)));
+  const firstChilds: Right[] = [];
+  for (const groupId of verticalGroupIds) {
+    const childs = rights.filter(r => r.groupId === groupId).sort((a, b) => a.order - b.order);
+    if (childs[0]) firstChilds.push(childs[0]);
+  }
+
+  return firstChilds;
 }
 
 function skipGroups(rights: Right[]) {
