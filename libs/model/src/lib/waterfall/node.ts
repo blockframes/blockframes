@@ -240,7 +240,7 @@ export function getTransferDetails(statementIncomeIds: string[], sourceId: strin
     to,
     amount,
     taken,
-    percent: percent * 100,
+    percent: parseFloat((percent * 100).toFixed(2)),
   };
 }
 

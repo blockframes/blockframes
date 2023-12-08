@@ -9,9 +9,9 @@ import { DashboardComponent } from './dashboard.component';
 // Blockframes
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
-import { JoinPipeModule, MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
-import { ContractPipeModule } from '@blockframes/contract/contract/pipe';
+import { StatementTableModule } from '@blockframes/waterfall/components/statement-table/statement-table.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -28,14 +28,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FormsModule,
     ReactiveFormsModule,
     NgApexchartsModule,
-    RightHolderNamePipeModule,
 
+    RightHolderNamePipeModule,
     PricePerCurrencyModule,
     TableModule,
     ToLabelModule,
-    JoinPipeModule,
-    MaxLengthModule,
-    ContractPipeModule,
+    StatementTableModule,
 
     MatIconModule,
     MatButtonModule,

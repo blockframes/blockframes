@@ -17,7 +17,7 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
 import { StatementForm } from '@blockframes/waterfall/form/statement.form';
 import { StartementFormGuardedComponent } from '@blockframes/waterfall/guards/statement-form.guard';
 import { StatementService } from '@blockframes/waterfall/statement.service';
-import { Subscription, combineLatest, debounceTime, map, pluck, tap } from 'rxjs';
+import { Subscription, combineLatest, debounceTime, filter, map, pluck, tap } from 'rxjs';
 
 @Component({
   selector: 'waterfall-statement-view',
@@ -29,6 +29,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
 
   public statement$ = combineLatest([this.route.params.pipe(pluck('statementId')), this.shell.statements$]).pipe(
     map(([statementId, statements]) => statements.find(s => s.id === statementId)),
+    filter(statement => !!statement),
     tap(statement => {
       if (this.shell.setDate(statement.duration.to)) {
         this.shell.simulateWaterfall();

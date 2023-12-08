@@ -25,7 +25,7 @@
 
   <ng-container *ngIf="currentState">
     <h3>Rightholders summary</h3>
-    <bf-table [source]="currentState.orgs | keyvalue" useFilter clickable (rowClick)="goTo('rightholders', $event.value.id)" pagination="50">
+    <bf-table [source]="currentState.orgs | keyvalue" clickable (rowClick)="goTo($event.value.id)" pagination="50">
       <ng-template colRef="value.id" label="Right Holder" let-id sort>
         {{ id | rightholderName: waterfall }}
       </ng-template>
@@ -56,62 +56,9 @@
       </ng-template>
     </bf-table>
 
-  <article *ngIf="outgoingStatements?.pending.length">
-    <h3>Pending statements for {{ 'producer' | toLabel: 'rightholderRoles' }} "{{ outgoingStatements.senderId | rightholderName: waterfall }}"</h3>
-    <bf-table [source]="outgoingStatements.pending" useFilter pagination="50">
-      <ng-template colRef="type" label="Type" let-type sort>
-        {{ type | toLabel: 'statementType' }}
-      </ng-template>
-      <ng-template colRef="" label="Contract Id" let-item sort>
-        {{ item.contractId | getCurrentContract: contracts : item.duration.from }}
-      </ng-template>
-      <ng-template colRef="duration.from" label="From" let-from sort defaultSort>
-        {{ from | date: 'dd/MM/yyyy' }}
-      </ng-template>
-      <ng-template colRef="duration.to" label="To" let-to sort defaultSort>
-        {{ to | date: 'dd/MM/yyyy' }}
-      </ng-template>
-      <ng-template colRef="incomeIds" label="Sources" let-incomeIds sort defaultSort>
-        {{ getIncomesSources(incomeIds) | join:'name' | maxLength:75 }}
-      </ng-template>
-      <ng-template colRef="" label="Actions" let-statement sticky>
-        <button mat-icon-button (click)="createStatement(statement, false);">
-          <mat-icon svgIcon="add" matTooltip="Create statement"></mat-icon>
-        </button>
-        <button mat-icon-button (click)="createStatement(statement);">
-          <mat-icon svgIcon="launch" matTooltip="Create and go to statement"></mat-icon>
-        </button>
-      </ng-template>
-    </bf-table>
-  </article>
-
-  <article *ngIf="outgoingStatements?.existing.length">
-    <h3>Existing statements for {{ 'producer' | toLabel: 'rightholderRoles' }} "{{ outgoingStatements.senderId | rightholderName: waterfall }}"</h3>
-    <bf-table [source]="outgoingStatements.existing" useFilter clickable (rowClick)="goTo('statements', $event.id)" pagination="50">
-      <ng-template colRef="type" label="Type" let-type sort>
-        {{ type | toLabel: 'statementType' }}
-      </ng-template>
-      <ng-template colRef="" label="Contract Id" let-item sort>
-        {{ item.contractId | getCurrentContract: contracts : item.duration.from }}
-      </ng-template>
-      <ng-template colRef="status" label="Status" let-status sort>
-        {{ status | toLabel: 'statementStatus' }}
-      </ng-template>
-      <ng-template colRef="duration.from" label="From" let-from sort defaultSort>
-        {{ from | date: 'dd/MM/yyyy' }}
-      </ng-template>
-      <ng-template colRef="duration.to" label="To" let-to sort defaultSort>
-        {{ to | date: 'dd/MM/yyyy' }}
-      </ng-template>
-      <ng-template colRef="incomeIds" label="Sources" let-incomeIds sort defaultSort>
-        {{ getIncomesSources(incomeIds) | join:'name' | maxLength:75 }}
-      </ng-template>
-      <ng-template colRef="id" label="Actions" let-statementId sticky>
-        <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'statements', statementId]">
-          <mat-icon svgIcon="launch" matTooltip="Go to statement"></mat-icon>
-        </a>
-      </ng-template>
-    </bf-table>
-  </article>
+    <article *ngIf="outgoingStatements?.length">
+      <h3>Pending Outgoing Statements</h3>
+      <waterfall-statement-table defaultSort [columns]="columns" [statements]="outgoingStatements"></waterfall-statement-table>
+    </article>
 
 </ng-container>
