@@ -11,7 +11,7 @@ import {
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
-import { Subscription, firstValueFrom } from 'rxjs';
+import { Subscription, filter, firstValueFrom, map, pairwise, startWith } from 'rxjs';
 import { StatementForm } from '../../../form/statement.form';
 import { unique } from '@blockframes/utils/helpers';
 
@@ -39,6 +39,7 @@ export class IncomingStatementComponent implements OnInit, OnChanges, OnDestroy 
   private rights: Right[] = [];
   private incomes: Income[] = [];
   private sub: Subscription;
+  private dateSub: Subscription;
 
   constructor(
     public shell: DashboardWaterfallShellComponent,
@@ -55,6 +56,7 @@ export class IncomingStatementComponent implements OnInit, OnChanges, OnDestroy 
 
   ngOnDestroy() {
     this.sub?.unsubscribe();
+    this.dateSub?.unsubscribe();
   }
 
   async ngOnChanges() {
@@ -64,69 +66,78 @@ export class IncomingStatementComponent implements OnInit, OnChanges, OnDestroy 
     if (!this.rights.length) this.rights = await this.shell.rights();
     if (!this.incomes.length) this.incomes = await this.shell.incomes();
 
-    const state = await firstValueFrom(this.shell.simulation$);
+    const date$ = this.form.get('duration').get('to').valueChanges.pipe(
+      pairwise(),
+      filter(([prev, curr]) => curr instanceof Date && prev?.getTime() !== curr.getTime()),
+      map(([_, curr]) => curr)
+    );
 
-    const config = {
-      senderId: this.statement.senderId,
-      receiverId: this.statement.receiverId,
-      statements: this.statements.filter(s => s.id !== this.statement.id),
-      contracts: this.contracts,
-      rights: this.rights,
-      titleState: state.waterfall.state,
-      incomes: this.incomes,
-      sources: this.shell.waterfall.sources,
-      date: this.form.get('duration').get('to').value,
-    };
+    this.dateSub = date$.pipe(startWith(this.form.get('duration').get('to').value)).subscribe(async date => {
+      const state = await firstValueFrom(this.shell.simulation$);
 
-    const prerequists = getOutgoingStatementPrerequists(config);
-    const reportableIncomes = prerequists[this.statement.contractId]?.incomeIds || [];
+      const config = {
+        senderId: this.statement.senderId,
+        receiverId: this.statement.receiverId,
+        statements: this.statements.filter(s => s.id !== this.statement.id),
+        contracts: this.contracts,
+        rights: this.rights,
+        titleState: state.waterfall.state,
+        incomes: this.incomes,
+        sources: this.shell.waterfall.sources,
+        date,
+      };
 
-    const filteredStatements = this.statements.filter(s => s.id !== this.statement.id && !isProducerStatement(s));
-    const reportableStatements = filteredStatements.filter(s => s.incomeIds.some(id => reportableIncomes.includes(id)));
-    const distributorStatements = filteredStatements.filter(s => s.incomeIds.some(id => this.statement.incomeIds.includes(id)));
+      const prerequists = getOutgoingStatementPrerequists(config);
+      const reportableIncomes = prerequists[this.statement.contractId]?.incomeIds || [];
 
-    const distributorsIds = unique(reportableStatements.map(s => s.senderId));
-    this.distributors = this.shell.waterfall.rightholders.filter(r => distributorsIds.includes(r.id));
+      const filteredStatements = this.statements.filter(s => s.id !== this.statement.id && !isProducerStatement(s));
+      const reportableStatements = filteredStatements.filter(s => s.incomeIds.some(id => reportableIncomes.includes(id)));
+      const distributorStatements = filteredStatements.filter(s => s.incomeIds.some(id => this.statement.incomeIds.includes(id)));
 
-    this.formArray.clear();
-    this.distributorContracts = {};
+      const distributorsIds = unique(reportableStatements.map(s => s.senderId));
+      this.distributors = this.shell.waterfall.rightholders.filter(r => distributorsIds.includes(r.id));
 
-    for (const statement of reportableStatements) {
-      if (statement.contractId) {
-        if (!this.distributorContracts[statement.senderId]) {
-          this.distributorContracts[statement.senderId] = [this.contracts.find(c => c.id === statement.contractId)];
-        } else if (!this.distributorContracts[statement.senderId].some(c => c.id === statement.contractId)) {
-          this.distributorContracts[statement.senderId].push(this.contracts.find(c => c.id === statement.contractId));
+      this.formArray.clear();
+      this.distributorContracts = {};
+
+      for (const statement of reportableStatements) {
+        if (statement.contractId) {
+          if (!this.distributorContracts[statement.senderId]) {
+            this.distributorContracts[statement.senderId] = [this.contracts.find(c => c.id === statement.contractId)];
+          } else if (!this.distributorContracts[statement.senderId].some(c => c.id === statement.contractId)) {
+            this.distributorContracts[statement.senderId].push(this.contracts.find(c => c.id === statement.contractId));
+          }
         }
       }
-    }
 
-    this.reportableStatements = [];
-    for (const distributor of this.distributors) {
-      if (!this.distributorContracts[distributor.id]) {
-        const distributorStms = sortStatements(filteredStatements.filter(s => s.senderId === distributor.id), false);
-        const filteredDistributorStatements = distributorStms.filter(s => reportableStatements.some(stm => stm.id === s.id));
-        this.reportableStatements = [...this.reportableStatements, ...filteredDistributorStatements];
-      } else {
-        for (const contract of this.distributorContracts[distributor.id]) {
-          const distributorStms = sortStatements(filteredStatements.filter(s => s.senderId === distributor.id && s.contractId === contract.id), false);
+      this.reportableStatements = [];
+      for (const distributor of this.distributors) {
+        if (!this.distributorContracts[distributor.id]) {
+          const distributorStms = sortStatements(filteredStatements.filter(s => s.senderId === distributor.id), false);
           const filteredDistributorStatements = distributorStms.filter(s => reportableStatements.some(stm => stm.id === s.id));
           this.reportableStatements = [...this.reportableStatements, ...filteredDistributorStatements];
+        } else {
+          for (const contract of this.distributorContracts[distributor.id]) {
+            const distributorStms = sortStatements(filteredStatements.filter(s => s.senderId === distributor.id && s.contractId === contract.id), false);
+            const filteredDistributorStatements = distributorStms.filter(s => reportableStatements.some(stm => stm.id === s.id));
+            this.reportableStatements = [...this.reportableStatements, ...filteredDistributorStatements];
+          }
         }
       }
-    }
 
-    for (const statement of this.reportableStatements) {
-      this.formArray.push(new FormGroup({
-        id: new FormControl<string>(statement.id),
-        checked: new FormControl<boolean>(distributorStatements.some(s => s.id === statement.id))
-      }), { emitEvent: false });
-    }
+      for (const statement of this.reportableStatements) {
+        this.formArray.push(new FormGroup({
+          id: new FormControl<string>(statement.id),
+          checked: new FormControl<boolean>(distributorStatements.some(s => s.id === statement.id))
+        }), { emitEvent: false });
+      }
 
-    this.formArray.updateValueAndValidity({ emitEvent: true });
+      this.formArray.updateValueAndValidity({ emitEvent: true });
 
-    this.onTabChanged({ index: 0 });
-    this.cdr.markForCheck();
+      this.onTabChanged({ index: 0 });
+      this.cdr.markForCheck();
+    });
+
   }
 
   onTabChanged({ index }: { index: number }) {
