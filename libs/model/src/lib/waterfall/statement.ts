@@ -518,7 +518,7 @@ export function generatePayments(statement: Statement, state: TitleState, rights
       incomeIds: statement.incomeIds.filter(id => {
         const income = incomes.find(i => i.id === id);
         const source = getAssociatedSource(income, sources);
-        return income.price > 0 && externalRights.some(r => pathExists(r.id, source.id, state)); // TODO #9524 remove price check ?
+        return income.price > 0 && externalRights.some(r => pathExists(r.id, source.id, state));
       })
     });
   }

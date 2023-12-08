@@ -2,7 +2,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription, firstValueFrom, startWith } from 'rxjs';
-import { add } from 'date-fns';
+import { add, differenceInMonths, isLastDayOfMonth, lastDayOfMonth } from 'date-fns';
 import { Router } from '@angular/router';
 
 // Blockframes
@@ -163,6 +163,19 @@ export class StatementsComponent implements OnInit, OnDestroy {
       from: add(this.currentStateDate, { days: 1 }),
       to: add(this.currentStateDate, { days: 1, months: 6 }),
     });
+
+    // Set duration from previous statement date & periodicity
+    const previousStatement = this.rightholderContracts.find(c => c.id === contractId)?.statements[0];
+    if (previousStatement) {
+      const difference = differenceInMonths(previousStatement.duration.to, previousStatement.duration.from);
+      duration.from = add(previousStatement.duration.to, { days: 1 });
+      duration.to = add(duration.from, { months: difference });
+
+      if (isLastDayOfMonth(previousStatement.duration.to)) {
+        duration.to = lastDayOfMonth(duration.to);
+      }
+    }
+
     switch (this.selected) {
       case 'mainDistributor':
       case 'salesAgent': {
