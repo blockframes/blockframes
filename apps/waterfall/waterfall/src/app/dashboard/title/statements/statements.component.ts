@@ -119,11 +119,13 @@ export class StatementsComponent implements OnInit, OnDestroy {
 
       if (this.selected !== 'directSales') {
         this.rightholderContracts = getContractsWith([this.statementSender.id, value], this.contracts, this.currentStateDate)
+          .filter(c => statementsRolesMapping[this.selected].includes(c.type))
           .filter(c => this.rights.some(r => r.contractId === c.id))
           .map(c => {
             const statements = filterStatements(this.selected, [this.statementSender.id, value], c.id, this.statements);
             return { ...c, statements: sortStatements(statements) };
-          });
+          })
+          .filter(c => c.statements.length > 0);
       } else {
         const statements = filterStatements(this.selected, [this.statementSender.id, value], undefined, this.statements);
         this.rightholderContracts = [{ id: '', statements: sortStatements(statements) }];
@@ -157,6 +159,10 @@ export class StatementsComponent implements OnInit, OnDestroy {
   }
 
   public async createStatement(rightholderId: string, contractId?: string) {
+    const duration = createDuration({
+      from: add(this.currentStateDate, { days: 1 }),
+      to: add(this.currentStateDate, { days: 1, months: 6 }),
+    });
     switch (this.selected) {
       case 'mainDistributor':
       case 'salesAgent': {
@@ -166,10 +172,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
           senderId: rightholderId,
           receiverId: this.statementSender.id, // Statement sender is the producer
           waterfallId: this.waterfall.id,
-          duration: createDuration({
-            from: add(this.currentStateDate, { days: 1 }),
-            to: add(this.currentStateDate, { days: 1, months: 6 }),
-          }),
+          duration,
           type: this.selected
         });
 
@@ -182,17 +185,14 @@ export class StatementsComponent implements OnInit, OnDestroy {
           senderId: this.statementSender.id,
           receiverId: rightholderId,
           waterfallId: this.waterfall.id,
-          duration: createDuration({
-            from: add(this.currentStateDate, { days: 1 }),
-            to: add(this.currentStateDate, { days: 1, months: 6 }),
-          })
+          duration
         });
 
         const id = await this.statementService.add(statement, { params: { waterfallId: this.waterfall.id } });
         return this.router.navigate(['/c/o/dashboard/title/', this.waterfall.id, 'statement', id, 'edit']);
       }
       case 'producer': {
-        const incomeIds = this.getIncomeIds(rightholderId, contractId);
+        const incomeIds = this.getIncomeIds(rightholderId, contractId, duration.to);
 
         const statement = createProducerStatement({
           id: this.statementService.createId(),
@@ -201,10 +201,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
           receiverId: rightholderId,
           waterfallId: this.waterfall.id,
           incomeIds,
-          duration: createDuration({
-            from: add(this.currentStateDate, { days: 1 }),
-            to: add(this.currentStateDate, { days: 1, months: 6 }),
-          })
+          duration
         });
 
         const id = await this.statementService.add(statement, { params: { waterfallId: this.waterfall.id } });
@@ -213,7 +210,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getIncomeIds(receiverId: string, contractId: string) {
+  private getIncomeIds(receiverId: string, contractId: string, date: Date) {
     // should create an outgoing statement.
     const config = {
       senderId: this.statementSender.id,
@@ -224,7 +221,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
       titleState: this.state.waterfall.state,
       incomes: this.incomes,
       sources: this.waterfall.sources,
-      date: this.currentStateDate
+      date
     };
 
     const prerequists = getOutgoingStatementPrerequists(config);
@@ -236,6 +233,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
   }
 
   public addNew(type: StatementType) {
+    if (type === 'directSales') return this.createStatement(this.statementSender.id);
     this.dialog.open(StatementNewComponent, {
       data: createModalData({
         type,

@@ -2,7 +2,16 @@ import { Component, ChangeDetectionStrategy, Inject, OnInit, OnDestroy, ChangeDe
 import { FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Right, Statement, StatementType, Waterfall, WaterfallContract, WaterfallRightholder, getContractsWith, hasContractWith, statementsRolesMapping } from '@blockframes/model';
+import {
+  Right,
+  Statement,
+  StatementType,
+  Waterfall,
+  WaterfallContract,
+  WaterfallRightholder,
+  getContractsWith,
+  statementsRolesMapping
+} from '@blockframes/model';
 import { Subscription } from 'rxjs';
 
 interface StatementNewData {
@@ -42,12 +51,19 @@ export class StatementNewComponent implements OnInit, OnDestroy {
     const rightholderKey = this.data.type === 'producer' ? 'receiverId' : 'senderId';
     this.rightholders = this.data.waterfall.rightholders
       .filter(r => r.id !== this.data.producer.id)
-      .filter(r => hasContractWith([this.data.producer.id, r.id], this.data.contracts, this.data.date))
       .filter(r => r.roles.some(role => statementsRolesMapping[this.data.type].includes(role)))
-      .filter(r => !this.data.statements.some(stm => stm[rightholderKey] === r.id));
+      .filter(r => {
+        const contracts = getContractsWith([this.data.producer.id, r.id], this.data.contracts, this.data.date)
+          .filter(c => statementsRolesMapping[this.data.type].includes(c.type));
+        if (!contracts.length) return false;
+        // If there is at least one contract that does not have statement, we display rightholder
+        return contracts.some(c => !this.data.statements.some(stm => stm[rightholderKey] === r.id && c.id === stm.contractId))
+      });
 
     this.sub = this.rightholderControl.valueChanges.subscribe(value => {
       this.rightholderContracts = getContractsWith([this.data.producer.id, value], this.data.contracts, this.data.date)
+        .filter(c => statementsRolesMapping[this.data.type].includes(c.type))
+        .filter(c => !this.data.statements.some(stm => stm[rightholderKey] === value && c.id === stm.contractId))
         .filter(c => this.data.rights.some(r => r.contractId === c.id));
 
       if (!this.rightholderContracts.length) {
