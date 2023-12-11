@@ -36,8 +36,7 @@ export class IncomingStatementComponent implements OnInit, OnDestroy {
   public contractControl = new FormControl<string>('');
   public formArray = new FormArray([]);
 
-  private sub: Subscription;
-  private dateSub: Subscription;
+  private subs: Subscription[] = [];
 
   constructor(
     public shell: DashboardWaterfallShellComponent,
@@ -50,7 +49,7 @@ export class IncomingStatementComponent implements OnInit, OnDestroy {
     const rights = await this.shell.rights();
     const incomes = await this.shell.incomes();
 
-    this.sub = this.formArray.valueChanges.pipe(
+    const formArraySub = this.formArray.valueChanges.pipe(
       pairwise(),
       filter(([prev, curr]) => {
         const prevChecked = prev?.filter(s => s.checked).map(s => s.id) || [];
@@ -71,8 +70,9 @@ export class IncomingStatementComponent implements OnInit, OnDestroy {
       startWith(this.form.get('duration').get('to').value),
       filter(date => date instanceof Date)
     );
+    this.subs.push(formArraySub);
 
-    this.dateSub = combineLatest([date$, this.statement$]).subscribe(async ([date, statement]) => {
+    const statementSub = combineLatest([date$, this.statement$]).subscribe(async ([date, statement]) => {
       this.distributors = [];
       const state = await firstValueFrom(this.shell.simulation$);
 
@@ -137,11 +137,12 @@ export class IncomingStatementComponent implements OnInit, OnDestroy {
       this.onTabChanged({ index: 0 });
       this.cdr.markForCheck();
     });
+
+    this.subs.push(statementSub);
   }
 
   ngOnDestroy() {
-    this.sub?.unsubscribe();
-    this.dateSub?.unsubscribe();
+    this.subs.forEach(sub => sub?.unsubscribe());
   }
 
   onTabChanged({ index }: { index: number }) {

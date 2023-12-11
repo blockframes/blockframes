@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 
 // Blockframes
 import {
-  Income,
   Right,
   RightholderRole,
   Statement,
@@ -30,7 +29,6 @@ import {
 } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
-import { WaterfallState } from '@blockframes/waterfall/waterfall.service';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 import { MatDialog } from '@angular/material/dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
@@ -77,8 +75,6 @@ export class StatementsComponent implements OnInit, OnDestroy {
 
   public contracts: WaterfallContract[] = [];
   public rights: Right[] = [];
-  private incomes: Income[] = [];
-  private state: WaterfallState;
   public statementTypes: StatementChipConfig[] = [];
   public selected: StatementType;
   private waterfall = this.shell.waterfall;
@@ -97,12 +93,10 @@ export class StatementsComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.state = await firstValueFrom(this.shell.state$);
     this.rights = await this.shell.rights();
     this.statements = await this.shell.statements();
     this.statementSender = await firstValueFrom(this.shell.currentRightholder$);
     this.contracts = await this.shell.contracts();
-    this.incomes = await this.shell.incomes();
     this.statementTypes = Object.entries(statementsRolesConfig).map(([key, value]: [StatementType, StatementRolesConfig]) => (
       {
         selected: false,
@@ -205,7 +199,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
         return this.router.navigate(['/c/o/dashboard/title/', this.waterfall.id, 'statement', id, 'edit']);
       }
       case 'producer': {
-        const incomeIds = this.getIncomeIds(rightholderId, contractId, duration.to);
+        const incomeIds = await this.getIncomeIds(rightholderId, contractId, duration.to);
 
         const statement = createProducerStatement({
           id: this.statementService.createId(),
@@ -223,7 +217,10 @@ export class StatementsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getIncomeIds(receiverId: string, contractId: string, date: Date) {
+  private async getIncomeIds(receiverId: string, contractId: string, date: Date) {
+    const incomes = await this.shell.incomes();
+    const state = await firstValueFrom(this.shell.state$);
+    this.statements = await this.shell.statements();
     // should create an outgoing statement.
     const config = {
       senderId: this.statementSender.id,
@@ -231,8 +228,8 @@ export class StatementsComponent implements OnInit, OnDestroy {
       statements: this.statements,
       contracts: this.contracts,
       rights: this.rights,
-      titleState: this.state.waterfall.state,
-      incomes: this.incomes,
+      titleState: state.waterfall.state,
+      incomes,
       sources: this.waterfall.sources,
       date
     };

@@ -137,9 +137,9 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     await this.shell.simulateWaterfall();
 
     if (reported) {
-      this.snackBar.open('Statement reported !', 'close', { duration: 5000 });
       // Statement is reported, actual waterfall is refreshed
       await this.shell.refreshWaterfall();
+      this.snackBar.open('Statement reported !', 'close', { duration: 5000 });
     } else {
       this.snackBar.open('Statement updated !', 'close', { duration: 5000 });
     }
