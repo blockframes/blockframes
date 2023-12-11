@@ -93,7 +93,6 @@ export class IncomingStatementComponent implements OnInit, OnDestroy {
 
       const filteredStatements = statements.filter(s => s.id !== statement.id && !isProducerStatement(s));
       const reportableStatements = filteredStatements.filter(s => s.incomeIds.some(id => reportableIncomes.includes(id)));
-      const distributorStatements = filteredStatements.filter(s => s.incomeIds.some(id => statement.incomeIds.includes(id)));
       const distributorsIds = unique(reportableStatements.map(s => s.senderId));
       this.distributors = this.shell.waterfall.rightholders.filter(r => distributorsIds.includes(r.id));
 
@@ -113,22 +112,23 @@ export class IncomingStatementComponent implements OnInit, OnDestroy {
       this.reportableStatements = [];
       for (const distributor of this.distributors) {
         if (!this.distributorContracts[distributor.id]) {
-          const distributorStms = sortStatements(filteredStatements.filter(s => s.senderId === distributor.id), false);
-          const filteredDistributorStatements = distributorStms.filter(s => reportableStatements.some(stm => stm.id === s.id));
+          const distributorStatements = sortStatements(filteredStatements.filter(s => s.senderId === distributor.id), false);
+          const filteredDistributorStatements = distributorStatements.filter(s => reportableStatements.some(stm => stm.id === s.id));
           this.reportableStatements = [...this.reportableStatements, ...filteredDistributorStatements];
         } else {
           for (const contract of this.distributorContracts[distributor.id]) {
-            const distributorStms = sortStatements(filteredStatements.filter(s => s.senderId === distributor.id && s.contractId === contract.id), false);
-            const filteredDistributorStatements = distributorStms.filter(s => reportableStatements.some(stm => stm.id === s.id));
+            const distributorStatements = sortStatements(filteredStatements.filter(s => s.senderId === distributor.id && s.contractId === contract.id), false);
+            const filteredDistributorStatements = distributorStatements.filter(s => reportableStatements.some(stm => stm.id === s.id));
             this.reportableStatements = [...this.reportableStatements, ...filteredDistributorStatements];
           }
         }
       }
 
+      const checkedStatements = reportableStatements.filter(s => s.incomeIds.some(id => statement.incomeIds.includes(id)));
       for (const statement of this.reportableStatements) {
         this.formArray.push(new FormGroup({
           id: new FormControl<string>(statement.id),
-          checked: new FormControl<boolean>(distributorStatements.some(s => s.id === statement.id))
+          checked: new FormControl<boolean>(checkedStatements.some(s => s.id === statement.id))
         }), { emitEvent: false });
       }
 
