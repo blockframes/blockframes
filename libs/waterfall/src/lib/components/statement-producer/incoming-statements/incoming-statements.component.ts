@@ -1,7 +1,5 @@
-import { Component, ChangeDetectionStrategy, Input, OnChanges, ChangeDetectorRef, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
 import {
-  Income,
-  Right,
   Statement,
   WaterfallContract,
   WaterfallRightholder,
@@ -11,7 +9,7 @@ import {
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
-import { Subscription, filter, firstValueFrom, map, pairwise, startWith } from 'rxjs';
+import { BehaviorSubject, Subscription, combineLatest, filter, firstValueFrom, map, pairwise, startWith } from 'rxjs';
 import { StatementForm } from '../../../form/statement.form';
 import { unique } from '@blockframes/utils/helpers';
 
@@ -21,9 +19,13 @@ import { unique } from '@blockframes/utils/helpers';
   styleUrls: ['./incoming-statements.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class IncomingStatementComponent implements OnInit, OnChanges, OnDestroy {
+export class IncomingStatementComponent implements OnInit, OnDestroy {
 
-  @Input() statement: Statement;
+  @Input() private set statement(statement: Statement) {
+    this.statement$.next(statement);
+  }
+  public statement$ = new BehaviorSubject<Statement>(null);
+
   @Input() form: StatementForm;
   @Output() incomeIds = new EventEmitter<string[]>();
 
@@ -34,10 +36,6 @@ export class IncomingStatementComponent implements OnInit, OnChanges, OnDestroy 
   public contractControl = new FormControl<string>('');
   public formArray = new FormArray([]);
 
-  private statements: Statement[] = [];
-  private contracts: WaterfallContract[] = [];
-  private rights: Right[] = [];
-  private incomes: Income[] = [];
   private sub: Subscription;
   private dateSub: Subscription;
 
@@ -46,66 +44,68 @@ export class IncomingStatementComponent implements OnInit, OnChanges, OnDestroy 
     private cdr: ChangeDetectorRef
   ) { }
 
-  ngOnInit() {
-    this.sub = this.formArray.valueChanges.subscribe(value => {
+  async ngOnInit() {
+    const statements = await this.shell.statements();
+    const contracts = await this.shell.contracts();
+    const rights = await this.shell.rights();
+    const incomes = await this.shell.incomes();
+
+    this.sub = this.formArray.valueChanges.pipe(
+      pairwise(),
+      filter(([prev, curr]) => {
+        const prevChecked = prev?.filter(s => s.checked).map(s => s.id) || [];
+        const currChecked = curr.filter(s => s.checked).map(s => s.id);
+        return prevChecked.length !== currChecked.length || prevChecked.some(id => !currChecked.includes(id));
+      }),
+      map(([_, curr]) => curr)
+    ).subscribe(value => {
       const checkedStatements: string[] = value.filter(s => s.checked).map(s => s.id);
-      const incomes = checkedStatements.map(s => this.statements.find(statement => statement.id === s).incomeIds).flat();
+      const incomes = checkedStatements.map(s => statements.find(statement => statement.id === s).incomeIds).flat();
       this.incomeIds.emit(incomes);
     });
-  }
-
-  ngOnDestroy() {
-    this.sub?.unsubscribe();
-    this.dateSub?.unsubscribe();
-  }
-
-  async ngOnChanges() {
-
-    if (!this.statements.length) this.statements = await this.shell.statements();
-    if (!this.contracts.length) this.contracts = await this.shell.contracts();
-    if (!this.rights.length) this.rights = await this.shell.rights();
-    if (!this.incomes.length) this.incomes = await this.shell.incomes();
 
     const date$ = this.form.get('duration').get('to').valueChanges.pipe(
       pairwise(),
       filter(([prev, curr]) => curr instanceof Date && prev?.getTime() !== curr.getTime()),
-      map(([_, curr]) => curr)
+      map(([_, curr]) => curr),
+      startWith(this.form.get('duration').get('to').value),
+      filter(date => date instanceof Date)
     );
 
-    this.dateSub = date$.pipe(startWith(this.form.get('duration').get('to').value)).subscribe(async date => {
+    this.dateSub = combineLatest([date$, this.statement$]).subscribe(async ([date, statement]) => {
+      this.distributors = [];
       const state = await firstValueFrom(this.shell.simulation$);
 
       const config = {
-        senderId: this.statement.senderId,
-        receiverId: this.statement.receiverId,
-        statements: this.statements.filter(s => s.id !== this.statement.id),
-        contracts: this.contracts,
-        rights: this.rights,
+        senderId: statement.senderId,
+        receiverId: statement.receiverId,
+        statements: statements.filter(s => s.id !== statement.id),
+        contracts,
+        rights,
         titleState: state.waterfall.state,
-        incomes: this.incomes,
+        incomes,
         sources: this.shell.waterfall.sources,
         date,
       };
 
       const prerequists = getOutgoingStatementPrerequists(config);
-      const reportableIncomes = prerequists[this.statement.contractId]?.incomeIds || [];
+      const reportableIncomes = prerequists[statement.contractId]?.incomeIds || [];
 
-      const filteredStatements = this.statements.filter(s => s.id !== this.statement.id && !isProducerStatement(s));
+      const filteredStatements = statements.filter(s => s.id !== statement.id && !isProducerStatement(s));
       const reportableStatements = filteredStatements.filter(s => s.incomeIds.some(id => reportableIncomes.includes(id)));
-      const distributorStatements = filteredStatements.filter(s => s.incomeIds.some(id => this.statement.incomeIds.includes(id)));
-
+      const distributorStatements = filteredStatements.filter(s => s.incomeIds.some(id => statement.incomeIds.includes(id)));
       const distributorsIds = unique(reportableStatements.map(s => s.senderId));
       this.distributors = this.shell.waterfall.rightholders.filter(r => distributorsIds.includes(r.id));
 
-      this.formArray.clear();
+      this.formArray.clear({ emitEvent: false });
       this.distributorContracts = {};
 
       for (const statement of reportableStatements) {
         if (statement.contractId) {
           if (!this.distributorContracts[statement.senderId]) {
-            this.distributorContracts[statement.senderId] = [this.contracts.find(c => c.id === statement.contractId)];
+            this.distributorContracts[statement.senderId] = [contracts.find(c => c.id === statement.contractId)];
           } else if (!this.distributorContracts[statement.senderId].some(c => c.id === statement.contractId)) {
-            this.distributorContracts[statement.senderId].push(this.contracts.find(c => c.id === statement.contractId));
+            this.distributorContracts[statement.senderId].push(contracts.find(c => c.id === statement.contractId));
           }
         }
       }
@@ -137,7 +137,11 @@ export class IncomingStatementComponent implements OnInit, OnChanges, OnDestroy 
       this.onTabChanged({ index: 0 });
       this.cdr.markForCheck();
     });
+  }
 
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
+    this.dateSub?.unsubscribe();
   }
 
   onTabChanged({ index }: { index: number }) {
@@ -148,6 +152,10 @@ export class IncomingStatementComponent implements OnInit, OnChanges, OnDestroy 
     } else {
       this.contractControl.setValue('');
     }
+  }
+
+  markAsDirty() {
+    if (this.statement$.value.status !== 'reported') this.form.markAsDirty();
   }
 
 }

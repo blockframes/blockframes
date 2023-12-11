@@ -76,7 +76,7 @@ interface Row {
 export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
 
   @Input() public statement: Statement;
-  @Input() form: StatementForm;
+  @Input() public form: StatementForm;
 
   private sub: Subscription;
 
@@ -110,10 +110,11 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
       const rights = statementRights.filter(r => rightIds.includes(r.id));
 
       const statement = generatePayments(this.statement, simulation.waterfall.state, rights, incomes, sources);
-      statement.duration = this.form.get('duration').value as Duration;
+      if (!this.form.pristine) statement.duration = this.form.get('duration').value as Duration;
       this.form.setAllValue({ ...statement, incomes, sources });
       return statement;
-    })
+    }),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   public groupsBreakdown$ = combineLatest([this.statement$, this.shell.rights$, this.shell.simulation$, this.sources$]).pipe(
@@ -197,7 +198,6 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
   constructor(private shell: DashboardWaterfallShellComponent) { }
 
   ngOnInit() {
-    this.form.setAllValue(this.statement);
 
     this.incomeIds$.next(this.statement.incomeIds);
 

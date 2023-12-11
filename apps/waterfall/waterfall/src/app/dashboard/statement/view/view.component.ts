@@ -27,7 +27,12 @@ import { Subscription, combineLatest, debounceTime, filter, map, pluck, tap } fr
 })
 export class StatementViewComponent implements OnInit, OnDestroy, StartementFormGuardedComponent {
 
-  public statement$ = combineLatest([this.route.params.pipe(pluck('statementId')), this.shell.statements$]).pipe(
+  private statementId = this.route.params.pipe(
+    pluck('statementId'),
+    tap(_ => this.form.reset()) // Statement Id has changed, reset form
+  );
+
+  public statement$ = combineLatest([this.statementId, this.shell.statements$]).pipe(
     map(([statementId, statements]) => statements.find(s => s.id === statementId)),
     filter(statement => !!statement),
     tap(statement => {
