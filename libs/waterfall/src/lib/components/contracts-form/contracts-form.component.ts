@@ -20,7 +20,8 @@ import {
   WaterfallFile,
   isContract,
   sortContracts,
-  convertDocumentTo
+  convertDocumentTo,
+  createExpensesConfig
 } from '@blockframes/model';
 import { TermService } from '@blockframes/contract/term/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -110,6 +111,7 @@ export class ContractsFormComponent implements OnInit {
       price: contract.price,
       terms,
       file: file,
+      expensesConfig: contract.expensesConfig,
     });
     this.creating = true;
   }
@@ -154,6 +156,8 @@ export class ContractsFormComponent implements OnInit {
 
     await this.waterfallService.update({ id: this.movieId, rightholders });
 
+    const expensesConfig = this.documentForm.controls.expensesConfig.value.map(c => createExpensesConfig({ ...c, id: c.id || this.documentService.createId() }));
+
     const document = createWaterfallDocument<WaterfallContract>({
       id: this.documentForm.controls.id.value,
       name: this.documentForm.controls.name.value,
@@ -171,6 +175,7 @@ export class ContractsFormComponent implements OnInit {
           to: this.documentForm.controls.endDate.value,
         },
         price: this.documentForm.controls.price.value,
+        expensesConfig,
       }),
     });
 

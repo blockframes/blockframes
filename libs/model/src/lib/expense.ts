@@ -31,3 +31,18 @@ export function createExpense(params: Partial<Expense> = {}): Expense {
     ...params,
   };
 }
+
+export interface ExpensesConfig {
+  id: string;
+  name: string;
+  capped: number;
+}
+
+export function createExpensesConfig(params: Partial<ExpensesConfig> = {}): ExpensesConfig {
+  return {
+    id: '',
+    name: '',
+    capped: 0,
+    ...params,
+  };
+}

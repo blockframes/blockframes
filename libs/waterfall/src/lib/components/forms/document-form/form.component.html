@@ -107,3 +107,5 @@
 </ng-container>
 
 <file-uploader [form]="form.get('file')" [meta]="['waterfall', 'documents', waterfall.id]" accept="pdf" (selectionChange)="change($event)"></file-uploader>
+
+<waterfall-expenses-config *ngIf="showExpensesConfig" [form]="form.get('expensesConfig')"></waterfall-expenses-config>

@@ -4,6 +4,7 @@ import { StorageFile } from '../media';
 import { DocumentMeta, createDocumentMeta } from '../meta';
 import { Media, RightholderRole, Territory, rightholderGroups } from '../static';
 import { allOf } from '../avail';
+import { ExpensesConfig } from '../expense';
 
 export interface WaterfallPermissions {
   _meta?: DocumentMeta;
@@ -164,6 +165,7 @@ export function createWaterfallContract(params: Partial<WaterfallContract>): Wat
     status: 'pending',
     stakeholders: [],
     rootId: '',
+    expensesConfig: [],
     ...params
   }
 }
@@ -221,6 +223,7 @@ interface WaterfallBudget {
 export interface WaterfallContract extends BaseContract {
   type: RightholderRole;
   name: string;
+  expensesConfig: ExpensesConfig[];
 };
 
 export interface WaterfallSale extends WaterfallContract {

@@ -1,0 +1,19 @@
+:host {
+  width: 100%;
+  margin: 32px 0;
+}
+
+article {
+  display: flex;
+  gap: 24px;
+  
+
+  mat-form-field{
+    flex-grow: 1;
+  }
+
+  button {
+    margin-top: 16px;
+  }
+}
+

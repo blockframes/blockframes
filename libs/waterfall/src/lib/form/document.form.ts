@@ -7,8 +7,24 @@ import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { BucketTermForm } from '@blockframes/contract/bucket/form';
 import { creatTermControl } from '@blockframes/contract/negotiation';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { RightholderRole, Term, WaterfallFile } from '@blockframes/model';
+import { ExpensesConfig, RightholderRole, Term, WaterfallFile } from '@blockframes/model';
 
+
+export function createExpensesConfigControl(config?: Partial<ExpensesConfig>) {
+  return {
+    id: new FormControl<string>(config?.id ?? ''),
+    name: new FormControl<string>(config?.name ?? ''),
+    capped: new FormControl<number>(config?.capped ?? 0),
+  };
+}
+
+type ExpensesConfigControl = ReturnType<typeof createExpensesConfigControl>;
+
+export class ExpensesConfigForm extends FormEntity<ExpensesConfigControl> {
+  constructor(config?: Partial<ExpensesConfig>) {
+    super(createExpensesConfigControl(config));
+  }
+}
 
 export interface WaterfallDocumentFormValue {
   id: string;
@@ -28,6 +44,8 @@ export interface WaterfallDocumentFormValue {
   terms: Term[];
 
   file: WaterfallFile;
+
+  expensesConfig: ExpensesConfig[];
 }
 
 function createWaterfallDocumentFormControl(contract: (Partial<WaterfallDocumentFormValue> & { id: string })) {
@@ -49,6 +67,8 @@ function createWaterfallDocumentFormControl(contract: (Partial<WaterfallDocument
     terms: FormList.factory(contract.terms, term => BucketTermForm.factory(term, creatTermControl)),
 
     file: new WaterfallFileForm({ ...contract.file, id: contract.id }),
+
+    expensesConfig: FormList.factory(contract?.expensesConfig, c => ExpensesConfigForm.factory(c, createExpensesConfigControl)),
   };
 }
 
@@ -74,8 +94,9 @@ export class WaterfallDocumentForm extends FormEntity<WaterfallDocumentFormContr
       endDate: data.endDate || new Date(),
       price: data.price || 0,
       file: data.file || { id: data.id },
-      terms: data.terms || [],
     });
+    this.controls.terms.patchAllValue(data.terms || []);
+    this.controls.expensesConfig.patchAllValue(data.expensesConfig || []);
     this.markAsPristine();
   }
 }

@@ -1,0 +1,24 @@
+<h2>Expenses</h2>
+
+<article *ngFor="let item of form.controls; let index = index; let last = last">
+  <mat-form-field appearance="outline">
+    <mat-label>Name</mat-label>
+    <input matInput type="text" placeholder="Name" [formControl]="item.controls.name" required />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>CAP max</mat-label>
+    <input matInput type="number" placeholder="CAP max" [formControl]="item.controls.capped" />
+  </mat-form-field>
+
+  <ng-container *ngIf="!last; else isLast">
+    <button mat-icon-button class="delete" (click)="remove(index)" matTooltip="Delete Expense Type">
+      <mat-icon svgIcon="delete"></mat-icon>
+    </button>
+  </ng-container>
+  <ng-template #isLast>
+    <button mat-mini-fab color="primary" (click)="add()" matTooltip="Delete Expense Type">
+      <mat-icon svgIcon="add"></mat-icon>
+    </button>
+  </ng-template>
+</article>

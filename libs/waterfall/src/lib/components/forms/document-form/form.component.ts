@@ -9,7 +9,7 @@ import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy, Output, E
 // Blockframes
 import { rightholderGroups, RightholderRole, Waterfall } from '@blockframes/model';
 import { BucketTermForm, createBucketTermControl } from '@blockframes/contract/bucket/form';
-import { WaterfallDocumentForm, WaterfallDocumentFormValue } from '../../../form/document.form';
+import { createExpensesConfigControl, ExpensesConfigForm, WaterfallDocumentForm, WaterfallDocumentFormValue } from '../../../form/document.form';
 
 @Component({
   selector: '[waterfall][form] waterfall-document-form',
@@ -35,6 +35,8 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
   licensor$ = new BehaviorSubject<string[]>([]); // seller
 
   subscription: Subscription[] = [];
+
+  showExpensesConfig = false;
 
   @Output() removeFile = new EventEmitter<boolean>(false);
 
@@ -73,6 +75,11 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges() {
     const showTerms = rightholderGroups.withTerms.includes(this.type);
     this.toggleTermsControl.setValue(showTerms);
+
+    this.showExpensesConfig = rightholderGroups.withStatements.includes(this.type);
+    if (this.showExpensesConfig && this.form.controls.expensesConfig.length === 0) {
+      this.form.controls.expensesConfig.push(ExpensesConfigForm.factory({}, createExpensesConfigControl));
+    };
   }
 
   ngOnDestroy() {
