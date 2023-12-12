@@ -111,5 +111,21 @@
         }
       }
     }
+
+    button {
+      position: absolute;
+      z-index: 3;
+  
+      &.bottom {
+        top: calc(100% + 12px);
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      &.right {
+        left: calc(100% + 12px);
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
   }
 }

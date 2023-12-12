@@ -38,7 +38,7 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
    * @example
    * <chips-autocomplete scope="TERRITORIES" ...
    */
-  @Input() scope: Scope;
+  @Input() scope?: Scope;
   @Input() selectable = true;
   @Input() removable = true;
   @Input() disabled = false;
@@ -73,8 +73,8 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.items = this.withoutValues.length
-      ? Object.keys(staticModel[this.scope]).filter((keys) => !this.withoutValues.includes(keys))
-      : Object.keys(staticModel[this.scope]);
+      ? Object.keys(staticModel[this.scope] ?? {}).filter((keys) => !this.withoutValues.includes(keys))
+      : Object.keys(staticModel[this.scope] ?? {});
 
     this.filteredItems$ = this.ctrl.valueChanges.pipe(
       startWith(''),
@@ -92,6 +92,7 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   /** Filter the items */
   private _filter(value: string) {
+    if (!this.scope) return [];
     const filterValue = value.toLowerCase();
     return this.items.filter(item => {
       return staticModel[this.scope][item].toLowerCase().includes(filterValue);
@@ -101,6 +102,13 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
   /** Add a chip based on key code */
   public add({ value }: MatChipInputEvent) {
     value.trim();
+    if (!this.scope) {
+      this.form.add(value);
+      this.added.emit(value);
+      this.inputEl.nativeElement.value = ''
+      this.ctrl.setValue(null);
+      return;
+    }
     const keyByValue = getKeyIfExists(this.scope, value)
     if (value && keyByValue) {
       if (this.uniqueValues && !this.form.value.includes(keyByValue)) {

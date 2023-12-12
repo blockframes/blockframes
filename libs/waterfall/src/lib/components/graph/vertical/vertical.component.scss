@@ -26,4 +26,20 @@
     transform: translate(50%, -50%);
     z-index: 1;
   }
+
+  button {
+    position: absolute;
+    z-index: 3;
+
+    &.bottom {
+      top: calc(100% + 0px);
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    &.right {
+      left: calc(100% + 0px);
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
 }

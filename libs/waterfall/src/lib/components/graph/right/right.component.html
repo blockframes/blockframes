@@ -4,11 +4,20 @@
   [ngStyle]="{ border: 'solid 1px ' + right.color, boxShadow: '0px 0px 12px 0px ' + right.color, backgroundColor: selected ? 'color-mix(in srgb, ' + right.color +' 30%, transparent)' : '#F3F6FF' }"
 >
   <p class="nodrag name" [matTooltip]="right.name || 'Right Name'">{{right.name || 'Right Name'}}</p>
-  <p class="nodrag label" [ngStyle]="{'--color': right.color}" >{{(right.data.percent * 100).toLocaleString(undefined, {maximumFractionDigits: 2})}}%</p>
-  <p class="nodrag org">{{right.orgName}}</p>
+  <p class="nodrag label" [ngStyle]="{'--color': right.color}" >{{(right.percent ?? -12).toLocaleString(undefined, {maximumFractionDigits: 2})}}%</p>
+  <p class="nodrag org">{{orgName$ | async}}</p>
   <div class="nodrag total">
     <mat-icon svgIcon="monetization"></mat-icon>
-    <p class="nodrag">Total Revenue: {{right.data?.revenu?.calculated ?? 0 | bigNumber:'1.0-2' }}€</p>
+    <p class="nodrag">Total Revenue: {{ amount$ | async | bigNumber:'1.0-2' }}€</p>
   </div>
-  <p *ngIf="!hideAmount" class="nodrag amount">{{right.data?.revenu?.calculated ?? 0 | bigNumber:'1.0-2' }}€</p>
+  <p *ngIf="!hideAmount" class="nodrag amount">{{ amount$ | async | bigNumber:'1.0-2' }}€</p>
 </div>
+
+<ng-container *ngIf="selected && editMode">
+  <button mat-mini-fab color="primary" class="right" (click)="handleAddSibling($event)">
+    <mat-icon svgIcon="add"></mat-icon>
+  </button>
+  <button mat-mini-fab color="primary" class="bottom" (click)="handleAddChild($event)">
+    <mat-icon svgIcon="add"></mat-icon>
+  </button>
+</ng-container>

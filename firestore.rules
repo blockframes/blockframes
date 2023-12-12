@@ -619,7 +619,10 @@ service cloud.firestore {
           && notInMaintenance()
           && isOrgMember(userOrgId())
           && isWaterfallAdmin(waterfallId);
-        allow delete: if false;
+        allow delete: if userHasValidOrg()
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && isWaterfallAdmin(waterfallId);
       }
 
       match /statements/{statementId} {

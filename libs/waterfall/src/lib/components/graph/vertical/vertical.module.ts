@@ -2,6 +2,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+
 import { NumberPipeModule } from '@blockframes/utils/pipes';
 
 import { WaterfallGraphLevelModule } from '../level/level.module';
@@ -16,6 +19,9 @@ import { WaterfallGraphVerticalComponent } from './vertical.component';
     NumberPipeModule,
     WaterfallGraphRightModule,
     WaterfallGraphLevelModule,
+
+    MatIconModule,
+    MatButtonModule,
   ],
   exports: [ WaterfallGraphVerticalComponent ],
 })

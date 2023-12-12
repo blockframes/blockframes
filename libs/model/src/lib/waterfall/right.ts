@@ -12,6 +12,7 @@ export interface Right {
   actionName: ActionName;
   groupId: string;
   order: number; // Used for vertical group childs
+  /** Parents (above) of this right */
   nextIds: string[];
   rightholderId: string;
   percent: number;

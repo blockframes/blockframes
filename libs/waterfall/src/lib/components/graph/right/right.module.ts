@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { NumberPipeModule } from '@blockframes/utils/pipes';
 
 import { WaterfallGraphRightComponent } from './right.component';
@@ -18,6 +19,7 @@ import { WaterfallGraphRightComponent } from './right.component';
     NumberPipeModule,
 
     MatIconModule,
+    MatButtonModule,
     MatTooltipModule,
   ],
   exports: [ WaterfallGraphRightComponent ],
