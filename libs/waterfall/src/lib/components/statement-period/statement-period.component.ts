@@ -5,8 +5,16 @@ import { Statement, filterStatements, sortStatements } from '@blockframes/model'
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 import { StatementForm } from '../../form/statement.form';
 import { add, differenceInMonths, endOfMonth, isFirstDayOfMonth, isLastDayOfMonth } from 'date-fns';
-import { Subscription } from 'rxjs';
+import { Subscription, filter, map, pairwise } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+
+function getMonthsDifference(from: Date, to: Date) {
+  if (from && to) {
+    let difference = differenceInMonths(to, from);
+    if (isFirstDayOfMonth(from) && isLastDayOfMonth(to)) difference++;
+    return difference;
+  }
+}
 
 @Component({
   selector: 'waterfall-statement-period',
@@ -31,7 +39,7 @@ export class StatementPeriodComponent implements OnInit, OnChanges, OnDestroy {
   public nextStatementId: string;
 
   private statements: Statement[] = [];
-  private sub: Subscription;
+  private subs: Subscription[] = [];
 
   constructor(
     public shell: DashboardWaterfallShellComponent,
@@ -41,18 +49,34 @@ export class StatementPeriodComponent implements OnInit, OnChanges, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.sub = this.periodicity.valueChanges.subscribe(value => {
+    const periodicitySub = this.periodicity.valueChanges.subscribe(value => {
       if (this.form.get('duration').value.from && value !== '0') {
         const to = add(this.form.get('duration').value.from, { months: +value - 1 });
         this.form.get('duration').get('to').setValue(endOfMonth(to));
+        this.form.get('duration').get('to').markAsDirty();
       }
     });
+    this.subs.push(periodicitySub);
 
-    // TODO #9524 #9525 #9532 #9531 subscribe on form duration changes to update periodicity
+    const durationSub = this.form.get('duration').valueChanges.pipe(
+      pairwise(),
+      filter(([prev, curr]) => (curr.from instanceof Date && prev.from?.getTime() !== curr.from.getTime()) || (curr.to instanceof Date && prev.to?.getTime() !== curr.to.getTime())),
+      map(([_, curr]) => curr)
+    ).subscribe(value => {
+      if (value.from instanceof Date && value.to instanceof Date) {
+        const difference = getMonthsDifference(value.from, value.to).toString();
+        if (this.periods[difference]) {
+          this.periodicity.setValue(difference, { emitEvent: false });
+        } else {
+          this.periodicity.setValue('0', { emitEvent: false });
+        }
+      }
+    });
+    this.subs.push(durationSub);
   }
 
   ngOnDestroy() {
-    this.sub?.unsubscribe();
+    this.subs.forEach(sub => sub?.unsubscribe());
   }
 
   async ngOnChanges() {
@@ -65,18 +89,14 @@ export class StatementPeriodComponent implements OnInit, OnChanges, OnDestroy {
     if (current > 1) this.previousStatementId = sortedStatements.find(s => s.number === current - 1).id;
     if (current < sortedStatements.length) this.nextStatementId = sortedStatements.find(s => s.number === current + 1).id;
 
-    // TODO #9524 #9525 #9532 #9531 set periodicity from previous statement if current does not have dates
     const currentDuration = this.statement.duration;
     if (currentDuration.from && currentDuration.to) {
-      let difference = differenceInMonths(currentDuration.to, currentDuration.from);
-      if (isFirstDayOfMonth(currentDuration.from) && isLastDayOfMonth(currentDuration.to)) difference++;
-
-      if (this.periods[difference.toString()]) {
-        this.periodicity.setValue(difference.toString(), { emitEvent: false });
+      const difference = getMonthsDifference(currentDuration.from, currentDuration.to).toString();
+      if (this.periods[difference]) {
+        this.periodicity.setValue(difference, { emitEvent: false });
       } else {
         this.periodicity.setValue('0', { emitEvent: false });
       }
-
     }
 
     this.cdr.markForCheck();

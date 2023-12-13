@@ -1,5 +1,5 @@
 import { sum } from '../utils';
-import { GroupState, HorizontalState, NodeState, RightState, SourceState, TitleState, VerticalState, createOrg } from './state';
+import { GroupState, HorizontalState, NodeState, RightState, SourceState, TitleState, TransferState, VerticalState, createOrg } from './state';
 
 export function nodeExists(state: TitleState, id: string) {
   return !!getNode(state, id);
@@ -67,8 +67,12 @@ export function getNodeOrg(state: TitleState, id: string) {
  */
 export function isGroupChild(state: TitleState, id: string) {
   if (Object.values(state.horizontals).find(g => g.children.includes(id))) return true;
-  if (Object.values(state.verticals).find(g => g.children.includes(id))) return true;
+  if (isVerticalGroupChild(state, id)) return true;
   return false;
+}
+
+export function isVerticalGroupChild(state: TitleState, id: string) {
+  return Object.values(state.verticals).find(g => g.children.includes(id));
 }
 
 /**
@@ -214,7 +218,15 @@ export function getTransferDetails(statementIncomeIds: string[], sourceId: strin
 
   let taken = 0;
   if (isGroup(state, to)) {
-    const innerTransfers = to.children.map(c => state.transfers[`${to.id}->${c}`]).filter(t => !!t);
+    const innerTransfers: TransferState[] = [];
+    for (const childId of to.children) {
+      const child = getNode(state, childId);
+      if (isVerticalGroup(state, child)) {
+        innerTransfers.push(...child.children.map(c => state.transfers[`${child.id}->${c}`]).filter(t => !!t));
+      } else if (state.transfers[`${to.id}->${childId}`]) {
+        innerTransfers.push(state.transfers[`${to.id}->${childId}`]);
+      }
+    }
     const innerIncomes = innerTransfers.map(t => t.history.filter(h => incomeIds.includes(h.incomeId))).flat();
     taken = sum(innerIncomes.filter(i => i.checked), i => i.amount * i.percent);
   } else {
@@ -228,7 +240,7 @@ export function getTransferDetails(statementIncomeIds: string[], sourceId: strin
     to,
     amount,
     taken,
-    percent: percent * 100,
+    percent: parseFloat((percent * 100).toFixed(2)),
   };
 }
 

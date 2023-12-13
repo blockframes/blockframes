@@ -12,7 +12,7 @@
     </span>
     <section>
       <span>
-        <mat-icon svgIcon="business"></mat-icon><span matLine><strong>{{ rightholderTag }}: </strong>{{ rightholderName }} <ng-container *ngIf="sources">({{ sources | join:'name' }})</ng-container></span>
+        <mat-icon svgIcon="business"></mat-icon><span matLine><strong>{{ rightholderTag }}: </strong>{{ rightholderName | titlecase }} <ng-container *ngIf="sources">({{ sources | join:'name' }})</ng-container></span>
       </span>
       <span>
         <span *ngIf="statement.status === 'reported' && !!statement.reported">

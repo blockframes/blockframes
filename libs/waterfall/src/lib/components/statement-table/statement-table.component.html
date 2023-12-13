@@ -40,6 +40,9 @@
   <ng-template *ngIf="columns.status" colRef="status" [label]="columns.status" let-status sort>
     <bf-tag [ngClass]="status === 'draft'? 'active' : ''">{{ status | toLabel: 'statementStatus' }}</bf-tag>
   </ng-template>
+  <ng-template *ngIf="columns.sources" colRef="incomeIds" [label]="columns.sources" let-incomeIds>
+    {{ incomeIds | incomesSources: (incomes$ | async) : waterfall | join:'name' | maxLength:75 }}
+  </ng-template>
   <ng-template *ngIf="columns.actions" colRef="" label="Actions" let-statement sticky>
     <a *ngIf="actions.crm" mat-icon-button [routerLink]="['/c/o/dashboard/crm/waterfall', statement.waterfallId, 'statements', statement.id]" (click)="$event.stopPropagation()">
       <mat-icon svgIcon="edit" matTooltip="Edit Statement"></mat-icon>

@@ -1,7 +1,7 @@
-import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output, Pipe, PipeTransform } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import { Statement, isDistributorStatement, isProducerStatement } from '@blockframes/model';
+import { Income, Statement, Waterfall, getIncomesSources, isDistributorStatement, isProducerStatement } from '@blockframes/model';
 import { StatementPaymentComponent } from '../statement-payment/statement-payment.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
@@ -39,6 +39,7 @@ export class StatementTableComponent {
 
   public waterfall = this.shell.waterfall;
   public contracts$ = this.shell.contracts$;
+  public incomes$ = this.shell.incomes$;
   public sorts = sorts;
 
   constructor(
@@ -76,5 +77,13 @@ export class StatementTableComponent {
         }
       })
     });
+  }
+}
+
+@Pipe({ name: 'incomesSources' })
+export class IncomesSourcesPipe implements PipeTransform {
+  transform(incomeIds: string[], _incomes: Income[], waterfall: Waterfall) {
+    const incomes = _incomes?.filter(i => incomeIds.includes(i.id)) || [];
+    return getIncomesSources(incomes, waterfall.sources);
   }
 }

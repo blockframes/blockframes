@@ -17,7 +17,7 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
 import { StatementForm } from '@blockframes/waterfall/form/statement.form';
 import { StartementFormGuardedComponent } from '@blockframes/waterfall/guards/statement-form.guard';
 import { StatementService } from '@blockframes/waterfall/statement.service';
-import { Subscription, combineLatest, debounceTime, map, pluck, tap } from 'rxjs';
+import { Subscription, combineLatest, debounceTime, filter, map, pluck, tap } from 'rxjs';
 
 @Component({
   selector: 'waterfall-statement-view',
@@ -27,8 +27,14 @@ import { Subscription, combineLatest, debounceTime, map, pluck, tap } from 'rxjs
 })
 export class StatementViewComponent implements OnInit, OnDestroy, StartementFormGuardedComponent {
 
-  public statement$ = combineLatest([this.route.params.pipe(pluck('statementId')), this.shell.statements$]).pipe(
+  private statementId = this.route.params.pipe(
+    pluck('statementId'),
+    tap(_ => this.form.reset()) // Statement Id has changed, reset form
+  );
+
+  public statement$ = combineLatest([this.statementId, this.shell.statements$]).pipe(
     map(([statementId, statements]) => statements.find(s => s.id === statementId)),
+    filter(statement => !!statement),
     tap(statement => {
       if (this.shell.setDate(statement.duration.to)) {
         this.shell.simulateWaterfall();
@@ -131,9 +137,9 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     await this.shell.simulateWaterfall();
 
     if (reported) {
-      this.snackBar.open('Statement reported !', 'close', { duration: 5000 });
       // Statement is reported, actual waterfall is refreshed
       await this.shell.refreshWaterfall();
+      this.snackBar.open('Statement reported !', 'close', { duration: 5000 });
     } else {
       this.snackBar.open('Statement updated !', 'close', { duration: 5000 });
     }

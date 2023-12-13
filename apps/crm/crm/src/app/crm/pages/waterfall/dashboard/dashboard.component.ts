@@ -15,29 +15,18 @@ import {
   Waterfall,
   WaterfallContract,
   WaterfallRightholder,
-  createDuration,
   createProducerStatement,
   getAssociatedSource,
-  getIncomesSources,
   getOutgoingStatementPrerequists,
   hasContractWith,
-  isProducerStatement,
   mainCurrency,
   movieCurrencies,
   rightholderGroups
 } from '@blockframes/model';
 import { formatPair } from '@blockframes/ui/price-per-currency/price-per-currency.component';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
-import { StatementService } from '@blockframes/waterfall/statement.service';
 import { WaterfallState } from '@blockframes/waterfall/waterfall.service';
-import { add } from 'date-fns';
 import { firstValueFrom } from 'rxjs';
-
-interface OutgoingStatements {
-  senderId: string,
-  pending: ProducerStatement[],
-  existing: ProducerStatement[]
-}
 
 @Component({
   selector: 'crm-dashboard',
@@ -51,7 +40,7 @@ export class DashboardComponent implements OnInit {
   public statementBlocks: Block[];
   public history: History[];
   private statements: Statement[];
-  public outgoingStatements: OutgoingStatements;
+  public outgoingStatements: Statement[];
   public contracts: WaterfallContract[] = [];
   private rights: Right[];
   private incomes: Income[];
@@ -62,9 +51,15 @@ export class DashboardComponent implements OnInit {
   public options = { xAxis: { categories: [] }, series: [] };
   public formatter = { formatter: (value: number) => `${value} ${movieCurrencies[mainCurrency]}` };
 
+  public columns: Record<string, string> = {
+    contract: 'Contract',
+    receiver: 'Receiver',
+    sources: 'Sources',
+    status: 'Status',
+  };
+
   constructor(
     private shell: DashboardWaterfallShellComponent,
-    private statementService: StatementService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
@@ -167,7 +162,7 @@ export class DashboardComponent implements OnInit {
     return pending;
   }
 
-  private statementsToCreate() {
+  private displayOutgoingStatements() {
     const currentStateDate = new Date(this.currentState.date);
 
     const outgoingStatementBeneficiaries = Object.keys(rightholderGroups.beneficiaries) as RightholderRole[];
@@ -176,7 +171,7 @@ export class DashboardComponent implements OnInit {
       .filter(r => hasContractWith([this.producer.id, r.id], this.contracts, currentStateDate)) // Rightholder have a contract with the statement sender
       .filter(r => r.roles.some(role => outgoingStatementBeneficiaries.includes(role))) // Rightholder can receive an outgoing statement
 
-    return rightholders.map(receiver => {
+    this.outgoingStatements = rightholders.map(receiver => {
 
       const config = {
         senderId: this.producer.id,
@@ -197,16 +192,11 @@ export class DashboardComponent implements OnInit {
       for (const contractId in prerequists) {
         const prerequist = prerequists[contractId];
         const producerStatement = createProducerStatement({
-          id: this.statementService.createId(),
           contractId: prerequist.contract.id,
           senderId: this.producer.id,
           receiverId: receiver.id,
           waterfallId: this.waterfall.id,
           incomeIds: prerequist.incomeIds,
-          duration: createDuration({
-            from: add(currentStateDate, { days: 1 }),
-            to: add(currentStateDate, { days: 1, months: 6 }),
-          })
         });
         statements.push(producerStatement);
       }
@@ -214,30 +204,11 @@ export class DashboardComponent implements OnInit {
       return statements;
 
     }).filter(s => !!s).flat();
-  }
 
-  public getIncomesSources(incomeIds: string[]) {
-    const incomes = this.incomes.filter(i => incomeIds.includes(i.id));
-    return getIncomesSources(incomes, this.waterfall.sources);
-  }
-
-  private displayOutgoingStatements() {
-    this.outgoingStatements = {
-      senderId: this.producer.id,
-      pending: this.statementsToCreate(),
-      existing: this.statements.filter(s => s.senderId === this.producer.id && isProducerStatement(s)) as ProducerStatement[]
-    };
     this.cdRef.markForCheck();
   }
 
-  public async createStatement(statement: Statement, redirect = true) {
-    const id = await this.statementService.add(statement, { params: { waterfallId: this.waterfall.id } });
-    if (redirect) return this.router.navigate(['/c/o/dashboard/crm/waterfall', this.waterfall.id, 'statement', id]);
-    this.statements.push(statement);
-    this.displayOutgoingStatements();
-  }
-
-  public goTo(type: 'statements' | 'rightholders', id: string) {
-    this.router.navigate(['/c/o/dashboard/crm/waterfall', this.waterfall.id, type, id]);
+  public goTo(id: string) {
+    this.router.navigate(['/c/o/dashboard/crm/waterfall', this.waterfall.id, 'rightholders', id]);
   }
 }
