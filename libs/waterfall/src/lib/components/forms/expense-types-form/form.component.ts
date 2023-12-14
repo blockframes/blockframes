@@ -18,6 +18,7 @@ import { WaterfallService } from '../../../waterfall.service';
 export class ExpenseTypesFormComponent implements OnInit {
 
   @Input() contractId: string;
+  // TODO #9520 @Input() versionId: string;
   public form = FormList.factory<ExpenseType, ExpenseTypeForm>([], expenseType => new ExpenseTypeForm(expenseType));
   public waterfall$ = this.shell.waterfall$;
 

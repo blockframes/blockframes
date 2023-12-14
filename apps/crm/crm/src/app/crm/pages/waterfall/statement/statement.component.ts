@@ -104,7 +104,7 @@ export class StatementComponent implements OnInit {
     }
 
     const versionId = _versionId || this.waterfall.versions[0]?.id;
-    if (versionId) this.shell.setVersionId(versionId);
+    if (versionId) this.shell.setVersionId(versionId); // TODO #9520 not usefull for simulation
     this.shell.setDate(statement.duration.to);
     this.snackBar.open('Initializing waterfall... Please wait', 'close', { duration: 5000 });
     this.simulation = await this.shell.simulateWaterfall();

@@ -43,6 +43,11 @@
         </ng-container>
       </ng-template>
     </bf-table>
+
+    <ng-container *ngIf="statement.type === 'directSales'">
+      <h3>Expenses Types</h3>
+      <waterfall-expense-types-form contractId="directSales"></waterfall-expense-types-form>
+    </ng-container>
   
     <ng-container *ngIf="expenses.length">
       <h3>Expenses</h3>

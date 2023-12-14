@@ -1,4 +1,3 @@
-<h3>Expenses</h3>
 <article class="surface" *ngIf="waterfall$ | async as waterfall">
   <waterfall-expense-types [form]="form"></waterfall-expense-types>
   <button mat-button (click)="save(waterfall)">
