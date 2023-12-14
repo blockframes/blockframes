@@ -40,7 +40,7 @@
           <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'">
             <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
           </button>
-          <button mat-icon-button matTooltip="Save changes" (click)="save()">
+          <button mat-icon-button matTooltip="Save changes" (click)="save(waterfall)">
             <mat-icon svgIcon="save"></mat-icon>
           </button>
         </header>
@@ -52,7 +52,7 @@
             <!-- TODO -->
             <!-- <p class="amendment">1 amendment - 30/06/2023</p> -->
             
-            <button mat-icon-button matTooltip="Edit contract" (click)="edit(contract)">
+            <button mat-icon-button matTooltip="Edit contract" (click)="edit(contract, waterfall)">
               <mat-icon svgIcon="edit"></mat-icon>
             </button>
             <a mat-icon-button *ngIf="contract.id | getFile: waterfall as file" 

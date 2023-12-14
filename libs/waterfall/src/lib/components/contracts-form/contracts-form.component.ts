@@ -21,7 +21,7 @@ import {
   isContract,
   sortContracts,
   convertDocumentTo,
-  createExpensesConfig
+  createExpenseType
 } from '@blockframes/model';
 import { TermService } from '@blockframes/contract/term/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -42,7 +42,6 @@ export class ContractsFormComponent implements OnInit {
 
   waterfall$: Observable<Waterfall>;
   contracts$: Observable<Partial<Record<RightholderRole, WaterfallContract[]>>>;
-  private waterfall: Waterfall;
   private contracts: Partial<Record<RightholderRole, WaterfallContract[]>>;
   private removeFileOnSave = false;
 
@@ -75,9 +74,7 @@ export class ContractsFormComponent implements OnInit {
       tap(rawContracts => this.contracts = rawContracts)
     )
 
-    this.waterfall$ = this.waterfallService.valueChanges(this.movieId).pipe(
-      tap(waterfall => this.waterfall = waterfall)
-    );
+    this.waterfall$ = this.waterfallService.valueChanges(this.movieId);
   }
 
   select(role: RightholderRole) {
@@ -93,11 +90,12 @@ export class ContractsFormComponent implements OnInit {
     this.documentForm.reset({ id: this.documentService.createId() });
   }
 
-  async edit(contract: WaterfallContract) {
+  async edit(contract: WaterfallContract, waterfall: Waterfall) {
     const terms = await this.termsService.getValue(contract.termIds);
-    const licensee = this.waterfall.rightholders.find(r => r.id === contract.buyerId);
-    const licensor = this.waterfall.rightholders.find(r => r.id === contract.sellerId);
-    const file = this.waterfall.documents.find(f => f.id === contract.id);
+    const licensee = waterfall.rightholders.find(r => r.id === contract.buyerId);
+    const licensor = waterfall.rightholders.find(r => r.id === contract.sellerId);
+    const file = waterfall.documents.find(f => f.id === contract.id);
+    const expenseTypes = waterfall.expenseTypes[contract.id] ?? [];
     this.documentForm.reset({
       id: contract.id,
       name: contract.name,
@@ -111,7 +109,7 @@ export class ContractsFormComponent implements OnInit {
       price: contract.price,
       terms,
       file: file,
-      expensesConfig: contract.expensesConfig,
+      expenseTypes,
     });
     this.creating = true;
   }
@@ -120,12 +118,14 @@ export class ContractsFormComponent implements OnInit {
     this.removeFileOnSave = bool;
   }
 
-  async save() {
+  async save(waterfall: Waterfall) {
     // TODO check form validity
+
+    const waterfallId = waterfall.id;
 
     // Seller create/update
     let sellerId: string;
-    const { rightholders } = this.waterfall;
+    const { rightholders, expenseTypes } = waterfall;
     const existingSeller = rightholders.find(r => r.name === this.documentForm.controls.licensorName.value);
     if (existingSeller) {
       sellerId = existingSeller.id;
@@ -154,15 +154,11 @@ export class ContractsFormComponent implements OnInit {
       // TODO add selected role if needed
     }
 
-    await this.waterfallService.update({ id: this.movieId, rightholders });
-
-    const expensesConfig = this.documentForm.controls.expensesConfig.value.map(c => createExpensesConfig({ ...c, id: c.id || this.documentService.createId() }));
-
     const document = createWaterfallDocument<WaterfallContract>({
       id: this.documentForm.controls.id.value,
       name: this.documentForm.controls.name.value,
       type: 'contract',
-      waterfallId: this.movieId,
+      waterfallId,
       signatureDate: this.documentForm.controls.signatureDate.value,
       ownerId: this.orgService.org.id,
       meta: createWaterfallContract({
@@ -175,7 +171,6 @@ export class ContractsFormComponent implements OnInit {
           to: this.documentForm.controls.endDate.value,
         },
         price: this.documentForm.controls.price.value,
-        expensesConfig,
       }),
     });
 
@@ -183,17 +178,25 @@ export class ContractsFormComponent implements OnInit {
       ...term,
       id: term.id || this.termsService.createId(),
       contractId: document.id,
-      titleId: this.waterfall.id
+      titleId: waterfallId
     }));
     document.meta.termIds = terms.map(t => t.id);
 
+    const expenseType = this.documentForm.controls.expenseTypes.value.filter(c => !!c.name).map(c => createExpenseType({
+      ...c,
+      contractId: document.id,
+      id: c.id || this.waterfallService.createId(),
+    }));
+    expenseTypes[document.id] = expenseType;
+
     await Promise.all([
-      this.documentService.upsert<WaterfallDocument>(document, { params: { waterfallId: this.movieId } }),
+      this.waterfallService.update({ id: waterfallId, rightholders, expenseTypes }),
+      this.documentService.upsert<WaterfallDocument>(document, { params: { waterfallId } }),
       this.termsService.upsert(terms)
     ]);
 
     if (this.removeFileOnSave) {
-      this.documentService.removeFile({ waterfallId: this.waterfall.id, documentId: document.id });
+      this.documentService.removeFile({ waterfallId, documentId: document.id });
     } else {
       this.uploaderService.upload();
     }

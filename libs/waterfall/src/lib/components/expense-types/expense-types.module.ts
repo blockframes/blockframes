@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { ExpensesConfigComponent } from './expenses-config.component';
+import { ExpenseTypesComponent } from './expense-types.component';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -13,7 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
-  declarations: [ExpensesConfigComponent],
+  declarations: [ExpenseTypesComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -26,6 +26,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatFormFieldModule,
 
   ],
-  exports: [ExpensesConfigComponent]
+  exports: [ExpenseTypesComponent]
 })
-export class ExpensesConfigModule { }
+export class ExpenseTypesModule { }

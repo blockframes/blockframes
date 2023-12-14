@@ -40,7 +40,7 @@ export interface FieldsConfig {
     currency: MovieCurrency;
     salesContractId: string;
   }[];
-  expenses: Expense[];
+  expenses: (Expense & { cap: number })[];
 }
 
 type FieldsConfigType = ExtractConfig<FieldsConfig>;
@@ -153,11 +153,18 @@ export function getStatementConfig(option: StatementConfig) {
         /* r */ 'expenses[].currency': (value: string): MovieCurrency => {
         return getCurrency(value);
       },
-        /* s */ 'expenses[].type': (value: string) => {
+        /* s */ 'expenses[].typeId': (value: string) => {
+        return valueToId(value);
+      },
+        /* t */ 'expenses[].nature': (value: string) => {
         return value.trim();
       },
-        /* t */ 'expenses[].category': (value: string) => {
-        return value.trim();
+        /* u */ 'expenses[].capped': (value: string) => {
+        const lower = value.trim().toLowerCase();
+        return ['yes', 'true'].includes(lower);
+      },
+        /* v */ 'expenses[].cap': (value: string) => {
+        return Number(value);
       },
     };
   }
