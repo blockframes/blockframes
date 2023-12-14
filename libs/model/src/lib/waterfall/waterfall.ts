@@ -4,7 +4,7 @@ import { StorageFile } from '../media';
 import { DocumentMeta, createDocumentMeta } from '../meta';
 import { Media, RightholderRole, Territory, rightholderGroups } from '../static';
 import { allOf } from '../avail';
-import { ExpensesConfig } from '../expense';
+import { ExpenseType } from '../expense';
 
 export interface WaterfallPermissions {
   _meta?: DocumentMeta;
@@ -97,6 +97,7 @@ export interface Waterfall {
   documents: WaterfallFile[];
   sources: WaterfallSource[];
   rightholders: WaterfallRightholder[];
+  expenseTypes: Record<string, ExpenseType[]>; // key is contractId or 'directSales'
 }
 
 export function createWaterfall(params: Partial<Waterfall> = {}): Waterfall {
@@ -106,6 +107,7 @@ export function createWaterfall(params: Partial<Waterfall> = {}): Waterfall {
     orgIds: [],
     documents: [],
     sources: [],
+    expenseTypes: {},
     ...params,
     rightholders: params.rightholders?.map(r => createWaterfallRightholder(r)) ?? [],
   }
@@ -165,7 +167,6 @@ export function createWaterfallContract(params: Partial<WaterfallContract>): Wat
     status: 'pending',
     stakeholders: [],
     rootId: '',
-    expensesConfig: [],
     ...params
   }
 }
@@ -223,7 +224,6 @@ interface WaterfallBudget {
 export interface WaterfallContract extends BaseContract {
   type: RightholderRole;
   name: string;
-  expensesConfig: ExpensesConfig[];
 };
 
 export interface WaterfallSale extends WaterfallContract {
