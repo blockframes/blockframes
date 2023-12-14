@@ -151,12 +151,13 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
    * Runs a simulation of the waterfall without storing data in the database
    * @param waterfall 
    * @param blocks 
+   * @param versionId
    * @param date 
    * @returns 
    */
-  public simulateWaterfall(data: WaterfallData, date?: Date) {
+  public simulateWaterfall(data: WaterfallData, versionId?: string, date?: Date) {
     const version = createVersion({ id: 'simulation', name: 'Simulation' });
-    const blocks = buildBlocks(data, this.authService.uid, version.id, { simulation: true });
+    const blocks = buildBlocks(data, this.authService.uid, versionId, { simulation: true });
     const simulation = buildWaterfall('simulated-waterfall', version, blocks);
     return waterfallToDate(simulation, date);
   }

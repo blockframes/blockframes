@@ -8,7 +8,7 @@ import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price
 import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { ContractPipeModule } from '@blockframes/contract/contract/pipe';
-import { ExpenseTypePipeModule } from '@blockframes/waterfall/pipes/expense-type';
+import { ExpenseTypePipeModule } from '@blockframes/waterfall/pipes/expense-type.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';

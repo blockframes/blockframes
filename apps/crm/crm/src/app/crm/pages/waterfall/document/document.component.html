@@ -115,6 +115,8 @@
 
   <article *ngIf="showExpenseTypes$ | async">
     <h3>Expenses</h3>
-    <waterfall-expense-types-form [contractId]="contract.id"></waterfall-expense-types-form>
+    <div class="surface">
+      <waterfall-expense-types-form [contractId]="contract.id"></waterfall-expense-types-form>
+    </div>
   </article>
 </ng-container>

@@ -1,7 +1,9 @@
-<article class="surface" *ngIf="waterfall$ | async as waterfall">
+<article *ngIf="waterfall$ | async as waterfall">
   <waterfall-expense-types [form]="form"></waterfall-expense-types>
-  <button mat-button (click)="save(waterfall)">
-    <mat-icon svgIcon="summarize"></mat-icon>
-    <span>Save</span>
-  </button>
+  <div>
+    <button type="button" mat-stroked-button (click)="save(waterfall)">
+      <mat-icon svgIcon="save"></mat-icon>
+      <span>Save</span>
+    </button>
+  </div>
 </article>

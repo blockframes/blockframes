@@ -313,10 +313,11 @@ export function sourcesToAction(waterfallSources: WaterfallSource[]) {
 export function expenseTypesToAction(expenseTypes: ExpenseType[], versionId: string) {
   const actions: Action[] = [];
 
-  expenseTypes.forEach((c, index) => {
+  expenseTypes.forEach((t, index) => {
+    const { [mainCurrency]: cap } = convertCurrenciesTo({ [t.currency]: t.cap.version[versionId] ?? t.cap.default }, mainCurrency);
     actions.push(action('expenseType', {
-      ...c,
-      cap: c.cap.version[versionId] ?? c.cap.default,
+      ...t,
+      cap,
       date: new Date(1 + (index * 1000)) // 01/01/1970 + "index" seconds 
     }));
   });

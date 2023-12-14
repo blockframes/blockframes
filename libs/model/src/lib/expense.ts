@@ -36,13 +36,14 @@ export function createExpense(params: Partial<Expense> = {}): Expense {
 
 interface ExpenseCap {
   default: number;
-  version: Record<string, number>;
+  version: Record<string, number>; // TODO #9520 key is versionId 
 }
 
 export interface ExpenseType {
   id: string;
   name: string;
   contractId: string;
+  currency: MovieCurrency;
   cap: ExpenseCap;
 }
 
@@ -51,6 +52,7 @@ export function createExpenseType(params: Partial<ExpenseType> = {}): ExpenseTyp
     id: '',
     name: '',
     contractId: '',
+    currency: 'EUR',
     ...params,
     cap: createExpenseCap(params.cap),
   };

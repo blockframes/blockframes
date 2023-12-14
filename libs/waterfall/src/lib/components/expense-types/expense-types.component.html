@@ -9,6 +9,10 @@
     <input matInput type="number" placeholder="CAP max" [formControl]="item.controls.cap.controls.default" />
   </mat-form-field>
 
+  <static-select [control]="item.controls.currency" [only]="['USD', 'EUR']" scope="movieCurrencies">
+    <mat-label>Currency</mat-label>
+  </static-select>
+
   <ng-container *ngIf="!last; else isLast">
     <button mat-icon-button class="delete" (click)="remove(index)" matTooltip="Delete Expense Type">
       <mat-icon svgIcon="delete"></mat-icon>

@@ -14,7 +14,7 @@ import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.mod
 import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 import { StatementHeaderModule } from '@blockframes/waterfall/components/statement-header/statement-header.module';
 import { StatementParticipationModule } from '@blockframes/waterfall/components/statement-participation/statement-participation.module';
-import { ExpenseTypePipeModule } from '@blockframes/waterfall/pipes/expense-type';
+import { ExpenseTypePipeModule } from '@blockframes/waterfall/pipes/expense-type.pipe';
 import { ExpenseTypesFormModule } from '@blockframes/waterfall/components/forms/expense-types-form/form.module';
 
 // Material

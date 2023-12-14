@@ -5,6 +5,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { ExpenseTypesComponent } from './expense-types.component';
 
+// Blockframes 
+import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
+
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,6 +20,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+
+    StaticSelectModule,
 
     // Material
     MatIconModule,

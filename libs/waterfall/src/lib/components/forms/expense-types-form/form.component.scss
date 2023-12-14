@@ -4,4 +4,8 @@ article {
   waterfall-expense-types {
     display: block;
   }
+  div {
+    display: flex;
+    justify-content: end;
+  }
 }

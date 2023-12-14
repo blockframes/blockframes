@@ -46,7 +46,9 @@
 
     <ng-container *ngIf="statement.type === 'directSales'">
       <h3>Expenses Types</h3>
-      <waterfall-expense-types-form contractId="directSales"></waterfall-expense-types-form>
+      <div class="surface">
+        <waterfall-expense-types-form contractId="directSales"></waterfall-expense-types-form>
+      </div>
     </ng-container>
   
     <ng-container *ngIf="expenses.length">

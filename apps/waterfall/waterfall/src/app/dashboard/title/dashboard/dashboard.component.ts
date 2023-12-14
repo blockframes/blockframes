@@ -20,7 +20,7 @@ import {
 
 // Blockframes
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
-import { OrgState, mainCurrency, movieCurrencies, titleCase, History } from '@blockframes/model';
+import { OrgState, mainCurrency, movieCurrencies, titleCase, History, sum } from '@blockframes/model';
 import { sorts } from '@blockframes/ui/list/table/sorts';
 import { FormControl } from '@angular/forms';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -75,11 +75,12 @@ export class DashboardComponent {
     })
   );
 
-  public rightholdersState$: Observable<(OrgState & { name: string })[]> = this.state$.pipe(
-    map(state => Object.values(state.waterfall.state.orgs)),
-    map(orgs => orgs.map(org => ({
+  public rightholdersState$: Observable<(OrgState & { name: string, expense: number })[]> = this.state$.pipe(
+    map(state => state.waterfall.state),
+    map(state => Object.values(state.orgs).map(org => ({
       ...org,
       name: titleCase(this.waterfall.rightholders.find(r => r.id === org.id).name),
+      expense: sum(Object.values(state.expenses).filter(e => e.orgId === org.id).map(e => e.amount)),
     })))
   );
 

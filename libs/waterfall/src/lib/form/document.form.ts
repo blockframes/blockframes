@@ -7,7 +7,7 @@ import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { BucketTermForm } from '@blockframes/contract/bucket/form';
 import { creatTermControl } from '@blockframes/contract/negotiation';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { ExpenseType, RightholderRole, Term, WaterfallFile } from '@blockframes/model';
+import { ExpenseType, RightholderRole, Term, WaterfallFile, mainCurrency } from '@blockframes/model';
 
 
 export function createExpenseTypeControl(config?: Partial<ExpenseType>) {
@@ -19,6 +19,7 @@ export function createExpenseTypeControl(config?: Partial<ExpenseType>) {
   return {
     id: new FormControl<string>(config?.id ?? ''),
     name: new FormControl<string>(config?.name ?? ''),
+    currency: new FormControl<string>(config?.currency ?? mainCurrency),
     cap: new FormGroup({
       default: new FormControl<number>(config?.cap?.default ?? 0),
       version: new FormRecord(version)

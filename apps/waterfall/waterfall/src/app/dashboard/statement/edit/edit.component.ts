@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExpenseService } from '@blockframes/contract/expense/service';
 import { IncomeService } from '@blockframes/contract/income/service';
-import { createIncome, Statement, createExpense, Income } from '@blockframes/model';
+import { createIncome, Statement, createExpense, Income, Expense, Waterfall } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
@@ -29,7 +29,7 @@ export class StatementEditComponent implements OnInit, OnDestroy, StartementForm
     map(([statementId, statements]) => statements.find(s => s.id === statementId))
   );
 
-  private waterfall = this.shell.waterfall;
+  public waterfall$ = this.shell.waterfall$;
 
   public form: StatementForm;
   private sub: Subscription;
@@ -62,7 +62,7 @@ export class StatementEditComponent implements OnInit, OnDestroy, StartementForm
     this.sub?.unsubscribe();
   }
 
-  public async save(statement: Statement, redirect = false) {
+  public async save(statement: Statement, waterfall: Waterfall, redirect = false) {
     if (this.form.invalid) {
       this.snackBar.open('Information not valid', 'close', { duration: 5000 });
       return;
@@ -73,7 +73,7 @@ export class StatementEditComponent implements OnInit, OnDestroy, StartementForm
     statement.reported = value.reported;
     statement.duration = value.duration;
 
-    const declaredIncomes = this.waterfall.sources
+    const declaredIncomes = waterfall.sources
       .map(source => ({ source, incomes: value[source.id] as Income[] }))
       .filter(v => v.incomes?.length);
 
@@ -83,7 +83,7 @@ export class StatementEditComponent implements OnInit, OnDestroy, StartementForm
           ...i,
           medias: i.medias.filter(m => value.source.medias.includes(m)),
           territories: i.territories.filter(m => value.source.territories.includes(m)),
-          titleId: this.waterfall.id,
+          titleId: waterfall.id,
           contractId: statement.contractId,
           date: statement.duration.to,
         });
@@ -101,13 +101,21 @@ export class StatementEditComponent implements OnInit, OnDestroy, StartementForm
     // If incomeIds are removed from the statement, backend-function will remove them from the income collection
     statement.incomeIds = unique([...incomes.filter(i => i.id).map(i => i.id), ...newIncomeIds]);
 
-    const expenses = value.expenses.map(expense => createExpense({
-      ...expense,
-      titleId: this.waterfall.id,
-      contractId: statement.contractId,
-      rightholderId: statement.senderId,
-      date: statement.duration.to,
-    }));
+    const expenseTypes = waterfall.expenseTypes[statement.contractId || 'directSales'] || [];
+    const declaredExpenses = expenseTypes
+      .map(expenseType => ({ expenseType, expenses: value[expenseType.id] as Expense[] }))
+      .filter(v => v.expenses?.length);
+
+    const expenses = declaredExpenses.map(value => {
+      return value.expenses.map(expense => createExpense({
+        ...expense,
+        typeId: value.expenseType.id,
+        titleId: waterfall.id,
+        contractId: value.expenseType.contractId,
+        rightholderId: statement.senderId,
+        date: statement.duration.to,
+      }));
+    }).flat();
 
     await this.expenseService.update(expenses.filter(e => e.id));
     const newExpenseIds = await this.expenseService.add(expenses.filter(e => !e.id));
@@ -131,7 +139,7 @@ export class StatementEditComponent implements OnInit, OnDestroy, StartementForm
       delete statement.reported;
     }
 
-    await this.statementService.update(statement, { params: { waterfallId: this.waterfall.id } });
+    await this.statementService.update(statement, { params: { waterfallId: waterfall.id } });
 
     // Update the simulation for next step
     await this.shell.simulateWaterfall();
