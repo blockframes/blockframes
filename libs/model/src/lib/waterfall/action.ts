@@ -15,12 +15,13 @@ import {
   createPoolState,
   ContractState,
   createExpenseState,
+  createExpenseTypeState,
 } from './state';
 import { getMinThreshold } from './threshold';
 import { assertNode, getChildRights, getGroup, getNode, getNodeOrg, isGroupChild, isRight, updateNode } from './node';
 import { WaterfallContract, WaterfallSource, getAssociatedSource } from './waterfall';
 import { Income } from '../income';
-import { Expense } from '../expense';
+import { Expense, ExpenseType } from '../expense';
 import { Term } from '../terms';
 import { getContractAndAmendments, getDeclaredAmount } from '../contract';
 import { convertCurrenciesTo, sortByDate, sum } from '../utils';
@@ -68,6 +69,7 @@ const actions = {
    *  - condition('event', { eventId: 'fr_dvd_sold', operator: '<=', value: 4_000 })
    */
   emitEvent,
+  expenseType,
   expense,
   updateRight,
   /**
@@ -308,6 +310,20 @@ export function sourcesToAction(waterfallSources: WaterfallSource[]) {
   return actions;
 }
 
+export function expenseTypesToAction(expenseTypes: ExpenseType[], versionId: string) {
+  const actions: Action[] = [];
+
+  expenseTypes.forEach((c, index) => {
+    actions.push(action('expenseType', {
+      ...c,
+      cap: c.cap.version[versionId] ?? c.cap.default,
+      date: new Date(1 + (index * 1000)) // 01/01/1970 + "index" seconds 
+    }));
+  });
+
+  return actions;
+}
+
 export function incomesToActions(contracts: WaterfallContract[], incomes: Income[], sources: WaterfallSource[]) {
   const actions: Action[] = [];
 
@@ -346,7 +362,8 @@ export function expensesToActions(expenses: Expense[]) {
         id: e.id,
         orgId: e.rightholderId,
         amount,
-        type: e.type,
+        typeId: e.typeId,
+        capped: e.capped,
         date: e.date
       })
     );
@@ -592,19 +609,23 @@ interface ExpenseAction extends BaseAction {
   orgId: OrgState['id'];
   date: Date;
   amount: number;
-  type: string;
+  capped?: boolean;
+  typeId: string;
 }
 function expense(state: TitleState, payload: ExpenseAction) {
-  const { id, amount, orgId, type } = payload;
-
-  state.expense[type] ||= 0;
-  state.expense[type] += amount;
-
+  const { id, typeId } = payload;
+  if (!state.expenseTypes[typeId]) throw new Error(`Expense type "${typeId}" doesn't exist`);
   if (state.expenses[id]) throw new Error(`Expense "${id}" already exists`);
   state.expenses[id] = createExpenseState(payload);
+}
 
-  state.orgs[orgId] ||= createOrg({ id: orgId });
-  state.orgs[orgId].expense += amount;
+interface ExpenseTypeAction extends BaseAction {
+  id: string;
+  name: string;
+  cap: number;
+}
+function expenseType(state: TitleState, payload: ExpenseTypeAction) {
+  state.expenseTypes[payload.id] ||= createExpenseTypeState(payload);
 }
 
 export interface Bonus extends BaseAction {

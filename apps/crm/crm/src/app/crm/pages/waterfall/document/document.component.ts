@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { Scope, Term, WaterfallContract, getDeclaredAmount } from '@blockframes/model';
+import { Scope, Term, WaterfallContract, getDeclaredAmount, rightholderGroups } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
 import { filter, map, switchMap } from 'rxjs';
@@ -34,6 +34,10 @@ export class DocumentComponent {
 
   public rights$ = this.shell.rights$.pipe(
     map(rights => rights.filter(r => r.contractId === this.contractId))
+  );
+
+  public showExpenseTypes$ = this.contract$.pipe(
+    map(contract => rightholderGroups.withStatements.includes(contract.type))
   );
 
   constructor(

@@ -1,5 +1,5 @@
 
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, FormRecord } from '@angular/forms';
 
 import { WaterfallFileForm } from './file.form';
 
@@ -7,22 +7,30 @@ import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { BucketTermForm } from '@blockframes/contract/bucket/form';
 import { creatTermControl } from '@blockframes/contract/negotiation';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { ExpensesConfig, RightholderRole, Term, WaterfallFile } from '@blockframes/model';
+import { ExpenseType, RightholderRole, Term, WaterfallFile } from '@blockframes/model';
 
 
-export function createExpensesConfigControl(config?: Partial<ExpensesConfig>) {
+export function createExpenseTypeControl(config?: Partial<ExpenseType>) {
+
+  const version = {};
+  for (const key in config?.cap?.version) {
+    version[key] = new FormControl<number>(config.cap.version[key] ?? 0);
+  }
   return {
     id: new FormControl<string>(config?.id ?? ''),
     name: new FormControl<string>(config?.name ?? ''),
-    capped: new FormControl<number>(config?.capped ?? 0),
+    cap: new FormGroup({
+      default: new FormControl<number>(config?.cap?.default ?? 0),
+      version: new FormRecord(version)
+    })
   };
 }
 
-type ExpensesConfigControl = ReturnType<typeof createExpensesConfigControl>;
+type ExpenseTypeControl = ReturnType<typeof createExpenseTypeControl>;
 
-export class ExpensesConfigForm extends FormEntity<ExpensesConfigControl> {
-  constructor(config?: Partial<ExpensesConfig>) {
-    super(createExpensesConfigControl(config));
+export class ExpenseTypeForm extends FormEntity<ExpenseTypeControl> {
+  constructor(config?: Partial<ExpenseType>) {
+    super(createExpenseTypeControl(config));
   }
 }
 
@@ -45,7 +53,7 @@ export interface WaterfallDocumentFormValue {
 
   file: WaterfallFile;
 
-  expensesConfig: ExpensesConfig[];
+  expenseTypes: ExpenseType[];
 }
 
 function createWaterfallDocumentFormControl(contract: (Partial<WaterfallDocumentFormValue> & { id: string })) {
@@ -68,7 +76,7 @@ function createWaterfallDocumentFormControl(contract: (Partial<WaterfallDocument
 
     file: new WaterfallFileForm({ ...contract.file, id: contract.id }),
 
-    expensesConfig: FormList.factory(contract?.expensesConfig, c => ExpensesConfigForm.factory(c, createExpensesConfigControl)),
+    expenseTypes: FormList.factory(contract?.expenseTypes, c => ExpenseTypeForm.factory(c, createExpenseTypeControl)),
   };
 }
 
@@ -96,7 +104,7 @@ export class WaterfallDocumentForm extends FormEntity<WaterfallDocumentFormContr
       file: data.file || { id: data.id },
     });
     this.controls.terms.patchAllValue(data.terms || []);
-    this.controls.expensesConfig.patchAllValue(data.expensesConfig || []);
+    this.controls.expenseTypes.patchAllValue(data.expenseTypes || []);
     this.markAsPristine();
   }
 }

@@ -3,8 +3,8 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
 import { ExpenseType, createExpenseType } from '@blockframes/model';
 import { FormList } from '@blockframes/utils/form';
-import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
-import { ExpenseTypeForm } from '@blockframes/waterfall/form/document.form';
+import { WaterfallDocumentsService } from '../../documents.service';
+import { ExpenseTypeForm } from '../../form/document.form';
 
 @Component({
   selector: '[form]waterfall-expense-types',

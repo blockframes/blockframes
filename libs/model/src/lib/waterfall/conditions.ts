@@ -1,9 +1,9 @@
 import { IncomeAction as Income } from './action';
 import { investmentWithInterest } from './interest';
-import { RightState, TitleState } from './state';
+import { ExpenseState, RightState, TitleState } from './state';
 import { assertNode, getNode } from './node';
 import { GroupScope, Media, Territory } from '../static';
-
+import { sum } from '../utils';
 
 export const thresholdConditions = {
   /** Will compare current amount arriving on node with org revenue */
@@ -245,14 +245,42 @@ export function toTargetValue(state: TitleState, target: TargetValue) {
   switch (target.in) {
     case 'orgs.revenu': return state.orgs[id].revenu.calculated * percent;
     case 'orgs.turnover': return state.orgs[id].turnover.calculated * percent;
-    case 'orgs.expense': return state.orgs[id].expense * percent;
+    case 'orgs.expense': return getExpensesValue(state, Object.values(state.expenses).filter(e => e.orgId === id)) * percent;
     case 'rights.revenu': return getNode(state, id).revenu.calculated * percent;
     case 'rights.turnover': return getNode(state, id).turnover.calculated * percent;
     case 'pools.revenu': return state.pools[id].revenu.calculated * percent;
     case 'pools.turnover': return state.pools[id].turnover.calculated * percent;
     case 'investment': return state.investment * percent;
-    case 'expense': return (state.expense[id] ?? 0) * percent;
+    case 'expense': return getExpensesValue(state, Object.values(state.expenses).filter(e => e.typeId === id)) * percent;
   }
+}
+
+function getExpensesValue(state: TitleState, expenses: ExpenseState[]) {
+  const expenseTypes = Object.values(state.expenseTypes).filter(e => expenses.some(o => o.typeId === e.id));
+
+  const expensesByType = expenseTypes.map(t => {
+    if (t.cap > 0) {
+      return {
+        type: t.id,
+        expenses: {
+          capped: Math.min(sum(expenses.filter(e => e.typeId === t.id && e.capped).map(e => e.amount)), t.cap),
+          uncapped: sum(expenses.filter(e => e.typeId === t.id && !e.capped).map(e => e.amount))
+        }
+      }
+    } else {
+      return {
+        type: t.id,
+        expenses: {
+          capped: 0,
+          uncapped: sum(expenses.filter(e => e.typeId === t.id).map(e => e.amount))
+        }
+      }
+    }
+
+  });
+
+  const values = expensesByType.map(e => e.expenses.capped + e.expenses.uncapped);
+  return sum(values);
 }
 
 interface OrgRevenuCondition {

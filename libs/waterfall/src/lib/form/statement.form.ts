@@ -53,8 +53,9 @@ function createExpenseFormControl(expense?: Partial<Expense>) {
     status: new FormControl<string>(expense?.status ?? 'pending'),
     titleId: new FormControl<string>(expense?.titleId ?? ''),
     rightholderId: new FormControl<string>(expense?.rightholderId ?? ''),
-    type: new FormControl<string>(expense?.type ?? ''),
-    category: new FormControl<string>(expense?.category ?? ''),
+    typeId: new FormControl<string>(expense?.typeId ?? ''),
+    nature: new FormControl<string>(expense?.nature ?? ''),
+    capped: new FormControl<boolean>(expense?.capped ?? false),
   };
 }
 

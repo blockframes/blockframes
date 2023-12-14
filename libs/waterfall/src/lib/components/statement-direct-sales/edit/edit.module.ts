@@ -24,6 +24,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [StatementDirectSalesEditComponent],
@@ -51,6 +52,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatChipsModule,
     MatDialogModule,
     MatSelectModule,
+    MatSlideToggleModule,
   ],
   exports: [StatementDirectSalesEditComponent]
 })

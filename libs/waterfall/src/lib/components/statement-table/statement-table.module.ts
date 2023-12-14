@@ -8,7 +8,7 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { JoinPipeModule, MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { StatementPaymentModule } from '../statement-payment/statement-payment.module';
-import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
+import { RightHolderNamePipeModule } from '../../pipes/rightholder-name.pipe';
 import { ContractPipeModule } from '@blockframes/contract/contract/pipe';
 
 // Component

@@ -8,12 +8,14 @@ import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price
 import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { ContractPipeModule } from '@blockframes/contract/contract/pipe';
+import { ExpenseTypePipeModule } from '@blockframes/waterfall/pipes/expense-type';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [ExpensesComponent],
@@ -25,11 +27,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     RightHolderNamePipeModule,
     ToLabelModule,
     ContractPipeModule,
+    ExpenseTypePipeModule,
 
     MatIconModule,
     MatButtonModule,
     MatSnackBarModule,
     MatTooltipModule,
+    MatSlideToggleModule,
 
     // remove
     RouterModule.forChild([{ path: '', component: ExpensesComponent }])

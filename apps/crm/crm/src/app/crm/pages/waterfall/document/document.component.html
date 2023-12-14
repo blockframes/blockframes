@@ -112,4 +112,6 @@
       </ng-template>
     </bf-table>
   </ng-container>
+
+  <waterfall-expense-types-form *ngIf="showExpenseTypes$ | async" [contractId]="contract.id"></waterfall-expense-types-form>
 </ng-container>

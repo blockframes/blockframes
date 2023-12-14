@@ -27,7 +27,8 @@ import {
   Block,
   investmentsToActions,
   buildBlock,
-  sourcesToAction
+  sourcesToAction,
+  expenseTypesToAction
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { AuthService } from '@blockframes/auth/service';
@@ -137,7 +138,7 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
    * @returns 
    */
   private async _initWaterfall(data: WaterfallData, version: Partial<Version>) {
-    const blocks = buildBlocks(data, this.authService.uid);
+    const blocks = buildBlocks(data, this.authService.uid, version.id);
     const blockIds = await this.blockService.add(blocks, { params: { waterfallId: data.waterfall.id } });
 
     await this.addVersion(data.waterfall, version);
@@ -154,8 +155,8 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
    * @returns 
    */
   public simulateWaterfall(data: WaterfallData, date?: Date) {
-    const blocks = buildBlocks(data, this.authService.uid, { simulation: true });
     const version = createVersion({ id: 'simulation', name: 'Simulation' });
+    const blocks = buildBlocks(data, this.authService.uid, version.id, { simulation: true });
     const simulation = buildWaterfall('simulated-waterfall', version, blocks);
     return waterfallToDate(simulation, date);
   }
@@ -259,9 +260,10 @@ function waterfallToDate(build: WaterfallState, date?: Date) {
   return build;
 }
 
-function groupActions(data: WaterfallData, isSimulation = false) {
+function groupActions(data: WaterfallData, versionId: string, isSimulation = false) {
   // @dev "sourcesToAction" may be activated for real waterfall also (generate bad display for graph generated with G6 but not with new one)
   const sourceActions = isSimulation ? sourcesToAction(data.waterfall.sources) : [];
+  const expenseTypesActions = expenseTypesToAction(Object.values(data.waterfall.expenseTypes).flat(), versionId);
   const contractActions = contractsToActions(data.contracts, data.terms);
   const investmentActions = investmentsToActions(data.contracts, data.terms);
   const rightActions = rightsToActions(data.rights);
@@ -271,6 +273,7 @@ function groupActions(data: WaterfallData, isSimulation = false) {
 
   const groupedActions = groupByDate([
     ...sourceActions,
+    ...expenseTypesActions,
     ...contractActions,
     ...investmentActions,
     ...rightActions,
@@ -282,8 +285,8 @@ function groupActions(data: WaterfallData, isSimulation = false) {
   return groupedActions;
 }
 
-function buildBlocks(data: WaterfallData, createdBy: string, options?: { simulation: boolean }) {
-  const groupedActions = groupActions(data, options?.simulation);
+function buildBlocks(data: WaterfallData, createdBy: string, versionId: string, options?: { simulation: boolean }) {
+  const groupedActions = groupActions(data, versionId, options?.simulation);
 
   return groupedActions.map(group => {
     const blockName = getBlockName(group.date, group.actions);

@@ -22,6 +22,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [StatementDistributorEditComponent],
@@ -47,6 +48,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatTabsModule,
     MatChipsModule,
     MatDialogModule,
+    MatSlideToggleModule,
   ],
   exports: [StatementDistributorEditComponent]
 })
