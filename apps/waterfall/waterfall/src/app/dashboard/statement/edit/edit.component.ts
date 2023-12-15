@@ -74,7 +74,7 @@ export class StatementEditComponent implements OnInit, OnDestroy, StartementForm
     statement.duration = value.duration;
 
     const declaredIncomes = waterfall.sources
-      .map(source => ({ source, incomes: value[source.id] as Income[] }))
+      .map(source => ({ source, incomes: this.form.getIncomes(source.id) }))
       .filter(v => v.incomes?.length);
 
     const incomes = declaredIncomes.map(value => {
@@ -103,7 +103,7 @@ export class StatementEditComponent implements OnInit, OnDestroy, StartementForm
 
     const expenseTypes = waterfall.expenseTypes[statement.contractId || 'directSales'] || [];
     const declaredExpenses = expenseTypes
-      .map(expenseType => ({ expenseType, expenses: value[expenseType.id] as Expense[] }))
+      .map(expenseType => ({ expenseType, expenses: this.form.getExpenses(expenseType.id) }))
       .filter(v => v.expenses?.length);
 
     const expenses = declaredExpenses.map(value => {

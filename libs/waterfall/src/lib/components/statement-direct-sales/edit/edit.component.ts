@@ -33,7 +33,7 @@ export class StatementDirectSalesEditComponent implements OnChanges {
         if (missingIncomes.length) {
           this.form.addIncomes(missingIncomes, this.shell.waterfall.sources);
         }
-        this.form.addExpenseControls(expenseTypes);
+        this.form.addExpenseTypeControls(expenseTypes);
       }
 
       return this.statement;
@@ -58,7 +58,7 @@ export class StatementDirectSalesEditComponent implements OnChanges {
     const sources = ids.map(id => this.shell.waterfall.sources.find(s => s.id === id));
     const removedSources = previous.filter(s => !sources.find(source => source.id === s.id));
     for (const source of removedSources) {
-      this.form.removeControl(source.id);
+      this.form.removeSource(source.id);
     }
     this.sources$.next(sources);
   }

@@ -168,12 +168,12 @@ function createStatementFormControl(statement?: Partial<FullStatement>) {
 
   for (const source of statement?.sources ?? []) {
     const incomes = statement?.incomes.filter(i => getAssociatedSource(i, statement.sources).id === source.id);
-    controls[source.id] = FormList.factory(incomes, (el) => new IncomeForm(el));
+    controls[`incomes-${source.id}`] = FormList.factory(incomes, (el) => new IncomeForm(el));
   }
 
   for (const expenseType of statement?.expenseTypes ?? []) {
     const expenses = statement?.expenses.filter(e => e.typeId === expenseType.id) || [];
-    controls[expenseType.id] = FormList.factory(expenses, (el) => new ExpenseForm(el));
+    controls[`expenses-${expenseType.id}`] = FormList.factory(expenses, (el) => new ExpenseForm(el));
   }
 
   return controls;
@@ -203,6 +203,14 @@ export class StatementForm extends FormEntity<StatementFormControl> {
     }
   }
 
+  getSource(sourceId: string) {
+    return this.get(`incomes-${sourceId}` as any);
+  }
+
+  getIncomes(sourceId: string) {
+    return this.value[`incomes-${sourceId}`] as Income[];
+  }
+
   addIncomes(incomes: Income[], sources: WaterfallSource[]) {
     for (const income of incomes) {
       this.addIncome(income, sources);
@@ -212,14 +220,26 @@ export class StatementForm extends FormEntity<StatementFormControl> {
   addIncome(income: Income, sources: WaterfallSource[]) {
     const source = getAssociatedSource(income, sources);
     if (!this.controls[source.id]) {
-      this.addControl(source.id, FormList.factory([income], (el) => new IncomeForm(el)));
+      this.addControl(`incomes-${source.id}`, FormList.factory([income], (el) => new IncomeForm(el)));
     }
   }
 
-  addExpenseControls(expenseTypes: ExpenseType[]) {
-    for(const expenseType of expenseTypes) {
+  removeSource(sourceId: string) {
+    this.removeControl(`incomes-${sourceId}`);
+  }
+
+  getExpenseType(expenseTypeId: string) {
+    return this.get(`expenses-${expenseTypeId}` as any);
+  }
+
+  getExpenses(expenseTypeId: string) {
+    return this.value[`expenses-${expenseTypeId}`] as Expense[];
+  }
+
+  addExpenseTypeControls(expenseTypes: ExpenseType[]) {
+    for (const expenseType of expenseTypes) {
       if (!this.controls[expenseType.id]) {
-        this.addControl(expenseType.id, FormList.factory([], (el) => new ExpenseForm(el)));
+        this.addControl(`expenses-${expenseType.id}`, FormList.factory([], (el) => new ExpenseForm(el)));
       }
     }
   }
