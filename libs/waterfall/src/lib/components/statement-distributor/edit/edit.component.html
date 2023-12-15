@@ -5,117 +5,12 @@
   <mat-tab-group class="bf-tabs" *ngIf="(sources$ | async).length">
     <mat-tab *ngFor="let source of (sources$ | async)" [label]="source.name">
       <ng-template matTabContent>
-        <section class="surface">
-          <h3>{{ source.name }}</h3>
-          <p class="mat-body-1">You can personalise your receipts using the following elements.</p>
-          <bf-form-table [columns]="incomeColumns" [form]="form.get(source.id)" [defaultFormValue]="defaultIncomeValue(source)">
-            <!-- Columns -->
-            <ng-template colRef="" label="Gross Receipts" let-item>
-              <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
-            </ng-template>
-            <ng-template colRef="medias" label="Medias" let-medias>
-              <mat-chip-list *ngIf="medias.length else noMedias" aria-label="Medias">
-                <mat-chip disableRipple *ngFor="let media of medias  | toGroupLabel:'medias':'All'">
-                  {{ media }}
-                </mat-chip>
-              </mat-chip-list>
-              <ng-template #noMedias>--</ng-template>
-            </ng-template>
-            <ng-template colRef="territories" label="Territories" let-territories>
-              <span *ngIf="territories.length else noTerritories" class="group-label" (click)="openTerritoryModal(territories)">
-                {{ territories | toGroupLabel:'territories':'World' | join | maxLength:30 }}
-              </span>
-              <ng-template #noTerritories>--</ng-template>
-            </ng-template>
-    
-            <!-- Local Form -->
-            <ng-template formView let-incomeForm>
-              <form [formGroup]="incomeForm" class="group" fxLayout="column" fxLayoutGap="8px">
-                <group-multiselect *ngIf="incomeForm.get('medias')?.value"
-                  scope="medias"
-                  label="Select Rights"
-                  displayAll="All Rights"
-                  filterPlaceholder="Specify right(s) to filter"
-                  selectIcon="play_arrow"
-                  [control]="incomeForm.get('medias')">
-                </group-multiselect>
-          
-                <group-multiselect *ngIf="incomeForm.get('territories')?.value"
-                  scope="territories"
-                  label="Select Territories"
-                  displayAll="World"
-                  filterPlaceholder="Specify territories to filter"
-                  [control]="incomeForm.get('territories')">
-                </group-multiselect>
-
-                <static-select [control]="incomeForm.get('currency')" [only]="['USD', 'EUR']" required scope="movieCurrencies">
-                  <mat-label>Currency</mat-label>
-                </static-select>
-
-                <mat-form-field appearance="outline">
-                  <mat-label>Gross Receipts</mat-label>
-                  <input type="number" matInput [formControl]="incomeForm.get('price')" required/>
-                  <mat-icon matPrefix *ngIf="incomeForm.get('currency').value" [svgIcon]="incomeForm.get('currency').value"></mat-icon>
-                </mat-form-field>
-              </form>
-    
-            </ng-template>
-    
-            <ng-template saveButtonText>Save Receipt</ng-template>
-            <ng-template addButtonText>Add Receipt</ng-template>
-    
-          </bf-form-table>
-        </section>
+        <waterfall-income-form [statement]="statement" [form]="form" [sources]="[source]"></waterfall-income-form>
       </ng-template>
     </mat-tab>
     <mat-tab label="Expenses">
       <ng-template matTabContent>
-        <section class="surface">
-          <h3>Expenses</h3>
-          <p class="mat-body-1">Please note, only the capped sums will be used for the calculation.</p>
-          <bf-form-table [columns]="expenseColumns" [form]="form.get('expenses')" [defaultFormValue]="defaultExpenseValue()">
-            <!-- Columns -->
-            <ng-template colRef="" label="Amount" let-item>
-              <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
-            </ng-template>
-            <ng-template colRef="type" label="Type" let-type>
-              {{ type }}
-            </ng-template>
-            <ng-template colRef="category" label="Category" let-category>
-              {{ category }}
-            </ng-template>
-    
-            <!-- Local Form -->
-            <ng-template formView let-expenseForm>
-              <form [formGroup]="expenseForm" class="group" fxLayout="column" fxLayoutGap="8px">
-                <mat-form-field appearance="outline">
-                  <mat-label>Type</mat-label>
-                  <input matInput [formControl]="expenseForm.get('type')" required/>
-                </mat-form-field>
-          
-                <mat-form-field appearance="outline">
-                  <mat-label>Category</mat-label>
-                  <input matInput [formControl]="expenseForm.get('category')" required/>
-                </mat-form-field>
-
-                <static-select [control]="expenseForm.get('currency')" [only]="['USD', 'EUR']" required scope="movieCurrencies">
-                  <mat-label>Currency</mat-label>
-                </static-select>
-
-                <mat-form-field appearance="outline">
-                  <mat-label>Amount</mat-label>
-                  <input type="number" matInput [formControl]="expenseForm.get('price')" required/>
-                  <mat-icon matPrefix *ngIf="expenseForm.get('currency').value" [svgIcon]="expenseForm.get('currency').value"></mat-icon>
-                </mat-form-field>
-              </form>
-    
-            </ng-template>
-    
-            <ng-template saveButtonText>Save Expense</ng-template>
-            <ng-template addButtonText>Add Expense</ng-template>
-    
-          </bf-form-table>
-        </section>
+        <waterfall-expense-form [form]="form" [contractId]="statement.contractId"></waterfall-expense-form>
       </ng-template>
     </mat-tab>
   </mat-tab-group>
