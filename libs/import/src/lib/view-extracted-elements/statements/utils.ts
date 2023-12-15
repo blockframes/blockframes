@@ -123,7 +123,13 @@ export async function formatStatement(
       const contractId = isDirectSalesStatement(statement) ? 'directSales' : expense.contractId;
       if (!expenseTypes[contractId]) expenseTypes[contractId] = [];
       if (!expenseTypes[contractId].find(t => t.id === e.typeId)) {
-        expenseTypes[contractId].push(createExpenseType({ id: e.typeId, contractId, name: e.typeId, cap: { default: e.cap, version: {} } }));
+        expenseTypes[contractId].push(createExpenseType({
+          id: e.typeId,
+          contractId,
+          currency: e.currency,
+          name: e.typeId,
+          cap: { default: e.cap, version: {} }
+        }));
       }
       return expense;
     });
