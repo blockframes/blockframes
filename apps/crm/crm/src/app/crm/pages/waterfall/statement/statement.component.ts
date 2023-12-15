@@ -71,6 +71,7 @@ export class StatementComponent implements OnInit {
     filter(statement => !!statement),
   );
   public statement: Statement;
+  public versionId: string;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
@@ -103,8 +104,8 @@ export class StatementComponent implements OnInit {
       this.expenses = expenses.filter(e => statement.expenseIds.includes(e.id));
     }
 
-    const versionId = _versionId || this.waterfall.versions[0]?.id;
-    if (versionId) this.shell.setVersionId(versionId);
+    this.versionId = _versionId || this.waterfall.versions[0]?.id;
+    if (this.versionId) this.shell.setVersionId(this.versionId);
     this.shell.setDate(statement.duration.to);
     this.snackBar.open('Initializing waterfall... Please wait', 'close', { duration: 5000 });
     this.simulation = await this.shell.simulateWaterfall();
