@@ -5,7 +5,7 @@
       <span>Remove all expenses</span>
     </button>
   </section>
-  <bf-table [source]="expenses" clickable useFilter pagination="50">
+  <bf-table [source]="expenses" useFilter pagination="50">
     <ng-template colRef="id" label="Id" let-id sort>
       {{ id }}
     </ng-template>
