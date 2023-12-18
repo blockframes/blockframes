@@ -26,7 +26,7 @@ export class StatementDistributorEditComponent {
     map(([sources, _incomes, _expenses]) => {
       if (this.form.pristine) {
         const incomes = this.statement.incomeIds.map(id => _incomes.find(i => i.id === id));
-        const expenses = this.statement.expenseIds.map(id => _expenses.find(i => i.id === id));
+        const expenses = this.statement.expenseIds.map(id => _expenses.find(e => e.id === id));
 
         const expenseTypes = this.shell.waterfall.expenseTypes[this.statement.contractId] || [];
         const missingIncomes = createMissingIncomes(sources, incomes, this.statement, this.shell.waterfall);

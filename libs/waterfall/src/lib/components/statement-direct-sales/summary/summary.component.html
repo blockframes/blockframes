@@ -39,8 +39,15 @@
               >
                 <mat-icon svgIcon="statement_warning"></mat-icon>
               </button>
+              <ng-container *ngIf="item.type === 'expense' && item.cap">
+                <span class="cap">CAP: <price-per-currency [price]="item.cap"></price-per-currency></span>
+              </ng-container>
             </ng-template>
           </bf-table>
+          <div class="to-be-recouped" *ngIf="item.stillToBeRecouped">
+            Still to be recouped:
+            <price-per-currency [price]="item.stillToBeRecouped" default="€ 0"></price-per-currency>
+          </div>
         </mat-expansion-panel>
       </div>
     </ng-container>
@@ -62,26 +69,34 @@
           </mat-expansion-panel-header>
           <bf-table [source]="item.rows">
             <ng-template colRef="" label="Section" let-item>
-              {{ item.section }}
+              <span [class]="item.type">{{ item.section }}</span>
             </ng-template>
             <ng-template colRef="" label="Prior Period" let-item>
-              <price-per-currency class="right" [price]="item.previous" default="€ 0"></price-per-currency>
+              <price-per-currency [class]="item.type" [price]="item.previous" default="€ 0"></price-per-currency>
             </ng-template>
             <ng-template colRef="" label="Current Period" let-item>
-              <price-per-currency class="right" [price]="item.current" default="€ 0"></price-per-currency>
+              <price-per-currency [class]="item.type" [price]="item.current" default="€ 0"></price-per-currency>
             </ng-template>
             <ng-template colRef="" label="Cumulative" let-item>
-              <price-per-currency class="right" [price]="item.cumulated" default="€ 0"></price-per-currency>
+              <price-per-currency [class]="item.type" [price]="item.cumulated" default="€ 0"></price-per-currency>
             </ng-template>
             <ng-template colRef="" label="" let-item>
               <button mat-icon-button 
+                *ngIf="item.type === 'right'"
                 [disabled]="statement.status === 'reported'"
                 [matTooltip]="statement.status === 'reported' ? 'Statement is already reported.' : 'Change current value'"
               >
                 <mat-icon svgIcon="statement_warning"></mat-icon>
               </button>
+              <ng-container *ngIf="item.type === 'expense' && item.cap">
+                <span class="cap">CAP: <price-per-currency [price]="item.cap"></price-per-currency></span>
+              </ng-container>
             </ng-template>
           </bf-table>
+          <div class="to-be-recouped" *ngIf="item.stillToBeRecouped">
+            Still to be recouped:
+            <price-per-currency [price]="item.stillToBeRecouped" default="€ 0"></price-per-currency>
+          </div>
         </mat-expansion-panel>
       </div>
     </ng-container>

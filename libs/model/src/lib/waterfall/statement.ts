@@ -4,12 +4,11 @@ import { Duration, createDuration } from '../terms';
 import { sortByDate, sum } from '../utils';
 import { TitleState, TransferState } from './state';
 import { Waterfall, WaterfallContract, WaterfallSource, getAssociatedSource, getIncomesSources } from './waterfall';
-import { Right, getRightsCondition } from './right';
+import { Right, getRightExpenseTypes } from './right';
 import { getSources, isVerticalGroupChild, pathExists } from './node';
 import { Income, createIncome } from '../income';
 import { getContractsWith } from '../contract';
 import { mainCurrency } from './action';
-import { ConditionWithTarget, isConditionWithTarget } from './conditions';
 
 export interface Payment {
   id: string;
@@ -579,7 +578,5 @@ export function getStatementRightholderTag(statement: Statement) {
 
 export function hasRightsWithExpenseCondition(_rights: Right[], statement: Statement) {
   const rights = _rights.filter(r => r.rightholderId === statement.senderId);
-  const conditions = getRightsCondition(rights);
-  const conditionsWithTarget = conditions.filter(c => isConditionWithTarget(c)) as ConditionWithTarget[];
-  return conditionsWithTarget.some(c => typeof c.payload.target === 'object' && c.payload.target.in === 'expense');
+  return rights.some(r => getRightExpenseTypes(r).length > 0);
 }
