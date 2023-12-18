@@ -1,6 +1,13 @@
 import { Component, ChangeDetectionStrategy, Input, OnChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Statement, WaterfallSource, createMissingIncomes, getStatementSources } from '@blockframes/model';
+import {
+  Right,
+  Statement,
+  WaterfallSource,
+  createMissingIncomes,
+  getStatementSources,
+  hasRightsWithExpenseCondition,
+} from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { StatementForm } from '../../../form/statement.form';
 import { BehaviorSubject, combineLatest, map } from 'rxjs';
@@ -18,6 +25,7 @@ export class StatementDirectSalesEditComponent implements OnChanges {
 
   public sourcesControl = new FormControl<string[]>([]);
   public sources$ = new BehaviorSubject<WaterfallSource[]>([]);
+  public rights$ = this.shell.rights$;
 
   public statement$ = combineLatest([this.sources$, this.shell.incomes$, this.shell.expenses$, this.shell.waterfall$]).pipe(
     map(([sources, _incomes, _expenses, waterfall]) => {
@@ -61,6 +69,10 @@ export class StatementDirectSalesEditComponent implements OnChanges {
       this.form.removeSource(source.id);
     }
     this.sources$.next(sources);
+  }
+
+  public displayExpensesTab(_rights: Right[]) {
+    return hasRightsWithExpenseCondition(_rights || [], this.statement);
   }
 
 }

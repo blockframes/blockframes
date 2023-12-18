@@ -8,7 +8,7 @@
         <waterfall-income-form [statement]="statement" [form]="form" [sources]="[source]"></waterfall-income-form>
       </ng-template>
     </mat-tab>
-    <mat-tab label="Expenses">
+    <mat-tab label="Expenses" *ngIf="displayExpensesTab(rights$ | async)">
       <ng-template matTabContent>
         <waterfall-expense-form [form]="form" [contractId]="statement.contractId"></waterfall-expense-form>
       </ng-template>

@@ -118,6 +118,7 @@ export type ConditionList = {
 
 export type ThresholdCondition = ConditionList[keyof typeof thresholdConditions];
 export type BlockingCondition = ConditionList[keyof typeof blockingConditions];
+export type ConditionWithTarget = ConditionList[Exclude<keyof typeof thresholdConditions, 'interest'>];
 export type Condition = ThresholdCondition | BlockingCondition;
 
 interface ConditionContext {
@@ -129,8 +130,17 @@ interface ConditionContext {
 }
 
 export function isThresholdCondition(condition: Condition): condition is ThresholdCondition {
-  return Object.keys(thresholdConditions).includes(condition.name as any);
+  return Object.keys(thresholdConditions).includes(condition.name);
 }
+
+export function isCondition(condition: Condition | ConditionGroup): condition is Condition {
+  return !Array.isArray(condition);
+}
+
+export function isConditionWithTarget(condition: Condition): condition is ConditionWithTarget {
+  return Object.keys(thresholdConditions).filter(k => k !== 'interest').includes(condition.name);
+}
+
 export function splitConditions(group: ConditionGroup) {
   const thresholdCdts: ThresholdCondition[] = [];
   const blockingCdts: BlockingCondition[] = [];

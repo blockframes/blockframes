@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Statement, createMissingIncomes, getStatementSources } from '@blockframes/model';
+import { Right, Statement, createMissingIncomes, getStatementSources, hasRightsWithExpenseCondition } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { StatementForm } from '../../../form/statement.form';
 import { combineLatest, map, shareReplay } from 'rxjs';
@@ -14,6 +14,8 @@ export class StatementDistributorEditComponent {
 
   @Input() private statement: Statement;
   @Input() form: StatementForm;
+
+  public rights$ = this.shell.rights$;
 
   public sources$ = combineLatest([this.shell.incomes$, this.shell.rights$, this.shell.simulation$]).pipe(
     map(([incomes, rights, simulation]) => getStatementSources(this.statement, this.shell.waterfall.sources, incomes, rights, simulation.waterfall.state)),
@@ -35,5 +37,9 @@ export class StatementDistributorEditComponent {
   );
 
   constructor(private shell: DashboardWaterfallShellComponent) { }
+
+  public displayExpensesTab(_rights: Right[]) {
+    return this.shell.waterfall.expenseTypes[this.statement.contractId] && hasRightsWithExpenseCondition(_rights || [], this.statement);
+  }
 
 }
