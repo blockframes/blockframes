@@ -39,7 +39,7 @@ export class StatementDistributorEditComponent {
   constructor(private shell: DashboardWaterfallShellComponent) { }
 
   public displayExpensesTab(_rights: Right[]) {
-    return this.shell.waterfall.expenseTypes[this.statement.contractId] && hasRightsWithExpenseCondition(_rights || [], this.statement);
+    return this.shell.waterfall.expenseTypes[this.statement.contractId] && hasRightsWithExpenseCondition(_rights || [], this.statement, this.shell.waterfall);
   }
 
 }

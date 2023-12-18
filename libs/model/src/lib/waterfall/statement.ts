@@ -4,11 +4,12 @@ import { Duration, createDuration } from '../terms';
 import { sortByDate, sum } from '../utils';
 import { TitleState, TransferState } from './state';
 import { Waterfall, WaterfallContract, WaterfallSource, getAssociatedSource, getIncomesSources } from './waterfall';
-import { Right, getRightExpenseTypes } from './right';
+import { Right, getRightCondition } from './right';
 import { getSources, isVerticalGroupChild, pathExists } from './node';
 import { Income, createIncome } from '../income';
 import { getContractsWith } from '../contract';
 import { mainCurrency } from './action';
+import { ConditionWithTarget, isConditionWithTarget } from './conditions';
 
 export interface Payment {
   id: string;
@@ -576,7 +577,36 @@ export function getStatementRightholderTag(statement: Statement) {
   }
 }
 
-export function hasRightsWithExpenseCondition(_rights: Right[], statement: Statement) {
+export function hasRightsWithExpenseCondition(_rights: Right[], statement: Statement, waterfall: Waterfall) {
   const rights = _rights.filter(r => r.rightholderId === statement.senderId);
-  return rights.some(r => getRightExpenseTypes(r).length > 0);
+  return rights.some(r => getRightExpenseTypes(r, statement, waterfall).length > 0);
+}
+
+/**
+ * Return expense types defined in conditions of a right
+ * @param right 
+ * @param statement
+ * @param waterfall
+ * @returns 
+ */
+export function getRightExpenseTypes(right: Right, statement: Statement, waterfall: Waterfall) {
+  const conditions = getRightCondition(right);
+  const conditionsWithTarget = conditions.filter(c => isConditionWithTarget(c)) as ConditionWithTarget[];
+
+  const expenseTargets = conditionsWithTarget
+    .map(c => (typeof c.payload.target === 'object' && c.payload.target.in === 'expense') ? c.payload.target.id : undefined)
+    .filter(id => !!id);
+
+  const [orgId] = conditionsWithTarget
+    .map(c => (typeof c.payload.target === 'object' && c.payload.target.in === 'orgs.expense') ? c.payload.target.id : undefined)
+    .filter(id => !!id);
+
+  if (orgId) {
+    // @dev target contract.expense instead of org.expense would be more appropriate.
+    if (orgId !== statement.senderId) throw new Error(`Statement senderId ${statement.senderId} does not match expense target orgId ${orgId}`);
+    const orgExpenseTargets = waterfall.expenseTypes[statement.contractId || 'directSales'].map(e => e.id);
+    expenseTargets.push(...orgExpenseTargets);
+  }
+
+  return Array.from(expenseTargets);
 }

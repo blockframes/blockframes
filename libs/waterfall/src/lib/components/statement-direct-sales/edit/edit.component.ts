@@ -72,7 +72,7 @@ export class StatementDirectSalesEditComponent implements OnChanges {
   }
 
   public displayExpensesTab(_rights: Right[]) {
-    return hasRightsWithExpenseCondition(_rights || [], this.statement);
+    return hasRightsWithExpenseCondition(_rights || [], this.statement, this.shell.waterfall);
   }
 
 }

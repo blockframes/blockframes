@@ -126,7 +126,7 @@ export class StatementDistributorSummaryComponent {
           const cumulatedRightPayment = history.map(s => s.payments.right).flat().filter(p => p.to === right.id);
           cumulatedSum.push(...cumulatedRightPayment.map(r => ({ ...r, price: -r.price })));
 
-          const rightExpenseTypes = getRightExpenseTypes(right);
+          const rightExpenseTypes = getRightExpenseTypes(right, current, this.waterfall);
           for (const expenseTypeId of rightExpenseTypes) {
             const currentExpenses = _expenses.filter(e => e.typeId === expenseTypeId && current.expenseIds.includes(e.id));
             const previousExpenses = _expenses.filter(e => e.typeId === expenseTypeId && previous.map(s => s.expenseIds).flat().includes(e.id));
@@ -216,7 +216,7 @@ export class StatementDistributorSummaryComponent {
           const currentRightPayment = current.payments.right.filter(p => p.to === right.id);
           const cumulatedRightPayment = history.map(s => s.payments.right).flat().filter(p => p.to === right.id);
 
-          const rightExpenseTypes = getRightExpenseTypes(right);
+          const rightExpenseTypes = getRightExpenseTypes(right, current, this.waterfall);
           for (const expenseTypeId of rightExpenseTypes) {
             const currentExpenses = _expenses.filter(e => e.typeId === expenseTypeId && current.expenseIds.includes(e.id));
             const previousExpenses = _expenses.filter(e => e.typeId === expenseTypeId && previous.map(s => s.expenseIds).flat().includes(e.id));

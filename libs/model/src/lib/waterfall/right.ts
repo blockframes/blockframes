@@ -1,7 +1,7 @@
 import { DocumentMeta } from '../meta';
 import { RightType } from '../static/types';
 import { ActionName } from './action';
-import { Condition, ConditionGroup, ConditionWithTarget, isCondition, isConditionWithTarget } from './conditions';
+import { Condition, ConditionGroup, isCondition } from './conditions';
 
 export interface Right {
   _meta?: DocumentMeta;
@@ -65,20 +65,6 @@ export function orderRights(rights: Right[]): Right[] {
   return orderedRights;
 }
 
-function getRightCondition(right: Right) {
+export function getRightCondition(right: Right) {
   return (right.conditions?.conditions?.filter(c => isCondition(c)).filter(c => !!c) || []) as Condition[];
-}
-
-/**
- * Return expense types defined in conditions of a right
- * @param right 
- * @returns 
- */
-export function getRightExpenseTypes(right: Right) {
-  const conditions = getRightCondition(right);
-  const conditionsWithTarget = conditions.filter(c => isConditionWithTarget(c)) as ConditionWithTarget[];
-  
-  return conditionsWithTarget
-    .map(c => (typeof c.payload.target === 'object' && c.payload.target.in === 'expense') ? c.payload.target.id : undefined)
-    .filter(id => !!id);
 }
