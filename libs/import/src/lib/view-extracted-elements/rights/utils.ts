@@ -54,11 +54,15 @@ export async function formatRight(
 
     const right = createRight(data.right);
 
-    if (data.conditionA?.conditionName) {
+    if (data.conditionA?.conditionName || data.conditionB?.conditionName || data.conditionC?.conditionName) {
       right.conditions = {
         operator: 'AND',
-        conditions: [formatCondition(data.conditionA, rightholderCache[data.waterfallId])]
+        conditions: []
       }
+    }
+
+    if (data.conditionA?.conditionName) {
+      right.conditions.conditions.push(formatCondition(data.conditionA, rightholderCache[data.waterfallId]));
     }
 
     if (data.conditionB?.conditionName) {
