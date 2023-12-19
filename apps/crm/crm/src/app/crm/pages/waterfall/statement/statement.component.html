@@ -44,13 +44,6 @@
       </ng-template>
     </bf-table>
 
-    <ng-container *ngIf="statement.type === 'directSales'">
-      <h3>Expenses Types</h3>
-      <div class="surface">
-        <waterfall-expense-types-form contractId="directSales"></waterfall-expense-types-form>
-      </div>
-    </ng-container>
-  
     <ng-container *ngIf="expenses.length">
       <h3>Expenses</h3>
       <bf-table [source]="expenses" useFilter pagination="50">

@@ -37,13 +37,9 @@ export class StatementDirectSalesEditComponent implements OnChanges {
 
       if (this.form.pristine) {
         this.form.setAllValue({ ...this.statement, incomes: [...incomes, ...missingIncomes], expenses, sources, expenseTypes });
-      } else {
-        if (missingIncomes.length) {
-          this.form.addIncomes(missingIncomes, this.shell.waterfall.sources);
-        }
-        this.form.addExpenseTypeControls(expenseTypes);
+      } else if (missingIncomes.length) {
+        this.form.addIncomes(missingIncomes, this.shell.waterfall.sources);
       }
-
       return this.statement;
     })
   );
