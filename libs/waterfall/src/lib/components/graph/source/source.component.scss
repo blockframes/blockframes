@@ -32,4 +32,16 @@
     border: solid 2px var(--primary);
     box-shadow: 0px 6px 12px 0px rgba(0, 0, 0, 0.35);
   }
+
+  button {
+    position: absolute;
+    z-index: 3;
+
+    &.bottom {
+      top: calc(100% + 12px);
+    }
+    &.right {
+      left: calc(100% + 12px);
+    }
+  }
 }

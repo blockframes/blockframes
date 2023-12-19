@@ -14,6 +14,9 @@ export class WaterfallGraphHorizontalComponent {
 
   @Input() horizontal: HorizontalNode;
   @Input() selected: string;
+  @Input() editMode = false;
 
+  @Output() addChild = new EventEmitter<string>();
+  @Output() addSibling = new EventEmitter<string>();
   @Output() handleSelect = new EventEmitter<string>();
 }

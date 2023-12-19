@@ -14,4 +14,13 @@
   </svg>
 </ng-container>
 
-<p class="amount">{{vertical.data?.revenu?.calculated ?? 0 | bigNumber:'1.0-2' }}€</p>
+<price-per-currency class="amount" [price]="amount$ | async | formatPair" default="0€"></price-per-currency>
+
+<ng-container *ngIf="selected && editMode">
+  <button mat-mini-fab color="primary" class="right" (click)="handleAddSibling($event)">
+    <mat-icon svgIcon="add"></mat-icon>
+  </button>
+  <button mat-mini-fab color="primary" class="bottom" (click)="handleAddChild($event)">
+    <mat-icon svgIcon="add"></mat-icon>
+  </button>
+</ng-container>

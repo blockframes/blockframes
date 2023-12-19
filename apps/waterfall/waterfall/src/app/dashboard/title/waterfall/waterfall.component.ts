@@ -2,8 +2,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 // Blockframes
-import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 
 @Component({
   selector: 'waterfall-title-waterfall',
@@ -14,7 +14,6 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 export class WaterfallComponent {
   public waterfall$ = this.shell.waterfall$;
   public rights$ = this.shell.rights$;
-  public state$ = this.shell.state$;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,

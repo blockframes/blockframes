@@ -279,6 +279,8 @@ describe('User that is not owner of movie', () => {
       const ref = db.collection('waterfall/M001/rights');
       await assertFails(ref.get());
     });
+
+    // TODO TEST DELETING RIGHTS
   });
 
 });
