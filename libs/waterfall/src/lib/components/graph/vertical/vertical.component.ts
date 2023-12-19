@@ -24,7 +24,7 @@ export class WaterfallGraphVerticalComponent {
   @Output() handleSelect = new EventEmitter<string>();
 
   amount$ = this.shell.state$.pipe(
-    map(state => state.waterfall.state.transfers[this.vertical.id]?.amount ?? 0),
+    map(state => state.waterfall.state.rights[this.vertical.id]?.revenu.calculated ?? 0),
     startWith(0),
   );
 

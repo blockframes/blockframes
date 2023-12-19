@@ -18,7 +18,7 @@ export const thresholdConditions = {
    */
   orgTurnover,
   /**
-   * Simulator to org revenue.
+   * Similar to org revenue.
    * 
    * Example:
    * Org can be seller & investor but we might want to add a condition

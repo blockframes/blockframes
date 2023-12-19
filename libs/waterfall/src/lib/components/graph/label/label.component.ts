@@ -16,7 +16,7 @@ import { Arrow } from '../layout';
 export class WaterfallGraphLabelComponent {
 
   amount$ = this.shell.state$.pipe(
-    map(state => Object.values(state.waterfall.state.transfers).find(t => t.from === this.arrow.parentId && t.to === this.arrow.childId)?.amount ?? 0),
+    map(state => state.waterfall.state.transfers[`${this.arrow.parentId}->${this.arrow.childId}`]?.amount ?? 0),
     startWith(0),
   );
   @Input() arrow: Arrow;

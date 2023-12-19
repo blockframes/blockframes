@@ -13,7 +13,8 @@
     text-transform: uppercase;
   }
 
-  p.amount {
+  p.amount,
+  price-per-currency.amount {
     position: absolute;
     font-size: 12px;
     font-weight: 600;

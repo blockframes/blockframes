@@ -29,17 +29,12 @@ export class WaterfallGraphRightComponent implements OnChanges {
   @HostBinding('class.selected') selectedClass = false;
 
   amount$ = this.shell.state$.pipe(
-    map(state => state.waterfall.state.transfers[this.right.id]?.amount ?? 0),
+    map(state => state.waterfall.state.rights[this.right.id]?.revenu.calculated ?? 0),
     startWith(0),
   );
 
-  orgName$ = this.shell.waterfall$.pipe(
-    map(waterfall => waterfall.rightholders.find(r => r.id === this.right.rightHolderId)?.name ?? ''),
-    startWith(''),
-  );
-
   constructor(
-    private shell: DashboardWaterfallShellComponent,
+    public shell: DashboardWaterfallShellComponent,
   ) { }
 
   ngOnChanges() {

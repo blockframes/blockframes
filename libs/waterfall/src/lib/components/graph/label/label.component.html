@@ -1,2 +1,2 @@
 
-<p>{{ amount$ | async | bigNumber:'1.0-2' }}€</p>
+<price-per-currency [price]="amount$ | async | formatPair" default="0€"></price-per-currency>

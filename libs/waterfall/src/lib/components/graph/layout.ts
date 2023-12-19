@@ -2,7 +2,7 @@
 import { graphlib, layout } from 'dagre';
 import LayoutEngine, { ElkExtendedEdge, ElkNode } from 'elkjs/lib/elk.bundled';
 
-import { Media, Right, Territory, WaterfallSource } from '@blockframes/model';
+import { Media, Right, Territory, WaterfallSource, createWaterfallSource } from '@blockframes/model';
 
 
 
@@ -699,6 +699,53 @@ export function createChild(parentId: string, graph: Node[]) {
 }
 
 
+
+function createHorizontal(node: Node, parents?: string[]): Right {
+  return {
+    id: node.id,
+    name: node.name,
+    groupId: '',
+    nextIds: parents ?? [],
+    rightholderId: '',
+    type: 'horizontal',
+    percent: 0,
+    actionName: 'prepend',
+    pools: [], // TODO
+    order: 0, // TODO
+  };
+}
+
+function createVertical(node: Node, parents?: string[]): Right {
+  return {
+    id: node.id,
+    name: node.name,
+    groupId: node.id,
+    nextIds: parents ?? [],
+    rightholderId: '',
+    type: 'vertical',
+    percent: 0,
+    actionName: 'prepend',
+    pools: [], // TODO
+    order: 0, // TODO
+  };
+}
+
+function createRight(node: RightNode, parents?: string[]): Right {
+  return {
+    id: node.id,
+    name: node.name,
+    groupId: node.id,
+    nextIds: parents ?? [],
+    rightholderId: node.rightHolderId,
+    type: 'unknown',
+    percent: node.percent,
+    actionName: 'prepend',
+    pools: [], // TODO
+    order: 0, // TODO
+  };
+}
+
+
 export function fromGraph(graph: readonly Node[]) {
 
   const rights: Right[] = [];
@@ -714,119 +761,35 @@ export function fromGraph(graph: readonly Node[]) {
 
   graph.forEach(node => {
     if (node.type === 'source') {
-      const source: WaterfallSource = {
+      const source = createWaterfallSource({
         id: node.id,
         name: node.name,
         medias: node.medias,
         territories: node.territories,
         destinationId: node.children[0],
-      };
+      });
       if (node.children.length > 1) console.warn(`Source (${node.id}) with multiple children: children should have been in a single group instead!`);
       sources.push(source);
     } else {
       if (node.type === 'horizontal') {
-        const hGroup: Right = {
-          id: node.id,
-          name: node.name,
-          groupId: '',
-          nextIds: parentIndex[node.id] ?? [],
-          rightholderId: '',
-          type: 'horizontal',
-          percent: 0,
-          actionName: 'prepend',
-          pools: [], // TODO
-          order: 0, // TODO
-        };
-        rights.push(hGroup);
+        rights.push(createHorizontal(node, parentIndex[node.id]));
         node.members.forEach(member => {
           if (member.type === 'vertical') {
-            const vGroup: Right = {
-              id: member.id,
-              name: member.name,
-              groupId: node.id,
-              nextIds: [],
-              rightholderId: '',
-              type: 'vertical',
-              percent: 0,
-              actionName: 'prepend',
-              pools: [], // TODO
-              order: 0, // TODO
-            };
-            rights.push(vGroup);
+            rights.push(createVertical(member));
             member.members.forEach(subMember => {
-              const right: Right = {
-                id: subMember.id,
-                name: subMember.name,
-                groupId: member.id,
-                nextIds: [],
-                rightholderId: subMember.rightHolderId,
-                type: 'unknown',
-                percent: subMember.percent,
-                actionName: 'prepend',
-                pools: [], // TODO
-                order: 0, // TODO
-              };
-              rights.push(right);
+              rights.push(createRight(subMember));
             });
           } else {
-            const right: Right = {
-              id: member.id,
-              name: member.name,
-              groupId: node.id,
-              nextIds: [],
-              rightholderId: member.rightHolderId,
-              type: 'unknown',
-              percent: member.percent,
-              actionName: 'prepend',
-              pools: [], // TODO
-              order: 0, // TODO
-            };
-            rights.push(right);
+            rights.push(createRight(member));
           }
         });
       } else if (node.type === 'vertical') {
-        const vGroup: Right = {
-          id: node.id,
-          name: node.name,
-          groupId: '',
-          nextIds: parentIndex[node.id] ?? [],
-          rightholderId: '',
-          type: 'vertical',
-          percent: 0,
-          actionName: 'prepend',
-          pools: [], // TODO
-          order: 0, // TODO
-        };
-        rights.push(vGroup);
+        rights.push(createVertical(node, parentIndex[node.id]));
         node.members.forEach(member => {
-          const right: Right = {
-            id: member.id,
-            name: member.name,
-            groupId: node.id,
-            nextIds: [],
-            rightholderId: member.rightHolderId,
-            type: 'unknown',
-            percent: member.percent,
-            actionName: 'prepend',
-            pools: [], // TODO
-            order: 0, // TODO
-          };
-          rights.push(right);
+          rights.push(createRight(member));
         });
       } else {
-        const right: Right = {
-          id: node.id,
-          name: node.name,
-          groupId: '',
-          nextIds: parentIndex[node.id] ?? [],
-          rightholderId: node.rightHolderId,
-          type: 'unknown',
-          percent: node.percent,
-          actionName: 'prepend',
-          pools: [], // TODO
-          order: 0, // TODO
-        };
-        rights.push(right);
+        rights.push(createRight(node, parentIndex[node.id]));
       }
     }
   });

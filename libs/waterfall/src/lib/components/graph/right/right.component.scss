@@ -83,7 +83,8 @@
       }
     }
 
-    p.amount {
+    p.amount,
+    price-per-currency.amount {
       position: absolute;
       top: 0;
       right: 0;

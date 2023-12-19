@@ -4,13 +4,13 @@
   [ngStyle]="{ border: 'solid 1px ' + right.color, boxShadow: '0px 0px 12px 0px ' + right.color, backgroundColor: selected ? 'color-mix(in srgb, ' + right.color +' 30%, transparent)' : '#F3F6FF' }"
 >
   <p class="nodrag name" [matTooltip]="right.name || 'Right Name'">{{right.name || 'Right Name'}}</p>
-  <p class="nodrag label" [ngStyle]="{'--color': right.color}" >{{(right.percent ?? -12).toLocaleString(undefined, {maximumFractionDigits: 2})}}%</p>
-  <p class="nodrag org">{{orgName$ | async}}</p>
+  <p class="nodrag label" [ngStyle]="{'--color': right.color}" >{{ (right.percent ?? 0).toLocaleString(undefined, {maximumFractionDigits: 2}) }}%</p>
+  <p class="nodrag org">{{ right.rightHolderId | rightholderName: shell.waterfall }}</p>
   <div class="nodrag total">
     <mat-icon svgIcon="monetization"></mat-icon>
-    <p class="nodrag">Total Revenue: {{ amount$ | async | bigNumber:'1.0-2' }}€</p>
+    <p class="nodrag">Total Revenue: <price-per-currency [price]="amount$ | async | formatPair" default="0€"></price-per-currency></p>
   </div>
-  <p *ngIf="!hideAmount" class="nodrag amount">{{ amount$ | async | bigNumber:'1.0-2' }}€</p>
+  <price-per-currency *ngIf="!hideAmount" class="nodrag amount" [price]="amount$ | async | formatPair" default="0€"></price-per-currency>
 </div>
 
 <ng-container *ngIf="selected && editMode">
