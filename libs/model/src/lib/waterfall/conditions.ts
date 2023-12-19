@@ -262,6 +262,7 @@ export function toTargetValue(state: TitleState, target: TargetValue) {
     case 'pools.turnover': return state.pools[id].turnover.calculated * percent;
     case 'investment': return state.investment * percent;
     case 'expense': return getExpensesValue(state, Object.values(state.expenses).filter(e => e.typeId === id)) * percent;
+    default: throw new Error(`Target "${target.in}" not supported.`);
   }
 }
 

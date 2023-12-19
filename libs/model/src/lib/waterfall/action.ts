@@ -350,7 +350,7 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: (Incom
     );
   };
 
-  for (const c of incomes.filter(i => isCompensation(i) && i.status === 'received').map(i => i as Compensation)) {
+  for (const c of incomes.filter(i => isCompensation(i) && i.status === 'received').map(c => c as Compensation)) {
     const { [mainCurrency]: amount } = convertCurrenciesTo({ [c.currency]: c.price }, mainCurrency);
     actions.push(
       action('income', {
