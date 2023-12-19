@@ -83,7 +83,8 @@
       }
     }
 
-    p.amount {
+    p.amount,
+    price-per-currency.amount {
       position: absolute;
       top: 0;
       right: 0;
@@ -109,6 +110,22 @@
         &:after {
           border-right: 8px solid color-mix(in srgb, var(--color) 27%, #F3F6FF);
         }
+      }
+    }
+
+    button {
+      position: absolute;
+      z-index: 3;
+  
+      &.bottom {
+        top: calc(100% + 12px);
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      &.right {
+        left: calc(100% + 12px);
+        top: 50%;
+        transform: translateY(-50%);
       }
     }
   }

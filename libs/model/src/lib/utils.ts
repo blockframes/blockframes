@@ -282,6 +282,7 @@ export function toLabel(
   endWith?: string
 ): string {
   if (!value) return '';
+  if (!scope && typeof value === 'string') return value;
   try {
     if (Array.isArray(value)) {
       return smartJoin(
