@@ -8,6 +8,10 @@
   border: dashed 1px var(--accent);
   padding: 32px;
 
+  waterfall-graph-right {
+    position: relative;
+  }
+
   p {
     position: absolute;
     top: 0px;

@@ -10,20 +10,20 @@ import {
   EventEmitter,
   OnDestroy
 } from '@angular/core';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { UntypedFormControl } from '@angular/forms';
-import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 // RxJs
 import { Observable, Subscription } from 'rxjs';
 import { startWith, map, distinctUntilChanged } from 'rxjs/operators';
 
 // Blockframes
-import { staticModel, Scope } from '@blockframes/model';
-import { boolean } from '@blockframes/utils/decorators/decorators';
 import { FormList } from '@blockframes/utils/form';
+import { staticModel, Scope } from '@blockframes/model';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
   selector: '[form]chips-autocomplete',
@@ -38,7 +38,7 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
    * @example
    * <chips-autocomplete scope="TERRITORIES" ...
    */
-  @Input() scope: Scope;
+  @Input() scope?: Scope;
   @Input() selectable = true;
   @Input() removable = true;
   @Input() disabled = false;
@@ -46,15 +46,15 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
   @Input() @boolean required: boolean;
   /* Values should be unique in the input */
   @Input() @boolean uniqueValues: boolean;
-  @Input() withoutValues: string[] = []
+  @Input() withoutValues: string[] = [];
   // The parent form to connect to
   @Input()
   get form(): FormList<unknown> { return this._form }
   set form(form) {
-    this._form = form
+    this._form = form;
     this.values$ = form.valueChanges.pipe(startWith(this.form.value));
   };
-  private _form
+  private _form;
 
   @Output() added = new EventEmitter<string>();
   @Output() removed = new EventEmitter<number>();
@@ -73,16 +73,16 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.items = this.withoutValues.length
-      ? Object.keys(staticModel[this.scope]).filter((keys) => !this.withoutValues.includes(keys))
-      : Object.keys(staticModel[this.scope]);
+      ? Object.keys(staticModel[this.scope] ?? {}).filter((keys) => !this.withoutValues.includes(keys))
+      : Object.keys(staticModel[this.scope] ?? {});
 
     this.filteredItems$ = this.ctrl.valueChanges.pipe(
       startWith(''),
-      map(value => (value ? this._filter(value) : this.items).sort((a, b) => a.localeCompare(b)))
+      map(value => (value ? this._filter(value) : this.items).sort((a, b) => a.localeCompare(b))),
     );
     this.sub = this.form.valueChanges.pipe(
       map(res => !!res.length),
-      distinctUntilChanged()
+      distinctUntilChanged(),
     ).subscribe(isDirty => isDirty ? this.form.markAsDirty() : this.form.markAsPristine());
   }
 
@@ -92,6 +92,7 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   /** Filter the items */
   private _filter(value: string) {
+    if (!this.scope) return [];
     const filterValue = value.toLowerCase();
     return this.items.filter(item => {
       return staticModel[this.scope][item].toLowerCase().includes(filterValue);
@@ -101,6 +102,13 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
   /** Add a chip based on key code */
   public add({ value }: MatChipInputEvent) {
     value.trim();
+    if (!this.scope) {
+      this.form.add(value);
+      this.added.emit(value);
+      this.inputEl.nativeElement.value = '';
+      this.ctrl.setValue(null);
+      return;
+    }
     const keyByValue = getKeyIfExists(this.scope, value)
     if (value && keyByValue) {
       if (this.uniqueValues && !this.form.value.includes(keyByValue)) {
@@ -111,7 +119,7 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
         this.added.emit(value);
       }
     }
-    this.inputEl.nativeElement.value = ''
+    this.inputEl.nativeElement.value = '';
     this.ctrl.setValue(null);
   }
 
