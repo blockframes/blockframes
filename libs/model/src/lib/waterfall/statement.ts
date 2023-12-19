@@ -6,7 +6,7 @@ import { TitleState, TransferState } from './state';
 import { Waterfall, WaterfallContract, WaterfallSource, getAssociatedSource, getIncomesSources } from './waterfall';
 import { Right, getRightCondition } from './right';
 import { getSources, isVerticalGroupChild, pathExists } from './node';
-import { Income, createIncome } from '../income';
+import { Compensation, Income, createCompensation, createIncome } from '../income';
 import { getContractsWith } from '../contract';
 import { mainCurrency } from './action';
 import { ConditionWithTarget, isConditionWithTarget } from './conditions';
@@ -115,6 +115,7 @@ export interface Statement {
     rightholder?: RightholderPayment;
   };
   comment: string;
+  compensations: Compensation[];
 }
 
 export interface DistributorStatement extends Statement {
@@ -168,6 +169,7 @@ function createStatementBase(params: Partial<Statement> = {}): Statement {
     comment: params.comment || '',
     ...params,
     duration: createDuration(params?.duration),
+    compensations: params.compensations ? params.compensations.map(createCompensation) : []
   };
 }
 
@@ -490,9 +492,10 @@ export function generatePayments(statement: Statement, state: TitleState, rights
 
     const isInternal = right.rightholderId === statement.senderId;
     const amountPerIncome = statement.incomeIds.map(incomeId => ({ incomeId, amount: getCalculatedAmount(right.id, incomeId, state.transfers) }));
+    const amountPerCompensation = statement.compensations.map(c => ({ incomeId: c.id, amount: getCalculatedAmount(right.id, c.id, state.transfers) }));
     const payment = createRightPayment({
       to: right.id,
-      price: sum(amountPerIncome, i => i.amount),
+      price: sum(amountPerIncome, i => i.amount) + (sum(amountPerCompensation, i => i.amount)),
       currency,
       date: isInternal ? statement.duration.to : undefined,
       incomeIds: amountPerIncome.map(i => i.incomeId).filter(id => {

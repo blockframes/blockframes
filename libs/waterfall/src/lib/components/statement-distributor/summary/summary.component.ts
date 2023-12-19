@@ -4,6 +4,7 @@ import {
   PricePerCurrency,
   RightPayment,
   Statement,
+  createCompensation,
   filterStatements,
   generatePayments,
   getAssociatedRights,
@@ -22,6 +23,17 @@ import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { StatementForm } from '../../../form/statement.form';
 import { combineLatest, map, shareReplay, switchMap } from 'rxjs';
+import { StatementService } from '@blockframes/waterfall/statement.service';
+
+interface BreakdownRow { 
+  section: string, 
+  type?: 'right' | 'net' | 'expense', 
+  previous: PricePerCurrency, 
+  current: PricePerCurrency, 
+  cumulated: PricePerCurrency, 
+  rightId?: string, 
+  cap?: PricePerCurrency
+}
 
 @Component({
   selector: 'waterfall-statement-distributor-summary',
@@ -50,13 +62,14 @@ export class StatementDistributorSummaryComponent {
       // Refresh waterfall if some incomes or expenses are not in the simulated waterfall
       const missingIncomeIds = this.statement.incomeIds.filter(i => !simulation.waterfall.state.incomes[i]);
       const missingExpenseIds = this.statement.expenseIds.filter(i => !simulation.waterfall.state.expenses[i]);
-      if (missingIncomeIds.length || missingExpenseIds.length) {
+      const missingCompensations = this.statement.compensations.filter(c => !simulation.waterfall.state.incomes[c.id]);
+      if (missingIncomeIds.length || missingExpenseIds.length || missingCompensations.length) {
 
         const missingIncomes = incomes.filter(i => missingIncomeIds.includes(i.id));
         const missingExpenses = expenses.filter(e => missingExpenseIds.includes(e.id));
 
         await this.shell.appendToSimulation({
-          incomes: missingIncomes.map(i => ({ ...i, status: 'received' })),
+          incomes: [...missingIncomes, ...missingCompensations].map(i => ({ ...i, status: 'received' })),
           expenses: missingExpenses.map(e => ({ ...e, status: 'received' })),
         });
 
@@ -94,7 +107,7 @@ export class StatementDistributorSummaryComponent {
       const orderedRights = getOrderedRights(displayedRights, simulation.waterfall.state);
 
       return sources.map(source => {
-        const rows: { section: string, type?: 'right' | 'net' | 'expense', previous: PricePerCurrency, current: PricePerCurrency, cumulated: PricePerCurrency, rightId?: string, cap?: PricePerCurrency }[] = [];
+        const rows: BreakdownRow[] = [];
 
         // Incomes declared by statement.senderId
         const previousSourcePayments = previous.map(s => s.payments.income).flat().filter(income => getAssociatedSource(incomes.find(i => i.id === income.incomeId), this.waterfall.sources).id === source.id);
@@ -205,7 +218,7 @@ export class StatementDistributorSummaryComponent {
       const rightTypes = unique(rightsWithManySources.map(right => right.type));
 
       return rightTypes.map(type => {
-        const rows: { section: string, type?: 'right' | 'expense', previous: PricePerCurrency, current: PricePerCurrency, cumulated: PricePerCurrency, rightId: string, cap?: PricePerCurrency }[] = [];
+        const rows: BreakdownRow[] = [];
 
         const stillToBeRecouped: { price: number, currency: MovieCurrency }[] = [];
         for (const right of rightsWithManySources) {
@@ -268,6 +281,23 @@ export class StatementDistributorSummaryComponent {
 
   private waterfall = this.shell.waterfall;
 
-  constructor(private shell: DashboardWaterfallShellComponent) { }
+  constructor(
+    private shell: DashboardWaterfallShellComponent,
+    private statementService: StatementService
+  ) { }
+
+
+  public async editRightPayment(row: BreakdownRow, statement: Statement) {
+
+    if(!statement.compensations.find(c => c.id === 'compensation')) {
+      // TODO #9524 update form, regenerate payments, update simulation ...
+      const compensation = createCompensation({ id: 'compensation', price: 1000, currency: 'EUR', date: statement.duration.to, to: row.rightId, from: 'playtime_com_cine'});
+
+      await this.statementService.update(statement.id, { compensations: [compensation] }, { params: { waterfallId: this.waterfall.id } });
+    } else {
+      // tmp remove compensation
+      await this.statementService.update(statement.id, { compensations: [] }, { params: { waterfallId: this.waterfall.id } });
+    }
+  }
 
 }
