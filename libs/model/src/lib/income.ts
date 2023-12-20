@@ -35,4 +35,3 @@ export function createIncome(params: Partial<Income> = {}): Income {
     ...params,
   };
 }
-

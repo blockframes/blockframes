@@ -516,7 +516,7 @@ export function generatePayments(statement: Statement, state: TitleState, rights
     const amountPerIncome = statement.incomeIds.map(incomeId => ({ incomeId, amount: getCalculatedAmount(right.id, incomeId, state.transfers) }));
     const payment = createRightPayment({
       to: right.id,
-      price: sum(amountPerIncome, i => i.amount), 
+      price: sum(amountPerIncome, i => i.amount),
       currency,
       date: isInternal ? statement.duration.to : undefined,
       incomeIds: amountPerIncome.map(i => i.incomeId).filter(id => {
