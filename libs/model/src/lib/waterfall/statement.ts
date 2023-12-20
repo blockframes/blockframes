@@ -4,9 +4,9 @@ import { Duration, createDuration } from '../terms';
 import { sortByDate, sum } from '../utils';
 import { TitleState, TransferState } from './state';
 import { Waterfall, WaterfallContract, WaterfallSource, getAssociatedSource, getIncomesSources } from './waterfall';
-import { Right, getRightCondition } from './right';
+import { Right, RightOverride, createRightOverride, getRightCondition } from './right';
 import { getSources, isVerticalGroupChild, pathExists } from './node';
-import { Compensation, Income, createCompensation, createIncome } from '../income';
+import { Income, createIncome } from '../income';
 import { getContractsWith } from '../contract';
 import { mainCurrency } from './action';
 import { ConditionWithTarget, isConditionWithTarget } from './conditions';
@@ -115,7 +115,7 @@ export interface Statement {
     rightholder?: RightholderPayment;
   };
   comment: string;
-  compensations: Compensation[];
+  rightOverrides: RightOverride[];
 }
 
 export interface DistributorStatement extends Statement {
@@ -169,7 +169,7 @@ function createStatementBase(params: Partial<Statement> = {}): Statement {
     comment: params.comment || '',
     ...params,
     duration: createDuration(params?.duration),
-    compensations: params.compensations ? params.compensations.map(createCompensation) : []
+    rightOverrides: params.rightOverrides ? params.rightOverrides.map(createRightOverride) : []
   };
 }
 
@@ -446,16 +446,38 @@ function skipGroups(rights: Right[]) {
 }
 
 /**
+ * Look into transfer state to find the history transfers for this rightId and incomeIds
+ * @param rightId 
+ * @param _incomeIds 
+ * @param transferState 
+ */
+function getTransfersHistory(rightId: string, _incomeIds: string[] | string, transferState: Record<string, TransferState>) {
+  const incomeIds = Array.isArray(_incomeIds) ? _incomeIds : [_incomeIds];
+  const transfers = Object.values(transferState).filter(t => t.to === rightId);
+  return transfers.map(t => t.history.filter(h => h.checked && incomeIds.includes(h.incomeId))).flat();
+}
+
+/**
+ * Look into transfer state to find the incoming amount for this rightId and incomeIds
+ * @param rightId 
+ * @param _incomeIds 
+ * @param transferState 
+ * @returns number
+ */
+export function getIncomingAmount(rightId: string, incomeIds: string[] | string, transferState: Record<string, TransferState>): number {
+  const history = getTransfersHistory(rightId, incomeIds, transferState);
+  return sum(history, i => i.amount);
+}
+
+/**
  * Look into transfer state to find the calculated amount for this rightId and incomeIds
  * @param rightId 
  * @param _incomeIds 
  * @param transferState 
  * @returns number
  */
-export function getCalculatedAmount(rightId: string, _incomeIds: string[] | string, transferState: Record<string, TransferState>): number {
-  const incomeIds = Array.isArray(_incomeIds) ? _incomeIds : [_incomeIds];
-  const transfers = Object.values(transferState).filter(t => t.to === rightId);
-  const history = transfers.map(t => t.history.filter(h => h.checked && incomeIds.includes(h.incomeId))).flat();
+export function getCalculatedAmount(rightId: string, incomeIds: string[] | string, transferState: Record<string, TransferState>): number {
+  const history = getTransfersHistory(rightId, incomeIds, transferState);
   return sum(history, i => i.amount * i.percent);
 }
 
@@ -492,10 +514,9 @@ export function generatePayments(statement: Statement, state: TitleState, rights
 
     const isInternal = right.rightholderId === statement.senderId;
     const amountPerIncome = statement.incomeIds.map(incomeId => ({ incomeId, amount: getCalculatedAmount(right.id, incomeId, state.transfers) }));
-    const amountPerCompensation = statement.compensations.map(c => ({ incomeId: c.id, amount: getCalculatedAmount(right.id, c.id, state.transfers) }));
     const payment = createRightPayment({
       to: right.id,
-      price: sum(amountPerIncome, i => i.amount) + (sum(amountPerCompensation, i => i.amount)),
+      price: sum(amountPerIncome, i => i.amount), 
       currency,
       date: isInternal ? statement.duration.to : undefined,
       incomeIds: amountPerIncome.map(i => i.incomeId).filter(id => {

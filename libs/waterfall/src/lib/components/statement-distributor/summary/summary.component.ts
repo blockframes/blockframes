@@ -4,11 +4,13 @@ import {
   PricePerCurrency,
   RightPayment,
   Statement,
-  createCompensation,
+  convertCurrenciesTo,
+  createRightOverride,
   filterStatements,
   generatePayments,
   getAssociatedRights,
   getAssociatedSource,
+  getIncomingAmount,
   getOrderedRights,
   getRightExpenseTypes,
   getSources,
@@ -16,7 +18,9 @@ import {
   getStatementRightsToDisplay,
   getStatementSources,
   getTotalPerCurrency,
+  mainCurrency,
   sortStatements,
+  sum,
   toLabel
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
@@ -25,14 +29,15 @@ import { StatementForm } from '../../../form/statement.form';
 import { combineLatest, map, shareReplay, switchMap } from 'rxjs';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 
-interface BreakdownRow { 
-  section: string, 
-  type?: 'right' | 'net' | 'expense', 
-  previous: PricePerCurrency, 
-  current: PricePerCurrency, 
-  cumulated: PricePerCurrency, 
-  rightId?: string, 
+interface BreakdownRow {
+  section: string,
+  type?: 'right' | 'net' | 'expense',
+  previous: PricePerCurrency,
+  current: PricePerCurrency,
+  cumulated: PricePerCurrency,
+  rightId?: string,
   cap?: PricePerCurrency
+  max?: PricePerCurrency
 }
 
 @Component({
@@ -62,14 +67,13 @@ export class StatementDistributorSummaryComponent {
       // Refresh waterfall if some incomes or expenses are not in the simulated waterfall
       const missingIncomeIds = this.statement.incomeIds.filter(i => !simulation.waterfall.state.incomes[i]);
       const missingExpenseIds = this.statement.expenseIds.filter(i => !simulation.waterfall.state.expenses[i]);
-      const missingCompensations = this.statement.compensations.filter(c => !simulation.waterfall.state.incomes[c.id]);
-      if (missingIncomeIds.length || missingExpenseIds.length || missingCompensations.length) {
+      if (missingIncomeIds.length || missingExpenseIds.length) {
 
         const missingIncomes = incomes.filter(i => missingIncomeIds.includes(i.id));
         const missingExpenses = expenses.filter(e => missingExpenseIds.includes(e.id));
 
         await this.shell.appendToSimulation({
-          incomes: [...missingIncomes, ...missingCompensations].map(i => ({ ...i, status: 'received' })),
+          incomes: missingIncomes.map(i => ({ ...i, status: 'received' })),
           expenses: missingExpenses.map(e => ({ ...e, status: 'received' })),
         });
 
@@ -81,9 +85,15 @@ export class StatementDistributorSummaryComponent {
       const rightIds = unique(sources.map(s => getAssociatedRights(s.id, statementRights, simulation.waterfall.state)).flat().map(r => r.id));
       const rights = statementRights.filter(r => rightIds.includes(r.id));
 
+      if (this.statement.status === 'draft') {
+        // Reset payments
+        this.statement.payments.income = [];
+        this.statement.payments.right = [];
+        delete this.statement.payments.rightholder;
+      }
+
       const statement = generatePayments(this.statement, simulation.waterfall.state, rights, incomes, sources);
       this.form.setAllValue({ ...this.statement, incomes, expenses, sources });
-
       return statement;
     }),
   );
@@ -162,13 +172,15 @@ export class StatementDistributorSummaryComponent {
 
           if (rightExpenseTypes.length > 0) stillToBeRecouped.push(...cumulatedRightPayment.map(r => ({ currency: r.currency, price: -r.price })));
 
+          const maxPerIncome = current.incomeIds.map(incomeId => ({ incomeId, amount: getIncomingAmount(right.id, incomeId, simulation.waterfall.state.transfers) }));
           rows.push({
             section,
             type: 'right',
             rightId: right.id,
             previous: getTotalPerCurrency(previousRightPayment),
             current: getTotalPerCurrency(currentRightPayment),
-            cumulated: getTotalPerCurrency(cumulatedRightPayment)
+            cumulated: getTotalPerCurrency(cumulatedRightPayment),
+            max: { [mainCurrency]: sum(maxPerIncome, i => i.amount) }
           });
         }
 
@@ -252,13 +264,15 @@ export class StatementDistributorSummaryComponent {
 
           if (rightExpenseTypes.length > 0) stillToBeRecouped.push(...cumulatedRightPayment.map(r => ({ currency: r.currency, price: -r.price })));
 
+          const maxPerIncome = current.incomeIds.map(incomeId => ({ incomeId, amount: getIncomingAmount(right.id, incomeId, simulation.waterfall.state.transfers) }));
           rows.push({
             section,
             type: 'right',
             rightId: right.id,
             previous: getTotalPerCurrency(previousRightPayment),
             current: getTotalPerCurrency(currentRightPayment),
-            cumulated: getTotalPerCurrency(cumulatedRightPayment)
+            cumulated: getTotalPerCurrency(cumulatedRightPayment),
+            max: { [mainCurrency]: sum(maxPerIncome, i => i.amount) }
           });
         }
 
@@ -289,15 +303,29 @@ export class StatementDistributorSummaryComponent {
 
   public async editRightPayment(row: BreakdownRow, statement: Statement) {
 
-    if(!statement.compensations.find(c => c.id === 'compensation')) {
-      // TODO #9524 update form, regenerate payments, update simulation ...
-      const compensation = createCompensation({ id: 'compensation', price: 1000, currency: 'EUR', date: statement.duration.to, to: row.rightId, from: 'playtime_com_cine'});
+    const incomeId = 'ufo_2';
+    //const overrideMax = row.max[mainCurrency] - convertCurrenciesTo(row.current, mainCurrency)[mainCurrency];
+    const selectedValue = 300;
+    const percent = (selectedValue / row.max[mainCurrency]) * 100;
+    console.log('percentageOverride', percent);
+    if (!statement.rightOverrides.find(c => c.id === 'override')) {
+      if (percent > 0) {
+        // TODO #9520 update form, regenerate payments, update simulation ...
+        // max 100% de ce que peut prendre le noeud, peu importe les conditions
 
-      await this.statementService.update(statement.id, { compensations: [compensation] }, { params: { waterfallId: this.waterfall.id } });
-    } else {
-      // tmp remove compensation
-      await this.statementService.update(statement.id, { compensations: [] }, { params: { waterfallId: this.waterfall.id } });
+        //const amountPerIncome = statement.incomeIds.map(incomeId => ({ incomeId, amount: getCalculatedAmount(right.id, incomeId, state.transfers) }));
+        const override = createRightOverride({ id: 'compensation', percent, rightId: row.rightId, incomeId });
+
+        await this.statementService.update(statement.id, { rightOverrides: [override] }, { params: { waterfallId: this.waterfall.id } });
+
+        // Refresh simulation
+        await this.shell.simulateWaterfall();
+      } else {
+        // tmp remove override 
+        await this.statementService.update(statement.id, { rightOverrides: [] }, { params: { waterfallId: this.waterfall.id } });
+      }
     }
+
   }
 
 }

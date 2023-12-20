@@ -20,7 +20,7 @@ import {
 import { getMinThreshold } from './threshold';
 import { assertNode, getChildRights, getGroup, getNode, getNodeOrg, isGroupChild, isRight, updateNode } from './node';
 import { WaterfallContract, WaterfallSource, getAssociatedSource } from './waterfall';
-import { Compensation, Income, isCompensation } from '../income';
+import { Income } from '../income';
 import { Expense, ExpenseType } from '../expense';
 import { Term } from '../terms';
 import { getContractAndAmendments, getDeclaredAmount } from '../contract';
@@ -325,13 +325,15 @@ export function expenseTypesToAction(expenseTypes: ExpenseType[], versionId: str
   return actions;
 }
 
-export function incomesToActions(contracts: WaterfallContract[], incomes: (Income | Compensation)[], sources: WaterfallSource[]) {
+export function incomesToActions(contracts: WaterfallContract[], incomes: Income[], sources: WaterfallSource[], statements: Statement[]) {
   const actions: Action[] = [];
 
-  for (const i of incomes.filter(i => !isCompensation(i) && i.status === 'received')) {
+  for (const i of incomes.filter(i => i.status === 'received')) {
     const contractAndAmendments = getContractAndAmendments(i.contractId, contracts);
     // On waterfall side, the root contract is updated (updateContract), so we need to specify this one.
     const rootContract = contractAndAmendments.find(c => !c.rootId);
+
+    const statement = statements.find(s => s.incomeIds.includes(i.id)); // TODO #9520 check statement & income version
 
     const source = getAssociatedSource(i, sources);
 
@@ -345,23 +347,8 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: (Incom
         amount,
         date: i.date,
         territories: i.territories,
-        medias: i.medias
-      })
-    );
-  };
-
-  for (const c of incomes.filter(i => isCompensation(i) && i.status === 'received').map(c => c as Compensation)) {
-    const { [mainCurrency]: amount } = convertCurrenciesTo({ [c.currency]: c.price }, mainCurrency);
-    actions.push(
-      action('income', {
-        id: c.id,
-        from: 'compensations', // TODO #9520 from should be producer ?
-        isCompensation: true,
-        to: c.to, // Destination right id
-        amount,
-        date: c.date,
-        territories: [],
-        medias: []
+        medias: i.medias,
+        rightOverrides: statement?.rightOverrides.map(r => ({ rightId: r.rightId, percent: r.percent / 100 })) || [],
       })
     );
   };
@@ -749,6 +736,11 @@ function source(state: TitleState, payload: SourceAction) {
   state.sources[payload.id] ||= createSourceState({ id: payload.id, amount: 0, destinationId: payload.destinationId });
 }
 
+export interface IncomeActionRightOverride { 
+  rightId: string,
+  percent: number
+}
+
 export interface IncomeAction extends BaseAction {
   id: string;
   amount: number;
@@ -758,6 +750,7 @@ export interface IncomeAction extends BaseAction {
   territories: Territory[];
   medias: Media[];
   isCompensation?: boolean;
+  rightOverrides?: IncomeActionRightOverride[];
 }
 
 /** Distribute the income per thresholds */
@@ -775,7 +768,6 @@ function income(state: TitleState, payload: IncomeAction) {
       state.sources[payload.from].incomeIds = Array.from(new Set([...state.sources[payload.from].incomeIds, payload.id]));
     }
   }
-
 
   state.incomes[payload.id] = payload;
   const incomeId = payload.id;

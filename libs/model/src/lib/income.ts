@@ -20,12 +20,6 @@ export interface Income {
   sourceId: string;
 }
 
-export interface Compensation extends Income {
-  isCompensation: true;
-  from: string; // Id of the right that is compensating
-  to: string; // Id of the right that is compensated
-}
-
 export function createIncome(params: Partial<Income> = {}): Income {
   return {
     id: '',
@@ -42,16 +36,3 @@ export function createIncome(params: Partial<Income> = {}): Income {
   };
 }
 
-export function createCompensation(params: Partial<Compensation> = {}): Compensation {
-  return {
-    ...createIncome(params),
-    isCompensation: true,
-    from: '',
-    to: '',
-    ...params,
-  };
-}
-
-export function isCompensation(params: Partial<Income | Compensation>): params is Compensation {
-  return (params as Compensation).isCompensation;
-}
