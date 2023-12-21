@@ -60,7 +60,7 @@ export class StatementArbitraryChangeComponent implements OnInit {
       if (config.max === 0) return;
 
       const override = overrides.find(override => override.incomeId === config.income.id);
-      if (config.current === this.getInitialValue(override.incomeId)) return; // No change
+      if (override.amount === this.getInitialValue(override.incomeId)) return; // No change
 
       const percent = override.amount === 0 ? 0 : (override.amount / config.max) * 100;
       if (percent === this.data.right.percent) return; // No change
