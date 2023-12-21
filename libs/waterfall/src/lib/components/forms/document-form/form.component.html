@@ -106,9 +106,10 @@
   </div>
 </ng-container>
 
-<file-uploader [form]="form.get('file')" [meta]="['waterfall', 'documents', waterfall.id]" accept="pdf" (selectionChange)="change($event)"></file-uploader>
-
 <section *ngIf="showExpenseTypes">
   <h2>Expenses</h2>
   <waterfall-expense-types [form]="form.get('expenseTypes')"></waterfall-expense-types>  
 </section>
+
+<file-uploader [form]="form.get('file')" [meta]="['waterfall', 'documents', waterfall.id]" accept="pdf" (selectionChange)="change($event)"></file-uploader>
+

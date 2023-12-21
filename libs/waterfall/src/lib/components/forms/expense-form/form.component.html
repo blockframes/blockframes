@@ -1,8 +1,3 @@
-<section class="surface" *ngIf="!contractId">
-  <h3>Expenses Types</h3>
-  <p class="mat-body-1">Specify expense types and cap for Direct Sales statements.</p>
-  <waterfall-expense-types-form contractId="directSales"></waterfall-expense-types-form>
-</section>
 <section *ngFor="let expenseType of (expenseTypes$ | async)" class="surface">
   <h3>{{ expenseType.name }}</h3>
   <p class="mat-body-1">Please note, only the capped sums will be used for the calculation.</p>

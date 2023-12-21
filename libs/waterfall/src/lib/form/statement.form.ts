@@ -236,12 +236,4 @@ export class StatementForm extends FormEntity<StatementFormControl> {
     return this.value[`expenses-${expenseTypeId}`] as Expense[];
   }
 
-  addExpenseTypeControls(expenseTypes: ExpenseType[]) {
-    for (const expenseType of expenseTypes) {
-      if (!this.controls[expenseType.id]) {
-        this.addControl(`expenses-${expenseType.id}`, FormList.factory([], (el) => new ExpenseForm(el)));
-      }
-    }
-  }
-
 }
