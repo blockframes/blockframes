@@ -9,7 +9,9 @@ import {
   createExpense,
   isDirectSalesStatement,
   convertDocumentTo,
-  WaterfallContract
+  WaterfallContract,
+  ExpenseType,
+  createExpenseType
 } from '@blockframes/model';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getStatementConfig } from './fieldConfigs';
@@ -40,6 +42,8 @@ export async function formatStatement(
   const rightholderCache: Record<string, WaterfallRightholder[]> = {};
   const titleCache: Record<string, Movie> = {};
   const caches = { rightholderCache, titleCache };
+
+  const expenseTypes: Record<string, ExpenseType[]> = {};
 
   const option = {
     waterfallService,
@@ -108,16 +112,29 @@ export async function formatStatement(
     const expenses = data.expenses.filter(e => e.price && e.currency).map(e => {
       if (!e.id) e.id = waterfallService.createId();
       const expense = createExpense({ ...e });
+      delete (expense as any).cap;
       if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) statement.expenseIds.push(expense.id);
       expense.contractId = isDistributorStatement(statement) ? statement.contractId : undefined;
       expense.rightholderId = statement.senderId;
       expense.date = statement.duration.to;
       expense.titleId = statement.waterfallId;
 
+      // Create expense types
+      const contractId = isDirectSalesStatement(statement) ? 'directSales' : expense.contractId;
+      if (!expenseTypes[contractId]) expenseTypes[contractId] = [];
+      if (!expenseTypes[contractId].find(t => t.id === e.typeId)) {
+        expenseTypes[contractId].push(createExpenseType({
+          id: e.typeId,
+          contractId,
+          currency: e.currency,
+          name: e.typeId,
+          cap: { default: e.cap, version: {} }
+        }));
+      }
       return expense;
     });
 
-    statements.push({ statement, incomes, expenses, errors });
+    statements.push({ statement, incomes, expenses, expenseTypes, errors });
   }
   return statements;
 }

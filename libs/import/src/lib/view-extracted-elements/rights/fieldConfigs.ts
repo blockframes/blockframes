@@ -194,7 +194,6 @@ export function getRightConfig(option: RightConfig) {
         if (isGroup && value.trim()) throw optionalWarning('Skipped contract id for group right');
         if (isGroup) return;
         if (value.split(separator).length > 1) throw mandatoryError(value, 'Contract Id', 'Multiple contract are not allowed');
-        // If contract ID is specified instead of a date, we use signature date as right date.
         const contract = await getWaterfallDocument(value.trim(), waterfallDocumentsService, documentCache, data.waterfallId);
         if (!contract) throw optionalWarning('Contract Id');
         if (!isContract(contract)) throw mandatoryError(value, 'Contract Id', `Document "${contract.id}" is not a contract`);

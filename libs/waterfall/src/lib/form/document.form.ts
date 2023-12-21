@@ -1,5 +1,5 @@
 
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, FormRecord } from '@angular/forms';
 
 import { WaterfallFileForm } from './file.form';
 
@@ -7,8 +7,33 @@ import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { BucketTermForm } from '@blockframes/contract/bucket/form';
 import { creatTermControl } from '@blockframes/contract/negotiation';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { RightholderRole, Term, WaterfallFile } from '@blockframes/model';
+import { ExpenseType, RightholderRole, Term, WaterfallFile, mainCurrency } from '@blockframes/model';
 
+
+export function createExpenseTypeControl(config?: Partial<ExpenseType>) {
+
+  const version = {};
+  for (const key in config?.cap?.version) {
+    version[key] = new FormControl<number>(config.cap.version[key] ?? 0);
+  }
+  return {
+    id: new FormControl<string>(config?.id ?? ''),
+    name: new FormControl<string>(config?.name ?? ''),
+    currency: new FormControl<string>(config?.currency ?? mainCurrency),
+    cap: new FormGroup({
+      default: new FormControl<number>(config?.cap?.default ?? 0),
+      version: new FormRecord(version)
+    })
+  };
+}
+
+type ExpenseTypeControl = ReturnType<typeof createExpenseTypeControl>;
+
+export class ExpenseTypeForm extends FormEntity<ExpenseTypeControl> {
+  constructor(config?: Partial<ExpenseType>) {
+    super(createExpenseTypeControl(config));
+  }
+}
 
 export interface WaterfallDocumentFormValue {
   id: string;
@@ -28,6 +53,8 @@ export interface WaterfallDocumentFormValue {
   terms: Term[];
 
   file: WaterfallFile;
+
+  expenseTypes: ExpenseType[];
 }
 
 function createWaterfallDocumentFormControl(contract: (Partial<WaterfallDocumentFormValue> & { id: string })) {
@@ -49,6 +76,8 @@ function createWaterfallDocumentFormControl(contract: (Partial<WaterfallDocument
     terms: FormList.factory(contract.terms, term => BucketTermForm.factory(term, creatTermControl)),
 
     file: new WaterfallFileForm({ ...contract.file, id: contract.id }),
+
+    expenseTypes: FormList.factory(contract?.expenseTypes, c => ExpenseTypeForm.factory(c, createExpenseTypeControl)),
   };
 }
 
@@ -74,8 +103,9 @@ export class WaterfallDocumentForm extends FormEntity<WaterfallDocumentFormContr
       endDate: data.endDate || new Date(),
       price: data.price || 0,
       file: data.file || { id: data.id },
-      terms: data.terms || [],
     });
+    this.controls.terms.patchAllValue(data.terms || []);
+    this.controls.expenseTypes.patchAllValue(data.expenseTypes || []);
     this.markAsPristine();
   }
 }

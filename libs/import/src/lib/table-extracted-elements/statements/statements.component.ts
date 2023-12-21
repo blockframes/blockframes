@@ -22,6 +22,7 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 import { StatementService } from '@blockframes/waterfall/statement.service';
 import { IncomeService } from '@blockframes/contract/income/service';
 import { ExpenseService } from '@blockframes/contract/expense/service';
+import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 const hasImportErrors = (importState: StatementsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -61,6 +62,7 @@ export class TableExtractedStatementsComponent implements AfterViewInit {
     private statementService: StatementService,
     private incomeService: IncomeService,
     private expenseService: ExpenseService,
+    private waterfallService: WaterfallService,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -124,11 +126,29 @@ export class TableExtractedStatementsComponent implements AfterViewInit {
       }));
     }
 
-    for (const expense of importState.expenses) {
-      await this.expenseService.add(createExpense({
-        ...expense,
-        _meta: createDocumentMeta({ createdAt: new Date() })
-      }));
+    if (importState.expenseTypes) {
+      const waterfall = await this.waterfallService.getValue(statement.waterfallId);
+      for (const [contractId, expenseTypes] of Object.entries(importState.expenseTypes)) {
+        if (!waterfall.expenseTypes[contractId]) {
+          waterfall.expenseTypes[contractId] = expenseTypes;
+        } else {
+          for (const expenseType of expenseTypes) {
+            if (!waterfall.expenseTypes[contractId].find(t => t.id === expenseType.id)) {
+              waterfall.expenseTypes[contractId].push(expenseType);
+            }
+          }
+        }
+
+        await this.waterfallService.update(statement.waterfallId, { id: statement.waterfallId, expenseTypes: waterfall.expenseTypes });
+      }
+
+      for (const expense of importState.expenses) {
+        await this.expenseService.add(createExpense({
+          ...expense,
+          capped: waterfall.expenseTypes[expense.contractId]?.find(t => t.id === expense.typeId)?.cap.default > 0 ? expense.capped : false,
+          _meta: createDocumentMeta({ createdAt: new Date() })
+        }));
+      }
     }
 
     importState.imported = true;

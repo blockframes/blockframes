@@ -11,6 +11,7 @@ import { DetailedGroupModule } from '@blockframes/ui/detail-modal/detailed.modul
 import { ToGroupLabelPipeModule, JoinPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
+import { ExpenseTypesFormModule } from '@blockframes/waterfall/components/forms/expense-types-form/form.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -29,6 +30,7 @@ import { MatButtonModule } from '@angular/material/button';
     PricePerCurrencyModule,
     ToLabelModule,
     RightHolderNamePipeModule,
+    ExpenseTypesFormModule,
 
     MatIconModule,
     MatButtonModule,

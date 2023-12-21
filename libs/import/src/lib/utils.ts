@@ -14,6 +14,7 @@ import {
   Right,
   createWaterfallRightholder,
   Statement,
+  ExpenseType,
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
@@ -84,6 +85,7 @@ export interface StatementsImportState extends ImportState {
   statement: Statement;
   incomes: Income[];
   expenses: Expense[];
+  expenseTypes: Record<string, ExpenseType[]>;
 }
 
 /**
@@ -108,7 +110,7 @@ export const sheetRanges: Record<SpreadsheetImportType, string> = {
   organizations: `A${sheetHeaderLine.organizations}:Z100`,
   sources: `A${sheetHeaderLine.sources}:G100`,
   rights: `A${sheetHeaderLine.rights}:AZ100`,
-  statements: `A${sheetHeaderLine.statements}:T400`,
+  statements: `A${sheetHeaderLine.statements}:V400`,
 };
 
 export async function getOrgId(

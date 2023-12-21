@@ -2,13 +2,15 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   Expense,
+  ExpenseType,
   Income,
   IncomePayment,
   RightPayment,
   RightholderPayment,
   Statement,
   WaterfallSource,
-  getAssociatedSource
+  getAssociatedSource,
+  mainCurrency
 } from '@blockframes/model';
 import { FormEntity, FormList, compareDates, isDateAfter } from '@blockframes/utils/form';
 
@@ -23,7 +25,7 @@ function createIncomeFormControl(income?: Partial<Income>) {
     medias: new FormControl<string[]>(income?.medias ?? []),
     territories: new FormControl<string[]>(income?.territories ?? []),
     price: new FormControl<number>(income?.price ?? 0),
-    currency: new FormControl<string>(income?.currency ?? 'EUR'),
+    currency: new FormControl<string>(income?.currency ?? mainCurrency),
     date: new FormControl<Date>(income?.date ?? new Date()),
     status: new FormControl<string>(income?.status ?? 'pending'),
     sourceId: new FormControl<string>(income?.sourceId ?? ''),
@@ -48,13 +50,14 @@ function createExpenseFormControl(expense?: Partial<Expense>) {
     id: new FormControl<string>(expense?.id ?? ''),
     contractId: new FormControl<string>(expense?.contractId ?? ''),
     price: new FormControl<number>(expense?.price ?? 0),
-    currency: new FormControl<string>(expense?.currency ?? 'EUR'),
+    currency: new FormControl<string>(expense?.currency ?? mainCurrency),
     date: new FormControl<Date>(expense?.date ?? new Date()),
     status: new FormControl<string>(expense?.status ?? 'pending'),
     titleId: new FormControl<string>(expense?.titleId ?? ''),
     rightholderId: new FormControl<string>(expense?.rightholderId ?? ''),
-    type: new FormControl<string>(expense?.type ?? ''),
-    category: new FormControl<string>(expense?.category ?? ''),
+    typeId: new FormControl<string>(expense?.typeId ?? ''),
+    nature: new FormControl<string>(expense?.nature ?? ''),
+    capped: new FormControl<boolean>(expense?.capped ?? false),
   };
 }
 
@@ -75,7 +78,7 @@ function createIncomePaymentControl(income?: Partial<IncomePayment>) {
     id: new FormControl<string>(income?.id ?? ''),
     type: new FormControl<string>('income'),
     price: new FormControl<number>(income?.price ?? 0),
-    currency: new FormControl<string>(income?.currency ?? 'EUR'),
+    currency: new FormControl<string>(income?.currency ?? mainCurrency),
     date: new FormControl<Date>(income?.date),
     status: new FormControl<string>('received'),
     mode: new FormControl<string>('internal'),
@@ -96,7 +99,7 @@ function createRightPaymentControl(right?: Partial<RightPayment>) {
     id: new FormControl<string>(right?.id ?? ''),
     type: new FormControl<string>('right'),
     price: new FormControl<number>(right?.price ?? 0),
-    currency: new FormControl<string>(right?.currency ?? 'EUR'),
+    currency: new FormControl<string>(right?.currency ?? mainCurrency),
     date: new FormControl<Date>(right?.date),
     status: new FormControl<string>(right?.status ?? 'pending'),
     mode: new FormControl<string>(right?.mode ?? 'internal'),
@@ -118,7 +121,7 @@ function createRightholderPaymentControl(rightholder?: Partial<RightholderPaymen
     id: new FormControl<string>(rightholder?.id ?? ''),
     type: new FormControl<string>('rightholder'),
     price: new FormControl<number>(rightholder?.price ?? 0),
-    currency: new FormControl<string>(rightholder?.currency ?? 'EUR'),
+    currency: new FormControl<string>(rightholder?.currency ?? mainCurrency),
     date: new FormControl<Date>(rightholder?.date),
     status: new FormControl<string>(rightholder?.status ?? 'pending'),
     mode: new FormControl<string>('external'),
@@ -141,6 +144,7 @@ class RightholderPaymentForm extends FormEntity<RightholderPaymentControl> {
 interface FullStatement extends Statement {
   sources: WaterfallSource[]
   incomes: Income[],
+  expenseTypes: ExpenseType[],
   expenses: Expense[]
 }
 
@@ -156,8 +160,6 @@ function createStatementFormControl(statement?: Partial<FullStatement>) {
       to: new FormControl<Date>(statement?.duration?.to ?? new Date(), toValidators),
     }),
     reported: new FormControl<Date>(statement?.reported ?? new Date()),
-    expenses: FormList.factory(statement?.expenses, (el) => new ExpenseForm(el)),
-
     incomePayments: FormList.factory(statement?.payments.income, (el) => new IncomePaymentForm(el)),
     rightPayments: FormList.factory(statement?.payments.right, (el) => new RightPaymentForm(el)),
     rightholderPayment: new RightholderPaymentForm(statement?.payments.rightholder),
@@ -166,7 +168,12 @@ function createStatementFormControl(statement?: Partial<FullStatement>) {
 
   for (const source of statement?.sources ?? []) {
     const incomes = statement?.incomes.filter(i => getAssociatedSource(i, statement.sources).id === source.id);
-    controls[source.id] = FormList.factory(incomes, (el) => new IncomeForm(el));
+    controls[`incomes-${source.id}`] = FormList.factory(incomes, (el) => new IncomeForm(el));
+  }
+
+  for (const expenseType of statement?.expenseTypes ?? []) {
+    const expenses = statement?.expenses.filter(e => e.typeId === expenseType.id) || [];
+    controls[`expenses-${expenseType.id}`] = FormList.factory(expenses, (el) => new ExpenseForm(el));
   }
 
   return controls;
@@ -196,6 +203,14 @@ export class StatementForm extends FormEntity<StatementFormControl> {
     }
   }
 
+  getSource(sourceId: string) {
+    return this.get(`incomes-${sourceId}` as any);
+  }
+
+  getIncomes(sourceId: string) {
+    return this.value[`incomes-${sourceId}`] as Income[];
+  }
+
   addIncomes(incomes: Income[], sources: WaterfallSource[]) {
     for (const income of incomes) {
       this.addIncome(income, sources);
@@ -205,7 +220,27 @@ export class StatementForm extends FormEntity<StatementFormControl> {
   addIncome(income: Income, sources: WaterfallSource[]) {
     const source = getAssociatedSource(income, sources);
     if (!this.controls[source.id]) {
-      this.controls[source.id] = FormList.factory([income], (el) => new IncomeForm(el));
+      this.addControl(`incomes-${source.id}`, FormList.factory([income], (el) => new IncomeForm(el)));
+    }
+  }
+
+  removeSource(sourceId: string) {
+    this.removeControl(`incomes-${sourceId}`);
+  }
+
+  getExpenseType(expenseTypeId: string) {
+    return this.get(`expenses-${expenseTypeId}` as any);
+  }
+
+  getExpenses(expenseTypeId: string) {
+    return this.value[`expenses-${expenseTypeId}`] as Expense[];
+  }
+
+  addExpenseTypeControls(expenseTypes: ExpenseType[]) {
+    for (const expenseType of expenseTypes) {
+      if (!this.controls[expenseType.id]) {
+        this.addControl(`expenses-${expenseType.id}`, FormList.factory([], (el) => new ExpenseForm(el)));
+      }
     }
   }
 

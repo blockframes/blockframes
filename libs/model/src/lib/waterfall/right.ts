@@ -1,7 +1,7 @@
 import { DocumentMeta } from '../meta';
 import { RightType } from '../static/types';
 import { ActionName } from './action';
-import { ConditionGroup } from './conditions';
+import { Condition, ConditionGroup, isCondition } from './conditions';
 
 export interface Right {
   _meta?: DocumentMeta;
@@ -64,4 +64,8 @@ export function orderRights(rights: Right[]): Right[] {
   }
 
   return orderedRights;
+}
+
+export function getRightCondition(right: Right) {
+  return (right.conditions?.conditions?.filter(c => isCondition(c)).filter(c => !!c) || []) as Condition[];
 }

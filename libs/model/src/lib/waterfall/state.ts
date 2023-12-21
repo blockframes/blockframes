@@ -127,7 +127,6 @@ export interface OrgState {
   turnover: AmountState;
   revenu: AmountState;
   investment: number;
-  expense: number;
   bonus: number;
   operations: Operation[];
 }
@@ -143,7 +142,6 @@ export const createOrg = (org: Partial<OrgState>): OrgState => ({
   },
   investment: 0,
   bonus: 0,
-  expense: 0,
   operations: [],
   ...org
 });
@@ -181,19 +179,34 @@ export interface IncomeState {
   contractId?: string;
 }
 
-interface ExpenseState {
+export interface ExpenseState {
   id: string;
   orgId: string;
   date: Date;
   amount: number;
-  type: string;
+  typeId: string;
+  capped: boolean;
 }
 export function createExpenseState(expense: Partial<ExpenseState> & { id: string }): ExpenseState {
   return {
     orgId: '',
     date: new Date(),
-    type: '',
+    typeId: '',
     amount: 0,
+    capped: false,
+    ...expense
+  }
+}
+
+interface ExpenseTypeState {
+  id: string;
+  name: string;
+  cap: number;
+}
+export function createExpenseTypeState(expense: Partial<ExpenseTypeState> & { id: string }): ExpenseTypeState {
+  return {
+    name: '',
+    cap: 0,
     ...expense
   }
 }
@@ -280,7 +293,9 @@ export interface TitleState {
   id: string;
   date: Date;
   investment: number;
-  expense: Record<string, number>;
+  expenseTypes: {
+    [id: string]: ExpenseTypeState;
+  }
   declarations: {
     [key: `${string}->${string}`]: number;
   },
@@ -334,7 +349,7 @@ export interface History extends TitleState {
 export const createTitleState = (id: string): TitleState => ({
   id,
   date: new Date(0), // 1970: will be updated by the actions
-  expense: {},
+  expenseTypes: {},
   investment: 0,
   declarations: {},
   transfers: {},

@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import {
+  MovieCurrency,
   PricePerCurrency,
   RightPayment,
   Statement,
@@ -8,6 +9,7 @@ import {
   getAssociatedRights,
   getAssociatedSource,
   getOrderedRights,
+  getRightExpenseTypes,
   getSources,
   getStatementRights,
   getStatementRightsToDisplay,
@@ -43,7 +45,7 @@ export class StatementDistributorSummaryComponent {
   ]).pipe(
     switchMap(async ([sources, _incomes, _expenses, _rights, simulation]) => {
       const incomes = this.statement.incomeIds.map(id => _incomes.find(i => i.id === id));
-      const expenses = this.statement.expenseIds.map(id => _expenses.find(i => i.id === id))
+      const expenses = this.statement.expenseIds.map(id => _expenses.find(e => e.id === id));
 
       // Refresh waterfall if some incomes or expenses are not in the simulated waterfall
       const missingIncomeIds = this.statement.incomeIds.filter(i => !simulation.waterfall.state.incomes[i]);
@@ -79,10 +81,10 @@ export class StatementDistributorSummaryComponent {
   );
 
   public sourcesBreakdown$ = combineLatest([
-    this.sources$, this.statement$, this.shell.incomes$,
+    this.sources$, this.statement$, this.shell.incomes$, this.shell.expenses$,
     this.statementsHistory$, this.shell.rights$, this.shell.simulation$
   ]).pipe(
-    map(([sources, current, incomes, _history, rights, simulation]) => {
+    map(([sources, current, incomes, _expenses, _history, rights, simulation]) => {
       const indexOfCurrent = _history.findIndex(s => s.id === current.id);
       _history[indexOfCurrent] = { ...current, number: _history[indexOfCurrent].number };
       const previous = _history.slice(indexOfCurrent + 1);
@@ -92,7 +94,7 @@ export class StatementDistributorSummaryComponent {
       const orderedRights = getOrderedRights(displayedRights, simulation.waterfall.state);
 
       return sources.map(source => {
-        const rows: { section: string, type?: 'right' | 'net', previous: PricePerCurrency, current: PricePerCurrency, cumulated: PricePerCurrency, rightId?: string }[] = [];
+        const rows: { section: string, type?: 'right' | 'net' | 'expense', previous: PricePerCurrency, current: PricePerCurrency, cumulated: PricePerCurrency, rightId?: string, cap?: PricePerCurrency }[] = [];
 
         // Incomes declared by statement.senderId
         const previousSourcePayments = previous.map(s => s.payments.income).flat().filter(income => getAssociatedSource(incomes.find(i => i.id === income.incomeId), this.waterfall.sources).id === source.id);
@@ -114,6 +116,7 @@ export class StatementDistributorSummaryComponent {
         const previousSum: RightPayment[] = [];
         const currentSum: RightPayment[] = [];
         const cumulatedSum: RightPayment[] = [];
+        const stillToBeRecouped: { price: number, currency: MovieCurrency }[] = [];
         for (const right of rights) {
           const section = right.type ? `${right.name} (${toLabel(right.type, 'rightTypes')} - ${right.percent}%)` : `${right.name} (${right.percent}%)`;
           const previousRightPayment = previous.map(s => s.payments.right).flat().filter(p => p.to === right.id);
@@ -122,6 +125,30 @@ export class StatementDistributorSummaryComponent {
           currentSum.push(...currentRightPayment.map(r => ({ ...r, price: -r.price })));
           const cumulatedRightPayment = history.map(s => s.payments.right).flat().filter(p => p.to === right.id);
           cumulatedSum.push(...cumulatedRightPayment.map(r => ({ ...r, price: -r.price })));
+
+          const rightExpenseTypes = getRightExpenseTypes(right, current, this.waterfall);
+          for (const expenseTypeId of rightExpenseTypes) {
+            const currentExpenses = _expenses.filter(e => e.typeId === expenseTypeId && current.expenseIds.includes(e.id));
+            const previousExpenses = _expenses.filter(e => e.typeId === expenseTypeId && previous.map(s => s.expenseIds).flat().includes(e.id));
+            const cumulatedExpenses = _expenses.filter(e => e.typeId === expenseTypeId && history.map(s => s.expenseIds).flat().includes(e.id));
+
+            const expenseType = this.waterfall.expenseTypes[current.contractId].find(e => e.id === expenseTypeId);
+
+            rows.push({
+              section: expenseType.name,
+              cap: expenseType.cap.default > 0 ? { [expenseType.currency]: expenseType.cap.default } : undefined, // TODO #9520 replace default by versionId
+              type: 'expense',
+              rightId: right.id,
+              previous: getTotalPerCurrency(previousExpenses),
+              current: getTotalPerCurrency(currentExpenses),
+              cumulated: getTotalPerCurrency(cumulatedExpenses)
+            });
+
+            stillToBeRecouped.push(...cumulatedExpenses);
+          }
+
+          if (rightExpenseTypes.length > 0) stillToBeRecouped.push(...cumulatedRightPayment.map(r => ({ currency: r.currency, price: -r.price })));
+
           rows.push({
             section,
             type: 'right',
@@ -142,7 +169,12 @@ export class StatementDistributorSummaryComponent {
           cumulated: getTotalPerCurrency([...cumulatedSourcePayments, ...cumulatedSum])
         });
 
-        return { name: source.name, rows, net: currentNet };
+        return {
+          name: source.name,
+          rows,
+          net: currentNet,
+          stillToBeRecouped: stillToBeRecouped.length ? getTotalPerCurrency(stillToBeRecouped) : undefined
+        };
       });
     })
   );
@@ -156,8 +188,11 @@ export class StatementDistributorSummaryComponent {
     }, {}))
   );
 
-  public rightsBreakdown$ = combineLatest([this.statement$, this.statementsHistory$, this.shell.rights$, this.shell.simulation$]).pipe(
-    map(([current, _history, rights, simulation]) => {
+  public rightsBreakdown$ = combineLatest([
+    this.statement$, this.statementsHistory$, this.shell.expenses$,
+    this.shell.rights$, this.shell.simulation$
+  ]).pipe(
+    map(([current, _history, _expenses, rights, simulation]) => {
       const indexOfCurrent = _history.findIndex(s => s.id === current.id);
       _history[indexOfCurrent] = { ...current, number: _history[indexOfCurrent].number };
       const previous = _history.slice(indexOfCurrent + 1);
@@ -170,8 +205,9 @@ export class StatementDistributorSummaryComponent {
       const rightTypes = unique(rightsWithManySources.map(right => right.type));
 
       return rightTypes.map(type => {
-        const rows: { section: string, previous: PricePerCurrency, current: PricePerCurrency, cumulated: PricePerCurrency, rightId: string }[] = [];
+        const rows: { section: string, type?: 'right' | 'expense', previous: PricePerCurrency, current: PricePerCurrency, cumulated: PricePerCurrency, rightId: string, cap?: PricePerCurrency }[] = [];
 
+        const stillToBeRecouped: { price: number, currency: MovieCurrency }[] = [];
         for (const right of rightsWithManySources) {
           if (right.type !== type) continue;
 
@@ -179,8 +215,33 @@ export class StatementDistributorSummaryComponent {
           const previousRightPayment = previous.map(s => s.payments.right).flat().filter(p => p.to === right.id);
           const currentRightPayment = current.payments.right.filter(p => p.to === right.id);
           const cumulatedRightPayment = history.map(s => s.payments.right).flat().filter(p => p.to === right.id);
+
+          const rightExpenseTypes = getRightExpenseTypes(right, current, this.waterfall);
+          for (const expenseTypeId of rightExpenseTypes) {
+            const currentExpenses = _expenses.filter(e => e.typeId === expenseTypeId && current.expenseIds.includes(e.id));
+            const previousExpenses = _expenses.filter(e => e.typeId === expenseTypeId && previous.map(s => s.expenseIds).flat().includes(e.id));
+            const cumulatedExpenses = _expenses.filter(e => e.typeId === expenseTypeId && history.map(s => s.expenseIds).flat().includes(e.id));
+
+            const expenseType = this.waterfall.expenseTypes[current.contractId].find(e => e.id === expenseTypeId);
+
+            rows.push({
+              section: expenseType.name,
+              cap: expenseType.cap.default > 0 ? { [expenseType.currency]: expenseType.cap.default } : undefined, // TODO #9520 replace default by versionId
+              type: 'expense',
+              rightId: right.id,
+              previous: getTotalPerCurrency(previousExpenses),
+              current: getTotalPerCurrency(currentExpenses),
+              cumulated: getTotalPerCurrency(cumulatedExpenses)
+            });
+
+            stillToBeRecouped.push(...cumulatedExpenses);
+          }
+
+          if (rightExpenseTypes.length > 0) stillToBeRecouped.push(...cumulatedRightPayment.map(r => ({ currency: r.currency, price: -r.price })));
+
           rows.push({
             section,
+            type: 'right',
             rightId: right.id,
             previous: getTotalPerCurrency(previousRightPayment),
             current: getTotalPerCurrency(currentRightPayment),
@@ -188,14 +249,19 @@ export class StatementDistributorSummaryComponent {
           });
         }
 
-        const total = rows.map(r => r.current).reduce((acc, curr) => {
+        const total = rows.filter(r => r.type === 'right').map(r => r.current).reduce((acc, curr) => {
           for (const currency of Object.keys(curr)) {
             acc[currency] = (acc[currency] || 0) + curr[currency];
           }
           return acc;
         }, {});
 
-        return { name: toLabel(type, 'rightTypes'), rows, total };
+        return {
+          name: toLabel(type, 'rightTypes'),
+          rows,
+          total,
+          stillToBeRecouped: stillToBeRecouped.length ? getTotalPerCurrency(stillToBeRecouped) : undefined
+        };
       });
     })
   );

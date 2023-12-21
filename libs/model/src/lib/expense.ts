@@ -12,8 +12,9 @@ export interface Expense {
   status: PaymentStatus;
   price: number;
   currency: MovieCurrency;
-  type: string;
-  category: string;
+  typeId: string;
+  nature: string;
+  capped: boolean;
 }
 
 export function createExpense(params: Partial<Expense> = {}): Expense {
@@ -26,8 +27,40 @@ export function createExpense(params: Partial<Expense> = {}): Expense {
     price: 0,
     currency: 'EUR',
     date: new Date(),
-    type: '',
-    category: '',
+    typeId: '',
+    nature: '',
+    capped: false,
     ...params,
+  };
+}
+
+interface ExpenseCap {
+  default: number;
+  version: Record<string, number>; // TODO #9520 key is versionId 
+}
+
+export interface ExpenseType {
+  id: string;
+  name: string;
+  contractId: string;
+  currency: MovieCurrency;
+  cap: ExpenseCap;
+}
+
+export function createExpenseType(params: Partial<ExpenseType> = {}): ExpenseType {
+  return {
+    id: '',
+    name: '',
+    contractId: '',
+    currency: 'EUR',
+    ...params,
+    cap: createExpenseCap(params.cap),
+  };
+}
+
+function createExpenseCap(params: Partial<ExpenseCap> = {}): ExpenseCap {
+  return {
+    default: params.default ?? 0,
+    version: params.version ?? {},
   };
 }

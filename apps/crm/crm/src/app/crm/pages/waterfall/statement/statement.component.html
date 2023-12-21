@@ -9,9 +9,9 @@
     <ng-container *ngIf="waterfall$ | async as waterfall">
       <mat-form-field *ngIf="waterfall.versions.length" appearance="outline">
         <mat-label>Waterfall Version</mat-label>
-        <mat-select (selectionChange)="switchToVersion($event.value)" [(value)]="waterfall.versions[0].id">
-          <mat-option *ngFor="let versions of waterfall.versions" [value]="versions.id">
-            {{ versions.name }}
+        <mat-select (selectionChange)="switchToVersion($event.value)" [(value)]="versionId">
+          <mat-option *ngFor="let version of waterfall.versions" [value]="version.id">
+            {{ version.name }}
           </mat-option>
         </mat-select>
       </mat-form-field>
@@ -43,6 +43,13 @@
         </ng-container>
       </ng-template>
     </bf-table>
+
+    <ng-container *ngIf="statement.type === 'directSales'">
+      <h3>Expenses Types</h3>
+      <div class="surface">
+        <waterfall-expense-types-form contractId="directSales"></waterfall-expense-types-form>
+      </div>
+    </ng-container>
   
     <ng-container *ngIf="expenses.length">
       <h3>Expenses</h3>
@@ -50,11 +57,14 @@
         <ng-template colRef="id" label="Id" let-id sort>
           {{ id }}
         </ng-template>
-        <ng-template colRef="category" label="Category" let-category sort>
-          {{ category }}
+        <ng-template colRef="nature" label="Nature" let-nature sort>
+          {{ nature }}
         </ng-template>
-        <ng-template colRef="type" label="Type" let-type sort>
-          {{ type }}
+        <ng-template colRef="" label="Type" let-item sort>
+          {{ item.typeId | expenseType : item.contractId : (waterfall$ | async) }}
+        </ng-template>
+        <ng-template colRef="capped" label="Capped" let-capped sort>
+          <mat-slide-toggle [checked]="capped" disabled color="primary"></mat-slide-toggle>
         </ng-template>
         <ng-template colRef="status" label="Status" let-status sort>
           {{ status | toLabel: 'paymentStatus' }}

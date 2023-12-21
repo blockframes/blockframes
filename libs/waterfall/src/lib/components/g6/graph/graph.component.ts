@@ -12,7 +12,8 @@ import {
   WaterfallRightholder,
   VerticalState,
   HorizontalState,
-  mainCurrency
+  mainCurrency,
+  sum
 } from '@blockframes/model';
 
 @Component({
@@ -31,7 +32,7 @@ export class GraphComponent implements OnInit, AfterViewInit, OnChanges {
   right?: RightState;
   verticalGroup?: VerticalState;
   horizontalGroup?: HorizontalState;
-  org?: OrgState;
+  org?: OrgState & { expense: number };
   currency = mainCurrency;
 
   @Input() tree?: { state: TitleState, history: History[] };
@@ -91,7 +92,8 @@ export class GraphComponent implements OnInit, AfterViewInit, OnChanges {
 
   orgDetails(orgId: string) {
     this.unselect();
-    this.org = this.state.orgs[orgId];
+    const expense = sum(Object.values(this.state.expenses).filter(e => e.orgId === orgId).map(e => e.amount));
+    this.org = { ...this.state.orgs[orgId], expense };
   }
 
   getRightholderName(id: string) {

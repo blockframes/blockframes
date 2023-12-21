@@ -228,7 +228,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   }
 
   private async loadData() {
-    const versionId = await firstValueFrom(this.versionId$);
+    const versionId = this.versionId$.value;
     const contracts = await this.contracts();
     const rights = await this.rights(versionId);
     const incomes = await this.incomes([], versionId);
@@ -344,8 +344,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   async simulateWaterfall() {
     this.isRefreshing$.next(true);
     this.simulationData = await this.loadData();
-    const date = await firstValueFrom(this.date$);
-    const waterfall = await this.waterfallService.simulateWaterfall(this.simulationData, date);
+    const waterfall = await this.waterfallService.simulateWaterfall(this.simulationData, this.versionId$.value, this.date$.value);
     this._simulation$.next(waterfall);
     this.isRefreshing$.next(false);
     return waterfall;
@@ -368,8 +367,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
       this.simulationData.expenses[expense.id] = expense;
     }
 
-    const date = await firstValueFrom(this.date$);
-    const waterfall = await this.waterfallService.simulateWaterfall(this.simulationData, date);
+    const waterfall = await this.waterfallService.simulateWaterfall(this.simulationData, this.versionId$.value, this.date$.value);
     this._simulation$.next(waterfall);
     this.isRefreshing$.next(false);
     return waterfall;

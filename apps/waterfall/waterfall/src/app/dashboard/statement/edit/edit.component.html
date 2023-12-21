@@ -3,17 +3,19 @@
   <waterfall-statement-distributor-edit *ngIf="['salesAgent', 'mainDistributor'].includes(statement.type)" [statement]="statement" [form]="form"></waterfall-statement-distributor-edit>
   <waterfall-statement-direct-sales-edit *ngIf="statement.type === 'directSales'" [statement]="statement" [form]="form"></waterfall-statement-direct-sales-edit>
 
-  <footer>
-    <button mat-flat-button color="primary" (click)="save(statement, true)">
-      <span>Continue</span>
-      <mat-icon svgIcon="arrow_forward"></mat-icon>
-    </button>
-  </footer>
-
-  <footer>
-    <button mat-button (click)="save(statement)">
-      <mat-icon svgIcon="save"></mat-icon>
-      <span>Save & Come back later</span>
-    </button>
-  </footer>
+  <ng-container *ngIf="waterfall$ | async as waterfall">
+    <footer>
+      <button mat-flat-button color="primary" (click)="save(statement, waterfall, true)">
+        <span>Continue</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </button>
+    </footer>
+  
+    <footer>
+      <button mat-button (click)="save(statement, waterfall)">
+        <mat-icon svgIcon="save"></mat-icon>
+        <span>Save & Come back later</span>
+      </button>
+    </footer>
+  </ng-container>
 </ng-container>

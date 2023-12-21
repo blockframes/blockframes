@@ -67,12 +67,28 @@ section {
           font-weight: bold;
         }
 
+        price-per-currency.expense, span.expense {
+          font-style: italic;
+        }
+
+        span.cap {
+          color: #f6b650
+        }
+
         mat-icon {
           color: var(--primary);
           vertical-align: middle;
           margin-top: -2px;
         }
+      }
 
+      div.to-be-recouped{
+        font-weight: 800;
+        font-size: 20px;
+        line-height: 24px;
+        text-align: right;
+        color: var(--foreground-third-text);
+        padding-top: 32px;
       }
     }
 

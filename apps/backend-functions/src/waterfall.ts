@@ -94,8 +94,9 @@ export async function onWaterfallDocumentDelete(docSnapshot: BlockframesSnapshot
   if (waterfallSnap.exists) {
     const waterfall = waterfallSnap.data() as Waterfall;
     const documents = waterfall.documents.filter(d => d.id !== waterfallDocument.id);
+    delete waterfall.expenseTypes[waterfallDocument.id];
     // This will trigger onWaterfallUpdate => cleanWaterfallMedias
-    waterfallSnap.ref.update({ documents });
+    waterfallSnap.ref.update({ documents, expenseTypes: waterfall.expenseTypes });
   }
 
   // If document is a contract, clean income, terms etc..

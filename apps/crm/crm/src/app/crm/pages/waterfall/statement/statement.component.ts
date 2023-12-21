@@ -71,6 +71,7 @@ export class StatementComponent implements OnInit {
     filter(statement => !!statement),
   );
   public statement: Statement;
+  public versionId: string;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
@@ -103,8 +104,8 @@ export class StatementComponent implements OnInit {
       this.expenses = expenses.filter(e => statement.expenseIds.includes(e.id));
     }
 
-    const versionId = _versionId || this.waterfall.versions[0]?.id;
-    if (versionId) this.shell.setVersionId(versionId);
+    this.versionId = _versionId || this.waterfall.versions[0]?.id;
+    if (this.versionId) this.shell.setVersionId(this.versionId);
     this.shell.setDate(statement.duration.to);
     this.snackBar.open('Initializing waterfall... Please wait', 'close', { duration: 5000 });
     this.simulation = await this.shell.simulateWaterfall();
@@ -139,6 +140,15 @@ export class StatementComponent implements OnInit {
     const rights = getStatementRights(this.statement, this.allRights);
     const rightIds = unique(this.sources.map(s => getAssociatedRights(s.id, rights, this.simulation.waterfall.state)).flat().map(r => r.id));
     this.rights = rights.filter(r => rightIds.includes(r.id));
+
+    if (this.statement.status === 'draft') {
+      // Reset payments
+      if (isDistributorStatement(this.statement) || isDirectSalesStatement(this.statement)) {
+        this.statement.payments.income = [];
+      }
+      this.statement.payments.right = [];
+      delete this.statement.payments.rightholder;
+    }
 
     this.statement = generatePayments(this.statement, this.simulation.waterfall.state, this.rights, this.incomes, this.waterfall.sources);
 

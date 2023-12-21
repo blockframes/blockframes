@@ -5,7 +5,7 @@
       <span>Remove all expenses</span>
     </button>
   </section>
-  <bf-table [source]="expenses" clickable useFilter pagination="50">
+  <bf-table [source]="expenses" useFilter pagination="50">
     <ng-template colRef="id" label="Id" let-id sort>
       {{ id }}
     </ng-template>
@@ -18,14 +18,17 @@
     <ng-template colRef="date" label="Date" let-date sort defaultSort>
       {{ date | date: 'dd/MM/yyyy' }}
     </ng-template>
-    <ng-template colRef="category" label="Category" let-category sort>
-      {{ category }}
+    <ng-template colRef="nature" label="Nature" let-nature sort>
+      {{ nature }}
     </ng-template>
-    <ng-template colRef="type" label="Type" let-type sort>
-      {{ type }}
+    <ng-template colRef="" label="Type" let-item sort>
+      {{ item.typeId | expenseType : item.contractId : waterfall }}
     </ng-template>
     <ng-template colRef="" label="Price" let-item sort>
       <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
+    </ng-template>
+    <ng-template colRef="capped" label="Capped" let-capped sort>
+      <mat-slide-toggle [checked]="capped" disabled color="primary"></mat-slide-toggle>
     </ng-template>
     <ng-template colRef="status" label="Status" let-status sort>
       {{ status | toLabel: 'paymentStatus' }}

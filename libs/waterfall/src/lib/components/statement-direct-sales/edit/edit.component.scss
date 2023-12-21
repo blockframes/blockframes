@@ -12,19 +12,6 @@ section.surface {
     color: var(--foreground-third-text);
   }
 
-  form.group {
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: 32px;
-    * {
-      flex: 1;
-    }
-  }
-
-  .group-label {
-    cursor: pointer;
-  }
-
   article {
     display: flex;
     gap: 16px;
