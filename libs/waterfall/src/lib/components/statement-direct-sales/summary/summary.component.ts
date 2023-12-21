@@ -32,6 +32,7 @@ import { StatementService } from '../../../statement.service';
 import { StatementArbitraryChangeComponent } from '../../statement-arbitrary-change/statement-arbitrary-change.component';
 import { MatDialog } from '@angular/material/dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface BreakdownRow {
   section: string;
@@ -165,6 +166,7 @@ export class StatementDirectSalesSummaryComponent {
             const cumulatedExpenses = _expenses.filter(e => e.typeId === expenseTypeId && history.map(s => s.expenseIds).flat().includes(e.id));
 
             const expenseType = this.waterfall.expenseTypes.directSales.find(e => e.id === expenseTypeId);
+            if(!expenseType) this.snackbar.open(`Expense type id "${expenseTypeId}" used in conditions of "${right.name}" is not defined.`, 'close', { duration: 5000 });
 
             rows.push({
               section: expenseType.name,
@@ -262,6 +264,7 @@ export class StatementDirectSalesSummaryComponent {
             const cumulatedExpenses = _expenses.filter(e => e.typeId === expenseTypeId && history.map(s => s.expenseIds).flat().includes(e.id));
 
             const expenseType = this.waterfall.expenseTypes.directSales.find(e => e.id === expenseTypeId);
+            if(!expenseType) this.snackbar.open(`Expense type id "${expenseTypeId}" used in conditions of "${right.name}" is not defined.`, 'close', { duration: 5000 });
 
             rows.push({
               section: expenseType.name,
@@ -318,6 +321,7 @@ export class StatementDirectSalesSummaryComponent {
     private shell: DashboardWaterfallShellComponent,
     private statementService: StatementService,
     private dialog: MatDialog,
+    private snackbar: MatSnackBar,
   ) { }
 
   public canEditRightPayment(row: BreakdownRow, statement: Statement) {
