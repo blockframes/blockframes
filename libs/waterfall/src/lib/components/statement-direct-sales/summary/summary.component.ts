@@ -99,7 +99,6 @@ export class StatementDirectSalesSummaryComponent {
         // Reset payments
         this.statement.payments.income = [];
         this.statement.payments.right = [];
-        delete this.statement.payments.rightholder;
       }
 
       const statement = generatePayments(this.statement, simulation.waterfall.state, rights, incomes, sources);
