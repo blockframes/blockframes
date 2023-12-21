@@ -34,8 +34,9 @@
             <ng-template colRef="" label="" let-item>
               <button mat-icon-button 
                 *ngIf="item.type === 'right'"
-                [disabled]="statement.status === 'reported'"
-                [matTooltip]="statement.status === 'reported' ? 'Statement is already reported.' : 'Change current value'"
+                [disabled]="!canEditRightPayment(item, statement)"
+                [matTooltip]="!canEditRightPayment(item, statement) ? 'This cannot be edited.' : 'Change current value'"
+                (click)="editRightPayment(item, statement)"
               >
                 <mat-icon svgIcon="statement_warning"></mat-icon>
               </button>
@@ -83,8 +84,9 @@
             <ng-template colRef="" label="" let-item>
               <button mat-icon-button 
                 *ngIf="item.type === 'right'"
-                [disabled]="statement.status === 'reported'"
-                [matTooltip]="statement.status === 'reported' ? 'Statement is already reported.' : 'Change current value'"
+                [disabled]="!canEditRightPayment(item, statement)"
+                [matTooltip]="!canEditRightPayment(item, statement) ? 'This cannot be edited.' : 'Change current value'"
+                (click)="editRightPayment(item, statement)"
               >
                 <mat-icon svgIcon="statement_warning"></mat-icon>
               </button>

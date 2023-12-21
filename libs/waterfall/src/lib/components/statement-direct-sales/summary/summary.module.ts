@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { StatementHeaderModule } from '../../statement-header/statement-header.module';
+import { StatementArbitraryChangeModule } from '../../statement-arbitrary-change/statement-arbitrary-change.module';
 
 // Components
 import { StatementDirectSalesSummaryComponent } from './summary.component';
@@ -20,6 +21,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [StatementDirectSalesSummaryComponent],
@@ -31,6 +33,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     PricePerCurrencyModule,
     TableModule,
     StatementHeaderModule,
+    StatementArbitraryChangeModule,
 
     // Material
     MatDividerModule,
@@ -41,6 +44,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatFormFieldModule,
     MatInputModule,
     MatTooltipModule,
+    MatDialogModule,
   ],
   exports: [StatementDirectSalesSummaryComponent]
 })

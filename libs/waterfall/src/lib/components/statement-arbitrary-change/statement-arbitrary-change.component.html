@@ -1,0 +1,57 @@
+<global-modal>
+  <h2>Save Changes of the {{ data.right.name }}</h2>
+
+  <ng-container *ngFor="let override of form.get('overrides').controls; let i = index">
+    <ng-container *ngIf="getConfig(override.get('incomeId').value) as config">
+      <section>
+        <h3>{{ config.source.name }} : </h3>
+        <mat-chip-list *ngIf="config.income.medias.length" aria-label="Medias">
+          <mat-chip disableRipple *ngFor="let media of config.income.medias | toGroupLabel:'medias':'All'">
+            {{ media }}
+          </mat-chip>
+        </mat-chip-list>
+        <span *ngIf="config.income.territories.length" class="group-label">
+          {{ config.income.territories | toGroupLabel:'territories':'World' | join | maxLength:30 }}
+        </span>
+      </section>
+      
+      <section>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ data.right.type | toLabel: 'rightTypes' }}</mat-label>
+          <mat-icon [svgIcon]="mainCurrency" matPrefix></mat-icon>
+          <input matInput type="number" min="0" [max]="config.max" [formControl]="override.get('amount')" required />
+          <mat-error>Please fill in a value between 0 and {{ config.max }}.</mat-error>
+        </mat-form-field>
+  
+        <button mat-icon-button (click)="restore(i, config.income.id)" matTooltip="Restore to initial value">
+          <mat-icon svgIcon="restore"></mat-icon>
+        </button>
+      </section>
+      
+      <p class="mat-body-2">Before applying the changes, please tell us the main reason of the changes in the comment below. </p>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Comment</mat-label>
+        <textarea matInput [formControl]="override.get('comment')" placeholder="Comment" type="string" cdkTextareaAutosize cdkAutosizeMinRows="6" required ></textarea>
+        <mat-error>Please tell us the main reason of the changes in the comment section.</mat-error>
+      </mat-form-field>
+      
+    </ng-container>
+
+  </ng-container>
+
+  <p class="mat-body-2">To confirm the changes, please type "SAVE"</p>
+  <mat-form-field appearance="outline">
+    <mat-label>Changes confirmation</mat-label>
+    <input matInput [formControl]="form.get('confirm')" required />
+  </mat-form-field>
+  
+  <mat-dialog-actions>
+    <button mat-flat-button color="primary" [disabled]="form.invalid || form.get('confirm').value !== 'SAVE'" (click)="confirm()">
+      <span>Confirm Changes</span>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
+    </button>
+    <button mat-button (click)="close()">
+      Close window
+    </button>
+  </mat-dialog-actions>
+</global-modal>

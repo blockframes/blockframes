@@ -23,10 +23,10 @@ export interface Right {
 }
 
 export interface RightOverride {
-  id: string;
   incomeId: string;
   rightId: string;
   percent: number;
+  comment: string;
 }
 
 export function createRight(params: Partial<Right> = {}) {
@@ -51,10 +51,10 @@ export function createRight(params: Partial<Right> = {}) {
 
 export function createRightOverride(params: Partial<RightOverride> = {}): RightOverride {
   return {
-    id: '',
     incomeId: '',
     rightId: '',
     percent: 100,
+    comment: '',
     ...params
   }
 }
