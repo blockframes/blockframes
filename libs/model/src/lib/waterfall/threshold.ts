@@ -71,13 +71,13 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
   if (from) {
     const incomeTransfer = initTransfer(incomeState, from, to);
     incomeTransfer.amount += basePercent;
-    incomeTransfer.percent = rightOverride?.percent || getNode(state, to).percent;
+    incomeTransfer.percent = rightOverride ? rightOverride.percent : getNode(state, to).percent;
   }
   let taken = 0;
   if (state.rights[to]) {
     const right = state.rights[to];
 
-    const rightPercent = rightOverride?.percent || right.percent;
+    const rightPercent = rightOverride ? rightOverride.percent : right.percent;
     const rightConditions: ConditionGroup = rightOverride ? { operator: 'AND', conditions: [] } : right.conditions;
 
     const { thresholdCdts } = splitConditions(rightConditions);
@@ -123,7 +123,7 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
       const rightOverride = getRightOverride(state, rightOverrides, child);
       const childIncomeTransfer = initTransfer(incomeState, group.id, child);
       childIncomeTransfer.amount += groupRate;
-      childIncomeTransfer.percent = rightOverride?.percent || getNode(state, child).percent;
+      childIncomeTransfer.percent = rightOverride ? rightOverride.percent : getNode(state, child).percent;
       if (childTakes > 0) {
         childIncomeTransfer.checked = true;
         initTransfer(incomeState, from, to).checked = true;
@@ -146,7 +146,7 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
       const rightOverride = getRightOverride(state, rightOverrides, child);
       const childIncomeTransfer = initTransfer(incomeState, group.id, child);
       childIncomeTransfer.amount += groupRate;
-      childIncomeTransfer.percent = rightOverride?.percent || getNode(state, child).percent;
+      childIncomeTransfer.percent = rightOverride ? rightOverride.percent : getNode(state, child).percent;
     }
 
     for (const child of group.children) {

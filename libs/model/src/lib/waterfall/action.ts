@@ -348,7 +348,7 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
         date: i.date,
         territories: i.territories,
         medias: i.medias,
-        rightOverrides: statement?.rightOverrides.map(r => ({ rightId: r.rightId, percent: r.percent / 100 })) || [],
+        rightOverrides: statement?.rightOverrides.filter(r => r.incomeId === i.id).map(r => ({ rightId: r.rightId, percent: r.percent / 100 })) || [],
       })
     );
   };
@@ -736,7 +736,7 @@ function source(state: TitleState, payload: SourceAction) {
   state.sources[payload.id] ||= createSourceState({ id: payload.id, amount: 0, destinationId: payload.destinationId });
 }
 
-export interface IncomeActionRightOverride { 
+export interface IncomeActionRightOverride {
   rightId: string,
   percent: number
 }

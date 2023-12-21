@@ -43,6 +43,16 @@
           <ng-container *ngSwitchCase="'to'">
             <strong>{{ item.key }}:</strong> {{ item.value | json }}
           </ng-container>
+          <ng-container *ngSwitchCase="'rightOverrides'">
+            <ng-container *ngIf="item.value.length > 0">
+              <strong>{{ item.key }}:</strong> <br>
+              <ul>
+                <li *ngFor="let override of item.value">
+                  {{ override | json }}
+                </li>
+              </ul>
+            </ng-container>
+          </ng-container>
           <ng-container *ngSwitchDefault>
             <strong>{{ item.key }}:</strong> {{ item.value  }}
           </ng-container>
