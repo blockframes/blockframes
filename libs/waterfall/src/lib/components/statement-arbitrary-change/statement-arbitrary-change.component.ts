@@ -4,6 +4,7 @@ import { Income, Right, RightOverride, WaterfallSource, createRightOverride, mai
 import { ArbitraryChangeForm, RightOverrideAmount } from '../../form/arbitrary-change.form';
 
 interface StatementArbitraryChangeData {
+  mode?: 'view';
   right: Right;
   maxPerIncome: { income: Income; max: number; current: number; source: WaterfallSource }[];
   overrides: RightOverride[];
@@ -41,9 +42,13 @@ export class StatementArbitraryChangeComponent implements OnInit {
     return this.data.maxPerIncome.find(maxPerIncome => maxPerIncome.income.id === incomeId);
   }
 
-  public restore(index: number, incomeId: string) {
+  public getInitialValue(incomeId: string) {
     const config = this.data.maxPerIncome.find(maxPerIncome => maxPerIncome.income.id === incomeId);
-    this.form.get('overrides').at(index).get('amount').setValue(this.data.right.percent * config.max / 100);
+    return this.data.right.percent * config.max / 100;
+  }
+
+  public restore(index: number, incomeId: string) {
+    this.form.get('overrides').at(index).get('amount').setValue(this.getInitialValue(incomeId));
   }
 
   public confirm() {

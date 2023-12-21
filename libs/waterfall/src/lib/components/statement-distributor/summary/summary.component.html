@@ -34,14 +34,23 @@
               <price-per-currency [class]="item.type" [price]="item.cumulated" default="€ 0"></price-per-currency>
             </ng-template>
             <ng-template colRef="" label="" let-item>
-              <button mat-icon-button 
-                *ngIf="item.type === 'right'"
-                [disabled]="!canEditRightPayment(item, statement)"
-                [matTooltip]="!canEditRightPayment(item, statement) ? 'This cannot be edited.' : 'Change current value'"
-                (click)="editRightPayment(item, statement)"
-              >
-                <mat-icon svgIcon="statement_warning"></mat-icon>
-              </button>
+              <ng-container *ngIf="item.type === 'right'">
+                <button mat-icon-button 
+                  [disabled]="!canEditRightPayment(item, statement)"
+                  [matTooltip]="!canEditRightPayment(item, statement) ? 'This cannot be edited.' : 'Change current value'"
+                  (click)="editRightPayment(item, statement)"
+                >
+                  <mat-icon svgIcon="statement_warning"></mat-icon>
+                </button>
+                <ng-container *ngIf="hasOverrides(item, statement)">
+                  <button mat-icon-button 
+                    matTooltip="This value has been overridden."
+                    (click)="showOverrides(item, statement)"
+                  >
+                    <mat-icon svgIcon="comment"></mat-icon>
+                  </button>
+                </ng-container>
+              </ng-container>
               <ng-container *ngIf="item.type === 'expense' && item.cap">
                 <span class="cap">CAP: <price-per-currency [price]="item.cap"></price-per-currency></span>
               </ng-container>
@@ -84,14 +93,23 @@
               <price-per-currency [class]="item.type" [price]="item.cumulated" default="€ 0"></price-per-currency>
             </ng-template>
             <ng-template colRef="" label="" let-item>
-              <button mat-icon-button 
-                *ngIf="item.type === 'right'"
-                [disabled]="!canEditRightPayment(item, statement)"
-                [matTooltip]="!canEditRightPayment(item, statement) ? 'This cannot be edited.' : 'Change current value'"
-                (click)="editRightPayment(item, statement)"
-              >
-                <mat-icon svgIcon="statement_warning"></mat-icon>
-              </button>
+              <ng-container *ngIf="item.type === 'right'">
+                <button mat-icon-button 
+                  [disabled]="!canEditRightPayment(item, statement)"
+                  [matTooltip]="!canEditRightPayment(item, statement) ? 'This cannot be edited.' : 'Change current value'"
+                  (click)="editRightPayment(item, statement)"
+                >
+                  <mat-icon svgIcon="statement_warning"></mat-icon>
+                </button>
+                <ng-container *ngIf="hasOverrides(item, statement)">
+                  <button mat-icon-button 
+                    matTooltip="This value has been overridden."
+                    (click)="showOverrides(item, statement)"
+                  >
+                    <mat-icon svgIcon="comment"></mat-icon>
+                  </button>
+                </ng-container>
+              </ng-container>
               <ng-container *ngIf="item.type === 'expense' && item.cap">
                 <span class="cap">CAP: <price-per-currency [price]="item.cap"></price-per-currency></span>
               </ng-container>

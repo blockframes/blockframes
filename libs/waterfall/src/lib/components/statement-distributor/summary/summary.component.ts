@@ -334,12 +334,28 @@ export class StatementDistributorSummaryComponent {
         right: row.right,
         maxPerIncome: row.maxPerIncome,
         overrides: statement.rightOverrides.filter(c => c.rightId === row.right.id),
-        onConfirm: async (rightOverrides: RightOverride[]) => {
-          await this.statementService.update(statement.id, { rightOverrides }, { params: { waterfallId: this.waterfall.id } });
+        onConfirm: async (overrides: RightOverride[]) => {
+          const rightOverrides = statement.rightOverrides.filter(c => c.rightId !== row.right.id);
+          await this.statementService.update(statement.id, { rightOverrides: [...rightOverrides, ...overrides] }, { params: { waterfallId: this.waterfall.id } });
 
           // Refresh simulation
           await this.shell.simulateWaterfall();
         }
+      })
+    });
+  }
+
+  public hasOverrides(row: BreakdownRow, statement: Statement) {
+    return statement.status === 'reported' && statement.rightOverrides.some(c => c.rightId === row.right.id);
+  }
+
+  public showOverrides(row: BreakdownRow, statement: Statement) {
+    this.dialog.open(StatementArbitraryChangeComponent, {
+      data: createModalData({
+        mode: 'view',
+        right: row.right,
+        maxPerIncome: row.maxPerIncome,
+        overrides: statement.rightOverrides.filter(c => c.rightId === row.right.id),
       })
     });
   }

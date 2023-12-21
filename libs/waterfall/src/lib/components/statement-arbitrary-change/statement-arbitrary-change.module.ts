@@ -8,6 +8,7 @@ import { StatementArbitraryChangeComponent } from './statement-arbitrary-change.
 // Blockframes
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 import { JoinPipeModule, MaxLengthModule, ToGroupLabelPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -29,6 +30,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ToGroupLabelPipeModule,
     MaxLengthModule,
     JoinPipeModule,
+    PricePerCurrencyModule,
 
     MatIconModule,
     MatButtonModule,
