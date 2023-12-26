@@ -874,7 +874,7 @@ function payment(state: TitleState, payload: PaymentAction) {
     state.orgs[payload.from.org].revenu.actual -= payload.amount;
     state.orgs[payload.to.org].revenu.actual += payload.amount;
     state.orgs[payload.to.org].turnover.actual += payload.amount;
-  } else if (payload.from.org && payload.to.right) { // Payment for org to right
+  } else if (payload.from.org && payload.to.right) { // Payment from org to right
     assertNode(state, payload.to.right);
     // Orgs
     const orgState = getNodeOrg(state, payload.to.right);
