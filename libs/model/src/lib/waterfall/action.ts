@@ -325,7 +325,7 @@ export function expenseTypesToAction(expenseTypes: ExpenseType[], versionId: str
   return actions;
 }
 
-export function incomesToActions(contracts: WaterfallContract[], incomes: Income[], sources: WaterfallSource[], statements: Statement[]) {
+export function incomesToActions(contracts: WaterfallContract[], incomes: Income[], sources: WaterfallSource[], _statements: Statement[]) {
   const actions: Action[] = [];
 
   for (const i of incomes.filter(i => i.status === 'received')) {
@@ -333,7 +333,9 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
     // On waterfall side, the root contract is updated (updateContract), so we need to specify this one.
     const rootContract = contractAndAmendments.find(c => !c.rootId);
 
-    const statement = statements.find(s => s.incomeIds.includes(i.id)); // TODO #9520 check statement & income version
+    // Fetch overrides from statements. There can be multiple statements for a single income (distrib/direct sales and outgoing(s))
+    const statements = _statements.filter(s => s.incomeIds.includes(i.id)); // TODO #9520 check statement & income version
+    const rightOverrides = statements.map(s => s.rightOverrides.filter(r => r.incomeId === i.id).map(r => ({ rightId: r.rightId, percent: r.percent / 100 }))).flat();
 
     const source = getAssociatedSource(i, sources);
 
@@ -348,7 +350,7 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
         date: i.date,
         territories: i.territories,
         medias: i.medias,
-        rightOverrides: statement?.rightOverrides.filter(r => r.incomeId === i.id).map(r => ({ rightId: r.rightId, percent: r.percent / 100 })) || [],
+        rightOverrides,
       })
     );
   };
