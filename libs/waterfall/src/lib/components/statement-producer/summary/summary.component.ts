@@ -101,6 +101,17 @@ interface BreakdownRow {
   }[];
 }
 
+interface DetailsRow {
+  name: string,
+  details: {
+    from: string,
+    to: string,
+    amount: number,
+    taken: number,
+    percent: number,
+  }[]
+}
+
 @Component({
   selector: 'waterfall-statement-producer-summary',
   templateUrl: './summary.component.html',
@@ -218,13 +229,14 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
     map(([groups, simulation, statement, rights]) => {
       const sourcesDetails = groups.map(g => g.rows.filter(r => r.type === 'source')).flat();
 
-      return sourcesDetails.map(row => {
+      const items: DetailsRow[] = [];
+      for (const row of sourcesDetails) {
         const source = this.waterfall.sources.find(s => s.id === row.source.id);
         const path = getPath(row.right.id, row.source.id, simulation.waterfall.state);
 
         const rightId = path[path.indexOf(row.right.id) - 1];
         const details = getPathDetails(statement.incomeIds, rightId, row.source.id, simulation.waterfall.state);
-        return {
+        const item: DetailsRow = {
           name: source.name,
           details: details.map(d => ({
             ...d,
@@ -232,7 +244,16 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
             to: rights.find(r => r.id === d.to.id).name
           }))
         }
-      });
+
+        // Prevent duplicated rows
+        const rowExists = (r: DetailsRow) => items.some(i =>
+          i.name === r.name && i.details.length === r.details.length &&
+          i.details[i.details.length - 1].to === r.details[r.details.length - 1].to
+        );
+        if (!rowExists(item)) items.push(item);
+      }
+
+      return items;
     })
   );
 

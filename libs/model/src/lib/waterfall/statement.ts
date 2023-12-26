@@ -451,21 +451,22 @@ function skipGroups(rights: Right[]) {
  * @param _incomeIds 
  * @param transferState 
  */
-function getTransfersHistory(rightId: string, _incomeIds: string[] | string, transferState: Record<string, TransferState>) {
+function getTransfersHistory(rightId: string, _incomeIds: string[] | string, transferState: Record<string, TransferState>, options: { checked: boolean } = { checked: true }) {
   const incomeIds = Array.isArray(_incomeIds) ? _incomeIds : [_incomeIds];
   const transfers = Object.values(transferState).filter(t => t.to === rightId);
-  return transfers.map(t => t.history.filter(h => h.checked && incomeIds.includes(h.incomeId))).flat();
+  const history = transfers.map(t => t.history.filter(h => incomeIds.includes(h.incomeId))).flat();
+  return options.checked ? history.filter(h => h.checked) : history;
 }
 
 /**
- * Look into transfer state to find the incoming amount for this rightId and incomeIds
+ * Look into transfer state to find the transfered amount (turnover) to this rightId for this incomeIds
  * @param rightId 
  * @param _incomeIds 
  * @param transferState 
  * @returns number
  */
 export function getIncomingAmount(rightId: string, incomeIds: string[] | string, transferState: Record<string, TransferState>): number {
-  const history = getTransfersHistory(rightId, incomeIds, transferState);
+  const history = getTransfersHistory(rightId, incomeIds, transferState, { checked: false });
   return sum(history, i => i.amount);
 }
 
