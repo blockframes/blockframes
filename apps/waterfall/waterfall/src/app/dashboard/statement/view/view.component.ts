@@ -155,6 +155,13 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     this.form.markAsPristine();
   }
 
+  /**
+   * Used to apply or revert arbitrary changes made to an outgoing statement.
+   * This method will re-write right payments of impacted (parents) statements.
+   * @see libs/waterfall/src/lib/components/statement-arbitrary-change/statement-arbitrary-change.component.ts
+   * @param statement 
+   * @returns 
+   */
   private async updateParentStatements(statement: Statement) {
     const incomeIds = statement.payments.right.map(payment => payment.incomeIds).flat();
     const statements = await this.shell.statements();
