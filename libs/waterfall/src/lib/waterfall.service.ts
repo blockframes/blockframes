@@ -272,11 +272,13 @@ function waterfallToDate(build: WaterfallState, date?: Date) {
 function groupActions(data: WaterfallData, versionId: string, isSimulation = false) {
   // @dev "sourcesToAction" may be activated for real waterfall also (generate bad display for graph generated with G6 but not with new one)
   const sourceActions = isSimulation ? sourcesToAction(data.waterfall.sources) : [];
+  const incomeStatements = isSimulation ? data.statements : data.statements.filter(s => s.status === 'reported');
+
   const expenseTypesActions = expenseTypesToAction(Object.values(data.waterfall.expenseTypes).flat(), versionId);
   const contractActions = contractsToActions(data.contracts, data.terms);
   const investmentActions = investmentsToActions(data.contracts, data.terms);
   const rightActions = rightsToActions(data.rights);
-  const incomeActions = incomesToActions(data.contracts, Object.values(data.incomes), data.waterfall.sources, data.statements);
+  const incomeActions = incomesToActions(data.contracts, Object.values(data.incomes), data.waterfall.sources, incomeStatements);
   const expenseActions = expensesToActions(Object.values(data.expenses));
   const paymentActions = statementsToActions(data.statements);
 

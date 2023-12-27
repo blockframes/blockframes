@@ -17,7 +17,7 @@
         </section>
         
         <p class="mat-body-2">Value for <strong>{{ data.right.name }}</strong> was changed from  
-          <strong><price-per-currency [price]="getInitialValue(override.incomeId) | formatPair" default="€ 0"></price-per-currency></strong>
+          <strong><price-per-currency [price]="override.initial | formatPair" default="€ 0"></price-per-currency></strong>
           to 
           <strong><price-per-currency [price]="config.current | formatPair" default="€ 0"></price-per-currency></strong>
         </p>
@@ -53,6 +53,46 @@
             {{ config.income.territories | toGroupLabel:'territories':'World' | join | maxLength:30 }}
           </span>
         </section>
+
+        <ng-container *ngIf="warnings[config.income.id] as warning">
+          <article *ngIf="warning.directSales?.length">
+            <section>
+              <span><mat-icon color="warn" svgIcon="warning"></mat-icon></span>
+              <p>
+                Changing this value might impact the following {{ 'directSales' | toLabel: 'statementType' }} statements: 
+              </p>
+            </section>
+            <ul>
+              <li *ngFor="let stm of warning.directSales">
+                <span>
+                  <h3>{{ stm.senderId | rightholderName: data.waterfall }} {{ stm.duration.from | date: 'dd/MM/yyyy' }} -  {{ stm.duration.to | date: 'dd/MM/yyyy' }}</h3>
+                  <a mat-icon-button [routerLink]="['/c/o/dashboard/title', stm.waterfallId, 'statement', stm.id]" target="_blank">
+                    <mat-icon svgIcon="document" matTooltip="View statement"></mat-icon>
+                  </a>
+                </span>
+              </li>
+            </ul>
+          </article>
+          <article *ngIf="warning.outgoing?.length">
+            <section>
+              <span><mat-icon color="warn" svgIcon="warning"></mat-icon></span>
+              <p>
+                Changing this value might create a payment <strong matTooltip="Distributed amount could be higher than available amount, resulting in a negative balance">overflow</strong> 
+                between current statement and the following {{ 'producer' | toLabel: 'statementType' }} statements:
+              </p>
+            </section>
+            <ul>
+              <li *ngFor="let stm of warning.outgoing">
+                <span>
+                  <h3>{{ stm.senderId | rightholderName: data.waterfall }} {{ stm.duration.from | date: 'dd/MM/yyyy' }} -  {{ stm.duration.to | date: 'dd/MM/yyyy' }}</h3>
+                  <a mat-icon-button [routerLink]="['/c/o/dashboard/title', stm.waterfallId, 'statement', stm.id]" target="_blank">
+                    <mat-icon svgIcon="document" matTooltip="View statement"></mat-icon>
+                  </a>
+                </span>
+              </li>
+            </ul>
+          </article>
+        </ng-container>
         
         <section>
           <mat-form-field appearance="outline">
@@ -62,7 +102,7 @@
             <mat-error>Please fill in a value between 0 and {{ config.max }}.</mat-error>
           </mat-form-field>
     
-          <button mat-icon-button (click)="restore(i, config.income.id)" matTooltip="Restore to initial value">
+          <button mat-icon-button (click)="restore(i)" matTooltip="Restore to initial value">
             <mat-icon svgIcon="restore"></mat-icon>
           </button>
         </section>

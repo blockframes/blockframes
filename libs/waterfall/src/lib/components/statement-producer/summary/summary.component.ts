@@ -32,7 +32,7 @@ import { BehaviorSubject, Subscription, combineLatest, debounceTime, map, shareR
 import { unique } from '@blockframes/utils/helpers';
 import { MatDialog } from '@angular/material/dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { StatementArbitraryChangeComponent } from '../../statement-arbitrary-change/statement-arbitrary-change.component';
+import { MaxPerIncome, StatementArbitraryChangeComponent } from '../../statement-arbitrary-change/statement-arbitrary-change.component';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 
 function getSourcesWithRemainsOf(incomeIds: string[], state: TitleState, right: Right, sources: WaterfallSource[]): BreakdownRow[] {
@@ -46,7 +46,7 @@ function getSourcesWithRemainsOf(incomeIds: string[], state: TitleState, right: 
     const to = path[path.indexOf(right.id) - 1];
 
     const details = getTransferDetails(incomeIds, s.id, from, to, state);
-    return { ...s, taken: details.taken };
+    return { ...s, taken: details.amount };
   }).map(source => ({ name: source.name, taken: source.taken, type: 'source', source, right }));
 }
 
@@ -93,12 +93,7 @@ interface BreakdownRow {
   type?: 'source' | 'total' | 'right';
   right?: Right;
   source?: WaterfallSource & { taken: number };
-  maxPerIncome?: {
-    income: Income;
-    max: number;
-    current: number;
-    source: WaterfallSource
-  }[];
+  maxPerIncome?: MaxPerIncome[];
 }
 
 interface DetailsRow {
@@ -287,12 +282,16 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  public editRightPayment(row: BreakdownRow, statement: Statement) {
+  public async editRightPayment(row: BreakdownRow, statement: Statement) {
+    const statements = await this.shell.statements();
     this.dialog.open(StatementArbitraryChangeComponent, {
       data: createModalData({
         right: row.right,
         maxPerIncome: row.maxPerIncome,
         overrides: statement.rightOverrides.filter(c => c.rightId === row.right.id),
+        statementId: statement.id,
+        statements,
+        waterfall: this.waterfall,
         onConfirm: async (overrides: RightOverride[]) => {
           const rightOverrides = statement.rightOverrides.filter(c => c.rightId !== row.right.id);
 
