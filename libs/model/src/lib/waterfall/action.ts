@@ -922,5 +922,6 @@ function payment(state: TitleState, payload: PaymentAction) {
   }
 
   // Logs the payment
+  if (!payload.id) throw new Error(`Missing id for payment made to ${payload.to.org ? 'org' : 'right'} "${payload.to.org ?? payload.to.right}".`);
   state.payments[payload.id] = payload;
 }
