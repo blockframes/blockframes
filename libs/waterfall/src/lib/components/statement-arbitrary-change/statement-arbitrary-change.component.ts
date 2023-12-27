@@ -58,9 +58,13 @@ export class StatementArbitraryChangeComponent implements OnInit {
          * @dev If data.statements is provided (only for outgoing statements),
          * we check if there is already statements with payments declared on the same income.
          * 
-         * DirectSales statements could be impacted (distributor statements also, but nothing displayed to user)
+         * DirectSales statements could be impacted.
+         * (distributor statements also, but nothing displayed to user, so this change can be silent)
          * 
-         * Sum of Outgoing statements rightPayments could exceed 100%
+         * Sum of Outgoing statements rightPayments could exceed 100%.
+         * 
+         * For each impacted statement, right payments will be updated once statement is reported.
+         * @see apps/waterfall/waterfall/src/app/dashboard/statement/view/view.component.ts
          */
         const parentDirectSalesStatements = this.data.statements
           .filter(s => isDirectSalesStatement(s))
@@ -73,6 +77,7 @@ export class StatementArbitraryChangeComponent implements OnInit {
 
         // TODO #9420 if an internal right payment of a distributor statement is impacted, we should create a new version.
         // To check if statement is impacted, another instance of simulation should be created ?
+        // This could be used to check if max > 100% and display a warning, additionnaly, max and theoric max should be displayed in the UI
         // Let's wait to know if this case can occur before implementing it.
 
         if (parentDirectSalesStatements.length || outgoingStatements.length) {

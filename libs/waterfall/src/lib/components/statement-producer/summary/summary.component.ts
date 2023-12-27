@@ -293,9 +293,6 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
         onConfirm: async (overrides: RightOverride[]) => {
           const rightOverrides = statement.rightOverrides.filter(c => c.rightId !== row.right.id);
 
-          // TODO #9520 if statement is using incomeIds declared in directSales statements, we should update the directSales statements and display a warning
-          // TODO #9520 also, if max > 100% we should display a warning + max and theoric max should be displayed in the UI
-
           await this.statementService.update(statement.id, {
             rightOverrides: [...rightOverrides, ...overrides],
             incomeIds: this.statement.incomeIds
