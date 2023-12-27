@@ -10,6 +10,7 @@ function createRightOverrideControl(orverride?: Partial<RightOverrideAmount>) {
     incomeId: new FormControl<string>(orverride?.incomeId ?? ''),
     rightId: new FormControl<string>(orverride?.rightId ?? ''),
     amount: new FormControl<number>(orverride?.amount ?? 0),
+    initial: new FormControl<number>(orverride?.initial ?? 0),
     comment: new FormControl<string>(orverride?.comment),
   };
 }

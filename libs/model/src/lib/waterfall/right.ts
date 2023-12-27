@@ -26,6 +26,7 @@ export interface RightOverride {
   incomeId: string;
   rightId: string;
   percent: number;
+  initial: number;
   comment: string;
 }
 
@@ -54,6 +55,7 @@ export function createRightOverride(params: Partial<RightOverride> = {}): RightO
     incomeId: '',
     rightId: '',
     percent: 100,
+    initial: 100,
     comment: '',
     ...params
   }

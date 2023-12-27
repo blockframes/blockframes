@@ -77,7 +77,6 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
   if (state.rights[to]) {
     const right = state.rights[to];
 
-    const rightPercent = rightOverride ? rightOverride.percent : right.percent;
     const rightConditions: ConditionGroup = rightOverride ? { operator: 'AND', conditions: [] } : right.conditions;
 
     const { thresholdCdts } = splitConditions(rightConditions);
@@ -85,12 +84,18 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
     incomeState.conditions.push(...thresholdCdts);
     // Update right
     const { checked, shadow, enabled } = checkCondition({ state, right, income: payload });
-    if (checked && from) initTransfer(incomeState, from, to).checked = true;
     right.enabled = enabled;
     const incomeRight = initRight(incomeState, to);
     incomeRight.turnoverRate += enabled ? basePercent : 0;
-    incomeRight.revenuRate += checked ? (rightPercent * basePercent) : 0;
-    incomeRight.shadowRevenuRate += shadow ? (rightPercent * basePercent) : 0;
+    if(rightOverride) {
+      if (from) initTransfer(incomeState, from, to).checked = true;
+      incomeRight.revenuRate += rightOverride.percent * basePercent;
+      incomeRight.shadowRevenuRate += rightOverride.percent * basePercent;
+    } else {
+      if (checked && from) initTransfer(incomeState, from, to).checked = true;
+      incomeRight.revenuRate += checked ? (right.percent * basePercent) : 0;
+      incomeRight.shadowRevenuRate += shadow ? (right.percent * basePercent) : 0;
+    }
     // Update org
     const incomeOrg = initOrg(incomeState, right.orgId);
     incomeOrg.revenuRate += incomeRight.revenuRate;
