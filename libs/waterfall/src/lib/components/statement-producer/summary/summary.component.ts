@@ -35,16 +35,14 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 import { MaxPerIncome, StatementArbitraryChangeComponent } from '../../statement-arbitrary-change/statement-arbitrary-change.component';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 
-function getSourcesWithRemainsOf(incomeIds: string[], state: TitleState, right: Right, sources: WaterfallSource[]): BreakdownRow[] {
+function getRightTurnover(incomeIds: string[], state: TitleState, right: Right, sources: WaterfallSource[]): BreakdownRow[] {
   const sourceIds = getSources(state, right.id).map(i => i.id);
 
   return sources.filter(s => sourceIds.includes(s.id)).map(s => {
     const path = getPath(right.id, s.id, state);
 
-    // We want the value of the transfer that is just before the current right or group
-    const from = path[path.indexOf(right.id) - 2];
-    const to = path[path.indexOf(right.id) - 1];
-
+    const to = path[path.length - 1];
+    const from = path[path.indexOf(to) - 1];
     const details = getTransferDetails(incomeIds, s.id, from, to, state);
     return { ...s, taken: details.amount };
   }).map(source => ({ name: source.name, taken: source.taken, type: 'source', source, right }));
@@ -179,7 +177,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
           const group = rights.find(r => r.id === groupState.id);
           if (!groups[group.id]) {
             // Sources remains 
-            const rows = getSourcesWithRemainsOf(statement.incomeIds, simulation.waterfall.state, group, sources);
+            const rows = getRightTurnover(statement.incomeIds, simulation.waterfall.state, group, sources);
 
             const remainTotal = rows.reduce((acc, s) => acc + s.taken, 0);
 
@@ -198,7 +196,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
           groups[group.id].rights.push(right);
         } else {
           // Sources remains 
-          const rows = getSourcesWithRemainsOf(statement.incomeIds, simulation.waterfall.state, right, sources);
+          const rows = getRightTurnover(statement.incomeIds, simulation.waterfall.state, right, sources);
 
           const remainTotal = rows.reduce((acc, s) => acc + s.taken, 0);
 
