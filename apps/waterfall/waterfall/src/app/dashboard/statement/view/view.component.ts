@@ -8,16 +8,21 @@ import {
   createIncomePayment,
   createRightPayment,
   createRightholderPayment,
+  generatePayments,
+  getAssociatedRights,
+  getStatementRights,
+  getStatementSources,
   isDirectSalesStatement,
   isDistributorStatement,
   isProducerStatement
 } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { StatementForm } from '@blockframes/waterfall/form/statement.form';
 import { StartementFormGuardedComponent } from '@blockframes/waterfall/guards/statement-form.guard';
 import { StatementService } from '@blockframes/waterfall/statement.service';
-import { Subscription, combineLatest, debounceTime, filter, map, pluck, tap } from 'rxjs';
+import { Subscription, combineLatest, debounceTime, filter, firstValueFrom, map, pluck, tap } from 'rxjs';
 
 @Component({
   selector: 'waterfall-statement-view',
@@ -137,6 +142,51 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     await this.shell.simulateWaterfall();
 
     if (reported) {
+      // TODO #9420 what if statement is put back to draft, how to revert the changes ?
+      if (isProducerStatement(statement) && statement.rightOverrides.length > 0) {
+        const incomeIds = statement.rightOverrides.map(override => override.incomeId);
+        const statements = await this.shell.statements();
+        const simulation = await firstValueFrom(this.shell.simulation$);
+        const _rights = await this.shell.rights();
+        const incomes = await this.shell.incomes();
+
+        const impactedStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
+          .filter(s => s.payments.right.some(r => r.incomeIds.some(id => incomeIds.includes(id))));
+
+        // Rewrite right payments of impacted statements
+        const statementsToUpdate: Statement[] = [];
+        for (const impactedStatement of impactedStatements) {
+
+          // Reset right payments
+          const existingPaymentInfos = impactedStatement.payments.right.map(p => ({ id: p.id, to: p.to, date: p.date, status: p.status }));
+          impactedStatement.payments.right = [];
+
+          const sources = getStatementSources(impactedStatement, this.waterfall.sources, incomes, _rights, simulation.waterfall.state);
+          const statementRights = getStatementRights(impactedStatement, _rights);
+          const rightIds = unique(sources.map(s => getAssociatedRights(s.id, statementRights, simulation.waterfall.state)).flat().map(r => r.id));
+          const rights = statementRights.filter(r => rightIds.includes(r.id));
+
+          const updatedStatements = generatePayments(impactedStatement, simulation.waterfall.state, rights, incomes, sources);
+          if (impactedStatement.status === 'reported') {
+            updatedStatements.payments.right = impactedStatement.payments.right.map(p => {
+              const existingPaymentInfo = existingPaymentInfos.find(info => info.to === p.to);
+              
+              const payment = {
+                ...p,
+                id: existingPaymentInfo.id,
+                status: existingPaymentInfo.status
+              }
+
+              if (existingPaymentInfo.date) payment.date = existingPaymentInfo.date;
+
+              return payment;
+            });
+          }
+          statementsToUpdate.push(updatedStatements);
+        }
+        await this.statementService.update(statementsToUpdate, { params: { waterfallId: this.waterfall.id } });
+      }
+
       // Statement is reported, actual waterfall is refreshed
       await this.shell.refreshWaterfall();
       this.snackBar.open('Statement reported !', 'close', { duration: 5000 });
