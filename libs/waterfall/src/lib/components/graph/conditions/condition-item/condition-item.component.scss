@@ -1,0 +1,21 @@
+
+:host {
+  margin: 16px 0;
+  padding: 4px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: color-mix(in srgb, var(--primary-lighter) 20%, transparent);
+  box-shadow: 0 4px 3px rgba(0, 0, 0, 0.2);
+
+  p,
+  mat-icon {
+    color: var(--primary);
+  }
+
+  p {
+    font-style: italic;
+    font-size: 12px;
+    margin: 0;
+  }
+}

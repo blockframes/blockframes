@@ -555,7 +555,7 @@ function contract(ctx: ConditionContext, payload: ConditionContract) {
   throw new Error('Terms condition should have at least the operators "in" or "not-in"');
 }
 
-interface ConditionContractAmount {
+export interface ConditionContractAmount {
   operator: NumberOperator;
   target: number;
 }
