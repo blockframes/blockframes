@@ -3,10 +3,29 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
-import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
-import { ArrayOperator, Condition, ConditionAmount, ConditionDuration, ConditionTerms, EventCondition, GroupCondition, GroupScope, Media, NumberOperator, OrgRevenuCondition, PoolCondition, Right, RightCondition, TargetValue, WaterfallContract, WaterfallDocument, arrayOperator, numberOperator } from '@blockframes/model';
+import {
+  Right,
+  Condition,
+  GroupScope,
+  TargetValue, 
+  ArrayOperator,
+  PoolCondition,
+  arrayOperator,
+  ConditionTerms,
+  EventCondition,
+  GroupCondition,
+  numberOperator,
+  NumberOperator,
+  RightCondition,
+  ConditionAmount,
+  ConditionDuration,
+  WaterfallContract,
+  WaterfallDocument,
+  OrgRevenuCondition,
+} from '@blockframes/model';
+import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 
-import { ConditionForm } from '../condition.form';
+import { ConditionForm } from './condition.form';
 
 
 const ownerLabels = {

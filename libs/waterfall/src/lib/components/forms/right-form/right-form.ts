@@ -1,7 +1,7 @@
 
 import { FormControl, FormGroup } from '@angular/forms';
 
-import { Condition, Right, RightType } from '@blockframes/model';
+import { Condition, Right, RightType, isConditionGroup } from '@blockframes/model';
 
 
 
@@ -21,7 +21,7 @@ export function createRightForm(right?: Partial<Right>): RightForm {
     name: new FormControl(right?.name ?? ''),
     percent: new FormControl(right?.percent ?? 0),
     parents: new FormControl<string[]>(right?.nextIds ?? []),
-    conditions: new FormControl(right?.conditions.conditions.filter(c => !('conditions' in c)) as Condition[] ?? []),
+    conditions: new FormControl(right?.conditions.conditions.filter(c => !isConditionGroup(c)) as Condition[] ?? [])
   });
 }
 
@@ -31,5 +31,5 @@ export function setRightFormValue(form: RightForm, right: Partial<Right>) {
   form.controls.name.setValue(right.name ?? '');
   form.controls.percent.setValue(right.percent ?? 0);
   form.controls.parents.setValue(right.nextIds ?? []);
-  form.controls.conditions.setValue(right.conditions?.conditions.filter(c => !('conditions' in c)) as Condition[] ?? []);
+  form.controls.conditions.setValue(right.conditions?.conditions.filter(c => !isConditionGroup(c)) as Condition[] ?? []);
 }

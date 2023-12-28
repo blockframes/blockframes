@@ -541,7 +541,7 @@ function termsLength(ctx: ConditionContext, payload: ConditionTermsLength) {
   return numericOperator(operator, terms.length, target);
 }
 
-export interface ConditionContract {
+interface ConditionContract {
   operator: ArrayOperator;
   contractIds: string[];
 }

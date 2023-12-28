@@ -1,8 +1,23 @@
 
 import { FormControl, FormGroup } from '@angular/forms';
 
+import {
+  Media,
+  Condition,
+  Territory,
+  ArrayOperator,
+  PoolCondition,
+  ConditionTerms,
+  GroupCondition,
+  EventCondition,
+  RightCondition,
+  NumberOperator,
+  numberOperator,
+  ConditionDuration,
+  OrgRevenuCondition,
+  ConditionContractAmount,
+} from '@blockframes/model';
 import { FormList } from '@blockframes/utils/form';
-import { ArrayOperator, Condition, ConditionContractAmount, ConditionDuration, ConditionTerms, EventCondition, GroupCondition, Media, NumberOperator, OrgRevenuCondition, PoolCondition, RightCondition, Territory, numberOperator } from '@blockframes/model';
 
 
 

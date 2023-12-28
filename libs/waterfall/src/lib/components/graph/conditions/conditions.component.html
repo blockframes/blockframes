@@ -19,14 +19,14 @@
   </mat-form-field>
 </div>
 
-<hr class="separator" />
+<hr />
 
 <waterfall-condition-item *ngFor="let condition of rightForm.controls.conditions.value; let index = index" [condition]="condition" (edit)="editCondition(index)" (delete)="deleteCondition(index)"></waterfall-condition-item>
 
 <waterfall-conditions-form [form]="conditionForm"></waterfall-conditions-form>
 
 <div class="add-next">
-  <hr/>
+  <hr />
   <p class="mat-caption">Add Next Condition</p>
   <button mat-mini-fab color="primary" [disabled]="!newCondition" (click)="createCondition()">
     <mat-icon svgIcon="add"></mat-icon>

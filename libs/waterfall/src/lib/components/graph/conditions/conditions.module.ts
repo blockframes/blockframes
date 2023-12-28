@@ -11,7 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { WaterfallConditionsComponent } from './conditions.component';
 import { WaterfallConditionItemModule } from './condition-item/condition-item.module';
-import { WaterfallConditionsFormModule } from './conditions-form/conditions-form.module';
+import { WaterfallConditionsFormModule } from '../../forms/conditions-form/conditions-form.module';
 
 
 @NgModule({

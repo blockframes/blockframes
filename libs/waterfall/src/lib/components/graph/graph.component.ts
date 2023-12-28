@@ -96,13 +96,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   async updateRight() {
     const rightId = this.selected$.getValue();
-    console.log(rightId);
 
     const graph = this.nodes$.getValue();
     updateParents(rightId, this.rightForm.controls.parents.value, graph);
-    console.log(graph);
     const newGraph = fromGraph(graph);
-    console.log(newGraph);
     const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
     const right = changes.updated.rights.find(right => right.id === rightId);
     right.type = this.rightForm.controls.type.value as RightType;

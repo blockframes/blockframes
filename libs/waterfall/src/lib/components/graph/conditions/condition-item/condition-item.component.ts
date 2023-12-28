@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import { Condition } from '@blockframes/model';
 
-import { conditionToString } from '../condition';
+import { conditionToString } from './condition';
 
 
 @Component({
