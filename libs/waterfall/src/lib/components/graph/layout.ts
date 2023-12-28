@@ -715,11 +715,11 @@ function createHorizontal(node: Node, parents?: string[]): Right {
   };
 }
 
-function createVertical(node: Node, parents?: string[]): Right {
+function createVertical(node: Node, parents?: string[], groupId?: string): Right {
   return {
     id: node.id,
     name: node.name,
-    groupId: node.id,
+    groupId: groupId ?? '',
     nextIds: parents ?? [],
     rightholderId: '',
     type: 'vertical',
@@ -730,11 +730,11 @@ function createVertical(node: Node, parents?: string[]): Right {
   };
 }
 
-function createRight(node: RightNode, parents?: string[]): Right {
+function createRight(node: RightNode, parents?: string[], groupId?: string): Right {
   return {
     id: node.id,
     name: node.name,
-    groupId: node.id,
+    groupId: groupId ?? '',
     nextIds: parents ?? [],
     rightholderId: node.rightHolderId,
     type: 'unknown',
@@ -775,18 +775,18 @@ export function fromGraph(graph: readonly Node[]) {
         rights.push(createHorizontal(node, parentIndex[node.id]));
         node.members.forEach(member => {
           if (member.type === 'vertical') {
-            rights.push(createVertical(member));
+            rights.push(createVertical(member, undefined, node.id));
             member.members.forEach(subMember => {
-              rights.push(createRight(subMember));
+              rights.push(createRight(subMember, undefined, member.id));
             });
           } else {
-            rights.push(createRight(member));
+            rights.push(createRight(member, undefined, node.id));
           }
         });
       } else if (node.type === 'vertical') {
         rights.push(createVertical(node, parentIndex[node.id]));
         node.members.forEach(member => {
-          rights.push(createRight(member));
+          rights.push(createRight(member, undefined, node.id));
         });
       } else {
         rights.push(createRight(node, parentIndex[node.id]));

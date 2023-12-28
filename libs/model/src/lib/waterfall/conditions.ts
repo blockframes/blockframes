@@ -541,7 +541,7 @@ function termsLength(ctx: ConditionContext, payload: ConditionTermsLength) {
   return numericOperator(operator, terms.length, target);
 }
 
-interface ConditionContract {
+export interface ConditionContract {
   operator: ArrayOperator;
   contractIds: string[];
 }
@@ -555,7 +555,7 @@ function contract(ctx: ConditionContext, payload: ConditionContract) {
   throw new Error('Terms condition should have at least the operators "in" or "not-in"');
 }
 
-interface ConditionContractAmount {
+export interface ConditionContractAmount {
   operator: NumberOperator;
   target: number;
 }

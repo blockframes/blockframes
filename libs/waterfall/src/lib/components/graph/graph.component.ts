@@ -11,8 +11,8 @@ import { Media, Right, RightType, Territory, Waterfall, WaterfallRightholder, Wa
 import { RightService } from '../../right.service';
 import { WaterfallService } from '../../waterfall.service';
 import { createRightForm, setRightFormValue } from '../forms/right-form/right-form';
-import { Arrow, Node, computeDiff, createChild, createSibling, fromGraph, toGraph, updateParents } from './layout';
 import { createSourceForm, setSourceFormValue } from '../forms/source-form/source-form';
+import { Arrow, Node, computeDiff, createChild, createSibling, fromGraph, toGraph, updateParents } from './layout';
 
 
 @Component({
@@ -96,16 +96,20 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   async updateRight() {
     const rightId = this.selected$.getValue();
+    console.log(rightId);
 
     const graph = this.nodes$.getValue();
     updateParents(rightId, this.rightForm.controls.parents.value, graph);
+    console.log(graph);
     const newGraph = fromGraph(graph);
+    console.log(newGraph);
     const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
     const right = changes.updated.rights.find(right => right.id === rightId);
     right.type = this.rightForm.controls.type.value as RightType;
     right.name = this.rightForm.controls.name.value;
     right.percent = this.rightForm.controls.percent.value;
     right.rightholderId = this.rightholders.find(r => r.name === this.rightForm.controls.org.value)?.id ?? '';
+    right.conditions = { operator: 'AND', conditions: this.rightForm.controls.conditions.value };
 
     const write = this.waterfallService.batch();
     await Promise.all([
