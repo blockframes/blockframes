@@ -2,7 +2,7 @@
 import { map, startWith } from 'rxjs';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
+import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 
 import { VerticalNode } from '../layout';
 

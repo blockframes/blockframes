@@ -210,13 +210,15 @@ export function getTransferDetails(statementIncomeIds: string[], sourceId: strin
   const to = getNode(state, toId);
   const from = getNode(state, fromId);
   const transfer = state.transfers[`${from.id}->${to.id}`];
-  let amount = 0;
+  const amount = { checked: 0, taken: 0, max: 0 };
   if (transfer) {
     const incomes = transfer.history.filter(h => incomeIds.includes(h.incomeId));
-    amount = sum(incomes.filter(i => i.checked), i => i.amount);
+    amount.checked = sum(incomes.filter(i => i.checked), i => i.amount);
+    amount.taken = sum(incomes.filter(i => i.checked), i => i.amount * i.percent);
+    amount.max = sum(incomes, i => i.amount);
   }
 
-  let taken = 0;
+  let taken = amount.taken;
   if (isGroup(state, to)) {
     const innerTransfers: TransferState[] = [];
     for (const childId of to.children) {
@@ -229,16 +231,14 @@ export function getTransferDetails(statementIncomeIds: string[], sourceId: strin
     }
     const innerIncomes = innerTransfers.map(t => t.history.filter(h => incomeIds.includes(h.incomeId))).flat();
     taken = sum(innerIncomes.filter(i => i.checked), i => i.amount * i.percent);
-  } else {
-    taken = amount * to.percent;
   }
 
-  const percent = isGroup(state, to) && amount ? (taken / amount) : to.percent;
+  const percent = amount.checked > 0 ? taken / amount.checked : 0;
 
   return {
     from,
     to,
-    amount,
+    amount: amount.max,
     taken,
     percent: parseFloat((percent * 100).toFixed(2)),
   };

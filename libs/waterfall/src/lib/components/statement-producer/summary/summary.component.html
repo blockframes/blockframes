@@ -30,7 +30,26 @@
               <span *ngIf="item.type === 'right'" [class]="item.type">{{ item.percent }} %</span>
             </ng-template>
             <ng-template colRef="" label="Net Receipts" let-item>
-              <price-per-currency [class]="item.type" [price]="item.taken | formatPair"></price-per-currency>
+              <price-per-currency [class]="item.type" [price]="item.taken | formatPair" default="€ 0"></price-per-currency>
+            </ng-template>
+            <ng-template colRef="" label="" let-item>
+              <ng-container *ngIf="item.type === 'right'">
+                <button mat-icon-button 
+                  [disabled]="!canEditRightPayment(item, statement)"
+                  [matTooltip]="!canEditRightPayment(item, statement) ? 'This cannot be edited.' : 'Change current value'"
+                  (click)="editRightPayment(item, statement)"
+                >
+                  <mat-icon svgIcon="statement_warning"></mat-icon>
+                </button>
+                <ng-container *ngIf="hasOverrides(item, statement)">
+                  <button mat-icon-button 
+                    matTooltip="This value has been overridden."
+                    (click)="showOverrides(item, statement)"
+                  >
+                    <mat-icon svgIcon="comment"></mat-icon>
+                  </button>
+                </ng-container>
+              </ng-container>
             </ng-template>
           </bf-table>
         </mat-expansion-panel>
@@ -61,14 +80,14 @@
               {{ to }}
             </ng-template>
             <ng-template colRef="amount" label="Amount" let-amount>
-              <price-per-currency [price]="amount | formatPair"></price-per-currency>
+              <price-per-currency [price]="amount | formatPair" default="€ 0"></price-per-currency>
             </ng-template>
             <ng-template colRef="percent" label="%" let-percent>
               {{ percent }}
             </ng-template>
             <ng-template colRef="taken" label="Taken" let-taken>
               <strong>
-                <price-per-currency [price]="taken | formatPair"></price-per-currency>
+                <price-per-currency [price]="taken | formatPair" default="€ 0"></price-per-currency>
               </strong>
             </ng-template>
           </bf-table>

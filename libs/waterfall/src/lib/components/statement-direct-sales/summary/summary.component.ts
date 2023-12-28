@@ -2,12 +2,16 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import {
   MovieCurrency,
   PricePerCurrency,
+  Right,
+  RightOverride,
   RightPayment,
   Statement,
   filterStatements,
   generatePayments,
   getAssociatedRights,
   getAssociatedSource,
+  getCalculatedAmount,
+  getIncomingAmount,
   getOrderedRights,
   getRightExpenseTypes,
   getSources,
@@ -22,6 +26,22 @@ import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { StatementForm } from '../../../form/statement.form';
 import { combineLatest, map, shareReplay, switchMap } from 'rxjs';
+import { StatementService } from '../../../statement.service';
+import { MaxPerIncome, StatementArbitraryChangeComponent } from '../../statement-arbitrary-change/statement-arbitrary-change.component';
+import { MatDialog } from '@angular/material/dialog';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+interface BreakdownRow {
+  section: string;
+  type?: 'right' | 'net' | 'expense';
+  previous: PricePerCurrency;
+  current: PricePerCurrency;
+  cumulated: PricePerCurrency;
+  right?: Right;
+  cap?: PricePerCurrency;
+  maxPerIncome?: MaxPerIncome[];
+}
 
 @Component({
   selector: 'waterfall-statement-direct-sales-summary',
@@ -68,9 +88,14 @@ export class StatementDirectSalesSummaryComponent {
       const rightIds = unique(sources.map(s => getAssociatedRights(s.id, statementRights, simulation.waterfall.state)).flat().map(r => r.id));
       const rights = statementRights.filter(r => rightIds.includes(r.id));
 
+      if (this.statement.status === 'draft') {
+        // Reset payments
+        this.statement.payments.income = [];
+        this.statement.payments.right = [];
+      }
+
       const statement = generatePayments(this.statement, simulation.waterfall.state, rights, incomes, sources);
       this.form.setAllValue({ ...this.statement, incomes, expenses, sources });
-
       return statement;
     }),
   );
@@ -94,7 +119,7 @@ export class StatementDirectSalesSummaryComponent {
       const orderedRights = getOrderedRights(displayedRights, simulation.waterfall.state);
 
       return sources.map(source => {
-        const rows: { section: string, type?: 'right' | 'net' | 'expense', previous: PricePerCurrency, current: PricePerCurrency, cumulated: PricePerCurrency, rightId?: string, cap?: PricePerCurrency }[] = [];
+        const rows: BreakdownRow[] = [];
 
         // Incomes declared by statement.senderId
         const previousSourcePayments = previous.map(s => s.payments.income).flat().filter(income => getAssociatedSource(incomes.find(i => i.id === income.incomeId), this.waterfall.sources).id === source.id);
@@ -133,12 +158,12 @@ export class StatementDirectSalesSummaryComponent {
             const cumulatedExpenses = _expenses.filter(e => e.typeId === expenseTypeId && history.map(s => s.expenseIds).flat().includes(e.id));
 
             const expenseType = this.waterfall.expenseTypes.directSales.find(e => e.id === expenseTypeId);
+            if (!expenseType) this.snackbar.open(`Expense type id "${expenseTypeId}" used in conditions of "${right.name}" is not defined.`, 'close', { duration: 5000 });
 
             rows.push({
               section: expenseType.name,
               cap: expenseType.cap.default > 0 ? { [expenseType.currency]: expenseType.cap.default } : undefined, // TODO #9520 replace default by versionId
               type: 'expense',
-              rightId: right.id,
               previous: getTotalPerCurrency(previousExpenses),
               current: getTotalPerCurrency(currentExpenses),
               cumulated: getTotalPerCurrency(cumulatedExpenses)
@@ -149,13 +174,21 @@ export class StatementDirectSalesSummaryComponent {
 
           if (rightExpenseTypes.length > 0) stillToBeRecouped.push(...cumulatedRightPayment.map(r => ({ currency: r.currency, price: -r.price })));
 
+          const maxPerIncome = unique(currentRightPayment.map(r => r.incomeIds).flat()).map(incomeId => ({
+            income: incomes.find(i => i.id === incomeId),
+            max: getIncomingAmount(right.id, incomeId, simulation.waterfall.state.transfers),
+            current: getCalculatedAmount(right.id, incomeId, simulation.waterfall.state.transfers),
+            source
+          })).filter(i => i.max > 0);
+
           rows.push({
             section,
             type: 'right',
-            rightId: right.id,
+            right,
             previous: getTotalPerCurrency(previousRightPayment),
             current: getTotalPerCurrency(currentRightPayment),
-            cumulated: getTotalPerCurrency(cumulatedRightPayment)
+            cumulated: getTotalPerCurrency(cumulatedRightPayment),
+            maxPerIncome
           });
         }
 
@@ -190,9 +223,9 @@ export class StatementDirectSalesSummaryComponent {
 
   public rightsBreakdown$ = combineLatest([
     this.statement$, this.statementsHistory$, this.shell.expenses$,
-    this.shell.rights$, this.shell.simulation$
+    this.shell.incomes$, this.shell.rights$, this.shell.simulation$
   ]).pipe(
-    map(([current, _history, _expenses, rights, simulation]) => {
+    map(([current, _history, _expenses, incomes, rights, simulation]) => {
       const indexOfCurrent = _history.findIndex(s => s.id === current.id);
       _history[indexOfCurrent] = { ...current, number: _history[indexOfCurrent].number };
       const previous = _history.slice(indexOfCurrent + 1);
@@ -205,7 +238,7 @@ export class StatementDirectSalesSummaryComponent {
       const rightTypes = unique(rightsWithManySources.map(right => right.type));
 
       return rightTypes.map(type => {
-        const rows: { section: string, type?: 'right' | 'expense', previous: PricePerCurrency, current: PricePerCurrency, cumulated: PricePerCurrency, rightId: string, cap?: PricePerCurrency }[] = [];
+        const rows: BreakdownRow[] = [];
 
         const stillToBeRecouped: { price: number, currency: MovieCurrency }[] = [];
         for (const right of rightsWithManySources) {
@@ -223,12 +256,12 @@ export class StatementDirectSalesSummaryComponent {
             const cumulatedExpenses = _expenses.filter(e => e.typeId === expenseTypeId && history.map(s => s.expenseIds).flat().includes(e.id));
 
             const expenseType = this.waterfall.expenseTypes.directSales.find(e => e.id === expenseTypeId);
+            if (!expenseType) this.snackbar.open(`Expense type id "${expenseTypeId}" used in conditions of "${right.name}" is not defined.`, 'close', { duration: 5000 });
 
             rows.push({
               section: expenseType.name,
               cap: expenseType.cap.default > 0 ? { [expenseType.currency]: expenseType.cap.default } : undefined, // TODO #9520 replace default by versionId
               type: 'expense',
-              rightId: right.id,
               previous: getTotalPerCurrency(previousExpenses),
               current: getTotalPerCurrency(currentExpenses),
               cumulated: getTotalPerCurrency(cumulatedExpenses)
@@ -239,13 +272,21 @@ export class StatementDirectSalesSummaryComponent {
 
           if (rightExpenseTypes.length > 0) stillToBeRecouped.push(...cumulatedRightPayment.map(r => ({ currency: r.currency, price: -r.price })));
 
+          const maxPerIncome = unique(currentRightPayment.map(r => r.incomeIds).flat()).map(incomeId => ({
+            income: incomes.find(i => i.id === incomeId),
+            max: getIncomingAmount(right.id, incomeId, simulation.waterfall.state.transfers),
+            current: getCalculatedAmount(right.id, incomeId, simulation.waterfall.state.transfers),
+            source: getAssociatedSource(incomes.find(i => i.id === incomeId), this.waterfall.sources)
+          })).filter(i => i.max > 0);
+
           rows.push({
             section,
             type: 'right',
-            rightId: right.id,
+            right,
             previous: getTotalPerCurrency(previousRightPayment),
             current: getTotalPerCurrency(currentRightPayment),
-            cumulated: getTotalPerCurrency(cumulatedRightPayment)
+            cumulated: getTotalPerCurrency(cumulatedRightPayment),
+            maxPerIncome
           });
         }
 
@@ -268,6 +309,51 @@ export class StatementDirectSalesSummaryComponent {
 
   private waterfall = this.shell.waterfall;
 
-  constructor(private shell: DashboardWaterfallShellComponent) { }
+  constructor(
+    private shell: DashboardWaterfallShellComponent,
+    private statementService: StatementService,
+    private dialog: MatDialog,
+    private snackbar: MatSnackBar,
+  ) { }
+
+  public canEditRightPayment(row: BreakdownRow, statement: Statement) {
+    if (statement.status === 'reported') return false;
+    if (row.maxPerIncome.every(i => i.max === 0)) return false;
+    const incomeIds = row.maxPerIncome.map(i => i.income.id);
+    if (statement.rightOverrides.find(c => c.rightId !== row.right.id && incomeIds.includes(c.incomeId))) return false;
+    return true;
+  }
+
+  public editRightPayment(row: BreakdownRow, statement: Statement) {
+    this.dialog.open(StatementArbitraryChangeComponent, {
+      data: createModalData({
+        right: row.right,
+        maxPerIncome: row.maxPerIncome,
+        overrides: statement.rightOverrides.filter(c => c.rightId === row.right.id),
+        onConfirm: async (overrides: RightOverride[]) => {
+          const rightOverrides = statement.rightOverrides.filter(c => c.rightId !== row.right.id);
+          await this.statementService.update(statement.id, { rightOverrides: [...rightOverrides, ...overrides] }, { params: { waterfallId: this.waterfall.id } });
+
+          // Refresh simulation
+          await this.shell.simulateWaterfall();
+        }
+      })
+    });
+  }
+
+  public hasOverrides(row: BreakdownRow, statement: Statement) {
+    return statement.status === 'reported' && statement.rightOverrides.some(c => c.rightId === row.right.id);
+  }
+
+  public showOverrides(row: BreakdownRow, statement: Statement) {
+    this.dialog.open(StatementArbitraryChangeComponent, {
+      data: createModalData({
+        mode: 'view',
+        right: row.right,
+        maxPerIncome: row.maxPerIncome,
+        overrides: statement.rightOverrides.filter(c => c.rightId === row.right.id),
+      })
+    });
+  }
 
 }

@@ -2,6 +2,7 @@ import { addYears, subYears } from 'date-fns';
 import { Person } from './identity';
 import { LanguageRecord } from './movie';
 import { App, MovieCurrency, Scope, staticModel } from './static';
+import { mainCurrency } from './waterfall';
 
 export interface ErrorResultResponse {
   error: string;
@@ -387,7 +388,7 @@ const pairs = {
   'EUR-EUR': 1,
   'USD-USD': 1,
 }
-export function convertCurrenciesTo(price: PricePerCurrency, to: MovieCurrency = 'USD'): PricePerCurrency {
+export function convertCurrenciesTo(price: PricePerCurrency, to: MovieCurrency = mainCurrency): PricePerCurrency {
   const prices = Object.entries(price).map(([currency, price]) => price * pairs[`${currency}-${to}`]);
   const value = prices.reduce((a, b) => a + b, 0);
   return { [to]: value || 0 };

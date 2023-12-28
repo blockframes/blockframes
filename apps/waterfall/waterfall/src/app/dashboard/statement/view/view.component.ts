@@ -8,16 +8,21 @@ import {
   createIncomePayment,
   createRightPayment,
   createRightholderPayment,
+  generatePayments,
+  getAssociatedRights,
+  getStatementRights,
+  getStatementSources,
   isDirectSalesStatement,
   isDistributorStatement,
   isProducerStatement
 } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { StatementForm } from '@blockframes/waterfall/form/statement.form';
 import { StartementFormGuardedComponent } from '@blockframes/waterfall/guards/statement-form.guard';
 import { StatementService } from '@blockframes/waterfall/statement.service';
-import { Subscription, combineLatest, debounceTime, filter, map, pluck, tap } from 'rxjs';
+import { Subscription, combineLatest, debounceTime, filter, firstValueFrom, map, pluck, tap } from 'rxjs';
 
 @Component({
   selector: 'waterfall-statement-view',
@@ -92,7 +97,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
 
     statement.comment = value.comment;
 
-    // Add an id to the payments if they don't have one and update interal right payments status
+    // Add an id to the payments if they don't have one and update internal right payments status
     if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
       const incomePayments = value.incomePayments.map(p => createIncomePayment({
         ...p,
@@ -137,6 +142,9 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     await this.shell.simulateWaterfall();
 
     if (reported) {
+
+      if (isProducerStatement(statement)) await this.updateParentStatements(statement);
+
       // Statement is reported, actual waterfall is refreshed
       await this.shell.refreshWaterfall();
       this.snackBar.open('Statement reported !', 'close', { duration: 5000 });
@@ -145,6 +153,47 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     }
 
     this.form.markAsPristine();
+  }
+
+  /**
+   * Used to apply or revert arbitrary changes made to an outgoing statement.
+   * This method will re-write right payments of impacted (parents) statements.
+   * @see libs/waterfall/src/lib/components/statement-arbitrary-change/statement-arbitrary-change.component.ts
+   * @param statement 
+   * @returns 
+   */
+  private async updateParentStatements(statement: Statement) {
+    const incomeIds = statement.payments.right.map(payment => payment.incomeIds).flat();
+    const statements = await this.shell.statements();
+    const simulation = await firstValueFrom(this.shell.simulation$);
+    const _rights = await this.shell.rights();
+    const incomes = await this.shell.incomes();
+
+    const impactedStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
+      .filter(s => s.payments.right.some(r => r.incomeIds.some(id => incomeIds.includes(id))));
+
+    // Rewrite right payments of impacted statements
+    const statementsToUpdate = impactedStatements.map(impactedStatement => {
+      // Reset right payments
+      const existingPaymentInfos = impactedStatement.payments.right.map(p => ({ id: p.id, to: p.to, date: p.date, status: p.status }));
+      impactedStatement.payments.right = isDirectSalesStatement(impactedStatement) ? [] : impactedStatement.payments.right.filter(p => p.mode === 'internal');
+
+      const sources = getStatementSources(impactedStatement, this.waterfall.sources, incomes, _rights, simulation.waterfall.state);
+      const statementRights = getStatementRights(impactedStatement, _rights);
+      const rightIds = unique(sources.map(s => getAssociatedRights(s.id, statementRights, simulation.waterfall.state)).flat().map(r => r.id));
+      const rights = statementRights.filter(r => rightIds.includes(r.id));
+
+      const updatedStatements = generatePayments(impactedStatement, simulation.waterfall.state, rights, incomes, sources);
+      updatedStatements.payments.right = impactedStatement.payments.right.map(p => {
+        const existingPaymentInfo = existingPaymentInfos.find(info => info.to === p.to);
+        const payment = createRightPayment({ ...p, id: existingPaymentInfo.id, status: existingPaymentInfo.status });
+        if (existingPaymentInfo.date) payment.date = existingPaymentInfo.date;
+        return payment;
+      });
+
+      return updatedStatements;
+    });
+    return this.statementService.update(statementsToUpdate, { params: { waterfallId: this.waterfall.id } });
   }
 
 }

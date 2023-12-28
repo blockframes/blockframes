@@ -325,13 +325,17 @@ export function expenseTypesToAction(expenseTypes: ExpenseType[], versionId: str
   return actions;
 }
 
-export function incomesToActions(contracts: WaterfallContract[], incomes: Income[], sources: WaterfallSource[]) {
+export function incomesToActions(contracts: WaterfallContract[], incomes: Income[], sources: WaterfallSource[], _statements: Statement[]) {
   const actions: Action[] = [];
 
   for (const i of incomes.filter(i => i.status === 'received')) {
     const contractAndAmendments = getContractAndAmendments(i.contractId, contracts);
     // On waterfall side, the root contract is updated (updateContract), so we need to specify this one.
     const rootContract = contractAndAmendments.find(c => !c.rootId);
+
+    // Fetch overrides from statements. There can be multiple statements for a single income (distrib/direct sales and outgoing(s))
+    const statements = _statements.filter(s => s.incomeIds.includes(i.id)); // TODO #9520 check statement & income version
+    const rightOverrides = statements.map(s => s.rightOverrides.filter(r => r.incomeId === i.id).map(r => ({ rightId: r.rightId, percent: r.percent / 100 }))).flat();
 
     const source = getAssociatedSource(i, sources);
 
@@ -345,7 +349,8 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
         amount,
         date: i.date,
         territories: i.territories,
-        medias: i.medias
+        medias: i.medias,
+        rightOverrides,
       })
     );
   };
@@ -733,6 +738,11 @@ function source(state: TitleState, payload: SourceAction) {
   state.sources[payload.id] ||= createSourceState({ id: payload.id, amount: 0, destinationId: payload.destinationId });
 }
 
+export interface IncomeActionRightOverride {
+  rightId: string,
+  percent: number
+}
+
 export interface IncomeAction extends BaseAction {
   id: string;
   amount: number;
@@ -742,6 +752,7 @@ export interface IncomeAction extends BaseAction {
   territories: Territory[];
   medias: Media[];
   isCompensation?: boolean;
+  rightOverrides?: IncomeActionRightOverride[];
 }
 
 /** Distribute the income per thresholds */
@@ -759,7 +770,6 @@ function income(state: TitleState, payload: IncomeAction) {
       state.sources[payload.from].incomeIds = Array.from(new Set([...state.sources[payload.from].incomeIds, payload.id]));
     }
   }
-
 
   state.incomes[payload.id] = payload;
   const incomeId = payload.id;
@@ -864,7 +874,7 @@ function payment(state: TitleState, payload: PaymentAction) {
     state.orgs[payload.from.org].revenu.actual -= payload.amount;
     state.orgs[payload.to.org].revenu.actual += payload.amount;
     state.orgs[payload.to.org].turnover.actual += payload.amount;
-  } else if (payload.from.org && payload.to.right) { // Payment for org to right
+  } else if (payload.from.org && payload.to.right) { // Payment from org to right
     assertNode(state, payload.to.right);
     // Orgs
     const orgState = getNodeOrg(state, payload.to.right);
@@ -912,5 +922,6 @@ function payment(state: TitleState, payload: PaymentAction) {
   }
 
   // Logs the payment
+  if (!payload.id) throw new Error(`Missing id for payment made to ${payload.to.org ? 'org' : 'right'} "${payload.to.org ?? payload.to.right}".`);
   state.payments[payload.id] = payload;
 }
