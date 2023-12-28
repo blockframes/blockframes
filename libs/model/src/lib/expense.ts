@@ -11,6 +11,7 @@ export interface Expense {
   titleId: string; // equals waterfallId
   status: PaymentStatus;
   price: number;
+  version: Record<string, { deleted?: true, price: number }>;
   currency: MovieCurrency;
   typeId: string;
   nature: string;
@@ -25,6 +26,7 @@ export function createExpense(params: Partial<Expense> = {}): Expense {
     titleId: '',
     status: 'pending',
     price: 0,
+    version: {},
     currency: 'EUR',
     date: new Date(),
     typeId: '',

@@ -1,0 +1,10 @@
+<ng-container *ngIf="waterfall$ | async as waterfall">
+  <mat-form-field *ngIf="waterfall.versions.length && !lockedVersionId" appearance="outline">
+    <mat-label>Waterfall Version</mat-label>
+    <mat-select (selectionChange)="switchToVersion($event.value)" [(value)]="versionId">
+      <mat-option *ngFor="let version of waterfall.versions" [value]="version.id">
+        {{ version.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</ng-container>

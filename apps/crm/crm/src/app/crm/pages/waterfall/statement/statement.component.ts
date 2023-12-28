@@ -34,7 +34,6 @@ import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 import { WaterfallState } from '@blockframes/waterfall/waterfall.service';
-import { where } from 'firebase/firestore';
 import { combineLatest, filter, firstValueFrom, map, pluck } from 'rxjs';
 
 interface RightDetails {
@@ -71,7 +70,6 @@ export class StatementComponent implements OnInit {
     filter(statement => !!statement),
   );
   public statement: Statement;
-  public versionId: string;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
@@ -83,9 +81,9 @@ export class StatementComponent implements OnInit {
     private snackBar: MatSnackBar,
   ) { }
 
-  ngOnInit() { return this.switchToVersion(); }
+  ngOnInit() { return this.versionChanged(); }
 
-  public async switchToVersion(_versionId?: string) {
+  public async versionChanged() {
     this.allRights = await this.shell.rights();
     const statement = await firstValueFrom(this.statement$);
     const incomes = await this.shell.incomes(statement.incomeIds);
@@ -100,12 +98,9 @@ export class StatementComponent implements OnInit {
     }
 
     if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
-      const expenses = await this.expenseService.getValue([where('titleId', '==', this.waterfall.id)]);
-      this.expenses = expenses.filter(e => statement.expenseIds.includes(e.id));
+      this.expenses = await this.shell.expenses(statement.expenseIds);
     }
 
-    this.versionId = _versionId || this.waterfall.versions[0]?.id;
-    if (this.versionId) this.shell.setVersionId(this.versionId);
     this.shell.setDate(statement.duration.to);
     this.snackBar.open('Initializing waterfall... Please wait', 'close', { duration: 5000 });
     this.simulation = await this.shell.simulateWaterfall();

@@ -9,6 +9,7 @@ export interface Income {
   /** The contract that created this income */
   contractId: string;
   price: number;
+  version: Record<string, { deleted?: true, price: number }>;
   currency: MovieCurrency;
   offerId?: string;
   titleId?: string;
@@ -26,6 +27,7 @@ export function createIncome(params: Partial<Income> = {}): Income {
     termId: '',
     contractId: '',
     price: 0,
+    version: {},
     currency: 'EUR',
     status: 'pending',
     date: new Date(),
