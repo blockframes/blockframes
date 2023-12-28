@@ -195,13 +195,13 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     switchMap(config => this.waterfallService.buildWaterfall(config))
   );
 
-  public currentVersionName$ = combineLatest([this.waterfall$, this.currentRightholder$]).pipe(
-    switchMap(([waterfall, rightholder]) => {
-      if (!waterfall.versions[0]?.id) return of();
-
-      if (rightholder) {
-        const versionId = 'version_2'; // TODO #9520 return rightholder.versionId;
-        this.lockedVersionId = versionId
+  public currentVersionName$ = combineLatest([this.waterfall$, this.currentRightholder$, this.canBypassRules$]).pipe(
+    switchMap(([waterfall, rightholder, canBypassRules]) => {
+      if (!waterfall.versions[0]?.id) return of(null);
+      if (rightholder && !canBypassRules) {
+        const versionId = 'version_3'; // TODO #9520 return rightholder.versionId;
+        this.lockedVersionId = versionId;
+        if (!this.versionId$.value) this.setVersionId(versionId);
         return of(versionId);
       }
 

@@ -20,7 +20,7 @@ export class VersionSelectorComponent implements OnInit {
 
   ngOnInit() { this.switchToVersion(this.shell.lockedVersionId); }
 
-  public switchToVersion(_versionId = this.shell.versionId$.value) {
+  public switchToVersion(_versionId: string) {
     this.versionId = _versionId || this.shell.waterfall.versions[0]?.id;
     if (!this.versionId) return;
     if (this.versionId === this.shell.versionId$.value) return;

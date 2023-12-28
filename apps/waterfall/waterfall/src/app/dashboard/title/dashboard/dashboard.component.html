@@ -1,6 +1,7 @@
 <ng-container *ngIf="waterfall$ | async as waterfall">
   <ng-container *ngIf="waterfall.versions.length; else noWaterfall">
     <ng-container *ngIf="state$ | async else loading">
+      <waterfall-version-selector></waterfall-version-selector>
       <header>
         <waterfall-dashboard-card 
           *ngIf="incomes$ | async as income"
