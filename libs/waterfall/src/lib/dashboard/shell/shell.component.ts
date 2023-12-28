@@ -175,7 +175,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     filter(([versionId, waterfall, blocks]) => versionId && !!waterfall.versions.length && !!blocks.length),
     map(([versionId, waterfall, blocks]) => {
       const version = waterfall.versions.find(v => v.id === versionId);
-      const blockIds = version.blockIds || [];
+      const blockIds = version?.blockIds || [];
       return blockIds.map(id => blocks.find(b => b.id === id));
     }),
     filter(blocks => !blocks.some(b => !b))
@@ -321,9 +321,9 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     if (!canBypassRules) throw new Error('You are not allowed to create waterfall');
     this.snackBar.open(`Creating version "${version.id}"... Please wait`, 'close');
     this.isRefreshing$.next(true);
+    this.setVersionId(version.id);
     const data = await this.loadData();
     const waterfall = await this.waterfallService.initWaterfall(data, version);
-    this.setVersionId(version.id);
     this.isRefreshing$.next(false);
     this.snackBar.open(`Version "${version.id}" initialized !`, 'close', { duration: 5000 });
     return waterfall;

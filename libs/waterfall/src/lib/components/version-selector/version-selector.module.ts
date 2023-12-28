@@ -8,6 +8,7 @@ import { VersionSelectorComponent } from './version-selector.component';
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [VersionSelectorComponent],
@@ -18,6 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
 
     MatFormFieldModule,
     MatSelectModule,
+    MatSnackBarModule
   ],
   exports: [VersionSelectorComponent]
 })
