@@ -33,7 +33,7 @@ import { unique } from '@blockframes/utils/helpers';
 import { MatDialog } from '@angular/material/dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { MaxPerIncome, StatementArbitraryChangeComponent } from '../../statement-arbitrary-change/statement-arbitrary-change.component';
-import { StatementService } from '@blockframes/waterfall/statement.service';
+import { StatementService } from '../../../statement.service';
 
 function getRightTurnover(incomeIds: string[], state: TitleState, right: Right, sources: WaterfallSource[]): BreakdownRow[] {
   const sourceIds = getSources(state, right.id).map(i => i.id);
