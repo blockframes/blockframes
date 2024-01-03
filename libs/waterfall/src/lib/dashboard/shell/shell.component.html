@@ -1,9 +1,9 @@
-<section fxLayout="column" *ngIf="waterfall$ | async">
+<section fxLayout="column" *ngIf="currentVersionName$ | async as currentVersionName">
   <header fxLayout="column" [bgAsset]="!lite ? 'header-dashboard-background.png' : ''">
     <a mat-icon-button (click)="goBack()">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
-    <section *ngIf="movie$ | async as movie" fxLayout fxLayout.lt-md="column" fxLayoutGap="16px">
+    <section fxLayout fxLayout.lt-md="column" fxLayoutGap="16px">
       <ng-container *ngIf="!lite">
         <section fxLayout fxLayoutGap="16px" fxFlex>
           <img fxHide.xs [ref]="movie.poster" asset="empty_poster.svg" alt="movie poster">
@@ -15,6 +15,7 @@
               </a>
             </h1>
             <h6>{{ movie.directors | displayName }}</h6>
+            <span>{{ currentVersionName }}</span>
           </article>
         </section>
         <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" >

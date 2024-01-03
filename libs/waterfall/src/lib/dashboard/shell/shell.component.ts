@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet, Event, ActivatedRoute } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
-import { BehaviorSubject, combineLatest, firstValueFrom, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, firstValueFrom, Observable, of, Subscription } from 'rxjs';
 import {
   Action,
   App,
@@ -58,12 +58,12 @@ export class WaterfallCtaDirective { }
 export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   private countRouteEvents = 1;
-  private versionId$ = new BehaviorSubject<string>(undefined);
+  public versionId$ = new BehaviorSubject<string>(undefined);
   private date$ = new BehaviorSubject<Date>(undefined);
   private _date = new Date();
   public isRefreshing$ = new BehaviorSubject<boolean>(false);
 
-  public movie$ = this.route.params.pipe(
+  private movie$ = this.route.params.pipe(
     pluck('movieId'),
     switchMap((movieId: string) => this.movieService.valueChanges(movieId)),
     tap(movie => this.movie = movie)
@@ -94,7 +94,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   );
 
   public currentRightholder$ = this.permission$.pipe(
-    map(permission => permission.rightholderIds.map(r => this.waterfall.rightholders.find(rh => rh.id === r))),
+    map(permission => permission ? permission.rightholderIds.map(r => this.waterfall.rightholders.find(rh => rh.id === r)) : []),
     map(rightholders => rightholders.pop())
   );
 
@@ -128,12 +128,12 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     switchMap(({ id: waterfallId }) => this.statementService.valueChanges({ waterfallId }))
   );
 
-  public incomes$ = this.movie$.pipe(
-    switchMap(({ id: waterfallId }) => this.incomeService.valueChanges([where('titleId', '==', waterfallId)]))
+  public incomes$ = combineLatest([this.movie$, this.versionId$]).pipe(
+    switchMap(([{ id: waterfallId }, versionId]) => this.incomeService.incomesChanges(waterfallId, versionId))
   );
 
-  public expenses$ = this.movie$.pipe(
-    switchMap(({ id: waterfallId }) => this.expenseService.valueChanges([where('titleId', '==', waterfallId)]))
+  public expenses$ = combineLatest([this.movie$, this.versionId$]).pipe(
+    switchMap(([{ id: waterfallId }, versionId]) => this.expenseService.expensesChanges(waterfallId, versionId))
   );
 
   // ---------
@@ -146,6 +146,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   public waterfall: Waterfall;
 
   public rights$ = this.movie$.pipe(
+    // TODO #9520 same as for income & expense.
     switchMap(({ id: waterfallId }) => this.rightService.valueChanges({ waterfallId }))
   );
 
@@ -174,7 +175,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     filter(([versionId, waterfall, blocks]) => versionId && !!waterfall.versions.length && !!blocks.length),
     map(([versionId, waterfall, blocks]) => {
       const version = waterfall.versions.find(v => v.id === versionId);
-      const blockIds = version.blockIds || [];
+      const blockIds = version?.blockIds || [];
       return blockIds.map(id => blocks.find(b => b.id === id));
     }),
     filter(blocks => !blocks.some(b => !b))
@@ -193,6 +194,23 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     })),
     switchMap(config => this.waterfallService.buildWaterfall(config))
   );
+
+  public currentVersionName$ = combineLatest([this.waterfall$, this.currentRightholder$, this.canBypassRules$]).pipe(
+    switchMap(([waterfall, rightholder, canBypassRules]) => {
+      if (!waterfall.versions[0]?.id) return of(null);
+      if (rightholder && !canBypassRules) {
+        const versionId = 'version_3'; // TODO #9520 return rightholder.versionId;
+        this.lockedVersionId = versionId;
+        if (!this.versionId$.value) this.setVersionId(versionId);
+        return of(versionId);
+      }
+
+      if (!this.versionId$.value) this.setVersionId(waterfall.versions[0]?.id);
+      return this.versionId$;
+    }),
+    map(versionId => this.waterfall.versions.find(v => v.id === versionId)?.name || '--')
+  );
+  public lockedVersionId: string; // VersionId that is locked for the current rightholder
 
   private _simulation$ = new BehaviorSubject<WaterfallState>(undefined);
   public simulation$ = this._simulation$.asObservable().pipe(filter(state => !!state));
@@ -228,11 +246,10 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   }
 
   private async loadData() {
-    const versionId = this.versionId$.value;
     const contracts = await this.contracts();
-    const rights = await this.rights(versionId);
-    const incomes = await this.incomes([], versionId);
-    const expenses = await this.expenses(versionId);
+    const rights = await this.rights();
+    const incomes = await this.incomes();
+    const expenses = await this.expenses();
     const statements = await this.statements();
     const terms = await this.terms();
 
@@ -265,23 +282,21 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     return contracts.filter(d => isContract(d)).map(c => convertDocumentTo<WaterfallContract>(c));
   }
 
-  rights(versionId?: string) {
+  rights(versionId = this.versionId$.value) {
     // TODO #9520 rights should be fitered by the current version this.versionId$
     return this.rightService.getValue({ waterfallId: this.waterfall.id });
   }
 
-  incomes(ids: string[] = [], versionId?: string) {
-    // TODO #9520 incomes should be fitered by the current version this.versionId$
-    return ids.length ? this.incomeService.getValue(ids) : this.incomeService.getValue([where('titleId', '==', this.waterfall.id)]);
+  incomes(ids: string[] = [], versionId = this.versionId$.value) {
+    return this.incomeService.incomes(this.waterfall.id, ids, versionId);
   }
 
   statements() {
     return this.statementService.getValue({ waterfallId: this.waterfall.id });
   }
 
-  expenses(versionId?: string) {
-    // TODO #9520 expenses should be fitered by the current version this.versionId$
-    return this.expenseService.getValue([where('titleId', '==', this.waterfall.id)]);
+  expenses(ids: string[] = [], versionId = this.versionId$.value) {
+    return this.expenseService.expenses(this.waterfall.id, ids, versionId);
   }
 
   terms() {
@@ -289,6 +304,8 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   }
 
   setVersionId(versionId: string) {
+    if (!versionId) return;
+    if (this.versionId$.value === versionId) return;
     this.versionId$.next(versionId);
   }
 
@@ -304,9 +321,9 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     if (!canBypassRules) throw new Error('You are not allowed to create waterfall');
     this.snackBar.open(`Creating version "${version.id}"... Please wait`, 'close');
     this.isRefreshing$.next(true);
+    this.setVersionId(version.id);
     const data = await this.loadData();
     const waterfall = await this.waterfallService.initWaterfall(data, version);
-    this.setVersionId(version.id);
     this.isRefreshing$.next(false);
     this.snackBar.open(`Version "${version.id}" initialized !`, 'close', { duration: 5000 });
     return waterfall;

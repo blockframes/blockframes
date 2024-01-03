@@ -10,6 +10,7 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 import { ContractPipeModule } from '@blockframes/contract/contract/pipe';
 import { ExpenseTypePipeModule } from '@blockframes/waterfall/pipes/expense-type.pipe';
 import { ExpenseTypesFormModule } from '@blockframes/waterfall/components/forms/expense-types-form/form.module';
+import { VersionSelectorModule } from '@blockframes/waterfall/components/version-selector/version-selector.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -30,6 +31,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     ContractPipeModule,
     ExpenseTypePipeModule,
     ExpenseTypesFormModule,
+    VersionSelectorModule,
 
     MatIconModule,
     MatButtonModule,

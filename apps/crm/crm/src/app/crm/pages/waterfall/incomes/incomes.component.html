@@ -1,3 +1,5 @@
+<waterfall-version-selector></waterfall-version-selector>
+
 <ng-container *ngIf="incomes$ | async as incomes">
   <section>
     <button mat-button color="primary" [disabled]="!incomes.length" (click)="removeIncomes(incomes)">
