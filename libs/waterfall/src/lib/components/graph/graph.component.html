@@ -138,8 +138,7 @@
         </mat-tab>
         <mat-tab label="Conditions">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <p>TODO</p>
-            <!-- <waterfall-graph-conditions-form></waterfall-graph-conditions-form> -->
+            <waterfall-conditions [rightForm]="rightForm"></waterfall-conditions>
           </section>
         </mat-tab>
       </mat-tab-group>
