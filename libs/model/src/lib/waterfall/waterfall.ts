@@ -95,12 +95,14 @@ export interface WaterfallSource {
   territories: Territory[];
   medias: Media[];
   destinationId: string; // The rightId this income will go to
+  // TODO #9520 sources whould be versionned as right, expenses etc..
 }
 
 export interface WaterfallRightholder {
   id: string;
   name: string;
   roles: RightholderRole[];
+  // TODO #9520 versionId to lockVersion for this rightholder ?
 };
 
 export interface Waterfall {

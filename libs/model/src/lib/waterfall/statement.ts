@@ -109,6 +109,7 @@ export interface Statement {
   reported?: Date;
   incomeIds: string[];
   expenseIds?: string[];
+  // TODO #9520 versionId is set from reveiverId LockedversionId if any during statement creation
   payments: {
     income?: IncomePayment[];
     right: RightPayment[]
