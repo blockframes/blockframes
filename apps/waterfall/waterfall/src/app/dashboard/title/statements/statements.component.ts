@@ -33,6 +33,8 @@ import { StatementService } from '@blockframes/waterfall/statement.service';
 import { MatDialog } from '@angular/material/dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { StatementNewComponent } from '@blockframes/waterfall/components/statement-new/statement-new.component';
+import { OrganizationService } from '@blockframes/organization/service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface StatementRolesConfig {
   roles: RightholderRole[],
@@ -63,20 +65,18 @@ const statementsRolesConfig: Record<StatementType, StatementRolesConfig> = {
 })
 export class StatementsComponent implements OnInit, OnDestroy {
   public waterfall$ = this.shell.waterfall$;
-  public currentStateDate = new Date();
-
   public statements: Statement[] = [];
   public rightholderContracts: (Partial<WaterfallContract> & { statements: (Statement & { number: number })[] })[] = [];
   public statementSender: WaterfallRightholder;
   public haveStatements: boolean;
-
   public rightholders: WaterfallRightholder[] = [];
   public rightholderControl = new FormControl<string>('');
-
   public contracts: WaterfallContract[] = [];
   public rights: Right[] = [];
   public statementTypes: StatementChipConfig[] = [];
   public selected: StatementType;
+
+  private currentStateDate = new Date();
   private waterfall = this.shell.waterfall;
   private sub: Subscription;
 
@@ -87,6 +87,8 @@ export class StatementsComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private router: Router,
     private dialog: MatDialog,
+    private orgService: OrganizationService,
+    private snackbar: MatSnackBar,
   ) {
     this.shell.setDate(this.currentStateDate);
     this.dynTitle.setPageTitle(this.shell.movie.title.international, 'Statements');
@@ -94,8 +96,12 @@ export class StatementsComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.rights = await this.shell.rights();
-    this.statements = await this.shell.statements();
     this.statementSender = await firstValueFrom(this.shell.currentRightholder$);
+    if (!this.statementSender) {
+      this.snackbar.open(`Organization "${this.orgService.org.name}" is not associated to any rightholders.`, 'close', { duration: 5000 });
+      return;
+    }
+    this.statements = await this.shell.statements();
     this.contracts = await this.shell.contracts();
     this.statementTypes = Object.entries(statementsRolesConfig).map(([key, value]: [StatementType, StatementRolesConfig]) => (
       {
@@ -152,7 +158,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
-  public async createStatement(rightholderId: string, contractId?: string) {
+  public async createStatement(rightholderId: string, contractId?: string, type = this.selected) {
     const duration = createDuration({
       from: add(this.currentStateDate, { days: 1 }),
       to: add(this.currentStateDate, { days: 1, months: 6 }),
@@ -170,7 +176,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
       }
     }
 
-    switch (this.selected) {
+    switch (type) {
       case 'mainDistributor':
       case 'salesAgent': {
         const statement = createDistributorStatement({
@@ -180,7 +186,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
           receiverId: this.statementSender.id, // Statement sender is the producer
           waterfallId: this.waterfall.id,
           duration,
-          type: this.selected
+          type
         });
 
         const id = await this.statementService.add(statement, { params: { waterfallId: this.waterfall.id } });
@@ -243,6 +249,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
   }
 
   public addNew(type: StatementType) {
+    if (!this.statementSender) return;
     if (type === 'directSales') return this.createStatement(this.statementSender.id);
     this.dialog.open(StatementNewComponent, {
       data: createModalData({
@@ -254,7 +261,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
         date: this.currentStateDate,
         rights: this.rights,
         onConfirm: async (statementId: string, contractId: string) => {
-          await this.createStatement(statementId, contractId);
+          await this.createStatement(statementId, contractId, type);
         }
       })
     });

@@ -95,11 +95,6 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     map(([isWaterfallAdmin, isBlockframesAdmin]) => isWaterfallAdmin || isBlockframesAdmin)
   );
 
-  public currentRightholder$ = this.permission$.pipe(
-    map(permission => permission ? permission.rightholderIds.map(r => this.waterfall.rightholders.find(rh => rh.id === r)) : []),
-    map(rightholders => rightholders.pop())
-  );
-
   // ---------
   // Contracts, Terms and Documents
   // ---------
@@ -169,6 +164,11 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
 
   private blocks$ = this.movie$.pipe(
     switchMap(({ id: waterfallId }) => this.blockService.valueChanges({ waterfallId }))
+  );
+
+  public currentRightholder$ = combineLatest([this.waterfall$, this.permission$]).pipe(
+    map(([waterfall, permission]) => permission ? permission.rightholderIds.map(r => waterfall.rightholders.find(rh => rh.id === r)) : []),
+    map(rightholders => rightholders.pop())
   );
 
   // Blocks used for the current version of the state

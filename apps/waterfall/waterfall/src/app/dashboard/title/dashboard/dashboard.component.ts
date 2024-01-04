@@ -59,7 +59,7 @@ export class DashboardComponent {
       if (!rightholder && this.waterfall.versions.length > 0) {
         this.snackbar.open(`Organization "${this.orgService.org.name}" is not associated to any rightholders.`, 'close', { duration: 5000 });
       } else {
-        this.rightholderControl.setValue(rightholder.id);
+        this.rightholderControl.setValue(rightholder?.id);
       }
     })
   );

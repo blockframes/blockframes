@@ -77,6 +77,7 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
   public async buildWaterfall(data: { waterfall: Waterfall, versionId: string, date?: Date }) {
     const blocks = await this.blockService.getValue({ waterfallId: data.waterfall.id });
     const version = data.waterfall.versions.find(v => v.id === data.versionId);
+    if (!version) throw new Error('Cannot build waterfall: version not found.');
     const versionBlocks = version.blockIds.map(blockId => blocks.find(b => b.id === blockId));
     const build = buildWaterfall(data.waterfall.id, version, versionBlocks);
     return waterfallToDate(build, data.date);
