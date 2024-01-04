@@ -10,6 +10,7 @@ import {
   createRightholderPayment,
   generatePayments,
   getAssociatedRights,
+  getDefaultVersionId,
   getStatementRights,
   getStatementSources,
   isDirectSalesStatement,
@@ -63,7 +64,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     private snackBar: MatSnackBar,
   ) {
     this.dynTitle.setPageTitle(this.shell.movie.title.international, 'View Statement');
-    const versionId = this.waterfall.versions[0]?.id; // TODO #9520 versionId selector or via url
+    const versionId = getDefaultVersionId(this.waterfall); // TODO #9520 versionId selector or via url
     if (versionId) this.shell.setVersionId(versionId);
     this.form = new StatementForm();
   }

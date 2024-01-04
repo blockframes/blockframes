@@ -47,7 +47,7 @@ export interface ImportedCondition {
 
 export interface FieldsConfig {
   waterfallId: string;
-  right: Omit<Right, 'conditions'>;
+  right: Omit<Right, 'conditions' | 'version'>;
   conditionA?: ImportedCondition;
   conditionB?: ImportedCondition;
   conditionC?: ImportedCondition;

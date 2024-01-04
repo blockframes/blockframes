@@ -1,3 +1,4 @@
+<waterfall-version-selector></waterfall-version-selector>
 <ng-container *ngIf="rights$ | async as rights">
   <section>
     <button mat-button color="primary" [disabled]="!rights.length" (click)="removeRights(rights)">

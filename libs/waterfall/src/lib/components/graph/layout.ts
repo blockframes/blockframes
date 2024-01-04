@@ -2,9 +2,14 @@
 import { graphlib, layout } from 'dagre';
 import LayoutEngine, { ElkExtendedEdge, ElkNode } from 'elkjs/lib/elk.bundled';
 
-import { Media, Right, Territory, WaterfallSource, createWaterfallSource } from '@blockframes/model';
-
-
+import {
+  Media,
+  Right,
+  Territory,
+  WaterfallSource,
+  createRight as _createRight,
+  createWaterfallSource
+} from '@blockframes/model';
 
 interface NodeBase {
   id: string;
@@ -42,7 +47,6 @@ export interface HorizontalNode extends NodeBase {
 }
 
 export type Node = SourceNode | RightNode | VerticalNode | HorizontalNode;
-
 
 const colors = [
   '#66DF9C',
@@ -96,7 +100,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
         type: 'vertical',
         members: members,
         name: right.name,
-        children: [ ...children ],
+        children: [...children],
         x: 0, y: 0,
         height: RIGHT_HEIGHT + (LEVEL_HEIGHT * (members.length - 1)) + (SPACING * (members.length + 1)),
         width: RIGHT_WIDTH + (SPACING * 2),
@@ -125,7 +129,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
             id: member.id,
             name: member.name,
             x: 0, y: 0,
-            width:  RIGHT_WIDTH + (SPACING * 2), height: RIGHT_HEIGHT + (LEVEL_HEIGHT * (vMembers.length - 1)) + (SPACING * (vMembers.length + 1)),
+            width: RIGHT_WIDTH + (SPACING * 2), height: RIGHT_HEIGHT + (LEVEL_HEIGHT * (vMembers.length - 1)) + (SPACING * (vMembers.length + 1)),
             type: 'vertical',
             children: [],
             members: vMembers,
@@ -154,7 +158,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
         type: 'horizontal',
         members: members,
         name: right.name,
-        children: [ ...children ],
+        children: [...children],
         x: 0, y: 0,
         height: maxMemberHeight + (SPACING * 2),
         width: (RIGHT_WIDTH * members.length) + (SPACING * (members.length + 1))
@@ -167,7 +171,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
         id: right.id,
         type: 'right',
         name: right.name,
-        children: [ ...children ],
+        children: [...children],
         x: 0, y: 0,
         width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
         color,
@@ -185,7 +189,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
       x: 0, y: 0,
       width: SOURCE_WIDTH, height: SOURCE_HEIGHT,
       type: 'source',
-      children: source.destinationId ? [ source.destinationId ] : [],
+      children: source.destinationId ? [source.destinationId] : [],
       medias: source.medias,
       territories: source.territories,
     });
@@ -300,7 +304,7 @@ async function autoLayout2(nodes: Node[]) {
       'elk.alignment': 'CENTER',
       'elk.edgeRouting': 'SPLINES',
       'elk.layered.mergeEdges': 'true',
-      
+
       'elk.layered.layering.strategy': 'NETWORK_SIMPLEX',
       // 'elk.layered.layering.strategy': 'LONGEST_PATH',
       // 'elk.layered.layering.strategy': 'MIN_WIDTH',
@@ -406,7 +410,7 @@ function getArrow(parent: Node, child: Node) {
   // return `M ${startX}, ${startY} L ${startControlX}, ${startControlY} L ${endControlX}, ${endControlY} L ${endX}, ${endY} L ${arrowLeftX}, ${arrowY} M ${endX}, ${endY} L ${arrowRightX}, ${arrowY}`;
   // return `M ${startX}, ${startY} L ${endX}, ${endY} L ${arrowLeftX}, ${arrowY} M ${endX}, ${endY} L ${arrowRightX}, ${arrowY}`;
   const path = `M ${startX} ${startY} C ${startControlX} ${startControlY} ${endControlX} ${endControlY} ${endX} ${endY} L ${arrowLeftX}, ${arrowY} M ${endX}, ${endY} L ${arrowRightX}, ${arrowY}`;
-  
+
   const arrow: Arrow = {
     path,
     parentId: parent.id,
@@ -464,7 +468,6 @@ export function updateParents(nodeId: string, newParentIds: string[], graph: Nod
     }
   }
 
-  
   // remove current node from its parents' children list
   const oldParentIds = parentIndex[nodeId] ?? [];
   oldParentIds.forEach(oldParentId => {
@@ -481,7 +484,7 @@ export function updateParents(nodeId: string, newParentIds: string[], graph: Nod
     return parentIds.every(parentId => newParentIds.includes(parentId))
       && newParentIds.every(parentId => parentIds.includes(parentId))
       && node.id !== nodeId
-    ;
+      ;
   }) as (RightNode | VerticalNode)[];
 
   if (siblings.length > 0) { // we need to group
@@ -511,7 +514,7 @@ export function updateParents(nodeId: string, newParentIds: string[], graph: Nod
 
     if (current.type === 'horizontal') { // node is already a group, move siblings to it
       current.members.push(...siblings);
-      current.children = [...childrenIds];      
+      current.children = [...childrenIds];
       return;
     }
 
@@ -526,8 +529,8 @@ export function updateParents(nodeId: string, newParentIds: string[], graph: Nod
       x: 0, y: 0,
       width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
       type: 'horizontal',
-      children: [ ...childrenIds ],
-      members: [ ...siblings, current as RightNode | VerticalNode ],
+      children: [...childrenIds],
+      members: [...siblings, current as RightNode | VerticalNode],
     };
     graph.push(group);
 
@@ -535,7 +538,7 @@ export function updateParents(nodeId: string, newParentIds: string[], graph: Nod
     newParentIds.forEach(newParentId => {
       const newParent = graph.find(node => node.id === newParentId);
       if (!newParent) return;
-      if (newParent.type === 'source') newParent.children = [ group.id ];
+      if (newParent.type === 'source') newParent.children = [group.id];
       else newParent.children.push(group.id);
     });
     return;
@@ -545,7 +548,7 @@ export function updateParents(nodeId: string, newParentIds: string[], graph: Nod
     newParentIds.forEach(newParentId => {
       const newParent = graph.find(node => node.id === newParentId);
       if (!newParent) return;
-      if (newParent.type === 'source') newParent.children = [ nodeId ];
+      if (newParent.type === 'source') newParent.children = [nodeId];
       else newParent.children.push(nodeId);
     });
   }
@@ -625,9 +628,9 @@ export function createSibling(olderSiblingId: string, graph: Node[]) {
       width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
       type: 'horizontal',
       children: [...children],
-      members: [ olderSibling, right],
+      members: [olderSibling, right],
     };
-    
+
     parents.forEach(parent => parent.children.push(group.id));
     graph.push(group);
     return;
@@ -689,62 +692,52 @@ export function createChild(parentId: string, graph: Node[]) {
       width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
       type: 'horizontal',
       children: [...children],
-      members: [ ...siblings, right],
+      members: [...siblings, right],
     };
-    
-    parent.children = [ group.id ];
+
+    parent.children = [group.id];
     graph.push(group);
     return;
   }
 }
 
-
-
 function createHorizontal(node: Node, parents?: string[]): Right {
-  return {
+  return _createRight({
     id: node.id,
     name: node.name,
-    groupId: '',
     nextIds: parents ?? [],
-    rightholderId: '',
     type: 'horizontal',
     percent: 0,
-    actionName: 'prepend',
     pools: [], // TODO
     order: 0, // TODO
-  };
+  });
 }
 
 function createVertical(node: Node, parents?: string[], groupId?: string): Right {
-  return {
+  return _createRight({
     id: node.id,
     name: node.name,
     groupId: groupId ?? '',
     nextIds: parents ?? [],
-    rightholderId: '',
     type: 'vertical',
     percent: 0,
-    actionName: 'prepend',
     pools: [], // TODO
     order: 0, // TODO
-  };
+  });
 }
 
 function createRight(node: RightNode, parents?: string[], groupId?: string): Right {
-  return {
+  return _createRight({
     id: node.id,
     name: node.name,
     groupId: groupId ?? '',
     nextIds: parents ?? [],
     rightholderId: node.rightHolderId,
-    type: 'unknown',
     percent: node.percent,
-    actionName: 'prepend',
     pools: [], // TODO
     order: 0, // TODO
-  };
+  });
 }
-
 
 export function fromGraph(graph: readonly Node[]) {
 

@@ -1,7 +1,15 @@
 import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output, Pipe, PipeTransform } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import { Income, Statement, Waterfall, getIncomesSources, isDistributorStatement, isProducerStatement } from '@blockframes/model';
+import {
+  Income,
+  Statement,
+  Waterfall,
+  getDefaultVersionId,
+  getIncomesSources,
+  isDistributorStatement,
+  isProducerStatement
+} from '@blockframes/model';
 import { StatementPaymentComponent } from '../statement-payment/statement-payment.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
@@ -50,7 +58,7 @@ export class StatementTableComponent {
   ) { }
 
   payment(statement: Statement) {
-    const versionId = this.waterfall.versions[0]?.id; // TODO #9520 versionId via statement.versionId ?
+    const versionId = getDefaultVersionId(this.waterfall); // TODO #9520 versionId via statement.versionId ?
     if (versionId) this.shell.setVersionId(versionId);
 
     this.dialog.open(StatementPaymentComponent, {

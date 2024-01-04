@@ -15,6 +15,9 @@
       <ng-template colRef="name" label="Name" let-name sort>
         {{ name }}
       </ng-template>
+      <ng-template colRef="" label="Default" let-version sort>
+        <mat-slide-toggle [checked]="version.default" [disabled]="version.default" (click)="setVersionAsDefault(version.id)" color="primary"></mat-slide-toggle>
+      </ng-template>
       <ng-template colRef="description" label="Description" let-description sort>
         {{ description }}
       </ng-template>

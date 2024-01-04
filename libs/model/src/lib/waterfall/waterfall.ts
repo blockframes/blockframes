@@ -26,6 +26,7 @@ export function createWaterfallPermissions(params: Partial<WaterfallPermissions>
 
 export interface Version {
   id: string;
+  default: boolean;
   name: string;
   description?: string;
   blockIds: string[]
@@ -34,6 +35,7 @@ export interface Version {
 export function createVersion(params: Partial<Version> = {}) {
   const version: Version = {
     id: '',
+    default: true,
     name: '',
     blockIds: [],
     ...params
@@ -41,6 +43,18 @@ export function createVersion(params: Partial<Version> = {}) {
 
   if (!version.name) version.name = version.id;
   return version;
+}
+
+function getDefaultVersion(waterfall: Waterfall) {
+  return waterfall.versions.find(v => v.default);
+}
+
+export function getDefaultVersionId(waterfall: Waterfall) {
+  return getDefaultVersion(waterfall)?.id;
+}
+
+export function isDefaultVersion(waterfall: Waterfall, versionId: string) {
+  return getDefaultVersionId(waterfall) === versionId;
 }
 
 export interface WaterfallFile extends StorageFile {

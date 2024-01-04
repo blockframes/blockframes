@@ -25,6 +25,8 @@ import {
   sortContracts,
   Expense,
   Income,
+  getDefaultVersionId,
+  isDefaultVersion,
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { filter, map, pluck, switchMap, tap } from 'rxjs/operators';
@@ -145,9 +147,8 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   );
   public waterfall: Waterfall;
 
-  public rights$ = this.movie$.pipe(
-    // TODO #9520 same as for income & expense.
-    switchMap(({ id: waterfallId }) => this.rightService.valueChanges({ waterfallId }))
+  public rights$ = combineLatest([this.movie$, this.versionId$]).pipe(
+    switchMap(([{ id: waterfallId }, versionId]) => this.rightService.rightsChanges(waterfallId, versionId))
   );
 
   public hasMinimalRights$ = combineLatest([this.waterfall$, this.rights$]).pipe(
@@ -189,7 +190,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     filter(([isRefreshing, waterfall]) => !!waterfall.versions.length && !isRefreshing),
     map(([_, waterfall, _versionId, date]) => ({
       waterfall: waterfall,
-      versionId: _versionId || waterfall.versions[0]?.id,
+      versionId: _versionId || getDefaultVersionId(waterfall),
       date
     })),
     switchMap(config => this.waterfallService.buildWaterfall(config))
@@ -197,7 +198,8 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
 
   public currentVersionName$ = combineLatest([this.waterfall$, this.currentRightholder$, this.canBypassRules$]).pipe(
     switchMap(([waterfall, rightholder, canBypassRules]) => {
-      if (!waterfall.versions[0]?.id) return of(null);
+      const defaultVersion = getDefaultVersionId(waterfall);
+      if (!defaultVersion) return of(null);
       if (rightholder && !canBypassRules) {
         const versionId = 'version_3'; // TODO #9520 return rightholder.versionId;
         this.lockedVersionId = versionId;
@@ -205,10 +207,14 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
         return of(versionId);
       }
 
-      if (!this.versionId$.value) this.setVersionId(waterfall.versions[0]?.id);
+      if (!this.versionId$.value) this.setVersionId(defaultVersion);
       return this.versionId$;
     }),
-    map(versionId => this.waterfall.versions.find(v => v.id === versionId)?.name || '--')
+    map(versionId => {
+      const name = this.waterfall.versions.find(v => v.id === versionId)?.name;
+      const isDefault = isDefaultVersion(this.waterfall, versionId) ? '(default)' : '';
+      return name ? `${name} ${isDefault}` : '--';
+    })
   );
   public lockedVersionId: string; // VersionId that is locked for the current rightholder
 
@@ -283,8 +289,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   }
 
   rights(versionId = this.versionId$.value) {
-    // TODO #9520 rights should be fitered by the current version this.versionId$
-    return this.rightService.getValue({ waterfallId: this.waterfall.id });
+    return this.rightService.rights(this.waterfall.id, versionId);
   }
 
   incomes(ids: string[] = [], versionId = this.versionId$.value) {
