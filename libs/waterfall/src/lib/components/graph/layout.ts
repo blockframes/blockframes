@@ -5,6 +5,7 @@ import LayoutEngine, { ElkExtendedEdge, ElkNode } from 'elkjs/lib/elk.bundled';
 import {
   Media,
   Right,
+  RightType,
   Territory,
   WaterfallSource,
   createRight as _createRight,
@@ -18,22 +19,65 @@ interface NodeBase {
   y: number;
   width: number;
   height: number;
-  type: string;
+  type: 'source' | 'right' | 'vertical' | 'horizontal';
   children: string[];
+}
+
+function createNodeBase(params: Partial<NodeBase> = {}): NodeBase {
+  return {
+    id: '',
+    name: '',
+    x: 0, y: 0,
+    width: 0,
+    height: 0,
+    type: 'right',
+    children: [],
+    ...params
+  }
 }
 
 export interface SourceNode extends NodeBase {
   type: 'source';
   medias: Media[];
   territories: Territory[];
-};
+}
+
+function createSourceNode(params: Partial<SourceNode> = {}) {
+  const node = createNodeBase(params);
+  const source: SourceNode = {
+    ...node,
+    type: 'source',
+    width: SOURCE_WIDTH,
+    height: SOURCE_HEIGHT,
+    medias: [],
+    territories: [],
+    ...params
+  }
+  return source;
+}
 
 export interface RightNode extends NodeBase {
   type: 'right';
   color: string;
   rightHolderId: string;
-
   percent: number;
+  rightType: RightType;
+}
+
+function createRightNode(params: Partial<RightNode> = {}) {
+  const node = createNodeBase(params);
+  const right: RightNode = {
+    ...node,
+    type: 'right',
+    width: RIGHT_WIDTH,
+    height: RIGHT_HEIGHT,
+    color: '#000',
+    rightHolderId: '',
+    percent: 0,
+    rightType: 'unknown',
+    ...params
+  }
+  return right;
 }
 
 export interface VerticalNode extends NodeBase {
@@ -41,9 +85,31 @@ export interface VerticalNode extends NodeBase {
   members: RightNode[];
 }
 
+function createVerticalNode(params: Partial<VerticalNode> = {}) {
+  const node = createNodeBase(params);
+  const vertical: VerticalNode = {
+    ...node,
+    type: 'vertical',
+    members: [],
+    ...params
+  }
+  return vertical;
+}
+
 export interface HorizontalNode extends NodeBase {
   type: 'horizontal';
   members: (VerticalNode | RightNode)[];
+}
+
+function createHorizontalNode(params: Partial<HorizontalNode> = {}) {
+  const node = createNodeBase(params);
+  const horizontal: HorizontalNode = {
+    ...node,
+    type: 'horizontal',
+    members: [],
+    ...params
+  }
+  return horizontal;
 }
 
 export type Node = SourceNode | RightNode | VerticalNode | HorizontalNode;
@@ -81,30 +147,25 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
       const members: RightNode[] = rights.filter(r => r.groupId === right.id).map(vMember => {
         const orgIndex = orgIds.findIndex(id => id === vMember.rightholderId);
         const color = orgColors[orgIndex];
-        const rightNode: RightNode = {
+        const rightNode = createRightNode({
           id: vMember.id,
           name: vMember.name,
-          x: 0, y: 0,
-          width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
-          type: 'right',
-          children: [],
           color,
           rightHolderId: vMember.rightholderId,
           percent: vMember.percent,
-        };
+          rightType: vMember.type,
+        });
         return rightNode;
       });
 
-      const verticalNode: VerticalNode = {
+      const verticalNode = createVerticalNode({
         id: right.id,
-        type: 'vertical',
         members: members,
         name: right.name,
         children: [...children],
-        x: 0, y: 0,
         height: RIGHT_HEIGHT + (LEVEL_HEIGHT * (members.length - 1)) + (SPACING * (members.length + 1)),
         width: RIGHT_WIDTH + (SPACING * 2),
-      };
+      });
       return verticalNode;
     } else if (right.type === 'horizontal') {
       const members = rights.filter(r => r.groupId === right.id).map(member => {
@@ -112,72 +173,59 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
           const vMembers = rights.filter(r => r.groupId === member.id).map(vMember => {
             const orgIndex = orgIds.findIndex(id => id === vMember.rightholderId);
             const color = orgColors[orgIndex];
-            const rightNode: RightNode = {
+            const rightNode = createRightNode({
               id: vMember.id,
               name: vMember.name,
-              x: 0, y: 0,
-              width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
-              type: 'right',
-              children: [],
               color,
               rightHolderId: vMember.rightholderId,
               percent: vMember.percent,
-            };
+              rightType: vMember.type,
+            });
             return rightNode;
           });
-          const verticlaNode: VerticalNode = {
+          const verticalNode = createVerticalNode({
             id: member.id,
             name: member.name,
-            x: 0, y: 0,
             width: RIGHT_WIDTH + (SPACING * 2), height: RIGHT_HEIGHT + (LEVEL_HEIGHT * (vMembers.length - 1)) + (SPACING * (vMembers.length + 1)),
-            type: 'vertical',
-            children: [],
             members: vMembers,
-          };
-          return verticlaNode;
+          });
+          return verticalNode;
         } else {
           const orgIndex = orgIds.findIndex(id => id === member.rightholderId);
           const color = orgColors[orgIndex];
-          const rightNode: RightNode = {
+          const rightNode = createRightNode({
             id: member.id,
             name: member.name,
-            x: 0, y: 0,
-            width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
-            type: 'right',
-            children: [],
             color,
             rightHolderId: member.rightholderId,
             percent: member.percent,
-          };
+            rightType: member.type,
+          });
           return rightNode;
         }
       });
       const maxMemberHeight = Math.max(...members.map(member => member.height));
-      const horizontalNode: HorizontalNode = {
+      const horizontalNode = createHorizontalNode({
         id: right.id,
-        type: 'horizontal',
         members: members,
         name: right.name,
         children: [...children],
-        x: 0, y: 0,
         height: maxMemberHeight + (SPACING * 2),
         width: (RIGHT_WIDTH * members.length) + (SPACING * (members.length + 1))
-      };
+      });
       return horizontalNode;
     } else {
       const orgIndex = orgIds.findIndex(id => id === right.rightholderId);
       const color = orgColors[orgIndex];
-      const rightNode: RightNode = {
+      const rightNode = createRightNode({
         id: right.id,
-        type: 'right',
         name: right.name,
         children: [...children],
-        x: 0, y: 0,
-        width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
         color,
         rightHolderId: right.rightholderId,
         percent: right.percent,
-      };
+        rightType: right.type,
+      });
       return rightNode;
     }
   });
@@ -214,15 +262,6 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
 
   return { nodes, arrows, bounds: { minX, maxX, minY, maxY } };
 }
-
-
-
-
-
-
-
-
-
 
 function autoLayout(nodes: Node[]) {
 
@@ -423,9 +462,6 @@ function getArrow(parent: Node, child: Node) {
   return arrow;
 }
 
-
-
-
 export function updateParents(nodeId: string, newParentIds: string[], graph: Node[]) {
   const parentIndex: Record<string, string[]> = {};
   graph.forEach(node => {
@@ -523,15 +559,13 @@ export function updateParents(nodeId: string, newParentIds: string[], graph: Nod
 
     // create a new group and add it to the graph
     const randGroup = Math.random().toString(36).slice(2, 11);
-    const group: HorizontalNode = {
+    const group = createHorizontalNode({
       id: `z-group-${randGroup}`, // TODO REAL ID
       name: `Group ${randGroup}`, // TODO
-      x: 0, y: 0,
       width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
-      type: 'horizontal',
       children: [...childrenIds],
       members: [...siblings, current as RightNode | VerticalNode],
-    };
+    });
     graph.push(group);
 
     // add the new group to its new parents' children list
@@ -560,32 +594,19 @@ export function createSibling(olderSiblingId: string, graph: Node[]) {
 
   if (olderSibling.type === 'source') {
     const rand = Math.random().toString(36).slice(2, 11);
-    const source: SourceNode = {
+    const source = createSourceNode({
       id: `z-source-${rand}`, // TODO REAL ID
       name: `Source ${rand}`, // TODO
-      x: 0, y: 0,
-      width: SOURCE_WIDTH, height: SOURCE_HEIGHT,
-      type: 'source',
-      children: [],
-      medias: [],
-      territories: [],
-    };
+    });
     graph.push(source);
     return;
 
   } else if (olderSibling.type === 'horizontal') {
     const rand = Math.random().toString(36).slice(2, 11);
-    const right: RightNode = {
+    const right = createRightNode({
       id: `z-right-${rand}`, // TODO REAL ID
       name: `Right ${rand}`, // TODO
-      x: 0, y: 0,
-      width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
-      type: 'right',
-      children: [],
-      color: '#000',
-      rightHolderId: '',
-      percent: 0,
-    };
+    });
     olderSibling.members.push(right);
     return;
 
@@ -601,17 +622,10 @@ export function createSibling(olderSiblingId: string, graph: Node[]) {
 
     // create a new right
     const randRight = Math.random().toString(36).slice(2, 11);
-    const right: RightNode = {
+    const right = createRightNode({
       id: `z-right-${randRight}`, // TODO REAL ID
       name: `Right ${randRight}`, // TODO
-      x: 0, y: 0,
-      width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
-      type: 'right',
-      children: [],
-      color: '#000',
-      rightHolderId: '',
-      percent: 0,
-    };
+    });
 
     if (parents.length === 0) { // simply create a right
       graph.push(right);
@@ -621,15 +635,13 @@ export function createSibling(olderSiblingId: string, graph: Node[]) {
     // create a new group with the new right and its siblings as members
     // the children of this new group is the whole children of the siblings
     const randGroup = Math.random().toString(36).slice(2, 11);
-    const group: HorizontalNode = {
+    const group = createHorizontalNode({
       id: `z-group-${randGroup}`, // TODO REAL ID
       name: `Group ${randGroup}`, // TODO
-      x: 0, y: 0,
       width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
-      type: 'horizontal',
       children: [...children],
       members: [olderSibling, right],
-    };
+    });
 
     parents.forEach(parent => parent.children.push(group.id));
     graph.push(group);
@@ -643,17 +655,10 @@ export function createChild(parentId: string, graph: Node[]) {
 
   if (parent.children.length === 0) { // simply create a right
     const rand = Math.random().toString(36).slice(2, 11);
-    const right: RightNode = {
+    const right = createRightNode({
       id: `z-right-${rand}`, // TODO REAL ID
       name: `Right ${rand}`, // TODO
-      x: 0, y: 0,
-      width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
-      type: 'right',
-      children: [],
-      color: '#000',
-      rightHolderId: '',
-      percent: 0,
-    };
+    });
     parent.children.push(right.id);
     graph.push(right);
     return;
@@ -670,30 +675,21 @@ export function createChild(parentId: string, graph: Node[]) {
 
     // create a new right
     const randRight = Math.random().toString(36).slice(2, 11);
-    const right: RightNode = {
+    const right = createRightNode({
       id: `z-right-${randRight}`, // TODO REAL ID
       name: `Right ${randRight}`, // TODO
-      x: 0, y: 0,
-      width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
-      type: 'right',
-      children: [],
-      color: '#000',
-      rightHolderId: '',
-      percent: 0,
-    };
+    });
 
     // create a new group with the new right and its siblings as members
     // the children of this new group is the whole children of the siblings
     const randGroup = Math.random().toString(36).slice(2, 11);
-    const group: HorizontalNode = {
+    const group = createHorizontalNode({
       id: `z-group-${randGroup}`, // TODO REAL ID
       name: `Group ${randGroup}`, // TODO
-      x: 0, y: 0,
       width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
-      type: 'horizontal',
       children: [...children],
       members: [...siblings, right],
-    };
+    });
 
     parent.children = [group.id];
     graph.push(group);
@@ -736,6 +732,7 @@ function createRight(node: RightNode, parents?: string[], groupId?: string): Rig
     percent: node.percent,
     pools: [], // TODO
     order: 0, // TODO
+    type: node.rightType,
   });
 }
 
@@ -745,7 +742,7 @@ export function fromGraph(graph: readonly Node[]) {
   const sources: WaterfallSource[] = [];
 
   const parentIndex: Record<string, string[]> = {};
-  graph.forEach(node => {
+  graph.filter(n => n.type !== 'source').forEach(node => {
     node.children.forEach(childId => {
       parentIndex[childId] ||= [];
       parentIndex[childId].push(node.id);
@@ -789,7 +786,6 @@ export function fromGraph(graph: readonly Node[]) {
 
   return { rights, sources };
 }
-
 
 export function computeDiff(
   oldGraph: { rights: Right[], sources: WaterfallSource[] },

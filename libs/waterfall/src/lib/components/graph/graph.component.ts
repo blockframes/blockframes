@@ -6,10 +6,7 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 import { GraphService } from '@blockframes/ui/graph/graph.service';
 import { CardModalComponent } from '@blockframes/ui/card-modal/card-modal.component';
 import {
-  Media,
   Right,
-  RightType,
-  Territory,
   WaterfallRightholder,
   WaterfallSource,
   createRight,
@@ -109,7 +106,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     const newGraph = fromGraph(graph);
     const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
     const right = changes.updated.rights.find(right => right.id === rightId);
-    right.type = this.rightForm.controls.type.value as RightType;
+    right.type = this.rightForm.controls.type.value;
     right.name = this.rightForm.controls.name.value;
     right.percent = this.rightForm.controls.percent.value;
     right.rightholderId = this.rightholders.find(r => r.name === this.rightForm.controls.org.value)?.id ?? '';
@@ -131,8 +128,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     if (!source) return;
 
     source.name = this.sourceForm.controls.name.value;
-    source.medias = this.sourceForm.controls.medias.value as Media[];
-    source.territories = this.sourceForm.controls.territories.value as Territory[];
+    source.medias = this.sourceForm.controls.medias.value;
+    source.territories = this.sourceForm.controls.territories.value;
 
     return this.waterfallService.updateSource(this.waterfall.id, source);
   }
