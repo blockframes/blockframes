@@ -24,13 +24,10 @@ export class AutocompleteComponent implements OnInit {
   @Input() @boolean required: boolean;
   @Input() options: Observable<string[]>;
   @Input() form: FormControl<string>;
-  @Input() @boolean disabled = false;
 
   public filteredStates: Observable<string[]>;
 
   ngOnInit() {
-    this.form.enable();
-    if(this.disabled) this.form.disable();
     this.filteredStates = combineLatest([
       this.form.valueChanges.pipe(startWith('')),
       this.options,
