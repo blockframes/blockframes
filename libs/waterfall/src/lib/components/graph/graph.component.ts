@@ -6,13 +6,13 @@ import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { GraphService } from '@blockframes/ui/graph/graph.service';
 import { CardModalComponent } from '@blockframes/ui/card-modal/card-modal.component';
-import { Media, Right, RightType, Territory, Waterfall, WaterfallRightholder, WaterfallSource, createRight, createWaterfallSource } from '@blockframes/model';
+import { Condition, Media, Right, RightType, Territory, Waterfall, WaterfallRightholder, WaterfallSource, createRight, createWaterfallSource, isConditionGroup } from '@blockframes/model';
 
 import { RightService } from '../../right.service';
 import { WaterfallService } from '../../waterfall.service';
 import { createRightForm, setRightFormValue } from '../forms/right-form/right-form';
 import { createSourceForm, setSourceFormValue } from '../forms/source-form/source-form';
-import { Arrow, Node, computeDiff, createChild, createSibling, fromGraph, toGraph, updateParents } from './layout';
+import { Arrow, Node, computeDiff, createChild, createSibling, createStep, deleteStep, fromGraph, toGraph, updateParents } from './layout';
 
 
 @Component({
@@ -84,9 +84,16 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     const right = this.rights.find(right => right.id === id);
     if (right) {
       this.isSourceSelected = false;
+      let steps: Condition[][] = [];
+      if (right.type === 'vertical') {
+        const members = this.rights.filter(r => r.groupId === right.id).sort((a, b) => a.order - b.order);
+        steps = members.map(member => member.conditions?.conditions.filter(c => !isConditionGroup(c)) as Condition[] ?? []);
+      } else {
+        steps[0] = right.conditions?.conditions.filter(c => !isConditionGroup(c)) as Condition[] ?? [];
+      }
       const org = this.rightholders.find(r => r.id === right.rightholderId)?.name ?? '';;
       const parents = this.nodes$.getValue().filter(node => node.children.includes(right.groupId || id)); // do not use ?? instead of ||, it will break since '' can be considered truthy
-      setRightFormValue(this.rightForm, { ...right, rightholderId: org, nextIds: parents.map(parent => parent.id) });
+      setRightFormValue(this.rightForm, { ...right, rightholderId: org, nextIds: parents.map(parent => parent.id) }, steps);
     }
   }
 
@@ -106,7 +113,15 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     right.name = this.rightForm.controls.name.value;
     right.percent = this.rightForm.controls.percent.value;
     right.rightholderId = this.rightholders.find(r => r.name === this.rightForm.controls.org.value)?.id ?? '';
-    right.conditions = { operator: 'AND', conditions: this.rightForm.controls.conditions.value };
+
+    if (right.type === 'vertical') {
+      const steps = changes.updated.rights.filter(r => r.groupId === right.id);
+      this.rightForm.controls.steps.value.forEach((conditions, index) => {
+        steps[index].conditions = { operator: 'AND', conditions: conditions };
+      });
+    } else {
+      right.conditions = { operator: 'AND', conditions: this.rightForm.controls.steps.value[0] };
+    }
 
     const write = this.waterfallService.batch();
     await Promise.all([
@@ -162,6 +177,43 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     createChild(id, graph);
     const newGraph = fromGraph(graph);
     const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
+
+    const write = this.waterfallService.batch();
+    await Promise.all([
+      this.rightService.add(changes.created.rights, { params: { waterfallId: this.route.snapshot.params.movieId }, write }),
+      this.rightService.update(changes.updated.rights, { params: { waterfallId: this.route.snapshot.params.movieId }, write }),
+      this.rightService.remove(changes.deleted.rights.map(r => r.id), { params: { waterfallId: this.route.snapshot.params.movieId }, write }),
+      this.waterfallService.update(this.route.snapshot.params.movieId, { id: this.route.snapshot.params.movieId, sources: newGraph.sources }, { write }),
+    ]);
+    return write.commit();
+  }
+
+  async createNewStep() {
+    const graph = this.nodes$.getValue();
+    const rightId = this.selected$.getValue();
+    createStep(rightId, graph);
+    const newGraph = fromGraph(graph);
+    const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
+
+    const write = this.waterfallService.batch();
+    await Promise.all([
+      this.rightService.add(changes.created.rights, { params: { waterfallId: this.route.snapshot.params.movieId }, write }),
+      this.rightService.update(changes.updated.rights, { params: { waterfallId: this.route.snapshot.params.movieId }, write }),
+      this.rightService.remove(changes.deleted.rights.map(r => r.id), { params: { waterfallId: this.route.snapshot.params.movieId }, write }),
+      this.waterfallService.update(this.route.snapshot.params.movieId, { id: this.route.snapshot.params.movieId, sources: newGraph.sources }, { write }),
+    ]);
+    return write.commit();
+  }
+
+  async deleteStep(index: number) {
+    const graph = this.nodes$.getValue();
+    const rightId = this.selected$.getValue();
+    deleteStep(rightId, index, graph);
+    console.log(graph);
+    const newGraph = fromGraph(graph);
+    console.log(newGraph);
+    const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
+    console.log(changes);
 
     const write = this.waterfallService.batch();
     await Promise.all([

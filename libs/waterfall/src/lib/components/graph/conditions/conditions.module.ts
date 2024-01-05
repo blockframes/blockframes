@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { WaterfallConditionsComponent } from './conditions.component';
+import { WaterfallStepItemModule } from './step-item/step-item.module';
 import { WaterfallConditionItemModule } from './condition-item/condition-item.module';
 import { WaterfallConditionsFormModule } from '../../forms/conditions-form/conditions-form.module';
 
@@ -20,6 +21,7 @@ import { WaterfallConditionsFormModule } from '../../forms/conditions-form/condi
     CommonModule,
     ReactiveFormsModule,
 
+    WaterfallStepItemModule,
     WaterfallConditionItemModule,
     WaterfallConditionsFormModule,
 

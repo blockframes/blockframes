@@ -1,0 +1,13 @@
+
+<p>Step {{ index + 1}}</p>
+<p>({{conditionCount}} condition{{ conditionCount > 1 ? 's' : '' }})</p>
+
+<span class="spacer"></span>
+
+<button mat-icon-button (click)="editStep.emit()">
+  <mat-icon svgIcon="edit"></mat-icon>
+</button>
+
+<button mat-icon-button (click)="deleteStep.emit()">
+  <mat-icon svgIcon="delete"></mat-icon>
+</button>
