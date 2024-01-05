@@ -78,7 +78,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
     const children = new Set<string>(rights.filter(r => r.nextIds.includes(right.id)).map(r => r.id));
 
     if (right.type === 'vertical') {
-      const members: RightNode[] = rights.filter(r => r.groupId === right.id).map(vMember => {
+      const members: RightNode[] = rights.filter(r => r.groupId === right.id).sort((a, b) => a.order - b.order).map(vMember => {
         const orgIndex = orgIds.findIndex(id => id === vMember.rightholderId);
         const color = orgColors[orgIndex];
         const rightNode: RightNode = {
@@ -109,7 +109,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
     } else if (right.type === 'horizontal') {
       const members = rights.filter(r => r.groupId === right.id).map(member => {
         if (member.type === 'vertical') {
-          const vMembers = rights.filter(r => r.groupId === member.id).map(vMember => {
+          const vMembers = rights.filter(r => r.groupId === member.id).sort((a, b) => a.order - b.order).map(vMember => {
             const orgIndex = orgIds.findIndex(id => id === vMember.rightholderId);
             const color = orgColors[orgIndex];
             const rightNode: RightNode = {
@@ -701,6 +701,106 @@ export function createChild(parentId: string, graph: Node[]) {
   }
 }
 
+export function createStep(nodeId: string, graph: Node[]) {
+  const nodeIndex = graph.findIndex(node => node.id === nodeId);
+  if (nodeIndex === -1) return;
+
+  const node = graph[nodeIndex];
+  
+  // if current node is a simple right, create a new group with this right and add new right in the group
+  if (node.type === 'right') {
+
+    graph.splice(nodeIndex, 1);
+
+    // update current node
+    const children = [ ...node.children ];
+    node.name = `Step 1`;
+    node.children = [];
+
+    // create a new step right
+    const rand1 = Math.random().toString(36).slice(2, 11);
+    const step1 = `z-right-${rand1}`; // TODO REAL ID
+    const right1: RightNode = {
+      id: step1,
+      name: `Step 2`,
+      x: 0, y: 0,
+      width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
+      type: 'right',
+      children: [],
+      color: '#000',
+      rightHolderId: node.rightHolderId ?? '',
+      percent: 0,
+    };
+
+    // create a new vertical group
+    const members = [ node, right1 ];
+    const randGroup = Math.random().toString(36).slice(2, 11);
+    const verticalNode: VerticalNode = {
+      id: `z-group-${randGroup}`, // TODO REAL ID
+      name: `Group ${randGroup}`, // TODO
+      type: 'vertical',
+      members,
+      children,
+      x: 0, y: 0,
+      height: RIGHT_HEIGHT + (LEVEL_HEIGHT * (members.length - 1)) + (SPACING * (members.length + 1)),
+      width: RIGHT_WIDTH + (SPACING * 2),
+    };
+    graph.push(verticalNode);
+
+    // update parents
+    const parents = graph.filter(node => node.children.includes(nodeId));
+    parents.forEach(parent => {
+      parent.children = parent.children.filter(childId => childId !== nodeId);
+      parent.children.push(verticalNode.id);
+    });
+  
+  // if current node is already a vertical group simply add a new member
+  } else if (node.type === 'vertical') {
+    const rand = Math.random().toString(36).slice(2, 11);
+    const id = `z-right-${rand}`; // TODO REAL ID
+    const right: RightNode = {
+      id,
+      name: `Step ${node.members.length + 1}`,
+      x: 0, y: 0,
+      width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
+      type: 'right',
+      children: [],
+      color: '#000',
+      rightHolderId: node.members[0].rightHolderId ?? '',
+      percent: 0,
+    };
+    node.members.push(right);
+    node.height = RIGHT_HEIGHT + (LEVEL_HEIGHT * (node.members.length - 1)) + (SPACING * (node.members.length + 1));
+  } else {
+    return;
+  }
+}
+
+export function deleteStep(groupId: string, stepIndex: number, graph: Node[]) {
+
+  const group = graph.find(node => node.id === groupId);
+  if (!group || group.type !== 'vertical') return;
+
+  group.members.splice(stepIndex, 1);
+
+  group.members.forEach((member, index) => {
+    member.name = `Step ${index + 1}`;
+  });
+
+  // if the group has only one member left, remove the group
+  if (group.members.length === 1) {
+    const lastMember = group.members[0];
+    const parents = graph.filter(node => node.children.includes(group.id));
+    parents.forEach(parent => {
+      parent.children = parent.children.filter(childId => childId !== group.id);
+      parent.children.push(lastMember.id);
+    });
+    graph.splice(graph.findIndex(node => node.id === group.id), 1);
+    graph.push(lastMember);
+  }
+}
+
+
 function createHorizontal(node: Node, parents?: string[]): Right {
   return _createRight({
     id: node.id,
@@ -726,7 +826,7 @@ function createVertical(node: Node, parents?: string[], groupId?: string): Right
   });
 }
 
-function createRight(node: RightNode, parents?: string[], groupId?: string): Right {
+function createRight(node: RightNode, parents?: string[], groupId?: string, index?: number): Right {
   return _createRight({
     id: node.id,
     name: node.name,
@@ -735,7 +835,7 @@ function createRight(node: RightNode, parents?: string[], groupId?: string): Rig
     rightholderId: node.rightHolderId,
     percent: node.percent,
     pools: [], // TODO
-    order: 0, // TODO
+    order: index ?? 0, // TODO
   });
 }
 
@@ -769,8 +869,8 @@ export function fromGraph(graph: readonly Node[]) {
         node.members.forEach(member => {
           if (member.type === 'vertical') {
             rights.push(createVertical(member, undefined, node.id));
-            member.members.forEach(subMember => {
-              rights.push(createRight(subMember, undefined, member.id));
+            member.members.forEach((subMember, index) => {
+              rights.push(createRight(subMember, undefined, member.id, index));
             });
           } else {
             rights.push(createRight(member, undefined, node.id));
@@ -778,8 +878,8 @@ export function fromGraph(graph: readonly Node[]) {
         });
       } else if (node.type === 'vertical') {
         rights.push(createVertical(node, parentIndex[node.id]));
-        node.members.forEach(member => {
-          rights.push(createRight(member, undefined, node.id));
+        node.members.forEach((member, index) => {
+          rights.push(createRight(member, undefined, node.id, index));
         });
       } else {
         rights.push(createRight(node, parentIndex[node.id]));

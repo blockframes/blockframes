@@ -1,0 +1,26 @@
+
+:host {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  box-shadow: 0 8px 8px 0px var(--foreground-divider);
+  margin: 12px 0;
+
+  p {
+    margin: 0;
+  }
+
+  p:first-child {
+    font-weight: 600;
+  }
+
+  p:nth-child(2) {
+    font-size: 14px;
+  }
+
+  span.spacer {
+    flex-grow: 1;
+  }
+}
