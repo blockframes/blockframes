@@ -1,5 +1,5 @@
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import { Condition } from '@blockframes/model';
 
@@ -15,6 +15,11 @@ import { createConditionForm, formToCondition, setConditionForm } from '../../fo
 export class WaterfallConditionsComponent implements OnInit {
 
   @Input() rightForm: RightForm;
+
+  @Output() createStep = new EventEmitter();
+  @Output() deleteStep = new EventEmitter();
+
+  selectedStep = 0;
 
   newCondition: Condition | undefined = undefined;
 
@@ -34,22 +39,31 @@ export class WaterfallConditionsComponent implements OnInit {
   createCondition() {
     if (!this.newCondition) return;
 
-    const conditions = this.rightForm.controls.conditions.value;
-    conditions.push(this.newCondition);
-    this.rightForm.controls.conditions.setValue(conditions);
+    const steps = this.rightForm.controls.steps.value;
+    steps[this.selectedStep].push(this.newCondition);
+    this.rightForm.controls.steps.setValue(steps);
     this.conditionForm = createConditionForm();
   }
 
   editCondition(index: number) {
-    const conditions = this.rightForm.controls.conditions.value;
-    const [condition] = conditions.splice(index, 1);
-    this.rightForm.controls.conditions.setValue(conditions);
+    const steps = this.rightForm.controls.steps.value;
+    const [condition] = steps[this.selectedStep].splice(index, 1);
+    this.rightForm.controls.steps.setValue(steps);
     setConditionForm(this.conditionForm, condition);
   }
 
   deleteCondition(index: number) {
-    const conditions = this.rightForm.controls.conditions.value;
-    conditions.splice(index, 1);
-    this.rightForm.controls.conditions.setValue(conditions);
+    const steps = this.rightForm.controls.steps.value;
+    steps[this.selectedStep].splice(index, 1);
+    this.rightForm.controls.steps.setValue(steps);
+  }
+
+  selectStep(index: number) {
+    this.selectedStep = index;
+
+  }
+
+  removeStep(index: number) {
+    this.deleteStep.emit(index);
   }
 }

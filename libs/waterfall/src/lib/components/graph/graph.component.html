@@ -138,7 +138,7 @@
         </mat-tab>
         <mat-tab label="Conditions">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-conditions [rightForm]="rightForm"></waterfall-conditions>
+            <waterfall-conditions [rightForm]="rightForm" (createStep)="createNewStep()" (deleteStep)="deleteStep($event)"></waterfall-conditions>
           </section>
         </mat-tab>
       </mat-tab-group>
