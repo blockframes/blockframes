@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 
 // Blockframes
 import { RightholderSelectModule } from '@blockframes/waterfall/components/rightholder-select/rightholder-select.module';
-import { EmptyWaterfallModule } from '@blockframes/waterfall/components/empty/empty.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { EmptyStatementCardModule } from '@blockframes/waterfall/components/empty-statement-card/empty-statement-card.module';
 import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
@@ -25,6 +24,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [StatementsComponent],
@@ -32,7 +32,6 @@ import { MatDialogModule } from '@angular/material/dialog';
     CommonModule,
 
     RightholderSelectModule,
-    EmptyWaterfallModule,
     ToLabelModule,
     EmptyStatementCardModule,
     RightHolderNamePipeModule,
@@ -49,6 +48,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatMenuModule,
     MatTabsModule,
     MatDialogModule,
+    MatSnackBarModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: StatementsComponent }]),

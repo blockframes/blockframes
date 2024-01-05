@@ -3,7 +3,7 @@
     <mat-label>Waterfall Version</mat-label>
     <mat-select (selectionChange)="switchToVersion($event.value)" [(value)]="versionId">
       <mat-option *ngFor="let version of waterfall.versions" [value]="version.id">
-        {{ version.name }}
+        {{ version.name }} {{ version.default ? '(default)' : '' }}
       </mat-option>
     </mat-select>
   </mat-form-field>

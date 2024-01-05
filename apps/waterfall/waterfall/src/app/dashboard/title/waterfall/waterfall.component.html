@@ -1,10 +1,6 @@
 <waterfall-version-selector></waterfall-version-selector>
 
-<waterfall-graph
-  *ngIf="(rights$ | async) as rights; else loading"
-  [rights$]="rights$"
-  [waterfall$]="waterfall$"
-></waterfall-graph>
+<waterfall-graph *ngIf="(rights$ | async) as rights; else loading"></waterfall-graph>
 
 <ng-template #loading>
   <article>

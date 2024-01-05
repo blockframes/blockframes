@@ -75,7 +75,7 @@ export class StatementArbitraryChangeComponent implements OnInit {
           .filter(s => isProducerStatement(s))
           .filter(s => s.payments.right?.some(r => r.incomeIds.includes(maxPerIncome.income.id)));
 
-        // TODO #9420 if an internal right payment of a distributor statement is impacted, we should create a new version.
+        // TODO #9520 if an internal right payment of a distributor statement is impacted, we should create a new version.
         // To check if statement is impacted, another instance of simulation should be created ?
         // This could be used to check if max > 100% and display a warning, additionnaly, max and theoric max should be displayed in the UI
         // Let's wait to know if this case can occur before implementing it.

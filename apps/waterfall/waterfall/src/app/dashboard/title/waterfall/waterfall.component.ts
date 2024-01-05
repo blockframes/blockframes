@@ -12,7 +12,6 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaterfallComponent {
-  public waterfall$ = this.shell.waterfall$;
   public rights$ = this.shell.rights$;
 
   constructor(

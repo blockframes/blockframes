@@ -1,97 +1,92 @@
 <ng-container *ngIf="waterfall$ | async as waterfall">
-  <ng-container *ngIf="waterfall.versions.length else noWaterfall">
-    <ng-container *ngIf="statements.length else noStatements">
-      <header>
-        <mat-chip-list aria-label="Statement type">
-          <ng-container *ngFor="let type of statementTypes">
-            <mat-divider *ngIf="type.divider && type.visible" [vertical]="true"></mat-divider>
-            <mat-chip
-            *ngIf="type.visible"
-            [selected]="type.selected"
-            (click)="changeType(type.key)">{{ type.value }}</mat-chip>
-          </ng-container>
-        </mat-chip-list>
-        
-        <article>
-          <span>
-            <ng-container *ngIf="rightholders.length > 0">
-              <waterfall-rightholder-select *ngIf="selected !== 'directSales'"
-                [rightholders]="rightholders"
-                [control]="rightholderControl">
-                <mat-label>Right Holder</mat-label>
-              </waterfall-rightholder-select>
-              <ng-container *ngIf="selected !== 'directSales'">
-                <a *ngIf="rightholderContracts.length === 1 && rightholderContracts[0].id" mat-icon-button [routerLink]="['..', 'documents', rightholderContracts[0].id]">
-                  <mat-icon svgIcon="contract" matTooltip="See contract"></mat-icon>
+  <ng-container *ngIf="statements.length else noStatements">
+    <header>
+      <mat-chip-list aria-label="Statement type">
+        <ng-container *ngFor="let type of statementTypes">
+          <mat-divider *ngIf="type.divider && type.visible" [vertical]="true"></mat-divider>
+          <mat-chip
+          *ngIf="type.visible"
+          [selected]="type.selected"
+          (click)="changeType(type.key)">{{ type.value }}</mat-chip>
+        </ng-container>
+      </mat-chip-list>
+      
+      <article>
+        <span>
+          <ng-container *ngIf="rightholders.length > 0">
+            <waterfall-rightholder-select *ngIf="selected !== 'directSales'"
+              [rightholders]="rightholders"
+              [control]="rightholderControl">
+              <mat-label>Right Holder</mat-label>
+            </waterfall-rightholder-select>
+            <ng-container *ngIf="selected !== 'directSales'">
+              <a *ngIf="rightholderContracts.length === 1 && rightholderContracts[0].id" mat-icon-button [routerLink]="['..', 'documents', rightholderContracts[0].id]">
+                <mat-icon svgIcon="contract" matTooltip="See contract"></mat-icon>
+              </a>
+
+              <button *ngIf="rightholderContracts.length > 1" mat-icon-button [matMenuTriggerFor]="contractsMenu">
+                <mat-icon svgIcon="contract" matTooltip="See contracts"></mat-icon>
+              </button>
+              
+              <mat-menu #contractsMenu="matMenu">
+                <a mat-menu-item *ngFor="let rightholderContract of rightholderContracts" [routerLink]="['..', 'documents', rightholderContract.id]">
+                  {{ rightholderContract.name }}
                 </a>
-
-                <button *ngIf="rightholderContracts.length > 1" mat-icon-button [matMenuTriggerFor]="contractsMenu">
-                  <mat-icon svgIcon="contract" matTooltip="See contracts"></mat-icon>
-                </button>
-                
-                <mat-menu #contractsMenu="matMenu">
-                  <a mat-menu-item *ngFor="let rightholderContract of rightholderContracts" [routerLink]="['..', 'documents', rightholderContract.id]">
-                    {{ rightholderContract.name }}
-                  </a>
-                </mat-menu>
-              </ng-container>
+              </mat-menu>
             </ng-container>
-          </span>
-          <div *ngIf="selected !== 'directSales' && rightholderContracts.length === 1">
-            <button mat-button (click)="createStatement(rightholderControl.value, rightholderContracts[0].id)">
-              <span>Add statement for {{ rightholderControl.value | rightholderName: waterfall }}</span>
-            </button>
-          </div>
-          <div *ngIf="selected === 'directSales' && haveStatements">
-            <button mat-button (click)="createStatement(rightholderControl.value)">
-              <span>Add Direct Sales statement</span>
-            </button>
-          </div>
-        </article>
-      </header>
-
-      <section>
-        <mat-tab-group class="bf-tabs" *ngIf="rightholderContracts.length > 1 else singleContract">
-          <ng-container *ngFor="let rightholderContract of rightholderContracts">
-            <mat-tab *ngIf="rightholderContract.statements.length > 0" [label]="rightholderContract.name">
-              <ng-template matTabContent>
-                <div>
-                  <button mat-button (click)="createStatement(rightholderControl.value, rightholderContract.id)">
-                    <span>Add statement for {{ rightholderControl.value | rightholderName: waterfall }} ({{ rightholderContract.name }})</span>
-                  </button>
-                </div>
-                <waterfall-statement-table [statements]="rightholderContract.statements"></waterfall-statement-table>
-              </ng-template>
-            </mat-tab>
           </ng-container>
-  
-        </mat-tab-group>
-  
-        <ng-template #singleContract>
-          <waterfall-statement-table *ngIf="haveStatements" [statements]="rightholderContracts[0].statements"></waterfall-statement-table>
-        </ng-template>
-      </section>
+        </span>
+        <div *ngIf="selected !== 'directSales' && rightholderContracts.length === 1">
+          <button mat-button (click)="createStatement(rightholderControl.value, rightholderContracts[0].id)">
+            <span>Add statement for {{ rightholderControl.value | rightholderName: waterfall }}</span>
+          </button>
+        </div>
+        <div *ngIf="selected === 'directSales' && haveStatements">
+          <button mat-button (click)="createStatement(rightholderControl.value)">
+            <span>Add Direct Sales statement</span>
+          </button>
+        </div>
+      </article>
+    </header>
 
-      <section *ngIf="!haveStatements">
-        <waterfall-empty-statement-card [type]="selected" (click)="addNew(selected)"></waterfall-empty-statement-card>
-      </section>
+    <section>
+      <mat-tab-group class="bf-tabs" *ngIf="rightholderContracts.length > 1 else singleContract">
+        <ng-container *ngFor="let rightholderContract of rightholderContracts">
+          <mat-tab *ngIf="rightholderContract.statements.length > 0" [label]="rightholderContract.name">
+            <ng-template matTabContent>
+              <div>
+                <button mat-button (click)="createStatement(rightholderControl.value, rightholderContract.id)">
+                  <span>Add statement for {{ rightholderControl.value | rightholderName: waterfall }} ({{ rightholderContract.name }})</span>
+                </button>
+              </div>
+              <waterfall-statement-table [statements]="rightholderContract.statements"></waterfall-statement-table>
+            </ng-template>
+          </mat-tab>
+        </ng-container>
 
-      <section *ngIf="haveStatements && selected !== 'directSales'" class="flex-center">
-        <button mat-button (click)="addNew(selected)">
-          <span>Add New {{ selected | toLabel: 'statementType' }}</span>
-        </button>
-      </section>
-    </ng-container>
+      </mat-tab-group>
+
+      <ng-template #singleContract>
+        <waterfall-statement-table *ngIf="haveStatements" [statements]="rightholderContracts[0].statements"></waterfall-statement-table>
+      </ng-template>
+    </section>
+
+    <section *ngIf="!haveStatements">
+      <waterfall-empty-statement-card [type]="selected" (click)="addNew(selected)"></waterfall-empty-statement-card>
+    </section>
+
+    <section *ngIf="haveStatements && selected !== 'directSales'" class="flex-center">
+      <button mat-button (click)="addNew(selected)">
+        <span>Add New {{ selected | toLabel: 'statementType' }}</span>
+      </button>
+    </section>
   </ng-container>
+
   <ng-template #noStatements>
     <section class="flex-center">
-      <waterfall-empty-statement-card type="mainDistributor" (click)="addNew('mainDistributor')"></waterfall-empty-statement-card>
-      <waterfall-empty-statement-card type="salesAgent" (click)="addNew('salesAgent')"></waterfall-empty-statement-card>
+      <waterfall-empty-statement-card type="mainDistributor" (click)="addNew('mainDistributor')" [disabled]="!statementSender"></waterfall-empty-statement-card>
+      <waterfall-empty-statement-card type="salesAgent" (click)="addNew('salesAgent')" [disabled]="!statementSender"></waterfall-empty-statement-card>
       <waterfall-empty-statement-card type="producer" disabled></waterfall-empty-statement-card>
     </section>
   </ng-template>
 </ng-container>
-
-<ng-template #noWaterfall>
-  <waterfall-empty></waterfall-empty>
-</ng-template>
