@@ -1,5 +1,5 @@
 
-import { BehaviorSubject, Subscription, combineLatest } from 'rxjs';
+import { BehaviorSubject, Subscription, combineLatest, tap } from 'rxjs';
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { boolean } from '@blockframes/utils/decorators/decorators';
@@ -12,7 +12,9 @@ import {
   createRight,
   createWaterfallSource,
   Condition,
-  isConditionGroup
+  isConditionGroup,
+  isDefaultVersion,
+  getDefaultVersionId
 } from '@blockframes/model';
 
 import { RightService } from '../../right.service';
@@ -34,7 +36,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   showEdit = true;
 
   rights: Right[];
-  private waterfall = this.shell.waterfall;
+  waterfall = this.shell.waterfall;
+  private versionId: string;
+  isDefaultVersion: boolean;
+  private defaultVersionId: string;
   sources: WaterfallSource[];
   rightholders: WaterfallRightholder[];
 
@@ -63,12 +68,26 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = combineLatest([
       this.shell.rights$,
-      this.shell.waterfall$
-    ]).subscribe(([rights, waterfall]) => {
+      this.shell.waterfall$,
+      this.shell.versionId$.pipe(tap(_ => this.unselect()))
+    ]).subscribe(([rights, waterfall, versionId]) => {
       this.rights = rights;
       this.sources = waterfall.sources;
       this.rightholders = waterfall.rightholders;
       this.rightholderNames$.next(this.rightholders.map(r => r.name));
+      this.versionId = versionId;
+      this.isDefaultVersion = isDefaultVersion(waterfall, versionId);
+      this.defaultVersionId = getDefaultVersionId(waterfall);
+
+      // Enable or disable possible updates
+      this.rightForm.enable();
+      this.sourceForm.enable();
+      if (this.versionId && !this.isDefaultVersion) {
+        this.rightForm.disable();
+        this.rightForm.controls.percent.enable();
+        this.rightForm.controls.steps.enable();
+        this.sourceForm.disable();
+      }
       this.layout();
     });
   }
@@ -127,6 +146,17 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       });
     } else {
       right.conditions = { operator: 'AND', conditions: this.rightForm.controls.steps.value[0] };
+    }
+
+    if (this.versionId) {
+      for (const r of changes.updated.rights) {
+        r.version[this.versionId].percent = r.percent;
+        r.version[this.versionId].conditions = r.conditions;
+        if (!this.isDefaultVersion) {
+          r.percent = r.version[this.defaultVersionId].percent;
+          r.conditions = r.version[this.defaultVersionId].conditions;
+        }
+      }
     }
 
     const write = this.waterfallService.batch();

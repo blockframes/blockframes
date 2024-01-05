@@ -54,6 +54,7 @@ export function getDefaultVersionId(waterfall: Waterfall) {
 }
 
 export function isDefaultVersion(waterfall: Waterfall, versionId: string) {
+  if (!versionId) return false;
   return getDefaultVersionId(waterfall) === versionId;
 }
 

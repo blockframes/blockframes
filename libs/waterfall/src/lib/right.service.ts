@@ -7,15 +7,12 @@ import { map } from 'rxjs';
 function convertRightsTo(rights: Right[], versionId: string) {
   if (!versionId) return rights;
   return rights.map(r => {
-    const version = (r.version && r.version[versionId] !== undefined) ? r.version[versionId] : undefined;
-    const right = r;
-    if (version?.conditions) right.conditions = version.conditions;
-    if (version?.percent) right.percent = version.percent;
-    if (version?.nextIds) right.nextIds = version.nextIds;
-    if (version?.pools) right.pools = version.pools;
-    if (version?.groupId) right.groupId = version.groupId;
-    return right
-  }).filter(r => !r.version || !r.version[versionId] || !r.version[versionId].deleted);
+    if (!r.version || !r.version[versionId]) r.version[versionId] = { conditions: r.conditions, percent: r.percent };
+    const version = r.version[versionId];
+    if (version?.conditions) r.conditions = version.conditions;
+    if (version?.percent !== undefined) r.percent = version.percent;
+    return r;
+  });
 }
 
 @Injectable({ providedIn: 'root' })
