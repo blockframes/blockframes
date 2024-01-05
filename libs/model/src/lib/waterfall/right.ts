@@ -22,7 +22,7 @@ export interface Right {
   pools: string[];
 }
 
-interface RightVersion {
+export interface RightVersion {
   deleted?: true;
   percent?: number;
   conditions?: ConditionGroup;

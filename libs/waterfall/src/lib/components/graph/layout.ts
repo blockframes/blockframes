@@ -6,6 +6,7 @@ import {
   Media,
   Right,
   RightType,
+  RightVersion,
   Territory,
   WaterfallSource,
   createRight as _createRight,
@@ -21,6 +22,7 @@ interface NodeBase {
   height: number;
   type: 'source' | 'right' | 'vertical' | 'horizontal';
   children: string[];
+  version: Record<string, RightVersion>;
 }
 
 function createNodeBase(params: Partial<NodeBase> = {}): NodeBase {
@@ -32,6 +34,7 @@ function createNodeBase(params: Partial<NodeBase> = {}): NodeBase {
     height: 0,
     type: 'right',
     children: [],
+    version: {},
     ...params
   }
 }
@@ -42,9 +45,9 @@ export interface SourceNode extends NodeBase {
   territories: Territory[];
 }
 
-function createSourceNode(params: Partial<SourceNode> = {}) {
+function createSourceNode(params: Partial<SourceNode> = {}): SourceNode {
   const node = createNodeBase(params);
-  const source: SourceNode = {
+  return {
     ...node,
     type: 'source',
     width: SOURCE_WIDTH,
@@ -53,7 +56,6 @@ function createSourceNode(params: Partial<SourceNode> = {}) {
     territories: [],
     ...params
   }
-  return source;
 }
 
 export interface RightNode extends NodeBase {
@@ -64,9 +66,9 @@ export interface RightNode extends NodeBase {
   rightType: RightType;
 }
 
-function createRightNode(params: Partial<RightNode> = {}) {
+function createRightNode(params: Partial<RightNode> = {}): RightNode {
   const node = createNodeBase(params);
-  const right: RightNode = {
+  return {
     ...node,
     type: 'right',
     width: RIGHT_WIDTH,
@@ -77,7 +79,6 @@ function createRightNode(params: Partial<RightNode> = {}) {
     rightType: 'unknown',
     ...params
   }
-  return right;
 }
 
 export interface VerticalNode extends NodeBase {
@@ -85,15 +86,14 @@ export interface VerticalNode extends NodeBase {
   members: RightNode[];
 }
 
-function createVerticalNode(params: Partial<VerticalNode> = {}) {
+function createVerticalNode(params: Partial<VerticalNode> = {}): VerticalNode {
   const node = createNodeBase(params);
-  const vertical: VerticalNode = {
+  return {
     ...node,
     type: 'vertical',
     members: [],
     ...params
   }
-  return vertical;
 }
 
 export interface HorizontalNode extends NodeBase {
@@ -101,15 +101,14 @@ export interface HorizontalNode extends NodeBase {
   members: (VerticalNode | RightNode)[];
 }
 
-function createHorizontalNode(params: Partial<HorizontalNode> = {}) {
+function createHorizontalNode(params: Partial<HorizontalNode> = {}): HorizontalNode {
   const node = createNodeBase(params);
-  const horizontal: HorizontalNode = {
+  return {
     ...node,
     type: 'horizontal',
     members: [],
     ...params
   }
-  return horizontal;
 }
 
 export type Node = SourceNode | RightNode | VerticalNode | HorizontalNode;
@@ -154,6 +153,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
           rightHolderId: vMember.rightholderId,
           percent: vMember.percent,
           rightType: vMember.type,
+          version: vMember.version,
         });
         return rightNode;
       });
@@ -165,6 +165,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
         children: [...children],
         height: RIGHT_HEIGHT + (LEVEL_HEIGHT * (members.length - 1)) + (SPACING * (members.length + 1)),
         width: RIGHT_WIDTH + (SPACING * 2),
+        version: right.version,
       });
       return verticalNode;
     } else if (right.type === 'horizontal') {
@@ -180,6 +181,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
               rightHolderId: vMember.rightholderId,
               percent: vMember.percent,
               rightType: vMember.type,
+              version: vMember.version,
             });
             return rightNode;
           });
@@ -188,6 +190,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
             name: member.name,
             width: RIGHT_WIDTH + (SPACING * 2), height: RIGHT_HEIGHT + (LEVEL_HEIGHT * (vMembers.length - 1)) + (SPACING * (vMembers.length + 1)),
             members: vMembers,
+            version: member.version,
           });
           return verticalNode;
         } else {
@@ -200,6 +203,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
             rightHolderId: member.rightholderId,
             percent: member.percent,
             rightType: member.type,
+            version: member.version,
           });
           return rightNode;
         }
@@ -211,7 +215,8 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
         name: right.name,
         children: [...children],
         height: maxMemberHeight + (SPACING * 2),
-        width: (RIGHT_WIDTH * members.length) + (SPACING * (members.length + 1))
+        width: (RIGHT_WIDTH * members.length) + (SPACING * (members.length + 1)),
+        version: right.version,
       });
       return horizontalNode;
     } else {
@@ -225,22 +230,21 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
         rightHolderId: right.rightholderId,
         percent: right.percent,
         rightType: right.type,
+        version: right.version,
       });
       return rightNode;
     }
   });
 
   sources.forEach(source => {
-    nodes.push({
+    nodes.push(createSourceNode({
       id: source.id,
       name: source.name,
-      x: 0, y: 0,
-      width: SOURCE_WIDTH, height: SOURCE_HEIGHT,
-      type: 'source',
       children: source.destinationId ? [source.destinationId] : [],
       medias: source.medias,
       territories: source.territories,
-    });
+      // version: source.version, // TODO #9520
+    }));
   });
 
   // TODO try to improve auto-layout
@@ -706,6 +710,7 @@ function createHorizontal(node: Node, parents?: string[]): Right {
     percent: 0,
     pools: [], // TODO
     order: 0, // TODO
+    version: node.version,
   });
 }
 
@@ -719,6 +724,7 @@ function createVertical(node: Node, parents?: string[], groupId?: string): Right
     percent: 0,
     pools: [], // TODO
     order: 0, // TODO
+    version: node.version,
   });
 }
 
@@ -733,6 +739,7 @@ function createRight(node: RightNode, parents?: string[], groupId?: string): Rig
     pools: [], // TODO
     order: 0, // TODO
     type: node.rightType,
+    version: node.version,
   });
 }
 
