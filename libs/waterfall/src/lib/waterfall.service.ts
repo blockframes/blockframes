@@ -163,7 +163,10 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
   }
 
   public addVersion(waterfall: Waterfall, params: Partial<Version>) {
-    const version = createVersion(params);
+    const version = createVersion({
+      ...params,
+      default: !waterfall.versions.some(v => v.default)
+    });
     waterfall.versions.push(version);
     return this.update(waterfall);
   }
@@ -171,6 +174,7 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
   public async removeVersion(data: WaterfallData, versionId: string) {
     const blockIds = data.waterfall.versions.find(v => v.id === versionId).blockIds;
     data.waterfall.versions = data.waterfall.versions.filter(v => v.id !== versionId);
+    if (data.waterfall.versions.length && !data.waterfall.versions.some(v => v.default)) data.waterfall.versions[0].default = true;
     await this.update(data.waterfall);
     return this.blockService.remove(blockIds, { params: { waterfallId: data.waterfall.id } });
   }
@@ -198,6 +202,12 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
 
     await this.addBlocksToVersion(waterfall, newVersion.id, blocksIds);
     return newVersion;
+  }
+
+  public setVersionAsDefault(waterfall: Waterfall, versionId: string) {
+    waterfall.versions.forEach(v => v.default = false);
+    waterfall.versions.find(v => v.id === versionId).default = true;
+    return this.update(waterfall);
   }
 
   public addBlocksToVersion(waterfall: Waterfall, versionId: string, blockIds: string[]) {

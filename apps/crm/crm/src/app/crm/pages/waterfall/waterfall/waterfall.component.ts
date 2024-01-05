@@ -3,6 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { rightholderName } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
+import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 @Component({
   selector: 'crm-waterfall',
@@ -16,6 +17,7 @@ export class WaterfallComponent {
 
   constructor(
     public shell: DashboardWaterfallShellComponent,
+    private waterfallService: WaterfallService,
     private snackBar: MatSnackBar
   ) {
     this.shell.setDate(undefined);
@@ -36,6 +38,10 @@ export class WaterfallComponent {
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 5000 });
     }
+  }
+
+  public setVersionAsDefault(versionId: string) {
+    return this.waterfallService.setVersionAsDefault(this.shell.waterfall, versionId);
   }
 
   public displayActions(versionId: string) {

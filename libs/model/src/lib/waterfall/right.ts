@@ -17,9 +17,18 @@ export interface Right {
   rightholderId: string;
   percent: number;
   conditions?: ConditionGroup;
+  version: Record<string, RightVersion>;
   blameId?: string;
   pools: string[];
-  versionId?: string; // TODO #9520
+}
+
+interface RightVersion {
+  deleted?: true;
+  percent?: number;
+  conditions?: ConditionGroup;
+  nextIds?: string[];
+  pools?: string[];
+  groupId?: string;
 }
 
 export interface RightOverride {
@@ -42,6 +51,7 @@ export function createRight(params: Partial<Right> = {}) {
     rightholderId: '',
     percent: 100,
     pools: [],
+    version: {},
     ...params
   }
 

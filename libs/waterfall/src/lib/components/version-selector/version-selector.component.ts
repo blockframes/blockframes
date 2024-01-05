@@ -1,8 +1,8 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
+import { getDefaultVersionId } from '@blockframes/model';
+import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 
 @Component({
   selector: 'waterfall-version-selector',
@@ -25,7 +25,7 @@ export class VersionSelectorComponent implements OnInit {
   ngOnInit() { this.switchToVersion(this.shell.lockedVersionId); }
 
   public switchToVersion(_versionId = this.shell.versionId$.value) {
-    this.versionId = _versionId || this.shell.waterfall.versions[0]?.id;
+    this.versionId = _versionId || getDefaultVersionId(this.shell.waterfall);
     if (!this.versionId) return;
     if (this.versionId === this.shell.versionId$.value) return;
 

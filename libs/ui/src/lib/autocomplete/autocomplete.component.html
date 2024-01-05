@@ -7,6 +7,7 @@
     [placeholder]="placeholder"
     [matAutocomplete]="auto"
     [formControl]="form"
+    [disabled]="disabled"
   >
   <mat-autocomplete #auto="matAutocomplete">
     <mat-option *ngFor="let state of filteredStates | async" [value]="state">
