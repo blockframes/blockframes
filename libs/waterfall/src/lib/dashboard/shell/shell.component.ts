@@ -29,7 +29,7 @@ import {
   isDefaultVersion,
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
-import { filter, map, pluck, switchMap, tap } from 'rxjs/operators';
+import { filter, map, pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { NavigationService } from '@blockframes/ui/navigation.service';
 import { WaterfallData, WaterfallService, WaterfallState } from '../../waterfall.service';
 import { WaterfallDocumentsService } from '../../documents.service';
@@ -138,12 +138,14 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   // ---------
   public waterfall$ = this.movie$.pipe(
     switchMap(movie => this.waterfallService.valueChanges(movie.id)),
-    tap(waterfall => this.waterfall = waterfall)
+    tap(waterfall => this.waterfall = waterfall),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
   public waterfall: Waterfall;
 
-  public rights$ = combineLatest([this.movie$, this.versionId$]).pipe(
-    switchMap(([{ id: waterfallId }, versionId]) => this.rightService.rightsChanges(waterfallId, versionId))
+  public rights$ = combineLatest([this.waterfall$, this.versionId$]).pipe(
+    switchMap(([waterfall, versionId]) => this.rightService.rightsChanges(waterfall, versionId)),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   public hasMinimalRights$ = combineLatest([this.waterfall$, this.rights$]).pipe(
@@ -168,7 +170,8 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
 
   public currentRightholder$ = combineLatest([this.waterfall$, this.permission$]).pipe(
     map(([waterfall, permission]) => permission ? permission.rightholderIds.map(r => waterfall.rightholders.find(rh => rh.id === r)) : []),
-    map(rightholders => rightholders.pop())
+    map(rightholders => rightholders.pop()),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   // Blocks used for the current version of the state
@@ -193,7 +196,8 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
       versionId: _versionId || getDefaultVersionId(waterfall),
       date
     })),
-    switchMap(config => this.waterfallService.buildWaterfall(config))
+    switchMap(config => this.waterfallService.buildWaterfall(config)),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   public currentVersionName$ = combineLatest([this.waterfall$, this.currentRightholder$, this.canBypassRules$]).pipe(
@@ -289,7 +293,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   }
 
   rights(versionId = this.versionId$.value) {
-    return this.rightService.rights(this.waterfall.id, versionId);
+    return this.rightService.rights(this.waterfall, versionId);
   }
 
   incomes(ids: string[] = [], versionId = this.versionId$.value) {

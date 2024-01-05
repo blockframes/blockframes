@@ -49,7 +49,7 @@
         <button mat-icon-button matTooltip="Save changes" (click)="updateSource()">
           <mat-icon svgIcon="save"></mat-icon>
         </button>
-        <button mat-icon-button matTooltip="Delete Source" (click)="delete()">
+        <button [disabled]="!canUpdateGraph" mat-icon-button matTooltip="Delete Source" (click)="delete()">
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </header>
@@ -83,7 +83,7 @@
         <button mat-icon-button matTooltip="Save changes" (click)="updateRight()">
           <mat-icon svgIcon="save"></mat-icon>
         </button>
-        <button mat-icon-button matTooltip="Delete Right" (click)="delete()">
+        <button [disabled]="!canUpdateGraph" mat-icon-button matTooltip="Delete Right" (click)="delete()">
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </header>
@@ -138,7 +138,7 @@
             <div class="add-next">
               <hr/>
               <p class="mat-caption">Add Next Receipt Share</p>
-              <button mat-mini-fab color="primary" (click)="addChild(selected)">
+              <button [disabled]="!canUpdateGraph" mat-mini-fab color="primary" (click)="addChild(selected)">
                 <mat-icon svgIcon="add"></mat-icon>
               </button>
             </div>
@@ -170,11 +170,11 @@
         <span>Ask for Help</span>
       </button>
       <div>
-        <button mat-flat-button color="primary" (click)="createNewSource()">
+        <button [disabled]="!canUpdateGraph" mat-flat-button color="primary" (click)="createNewSource()">
           <mat-icon svgIcon="add"></mat-icon>
           <span>Create new Source</span>
         </button>
-        <button mat-flat-button color="primary" (click)="createNewRight()">
+        <button [disabled]="!canUpdateGraph" mat-flat-button color="primary" (click)="createNewRight()">
           <mat-icon svgIcon="add"></mat-icon>
           <span>Create new Right</span>
         </button>

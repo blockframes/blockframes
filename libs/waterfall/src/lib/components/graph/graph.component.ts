@@ -23,6 +23,7 @@ import { createRightForm, setRightFormValue } from '../forms/right-form/right-fo
 import { createSourceForm, setSourceFormValue } from '../forms/source-form/source-form';
 import { Arrow, Node, computeDiff, createChild, createSibling, createStep, deleteStep, fromGraph, toGraph, updateParents } from './layout';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'waterfall-graph',
@@ -40,6 +41,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   private versionId: string;
   isDefaultVersion: boolean;
   private defaultVersionId: string;
+  canUpdateGraph = true;
   sources: WaterfallSource[];
   rightholders: WaterfallRightholder[];
 
@@ -63,6 +65,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     private rightService: RightService,
     private shell: DashboardWaterfallShellComponent,
     private waterfallService: WaterfallService,
+    private snackBar: MatSnackBar,
   ) { }
 
   ngOnInit() {
@@ -82,11 +85,13 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       // Enable or disable possible updates
       this.rightForm.enable();
       this.sourceForm.enable();
+      this.canUpdateGraph = true;
       if (this.versionId && !this.isDefaultVersion) {
         this.rightForm.disable();
         this.rightForm.controls.percent.enable();
         this.rightForm.controls.steps.enable();
         this.sourceForm.disable();
+        this.canUpdateGraph = false;
       }
       this.layout();
     });
@@ -193,6 +198,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async addSibling(id: string) {
+    if(!this.canUpdateGraph) {
+      this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
+      return ;
+    }
     const graph = this.nodes$.getValue();
     createSibling(id, graph);
     const newGraph = fromGraph(graph);
@@ -209,6 +218,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async addChild(id: string) {
+    if(!this.canUpdateGraph) {
+      this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
+      return ;
+    }
     const graph = this.nodes$.getValue();
     createChild(id, graph);
     const newGraph = fromGraph(graph);
@@ -225,6 +238,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async createNewStep() {
+    if(!this.canUpdateGraph) {
+      this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
+      return ;
+    }
     const graph = this.nodes$.getValue();
     const rightId = this.selected$.getValue();
     createStep(rightId, graph);
@@ -242,6 +259,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async deleteStep(index: number) {
+    if(!this.canUpdateGraph) {
+      this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
+      return ;
+    }
     const graph = this.nodes$.getValue();
     const rightId = this.selected$.getValue();
     deleteStep(rightId, index, graph);
@@ -262,6 +283,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async createNewSource() {
+    if(!this.canUpdateGraph) {
+      this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
+      return ;
+    }
     const newSource = createWaterfallSource({
       id: this.waterfallService.createId(),
       name: `Source ${this.sources.length + 1}`,
@@ -271,6 +296,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async createNewRight() {
+    if(!this.canUpdateGraph) {
+      this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
+      return ;
+    }
     const newRight = createRight({
       name: `Right ${this.rights.length + 1}`,
       percent: 0,
@@ -280,6 +309,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async delete() {
+    if(!this.canUpdateGraph) {
+      this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
+      return ;
+    }
     const id = this.selected$.getValue();
     const right = this.rights.find(right => right.id === id);
     const source = this.sources.find(source => source.id === id);

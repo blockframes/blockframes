@@ -20,7 +20,7 @@ import { WaterfallGraphComponent } from './graph.component';
 import { WaterfallGraphNodeModule } from './node/node.module';
 import { WaterfallGraphLabelModule } from './label/label.module';
 import { WaterfallConditionsModule } from './conditions/conditions.module';
-
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [ WaterfallGraphComponent ],
@@ -43,6 +43,7 @@ import { WaterfallConditionsModule } from './conditions/conditions.module';
     MatButtonModule,
     MatTooltipModule,
     MatFormFieldModule,
+    MatSnackBarModule,
   ],
   exports: [ WaterfallGraphComponent ],
 })
