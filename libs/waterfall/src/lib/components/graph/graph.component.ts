@@ -116,8 +116,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
     if (right.type === 'vertical') {
       const steps = changes.updated.rights.filter(r => r.groupId === right.id);
-      this.rightForm.controls.steps.value.forEach((condtions, index) => {
-        steps[index].conditions = { operator: 'AND', conditions: condtions };
+      this.rightForm.controls.steps.value.forEach((conditions, index) => {
+        steps[index].conditions = { operator: 'AND', conditions: conditions };
       });
     } else {
       right.conditions = { operator: 'AND', conditions: this.rightForm.controls.steps.value[0] };
@@ -192,11 +192,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     const graph = this.nodes$.getValue();
     const rightId = this.selected$.getValue();
     createStep(rightId, graph);
-    console.log(graph);
     const newGraph = fromGraph(graph);
-    console.log(newGraph);
     const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
-    console.log(changes);
 
     const write = this.waterfallService.batch();
     await Promise.all([
