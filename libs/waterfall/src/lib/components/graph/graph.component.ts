@@ -198,9 +198,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async addSibling(id: string) {
-    if(!this.canUpdateGraph) {
+    if (!this.canUpdateGraph) {
       this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
-      return ;
+      return;
     }
     const graph = this.nodes$.getValue();
     createSibling(id, graph);
@@ -218,9 +218,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async addChild(id: string) {
-    if(!this.canUpdateGraph) {
+    if (!this.canUpdateGraph) {
       this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
-      return ;
+      return;
     }
     const graph = this.nodes$.getValue();
     createChild(id, graph);
@@ -238,9 +238,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async createNewStep() {
-    if(!this.canUpdateGraph) {
+    if (!this.canUpdateGraph) {
       this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
-      return ;
+      return;
     }
     const graph = this.nodes$.getValue();
     const rightId = this.selected$.getValue();
@@ -259,9 +259,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async deleteStep(index: number) {
-    if(!this.canUpdateGraph) {
+    if (!this.canUpdateGraph) {
       this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
-      return ;
+      return;
     }
     const graph = this.nodes$.getValue();
     const rightId = this.selected$.getValue();
@@ -283,9 +283,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async createNewSource() {
-    if(!this.canUpdateGraph) {
+    if (!this.canUpdateGraph) {
       this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
-      return ;
+      return;
     }
     const newSource = createWaterfallSource({
       id: this.waterfallService.createId(),
@@ -296,9 +296,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async createNewRight() {
-    if(!this.canUpdateGraph) {
+    if (!this.canUpdateGraph) {
       this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
-      return ;
+      return;
     }
     const newRight = createRight({
       name: `Right ${this.rights.length + 1}`,
@@ -309,9 +309,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async delete() {
-    if(!this.canUpdateGraph) {
+    if (!this.canUpdateGraph) {
       this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
-      return ;
+      return;
     }
     const id = this.selected$.getValue();
     const right = this.rights.find(right => right.id === id);
