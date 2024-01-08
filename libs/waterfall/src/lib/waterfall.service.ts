@@ -225,10 +225,9 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     return this.update(waterfallId, { id: waterfallId, orgIds });
   }
 
-  public async addSource(waterfallId: string, source: WaterfallSource) {
-    const waterfall = await this.getValue(waterfallId);
-    if (!waterfall.sources.find(s => s.name === source.name)) waterfall.sources.push(source);
-    return this.update(waterfallId, { id: waterfallId, sources: waterfall.sources });
+  public async addSource(waterfall: Waterfall, source: WaterfallSource) {
+    waterfall.sources.push(source);
+    return this.update(waterfall.id, { id: waterfall.id, sources: waterfall.sources });
   }
 
   public async updateSource(waterfallId: string, newSource: WaterfallSource, options?: WriteOptions) {
