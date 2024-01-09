@@ -28,7 +28,8 @@ import {
   investmentsToActions,
   buildBlock,
   sourcesToAction,
-  expenseTypesToAction
+  expenseTypesToAction,
+  waterfallSources
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { AuthService } from '@blockframes/auth/service';
@@ -130,7 +131,7 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
   public async refreshWaterfall(data: WaterfallData, versionId: string) {
     const version = data.waterfall.versions.find(v => v.id === versionId);
     await this.removeVersion(data, versionId);
-    return this._initWaterfall(data, { id: version.id, name: version.name, description: version.description });
+    return this._initWaterfall(data, { id: version.id, name: version.name, description: version.description, standalone: version.standalone });
   }
 
   /**
@@ -139,11 +140,9 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
    * @returns 
    */
   private async _initWaterfall(data: WaterfallData, version: Partial<Version>) {
+    await this.addVersion(data.waterfall, version);
     const blocks = buildBlocks(data, this.authService.uid, version.id);
     const blockIds = await this.blockService.add(blocks, { params: { waterfallId: data.waterfall.id } });
-
-    await this.addVersion(data.waterfall, version);
-
     await this.addBlocksToVersion(data.waterfall, version.id, blockIds);
     return data.waterfall;
   }
@@ -163,13 +162,14 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     return waterfallToDate(simulation, date);
   }
 
-  public addVersion(waterfall: Waterfall, params: Partial<Version>) {
+  public async addVersion(waterfall: Waterfall, params: Partial<Version>) {
     const version = createVersion({
       ...params,
       default: !waterfall.versions.some(v => v.default)
     });
     waterfall.versions.push(version);
-    return this.update(waterfall);
+    await this.update(waterfall);
+    return version;
   }
 
   public async removeVersion(data: WaterfallData, versionId: string) {
@@ -177,23 +177,21 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     data.waterfall.versions = data.waterfall.versions.filter(v => v.id !== versionId);
     if (data.waterfall.versions.length && !data.waterfall.versions.some(v => v.default)) data.waterfall.versions[0].default = true;
     await this.update(data.waterfall);
-    return this.blockService.remove(blockIds, { params: { waterfallId: data.waterfall.id } });
+    await this.blockService.remove(blockIds, { params: { waterfallId: data.waterfall.id } });
+    return data.waterfall;
   }
 
-  public async duplicateVersion(waterfall: Waterfall, blocks: Block[], versionId: string) {
-    const version = waterfall.versions.find(v => v.id === versionId);
-    const blockIds = waterfall.versions.find(v => v.id === versionId).blockIds;
+  public async duplicateVersion(waterfall: Waterfall, blocks: Block[], versionIdToDuplicate: string, version?: Partial<Version>) {
+    const versionToDuplicate = waterfall.versions.find(v => v.id === versionIdToDuplicate);
+    const blockIds = waterfall.versions.find(v => v.id === versionIdToDuplicate).blockIds;
     const versionBlocks = blockIds.map(id => blocks.find(b => b.id === id));
 
-    const newId = `${version.id}-copy`;
-    const existingId = waterfall.versions.find(v => v.id === newId);
-    if (existingId) throw new Error(`Version "${newId}" already exists for waterfall "${waterfall.id}"`);
     const newVersion = createVersion({
-      ...version,
-      id: newId,
-      name: `${version.name} (copy)`,
+      ...versionToDuplicate,
+      id: version?.id || this.createId(),
+      name: version?.name || `${versionToDuplicate.name} (copy)`,
       blockIds: [],
-      description: `Copied from ${version.id}`
+      description: version?.description || `Copied from ${versionToDuplicate.name}`
     });
 
     await this.addVersion(waterfall, newVersion);
@@ -280,15 +278,16 @@ function waterfallToDate(build: WaterfallState, date?: Date) {
 }
 
 function groupActions(data: WaterfallData, versionId: string, isSimulation = false) {
+  const sources = waterfallSources(data.waterfall, versionId);
   // @dev "sourcesToAction" may be activated for real waterfall also (generate bad display for graph generated with G6 but not with new one)
-  const sourceActions = isSimulation ? sourcesToAction(data.waterfall.sources) : [];
+  const sourceActions = isSimulation ? sourcesToAction(sources) : [];
   const incomeStatements = isSimulation ? data.statements : data.statements.filter(s => s.status === 'reported');
 
   const expenseTypesActions = expenseTypesToAction(Object.values(data.waterfall.expenseTypes).flat(), versionId);
   const contractActions = contractsToActions(data.contracts, data.terms);
   const investmentActions = investmentsToActions(data.contracts, data.terms);
   const rightActions = rightsToActions(data.rights);
-  const incomeActions = incomesToActions(data.contracts, Object.values(data.incomes), data.waterfall.sources, incomeStatements);
+  const incomeActions = incomesToActions(data.contracts, Object.values(data.incomes), sources, incomeStatements);
   const expenseActions = expensesToActions(Object.values(data.expenses));
   const paymentActions = statementsToActions(data.statements);
 

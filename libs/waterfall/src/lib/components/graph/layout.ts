@@ -6,7 +6,7 @@ import {
   Media,
   Right,
   RightType,
-  RightVersion,
+  Version,
   Territory,
   WaterfallSource,
   createRight as _createRight,
@@ -22,7 +22,7 @@ interface NodeBase {
   height: number;
   type: 'source' | 'right' | 'vertical' | 'horizontal';
   children: string[];
-  version: Record<string, RightVersion>;
+  version: Record<string, object>;
 }
 
 function createNodeBase(params: Partial<NodeBase> = {}): NodeBase {
@@ -788,9 +788,26 @@ export function deleteStep(groupId: string, stepIndex: number, graph: Node[]) {
   }
 }
 
+function createSource(node: SourceNode, version: Version) {
+  const source = createWaterfallSource({
+    id: node.id,
+    name: node.name,
+    medias: node.medias,
+    territories: node.territories,
+    destinationId: node.children[0],
+    version: node.version,
+  });
 
-function createHorizontal(node: Node, parents?: string[]): Right {
-  return _createRight({
+  if (version.standalone) {
+    if (!source.version[version.id]) source.version[version.id] = {};
+    source.version[version.id].standalone = true;
+  }
+
+  return source;
+}
+
+function createHorizontal(node: Node, version: Version, parents?: string[]): Right {
+  const right = _createRight({
     id: node.id,
     name: node.name,
     nextIds: parents ?? [],
@@ -800,10 +817,17 @@ function createHorizontal(node: Node, parents?: string[]): Right {
     order: 0, // TODO
     version: node.version,
   });
+
+  if (version.standalone) {
+    if (!right.version[version.id]) right.version[version.id] = {};
+    right.version[version.id].standalone = true;
+  }
+
+  return right;
 }
 
-function createVertical(node: Node, parents?: string[], groupId?: string): Right {
-  return _createRight({
+function createVertical(node: Node, version: Version, parents?: string[], groupId?: string): Right {
+  const right = _createRight({
     id: node.id,
     name: node.name,
     groupId: groupId ?? '',
@@ -814,10 +838,17 @@ function createVertical(node: Node, parents?: string[], groupId?: string): Right
     order: 0,
     version: node.version,
   });
+
+  if (version.standalone) {
+    if (!right.version[version.id]) right.version[version.id] = {};
+    right.version[version.id].standalone = true;
+  }
+
+  return right;
 }
 
-function createRight(node: RightNode, parents?: string[], groupId?: string, order = 0): Right {
-  return _createRight({
+function createRight(node: RightNode, version: Version, parents?: string[], groupId?: string, order = 0): Right {
+  const right = _createRight({
     id: node.id,
     name: node.name,
     groupId: groupId ?? '',
@@ -829,9 +860,16 @@ function createRight(node: RightNode, parents?: string[], groupId?: string, orde
     type: node.rightType,
     version: node.version,
   });
+
+  if (version.standalone) {
+    if (!right.version[version.id]) right.version[version.id] = {};
+    right.version[version.id].standalone = true;
+  }
+
+  return right;
 }
 
-export function fromGraph(graph: readonly Node[]) {
+export function fromGraph(graph: readonly Node[], version: Version) {
 
   const rights: Right[] = [];
   const sources: WaterfallSource[] = [];
@@ -846,35 +884,29 @@ export function fromGraph(graph: readonly Node[]) {
 
   graph.forEach(node => {
     if (node.type === 'source') {
-      const source = createWaterfallSource({
-        id: node.id,
-        name: node.name,
-        medias: node.medias,
-        territories: node.territories,
-        destinationId: node.children[0],
-      });
+      const source = createSource(node, version);
       if (node.children.length > 1) console.warn(`Source (${node.id}) with multiple children: children should have been in a single group instead!`);
       sources.push(source);
     } else {
       if (node.type === 'horizontal') {
-        rights.push(createHorizontal(node, parentIndex[node.id]));
+        rights.push(createHorizontal(node, version, parentIndex[node.id]));
         node.members.forEach(member => {
           if (member.type === 'vertical') {
-            rights.push(createVertical(member, undefined, node.id));
+            rights.push(createVertical(member, version, undefined, node.id));
             member.members.forEach((subMember, order) => {
-              rights.push(createRight(subMember, undefined, member.id, order));
+              rights.push(createRight(subMember, version, undefined, member.id, order));
             });
           } else {
-            rights.push(createRight(member, undefined, node.id));
+            rights.push(createRight(member, version, undefined, node.id));
           }
         });
       } else if (node.type === 'vertical') {
-        rights.push(createVertical(node, parentIndex[node.id]));
+        rights.push(createVertical(node, version, parentIndex[node.id]));
         node.members.forEach((member, order) => {
-          rights.push(createRight(member, undefined, node.id, order));
+          rights.push(createRight(member, version, undefined, node.id, order));
         });
       } else {
-        rights.push(createRight(node, parentIndex[node.id]));
+        rights.push(createRight(node, version, parentIndex[node.id]));
       }
     }
   });

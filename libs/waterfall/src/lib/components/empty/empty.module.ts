@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 // Modules
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
+import { VersionEditorModule } from '../version-editor/version-editor.module';
 
 // Pages
 import { EmptyWaterfallComponent } from './empty.component';
@@ -14,6 +15,7 @@ import { EmptyWaterfallComponent } from './empty.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [EmptyWaterfallComponent],
@@ -23,11 +25,13 @@ import { MatIconModule } from '@angular/material/icon';
 
     ImageModule,
     LogoSpinnerModule,
+    VersionEditorModule,
 
     // Material
     MatButtonModule,
     MatTooltipModule,
     MatIconModule,
+    MatDialogModule,
   ],
   exports: [EmptyWaterfallComponent]
 })

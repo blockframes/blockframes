@@ -15,6 +15,8 @@ import { TreeModule } from '@blockframes/waterfall/components/g6/tree/tree.modul
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 import { EmptyWaterfallModule } from '@blockframes/waterfall/components/empty/empty.module';
+import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.module';
+import { VersionSelectorModule } from '@blockframes/waterfall/components/version-selector/version-selector.module';
 
 // Material
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -22,6 +24,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [WaterfallComponent],
@@ -36,12 +39,15 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     ClipboardModule,
     RightHolderNamePipeModule,
     EmptyWaterfallModule,
+    ConfirmInputModule,
+    VersionSelectorModule,
 
     MatIconModule,
     MatButtonModule,
     MatSnackBarModule,
     MatTooltipModule,
     MatSlideToggleModule,
+    MatDialogModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: WaterfallComponent }]),

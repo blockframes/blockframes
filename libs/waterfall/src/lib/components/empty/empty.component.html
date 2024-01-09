@@ -41,7 +41,7 @@
       </li>
     </ul>
     
-    <a *ngIf="shell.canInitWaterfall$ | async else canNotInit" (click)="shell.initWaterfall()" class="surface">
+    <a *ngIf="shell.canInitWaterfall$ | async else canNotInit" (click)="initWaterfall()" class="surface">
       <img asset="add_draft.svg" alt="Add waterfall image">
       <button mat-button color="primary" matTooltip="Initialize Waterfall">Initialize Waterfall</button>
     </a>

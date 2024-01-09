@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Pipe, PipeTransform } from '@angular/core';
 import { Territory, WaterfallSource, Right } from '@blockframes/model';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
@@ -13,9 +13,9 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
   styleUrls: ['./sources.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SourcesComponent implements OnInit {
-  public waterfall$ = this.shell.waterfall$;
-  private rights: Right[] = [];
+export class SourcesComponent {
+  public sources$ = this.shell.sources$;
+  public rights$ = this.shell.rights$;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
@@ -23,10 +23,6 @@ export class SourcesComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) { }
-
-  async ngOnInit() {
-    this.rights = await this.shell.rights();
-  }
 
   public openTerritoryModal(territories: Territory[]) {
     this.dialog.open(DetailedGroupComponent, {
@@ -40,8 +36,11 @@ export class SourcesComponent implements OnInit {
     this.snackBar.open(`Source${sources.length > 1 ? 's' : ''} ${sources.length === 1 ? sources[0].id : ''} deleted from waterfall !`, 'close', { duration: 5000 });
   }
 
-  public rightExists(id: string) {
-    return this.rights.find(r => r.id === id);
-  }
+}
 
+@Pipe({ name: 'rightExists' })
+export class RightExistsPipe implements PipeTransform {
+  transform(id: string, rights: Right[]) {
+    return rights.find(r => r.id === id);
+  }
 }
