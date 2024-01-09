@@ -84,6 +84,7 @@ function createRightNode(params: Partial<RightNode> = {}): RightNode {
 export interface VerticalNode extends NodeBase {
   type: 'vertical';
   members: RightNode[];
+  percent: number;
 }
 
 function createVerticalNode(params: Partial<VerticalNode> = {}): VerticalNode {
@@ -92,6 +93,7 @@ function createVerticalNode(params: Partial<VerticalNode> = {}): VerticalNode {
     ...node,
     type: 'vertical',
     members: [],
+    percent: 100,
     ...params
   }
 }
@@ -99,6 +101,7 @@ function createVerticalNode(params: Partial<VerticalNode> = {}): VerticalNode {
 export interface HorizontalNode extends NodeBase {
   type: 'horizontal';
   members: (VerticalNode | RightNode)[];
+  percent: number;
 }
 
 function createHorizontalNode(params: Partial<HorizontalNode> = {}): HorizontalNode {
@@ -107,6 +110,7 @@ function createHorizontalNode(params: Partial<HorizontalNode> = {}): HorizontalN
     ...node,
     type: 'horizontal',
     members: [],
+    percent: 100,
     ...params
   }
 }
@@ -166,6 +170,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
         height: RIGHT_HEIGHT + (LEVEL_HEIGHT * (members.length - 1)) + (SPACING * (members.length + 1)),
         width: RIGHT_WIDTH + (SPACING * 2),
         version: right.version,
+        percent: right.percent,
       });
       return verticalNode;
     } else if (right.type === 'horizontal') {
@@ -191,6 +196,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
             width: RIGHT_WIDTH + (SPACING * 2), height: RIGHT_HEIGHT + (LEVEL_HEIGHT * (vMembers.length - 1)) + (SPACING * (vMembers.length + 1)),
             members: vMembers,
             version: member.version,
+            percent: member.percent,
           });
           return verticalNode;
         } else {
@@ -217,6 +223,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
         height: maxMemberHeight + (SPACING * 2),
         width: (RIGHT_WIDTH * members.length) + (SPACING * (members.length + 1)),
         version: right.version,
+        percent: right.percent,
       });
       return horizontalNode;
     } else {
@@ -806,15 +813,15 @@ function createSource(node: SourceNode, version?: Version) {
   return source;
 }
 
-function createHorizontal(node: Node, version?: Version, parents?: string[]): Right {
+function createHorizontal(node: HorizontalNode, version?: Version, parents?: string[]): Right {
   const right = _createRight({
     id: node.id,
     name: node.name,
     nextIds: parents ?? [],
     type: 'horizontal',
-    percent: 0,
+    actionName: 'prependHorizontal',
+    percent: node.percent,
     pools: [], // TODO
-    order: 0, // TODO
     version: node.version,
   });
 
@@ -826,16 +833,16 @@ function createHorizontal(node: Node, version?: Version, parents?: string[]): Ri
   return right;
 }
 
-function createVertical(node: Node, version?: Version, parents?: string[], groupId?: string): Right {
+function createVertical(node: VerticalNode, version?: Version, parents?: string[], groupId?: string): Right {
   const right = _createRight({
     id: node.id,
     name: node.name,
     groupId: groupId ?? '',
     nextIds: parents ?? [],
     type: 'vertical',
-    percent: 0,
+    actionName: 'prependVertical',
+    percent: node.percent,
     pools: [], // TODO
-    order: 0,
     version: node.version,
   });
 
