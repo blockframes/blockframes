@@ -36,7 +36,13 @@ import { AtomicWrite } from 'ngfire';
 })
 export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
-  @Input() @boolean editMode = true;
+  @Input() @boolean set editMode(value: boolean) {
+    if (value === null) return;
+    this._editMode = value;
+    this.showEdit = value;
+  }
+  get editMode() { return this._editMode; }
+  private _editMode = true;
   showEdit = true;
 
   rights: Right[];
@@ -295,7 +301,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       name: `Source ${this.sources.length + 1}`,
     });
 
-    if (this.version.standalone) {
+    if (this.version?.standalone) {
       newSource.version[this.version.id] = { standalone: true };
     }
 
@@ -313,7 +319,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       percent: 0,
     });
 
-    if (this.version.standalone) {
+    if (this.version?.standalone) {
       newRight.version[this.version.id] = { standalone: true };
     }
 
@@ -412,7 +418,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   private async updateSources(sources: WaterfallSource[], write?: AtomicWrite) {
-    if (!this.version.standalone) {
+    if (!this.version || !this.version.standalone) {
       const standaloneSources = this.shell.waterfall.sources.filter(s => s.version && Object.values(s.version).some(v => v.standalone));
       return this.waterfallService.update(this.waterfall.id, { id: this.waterfall.id, sources: [...sources, ...standaloneSources] }, { write });
     } else {

@@ -19,6 +19,7 @@ import { firstValueFrom } from 'rxjs';
 export class VersionSelectorComponent implements OnInit {
 
   public waterfall$ = this.shell.waterfall$;
+  public canBypassRules$ = this.shell.canBypassRules$;
   public versionId: string;
   public lockedVersionId = this.shell.lockedVersionId;
   @Output() versionChanged = new EventEmitter<string>();

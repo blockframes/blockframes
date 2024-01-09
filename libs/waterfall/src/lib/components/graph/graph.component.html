@@ -5,7 +5,7 @@
       <h2>
         <span>Waterfall Scheme</span>
         <mat-icon 
-          *ngIf="isDefaultVersion && waterfall.versions.length > 1"
+          *ngIf="isDefaultVersion && waterfall.versions.length > 1 && editMode"
           color="warn"
           svgIcon="warning"
           matTooltip="You are editing the default version of this waterfall. Except already overwritten receipt share percentage and conditions, changes performed on this version will be applied to all versions."

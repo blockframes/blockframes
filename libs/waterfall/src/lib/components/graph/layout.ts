@@ -788,7 +788,7 @@ export function deleteStep(groupId: string, stepIndex: number, graph: Node[]) {
   }
 }
 
-function createSource(node: SourceNode, version: Version) {
+function createSource(node: SourceNode, version?: Version) {
   const source = createWaterfallSource({
     id: node.id,
     name: node.name,
@@ -798,7 +798,7 @@ function createSource(node: SourceNode, version: Version) {
     version: node.version,
   });
 
-  if (version.standalone) {
+  if (version?.standalone) {
     if (!source.version[version.id]) source.version[version.id] = {};
     source.version[version.id].standalone = true;
   }
@@ -806,7 +806,7 @@ function createSource(node: SourceNode, version: Version) {
   return source;
 }
 
-function createHorizontal(node: Node, version: Version, parents?: string[]): Right {
+function createHorizontal(node: Node, version?: Version, parents?: string[]): Right {
   const right = _createRight({
     id: node.id,
     name: node.name,
@@ -818,7 +818,7 @@ function createHorizontal(node: Node, version: Version, parents?: string[]): Rig
     version: node.version,
   });
 
-  if (version.standalone) {
+  if (version?.standalone) {
     if (!right.version[version.id]) right.version[version.id] = {};
     right.version[version.id].standalone = true;
   }
@@ -826,7 +826,7 @@ function createHorizontal(node: Node, version: Version, parents?: string[]): Rig
   return right;
 }
 
-function createVertical(node: Node, version: Version, parents?: string[], groupId?: string): Right {
+function createVertical(node: Node, version?: Version, parents?: string[], groupId?: string): Right {
   const right = _createRight({
     id: node.id,
     name: node.name,
@@ -839,7 +839,7 @@ function createVertical(node: Node, version: Version, parents?: string[], groupI
     version: node.version,
   });
 
-  if (version.standalone) {
+  if (version?.standalone) {
     if (!right.version[version.id]) right.version[version.id] = {};
     right.version[version.id].standalone = true;
   }
@@ -847,7 +847,7 @@ function createVertical(node: Node, version: Version, parents?: string[], groupI
   return right;
 }
 
-function createRight(node: RightNode, version: Version, parents?: string[], groupId?: string, order = 0): Right {
+function createRight(node: RightNode, version?: Version, parents?: string[], groupId?: string, order = 0): Right {
   const right = _createRight({
     id: node.id,
     name: node.name,
@@ -861,7 +861,7 @@ function createRight(node: RightNode, version: Version, parents?: string[], grou
     version: node.version,
   });
 
-  if (version.standalone) {
+  if (version?.standalone) {
     if (!right.version[version.id]) right.version[version.id] = {};
     right.version[version.id].standalone = true;
   }
@@ -869,7 +869,7 @@ function createRight(node: RightNode, version: Version, parents?: string[], grou
   return right;
 }
 
-export function fromGraph(graph: readonly Node[], version: Version) {
+export function fromGraph(graph: readonly Node[], version?: Version) {
 
   const rights: Right[] = [];
   const sources: WaterfallSource[] = [];
