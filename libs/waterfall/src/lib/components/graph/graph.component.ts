@@ -2,30 +2,33 @@
 import { BehaviorSubject, Subscription, combineLatest, tap } from 'rxjs';
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+import {
+  Right,
+  Condition,
+  createRight,
+  WaterfallSource,
+  isConditionGroup,
+  getContractsWith,
+  isDefaultVersion,
+  WaterfallContract,
+  getDefaultVersionId,
+  WaterfallRightholder,
+  createWaterfallSource,
+  Version,
+  waterfallSources,
+} from '@blockframes/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { GraphService } from '@blockframes/ui/graph/graph.service';
 import { CardModalComponent } from '@blockframes/ui/card-modal/card-modal.component';
-import {
-  Right,
-  WaterfallRightholder,
-  WaterfallSource,
-  createRight,
-  createWaterfallSource,
-  Condition,
-  isConditionGroup,
-  isDefaultVersion,
-  getDefaultVersionId,
-  waterfallSources,
-  Version
-} from '@blockframes/model';
 
 import { RightService } from '../../right.service';
 import { WaterfallService } from '../../waterfall.service';
 import { createRightForm, setRightFormValue } from '../forms/right-form/right-form';
 import { createSourceForm, setSourceFormValue } from '../forms/source-form/source-form';
-import { Arrow, Node, computeDiff, createChild, createSibling, createStep, deleteStep, fromGraph, toGraph, updateParents } from './layout';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Arrow, Node, computeDiff, createChild, createSibling, createStep, deleteStep, fromGraph, toGraph, updateParents } from './layout';
 import { AtomicWrite } from 'ngfire';
 
 @Component({
@@ -66,15 +69,16 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   sourceForm = createSourceForm();
 
   rightholderNames$ = new BehaviorSubject<string[]>([]);
+  relevantContracts$ = new BehaviorSubject<WaterfallContract[]>([]);
 
   subscription: Subscription;
 
   constructor(
+    private snackBar: MatSnackBar,
     private service: GraphService,
     private rightService: RightService,
-    private shell: DashboardWaterfallShellComponent,
     private waterfallService: WaterfallService,
-    private snackBar: MatSnackBar,
+    private shell: DashboardWaterfallShellComponent,
   ) { }
 
   ngOnInit() {
@@ -110,7 +114,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  select(id: string) {
+  async select(id: string) {
     this.selected$.next(id);
 
     const source = this.sources.find(source => source.id === id);
@@ -124,6 +128,15 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     if (right) {
       this.isSourceSelected = false;
       let steps: Condition[][] = [];
+
+      const producer = this.rightholders.find(r => r.roles.includes('producer'));
+      if (right.rightholderId && right.rightholderId !== producer?.id) {
+        const contracts = await this.shell.contracts();
+        this.relevantContracts$.next(getContractsWith([right.rightholderId, producer?.id], contracts));
+      } else {
+        this.relevantContracts$.next([]);
+      }
+
       if (right.type === 'vertical') {
         const members = this.rights.filter(r => r.groupId === right.id).sort((a, b) => a.order - b.order);
         steps = members.map(member => member.conditions?.conditions.filter(c => !isConditionGroup(c)) as Condition[] ?? []);
@@ -151,10 +164,15 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     right.type = this.rightForm.controls.type.value;
     right.name = this.rightForm.controls.name.value;
     right.percent = this.rightForm.controls.percent.value;
+    right.contractId = this.rightForm.controls.contract.value;
     right.rightholderId = this.rightholders.find(r => r.name === this.rightForm.controls.org.value)?.id ?? '';
 
     if (right.type === 'vertical') {
       const steps = changes.updated.rights.filter(r => r.groupId === right.id);
+      steps.forEach(step => {
+        step.rightholderId = right.rightholderId;
+        step.contractId = right.contractId;
+      });
       this.rightForm.controls.steps.value.forEach((conditions, index) => {
         steps[index].conditions = { operator: 'AND', conditions: conditions };
       });

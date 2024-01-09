@@ -109,6 +109,13 @@
               placeholder="Choose Company or put your own"
               [form]="rightForm.get('org')"
             ></bf-autocomplete>
+
+            <mat-form-field *ngIf="(relevantContracts$ | async).length" appearance="outline">
+              <mat-label>Contract</mat-label>
+              <mat-select [formControl]="rightForm.get('contract')">
+                <mat-option *ngFor="let contract of (relevantContracts$ | async)" [value]="contract.id">{{contract.name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
     
             <mat-form-field appearance="outline">
               <mat-label>Name</mat-label>
@@ -153,32 +160,55 @@
     </ng-template>
   </ng-container>
   <ng-template #noSelection>
-    <header>
-      <h2>To Begin</h2>
-    </header>
-    <section class="begin">
-      <ol>
-        <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-        <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-        <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-        <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-        <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-        <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-      </ol>
-      <button mat-button>
-        <mat-icon svgIcon="help"></mat-icon>
-        <span>Ask for Help</span>
-      </button>
-      <div>
-        <button [disabled]="!canUpdateGraph" mat-flat-button color="primary" (click)="createNewSource()">
-          <mat-icon svgIcon="add"></mat-icon>
-          <span>Create new Source</span>
+    <!-- <ng-container *ngIf="(nodes$ | async).length; else emptyGraph">
+      <header>
+        <h2>Receipt Share List</h2>
+        <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'">
+          <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
         </button>
-        <button [disabled]="!canUpdateGraph" mat-flat-button color="primary" (click)="createNewRight()">
-          <mat-icon svgIcon="add"></mat-icon>
-          <span>Create new Right</span>
+      </header>
+      <p><strong>Pool</strong> is needed when several Receipts Shares come from different sources, but should be used in the same condition.</p>
+      <mat-tab-group>
+        <mat-tab label="Receipts Shares">
+          <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
+            <waterfall-right-list></waterfall-right-list>
+          </section>
+        </mat-tab>
+        <mat-tab label="Pools Only">
+          <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
+            <p>TODO</p>
+          </section>
+        </mat-tab>
+      </mat-tab-group>
+    </ng-container>
+    <ng-template #emptyGraph> -->
+      <header>
+        <h2>To Begin</h2>
+      </header>
+      <section class="begin">
+        <ol>
+          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+        </ol>
+        <button mat-button>
+          <mat-icon svgIcon="help"></mat-icon>
+          <span>Ask for Help</span>
         </button>
-      </div>
-    </section>
+        <div>
+          <button mat-flat-button color="primary" (click)="createNewSource()">
+            <mat-icon svgIcon="add"></mat-icon>
+            <span>Create new Source</span>
+          </button>
+          <button mat-flat-button color="primary" (click)="createNewRight()">
+            <mat-icon svgIcon="add"></mat-icon>
+            <span>Create new Right</span>
+          </button>
+        </div>
+      </section>
+    <!-- </ng-template> -->
   </ng-template>
 </bf-card-modal>
