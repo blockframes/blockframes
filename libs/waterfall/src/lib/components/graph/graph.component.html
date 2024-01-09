@@ -2,7 +2,15 @@
 <section class="surface" [ngStyle]="{ width: showEdit ? '50%' : '100%' }" (dblclick)="select('')">
   <header>
     <div>
-      <h2>Waterfall Scheme</h2>
+      <h2>
+        <span>Waterfall Scheme</span>
+        <mat-icon 
+          *ngIf="isDefaultVersion && waterfall.versions.length > 1"
+          color="warn"
+          svgIcon="warning"
+          matTooltip="You are editing the default version of this waterfall. Except already overwritten receipt share percentage and conditions, changes performed on this version will be applied to all versions."
+        ></mat-icon>
+      </h2>
       <button mat-icon-button [matTooltip]="(showEdit ? 'Hide' : 'Show') + ' Edit Panel'" (click)="toggleEdit()">
         <mat-icon [svgIcon]="showEdit ? 'chevron_right' : 'chevron_left'"></mat-icon>
       </button>
@@ -41,7 +49,7 @@
         <button mat-icon-button matTooltip="Save changes" (click)="updateSource()">
           <mat-icon svgIcon="save"></mat-icon>
         </button>
-        <button mat-icon-button matTooltip="Delete Source" (click)="delete()">
+        <button [disabled]="!canUpdateGraph" mat-icon-button matTooltip="Delete Source" (click)="delete()">
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </header>
@@ -75,7 +83,7 @@
         <button mat-icon-button matTooltip="Save changes" (click)="updateRight()">
           <mat-icon svgIcon="save"></mat-icon>
         </button>
-        <button mat-icon-button matTooltip="Delete Right" (click)="delete()">
+        <button [disabled]="!canUpdateGraph" mat-icon-button matTooltip="Delete Right" (click)="delete()">
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </header>
@@ -130,7 +138,7 @@
             <div class="add-next">
               <hr/>
               <p class="mat-caption">Add Next Receipt Share</p>
-              <button mat-mini-fab color="primary" (click)="addChild(selected)">
+              <button [disabled]="!canUpdateGraph" mat-mini-fab color="primary" (click)="addChild(selected)">
                 <mat-icon svgIcon="add"></mat-icon>
               </button>
             </div>
@@ -162,11 +170,11 @@
         <span>Ask for Help</span>
       </button>
       <div>
-        <button mat-flat-button color="primary" (click)="createNewSource()">
+        <button [disabled]="!canUpdateGraph" mat-flat-button color="primary" (click)="createNewSource()">
           <mat-icon svgIcon="add"></mat-icon>
           <span>Create new Source</span>
         </button>
-        <button mat-flat-button color="primary" (click)="createNewRight()">
+        <button [disabled]="!canUpdateGraph" mat-flat-button color="primary" (click)="createNewRight()">
           <mat-icon svgIcon="add"></mat-icon>
           <span>Create new Right</span>
         </button>

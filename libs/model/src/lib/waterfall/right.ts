@@ -23,12 +23,8 @@ export interface Right {
 }
 
 export interface RightVersion {
-  deleted?: true;
   percent?: number;
   conditions?: ConditionGroup;
-  nextIds?: string[];
-  pools?: string[];
-  groupId?: string;
 }
 
 export interface RightOverride {
