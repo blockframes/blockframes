@@ -6,7 +6,7 @@ import {
   Media,
   Right,
   RightType,
-  RightVersion,
+  Version,
   Territory,
   WaterfallSource,
   createRight as _createRight,
@@ -22,7 +22,7 @@ interface NodeBase {
   height: number;
   type: 'source' | 'right' | 'vertical' | 'horizontal';
   children: string[];
-  version: Record<string, RightVersion>;
+  version: Record<string, object>;
 }
 
 function createNodeBase(params: Partial<NodeBase> = {}): NodeBase {
@@ -84,6 +84,7 @@ function createRightNode(params: Partial<RightNode> = {}): RightNode {
 export interface VerticalNode extends NodeBase {
   type: 'vertical';
   members: RightNode[];
+  percent: number;
 }
 
 function createVerticalNode(params: Partial<VerticalNode> = {}): VerticalNode {
@@ -92,6 +93,7 @@ function createVerticalNode(params: Partial<VerticalNode> = {}): VerticalNode {
     ...node,
     type: 'vertical',
     members: [],
+    percent: 100,
     ...params
   }
 }
@@ -99,6 +101,7 @@ function createVerticalNode(params: Partial<VerticalNode> = {}): VerticalNode {
 export interface HorizontalNode extends NodeBase {
   type: 'horizontal';
   members: (VerticalNode | RightNode)[];
+  percent: number;
 }
 
 function createHorizontalNode(params: Partial<HorizontalNode> = {}): HorizontalNode {
@@ -107,6 +110,7 @@ function createHorizontalNode(params: Partial<HorizontalNode> = {}): HorizontalN
     ...node,
     type: 'horizontal',
     members: [],
+    percent: 100,
     ...params
   }
 }
@@ -166,6 +170,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
         height: RIGHT_HEIGHT + (LEVEL_HEIGHT * (members.length - 1)) + (SPACING * (members.length + 1)),
         width: RIGHT_WIDTH + (SPACING * 2),
         version: right.version,
+        percent: right.percent,
       });
       return verticalNode;
     } else if (right.type === 'horizontal') {
@@ -191,6 +196,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
             width: RIGHT_WIDTH + (SPACING * 2), height: RIGHT_HEIGHT + (LEVEL_HEIGHT * (vMembers.length - 1)) + (SPACING * (vMembers.length + 1)),
             members: vMembers,
             version: member.version,
+            percent: member.percent,
           });
           return verticalNode;
         } else {
@@ -217,6 +223,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
         height: maxMemberHeight + (SPACING * 2),
         width: (RIGHT_WIDTH * members.length) + (SPACING * (members.length + 1)),
         version: right.version,
+        percent: right.percent,
       });
       return horizontalNode;
     } else {
@@ -788,36 +795,67 @@ export function deleteStep(groupId: string, stepIndex: number, graph: Node[]) {
   }
 }
 
+function createSource(node: SourceNode, version?: Version) {
+  const source = createWaterfallSource({
+    id: node.id,
+    name: node.name,
+    medias: node.medias,
+    territories: node.territories,
+    destinationId: node.children[0],
+    version: node.version,
+  });
 
-function createHorizontal(node: Node, parents?: string[]): Right {
-  return _createRight({
+  if (version?.standalone) {
+    if (!source.version[version.id]) source.version[version.id] = {};
+    source.version[version.id].standalone = true;
+  }
+
+  return source;
+}
+
+function createHorizontal(node: HorizontalNode, version?: Version, parents?: string[]): Right {
+  const right = _createRight({
     id: node.id,
     name: node.name,
     nextIds: parents ?? [],
     type: 'horizontal',
-    percent: 0,
+    actionName: 'prependHorizontal',
+    percent: node.percent,
     pools: [], // TODO
-    order: 0, // TODO
     version: node.version,
   });
+
+  if (version?.standalone) {
+    if (!right.version[version.id]) right.version[version.id] = {};
+    right.version[version.id].standalone = true;
+  }
+
+  return right;
 }
 
-function createVertical(node: Node, parents?: string[], groupId?: string): Right {
-  return _createRight({
+function createVertical(node: VerticalNode, version?: Version, parents?: string[], groupId?: string): Right {
+  const right = _createRight({
     id: node.id,
     name: node.name,
     groupId: groupId ?? '',
     nextIds: parents ?? [],
     type: 'vertical',
-    percent: 0,
+    actionName: 'prependVertical',
+    percent: node.percent,
     pools: [], // TODO
-    order: 0,
     version: node.version,
   });
+
+  if (version?.standalone) {
+    if (!right.version[version.id]) right.version[version.id] = {};
+    right.version[version.id].standalone = true;
+  }
+
+  return right;
 }
 
-function createRight(node: RightNode, parents?: string[], groupId?: string, order = 0): Right {
-  return _createRight({
+function createRight(node: RightNode, version?: Version, parents?: string[], groupId?: string, order = 0): Right {
+  const right = _createRight({
     id: node.id,
     name: node.name,
     groupId: groupId ?? '',
@@ -829,9 +867,16 @@ function createRight(node: RightNode, parents?: string[], groupId?: string, orde
     type: node.rightType,
     version: node.version,
   });
+
+  if (version?.standalone) {
+    if (!right.version[version.id]) right.version[version.id] = {};
+    right.version[version.id].standalone = true;
+  }
+
+  return right;
 }
 
-export function fromGraph(graph: readonly Node[]) {
+export function fromGraph(graph: readonly Node[], version?: Version) {
 
   const rights: Right[] = [];
   const sources: WaterfallSource[] = [];
@@ -846,35 +891,29 @@ export function fromGraph(graph: readonly Node[]) {
 
   graph.forEach(node => {
     if (node.type === 'source') {
-      const source = createWaterfallSource({
-        id: node.id,
-        name: node.name,
-        medias: node.medias,
-        territories: node.territories,
-        destinationId: node.children[0],
-      });
+      const source = createSource(node, version);
       if (node.children.length > 1) console.warn(`Source (${node.id}) with multiple children: children should have been in a single group instead!`);
       sources.push(source);
     } else {
       if (node.type === 'horizontal') {
-        rights.push(createHorizontal(node, parentIndex[node.id]));
+        rights.push(createHorizontal(node, version, parentIndex[node.id]));
         node.members.forEach(member => {
           if (member.type === 'vertical') {
-            rights.push(createVertical(member, undefined, node.id));
+            rights.push(createVertical(member, version, undefined, node.id));
             member.members.forEach((subMember, order) => {
-              rights.push(createRight(subMember, undefined, member.id, order));
+              rights.push(createRight(subMember, version, undefined, member.id, order));
             });
           } else {
-            rights.push(createRight(member, undefined, node.id));
+            rights.push(createRight(member, version, undefined, node.id));
           }
         });
       } else if (node.type === 'vertical') {
-        rights.push(createVertical(node, parentIndex[node.id]));
+        rights.push(createVertical(node, version, parentIndex[node.id]));
         node.members.forEach((member, order) => {
-          rights.push(createRight(member, undefined, node.id, order));
+          rights.push(createRight(member, version, undefined, node.id, order));
         });
       } else {
-        rights.push(createRight(node, parentIndex[node.id]));
+        rights.push(createRight(node, version, parentIndex[node.id]));
       }
     }
   });

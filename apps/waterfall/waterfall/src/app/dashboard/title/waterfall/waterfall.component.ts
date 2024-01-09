@@ -13,6 +13,7 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
 })
 export class WaterfallComponent {
   public rights$ = this.shell.rights$;
+  public canBypassRules$ = this.shell.canBypassRules$;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,

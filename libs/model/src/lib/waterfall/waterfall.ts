@@ -27,6 +27,7 @@ export function createWaterfallPermissions(params: Partial<WaterfallPermissions>
 export interface Version {
   id: string;
   default: boolean;
+  standalone: boolean;
   name: string;
   description?: string;
   blockIds: string[]
@@ -36,6 +37,7 @@ export function createVersion(params: Partial<Version> = {}) {
   const version: Version = {
     id: '',
     default: true,
+    standalone: false, // If true, indicates that this version does not share any rights or sources with other versions
     name: '',
     blockIds: [],
     ...params
@@ -70,8 +72,30 @@ export function createWaterfallSource(params: Partial<WaterfallSource>): Waterfa
     territories: [],
     medias: [],
     destinationId: '',
+    version: {},
     ...params
   }
+}
+
+/**
+ * Fetch versionned sources if versionId is provided, else return all sources
+ * @param waterfall 
+ * @param versionId 
+ * @returns 
+ */
+export function waterfallSources(waterfall: Waterfall, versionId?: string): WaterfallSource[] {
+  if (!versionId) return waterfall.sources;
+  const version = waterfall.versions.find(v => v.id === versionId);
+  if (!version) return waterfall.sources;
+  const sources = waterfall.sources;
+
+  if (version.standalone) return sources.filter(s => s.version && s.version[version.id]);
+
+  return sources.filter(r => !Object.values(r.version).some(v => v.standalone)).map(s => {
+    if (!s.version) s.version = {};
+    const destinationId = s.version[versionId] !== undefined ? s.version[versionId].destinationId : s.destinationId;
+    return { ...s, destinationId };
+  });
 }
 
 export function getAssociatedSource(income: Income, sources: WaterfallSource[]) {
@@ -96,14 +120,14 @@ export interface WaterfallSource {
   territories: Territory[];
   medias: Media[];
   destinationId: string; // The rightId this income will go to
-  // TODO #9520 sources whould be versionned as right, expenses etc..
+  version: Record<string, { standalone?: true, destinationId?: string }>;
 }
 
 export interface WaterfallRightholder {
   id: string;
   name: string;
   roles: RightholderRole[];
-  // TODO #9520 versionId to lockVersion for this rightholder ?
+  lockedVersionId?: string;
 };
 
 export interface Waterfall {
@@ -123,10 +147,10 @@ export function createWaterfall(params: Partial<Waterfall> = {}): Waterfall {
     versions: [],
     orgIds: [],
     documents: [],
-    sources: [],
     expenseTypes: {},
     ...params,
     rightholders: params.rightholders?.map(r => createWaterfallRightholder(r)) ?? [],
+    sources: params.sources?.map(s => createWaterfallSource(s)) ?? [],
   }
 }
 

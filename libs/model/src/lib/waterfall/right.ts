@@ -23,6 +23,7 @@ export interface Right {
 }
 
 export interface RightVersion {
+  standalone?: true;
   percent?: number;
   conditions?: ConditionGroup;
 }

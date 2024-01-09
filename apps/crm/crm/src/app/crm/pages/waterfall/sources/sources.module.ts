@@ -2,10 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-import { SourcesComponent } from './sources.component';
+import { RightExistsPipe, SourcesComponent } from './sources.component';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { JoinPipeModule, MaxLengthModule, ToGroupLabelPipeModule } from '@blockframes/utils/pipes';
-
+import { VersionSelectorModule } from '@blockframes/waterfall/components/version-selector/version-selector.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -16,7 +16,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
-  declarations: [SourcesComponent],
+  declarations: [SourcesComponent, RightExistsPipe],
   imports: [
     CommonModule,
 
@@ -24,6 +24,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ToGroupLabelPipeModule,
     MaxLengthModule,
     JoinPipeModule,
+    VersionSelectorModule,
 
     MatIconModule,
     MatChipsModule,

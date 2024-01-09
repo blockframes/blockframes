@@ -3,10 +3,7 @@
   <ng-container *ngIf="waterfall.versions.length else noWaterfall">
     <div>
       <h3>Versions</h3>
-      <button mat-button [disabled]="(shell.canInitWaterfall$ | async) === false" (click)="shell.initWaterfall()" color="primary" [matTooltip]="(shell.canInitWaterfall$ | async) ? 'Initialize a new version' : 'Missing data'">
-        <mat-icon svgIcon="add"></mat-icon>
-        <span>Initialize a new version</span>
-      </button>
+      <waterfall-version-selector></waterfall-version-selector>
     </div>
     <bf-table [source]="waterfall.versions" useFilter pagination="50">
       <ng-template colRef="id" label="Id" let-id sort defaultSort>
@@ -16,7 +13,10 @@
         {{ name }}
       </ng-template>
       <ng-template colRef="" label="Default" let-version sort>
-        <mat-slide-toggle [checked]="version.default" [disabled]="version.default" (click)="setVersionAsDefault(version.id)" color="primary"></mat-slide-toggle>
+        <mat-slide-toggle [checked]="version.default" [disabled]="version.default || version.standalone" (click)="setVersionAsDefault(version)" color="primary"></mat-slide-toggle>
+      </ng-template>
+      <ng-template colRef="standalone" label="Standalone" let-standalone sort>
+        <mat-icon [svgIcon]="standalone ? 'check_circle': 'cancel'"></mat-icon>
       </ng-template>
       <ng-template colRef="description" label="Description" let-description sort>
         {{ description }}
@@ -24,20 +24,23 @@
       <ng-template colRef="blockIds" label="Blocks" let-blockIds sort>
         {{ blockIds.length }} block(s)
       </ng-template>
-      <ng-template colRef="id" label="Actions" let-versionId sticky>
-        <button mat-icon-button (click)="removeVersion(versionId)">
+      <ng-template colRef="" label="Actions" let-version sticky>
+        <button mat-icon-button (click)="removeVersion(version.id)">
           <mat-icon svgIcon="delete" matTooltip="Delete version"></mat-icon>
         </button>
-        <button mat-icon-button (click)="duplicateVersion(versionId)">
-          <mat-icon svgIcon="file_copy" matTooltip="Duplicate version"></mat-icon>
+        <button mat-icon-button [disabled]="version.standalone" (click)="duplicateVersion(version.id)">
+          <mat-icon svgIcon="file_copy" [matTooltip]="version.standalone ? 'Cannot duplicate standalone version' : 'Duplicate version'"></mat-icon>
         </button>
-        <button mat-icon-button (click)="displayActions(versionId)">
+        <button mat-icon-button (click)="refreshWaterfall(version.id)">
+          <mat-icon svgIcon="refresh" matTooltip="Refresh waterfall"></mat-icon>
+        </button>
+        <button mat-icon-button (click)="displayActions(version.id)">
           <mat-icon svgIcon="search" matTooltip="Show actions"></mat-icon>
         </button>
-        <button mat-icon-button (click)="displayWaterfall(versionId)">
+        <button mat-icon-button (click)="displayWaterfall(version.id)">
           <mat-icon svgIcon="star" matTooltip="Show waterfall"></mat-icon>
         </button>
-        <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'dashboards', versionId]" (click)="$event.stopPropagation()">
+        <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'dashboards', version.id]" (click)="$event.stopPropagation()">
           <mat-icon svgIcon="launch" matTooltip="Go to dashboard"></mat-icon>
         </a>
       </ng-template>

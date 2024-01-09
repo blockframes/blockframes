@@ -86,7 +86,7 @@ export class TableExtractedSourcesComponent implements AfterViewInit {
   }
 
   /**
-   * Adds an source to database and prevents multi-insert by refreshing mat-table
+   * Adds a source to database and prevents multi-insert by refreshing mat-table
    * @param importState
    */
   private async add(importState: SourcesImportState, { increment } = { increment: false }) {
@@ -96,7 +96,9 @@ export class TableExtractedSourcesComponent implements AfterViewInit {
     if (increment) this.processing++;
     this.cdr.markForCheck();
 
-    await this.waterfallService.addSource(importState.waterfallId, createWaterfallSource(importState.source));
+    const waterfall = await this.waterfallService.getValue(importState.waterfallId);
+    const source = createWaterfallSource(importState.source);
+    if (!waterfall.sources.find(s => s.name === source.name)) await this.waterfallService.addSource(waterfall, source);
 
     importState.imported = true;
 

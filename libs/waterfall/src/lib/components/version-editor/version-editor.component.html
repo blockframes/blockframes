@@ -1,0 +1,60 @@
+<global-modal>
+  <header>
+    <h2 *ngIf="data.mode === 'edit'">Edit Waterfall Version</h2>
+    <h2 *ngIf="data.mode === 'init'">Initialize Waterfall</h2>
+
+    <ng-container *ngIf="data.mode === 'create'">
+      <h2>Create version of Waterfall</h2>
+      <p class="mat-body-2">
+        You are about to create a new version of Waterfall. <br/>
+        You will be able to view all other versions.
+      </p>
+    </ng-container>
+  </header>
+
+  <form [formGroup]="form">
+
+    <ng-container *ngIf="data.mode === 'create'">
+      <p class="mat-body-2">Please choose how you would like to proceed:</p>
+      <mat-radio-group formControlName="standalone">
+        <mat-radio-button [value]="true">
+          FROM SCRATCH - Creates a completely new version
+        </mat-radio-button>
+        <mat-radio-button [value]="false">
+          DUPLICATE - Creates a duplicate of the current version
+        </mat-radio-button>
+      </mat-radio-group>
+    </ng-container>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Version Name</mat-label>
+      <input matInput placeholder="e.g. Royalty Adjustment, New Studio Partnership..."  formControlName="name" required/>
+      <mat-hint>Please ensure to provide a clear and explicit name for your version.</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Version Description</mat-label>
+      <textarea matInput formControlName="description" placeholder="e.g. Following the amendments made to the Sales Agent's contract..." type="string" cdkTextareaAutosize cdkAutosizeMinRows="6" ></textarea>
+      <mat-hint>Clarify the purpose and changes in this Waterfall version for better understanding by you and other Right Holders.</mat-hint>
+    </mat-form-field>
+
+    <waterfall-rightholder-select 
+      *ngIf="data.mode !== 'init'"
+      [rightholders]="data.rightholders"
+      [control]="form.get('rightholderIds')"
+      multiple>
+      <mat-label>Impacted Organizations</mat-label>
+      <mat-hint>Please specify the organizations that will be impacted by this new version.</mat-hint>
+    </waterfall-rightholder-select>
+  </form>
+
+  <mat-dialog-actions>
+    <button mat-flat-button color="primary" (click)="confirm()">
+      <span>{{ data.mode === 'edit' ? 'Edit version' : 'Create version' }}</span>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
+    </button>
+    <button mat-button (click)="close()">
+      Close window
+    </button>
+  </mat-dialog-actions>
+</global-modal>

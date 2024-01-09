@@ -4,6 +4,10 @@ import { BehaviorSubject } from 'rxjs';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { rightholderName } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
+import { Version } from '@blockframes/model';
+import { MatDialog } from '@angular/material/dialog';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 
 @Component({
   selector: 'crm-waterfall',
@@ -18,16 +22,28 @@ export class WaterfallComponent {
   constructor(
     public shell: DashboardWaterfallShellComponent,
     private waterfallService: WaterfallService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
   ) {
     this.shell.setDate(undefined);
   }
 
-  public async removeVersion(id: string) {
-    await this.shell.removeVersion(id);
-    this.displayActions$.next(false);
-    this.displayWaterfall$.next(false);
-    this.snackBar.open(`Version "${id}" deleted from waterfall !`, 'close', { duration: 5000 });
+  public removeVersion(id: string) {
+    this.dialog.open(ConfirmInputComponent, {
+      data: createModalData({
+        title: 'You are about to delete this version from Waterfall ?',
+        text: "If yes, please write 'DELETE' inside the form below.",
+        warning: 'Doing this will could lead to a loss of data and broken pages.',
+        confirmationWord: 'delete',
+        confirmButtonText: 'delete',
+        onConfirm: async () => {
+          await this.shell.removeVersion(id);
+          this.displayActions$.next(false);
+          this.displayWaterfall$.next(false);
+          this.snackBar.open(`Version "${id}" deleted from waterfall !`, 'close', { duration: 5000 });
+        }
+      })
+    });
   }
 
   public async duplicateVersion(versionId: string) {
@@ -40,8 +56,9 @@ export class WaterfallComponent {
     }
   }
 
-  public setVersionAsDefault(versionId: string) {
-    return this.waterfallService.setVersionAsDefault(this.shell.waterfall, versionId);
+  public setVersionAsDefault(version: Version) {
+    if(version.default || version.standalone) return;
+    return this.waterfallService.setVersionAsDefault(this.shell.waterfall, version.id);
   }
 
   public displayActions(versionId: string) {
@@ -54,6 +71,12 @@ export class WaterfallComponent {
     this.displayActions$.next(false);
     this.displayWaterfall$.next(true);
     this.shell.setVersionId(versionId);
+  }
+
+  async refreshWaterfall(versionId: string){
+    this.shell.setVersionId(versionId);
+    await this.shell.refreshWaterfall();
+    return this.snackBar.open(`Waterfall "${versionId}" refreshed`, 'close');
   }
 
   public getPayloadPair(from: string | { org?: string, income?: string, right?: string }) {

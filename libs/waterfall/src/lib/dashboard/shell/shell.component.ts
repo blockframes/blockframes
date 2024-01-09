@@ -27,6 +27,7 @@ import {
   Income,
   getDefaultVersionId,
   isDefaultVersion,
+  waterfallSources,
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { filter, map, pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
@@ -143,15 +144,20 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   );
   public waterfall: Waterfall;
 
+  public sources$ = combineLatest([this.waterfall$, this.versionId$]).pipe(
+    map(([waterfall, versionId]) => waterfallSources(waterfall, versionId))
+  );
+
   public rights$ = combineLatest([this.waterfall$, this.versionId$]).pipe(
     switchMap(([waterfall, versionId]) => this.rightService.rightsChanges(waterfall, versionId)),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  public hasMinimalRights$ = combineLatest([this.waterfall$, this.rights$]).pipe(
-    map(([waterfall, rights]) => {
-      if (!waterfall.sources.length) return false;
-      const destinationRightIds = unique(this.waterfall.sources.map(s => s.destinationId));
+  public hasMinimalRights$ = combineLatest([this.waterfall$, this.rights$, this.versionId$]).pipe(
+    map(([waterfall, rights, versionId]) => {
+      const sources = waterfallSources(waterfall, versionId);
+      if (!sources.length) return false;
+      const destinationRightIds = unique(sources.map(s => s.destinationId));
       return destinationRightIds.every(id => rights.map(r => r.id).includes(id));
     })
   );
@@ -196,6 +202,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
       versionId: _versionId || getDefaultVersionId(waterfall),
       date
     })),
+    filter(config => !!config.versionId && config.waterfall.versions.some(v => v.id === config.versionId)),
     switchMap(config => this.waterfallService.buildWaterfall(config)),
     shareReplay({ bufferSize: 1, refCount: true })
   );
@@ -205,7 +212,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
       const defaultVersion = getDefaultVersionId(waterfall);
       if (!defaultVersion) return of(null);
       if (rightholder && !canBypassRules) {
-        const versionId = 'version_3'; // TODO #9520 return rightholder.versionId;
+        const versionId = rightholder.lockedVersionId || defaultVersion;
         this.lockedVersionId = versionId;
         if (!this.versionId$.value) this.setVersionId(versionId);
         return of(versionId);
@@ -345,21 +352,21 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     return this.waterfallService.removeVersion(data, versionId);
   }
 
-  async duplicateVersion(versionId: string) {
+  async duplicateVersion(versionIdToDuplicate: string, version?: Partial<Version>) {
     const canBypassRules = await firstValueFrom(this.canBypassRules$);
     if (!canBypassRules) throw new Error('You are not allowed to duplicate waterfall');
     const waterfall = await firstValueFrom(this.waterfall$);
     const blocks = await firstValueFrom(this.blocks$);
-    return this.waterfallService.duplicateVersion(waterfall, blocks, versionId);
+    // TODO #9520 version{} of rights, incomes, expenses should be duplicated into new version to keep overrides
+    return this.waterfallService.duplicateVersion(waterfall, blocks, versionIdToDuplicate, version);
   }
 
-  async refreshWaterfall(_versionId?: string) {
+  async refreshWaterfall() {
     const canBypassRules = await firstValueFrom(this.canBypassRules$);
     if (!canBypassRules) throw new Error('You are not allowed to refresh waterfall');
     this.isRefreshing$.next(true);
     const data = await this.loadData();
-    const versionId = _versionId || this.versionId$.value;
-    const waterfall = versionId ? await this.waterfallService.refreshWaterfall(data, versionId) : await this.initWaterfall();
+    const waterfall = this.versionId$.value ? await this.waterfallService.refreshWaterfall(data, this.versionId$.value) : await this.initWaterfall();
     this.isRefreshing$.next(false);
     return waterfall;
   }

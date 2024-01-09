@@ -1,6 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { Observable, combineLatest, filter, map, switchMap, tap } from 'rxjs';
+import { Observable, combineLatest, filter, map, startWith, switchMap, tap } from 'rxjs';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -183,7 +183,11 @@ export class DashboardComponent {
     })
   );
 
-  public netRevenueChart$: Observable<Partial<ChartOptions>> = this.rightholderControl.valueChanges.pipe(
+  public netRevenueChart$: Observable<Partial<ChartOptions>> = combineLatest([
+    this.currentRightholder$,
+    this.rightholderControl.valueChanges.pipe(startWith(''))
+  ]).pipe(
+    map(([currentRightholder, controlValue]) => controlValue || currentRightholder.id),
     switchMap(rightholderId => this.rightholdersState$.pipe(map(orgs => orgs.find(org => org.id === rightholderId)))),
     switchMap(rightholder => this.state$.pipe(map(state => ({
       rightholder,

@@ -8,4 +8,7 @@
       {{ rightholder.name | titlecase }}
     </mat-option>
   </mat-select>
+  <mat-hint>
+    <ng-content select="mat-hint"></ng-content>
+  </mat-hint>
 </mat-form-field>

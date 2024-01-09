@@ -1,10 +1,39 @@
 <ng-container *ngIf="waterfall$ | async as waterfall">
-  <mat-form-field *ngIf="waterfall.versions.length > 1 && !lockedVersionId" appearance="outline">
-    <mat-label>Waterfall Version</mat-label>
-    <mat-select (selectionChange)="switchToVersion($event.value)" [(value)]="versionId">
-      <mat-option *ngFor="let version of waterfall.versions" [value]="version.id">
-        {{ version.name }} {{ version.default ? '(default)' : '' }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+  <ng-container *ngIf="!lockedVersionId && (canBypassRules$ | async)">
+    <ng-container *ngIf="waterfall.versions.length !== 0 else initMode">
+      <ng-container *ngIf="waterfall.versions.length > 0 else createMode">
+        <button mat-flat-button color="primary" [matMenuTriggerFor]="menu">Choose Waterfall Versions</button>
+        <mat-menu class="bf-menu" #menu="matMenu">
+          <div mat-menu-item *ngFor="let version of waterfall.versions">
+            <section>
+              <mat-radio-group (click)="switchToVersion(version.id)" (change)="switchToVersion($event.value)">
+                <mat-radio-button [checked]="versionId === version.id"  [value]="version.id">
+                  <strong>{{ version.name }} {{ version.default ? '(default)' : '' }} {{ version.standalone ? '(standalone)' : '' }}</strong>
+                </mat-radio-button>
+              </mat-radio-group>
+              <button mat-icon-button (click)="edit(version.id);$event.stopPropagation()" matTooltip="Edit Version">
+                <mat-icon svgIcon="edit"></mat-icon>
+              </button>
+            </section>
+            <p (click)="switchToVersion(version.id)">{{ version.description }}</p>
+          </div>
+          <div mat-menu-item class="new-version">
+            <button mat-button class="main-dashboard-cta" color="primary" matTooltip="Create New Waterfall Version" (click)="create();$event.stopPropagation()">
+              <mat-icon svgIcon="add"></mat-icon>
+              <span>Create New Waterfall Version</span>
+            </button>
+          </div>
+        </mat-menu>
+      </ng-container>
+      <button mat-icon-button>
+        <mat-icon svgIcon="help" matTooltip="Learn more about versions"></mat-icon>
+      </button>
+    </ng-container>
+    <ng-template #createMode>
+      <button mat-stroked-button color="primary" (click)="create();$event.stopPropagation()">Create Waterfall Version</button>
+    </ng-template>
+    <ng-template #initMode>
+      <button mat-stroked-button color="primary" (click)="init();$event.stopPropagation()">Initialize Waterfall</button>
+    </ng-template>
+  </ng-container>
 </ng-container>
