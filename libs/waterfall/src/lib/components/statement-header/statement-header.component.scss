@@ -4,6 +4,12 @@ header {
     vertical-align: middle;
   }
 
+  h1 {
+    mat-icon {
+      font: icon;
+    }
+  }
+
   article {
     display: flex;
     flex-direction: column;

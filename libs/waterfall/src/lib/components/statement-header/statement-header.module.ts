@@ -11,6 +11,7 @@ import { VersionSelectorModule } from '../version-selector/version-selector.modu
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [StatementHeaderComponent],
@@ -23,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
 
     // Material
     MatIconModule,
+    MatTooltipModule,
   ],
   exports: [StatementHeaderComponent]
 })

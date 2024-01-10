@@ -1,6 +1,10 @@
 <header>
   <section>
-    <h1 *ngIf="statement">{{ statement.type | toLabel: 'statementType' }} Statement #{{ statementNumber }}</h1>
+    <h1 *ngIf="statement">
+      <span>{{ statement.type | toLabel: 'statementType' }} Statement #{{ statementNumber }}</span>
+      <mat-icon *ngIf="statement.duplicatedFrom" svgIcon="warning" color="warn" matTooltip="You are viewing a duplicated statement."></mat-icon>
+    </h1>
+    
     <waterfall-version-selector 
       [ngStyle]="{ display: statement.type !== 'producer' || statement.status !== 'draft' ? 'none' : 'initial' }"
       simulator
