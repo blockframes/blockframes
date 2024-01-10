@@ -111,7 +111,7 @@ export class StatementDistributorSummaryComponent {
     this.statementsHistory$, this.shell.rights$, this.shell.simulation$
   ]).pipe(
     map(([sources, current, incomes, _expenses, _history, rights, simulation]) => {
-      const indexOfCurrent = _history.findIndex(s => s.id === current.id);
+      const indexOfCurrent = _history.findIndex(s => s.id === current.id || s.id === current.duplicatedFrom);
       _history[indexOfCurrent] = { ...current, number: _history[indexOfCurrent].number };
       const previous = _history.slice(indexOfCurrent + 1);
       const history = _history.slice(indexOfCurrent);
@@ -227,7 +227,7 @@ export class StatementDistributorSummaryComponent {
     this.shell.incomes$, this.shell.rights$, this.shell.simulation$
   ]).pipe(
     map(([current, _history, _expenses, incomes, rights, simulation]) => {
-      const indexOfCurrent = _history.findIndex(s => s.id === current.id);
+      const indexOfCurrent = _history.findIndex(s => s.id === current.id|| s.id === current.duplicatedFrom);
       _history[indexOfCurrent] = { ...current, number: _history[indexOfCurrent].number };
       const previous = _history.slice(indexOfCurrent + 1);
       const history = _history.slice(indexOfCurrent);

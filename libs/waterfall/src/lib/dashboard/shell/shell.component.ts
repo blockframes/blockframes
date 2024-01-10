@@ -122,8 +122,8 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   // ---------
   // Statements, Incomes and Expenses
   // ---------
-  public statements$ = this.movie$.pipe(
-    switchMap(({ id: waterfallId }) => this.statementService.valueChanges({ waterfallId }))
+  public statements$ = combineLatest([this.movie$, this.versionId$]).pipe(
+    switchMap(([{ id: waterfallId }, versionId]) => this.statementService.statementsChanges(waterfallId, versionId))
   );
 
   public incomes$ = combineLatest([this.movie$, this.versionId$]).pipe(
@@ -307,8 +307,8 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     return this.incomeService.incomes(this.waterfall.id, ids, versionId);
   }
 
-  statements() {
-    return this.statementService.getValue({ waterfallId: this.waterfall.id });
+  statements(versionId = this.versionId$.value) {
+    return this.statementService.statements(this.waterfall.id, versionId);
   }
 
   expenses(ids: string[] = [], versionId = this.versionId$.value) {

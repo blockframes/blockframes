@@ -110,6 +110,7 @@ export interface Statement {
   incomeIds: string[];
   expenseIds?: string[];
   versionId: string; // Version used to create this statement
+  duplicatedFrom: string; // Id of the statement this one was duplicated from
   payments: {
     income?: IncomePayment[];
     right: RightPayment[]
@@ -165,6 +166,7 @@ function createStatementBase(params: Partial<Statement> = {}): Statement {
     receiverId: '',
     incomeIds: params.incomeIds || [],
     versionId: '',
+    duplicatedFrom: '',
     payments: {
       right: params.payments?.right ? params.payments.right.map(createRightPayment) : []
     },

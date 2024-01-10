@@ -12,7 +12,7 @@ import { RightHolderNamePipeModule } from '../../pipes/rightholder-name.pipe';
 import { ContractPipeModule } from '@blockframes/contract/contract/pipe';
 
 // Component
-import { IncomesSourcesPipe, StatementTableComponent } from './statement-table.component';
+import { IncomesSourcesPipe, StatementTableComponent, VersionNamePipe } from './statement-table.component';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -22,7 +22,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
-  declarations: [StatementTableComponent, IncomesSourcesPipe],
+  declarations: [StatementTableComponent, IncomesSourcesPipe, VersionNamePipe],
   imports: [
     CommonModule,
 

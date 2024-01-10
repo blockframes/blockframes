@@ -3,14 +3,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExpenseService } from '@blockframes/contract/expense/service';
 import { IncomeService } from '@blockframes/contract/income/service';
-import { createIncome, Statement, createExpense, Income, Expense, Waterfall } from '@blockframes/model';
+import { createIncome, Statement, createExpense, Waterfall } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { StatementForm } from '@blockframes/waterfall/form/statement.form';
 import { StartementFormGuardedComponent } from '@blockframes/waterfall/guards/statement-form.guard';
 import { StatementService } from '@blockframes/waterfall/statement.service';
-import { Subscription, combineLatest, debounceTime, map, pluck, tap } from 'rxjs';
+import { Subscription, debounceTime, pluck, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'waterfall-statement-edit',
@@ -25,8 +25,8 @@ export class StatementEditComponent implements OnInit, OnDestroy, StartementForm
     tap(_ => this.form.reset()) // Statement Id has changed, reset form
   );
 
-  public statement$ = combineLatest([this.statementId, this.shell.statements$]).pipe(
-    map(([statementId, statements]) => statements.find(s => s.id === statementId))
+  public statement$ = this.statementId.pipe(
+    switchMap((statementId: string) => this.statementService.valueChanges(statementId, { waterfallId: this.shell.waterfall.id })),
   );
 
   public waterfall$ = this.shell.waterfall$;

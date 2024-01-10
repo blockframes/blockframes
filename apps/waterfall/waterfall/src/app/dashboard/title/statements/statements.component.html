@@ -1,16 +1,18 @@
 <ng-container *ngIf="waterfall$ | async as waterfall">
   <ng-container *ngIf="statements.length else noStatements">
     <header>
-      <mat-chip-list aria-label="Statement type">
-        <ng-container *ngFor="let type of statementTypes">
-          <mat-divider *ngIf="type.divider && type.visible" [vertical]="true"></mat-divider>
-          <mat-chip
-          *ngIf="type.visible"
-          [selected]="type.selected"
-          (click)="changeType(type.key)">{{ type.value }}</mat-chip>
-        </ng-container>
-      </mat-chip-list>
-      
+      <article>
+        <mat-chip-list aria-label="Statement type">
+          <ng-container *ngFor="let type of statementTypes">
+            <mat-divider *ngIf="type.divider && type.visible" [vertical]="true"></mat-divider>
+            <mat-chip
+            *ngIf="type.visible"
+            [selected]="type.selected"
+            (click)="changeType(type.key)">{{ type.value }}</mat-chip>
+          </ng-container>
+        </mat-chip-list>
+        <waterfall-version-selector></waterfall-version-selector>
+      </article>
       <article>
         <span>
           <ng-container *ngIf="rightholders.length > 0">

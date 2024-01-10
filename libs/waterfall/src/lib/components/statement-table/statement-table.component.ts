@@ -5,6 +5,7 @@ import {
   Income,
   Statement,
   Waterfall,
+  getDefaultVersion,
   getDefaultVersionId,
   getIncomesSources,
   isDistributorStatement,
@@ -59,9 +60,10 @@ export class StatementTableComponent {
   ) { }
 
   payment(statement: Statement) {
-    const versionId = getDefaultVersionId(this.waterfall); // TODO #9520 versionId via statement.versionId ?
+    const versionId = statement.versionId || getDefaultVersionId(this.waterfall);
     if (versionId) this.shell.setVersionId(versionId);
 
+    // TODO #9520 on which version(s) should the payments be created ?
     this.dialog.open(StatementPaymentComponent, {
       data: createModalData({
         statement,
@@ -80,7 +82,7 @@ export class StatementTableComponent {
           }));
 
           await this.statementService.update(statement, { params: { waterfallId: this.waterfall.id } });
-          await this.shell.refreshWaterfall();
+          await this.shell.refreshWaterfall(); // TODO #9520 refresh all versions ?
 
           this.statements = this.statements.map(s => s.id === statement.id ? statement : s);
 
@@ -97,5 +99,13 @@ export class IncomesSourcesPipe implements PipeTransform {
   transform(incomeIds: string[], _incomes: Income[], waterfall: Waterfall) {
     const incomes = _incomes?.filter(i => incomeIds.includes(i.id)) || [];
     return getIncomesSources(incomes, waterfall.sources);
+  }
+}
+
+@Pipe({ name: 'versionName' })
+export class VersionNamePipe implements PipeTransform {
+  transform(versionId: string, waterfall: Waterfall) {
+    if (!versionId) return getDefaultVersion(waterfall)?.name || '--';
+    return waterfall.versions.find(v => v.id === versionId)?.name || '--';
   }
 }

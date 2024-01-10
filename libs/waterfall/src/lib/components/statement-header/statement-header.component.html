@@ -1,7 +1,11 @@
 <header>
   <section>
     <h1 *ngIf="statement">{{ statement.type | toLabel: 'statementType' }} Statement #{{ statementNumber }}</h1>
-    <waterfall-version-selector [ngStyle]="{ display: statement.type !== 'producer' ? 'none' : 'initial' }" *ngIf="statement.status === 'draft'" simulator [initialVersion]="versionId"></waterfall-version-selector>
+    <waterfall-version-selector 
+      [ngStyle]="{ display: statement.type !== 'producer' || statement.status !== 'draft' ? 'none' : 'initial' }"
+      simulator
+      [initialVersion]="versionId"
+    ></waterfall-version-selector>
   </section>
   <article>
     <span>

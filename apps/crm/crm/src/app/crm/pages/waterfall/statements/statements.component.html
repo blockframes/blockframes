@@ -1,5 +1,6 @@
 <ng-container *ngIf="statements$ | async as statements">
   <section>
+    <waterfall-version-selector></waterfall-version-selector>
     <button mat-button color="primary" [disabled]="!statements.length" (click)="removeStatements(statements)">
       <mat-icon svgIcon="delete"></mat-icon>
       <span>Remove all statements</span>

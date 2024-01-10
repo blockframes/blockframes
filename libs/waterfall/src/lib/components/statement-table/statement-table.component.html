@@ -8,6 +8,9 @@
   <ng-template *ngIf="columns.type" colRef="type" [label]="columns.type" let-type sort>
     {{ type | toLabel: 'statementType' }}
   </ng-template>
+  <ng-template *ngIf="columns.versionId" colRef="versionId" [label]="columns.versionId" let-versionId sort>
+    {{ versionId | versionName: waterfall }}
+  </ng-template>
   <ng-template *ngIf="columns.contract" colRef="" [label]="columns.contract" let-item sort>
     {{ item.contractId | getCurrentContract: (contracts$ | async) : item.duration.from }}
   </ng-template>

@@ -42,7 +42,7 @@ export class StatementHeaderComponent implements OnChanges {
     this.rightholderName = rightholder.name;
 
     // Set version to default, unless a locked version is found for an outgoing statement
-    this.versionId = getDefaultVersionId(this.shell.waterfall);
+    this.versionId = this.statement.versionId || getDefaultVersionId(this.shell.waterfall);
     if (isProducerStatement(this.statement)) {
       if (rightholder.lockedVersionId && this.shell.waterfall.versions.some(v => v.id === rightholder.lockedVersionId)) {
         this.versionId = rightholder.lockedVersionId;

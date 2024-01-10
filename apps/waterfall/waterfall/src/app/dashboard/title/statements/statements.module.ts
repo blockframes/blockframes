@@ -10,6 +10,7 @@ import { EmptyStatementCardModule } from '@blockframes/waterfall/components/empt
 import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 import { StatementTableModule } from '@blockframes/waterfall/components/statement-table/statement-table.module';
 import { StatementNewModule } from '@blockframes/waterfall/components/statement-new/statement-new.module';
+import { VersionSelectorModule } from '@blockframes/waterfall/components/version-selector/version-selector.module';
 
 // Pages
 import { StatementsComponent } from './statements.component';
@@ -37,6 +38,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     RightHolderNamePipeModule,
     StatementTableModule,
     StatementNewModule,
+    VersionSelectorModule,
 
     // Material
     MatFormFieldModule,
