@@ -64,8 +64,6 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     private snackBar: MatSnackBar,
   ) {
     this.dynTitle.setPageTitle(this.shell.movie.title.international, 'View Statement');
-    const versionId = getDefaultVersionId(this.waterfall); // TODO #9520 versionId selector or via url
-    if (versionId) this.shell.setVersionId(versionId);
     this.form = new StatementForm();
   }
 
@@ -125,6 +123,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     if (reported) {
       statement.status = 'reported';
       statement.reported = value.reported;
+      statement.versionId = this.shell.versionId$.value;
 
       if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
         await this.incomeService.update(statement.incomeIds, (i) => {

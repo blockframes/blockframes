@@ -1,5 +1,8 @@
 <header>
-  <h1 *ngIf="statement">{{ statement.type | toLabel: 'statementType' }} Statement #{{ statementNumber }}</h1>
+  <section>
+    <h1 *ngIf="statement">{{ statement.type | toLabel: 'statementType' }} Statement #{{ statementNumber }}</h1>
+    <waterfall-version-selector [ngStyle]="{ display: statement.type !== 'producer' ? 'none' : 'initial' }" *ngIf="statement.status === 'draft'" simulator [initialVersion]="versionId"></waterfall-version-selector>
+  </section>
   <article>
     <span>
       <mat-icon svgIcon="movie"></mat-icon><span matLine><strong>Movie: </strong>{{ shell.movie.title.international }}</span>

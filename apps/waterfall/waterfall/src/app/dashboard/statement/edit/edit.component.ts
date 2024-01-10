@@ -45,7 +45,6 @@ export class StatementEditComponent implements OnInit, OnDestroy, StartementForm
     private expenseService: ExpenseService
   ) {
     this.dynTitle.setPageTitle(this.shell.movie.title.international, 'Edit Statement');
-    this.shell.simulateWaterfall();
 
     this.form = new StatementForm();
   }

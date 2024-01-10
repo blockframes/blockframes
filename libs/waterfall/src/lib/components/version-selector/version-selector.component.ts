@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -9,6 +9,7 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 import { VersionEditorComponent } from '../version-editor/version-editor.component';
 import { WaterfallService } from '../../waterfall.service';
 import { firstValueFrom } from 'rxjs';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
   selector: 'waterfall-version-selector',
@@ -22,6 +23,8 @@ export class VersionSelectorComponent implements OnInit {
   public canBypassRules$ = this.shell.canBypassRules$;
   public versionId: string;
   public lockedVersionId = this.shell.lockedVersionId;
+  @Input() @boolean simulator = false;
+  @Input() set initialVersion(value: string) { this.switchToVersion(value); }
   @Output() versionChanged = new EventEmitter<string>();
 
   constructor(
@@ -42,6 +45,8 @@ export class VersionSelectorComponent implements OnInit {
     this.snackbar.open(`Switched to version "${versionName}"`, 'close', { duration: 5000 });
     this.shell.setVersionId(this.versionId);
     this.versionChanged.emit(this.versionId);
+
+    if (this.simulator) this.shell.simulateWaterfall();
   }
 
   public edit(versionId: string) {
@@ -55,7 +60,11 @@ export class VersionSelectorComponent implements OnInit {
         onConfirm: async (version: Version, rightholderIds: string[] = []) => {
           const versions = this.shell.waterfall.versions.map(v => v.id === version.id ? version : v);
           if (version.default) versions.filter(v => v.id !== version.id).forEach(v => v.default = false);
-          const rightholders = this.shell.waterfall.rightholders.map(r => rightholderIds.includes(r.id) ? { ...r, lockedVersionId: version.id } : r);
+          const rightholders = this.shell.waterfall.rightholders.map(r => {
+            if (rightholderIds.includes(r.id)) return { ...r, lockedVersionId: version.id };
+            if (r.lockedVersionId === version.id) return { ...r, lockedVersionId: null };
+            return r;
+          });
           await this.waterfallService.update(this.shell.waterfall.id, { id: this.shell.waterfall.id, versions, rightholders });
         }
       })

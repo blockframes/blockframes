@@ -7,6 +7,7 @@ import { StatementHeaderComponent } from './statement-header.component';
 
 // Blockframes
 import { JoinPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { VersionSelectorModule } from '../version-selector/version-selector.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -18,6 +19,7 @@ import { MatIconModule } from '@angular/material/icon';
 
     ToLabelModule,
     JoinPipeModule,
+    VersionSelectorModule,
 
     // Material
     MatIconModule,
