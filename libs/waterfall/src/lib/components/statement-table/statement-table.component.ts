@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output, Pipe, PipeTransform } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output, Pipe, PipeTransform, ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import {
@@ -55,6 +55,7 @@ export class StatementTableComponent {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private statementService: StatementService,
+    private cdr: ChangeDetectorRef,
   ) { }
 
   payment(statement: Statement) {
@@ -81,7 +82,10 @@ export class StatementTableComponent {
           await this.statementService.update(statement, { params: { waterfallId: this.waterfall.id } });
           await this.shell.refreshWaterfall();
 
+          this.statements = this.statements.map(s => s.id === statement.id ? statement : s);
+
           this.snackBar.open('Statement marked as paid !', 'close', { duration: 5000 });
+          this.cdr.markForCheck();
         }
       })
     });
