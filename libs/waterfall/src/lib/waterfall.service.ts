@@ -130,8 +130,15 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
 
   public async refreshWaterfall(data: WaterfallData, versionId: string) {
     const version = data.waterfall.versions.find(v => v.id === versionId);
-    await this.removeVersion(data, versionId);
-    return this._initWaterfall(data, { id: version.id, name: version.name, description: version.description, standalone: version.standalone });
+    await this.removeVersion(data, versionId, !version.default);
+    const refreshedVersion = createVersion({
+      id: version.id,
+      name: version.name,
+      description: version.description,
+      standalone: version.standalone,
+      default: version.default
+    });
+    return this._initWaterfall(data, refreshedVersion);
   }
 
   /**
@@ -172,10 +179,11 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     return version;
   }
 
-  public async removeVersion(data: WaterfallData, versionId: string) {
+  public async removeVersion(data: WaterfallData, versionId: string, resetDefault = true) {
     const blockIds = data.waterfall.versions.find(v => v.id === versionId).blockIds;
     data.waterfall.versions = data.waterfall.versions.filter(v => v.id !== versionId);
-    if (data.waterfall.versions.length && !data.waterfall.versions.some(v => v.default)) data.waterfall.versions[0].default = true;
+    const shouldResetDefault = resetDefault && data.waterfall.versions.length && !data.waterfall.versions.some(v => v.default)
+    if (shouldResetDefault) data.waterfall.versions[0].default = true;
     await this.update(data.waterfall);
     await this.blockService.remove(blockIds, { params: { waterfallId: data.waterfall.id } });
     return data.waterfall;
