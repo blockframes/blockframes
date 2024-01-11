@@ -22,6 +22,11 @@ const routes: Routes = [{
       data: { animation: 0 }
     },
     {
+      path: 'dashboards',
+      loadChildren: () => import('../dashboard/dashboard.module').then(m => m.DashboardModule),
+      data: { animation: 1 }
+    },
+    {
       path: 'rightholders',
       loadChildren: () => import('../rightholders/rightholders.module').then(m => m.RightholdersModule),
       data: { animation: 2 }
@@ -70,10 +75,6 @@ const routes: Routes = [{
       path: 'sales',
       loadChildren: () => import('../sales/sales.module').then(m => m.SalesModule),
       data: { animation: 11 }
-    },
-    {
-      path: 'dashboards',
-      loadChildren: () => import('../dashboard/dashboard.module').then(m => m.DashboardModule)
     },
     {
       path: 'rightholders/:rightholderId',
