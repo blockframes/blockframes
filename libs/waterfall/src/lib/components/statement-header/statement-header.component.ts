@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnChanges } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnChanges, EventEmitter, Output } from '@angular/core';
 
 import {
   Statement,
@@ -8,8 +8,7 @@ import {
   filterStatements,
   WaterfallContract,
   getStatementRightholderTag,
-  isProducerStatement,
-  getDefaultVersionId
+  isProducerStatement
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 
@@ -22,6 +21,7 @@ import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.co
 export class StatementHeaderComponent implements OnChanges {
   @Input() statement: Statement;
   @Input() sources: WaterfallSource[] = [];
+  @Output() versionChanged = new EventEmitter<string>();
   public rightholderTag: string;
   public rightholderName: string;
   public statementNumber: number;
@@ -41,8 +41,8 @@ export class StatementHeaderComponent implements OnChanges {
     const rightholder = this.shell.waterfall.rightholders.find(r => r.id === this.statement[rightholderKey]);
     this.rightholderName = rightholder.name;
 
-    // Set version to default, unless a locked version is found for an outgoing statement
-    this.versionId = this.statement.versionId || getDefaultVersionId(this.shell.waterfall);
+    // Set version to the one of the statement if any and unless a locked version is found for an outgoing statement
+    this.versionId = this.statement.versionId;
     if (isProducerStatement(this.statement)) {
       if (rightholder.lockedVersionId && this.shell.waterfall.versions.some(v => v.id === rightholder.lockedVersionId)) {
         this.versionId = rightholder.lockedVersionId;

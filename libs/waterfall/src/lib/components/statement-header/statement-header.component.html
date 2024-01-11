@@ -9,6 +9,7 @@
       [ngStyle]="{ display: statement.type !== 'producer' || statement.status !== 'draft' ? 'none' : 'initial' }"
       simulator
       [initialVersion]="versionId"
+      (versionChanged)="versionChanged.emit($event)"
     ></waterfall-version-selector>
   </section>
   <article>

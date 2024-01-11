@@ -24,7 +24,7 @@ export class VersionSelectorComponent implements OnInit {
   public versionId: string;
   public lockedVersionId = this.shell.lockedVersionId;
   @Input() @boolean simulator = false;
-  @Input() set initialVersion(value: string) { this.switchToVersion(value); }
+  @Input() set initialVersion(value: string) { if (value) this.switchToVersion(value); }
   @Output() versionChanged = new EventEmitter<string>();
 
   constructor(

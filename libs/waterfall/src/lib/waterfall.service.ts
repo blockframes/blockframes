@@ -163,7 +163,7 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
    * @returns 
    */
   public simulateWaterfall(data: WaterfallData, versionId?: string, date?: Date) {
-    const version = createVersion({ id: 'simulation', name: 'Simulation' });
+    const version = createVersion({ id: 'simulation', name: 'Simulation', default: false });
     const blocks = buildBlocks(data, this.authService.uid, versionId, { simulation: true });
     const simulation = buildWaterfall('simulated-waterfall', version, blocks);
     return waterfallToDate(simulation, date);

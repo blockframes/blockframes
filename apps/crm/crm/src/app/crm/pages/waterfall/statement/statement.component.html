@@ -5,8 +5,7 @@
 </ng-container>
 <ng-template #showStatement>
   <ng-container *ngIf="statement">
-    <waterfall-statement-header *ngIf="sources" [statement]="statement" [sources]="sources"></waterfall-statement-header>
-    <waterfall-version-selector (versionChanged)="versionChanged()"></waterfall-version-selector>
+    <waterfall-statement-header *ngIf="sources" [statement]="statement" [sources]="sources" (versionChanged)="versionChanged()"></waterfall-statement-header>
 
     <ul *ngIf="waterfall$ | async as waterfall">
       <li *ngIf="statement.type !== 'directSales'"><strong>Receiver :</strong> {{ statement.receiverId | rightholderName: waterfall }}</li>
