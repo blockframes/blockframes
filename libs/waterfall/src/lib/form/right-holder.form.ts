@@ -1,7 +1,7 @@
 
 import { FormControl } from '@angular/forms';
 
-import { RightholderRole } from '@blockframes/model';
+import { RightholderRole, createWaterfallRightholder } from '@blockframes/model';
 import { FormEntity } from '@blockframes/utils/form';
 
 
@@ -9,7 +9,7 @@ export interface WaterfallRightholderFormValue {
   id: string;
   name: string;
   roles: RightholderRole[];
-  lockedVersionId: string;
+  lockedVersionId?: string;
 }
 
 function createWaterfallRightholderFormControl(rightholder?: Partial<WaterfallRightholderFormValue>) {
@@ -26,5 +26,11 @@ type WaterfallRightholderFormControl = ReturnType<typeof createWaterfallRighthol
 export class WaterfallRightholderForm extends FormEntity<WaterfallRightholderFormControl> {
   constructor(rightholder?: Partial<WaterfallRightholderFormValue>) {
     super(createWaterfallRightholderFormControl(rightholder))
+  }
+
+  setValue(_rightholder?: Partial<WaterfallRightholderFormValue>) {
+    const rightholder = createWaterfallRightholder(_rightholder);
+    if (!rightholder.lockedVersionId) rightholder.lockedVersionId = '';
+    super.setValue(rightholder);
   }
 }

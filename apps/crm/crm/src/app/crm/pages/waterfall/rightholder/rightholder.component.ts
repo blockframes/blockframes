@@ -17,7 +17,7 @@ export class RightholderComponent {
 
   public rightholder$ = combineLatest([this.route.params.pipe(pluck('rightholderId')), this.shell.waterfall$]).pipe(
     map(([rightholderId, waterfall]) => waterfall.rightholders.find(r => r.id === rightholderId)),
-    tap(rightholder => this.rightholderForm.setValue({ ...rightholder, lockedVersionId: rightholder.lockedVersionId ?? '' }))
+    tap(rightholder => this.rightholderForm.setValue(rightholder))
   );
 
   public rights$: Observable<(Right & { revenue: PricePerCurrency })[]> = combineLatest([this.rightholder$, this.shell.state$, this.shell.rights$]).pipe(
