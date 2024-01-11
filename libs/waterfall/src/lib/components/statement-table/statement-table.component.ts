@@ -63,7 +63,6 @@ export class StatementTableComponent {
     const versionId = statement.versionId || getDefaultVersionId(this.waterfall);
     if (versionId) this.shell.setVersionId(versionId);
 
-    // TODO #9520 on which version(s) should the payments be created ?
     this.dialog.open(StatementPaymentComponent, {
       data: createModalData({
         statement,
