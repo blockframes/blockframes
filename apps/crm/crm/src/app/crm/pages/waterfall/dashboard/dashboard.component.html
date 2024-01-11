@@ -1,27 +1,32 @@
-<ng-container *ngIf="waterfall && version">
-  <h3>Dashboard - {{ version.name }}</h3>
-  <section>
-    <article>
-      <mat-form-field appearance="fill">
-        <mat-label>Statements</mat-label>
-        <mat-select (selectionChange)="selectBlock($event.value)" [(value)]="currentBlock">
-          <mat-option *ngFor="let block of statementBlocks" [value]="block.id">
-            {{ block.name }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <h3 *ngIf="currentState">
-        Total film revenue : <price-per-currency [price]="getTotalIncomes(currentState.incomes)"></price-per-currency>
-      </h3>
-    </article>
-    <apx-chart *ngIf="options.series.length"
-      [chart]="{ type: 'bar', stacked: true }" 
-      [series]="options.series"
-      [xaxis]="options.xAxis"
-      [tooltip]="{ y: formatter }">
-    </apx-chart>
-  </section>
+<ng-container *ngIf="waterfall">
+  <header>
+    <div>
+      <h3>Dashboard</h3>
+      <waterfall-version-selector></waterfall-version-selector>
+    </div>
+    <section>
+      <article>
+        <mat-form-field appearance="fill">
+          <mat-label>Statements</mat-label>
+          <mat-select (selectionChange)="selectBlock($event.value)" [(value)]="currentBlock">
+            <mat-option *ngFor="let block of statementBlocks" [value]="block.id">
+              {{ block.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+  
+        <h3 *ngIf="currentState">
+          Total film revenue : <price-per-currency [price]="getTotalIncomes(currentState.incomes)"></price-per-currency>
+        </h3>
+      </article>
+      <apx-chart *ngIf="options.series.length"
+        [chart]="{ type: 'bar', stacked: true, height: 300 }" 
+        [series]="options.series"
+        [xaxis]="options.xAxis"
+        [tooltip]="{ y: formatter }">
+      </apx-chart>
+    </section>
+  </header>
 
   <ng-container *ngIf="currentState">
     <h3>Rightholders summary</h3>

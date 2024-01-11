@@ -22,11 +22,6 @@ const routes: Routes = [{
       data: { animation: 0 }
     },
     {
-      path: 'dashboards',
-      loadChildren: () => import('../dashboards/dashboards.module').then(m => m.DashboardsModule),
-      data: { animation: 1 }
-    },
-    {
       path: 'rightholders',
       loadChildren: () => import('../rightholders/rightholders.module').then(m => m.RightholdersModule),
       data: { animation: 2 }
@@ -77,7 +72,7 @@ const routes: Routes = [{
       data: { animation: 11 }
     },
     {
-      path: 'dashboards/:versionId',
+      path: 'dashboards',
       loadChildren: () => import('../dashboard/dashboard.module').then(m => m.DashboardModule)
     },
     {

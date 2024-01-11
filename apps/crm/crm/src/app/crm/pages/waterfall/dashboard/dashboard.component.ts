@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import {
   Block,
   History,
@@ -26,7 +26,7 @@ import {
 import { formatPair } from '@blockframes/ui/price-per-currency/price-per-currency.component';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { WaterfallState } from '@blockframes/waterfall/waterfall.service';
-import { firstValueFrom } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'crm-dashboard',
@@ -34,7 +34,7 @@ import { firstValueFrom } from 'rxjs';
   styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   public waterfall: Waterfall;
   public version: Version;
   public statementBlocks: Block[];
@@ -50,6 +50,7 @@ export class DashboardComponent implements OnInit {
   public producer: WaterfallRightholder;
   public options = { xAxis: { categories: [] }, series: [] };
   public formatter = { formatter: (value: number) => `${value} ${movieCurrencies[mainCurrency]}` };
+  public sub: Subscription;
 
   public columns: Record<string, string> = {
     contract: 'Contract',
@@ -60,41 +61,44 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
-    private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
     private router: Router
   ) { }
 
   async ngOnInit() {
-    this.shell.setVersionId(this.route.snapshot.paramMap.get('versionId'));
     this.shell.setDate(undefined);
+    this.sub = this.shell.versionId$.subscribe(async _ => {
+      this.waterfall = this.shell.waterfall;
+      this.statements = await this.shell.statements();
+      this.contracts = await this.shell.contracts();
+      this.rights = await this.shell.rights();
+      this.incomes = await this.shell.incomes();
+      const versionBlocks = await firstValueFrom(this.shell.versionBlocks$);
 
-    this.waterfall = this.shell.waterfall;
-    this.statements = await this.shell.statements();
-    this.contracts = await this.shell.contracts();
-    this.rights = await this.shell.rights();
-    this.incomes = await this.shell.incomes();
-    const versionBlocks = await firstValueFrom(this.shell.versionBlocks$);
-
-    this.snackBar.open('Waterfall is loading. Please wait', 'close', { duration: 5000 });
-    this.state = await firstValueFrom(this.shell.state$);
-    this.history = this.state.waterfall.history;
-    this.version = this.state.version;
-    this.statementBlocks = versionBlocks.filter(b => this.statements.find(s => s.duration.to.getTime() === b.timestamp));
-    if (this.statementBlocks.length) {
-      this.currentBlock = this.statementBlocks[this.statementBlocks.length - 1].id;
-      this.selectBlock(this.currentBlock);
-      if (!this.producer) {
-        this.snackBar.open('No producer found for this waterfall. Please set rightholders roles.', 'close', { duration: 5000 });
+      this.snackBar.open('Waterfall is loading. Please wait', 'close', { duration: 5000 });
+      this.state = await firstValueFrom(this.shell.state$);
+      this.history = this.state.waterfall.history;
+      this.version = this.state.version;
+      this.statementBlocks = versionBlocks.filter(b => this.statements.find(s => s.duration.to.getTime() === b.timestamp));
+      if (this.statementBlocks.length) {
+        this.currentBlock = this.statementBlocks[this.statementBlocks.length - 1].id;
+        this.selectBlock(this.currentBlock);
+        if (!this.producer) {
+          this.snackBar.open('No producer found for this waterfall. Please set rightholders roles.', 'close', { duration: 5000 });
+        } else {
+          this.snackBar.open('Waterfall loaded !', 'close', { duration: 5000 });
+        }
       } else {
-        this.snackBar.open('Waterfall loaded !', 'close', { duration: 5000 });
+        this.snackBar.open('No statements found for this waterfall', 'close', { duration: 5000 });
       }
-    } else {
-      this.snackBar.open('No statements found for this waterfall', 'close', { duration: 5000 });
-    }
 
-    this.cdRef.markForCheck();
+      this.cdRef.markForCheck();
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   public selectBlock(blockId: string) {

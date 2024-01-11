@@ -23,7 +23,7 @@ export class TitleViewComponent {
     },
     {
       path: 'dashboards',
-      label: 'Dashboards',
+      label: 'Dashboard',
     },
     {
       path: 'rightholders',
