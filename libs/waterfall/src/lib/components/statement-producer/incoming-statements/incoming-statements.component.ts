@@ -3,6 +3,7 @@ import {
   Statement,
   WaterfallContract,
   WaterfallRightholder,
+  getDefaultVersionId,
   getOutgoingStatementPrerequists,
   isProducerStatement,
   sortStatements
@@ -49,7 +50,7 @@ export class IncomingStatementComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     const rightholder = this.shell.waterfall.rightholders.find(r => r.id === this.statement.receiverId);
     const hasLockedVersion = rightholder.lockedVersionId && this.shell.waterfall.versions.some(v => v.id === rightholder.lockedVersionId)
-    const versionId = hasLockedVersion ? rightholder.lockedVersionId : this.statement.versionId;
+    const versionId = hasLockedVersion ? rightholder.lockedVersionId : this.statement.versionId || getDefaultVersionId(this.shell.waterfall);
     const statements = await this.shell.statements(versionId);
     const contracts = await this.shell.contracts();
     const rights = await this.shell.rights();

@@ -216,6 +216,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     const incomes = await this.shell.incomes();
 
     const impactedStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
+      .filter(s => !s.duplicatedFrom) // Skip already duplicated statements
       .filter(s => s.payments.right.some(r => r.incomeIds.some(id => incomeIds.includes(id))));
 
     // Rewrite right payments of impacted statements
@@ -252,8 +253,6 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
 
       return updatedStatement;
     });
-
-    // TODO #9520 check if statement is already duplicated in this version (if two financiers are)
 
     const statementsToDuplicate = statementsToUpdate.map(s => (createStatement({
       ...s,
