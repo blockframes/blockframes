@@ -82,7 +82,7 @@ export class StatementTableComponent {
           }));
 
           await this.statementService.update(statement, { params: { waterfallId: this.waterfall.id } });
-          await this.shell.refreshWaterfall(); // TODO #9520 refresh all versions ?
+          await this.shell.refreshAllWaterfalls();
 
           this.statements = this.statements.map(s => s.id === statement.id ? statement : s);
 

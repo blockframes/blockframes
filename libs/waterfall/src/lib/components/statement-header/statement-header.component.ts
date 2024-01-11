@@ -35,7 +35,7 @@ export class StatementHeaderComponent implements OnChanges {
   ) { }
 
   async ngOnChanges() {
-    if (!this.statements.length) this.statements = await this.shell.statements();
+    if (!this.statements.length) this.statements = await this.shell.statements(this.statement.versionId || this.shell.versionId$.value);
     if (!this.contract && !!this.statement.contractId) this.contract = (await this.shell.contracts([this.statement.contractId]))[0];
     const rightholderKey = this.statement.type === 'producer' ? 'receiverId' : 'senderId';
     const rightholder = this.shell.waterfall.rightholders.find(r => r.id === this.statement[rightholderKey]);

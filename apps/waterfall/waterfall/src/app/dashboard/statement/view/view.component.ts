@@ -8,6 +8,7 @@ import {
   createIncomePayment,
   createRightPayment,
   createRightholderPayment,
+  createStatement,
   generatePayments,
   getAssociatedRights,
   getDefaultVersionId,
@@ -23,7 +24,7 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
 import { StatementForm } from '@blockframes/waterfall/form/statement.form';
 import { StartementFormGuardedComponent } from '@blockframes/waterfall/guards/statement-form.guard';
 import { StatementService } from '@blockframes/waterfall/statement.service';
-import { Subscription, combineLatest, debounceTime, filter, firstValueFrom, map, pluck, tap } from 'rxjs';
+import { Subscription, debounceTime, filter, firstValueFrom, pluck, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'waterfall-statement-view',
@@ -38,8 +39,8 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     tap(_ => this.form.reset()) // Statement Id has changed, reset form
   );
 
-  public statement$ = combineLatest([this.statementId, this.shell.statements$]).pipe(
-    map(([statementId, statements]) => statements.find(s => s.id === statementId)),
+  public statement$ = this.statementId.pipe(
+    switchMap((statementId: string) => this.statementService.valueChanges(statementId, { waterfallId: this.waterfall.id })),
     filter(statement => !!statement),
     tap(statement => {
       if (this.shell.setDate(statement.duration.to)) {
@@ -143,10 +144,16 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
 
     if (reported) {
 
-      if (isProducerStatement(statement)) await this.updateParentStatements(statement);
+      if (isProducerStatement(statement)) {
+        if (statement.versionId !== getDefaultVersionId(this.shell.waterfall)) {
+          await this.duplicateParentStatements(statement);
+        } else {
+          await this.updateParentStatements(statement);
+        }
+      }
 
-      // Statement is reported, actual waterfall is refreshed
-      await this.shell.refreshWaterfall();
+      // Statement is reported, actual waterfalls are refreshed
+      await this.shell.refreshAllWaterfalls();
       this.snackBar.open('Statement reported !', 'close', { duration: 5000 });
     } else {
       this.snackBar.open('Statement updated !', 'close', { duration: 5000 });
@@ -183,17 +190,80 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
       const rightIds = unique(sources.map(s => getAssociatedRights(s.id, statementRights, simulation.waterfall.state)).flat().map(r => r.id));
       const rights = statementRights.filter(r => rightIds.includes(r.id));
 
-      const updatedStatements = generatePayments(impactedStatement, simulation.waterfall.state, rights, incomes, sources);
-      updatedStatements.payments.right = impactedStatement.payments.right.map(p => {
+      const updatedStatement = generatePayments(impactedStatement, simulation.waterfall.state, rights, incomes, sources);
+      updatedStatement.payments.right = impactedStatement.payments.right.map(p => {
         const existingPaymentInfo = existingPaymentInfos.find(info => info.to === p.to);
         const payment = createRightPayment({ ...p, id: existingPaymentInfo.id, status: existingPaymentInfo.status });
         if (existingPaymentInfo.date) payment.date = existingPaymentInfo.date;
         return payment;
       });
 
-      return updatedStatements;
+      return updatedStatement;
     });
     return this.statementService.update(statementsToUpdate, { params: { waterfallId: this.waterfall.id } });
+  }
+
+  /**
+   * If outgoing statement was not created with default version, parents statements should be duplicated
+   * to integrate changes made to declared incomes and expenses
+   * @param statement 
+   */
+  private async duplicateParentStatements(statement: Statement) {
+    const incomeIds = statement.payments.right.map(payment => payment.incomeIds).flat();
+    const statements = await this.shell.statements();
+    const simulation = await firstValueFrom(this.shell.simulation$);
+    const _rights = await this.shell.rights();
+    const incomes = await this.shell.incomes();
+
+    const impactedStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
+      .filter(s => s.payments.right.some(r => r.incomeIds.some(id => incomeIds.includes(id))));
+
+    // Rewrite right payments of impacted statements
+    const statementsToUpdate = impactedStatements.map(impactedStatement => {
+      // Reset right payments
+      const existingRightPaymentInfos = impactedStatement.payments.right.map(p => ({ id: p.id, to: p.to, date: p.date, status: p.status }));
+      impactedStatement.payments.right = [];
+      // Reset rightholder payment
+      const existingRightholderPaymentInfo = isDistributorStatement(impactedStatement) ? {
+        id: impactedStatement.payments.rightholder.id,
+        date: impactedStatement.payments.rightholder.date,
+        status: impactedStatement.payments.rightholder.status
+      } : undefined;
+      delete impactedStatement.payments.rightholder;
+
+      const sources = getStatementSources(impactedStatement, this.waterfall.sources, incomes, _rights, simulation.waterfall.state);
+      const statementRights = getStatementRights(impactedStatement, _rights);
+      const rightIds = unique(sources.map(s => getAssociatedRights(s.id, statementRights, simulation.waterfall.state)).flat().map(r => r.id));
+      const rights = statementRights.filter(r => rightIds.includes(r.id));
+
+      const updatedStatement = generatePayments(impactedStatement, simulation.waterfall.state, rights, incomes, sources);
+      updatedStatement.payments.right = impactedStatement.payments.right.map(p => {
+        const existingPaymentInfo = existingRightPaymentInfos.find(info => info.to === p.to);
+        const payment = createRightPayment({ ...p, id: existingPaymentInfo.id, status: existingPaymentInfo.status });
+        if (existingPaymentInfo.date) payment.date = existingPaymentInfo.date;
+        return payment;
+      });
+
+      if (isDistributorStatement(impactedStatement)) {
+        const existingPaymentInfo = existingRightholderPaymentInfo;
+        updatedStatement.payments.rightholder = createRightholderPayment({ ...impactedStatement.payments.rightholder, id: existingPaymentInfo.id, status: existingPaymentInfo.status });
+        if (existingPaymentInfo.date) updatedStatement.payments.rightholder.date = existingPaymentInfo.date;
+      }
+
+      return updatedStatement;
+    });
+
+    // TODO #9520 check if statement is already duplicated in this version (if two financiers are)
+
+    const statementsToDuplicate = statementsToUpdate.map(s => (createStatement({
+      ...s,
+      id: this.statementService.createId(),
+      versionId: this.shell.versionId$.value,
+      duplicatedFrom: s.id,
+      // TODO #9520 test overrides & need remove ?
+    })));
+
+    return this.statementService.add(statementsToDuplicate, { params: { waterfallId: this.waterfall.id } });
   }
 
 }

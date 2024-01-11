@@ -265,7 +265,7 @@ export class StatementComponent implements OnInit {
     await Promise.all(promises);
 
     this.snackBar.open('Refreshing waterfall... Please wait', 'close', { duration: 5000 });
-    await this.shell.refreshWaterfall();
+    await this.shell.refreshAllWaterfalls();
     this.snackBar.open('Waterfall refreshed!', 'close', { duration: 5000 });
     this.cdRef.markForCheck();
   }

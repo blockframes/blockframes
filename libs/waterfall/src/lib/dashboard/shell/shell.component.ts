@@ -361,13 +361,24 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     return this.waterfallService.duplicateVersion(waterfall, blocks, versionIdToDuplicate, version);
   }
 
-  async refreshWaterfall() {
+  async refreshAllWaterfalls() {
+    const canBypassRules = await firstValueFrom(this.canBypassRules$);
+    if (!canBypassRules) throw new Error('You are not allowed to refresh waterfalls');
+    this.isRefreshing$.next(true);
+    for (const version of this.waterfall.versions) {
+      this.setVersionId(version.id);
+      await this.refreshWaterfall(false);
+    }
+    this.isRefreshing$.next(false);
+  }
+
+  async refreshWaterfall(markAsRefreshing = true) {
     const canBypassRules = await firstValueFrom(this.canBypassRules$);
     if (!canBypassRules) throw new Error('You are not allowed to refresh waterfall');
-    this.isRefreshing$.next(true);
+    if (markAsRefreshing) this.isRefreshing$.next(true);
     const data = await this.loadData();
     const waterfall = this.versionId$.value ? await this.waterfallService.refreshWaterfall(data, this.versionId$.value) : await this.initWaterfall();
-    this.isRefreshing$.next(false);
+    if (markAsRefreshing) this.isRefreshing$.next(false);
     return waterfall;
   }
 
