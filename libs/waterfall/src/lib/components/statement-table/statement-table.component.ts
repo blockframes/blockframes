@@ -1,10 +1,11 @@
-import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output, Pipe, PipeTransform } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output, Pipe, PipeTransform, ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import {
   Income,
   Statement,
   Waterfall,
+  getDefaultVersion,
   getDefaultVersionId,
   getIncomesSources,
   isDistributorStatement,
@@ -55,10 +56,11 @@ export class StatementTableComponent {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private statementService: StatementService,
+    private cdr: ChangeDetectorRef,
   ) { }
 
   payment(statement: Statement) {
-    const versionId = getDefaultVersionId(this.waterfall); // TODO #9520 versionId via statement.versionId ?
+    const versionId = statement.versionId || getDefaultVersionId(this.waterfall);
     if (versionId) this.shell.setVersionId(versionId);
 
     this.dialog.open(StatementPaymentComponent, {
@@ -79,9 +81,12 @@ export class StatementTableComponent {
           }));
 
           await this.statementService.update(statement, { params: { waterfallId: this.waterfall.id } });
-          await this.shell.refreshWaterfall();
+          await this.shell.refreshAllWaterfalls();
+
+          this.statements = this.statements.map(s => s.id === statement.id ? statement : s);
 
           this.snackBar.open('Statement marked as paid !', 'close', { duration: 5000 });
+          this.cdr.markForCheck();
         }
       })
     });
@@ -93,5 +98,13 @@ export class IncomesSourcesPipe implements PipeTransform {
   transform(incomeIds: string[], _incomes: Income[], waterfall: Waterfall) {
     const incomes = _incomes?.filter(i => incomeIds.includes(i.id)) || [];
     return getIncomesSources(incomes, waterfall.sources);
+  }
+}
+
+@Pipe({ name: 'versionName' })
+export class VersionNamePipe implements PipeTransform {
+  transform(versionId: string, waterfall: Waterfall) {
+    if (!versionId) return getDefaultVersion(waterfall)?.name || '--';
+    return waterfall.versions.find(v => v.id === versionId)?.name || '--';
   }
 }

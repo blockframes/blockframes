@@ -47,7 +47,7 @@ export function createVersion(params: Partial<Version> = {}) {
   return version;
 }
 
-function getDefaultVersion(waterfall: Waterfall) {
+export function getDefaultVersion(waterfall: Waterfall) {
   return waterfall.versions.find(v => v.default);
 }
 

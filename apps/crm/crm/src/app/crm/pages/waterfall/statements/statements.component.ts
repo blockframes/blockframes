@@ -17,6 +17,7 @@ export class StatementsComponent {
   public columns: Record<string, string> = {
     id: 'Id',
     type: 'Type',
+    versionId: 'Version',
     contract: 'Contract',
     sender: 'Sender',
     receiver: 'Receiver',

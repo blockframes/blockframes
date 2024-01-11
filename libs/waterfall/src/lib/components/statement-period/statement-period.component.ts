@@ -73,6 +73,13 @@ export class StatementPeriodComponent implements OnInit, OnChanges, OnDestroy {
       }
     });
     this.subs.push(durationSub);
+
+    const versionSub = this.shell.versionId$.subscribe(_ => {
+      this.statements = [];
+      this.ngOnChanges();
+    });
+
+    this.subs.push(versionSub);
   }
 
   ngOnDestroy() {
@@ -85,9 +92,11 @@ export class StatementPeriodComponent implements OnInit, OnChanges, OnDestroy {
     if (!this.statements.length) this.statements = await this.shell.statements();
     const filteredStatements = filterStatements(this.statement.type, [this.statement.senderId, this.statement.receiverId], this.statement.contractId, this.statements);
     const sortedStatements = sortStatements(filteredStatements);
-    const current = sortedStatements.find(s => s.id === this.statement.id).number;
-    if (current > 1) this.previousStatementId = sortedStatements.find(s => s.number === current - 1).id;
-    if (current < sortedStatements.length) this.nextStatementId = sortedStatements.find(s => s.number === current + 1).id;
+    const current = sortedStatements.find(s => s.id === this.statement.id);
+    if (!current) return;
+    const number = current.number;
+    if (number > 1) this.previousStatementId = sortedStatements.find(s => s.number === number - 1).id;
+    if (number < sortedStatements.length) this.nextStatementId = sortedStatements.find(s => s.number === number + 1).id;
 
     const currentDuration = this.statement.duration;
     if (currentDuration.from && currentDuration.to) {

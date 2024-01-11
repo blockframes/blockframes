@@ -109,7 +109,8 @@ export interface Statement {
   reported?: Date;
   incomeIds: string[];
   expenseIds?: string[];
-  // TODO #9520 versionId is set from reveiverId LockedversionId if any during statement creation
+  versionId: string; // Version used to create this statement
+  duplicatedFrom: string; // Id of the statement this one was duplicated from
   payments: {
     income?: IncomePayment[];
     right: RightPayment[]
@@ -164,6 +165,8 @@ function createStatementBase(params: Partial<Statement> = {}): Statement {
     senderId: '',
     receiverId: '',
     incomeIds: params.incomeIds || [],
+    versionId: '',
+    duplicatedFrom: '',
     payments: {
       right: params.payments?.right ? params.payments.right.map(createRightPayment) : []
     },

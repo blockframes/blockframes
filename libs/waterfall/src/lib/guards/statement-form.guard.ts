@@ -33,8 +33,7 @@ export class StatementFormGuard<T extends StartementFormGuardedComponent> implem
     if (!statementId) this.router.parseUrl(`/c/o/dashboard/title/${waterfallId}/statements`);
 
     return this.service.valueChanges(statementId, { waterfallId }).pipe(
-      map(statement => statement.type),
-      map(type => type !== 'producer' || isViewPage || this.router.parseUrl(`/c/o/dashboard/title/${waterfallId}/statement/${statementId}`)),
+      map(statement => (statement.type !== 'producer' && statement.status === 'draft') || isViewPage || this.router.parseUrl(`/c/o/dashboard/title/${waterfallId}/statement/${statementId}`)),
     );
   }
 

@@ -1,7 +1,7 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Subscription, firstValueFrom, startWith } from 'rxjs';
+import { Subscription, combineLatest, firstValueFrom, startWith } from 'rxjs';
 import { add, differenceInMonths, isLastDayOfMonth, lastDayOfMonth } from 'date-fns';
 import { Router } from '@angular/router';
 
@@ -115,20 +115,23 @@ export class StatementsComponent implements OnInit, OnDestroy {
 
     this.changeType('mainDistributor');
 
-    this.sub = this.rightholderControl.valueChanges.pipe(startWith(this.rightholderControl.value)).subscribe(value => {
+    this.sub = combineLatest([
+      this.rightholderControl.valueChanges.pipe(startWith(this.rightholderControl.value)),
+      this.shell.statements$
+    ]).subscribe(([value, statements]) => {
 
       if (this.selected !== 'directSales') {
         this.rightholderContracts = getContractsWith([this.statementSender.id, value], this.contracts, this.currentStateDate)
           .filter(c => statementsRolesMapping[this.selected].includes(c.type))
           .filter(c => this.rights.some(r => r.contractId === c.id))
           .map(c => {
-            const statements = filterStatements(this.selected, [this.statementSender.id, value], c.id, this.statements);
-            return { ...c, statements: sortStatements(statements) };
+            const stms = filterStatements(this.selected, [this.statementSender.id, value], c.id, statements);
+            return { ...c, statements: sortStatements(stms) };
           })
           .filter(c => c.statements.length > 0);
       } else {
-        const statements = filterStatements(this.selected, [this.statementSender.id, value], undefined, this.statements);
-        this.rightholderContracts = [{ id: '', statements: sortStatements(statements) }];
+        const stms = filterStatements(this.selected, [this.statementSender.id, value], undefined, statements);
+        this.rightholderContracts = [{ id: '', statements: sortStatements(stms) }];
       }
 
       this.haveStatements = this.rightholderContracts.some(c => c.statements.length > 0);

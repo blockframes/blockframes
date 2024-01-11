@@ -8,6 +8,9 @@
     <bf-table [source]="waterfall.versions" useFilter pagination="50">
       <ng-template colRef="id" label="Id" let-id sort defaultSort>
         {{ id }}
+        <button mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
+          <mat-icon svgIcon="file_copy"></mat-icon>
+        </button>
       </ng-template>
       <ng-template colRef="name" label="Name" let-name sort>
         {{ name }}
@@ -40,9 +43,6 @@
         <button mat-icon-button (click)="displayWaterfall(version.id)">
           <mat-icon svgIcon="star" matTooltip="Show waterfall"></mat-icon>
         </button>
-        <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'dashboards', version.id]" (click)="$event.stopPropagation()">
-          <mat-icon svgIcon="launch" matTooltip="Go to dashboard"></mat-icon>
-        </a>
       </ng-template>
     </bf-table>
   </ng-container>

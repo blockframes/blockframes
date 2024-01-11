@@ -1,5 +1,7 @@
 import { CallableContext } from 'firebase-functions/lib/common/providers/https';
 import {
+  Expense,
+  Income,
   PublicUser,
   Right,
   Statement,
@@ -8,6 +10,7 @@ import {
   WaterfallDocument,
   WaterfallPermissions,
   convertDocumentTo,
+  getDefaultVersionId,
   isContract,
   isDirectSalesStatement,
   isDistributorStatement
@@ -111,7 +114,7 @@ export async function onWaterfallDocumentDelete(docSnapshot: BlockframesSnapshot
   return true;
 }
 
-export async function onWaterfallStatementUpdate(change: BlockframesChange<Statement>) {
+export async function onWaterfallStatementUpdate(change: BlockframesChange<Statement>, context: EventContext) {
   const before = change.before.data();
   const after = change.after.data();
 
@@ -123,32 +126,77 @@ export async function onWaterfallStatementUpdate(change: BlockframesChange<State
   const batch = db.batch();
 
   if (isDistributorStatement(after) || isDirectSalesStatement(after)) {
-    // If incomeId is removed from distributor or direct sales statement document, we also remove income document
-    const incomeRemovedIds = difference(before.incomeIds, after.incomeIds);
-    const incomes = await Promise.all(incomeRemovedIds.map(id => getDocumentSnap(`incomes/${id}`, db)));
-    incomes.forEach(doc => batch.delete(doc.ref));
+    const { waterfallID } = context.params;
 
-    // Same for expenses
-    const expenseRemovedIds = difference(before.expenseIds, after.expenseIds);
-    const expenses = await Promise.all(expenseRemovedIds.map(id => getDocumentSnap(`expenses/${id}`, db)));
-    expenses.forEach(doc => batch.delete(doc.ref));
+    const waterfallSnap = await getDocumentSnap(`waterfall/${waterfallID}`);
+    if (waterfallSnap.exists) {
+      const waterfall = waterfallSnap.data() as Waterfall;
+
+      // If incomeId is removed from distributor or direct sales statement document, we also remove or update income document
+      const incomeRemovedIds = difference(before.incomeIds, after.incomeIds);
+      const incomes = await Promise.all(incomeRemovedIds.map(id => getDocumentSnap(`incomes/${id}`, db)));
+
+      // Same for expenses
+      const expenseRemovedIds = difference(before.expenseIds, after.expenseIds);
+      const expenses = await Promise.all(expenseRemovedIds.map(id => getDocumentSnap(`expenses/${id}`, db)));
+
+      const defaultVersion = getDefaultVersionId(waterfall);
+      if (after.versionId && defaultVersion && after.versionId !== defaultVersion) {
+        incomes.forEach(doc => {
+          const i = doc.data() as Income;
+          delete i.version[after.versionId];
+          batch.update(doc.ref, { version: i.version });
+        });
+
+        expenses.forEach(doc => {
+          const e = doc.data() as Expense;
+          delete e.version[after.versionId];
+          batch.update(doc.ref, { version: e.version });
+        });
+      } else {
+        incomes.forEach(doc => batch.delete(doc.ref));
+        expenses.forEach(doc => batch.delete(doc.ref));
+      }
+    }
   }
 
   return batch.commit();
 }
 
-export async function onWaterfallStatementDelete(docSnapshot: BlockframesSnapshot<Statement>) {
+export async function onWaterfallStatementDelete(docSnapshot: BlockframesSnapshot<Statement>, context: EventContext) {
   const statement = docSnapshot.data();
 
   const batch = db.batch();
 
   if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
-    // Remove incomes and expenses 
-    const incomes = await Promise.all(statement.incomeIds.map(id => getDocumentSnap(`incomes/${id}`, db)));
-    incomes.forEach(doc => batch.delete(doc.ref));
+    const { waterfallID } = context.params;
 
-    const expenses = await Promise.all(statement.expenseIds.map(id => getDocumentSnap(`expenses/${id}`, db)));
-    expenses.forEach(doc => batch.delete(doc.ref));
+    const waterfallSnap = await getDocumentSnap(`waterfall/${waterfallID}`);
+    if (waterfallSnap.exists) {
+      const waterfall = waterfallSnap.data() as Waterfall;
+
+      // Remove or update incomes and expenses 
+      const incomes = await Promise.all(statement.incomeIds.map(id => getDocumentSnap(`incomes/${id}`, db)));
+      const expenses = await Promise.all(statement.expenseIds.map(id => getDocumentSnap(`expenses/${id}`, db)));
+
+      const defaultVersion = getDefaultVersionId(waterfall);
+      if (statement.versionId && defaultVersion && statement.versionId !== defaultVersion) {
+        incomes.forEach(doc => {
+          const i = doc.data() as Income;
+          delete i.version[statement.versionId];
+          batch.update(doc.ref, { version: i.version });
+        });
+
+        expenses.forEach(doc => {
+          const e = doc.data() as Expense;
+          delete e.version[statement.versionId];
+          batch.update(doc.ref, { version: e.version });
+        });
+      } else {
+        incomes.forEach(doc => batch.delete(doc.ref));
+        expenses.forEach(doc => batch.delete(doc.ref));
+      }
+    }
   }
 
   return batch.commit();

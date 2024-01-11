@@ -15,7 +15,6 @@ import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/righthol
 import { StatementHeaderModule } from '@blockframes/waterfall/components/statement-header/statement-header.module';
 import { StatementParticipationModule } from '@blockframes/waterfall/components/statement-participation/statement-participation.module';
 import { ExpenseTypePipeModule } from '@blockframes/waterfall/pipes/expense-type.pipe';
-import { VersionSelectorModule } from '@blockframes/waterfall/components/version-selector/version-selector.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -45,7 +44,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     StatementHeaderModule,
     StatementParticipationModule,
     ExpenseTypePipeModule,
-    VersionSelectorModule,
 
     MatIconModule,
     MatButtonModule,

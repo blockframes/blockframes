@@ -24,6 +24,9 @@ export class IncomingStatementComponent implements OnInit, OnDestroy {
   @Input() private set statement(statement: Statement) {
     this.statement$.next(statement);
   }
+  private get statement() {
+    return this.statement$.value;
+  }
   public statement$ = new BehaviorSubject<Statement>(null);
 
   @Input() form: StatementForm;
@@ -44,7 +47,10 @@ export class IncomingStatementComponent implements OnInit, OnDestroy {
   ) { }
 
   async ngOnInit() {
-    const statements = await this.shell.statements();
+    const rightholder = this.shell.waterfall.rightholders.find(r => r.id === this.statement.receiverId);
+    const hasLockedVersion = rightholder.lockedVersionId && this.shell.waterfall.versions.some(v => v.id === rightholder.lockedVersionId)
+    const versionId = hasLockedVersion ? rightholder.lockedVersionId : this.statement.versionId;
+    const statements = await this.shell.statements(versionId);
     const contracts = await this.shell.contracts();
     const rights = await this.shell.rights();
     const incomes = await this.shell.incomes();

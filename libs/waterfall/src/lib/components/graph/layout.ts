@@ -485,7 +485,7 @@ export function updateParents(nodeId: string, newParentIds: string[], graph: Nod
   let current = graph.find(node => node.id === nodeId);
   if (current && current.type === 'source') return;
   if (!current) {
-    const group = graph.find(node => (node as HorizontalNode | VerticalNode).members.some(member => member.id === nodeId)) as HorizontalNode | VerticalNode | undefined;
+    const group = graph.find(node => (node as HorizontalNode | VerticalNode).members?.some(member => member.id === nodeId)) as HorizontalNode | VerticalNode | undefined;
     current = group?.members.find(member => member.id === nodeId);
     if (!current) return;
     const groupParents = parentIndex[group.id] ?? [];

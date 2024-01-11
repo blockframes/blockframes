@@ -12,6 +12,7 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 import { StatementTableModule } from '@blockframes/waterfall/components/statement-table/statement-table.module';
+import { VersionSelectorModule } from '@blockframes/waterfall/components/version-selector/version-selector.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -34,6 +35,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     TableModule,
     ToLabelModule,
     StatementTableModule,
+    VersionSelectorModule,
 
     MatIconModule,
     MatButtonModule,
