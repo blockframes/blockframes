@@ -9,6 +9,7 @@ export interface WaterfallRightholderFormValue {
   id: string;
   name: string;
   roles: RightholderRole[];
+  lockedVersionId: string;
 }
 
 function createWaterfallRightholderFormControl(rightholder?: Partial<WaterfallRightholderFormValue>) {
@@ -16,6 +17,7 @@ function createWaterfallRightholderFormControl(rightholder?: Partial<WaterfallRi
     id: new FormControl(rightholder?.id ?? ''),
     name: new FormControl(rightholder?.name ?? ''),
     roles: new FormControl(rightholder?.roles ?? []),
+    lockedVersionId: new FormControl(rightholder?.lockedVersionId ?? ''),
   }
 }
 

@@ -17,7 +17,7 @@ export class RightholderComponent {
 
   public rightholder$ = combineLatest([this.route.params.pipe(pluck('rightholderId')), this.shell.waterfall$]).pipe(
     map(([rightholderId, waterfall]) => waterfall.rightholders.find(r => r.id === rightholderId)),
-    tap(rightholder => this.rightholderForm.setValue(rightholder))
+    tap(rightholder => this.rightholderForm.setValue({ ...rightholder, lockedVersionId: rightholder.lockedVersionId ?? '' }))
   );
 
   public rights$: Observable<(Right & { revenue: PricePerCurrency })[]> = combineLatest([this.rightholder$, this.shell.state$, this.shell.rights$]).pipe(
@@ -28,6 +28,8 @@ export class RightholderComponent {
   );
 
   public rightholderForm = new WaterfallRightholderForm({});
+
+  public versions = this.shell.waterfall.versions;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
@@ -40,6 +42,7 @@ export class RightholderComponent {
 
   public async save() {
     const formValue: WaterfallRightholder = this.rightholderForm.value;
+    if (!formValue.lockedVersionId) delete formValue.lockedVersionId;
     const rightholders = this.shell.waterfall.rightholders.map(r => r.id === formValue.id ? formValue : r);
     await this.waterfallService.update({ id: this.shell.waterfall.id, rightholders });
     this.snackBar.open('Roles updated', 'close', { duration: 3000 });

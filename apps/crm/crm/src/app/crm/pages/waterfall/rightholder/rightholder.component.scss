@@ -6,9 +6,11 @@
 
 form {
   display: flex;
+  flex-direction: column;
   gap: 16px;
-  static-select {
+  static-select, mat-form-field {
     width: 30%
   }
+  margin-bottom: 40px;
 }
 

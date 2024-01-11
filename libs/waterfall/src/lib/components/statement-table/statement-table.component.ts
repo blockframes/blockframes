@@ -5,7 +5,6 @@ import {
   Income,
   Statement,
   Waterfall,
-  getDefaultVersion,
   getDefaultVersionId,
   getIncomesSources,
   isDistributorStatement,
@@ -101,10 +100,3 @@ export class IncomesSourcesPipe implements PipeTransform {
   }
 }
 
-@Pipe({ name: 'versionName' })
-export class VersionNamePipe implements PipeTransform {
-  transform(versionId: string, waterfall: Waterfall) {
-    if (!versionId) return getDefaultVersion(waterfall)?.name || '--';
-    return waterfall.versions.find(v => v.id === versionId)?.name || '--';
-  }
-}

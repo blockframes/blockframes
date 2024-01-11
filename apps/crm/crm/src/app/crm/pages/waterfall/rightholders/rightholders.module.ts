@@ -7,6 +7,7 @@ import { RightholdersComponent } from './rightholders.component';
 // Blockframes
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { VersionNamePipeModule } from '@blockframes/waterfall/pipes/version-name.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -18,8 +19,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   declarations: [RightholdersComponent],
   imports: [
     CommonModule,
+
     TableModule,
     ToLabelModule,
+    VersionNamePipeModule,
+
     MatIconModule,
     MatButtonModule,
     MatSnackBarModule,
