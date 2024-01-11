@@ -221,6 +221,10 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
 
     // Rewrite right payments of impacted statements
     const statementsToUpdate = impactedStatements.map(impactedStatement => {
+      // Reset incomes payments
+      const existingIncomePaymentInfos = impactedStatement.payments.income.map(p => ({ id: p.id, incomeId: p.incomeId }));
+      impactedStatement.payments.income = [];
+
       // Reset right payments
       const existingRightPaymentInfos = impactedStatement.payments.right.map(p => ({ id: p.id, to: p.to, date: p.date, status: p.status }));
       impactedStatement.payments.right = [];
@@ -250,6 +254,12 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
         updatedStatement.payments.rightholder = createRightholderPayment({ ...impactedStatement.payments.rightholder, id: existingPaymentInfo.id, status: existingPaymentInfo.status });
         if (existingPaymentInfo.date) updatedStatement.payments.rightholder.date = existingPaymentInfo.date;
       }
+
+      updatedStatement.payments.income = impactedStatement.payments.income.map(p => {
+        const existingPaymentInfo = existingIncomePaymentInfos.find(info => info.incomeId === p.incomeId);
+        const payment = createIncomePayment({ ...p, id: existingPaymentInfo.id });
+        return payment;
+      });
 
       return updatedStatement;
     });
