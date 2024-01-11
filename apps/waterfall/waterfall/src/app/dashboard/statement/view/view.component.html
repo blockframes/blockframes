@@ -5,7 +5,7 @@
   <waterfall-statement-producer-summary *ngIf="statement.type === 'producer'" [statement]="statement" [form]="form"></waterfall-statement-producer-summary>
 
   <footer>
-    <a mat-flat-button routerLink="edit" *ngIf="statement.type !== 'producer'">
+    <a mat-flat-button routerLink="edit" *ngIf="statement.type !== 'producer' && statement.status === 'draft'">
       <mat-icon svgIcon="arrow_back"></mat-icon>
       <span>Back</span>
     </a>
