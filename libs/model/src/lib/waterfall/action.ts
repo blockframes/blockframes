@@ -861,16 +861,7 @@ export interface PaymentAction extends BaseAction {
  * @param payload 
  */
 function payment(state: TitleState, payload: PaymentAction) {
-  const assertRevenue = () => {
-    const distributedRevenue = Object.values(state.rights).filter(r => r.orgId === payload.from.org).reduce((acc, r) => acc + r.revenu.actual, 0);
-    const orgRevenue = state.orgs[payload.from.org].revenu.actual;
-    if (parseFloat(payload.amount.toFixed(4)) > parseFloat((orgRevenue - distributedRevenue).toFixed(4))) {
-      throw new Error(`Org "${payload.from.org}" does not have enough actual revenue to proceed.`);
-    }
-  };
-
   if (payload.from.org && payload.to.org) { // Payment from org to org
-    assertRevenue();
     state.orgs[payload.from.org].revenu.actual -= payload.amount;
     state.orgs[payload.to.org].revenu.actual += payload.amount;
     state.orgs[payload.to.org].turnover.actual += payload.amount;
@@ -879,7 +870,6 @@ function payment(state: TitleState, payload: PaymentAction) {
     // Orgs
     const orgState = getNodeOrg(state, payload.to.right);
     if (orgState.id !== payload.from.org) throw new Error(`Internal payment error. "${payload.to.right}" is not owned by "${payload.from.org}".`);
-    assertRevenue();
 
     // Rights
     const nodeTo = getNode(state, payload.to.right);
