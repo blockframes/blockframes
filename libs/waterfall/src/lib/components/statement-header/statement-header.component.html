@@ -6,7 +6,7 @@
     </h1>
     
     <waterfall-version-selector 
-      [ngStyle]="{ display: statement.type !== 'producer' || statement.status !== 'draft' ? 'none' : 'initial' }"
+      [ngStyle]="{ display: statement.type !== 'producer' || statement.status !== 'draft' || statement.versionId ? 'none' : 'initial' }"
       simulator
       [initialVersion]="versionId"
       (versionChanged)="versionChanged.emit($event)"

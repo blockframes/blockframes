@@ -236,6 +236,7 @@ export class StatementComponent implements OnInit {
   public async reportStatement(reported: Date) {
     this.statement.status = 'reported';
     this.statement.reported = reported;
+    this.statement.versionId = this.shell.versionId$.value;
 
     // Add an id to the income payments if missing
     if (isDistributorStatement(this.statement) || isDirectSalesStatement(this.statement)) {
