@@ -25,7 +25,8 @@ import {
   getStatementSources,
   getTransferDetails,
   isSource,
-  isVerticalGroup
+  isVerticalGroup,
+  waterfallSources
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { StatementForm } from '../../../form/statement.form';
@@ -35,6 +36,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { MaxPerIncome, StatementArbitraryChangeComponent } from '../../statement-arbitrary-change/statement-arbitrary-change.component';
 import { StatementService } from '../../../statement.service';
+import { StatementIncomeEditComponent } from '../../statement-income-edit/statement-income-edit.component';
+import { IncomeService } from '@blockframes/contract/income/service';
 
 function getRightTurnover(incomeIds: string[], state: TitleState, right: Right, sources: WaterfallSource[]): BreakdownRow[] {
   const sourceIds = getSources(state, right.id).map(i => i.id);
@@ -99,6 +102,7 @@ interface DetailsRow {
   name: string,
   details: {
     from: string,
+    fromId: string,
     to: string,
     amount: number,
     taken: number,
@@ -121,6 +125,8 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
 
   public statementsControl = new FormControl<string[]>([]);
   public incomeIds$ = new BehaviorSubject<string[]>([]);
+  private incomes: Income[] = [];
+  private statementDuplicates: Statement[] = [];
 
   public sources$ = combineLatest([this.incomeIds$, this.shell.incomes$, this.shell.rights$, this.shell.simulation$]).pipe(
     map(([incomeIds, incomes, rights, simulation]) => getStatementSources({ ...this.statement, incomeIds }, this.waterfall.sources, incomes, rights, simulation.waterfall.state)),
@@ -235,7 +241,8 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
           details: details.map(d => ({
             ...d,
             from: isSource(simulation.waterfall.state, d.from) ? this.waterfall.sources.find(s => s.id === d.from.id).name : rights.find(r => r.id === d.from.id).name,
-            to: rights.find(r => r.id === d.to.id).name
+            to: rights.find(r => r.id === d.to.id).name,
+            fromId: d.from.id
           }))
         }
 
@@ -256,10 +263,11 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
   constructor(
     private shell: DashboardWaterfallShellComponent,
     private dialog: MatDialog,
-    private statementService: StatementService
+    private statementService: StatementService,
+    private incomeService: IncomeService,
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.incomeIds$.next(this.statement.incomeIds);
 
     this.sub = this.form.get('duration').get('to').valueChanges.pipe(debounceTime(500)).subscribe(date => {
@@ -267,6 +275,10 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
       const inError = control.hasError('startOverEnd') || control.hasError('isBefore');
       if (!inError && this.shell.setDate(date)) this.shell.simulateWaterfall();
     });
+
+    this.incomes = await this.shell.incomes([], '');
+    const allStatements = await this.shell.statements('');
+    this.statementDuplicates = allStatements.filter(s => !!s.duplicatedFrom);
   }
 
   ngOnDestroy() {
@@ -279,6 +291,17 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
     if (this.shell.versionId$.value !== getDefaultVersionId(this.shell.waterfall)) return false;
     const incomeIds = row.maxPerIncome.map(i => i.income.id);
     if (statement.rightOverrides.find(c => c.rightId !== row.right.id && incomeIds.includes(c.incomeId))) return false;
+    return true;
+  }
+
+  public canEditIncomeOrExpense(sourceId: string, statement: Statement) {
+    if (statement.status === 'reported') return false;
+    if (this.shell.versionId$.value === getDefaultVersionId(this.shell.waterfall)) return false;
+    if (statement.rightOverrides.length) return false;
+    const sources = waterfallSources(this.waterfall, this.shell.versionId$.value);
+    const incomes = this.incomes.filter(i => getAssociatedSource(i, sources).id === sourceId && this.incomeIds$.value.includes(i.id));
+    const currentVersionDuplicates = this.statementDuplicates.filter(s => s.versionId === this.shell.versionId$.value);
+    if (currentVersionDuplicates.some(s => incomes.some(i => s.incomeIds.includes(i.id)))) return false;
     return true;
   }
 
@@ -299,6 +322,24 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
             rightOverrides: [...rightOverrides, ...overrides],
             incomeIds: this.statement.incomeIds
           }, { params: { waterfallId: this.waterfall.id } });
+
+          // Refresh simulation
+          await this.shell.simulateWaterfall();
+        }
+      })
+    });
+  }
+
+  public async editIncome(sourceId: string) {
+    const sources = waterfallSources(this.waterfall, this.shell.versionId$.value);
+    const incomes = this.incomes.filter(i => getAssociatedSource(i, sources).id === sourceId && this.incomeIds$.value.includes(i.id));
+    this.dialog.open(StatementIncomeEditComponent, {
+      data: createModalData({
+        incomes,
+        waterfall: this.shell.waterfall,
+        versionId: this.shell.versionId$.value,
+        onConfirm: async (incomes: Income[]) => {
+          await this.incomeService.update(incomes);
 
           // Refresh simulation
           await this.shell.simulateWaterfall();

@@ -286,14 +286,16 @@ function groupActions(data: WaterfallData, versionId: string, isSimulation = fal
   // @dev "sourcesToAction" may be activated for real waterfall also (generate bad display for graph generated with G6 but not with new one)
   const sourceActions = isSimulation ? sourcesToAction(sources) : [];
   const incomeStatements = isSimulation ? data.statements : data.statements.filter(s => s.status === 'reported');
+  // Skip deleted incomes for this version
+  const incomes = Object.values(data.incomes).filter(i => !i.version[versionId] || !i.version[versionId].deleted);
 
   const expenseTypesActions = expenseTypesToAction(Object.values(data.waterfall.expenseTypes).flat(), versionId);
   const contractActions = contractsToActions(data.contracts, data.terms);
   const investmentActions = investmentsToActions(data.contracts, data.terms);
   const rightActions = rightsToActions(data.rights);
-  const incomeActions = incomesToActions(data.contracts, Object.values(data.incomes), sources, incomeStatements);
+  const incomeActions = incomesToActions(data.contracts, incomes, sources, incomeStatements);
   const expenseActions = expensesToActions(Object.values(data.expenses));
-  const paymentActions = statementsToActions(data.statements);
+  const paymentActions = statementsToActions(data.statements, incomes);
 
   const groupedActions = groupByDate([
     ...sourceActions,

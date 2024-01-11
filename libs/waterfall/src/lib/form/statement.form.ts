@@ -35,7 +35,7 @@ function createIncomeFormControl(income?: Partial<Income>) {
 
 type IncomeFormControl = ReturnType<typeof createIncomeFormControl>;
 
-class IncomeForm extends FormEntity<IncomeFormControl> {
+export class IncomeForm extends FormEntity<IncomeFormControl> {
   constructor(income?: Partial<Income>) {
     super(createIncomeFormControl(income));
   }

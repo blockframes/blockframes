@@ -378,7 +378,7 @@ export function expensesToActions(expenses: Expense[]) {
   return actions;
 }
 
-export function statementsToActions(statements: Statement[]) {
+export function statementsToActions(statements: Statement[], incomes: Income[]) {
   const payments: PaymentAction[] = [];
 
   for (const statement of statements.filter(s => s.status === 'reported')) {
@@ -387,6 +387,8 @@ export function statementsToActions(statements: Statement[]) {
     if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
       const incomePayments = statement.payments.income;
       for (const payment of incomePayments) {
+        // Check if income exists in this version to prevent payments (in this case, payment price should always be 0)
+        if (!incomes.find(i => i.id === payment.incomeId)) continue;
         payments.push({
           id: payment.id,
           amount: convertCurrenciesTo({ [payment.currency]: payment.price }, mainCurrency)[mainCurrency],

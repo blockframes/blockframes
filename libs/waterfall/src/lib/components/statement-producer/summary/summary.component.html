@@ -79,8 +79,17 @@
             <ng-template colRef="to" label="To" let-to>
               {{ to }}
             </ng-template>
-            <ng-template colRef="amount" label="Amount" let-amount>
-              <price-per-currency [price]="amount | formatPair" default="€ 0"></price-per-currency>
+            <ng-template colRef="" label="" let-item let-index="index">
+              <price-per-currency [price]="item.amount | formatPair" default="€ 0"></price-per-currency>
+              <ng-container *ngIf="index === 0">
+                <button mat-icon-button 
+                  [disabled]="!canEditIncomeOrExpense(item.fromId, statement)"
+                  [matTooltip]="!canEditIncomeOrExpense(item.fromId, statement) ? 'This cannot be edited.' : 'Change income value'"
+                  (click)="editIncome(item.fromId)"
+                >
+                <mat-icon svgIcon="statement_warning"></mat-icon>
+              </button>
+              </ng-container>
             </ng-template>
             <ng-template colRef="percent" label="%" let-percent>
               {{ percent }}

@@ -10,6 +10,7 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { StatementParticipationModule } from '../../statement-participation/statement-participation.module';
 import { StatementArbitraryChangeModule } from '../../statement-arbitrary-change/statement-arbitrary-change.module';
+import { StatementIncomeEditModule } from '../../statement-income-edit/statement-income-edit.module';
 
 // Components
 import { StatementProducerSummaryComponent } from './summary.component';
@@ -34,6 +35,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     PricePerCurrencyModule,
     StatementParticipationModule,
     StatementArbitraryChangeModule,
+    StatementIncomeEditModule,
 
     // Material
     MatExpansionModule,
