@@ -13,6 +13,7 @@ import {
   getAssociatedSource,
   getCalculatedAmount,
   getChildRights,
+  getDefaultVersionId,
   getGroup,
   getIncomingAmount,
   getOrderedRights,
@@ -275,6 +276,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
   public canEditRightPayment(row: BreakdownRow, statement: Statement) {
     if (statement.status === 'reported') return false;
     if (row.maxPerIncome.every(i => i.max === 0)) return false;
+    if (this.shell.versionId$.value !== getDefaultVersionId(this.shell.waterfall)) return false;
     const incomeIds = row.maxPerIncome.map(i => i.income.id);
     if (statement.rightOverrides.find(c => c.rightId !== row.right.id && incomeIds.includes(c.incomeId))) return false;
     return true;

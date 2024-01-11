@@ -260,7 +260,6 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
       id: this.statementService.createId(),
       versionId: this.shell.versionId$.value,
       duplicatedFrom: s.id,
-      // TODO #9520 test overrides & need remove ?
     })));
 
     return this.statementService.add(statementsToDuplicate, { params: { waterfallId: this.waterfall.id } });
