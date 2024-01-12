@@ -118,8 +118,17 @@ export class StatementDirectSalesSummaryComponent {
       const displayedRights = getStatementRightsToDisplay(current, rights);
       const orderedRights = getOrderedRights(displayedRights, simulation.waterfall.state);
 
+      const statementIncomes = incomes.filter(i => this.statement.incomeIds.includes(i.id));
+
       return sources.map(source => {
         const rows: BreakdownRow[] = [];
+
+        // Remove sources where all incomes are hidden from reported statement 
+        if (this.statement.status === 'reported') {
+          const sourceIncomes = statementIncomes.filter(i => getAssociatedSource(i, sources).id === source.id);
+          const allHidden = sourceIncomes.every(i => i.version[this.shell.versionId$.value]?.hidden);
+          if (allHidden) return;
+        }
 
         // Incomes declared by statement.senderId
         const previousSourcePayments = previous.map(s => s.payments.income).flat().filter(income => getAssociatedSource(incomes.find(i => i.id === income.incomeId), this.waterfall.sources).id === source.id);
@@ -208,7 +217,7 @@ export class StatementDirectSalesSummaryComponent {
           net: currentNet,
           stillToBeRecouped: stillToBeRecouped.length ? getTotalPerCurrency(stillToBeRecouped) : undefined
         };
-      });
+      }).filter(r => r);
     })
   );
 

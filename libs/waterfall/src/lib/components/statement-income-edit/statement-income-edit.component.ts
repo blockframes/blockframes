@@ -51,7 +51,7 @@ export class StatementIncomeEditComponent implements OnInit {
       const price = overrides.find(override => override.id === income.id)?.price;
 
       if (price === 0) {
-        income.version[this.data.versionId] = { deleted: true, price };
+        income.version[this.data.versionId] = { hidden: true, price };
       } else {
         income.version[this.data.versionId] = { price };
       }

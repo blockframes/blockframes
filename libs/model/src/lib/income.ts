@@ -9,7 +9,7 @@ export interface Income {
   /** The contract that created this income */
   contractId: string;
   price: number;
-  version: Record<string, { deleted?: true, price: number }>;
+  version: Record<string, { hidden?: true, price: number }>;
   currency: MovieCurrency;
   offerId?: string;
   titleId?: string;

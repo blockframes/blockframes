@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy, OnChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {
   Duration,
@@ -6,6 +6,7 @@ import {
   Right,
   RightOverride,
   Statement,
+  StatementStatus,
   TitleState,
   WaterfallSource,
   generatePayments,
@@ -39,7 +40,7 @@ import { StatementService } from '../../../statement.service';
 import { StatementIncomeEditComponent } from '../../statement-income-edit/statement-income-edit.component';
 import { IncomeService } from '@blockframes/contract/income/service';
 
-function getRightTurnover(incomeIds: string[], state: TitleState, right: Right, sources: WaterfallSource[]): BreakdownRow[] {
+function getRightTurnover(incomeIds: string[], state: TitleState, right: Right, sources: WaterfallSource[], statementIncomes: Income[], statementStatus: StatementStatus, versionId: string): BreakdownRow[] {
   const sourceIds = getSources(state, right.id).map(i => i.id);
 
   return sources.filter(s => sourceIds.includes(s.id)).map(s => {
@@ -49,7 +50,14 @@ function getRightTurnover(incomeIds: string[], state: TitleState, right: Right, 
     const from = path[path.indexOf(to) - 1];
     const details = getTransferDetails(incomeIds, s.id, from, to, state);
     return { ...s, taken: details.amount };
-  }).map(source => ({ name: source.name, taken: source.taken, type: 'source', source, right }));
+  }).map(source => ({ name: source.name, taken: source.taken, type: 'source', source, right } as BreakdownRow))
+    .filter(row => {
+      if (statementStatus === 'draft') return true;
+      // Remove sources where all incomes are hidden from reported statement 
+      const sourceIncomes = statementIncomes.filter(i => getAssociatedSource(i, sources).id === row.source.id);
+      const allHidden = sourceIncomes.every(i => i.version[versionId]?.hidden);
+      return !allHidden;
+    })
 }
 
 function getRightTaken(rights: Right[], statement: Statement, state: TitleState, rightId: string, sources: WaterfallSource[], incomes: Income[]): BreakdownRow {
@@ -116,7 +124,7 @@ interface DetailsRow {
   styleUrls: ['./summary.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
+export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() public statement: Statement;
   @Input() public form: StatementForm;
@@ -176,6 +184,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
 
       const displayedRights = getStatementRightsToDisplay(statement, rights);
       const orderedRights = getOrderedRights(displayedRights, simulation.waterfall.state);
+      const statementIncomes = incomes.filter(i => statement.incomeIds.includes(i.id));
 
       const groups: Record<string, { group: Right, rights: Right[], rows: BreakdownRow[] }> = {};
       for (const right of orderedRights) {
@@ -184,7 +193,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
           const group = rights.find(r => r.id === groupState.id);
           if (!groups[group.id]) {
             // Sources remains 
-            const rows = getRightTurnover(statement.incomeIds, simulation.waterfall.state, group, sources);
+            const rows = getRightTurnover(statement.incomeIds, simulation.waterfall.state, group, sources, statementIncomes, statement.status, this.shell.versionId$.value);
 
             const remainTotal = rows.reduce((acc, s) => acc + s.taken, 0);
 
@@ -203,7 +212,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
           groups[group.id].rights.push(right);
         } else {
           // Sources remains 
-          const rows = getRightTurnover(statement.incomeIds, simulation.waterfall.state, right, sources);
+          const rows = getRightTurnover(statement.incomeIds, simulation.waterfall.state, right, sources, statementIncomes, statement.status, this.shell.versionId$.value);
 
           const remainTotal = rows.reduce((acc, s) => acc + s.taken, 0);
 
@@ -279,6 +288,10 @@ export class StatementProducerSummaryComponent implements OnInit, OnDestroy {
     this.incomes = await this.shell.incomes([], '');
     const allStatements = await this.shell.statements('');
     this.statementDuplicates = allStatements.filter(s => !!s.duplicatedFrom);
+  }
+
+  ngOnChanges() {
+    this.incomeIds$.next(this.statement.incomeIds);
   }
 
   ngOnDestroy() {

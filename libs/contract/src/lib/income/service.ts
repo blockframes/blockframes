@@ -13,7 +13,7 @@ function convertIncomesTo(incomes: Income[], versionId: string) {
   return incomes.map(i => {
     const price = (i.version && i.version[versionId] !== undefined) ? i.version[versionId].price : i.price;
     return { ...i, price };
-  }).filter(i => !i.version || !i.version[versionId] || !i.version[versionId].deleted);
+  });
 }
 
 @Injectable({ providedIn: 'root' })
