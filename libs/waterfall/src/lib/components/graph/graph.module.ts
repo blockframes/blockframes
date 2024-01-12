@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { BlockframesGraphModule } from '@blockframes/ui/graph/graph.module';
@@ -19,8 +20,8 @@ import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/grou
 import { WaterfallGraphComponent } from './graph.component';
 import { WaterfallGraphNodeModule } from './node/node.module';
 import { WaterfallGraphLabelModule } from './label/label.module';
+import { WaterfallRightListModule } from './right-list/right-list.module';
 import { WaterfallConditionsModule } from './conditions/conditions.module';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [ WaterfallGraphComponent ],
@@ -33,6 +34,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     GroupMultiselectModule,
     BlockframesGraphModule,
     WaterfallGraphNodeModule,
+    WaterfallRightListModule,
     WaterfallGraphLabelModule,
     WaterfallConditionsModule,
 
@@ -42,8 +44,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatSelectModule,
     MatButtonModule,
     MatTooltipModule,
-    MatFormFieldModule,
     MatSnackBarModule,
+    MatFormFieldModule,
   ],
   exports: [ WaterfallGraphComponent ],
 })

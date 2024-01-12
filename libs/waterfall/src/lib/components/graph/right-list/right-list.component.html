@@ -1,0 +1,149 @@
+
+<section class="pool">
+  <button mat-button color="primary" [disabled]="selected.size === 0" (click)="poolModal()">
+    <mat-icon svgIcon="add"></mat-icon>
+    <span>Group Right Share</span>
+  </button>
+</section>
+
+<mat-chip-list>
+  <mat-chip
+    *ngFor="let pool of existingPools"
+    color="primary"
+    [selected]="poolsFilter.has(pool)"
+    (click)="selectFilterPool(pool)"
+  >
+    {{pool}}
+  </mat-chip>
+</mat-chip-list>
+
+<section>
+  <mat-checkbox
+    color="primary"
+    (change)="selectAll($event)"
+    [indeterminate]="selected.size !== 0 && selected.size !== rights.length"
+  ></mat-checkbox>
+  <mat-form-field>
+    <input matInput placeholder="Specify Right Share or Group" [formControl]="searchControl" />
+  </mat-form-field>
+</section>
+
+<ul>
+  <li *ngFor="let right of rootRights">
+    <section>
+      <mat-checkbox
+        color="primary"
+        (change)="check($event, right.id)"
+        [checked]="selected.has(right.id)"
+        [indeterminate]="!isDeterminate(right.id)"
+      >
+        {{right.name}}
+      </mat-checkbox>
+      <ng-container *ngIf="right.pools.length">
+        <mat-chip-list>
+          <mat-chip *ngFor="let pool of right.pools" color="primary">
+            {{pool}}
+          </mat-chip>
+        </mat-chip-list>
+      </ng-container>
+      <button
+        mat-icon-button
+        (click)="edit(right.id)"
+        [matTooltip]="right.type === 'vertical' || right.type === 'horizontal' ? 'Edit Group Name' : 'Edit Share Name'"
+      >
+        <mat-icon svgIcon="edit"></mat-icon>
+      </button>
+      <button
+        *ngIf="right.type !== 'vertical' || right.type === 'horizontal'"
+        mat-icon-button
+        (click)="remove(right.id)"
+        matTooltip="Delete Right Share"
+      >
+        <mat-icon svgIcon="delete"></mat-icon>
+      </button>
+    </section>
+    <ul *ngIf="right.type === 'horizontal'">
+      <li *ngFor="let member of hMembers[right.id]">
+        <section>
+          <mat-checkbox
+            color="primary"
+            (change)="check($event, member.id)"
+            [checked]="selected.has(member.id)"
+            [indeterminate]="!isDeterminate(member.id)"
+          >
+            {{member.name}}
+          </mat-checkbox>
+          <ng-container *ngIf="member.pools.length">
+            <mat-chip-list>
+              <mat-chip *ngFor="let pool of member.pools" color="primary">
+                {{pool}}
+              </mat-chip>
+            </mat-chip-list>
+          </ng-container>
+          <button
+            mat-icon-button
+            (click)="edit(member.id)"
+            [matTooltip]="member.type === 'vertical' || member.type === 'horizontal' ? 'Edit Group Name' : 'Edit Share Name'"
+          >
+            <mat-icon svgIcon="edit"></mat-icon>
+          </button>
+          <button
+            *ngIf="right.type !== 'vertical' || right.type === 'horizontal'"
+            mat-icon-button
+            (click)="remove(member.id)"
+            matTooltip="Delete Right Share"
+          >
+            <mat-icon svgIcon="delete"></mat-icon>
+          </button>
+        </section>
+        <ul *ngIf="member.type === 'vertical'">
+          <li *ngFor="let subMember of vMembers[member.id]">
+            <section>
+              <mat-checkbox
+                color="primary"
+                (change)="check($event, subMember.id)"
+                [checked]="selected.has(subMember.id)"
+                [indeterminate]="!isDeterminate(subMember.id)"
+              >
+                {{subMember.name}}
+              </mat-checkbox>
+              <ng-container *ngIf="subMember.pools.length">
+                <mat-chip-list>
+                  <mat-chip *ngFor="let pool of subMember.pools" color="primary">
+                    {{pool}}
+                  </mat-chip>
+                </mat-chip-list>
+              </ng-container>
+              <button mat-icon-button matTooltip="Edit Share Name" (click)="edit(subMember.id)">
+                <mat-icon svgIcon="edit"></mat-icon>
+              </button>
+              <button mat-icon-button matTooltip="Delete Right Share" (click)="remove(subMember.id)">
+                <mat-icon svgIcon="delete"></mat-icon>
+              </button>
+            </section>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <ul *ngIf="right.type === 'vertical'">
+      <li *ngFor="let member of vMembers[right.id]">
+        <section>
+          <mat-checkbox
+            color="primary"
+            (change)="check($event, member.id)"
+            [checked]="selected.has(member.id)"
+            [indeterminate]="!isDeterminate(member.id)"
+          >
+            {{member.name}}
+          </mat-checkbox>
+          <button mat-icon-button matTooltip="Edit Share Name" (click)="edit(member.id)">
+            <mat-icon svgIcon="edit"></mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Delete Right Share" (click)="remove(member.id)">
+            <mat-icon svgIcon="delete"></mat-icon>
+          </button>
+        </section>
+      </li>
+    </ul>
+  </li>
+</ul>

@@ -78,7 +78,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     private service: GraphService,
     private rightService: RightService,
     private waterfallService: WaterfallService,
-    private shell: DashboardWaterfallShellComponent,
+    public shell: DashboardWaterfallShellComponent,
   ) { }
 
   ngOnInit() {
@@ -345,12 +345,12 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     this.select(id);
   }
 
-  async delete() {
+  async delete(rightId?: string) {
     if (!this.canUpdateGraph) {
       this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
       return;
     }
-    const id = this.selected$.getValue();
+    const id = rightId ?? this.selected$.getValue();
     const right = this.rights.find(right => right.id === id);
     const source = this.sources.find(source => source.id === id);
 
@@ -359,7 +359,6 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     if (right) {
       if (right.groupId) {
         const group = this.rights.find(r => r.id === right.groupId);
-        if (group.type === 'vertical') return; // TODO
 
         const members = this.rights.filter(r => r.groupId === group.id && r.id !== right.id);
 
@@ -392,6 +391,27 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
             this.rightService.update(rightsToUpdate, { params: { waterfallId: this.waterfall.id }, write }),
             this.rightService.remove([id, group.id], { params: { waterfallId: this.waterfall.id }, write }),
           ]);
+          await write.commit();
+          return;
+        }
+
+        // delete the right and update the order (and name) of the remaining members
+        if (group.type === 'vertical') {
+          const vMembers = this.rights.filter(r => r.groupId === group.id).sort((a, b) => a.order - b.order);
+          const indexToRemove = vMembers.findIndex(r => r.id === id);
+          console.log(indexToRemove);
+          vMembers.splice(indexToRemove, 1);
+          vMembers.forEach((r, index) => {
+            r.order = index;
+            r.name = `Step ${index + 1}`;
+          });
+          console.log(vMembers);
+
+          const write = this.waterfallService.batch();
+          const promises: Promise<unknown>[] = [];
+          vMembers.forEach(r => promises.push(this.rightService.update(r.id, r, { params: { waterfallId: this.waterfall.id }, write })));
+          promises.push(this.rightService.remove(id, { params: { waterfallId: this.waterfall.id }, write }));
+          await Promise.all(promises);
           await write.commit();
           return;
         }

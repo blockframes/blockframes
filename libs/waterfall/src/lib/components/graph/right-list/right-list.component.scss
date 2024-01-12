@@ -1,0 +1,44 @@
+
+:host {
+  grid-column: span 2;
+
+  section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+
+    mat-form-field {
+      width: 100%;
+      margin-left: 8px;
+    }
+    mat-chip-list {
+      width: 100%;
+    }
+  }
+
+  section.pool {
+    justify-content: end;
+  }
+
+  ul {
+    mat-checkbox {
+      width: 100%;
+    }
+
+    li {
+      padding-top: 8px;
+      padding-bottom: 8px;
+    }
+
+    li:not(:last-child) {
+      border-bottom: solid 2px var(--foreground-divider);
+    }
+
+    ul {
+      li {
+        padding-left: 32px;
+      }
+    }
+  }
+}
