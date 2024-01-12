@@ -1,0 +1,35 @@
+<global-modal>
+  <h2>Save Expense Changes</h2>
+
+  <h3>{{ data.expense.rightholderId | rightholderName: data.waterfall }} - {{ data.expense.date | date: 'dd/MM/yyyy' }}</h3>
+  <p class="mat-body-1">{{ data.expense.nature }} - {{ data.expense.typeId | expenseType : data.expense.contractId : data.waterfall }}</p>
+
+  <section>
+    <mat-form-field appearance="outline">
+      <mat-icon [svgIcon]="form.get('override').get('currency').value" matPrefix></mat-icon>
+      <input matInput type="number" min="0" [formControl]="form.get('override').get('price')" required />
+      <mat-error>Please fill in a value.</mat-error>
+      <mat-hint>Enter the new amount of this Expense. Set it to zero to delete it.</mat-hint>
+    </mat-form-field>
+
+    <button mat-icon-button (click)="restore()" matTooltip="Restore to initial value">
+      <mat-icon svgIcon="restore"></mat-icon>
+    </button>
+  </section>
+
+  <p class="mat-body-2">To confirm the changes, please type "SAVE"</p>
+  <mat-form-field appearance="outline">
+    <mat-label>Changes confirmation</mat-label>
+    <input matInput [formControl]="form.get('confirm')" required />
+  </mat-form-field>
+  
+  <mat-dialog-actions>
+    <button mat-flat-button color="primary" [disabled]="form.invalid || form.get('confirm').value !== 'SAVE'" (click)="confirm()">
+      <span>Confirm Changes</span>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
+    </button>
+    <button mat-button (click)="close()">
+      Close window
+    </button>
+  </mat-dialog-actions>
+</global-modal>

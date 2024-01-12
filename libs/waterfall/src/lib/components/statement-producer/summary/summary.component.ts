@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy, OnChanges
 import { FormControl } from '@angular/forms';
 import {
   Duration,
+  Expense,
   Income,
   Right,
   RightOverride,
@@ -25,6 +26,8 @@ import {
   getStatementRightsToDisplay,
   getStatementSources,
   getTransferDetails,
+  isDirectSalesStatement,
+  isDistributorStatement,
   isSource,
   isVerticalGroup,
   waterfallSources
@@ -39,6 +42,8 @@ import { MaxPerIncome, StatementArbitraryChangeComponent } from '../../statement
 import { StatementService } from '../../../statement.service';
 import { StatementIncomeEditComponent } from '../../statement-income-edit/statement-income-edit.component';
 import { IncomeService } from '@blockframes/contract/income/service';
+import { StatementExpenseEditComponent } from '../../statement-expense-edit/statement-expense-edit.component';
+import { ExpenseService } from '@blockframes/contract/expense/service';
 
 function getRightTurnover(incomeIds: string[], state: TitleState, right: Right, sources: WaterfallSource[], statementIncomes: Income[], statementStatus: StatementStatus, versionId: string): BreakdownRow[] {
   const sourceIds = getSources(state, right.id).map(i => i.id);
@@ -267,13 +272,23 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     })
   );
 
-  private waterfall = this.shell.waterfall;
+  public expenses$ = combineLatest([this.statement$, this.shell.statements$, this.shell.expenses$]).pipe(
+    map(([statement, statements, expenses]) => {
+      const parentStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
+        .filter(s => s.payments.right.some(r => r.incomeIds.some(id => statement.incomeIds.includes(id))));
+      const expenseIds = parentStatements.map(s => s.expenseIds).flat();
+      return expenses.filter(e => expenseIds.includes(e.id));
+    })
+  );
+
+  public waterfall = this.shell.waterfall;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
     private dialog: MatDialog,
     private statementService: StatementService,
     private incomeService: IncomeService,
+    private expenseService: ExpenseService,
   ) { }
 
   async ngOnInit() {
@@ -307,7 +322,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     return true;
   }
 
-  public canEditIncomeOrExpense(sourceId: string, statement: Statement) {
+  public canEditIncome(sourceId: string, statement: Statement) {
     if (statement.status === 'reported') return false;
     if (this.shell.versionId$.value === getDefaultVersionId(this.shell.waterfall)) return false;
     if (statement.rightOverrides.length) return false;
@@ -315,6 +330,15 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     const incomes = this.incomes.filter(i => getAssociatedSource(i, sources).id === sourceId && this.incomeIds$.value.includes(i.id));
     const currentVersionDuplicates = this.statementDuplicates.filter(s => s.versionId === this.shell.versionId$.value);
     if (currentVersionDuplicates.some(s => incomes.some(i => s.incomeIds.includes(i.id)))) return false;
+    return true;
+  }
+
+  public canEditExpense(expenseId: string, statement: Statement) {
+    if (statement.status === 'reported') return false;
+    if (this.shell.versionId$.value === getDefaultVersionId(this.shell.waterfall)) return false;
+    if (statement.rightOverrides.length) return false;
+    const currentVersionDuplicates = this.statementDuplicates.filter(s => s.versionId === this.shell.versionId$.value);
+    if (currentVersionDuplicates.some(s => s.expenseIds.includes(expenseId))) return false;
     return true;
   }
 
@@ -343,7 +367,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     });
   }
 
-  public async editIncome(sourceId: string) {
+  public editIncome(sourceId: string) {
     const sources = waterfallSources(this.waterfall, this.shell.versionId$.value);
     const incomes = this.incomes.filter(i => getAssociatedSource(i, sources).id === sourceId && this.incomeIds$.value.includes(i.id));
     this.dialog.open(StatementIncomeEditComponent, {
@@ -353,6 +377,23 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
         versionId: this.shell.versionId$.value,
         onConfirm: async (incomes: Income[]) => {
           await this.incomeService.update(incomes);
+
+          // Refresh simulation
+          await this.shell.simulateWaterfall();
+        }
+      })
+    });
+  }
+
+  public async editExpense(expenseId: string) {
+    const expense = await this.expenseService.getValue(expenseId);
+    this.dialog.open(StatementExpenseEditComponent, {
+      data: createModalData({
+        expense,
+        waterfall: this.shell.waterfall,
+        versionId: this.shell.versionId$.value,
+        onConfirm: async (expense: Expense) => {
+          await this.expenseService.update(expense);
 
           // Refresh simulation
           await this.shell.simulateWaterfall();

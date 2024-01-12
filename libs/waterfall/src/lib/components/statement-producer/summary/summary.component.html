@@ -83,8 +83,8 @@
               <price-per-currency [price]="item.amount | formatPair" default="€ 0"></price-per-currency>
               <ng-container *ngIf="index === 0">
                 <button mat-icon-button 
-                  [disabled]="!canEditIncomeOrExpense(item.fromId, statement)"
-                  [matTooltip]="!canEditIncomeOrExpense(item.fromId, statement) ? 'This cannot be edited.' : 'Change income value'"
+                  [disabled]="!canEditIncome(item.fromId, statement)"
+                  [matTooltip]="!canEditIncome(item.fromId, statement) ? 'This cannot be edited.' : 'Change income value'"
                   (click)="editIncome(item.fromId)"
                 >
                 <mat-icon svgIcon="statement_warning"></mat-icon>
@@ -98,6 +98,50 @@
               <strong>
                 <price-per-currency [price]="taken | formatPair" default="€ 0"></price-per-currency>
               </strong>
+            </ng-template>
+          </bf-table>
+        </mat-expansion-panel>
+      </div>
+    </article>
+  </ng-container>
+
+  <ng-container *ngIf="expenses$ | async as expenses">
+    <article *ngIf="expenses.length" class="breakdown">
+      <header>
+        <span>Expenses</span>
+      </header>
+      <div class="surface" >
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <span>Distributor details</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <bf-table [source]="expenses" pagination="50">
+            <ng-template colRef="rightholderId" label="Rightholder" let-rightholderId sort>
+              {{ rightholderId | rightholderName: waterfall }}
+            </ng-template>
+            <ng-template colRef="date" label="Date" let-date sort defaultSort>
+              {{ date | date: 'dd/MM/yyyy' }}
+            </ng-template>
+            <ng-template colRef="nature" label="Nature" let-nature sort>
+              {{ nature }}
+            </ng-template>
+            <ng-template colRef="" label="Type" let-item sort>
+              {{ item.typeId | expenseType : item.contractId : waterfall }}
+            </ng-template>
+            <ng-template colRef="" label="Price" let-item sort>
+              <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
+              <button mat-icon-button 
+                [disabled]="!canEditExpense(item.id, statement)"
+                [matTooltip]="!canEditExpense(item.id, statement) ? 'This cannot be edited.' : 'Change expense value'"
+                (click)="editExpense(item.id)"
+                >
+                <mat-icon svgIcon="statement_warning"></mat-icon>
+              </button>
+            </ng-template>
+            <ng-template colRef="capped" label="Capped" let-capped sort>
+              <mat-slide-toggle [checked]="capped" disabled color="primary"></mat-slide-toggle>
             </ng-template>
           </bf-table>
         </mat-expansion-panel>

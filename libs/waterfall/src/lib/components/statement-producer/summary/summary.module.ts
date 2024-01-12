@@ -11,6 +11,9 @@ import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price
 import { StatementParticipationModule } from '../../statement-participation/statement-participation.module';
 import { StatementArbitraryChangeModule } from '../../statement-arbitrary-change/statement-arbitrary-change.module';
 import { StatementIncomeEditModule } from '../../statement-income-edit/statement-income-edit.module';
+import { ExpenseTypePipeModule } from '../../../pipes/expense-type.pipe';
+import { RightHolderNamePipeModule } from '../../../pipes/rightholder-name.pipe';
+import { StatementExpenseEditModule } from '../../statement-expense-edit/statement-expense-edit.module';
 
 // Components
 import { StatementProducerSummaryComponent } from './summary.component';
@@ -21,6 +24,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [StatementProducerSummaryComponent],
@@ -36,6 +40,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     StatementParticipationModule,
     StatementArbitraryChangeModule,
     StatementIncomeEditModule,
+    StatementExpenseEditModule,
+    ExpenseTypePipeModule,
+    RightHolderNamePipeModule,
 
     // Material
     MatExpansionModule,
@@ -43,6 +50,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatIconModule,
     MatTooltipModule,
     MatDialogModule,
+    MatSlideToggleModule,
   ],
   exports: [StatementProducerSummaryComponent]
 })

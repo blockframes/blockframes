@@ -294,7 +294,9 @@ function groupActions(data: WaterfallData, versionId: string, isSimulation = fal
   const investmentActions = investmentsToActions(data.contracts, data.terms);
   const rightActions = rightsToActions(data.rights);
   const incomeActions = incomesToActions(data.contracts, incomes, sources, incomeStatements);
-  const expenseActions = expensesToActions(Object.values(data.expenses));
+  // Skip hidden expenses for this version
+  const expenses = isSimulation ? Object.values(data.expenses) : Object.values(data.expenses).filter(i => !i.version[versionId] || !i.version[versionId].hidden);
+  const expenseActions = expensesToActions(expenses);
   const paymentActions = statementsToActions(data.statements, incomes);
 
   const groupedActions = groupByDate([

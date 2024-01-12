@@ -10,7 +10,7 @@ import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price
 import { StatementPaymentModule } from '../statement-payment/statement-payment.module';
 import { RightHolderNamePipeModule } from '../../pipes/rightholder-name.pipe';
 import { ContractPipeModule } from '@blockframes/contract/contract/pipe';
-import { VersionNamePipeModule } from '@blockframes/waterfall/pipes/version-name.pipe';
+import { VersionNamePipeModule } from '../../pipes/version-name.pipe';
 
 // Component
 import { IncomesSourcesPipe, StatementTableComponent } from './statement-table.component';

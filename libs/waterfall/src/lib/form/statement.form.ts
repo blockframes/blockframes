@@ -63,7 +63,7 @@ function createExpenseFormControl(expense?: Partial<Expense>) {
 
 type ExpenseFormControl = ReturnType<typeof createExpenseFormControl>;
 
-class ExpenseForm extends FormEntity<ExpenseFormControl> {
+export class ExpenseForm extends FormEntity<ExpenseFormControl> {
   constructor(expense?: Partial<Expense>) {
     super(createExpenseFormControl(expense));
   }

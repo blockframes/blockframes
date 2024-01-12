@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Income, Waterfall, getAssociatedSource } from '@blockframes/model';
-import { IncomeEditForm } from '@blockframes/waterfall/form/income-edit.form';
+import { IncomeEditForm } from '../../form/income-edit.form';
 
 interface StatementIncomeChangeData {
   incomes: Income[];
