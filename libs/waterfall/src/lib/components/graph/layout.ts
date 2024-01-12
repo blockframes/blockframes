@@ -250,7 +250,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
       children: source.destinationId ? [source.destinationId] : [],
       medias: source.medias,
       territories: source.territories,
-      // version: source.version, // TODO #9520
+      version: source.version,
     }));
   });
 
