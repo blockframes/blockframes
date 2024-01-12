@@ -8,6 +8,7 @@ import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { StatementHeaderModule } from '../../statement-header/statement-header.module';
 import { StatementArbitraryChangeModule } from '../../statement-arbitrary-change/statement-arbitrary-change.module';
+import { ExpenseTypePipeModule } from '../../../pipes/expense-type.pipe';
 
 // Components
 import { StatementDirectSalesSummaryComponent } from './summary.component';
@@ -22,6 +23,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [StatementDirectSalesSummaryComponent],
@@ -34,6 +36,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     TableModule,
     StatementHeaderModule,
     StatementArbitraryChangeModule,
+    ExpenseTypePipeModule,
 
     // Material
     MatDividerModule,
@@ -45,6 +48,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatInputModule,
     MatTooltipModule,
     MatDialogModule,
+    MatSlideToggleModule,
   ],
   exports: [StatementDirectSalesSummaryComponent]
 })

@@ -316,7 +316,11 @@ export class StatementDirectSalesSummaryComponent {
     })
   );
 
-  private waterfall = this.shell.waterfall;
+  public expenses$ = combineLatest([this.statement$, this.shell.expenses$]).pipe(
+    map(([statement, expenses]) => statement.expenseIds.map(id => expenses.find(e => e.id === id)))
+  );
+
+  public waterfall = this.shell.waterfall;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
