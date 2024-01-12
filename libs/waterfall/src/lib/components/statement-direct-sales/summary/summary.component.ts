@@ -317,7 +317,10 @@ export class StatementDirectSalesSummaryComponent {
   );
 
   public expenses$ = combineLatest([this.statement$, this.shell.expenses$]).pipe(
-    map(([statement, expenses]) => statement.expenseIds.map(id => expenses.find(e => e.id === id)))
+    map(([statement, expenses]) =>
+      statement.expenseIds.map(id => expenses.find(e => e.id === id))
+        .filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true)
+    )
   );
 
   public waterfall = this.shell.waterfall;

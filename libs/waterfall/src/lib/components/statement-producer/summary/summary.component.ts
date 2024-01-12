@@ -277,7 +277,8 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
       const parentStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
         .filter(s => s.payments.right.some(r => r.incomeIds.some(id => statement.incomeIds.includes(id))));
       const expenseIds = parentStatements.map(s => s.expenseIds).flat();
-      return expenses.filter(e => expenseIds.includes(e.id));
+      return expenses.filter(e => expenseIds.includes(e.id))
+        .filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true);
     })
   );
 
