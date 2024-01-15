@@ -172,7 +172,7 @@ export class StatementDistributorSummaryComponent {
 
             rows.push({
               section: expenseType.name,
-              cap: expenseType.cap.default > 0 ? { [expenseType.currency]: expenseType.cap.default } : undefined, // TODO #9520 replace default by versionId
+              cap: expenseType.cap.default > 0 ? { [expenseType.currency]: expenseType.cap.default } : undefined,
               type: 'expense',
               previous: getTotalPerCurrency(previousExpenses),
               current: getTotalPerCurrency(currentExpenses),
@@ -270,7 +270,7 @@ export class StatementDistributorSummaryComponent {
 
             rows.push({
               section: expenseType.name,
-              cap: expenseType.cap.default > 0 ? { [expenseType.currency]: expenseType.cap.default } : undefined, // TODO #9520 replace default by versionId
+              cap: expenseType.cap.default > 0 ? { [expenseType.currency]: expenseType.cap.default } : undefined,
               type: 'expense',
               previous: getTotalPerCurrency(previousExpenses),
               current: getTotalPerCurrency(currentExpenses),

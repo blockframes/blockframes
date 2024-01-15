@@ -140,8 +140,11 @@
                 <mat-icon svgIcon="statement_warning"></mat-icon>
               </button>
             </ng-template>
-            <ng-template colRef="capped" label="Capped" let-capped sort>
-              <mat-slide-toggle [checked]="capped" disabled color="primary"></mat-slide-toggle>
+            <ng-template colRef="" label="Capped" let-item sort>
+              <mat-slide-toggle [checked]="item.capped" disabled color="primary"></mat-slide-toggle>
+              <ng-container *ngIf="item.cap">
+                <span class="cap">CAP: <price-per-currency [price]="item.cap"></price-per-currency></span>
+              </ng-container>
             </ng-template>
           </bf-table>
         </mat-expansion-panel>

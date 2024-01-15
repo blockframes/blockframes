@@ -4,6 +4,7 @@ import {
   Duration,
   Expense,
   Income,
+  PricePerCurrency,
   Right,
   RightOverride,
   Statement,
@@ -26,6 +27,7 @@ import {
   getStatementRightsToDisplay,
   getStatementSources,
   getTransferDetails,
+  isDefaultVersion,
   isDirectSalesStatement,
   isDistributorStatement,
   isSource,
@@ -34,7 +36,7 @@ import {
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { StatementForm } from '../../../form/statement.form';
-import { BehaviorSubject, Subscription, combineLatest, debounceTime, map, shareReplay } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, combineLatest, debounceTime, map, shareReplay } from 'rxjs';
 import { unique } from '@blockframes/utils/helpers';
 import { MatDialog } from '@angular/material/dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
@@ -272,13 +274,22 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     })
   );
 
-  public expenses$ = combineLatest([this.statement$, this.shell.statements$, this.shell.expenses$]).pipe(
-    map(([statement, statements, expenses]) => {
+  public expenses$: Observable<(Expense & { cap?: PricePerCurrency })[]> = combineLatest([
+    this.statement$, this.shell.statements$,
+    this.shell.expenses$, this.shell.versionId$
+  ]).pipe(
+    map(([statement, statements, expenses, versionId]) => {
       const parentStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
         .filter(s => s.payments.right.some(r => r.incomeIds.some(id => statement.incomeIds.includes(id))));
       const expenseIds = parentStatements.map(s => s.expenseIds).flat();
-      return expenses.filter(e => expenseIds.includes(e.id))
-        .filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true);
+      return expenses.filter(e => expenseIds.includes(e.id)).map(e => {
+        const type = e.typeId ? this.waterfall.expenseTypes[e.contractId].find(t => t.id === e.typeId) : undefined;
+        if (!type) return e;
+        const versionKey = isDefaultVersion(this.shell.waterfall, versionId) ? 'default' : versionId;
+        const cap = type.cap.version[versionKey] !== undefined ? type.cap.version[versionKey] : type.cap.default;
+        if (cap === 0) return e;
+        return { ...e, cap: { [type.currency]: cap } };
+      }).filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true);
     })
   );
 
