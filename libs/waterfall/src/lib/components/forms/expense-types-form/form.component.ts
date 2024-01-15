@@ -19,7 +19,7 @@ import { WaterfallService } from '../../../waterfall.service';
 export class ExpenseTypesFormComponent implements OnInit {
 
   @Input() contractId: string;
-  public versionId$ = this.shell.versionId$.pipe(map(versionId => isDefaultVersion(this.shell.waterfall, versionId) ? 'default' : versionId));
+  public versionId$ = this.shell.versionId$.pipe(map(versionId => (!versionId || isDefaultVersion(this.shell.waterfall, versionId)) ? 'default' : versionId));
   private versions = this.shell.waterfall.versions.map(v => v.id).filter(id => id !== getDefaultVersionId(this.shell.waterfall));
   public form = FormList.factory<ExpenseType, ExpenseTypeForm>([], expenseType => new ExpenseTypeForm(expenseType, this.versions));
   public waterfall$ = this.shell.waterfall$;
