@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, OnInit, Output, EventEmitter, Input
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 
-import { createVersion, getDefaultVersionId, Version } from '@blockframes/model';
+import { createVersion, getDefaultVersionId, isDefaultVersion, Version } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { VersionEditorComponent } from '../version-editor/version-editor.component';
@@ -21,6 +21,7 @@ export class VersionSelectorComponent implements OnInit {
 
   public waterfall$ = this.shell.waterfall$;
   public canBypassRules$ = this.shell.canBypassRules$;
+  public canInitWaterfall$ = this.shell.canInitWaterfall$;
   public versionId: string;
   public lockedVersionId = this.shell.lockedVersionId;
   @Input() @boolean simulator = false;
@@ -56,6 +57,7 @@ export class VersionSelectorComponent implements OnInit {
       data: createModalData({
         mode: 'edit',
         version,
+        isDefaultVersion: isDefaultVersion(this.shell.waterfall, versionId),
         rightholders: this.shell.waterfall.rightholders,
         onConfirm: async (version: Version, rightholderIds: string[] = []) => {
           const versions = this.shell.waterfall.versions.map(v => v.id === version.id ? version : v);
@@ -75,6 +77,7 @@ export class VersionSelectorComponent implements OnInit {
     this.dialog.open(VersionEditorComponent, {
       data: createModalData({
         mode: 'create',
+        isDefaultVersion: false,
         version: createVersion({ id: this.waterfallService.createId(), name: 'New version' }),
         rightholders: this.shell.waterfall.rightholders,
         onConfirm: async (_version: Version, rightholderIds: string[] = []) => {
@@ -95,6 +98,7 @@ export class VersionSelectorComponent implements OnInit {
     this.dialog.open(VersionEditorComponent, {
       data: createModalData({
         mode: 'init',
+        isDefaultVersion: true,
         version: createVersion({ id: this.waterfallService.createId(), name: 'First version' }),
         rightholders: this.shell.waterfall.rightholders,
         onConfirm: async (_version: Version, rightholderIds: string[] = []) => {

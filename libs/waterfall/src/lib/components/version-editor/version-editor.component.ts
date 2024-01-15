@@ -6,6 +6,7 @@ import { VersionForm } from '../../form/version.form';
 interface VersionData {
   mode: 'edit' | 'create' | 'init';
   version: Version;
+  isDefaultVersion: boolean;
   rightholders: WaterfallRightholder[];
   onConfirm?: (version: Version, rightholderIds: string[]) => void
 }

@@ -333,8 +333,11 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
     // On waterfall side, the root contract is updated (updateContract), so we need to specify this one.
     const rootContract = contractAndAmendments.find(c => !c.rootId);
 
+    // An income should have at least one statement associated on current version
+    const statements = _statements.filter(s => s.incomeIds.includes(i.id));
+    if (!statements.length) continue;
+
     // Fetch overrides from statements. There can be multiple statements for a single income (distrib/direct sales and outgoing(s))
-    const statements = _statements.filter(s => s.incomeIds.includes(i.id)); // TODO #9520 check statement & income version
     const rightOverrides = statements.map(s => s.rightOverrides.filter(r => r.incomeId === i.id).map(r => ({ rightId: r.rightId, percent: r.percent / 100 }))).flat();
 
     const source = getAssociatedSource(i, sources);
