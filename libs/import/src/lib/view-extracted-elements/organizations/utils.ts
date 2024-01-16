@@ -24,6 +24,7 @@ interface FieldsConfig {
       catalog: ModuleAccess;
       festival: ModuleAccess;
       financiers: ModuleAccess;
+      waterfall: ModuleAccess;
     };
     name: string;
     email: string;
@@ -112,6 +113,7 @@ export async function formatOrg(sheetTab: SheetTab, organizationService: Organiz
     /* k */ 'org.appAccess.catalog': (value: string) => formatAccess(value, 'Catalog Access'),
     /* l */ 'org.appAccess.festival': (value: string) => formatAccess(value, 'Festival Access'),
     /* m */ 'org.appAccess.financiers': (value: string) => formatAccess(value, 'Financiers Access'),
+    /* n */ 'org.appAccess.waterfall': (value: string) => formatAccess(value, 'Blockframes Access'),
   };
 
   const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig);
