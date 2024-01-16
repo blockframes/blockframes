@@ -1,43 +1,35 @@
 
-import { Subscription } from 'rxjs';
+import { map, tap } from 'rxjs';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Component, OnDestroy, OnInit } from '@angular/core';
 
+import { Right } from '@blockframes/model';
 import { RightService } from '@blockframes/waterfall/right.service';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 
 import { WaterfallPoolModalComponent } from '../pool-modal/pool-modal.component';
-import { Right } from '@blockframes/model';
 
 
 @Component({
   selector: 'waterfall-pool-list',
   templateUrl: './pool-list.component.html',
-  styleUrls: ['./pool-list.component.scss'] 
+  styleUrls: ['./pool-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WaterfallPoolListComponent implements OnInit, OnDestroy {
+export class WaterfallPoolListComponent {
 
   rights: Right[] = [];
-  existingPools = new Set<string>();
-
-  sub: Subscription;
+  existingPools$ = this.shell.rights$.pipe(
+    tap(rights => this.rights = rights),
+    map(rights => new Set(rights.map(r => r.pools).flat()))
+  );
 
   constructor(
     private dialog: MatDialog,
     private rightService: RightService,
     private shell: DashboardWaterfallShellComponent,
   ) { }
-
-  ngOnInit() {
-    this.sub = this.shell.rights$.subscribe(rights => {
-      this.rights = rights;
-      this.existingPools = new Set(rights.map(r => r.pools).flat());
-    });
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
 
   removePool(pool: string) {
     const rights = this.rights.map(r => ({ ...r, pools: r.pools.filter(p => p !== pool) }));
@@ -49,7 +41,7 @@ export class WaterfallPoolListComponent implements OnInit, OnDestroy {
     this.dialog.open(
       WaterfallPoolModalComponent,
       {
-        data: {
+        data: createModalData({
           rights: this.rights,
           selected,
           name: oldName,
@@ -62,7 +54,7 @@ export class WaterfallPoolListComponent implements OnInit, OnDestroy {
 
             await this.rightService.update(rights, { params: { waterfallId: this.shell.waterfall.id } });
           },
-        },
+        }),
       },
     );
   }
