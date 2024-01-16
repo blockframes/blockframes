@@ -122,6 +122,36 @@
         </mat-expansion-panel>
       </div>
     </ng-container>
+
+    <ng-container *ngIf="expenses$ | async as expenses">
+      <mat-divider *ngIf="expenses.length"></mat-divider>
+      <div class="surface" *ngIf="expenses.length">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <span>Expenses details</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <bf-table [source]="expenses" pagination="50">
+            <ng-template colRef="date" label="Date" let-date sort defaultSort>
+              {{ date | date: 'dd/MM/yyyy' }}
+            </ng-template>
+            <ng-template colRef="nature" label="Nature" let-nature sort>
+              {{ nature }}
+            </ng-template>
+            <ng-template colRef="" label="Type" let-item sort>
+              {{ item.typeId | expenseType : item.contractId : waterfall }}
+            </ng-template>
+            <ng-template colRef="" label="Price" let-item sort>
+              <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
+            </ng-template>
+            <ng-template colRef="capped" label="Capped" let-capped sort>
+              <mat-slide-toggle [checked]="capped" disabled color="primary"></mat-slide-toggle>
+            </ng-template>
+          </bf-table>
+        </mat-expansion-panel>
+      </div>
+    </ng-container>
   </article>
 
   <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment"></waterfall-statement-participation>

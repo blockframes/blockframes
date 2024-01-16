@@ -9,6 +9,7 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { StatementHeaderModule } from '../../statement-header/statement-header.module';
 import { StatementParticipationModule } from '../../statement-participation/statement-participation.module';
 import { StatementArbitraryChangeModule } from '../../statement-arbitrary-change/statement-arbitrary-change.module';
+import { ExpenseTypePipeModule } from '../../../pipes/expense-type.pipe';
 
 // Components
 import { StatementDistributorSummaryComponent } from './summary.component';
@@ -23,6 +24,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [StatementDistributorSummaryComponent],
@@ -36,6 +38,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     StatementHeaderModule,
     StatementParticipationModule,
     StatementArbitraryChangeModule,
+    ExpenseTypePipeModule,
 
     // Material
     MatDividerModule,
@@ -47,6 +50,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatInputModule,
     MatTooltipModule,
     MatDialogModule,
+    MatSlideToggleModule,
   ],
   exports: [StatementDistributorSummaryComponent]
 })

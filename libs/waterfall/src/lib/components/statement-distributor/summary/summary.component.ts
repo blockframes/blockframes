@@ -119,8 +119,17 @@ export class StatementDistributorSummaryComponent {
       const displayedRights = getStatementRightsToDisplay(current, rights);
       const orderedRights = getOrderedRights(displayedRights, simulation.waterfall.state);
 
+      const statementIncomes = incomes.filter(i => this.statement.incomeIds.includes(i.id));
+
       return sources.map(source => {
         const rows: BreakdownRow[] = [];
+
+        // Remove sources where all incomes are hidden from reported statement 
+        if (this.statement.status === 'reported') {
+          const sourceIncomes = statementIncomes.filter(i => getAssociatedSource(i, sources).id === source.id);
+          const allHidden = sourceIncomes.every(i => i.version[this.shell.versionId$.value]?.hidden);
+          if (allHidden) return;
+        }
 
         // Incomes declared by statement.senderId
         const previousSourcePayments = previous.map(s => s.payments.income).flat().filter(income => getAssociatedSource(incomes.find(i => i.id === income.incomeId), this.waterfall.sources).id === source.id);
@@ -209,7 +218,7 @@ export class StatementDistributorSummaryComponent {
           net: currentNet,
           stillToBeRecouped: stillToBeRecouped.length ? getTotalPerCurrency(stillToBeRecouped) : undefined
         };
-      });
+      }).filter(r => r);
     })
   );
 
@@ -227,7 +236,7 @@ export class StatementDistributorSummaryComponent {
     this.shell.incomes$, this.shell.rights$, this.shell.simulation$
   ]).pipe(
     map(([current, _history, _expenses, incomes, rights, simulation]) => {
-      const indexOfCurrent = _history.findIndex(s => s.id === current.id|| s.id === current.duplicatedFrom);
+      const indexOfCurrent = _history.findIndex(s => s.id === current.id || s.id === current.duplicatedFrom);
       _history[indexOfCurrent] = { ...current, number: _history[indexOfCurrent].number };
       const previous = _history.slice(indexOfCurrent + 1);
       const history = _history.slice(indexOfCurrent);
@@ -308,7 +317,14 @@ export class StatementDistributorSummaryComponent {
     })
   );
 
-  private waterfall = this.shell.waterfall;
+  public expenses$ = combineLatest([this.statement$, this.shell.expenses$]).pipe(
+    map(([statement, expenses]) =>
+      statement.expenseIds.map(id => expenses.find(e => e.id === id))
+        .filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true)
+    )
+  );
+
+  public waterfall = this.shell.waterfall;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,

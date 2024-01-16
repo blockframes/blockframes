@@ -364,11 +364,13 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   async refreshAllWaterfalls() {
     const canBypassRules = await firstValueFrom(this.canBypassRules$);
     if (!canBypassRules) throw new Error('You are not allowed to refresh waterfalls');
+    const currentVersion = this.versionId$.value;
     this.isRefreshing$.next(true);
     for (const version of this.waterfall.versions) {
       this.setVersionId(version.id);
       await this.refreshWaterfall(false);
     }
+    this.setVersionId(currentVersion);
     this.isRefreshing$.next(false);
   }
 

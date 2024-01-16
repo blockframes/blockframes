@@ -118,8 +118,17 @@ export class StatementDirectSalesSummaryComponent {
       const displayedRights = getStatementRightsToDisplay(current, rights);
       const orderedRights = getOrderedRights(displayedRights, simulation.waterfall.state);
 
+      const statementIncomes = incomes.filter(i => this.statement.incomeIds.includes(i.id));
+
       return sources.map(source => {
         const rows: BreakdownRow[] = [];
+
+        // Remove sources where all incomes are hidden from reported statement 
+        if (this.statement.status === 'reported') {
+          const sourceIncomes = statementIncomes.filter(i => getAssociatedSource(i, sources).id === source.id);
+          const allHidden = sourceIncomes.every(i => i.version[this.shell.versionId$.value]?.hidden);
+          if (allHidden) return;
+        }
 
         // Incomes declared by statement.senderId
         const previousSourcePayments = previous.map(s => s.payments.income).flat().filter(income => getAssociatedSource(incomes.find(i => i.id === income.incomeId), this.waterfall.sources).id === source.id);
@@ -208,7 +217,7 @@ export class StatementDirectSalesSummaryComponent {
           net: currentNet,
           stillToBeRecouped: stillToBeRecouped.length ? getTotalPerCurrency(stillToBeRecouped) : undefined
         };
-      });
+      }).filter(r => r);
     })
   );
 
@@ -307,7 +316,14 @@ export class StatementDirectSalesSummaryComponent {
     })
   );
 
-  private waterfall = this.shell.waterfall;
+  public expenses$ = combineLatest([this.statement$, this.shell.expenses$]).pipe(
+    map(([statement, expenses]) =>
+      statement.expenseIds.map(id => expenses.find(e => e.id === id))
+        .filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true)
+    )
+  );
+
+  public waterfall = this.shell.waterfall;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,

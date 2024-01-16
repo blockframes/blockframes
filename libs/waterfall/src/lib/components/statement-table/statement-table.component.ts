@@ -5,7 +5,6 @@ import {
   Income,
   Statement,
   Waterfall,
-  getDefaultVersion,
   getDefaultVersionId,
   getIncomesSources,
   isDistributorStatement,
@@ -50,6 +49,7 @@ export class StatementTableComponent {
   public contracts$ = this.shell.contracts$;
   public incomes$ = this.shell.incomes$;
   public sorts = sorts;
+  public canBypassRules$ = this.shell.canBypassRules$;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
@@ -101,10 +101,3 @@ export class IncomesSourcesPipe implements PipeTransform {
   }
 }
 
-@Pipe({ name: 'versionName' })
-export class VersionNamePipe implements PipeTransform {
-  transform(versionId: string, waterfall: Waterfall) {
-    if (!versionId) return getDefaultVersion(waterfall)?.name || '--';
-    return waterfall.versions.find(v => v.id === versionId)?.name || '--';
-  }
-}

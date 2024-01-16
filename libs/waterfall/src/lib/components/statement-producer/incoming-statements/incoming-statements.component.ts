@@ -3,7 +3,10 @@ import {
   Statement,
   WaterfallContract,
   WaterfallRightholder,
+  getDefaultVersionId,
   getOutgoingStatementPrerequists,
+  isDirectSalesStatement,
+  isDistributorStatement,
   isProducerStatement,
   sortStatements
 } from '@blockframes/model';
@@ -49,102 +52,117 @@ export class IncomingStatementComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     const rightholder = this.shell.waterfall.rightholders.find(r => r.id === this.statement.receiverId);
     const hasLockedVersion = rightholder.lockedVersionId && this.shell.waterfall.versions.some(v => v.id === rightholder.lockedVersionId)
-    const versionId = hasLockedVersion ? rightholder.lockedVersionId : this.statement.versionId;
+    const versionId = hasLockedVersion ? rightholder.lockedVersionId : this.statement.versionId || getDefaultVersionId(this.shell.waterfall);
     const statements = await this.shell.statements(versionId);
     const contracts = await this.shell.contracts();
-    const rights = await this.shell.rights();
-    const incomes = await this.shell.incomes();
 
-    const formArraySub = this.formArray.valueChanges.pipe(
-      pairwise(),
-      filter(([prev, curr]) => {
-        const prevChecked = prev?.filter(s => s.checked).map(s => s.id) || [];
-        const currChecked = curr.filter(s => s.checked).map(s => s.id);
-        return prevChecked.length !== currChecked.length || prevChecked.some(id => !currChecked.includes(id));
-      }),
-      map(([_, curr]) => curr)
-    ).subscribe(value => {
-      const checkedStatements: string[] = value.filter(s => s.checked).map(s => s.id);
-      const incomes = checkedStatements.map(s => statements.find(statement => statement.id === s).incomeIds).flat();
-      this.incomeIds.emit(incomes);
-    });
+    if (this.statement.status === 'reported') {
+      const statementSub = this.statement$.subscribe(statement => {
+        const filteredStatements = statements.filter(s => s.id !== statement.id && !isProducerStatement(s));
+        const reportableStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
+          .filter(s => s.payments.right.some(r => r.incomeIds.some(id => statement.incomeIds.includes(id))));
+        this.computeReportableStatements(statement, reportableStatements, filteredStatements, contracts);
+      });
+      this.subs.push(statementSub);
+    } else {
+      const rights = await this.shell.rights(versionId);
+      const incomes = await this.shell.incomes([], versionId);
+      const formArraySub = this.formArray.valueChanges.pipe(
+        pairwise(),
+        filter(([prev, curr]) => {
+          const prevChecked = prev?.filter(s => s.checked).map(s => s.id) || [];
+          const currChecked = curr.filter(s => s.checked).map(s => s.id);
+          return prevChecked.length !== currChecked.length || prevChecked.some(id => !currChecked.includes(id));
+        }),
+        map(([_, curr]) => curr)
+      ).subscribe(value => {
+        const checkedStatements: string[] = value.filter(s => s.checked).map(s => s.id);
+        const incomes = checkedStatements.map(s => statements.find(statement => statement.id === s).incomeIds).flat();
+        this.incomeIds.emit(incomes);
+      });
 
-    const date$ = this.form.get('duration').get('to').valueChanges.pipe(
-      pairwise(),
-      filter(([prev, curr]) => curr instanceof Date && prev?.getTime() !== curr.getTime()),
-      map(([_, curr]) => curr),
-      startWith(this.form.get('duration').get('to').value),
-      filter(date => date instanceof Date)
-    );
-    this.subs.push(formArraySub);
+      const date$ = this.form.get('duration').get('to').valueChanges.pipe(
+        pairwise(),
+        filter(([prev, curr]) => curr instanceof Date && prev?.getTime() !== curr.getTime()),
+        map(([_, curr]) => curr),
+        startWith(this.form.get('duration').get('to').value),
+        filter(date => date instanceof Date)
+      );
+      this.subs.push(formArraySub);
 
-    const statementSub = combineLatest([date$, this.statement$]).subscribe(async ([date, statement]) => {
-      this.distributors = [];
-      const state = await firstValueFrom(this.shell.simulation$);
+      const statementSub = combineLatest([date$, this.statement$]).subscribe(async ([date, statement]) => {
+        this.distributors = [];
+        const state = await firstValueFrom(this.shell.simulation$);
 
-      const config = {
-        senderId: statement.senderId,
-        receiverId: statement.receiverId,
-        statements: statements.filter(s => s.id !== statement.id),
-        contracts,
-        rights,
-        titleState: state.waterfall.state,
-        incomes,
-        sources: this.shell.waterfall.sources,
-        date,
-      };
+        const config = {
+          senderId: statement.senderId,
+          receiverId: statement.receiverId,
+          statements: statements.filter(s => s.id !== statement.id),
+          contracts,
+          rights,
+          titleState: state.waterfall.state,
+          incomes,
+          sources: this.shell.waterfall.sources,
+          date,
+        };
 
-      const prerequists = getOutgoingStatementPrerequists(config);
-      const reportableIncomes = prerequists[statement.contractId]?.incomeIds || [];
+        const prerequists = getOutgoingStatementPrerequists(config);
+        const reportableIncomes = prerequists[statement.contractId]?.incomeIds || [];
 
-      const filteredStatements = statements.filter(s => s.id !== statement.id && !isProducerStatement(s));
-      const reportableStatements = filteredStatements.filter(s => s.incomeIds.some(id => reportableIncomes.includes(id)));
-      const distributorsIds = unique(reportableStatements.map(s => s.senderId));
-      this.distributors = this.shell.waterfall.rightholders.filter(r => distributorsIds.includes(r.id));
+        const filteredStatements = statements.filter(s => s.id !== statement.id && !isProducerStatement(s));
+        const reportableStatements = filteredStatements.filter(s => s.incomeIds.some(id => reportableIncomes.includes(id)));
 
-      this.formArray.clear({ emitEvent: false });
-      this.distributorContracts = {};
+        this.computeReportableStatements(statement, reportableStatements, filteredStatements, contracts);
+      });
 
-      for (const statement of reportableStatements) {
-        if (statement.contractId) {
-          if (!this.distributorContracts[statement.senderId]) {
-            this.distributorContracts[statement.senderId] = [contracts.find(c => c.id === statement.contractId)];
-          } else if (!this.distributorContracts[statement.senderId].some(c => c.id === statement.contractId)) {
-            this.distributorContracts[statement.senderId].push(contracts.find(c => c.id === statement.contractId));
-          }
+      this.subs.push(statementSub);
+    }
+  }
+
+  private computeReportableStatements(statement: Statement, reportableStatements: Statement[], filteredStatements: Statement[], contracts: WaterfallContract[]) {
+    const distributorsIds = unique(reportableStatements.map(s => s.senderId));
+    this.distributors = this.shell.waterfall.rightholders.filter(r => distributorsIds.includes(r.id));
+
+    this.formArray.clear({ emitEvent: false });
+    this.distributorContracts = {};
+
+    for (const statement of reportableStatements) {
+      if (statement.contractId) {
+        if (!this.distributorContracts[statement.senderId]) {
+          this.distributorContracts[statement.senderId] = [contracts.find(c => c.id === statement.contractId)];
+        } else if (!this.distributorContracts[statement.senderId].some(c => c.id === statement.contractId)) {
+          this.distributorContracts[statement.senderId].push(contracts.find(c => c.id === statement.contractId));
         }
       }
+    }
 
-      this.reportableStatements = [];
-      for (const distributor of this.distributors) {
-        if (!this.distributorContracts[distributor.id]) {
-          const distributorStatements = sortStatements(filteredStatements.filter(s => s.senderId === distributor.id), false);
+    this.reportableStatements = [];
+    for (const distributor of this.distributors) {
+      if (!this.distributorContracts[distributor.id]) {
+        const distributorStatements = sortStatements(filteredStatements.filter(s => s.senderId === distributor.id), false);
+        const filteredDistributorStatements = distributorStatements.filter(s => reportableStatements.some(stm => stm.id === s.id));
+        this.reportableStatements = [...this.reportableStatements, ...filteredDistributorStatements];
+      } else {
+        for (const contract of this.distributorContracts[distributor.id]) {
+          const distributorStatements = sortStatements(filteredStatements.filter(s => s.senderId === distributor.id && s.contractId === contract.id), false);
           const filteredDistributorStatements = distributorStatements.filter(s => reportableStatements.some(stm => stm.id === s.id));
           this.reportableStatements = [...this.reportableStatements, ...filteredDistributorStatements];
-        } else {
-          for (const contract of this.distributorContracts[distributor.id]) {
-            const distributorStatements = sortStatements(filteredStatements.filter(s => s.senderId === distributor.id && s.contractId === contract.id), false);
-            const filteredDistributorStatements = distributorStatements.filter(s => reportableStatements.some(stm => stm.id === s.id));
-            this.reportableStatements = [...this.reportableStatements, ...filteredDistributorStatements];
-          }
         }
       }
+    }
 
-      const checkedStatements = reportableStatements.filter(s => s.incomeIds.some(id => statement.incomeIds.includes(id)));
-      for (const statement of this.reportableStatements) {
-        this.formArray.push(new FormGroup({
-          id: new FormControl<string>(statement.id),
-          checked: new FormControl<boolean>(checkedStatements.some(s => s.id === statement.id))
-        }), { emitEvent: false });
-      }
+    const checkedStatements = reportableStatements.filter(s => s.incomeIds.some(id => statement.incomeIds.includes(id)));
+    for (const statement of this.reportableStatements) {
+      this.formArray.push(new FormGroup({
+        id: new FormControl<string>(statement.id),
+        checked: new FormControl<boolean>(checkedStatements.some(s => s.id === statement.id))
+      }), { emitEvent: false });
+    }
 
-      this.formArray.updateValueAndValidity({ emitEvent: true });
+    this.formArray.updateValueAndValidity({ emitEvent: true });
 
-      this.onTabChanged({ index: 0 });
-      this.cdr.markForCheck();
-    });
-
-    this.subs.push(statementSub);
+    this.onTabChanged({ index: 0 });
+    this.cdr.markForCheck();
   }
 
   ngOnDestroy() {

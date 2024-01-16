@@ -57,6 +57,14 @@ const statementsRolesConfig: Record<StatementType, StatementRolesConfig> = {
   producer: { roles: statementsRolesMapping.producer, divider: true, visible: true },
 }
 
+function filterRightholderStatements(statements: Statement[], rightholderId: string) {
+  const rightholderStatements = statements.filter(s => [s.senderId, s.receiverId].includes(rightholderId) && s.status === 'reported');
+  const rightholderStatementsIds = rightholderStatements.map(s => s.id);
+  const incomeIds = rightholderStatements.map(s => s.incomeIds).flat();
+  const parentStatements = statements.filter(s => !rightholderStatementsIds.includes(s.id) && !isProducerStatement(s) && s.status === 'reported' && s.incomeIds.some(id => incomeIds.includes(id)));
+  return [...rightholderStatements, ...parentStatements];
+}
+
 @Component({
   selector: 'waterfall-title-statements',
   templateUrl: './statements.component.html',
@@ -67,7 +75,6 @@ export class StatementsComponent implements OnInit, OnDestroy {
   public waterfall$ = this.shell.waterfall$;
   public statements: Statement[] = [];
   public rightholderContracts: (Partial<WaterfallContract> & { statements: (Statement & { number: number })[] })[] = [];
-  public statementSender: WaterfallRightholder;
   public haveStatements: boolean;
   public rightholders: WaterfallRightholder[] = [];
   public rightholderControl = new FormControl<string>('');
@@ -75,10 +82,12 @@ export class StatementsComponent implements OnInit, OnDestroy {
   public rights: Right[] = [];
   public statementTypes: StatementChipConfig[] = [];
   public selected: StatementType;
+  public isStatementSender: boolean;
 
   private currentStateDate = new Date();
   private waterfall = this.shell.waterfall;
   private sub: Subscription;
+  private statementSender: WaterfallRightholder;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
@@ -96,12 +105,24 @@ export class StatementsComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.rights = await this.shell.rights();
-    this.statementSender = await firstValueFrom(this.shell.currentRightholder$);
-    if (!this.statementSender) {
+    const currentRightholder = await firstValueFrom(this.shell.currentRightholder$);
+    if (!currentRightholder) {
       this.snackbar.open(`Organization "${this.orgService.org.name}" is not associated to any rightholders.`, 'close', { duration: 5000 });
       return;
     }
-    this.statements = await this.shell.statements();
+    /**
+     * @dev statementSender should be current rightholder when we will 
+     * allow rightholders other than producer (distributors) to create statements
+     */
+    this.statementSender = this.waterfall.rightholders.find(r => r.roles.includes('producer'));
+    if (!this.statementSender) {
+      this.snackbar.open(`Producer is not defined.`, 'close', { duration: 5000 });
+      return;
+    }
+    const statements = await this.shell.statements();
+    this.isStatementSender = currentRightholder.id === this.statementSender.id;
+    this.statements = !this.isStatementSender ? filterRightholderStatements(statements, currentRightholder.id) : statements;
+
     this.contracts = await this.shell.contracts();
     this.statementTypes = Object.entries(statementsRolesConfig).map(([key, value]: [StatementType, StatementRolesConfig]) => (
       {
@@ -118,7 +139,8 @@ export class StatementsComponent implements OnInit, OnDestroy {
     this.sub = combineLatest([
       this.rightholderControl.valueChanges.pipe(startWith(this.rightholderControl.value)),
       this.shell.statements$
-    ]).subscribe(([value, statements]) => {
+    ]).subscribe(([value, _statements]) => {
+      const statements = !this.isStatementSender ? filterRightholderStatements(_statements, currentRightholder.id) : _statements;
 
       if (this.selected !== 'directSales') {
         this.rightholderContracts = getContractsWith([this.statementSender.id, value], this.contracts, this.currentStateDate)
@@ -252,7 +274,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
   }
 
   public addNew(type: StatementType) {
-    if (!this.statementSender) return;
+    if (!this.isStatementSender) return;
     if (type === 'directSales') return this.createStatement(this.statementSender.id);
     this.dialog.open(StatementNewComponent, {
       data: createModalData({

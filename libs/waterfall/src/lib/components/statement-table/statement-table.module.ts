@@ -10,9 +10,10 @@ import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price
 import { StatementPaymentModule } from '../statement-payment/statement-payment.module';
 import { RightHolderNamePipeModule } from '../../pipes/rightholder-name.pipe';
 import { ContractPipeModule } from '@blockframes/contract/contract/pipe';
+import { VersionNamePipeModule } from '../../pipes/version-name.pipe';
 
 // Component
-import { IncomesSourcesPipe, StatementTableComponent, VersionNamePipe } from './statement-table.component';
+import { IncomesSourcesPipe, StatementTableComponent } from './statement-table.component';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -22,7 +23,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
-  declarations: [StatementTableComponent, IncomesSourcesPipe, VersionNamePipe],
+  declarations: [StatementTableComponent, IncomesSourcesPipe],
   imports: [
     CommonModule,
 
@@ -34,6 +35,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     ContractPipeModule,
     JoinPipeModule,
     MaxLengthModule,
+    VersionNamePipeModule,
 
     // Material
     MatIconModule,

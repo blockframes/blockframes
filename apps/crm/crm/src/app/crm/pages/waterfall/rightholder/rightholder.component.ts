@@ -29,6 +29,8 @@ export class RightholderComponent {
 
   public rightholderForm = new WaterfallRightholderForm({});
 
+  public versions = this.shell.waterfall.versions;
+
   constructor(
     private shell: DashboardWaterfallShellComponent,
     private waterfallService: WaterfallService,
@@ -40,6 +42,7 @@ export class RightholderComponent {
 
   public async save() {
     const formValue: WaterfallRightholder = this.rightholderForm.value;
+    if (!formValue.lockedVersionId) delete formValue.lockedVersionId;
     const rightholders = this.shell.waterfall.rightholders.map(r => r.id === formValue.id ? formValue : r);
     await this.waterfallService.update({ id: this.shell.waterfall.id, rightholders });
     this.snackBar.open('Roles updated', 'close', { duration: 3000 });

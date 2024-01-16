@@ -9,7 +9,7 @@ function convertExpensesTo(expenses: Expense[], versionId: string) {
   return expenses.map(e => {
     const price = (e.version && e.version[versionId] !== undefined) ? e.version[versionId].price : e.price;
     return { ...e, price };
-  }).filter(e => !e.version || !e.version[versionId] || !e.version[versionId].deleted);
+  });
 }
 
 @Injectable({ providedIn: 'root' })

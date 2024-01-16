@@ -11,7 +11,7 @@ export interface Expense {
   titleId: string; // equals waterfallId
   status: PaymentStatus;
   price: number;
-  version: Record<string, { deleted?: true, price: number }>;
+  version: Record<string, { hidden?: true, price: number }>;
   currency: MovieCurrency;
   typeId: string;
   nature: string;
