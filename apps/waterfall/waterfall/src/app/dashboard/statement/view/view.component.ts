@@ -43,6 +43,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     switchMap((statementId: string) => this.statementService.valueChanges(statementId, { waterfallId: this.waterfall.id })),
     filter(statement => !!statement),
     tap(statement => {
+      if (statement.versionId) this.shell.setVersionId(statement.versionId);
       if (this.shell.setDate(statement.duration.to)) {
         this.shell.simulateWaterfall();
         this.form.setAllValue(statement);

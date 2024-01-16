@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 import { DocumentSnapshot } from '@firebase/firestore';
-import { Statement, createStatement } from '@blockframes/model';
+import { Statement, Version, Waterfall, createStatement } from '@blockframes/model';
 import { BlockframesSubCollection } from '@blockframes/utils/abstract-service';
 import { map } from 'rxjs';
 
-function convertStatementsTo(statements: Statement[], versionId: string) {
-  if (!versionId) return statements;
+function convertStatementsTo(_statements: Statement[], version: Version) {
+  if (!version?.id) return _statements;
+  if (version.standalone) return _statements.filter(s => s.versionId === version.id);
+  const statements = _statements.filter(s => !s.standalone);
   const duplicatedStatements = statements.filter(s => !!s.duplicatedFrom);
   const rootStatements = statements.filter(s => !s.duplicatedFrom);
-  return rootStatements.map(s => duplicatedStatements.find(d => d.duplicatedFrom === s.id && d.versionId === versionId) || s);
+  return rootStatements.map(s => duplicatedStatements.find(d => d.duplicatedFrom === s.id && d.versionId === version.id) || s);
 }
 
 @Injectable({ providedIn: 'root' })
@@ -21,14 +23,14 @@ export class StatementService extends BlockframesSubCollection<Statement> {
     return createStatement(statement);
   }
 
-  public statementsChanges(waterfallId: string, versionId: string) {
-    return this.valueChanges({ waterfallId }).pipe(
-      map(statements => convertStatementsTo(statements, versionId))
+  public statementsChanges(waterfall: Waterfall, versionId: string) {
+    return this.valueChanges({ waterfallId: waterfall.id }).pipe(
+      map(statements => convertStatementsTo(statements, waterfall.versions.find(v => v.id === versionId)))
     );
   }
 
-  public async statements(waterfallId: string, versionId?: string) {
-    const statements = await this.getValue({ waterfallId });
-    return convertStatementsTo(statements, versionId);
+  public async statements(waterfall: Waterfall, versionId?: string) {
+    const statements = await this.getValue({ waterfallId: waterfall.id });
+    return convertStatementsTo(statements, waterfall.versions.find(v => v.id === versionId));
   }
 }

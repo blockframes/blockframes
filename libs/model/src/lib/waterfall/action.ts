@@ -361,10 +361,14 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
   return actions;
 }
 
-export function expensesToActions(expenses: Expense[]) {
+export function expensesToActions(expenses: Expense[], statements: Statement[]) {
   const actions: Action[] = [];
 
   for (const e of expenses.filter(e => e.status === 'received')) {
+
+    // An expense should have at least one statement associated on current version
+    if (!statements.filter(s => s.expenseIds?.includes(e.id)).length) continue;
+
     const { [mainCurrency]: amount } = convertCurrenciesTo({ [e.currency]: e.price }, mainCurrency);
     actions.push(
       action('expense', {
