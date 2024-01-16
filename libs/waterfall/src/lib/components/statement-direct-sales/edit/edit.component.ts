@@ -7,6 +7,7 @@ import {
   createMissingIncomes,
   getStatementSources,
   hasRightsWithExpenseCondition,
+  waterfallSources,
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { StatementForm } from '../../../form/statement.form';
@@ -38,7 +39,7 @@ export class StatementDirectSalesEditComponent implements OnChanges {
       if (this.form.pristine) {
         this.form.setAllValue({ ...this.statement, incomes: [...incomes, ...missingIncomes], expenses, sources, expenseTypes });
       } else if (missingIncomes.length) {
-        this.form.addIncomes(missingIncomes, this.shell.waterfall.sources);
+        this.form.addIncomes(missingIncomes);
       }
       return this.statement;
     })
@@ -51,7 +52,7 @@ export class StatementDirectSalesEditComponent implements OnChanges {
   async ngOnChanges() {
     const incomes = await this.shell.incomes();
     const sources = getStatementSources(this.statement, this.shell.waterfall.sources, incomes);
-    this.waterfallSources = this.shell.waterfall.sources.map(s => sources.find(source => source.id === s.id) ? { ...s, disabled: true } : s);
+    this.waterfallSources = waterfallSources(this.shell.waterfall, this.shell.versionId$.value).map(s => sources.find(source => source.id === s.id) ? { ...s, disabled: true } : s);
     this.sourcesControl.setValue(sources.map(s => s.id));
     this.sources$.next(sources);
   }

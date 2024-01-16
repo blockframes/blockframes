@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { IncomeService } from '@blockframes/contract/income/service';
-import { Income, PricePerCurrency, getAssociatedSource } from '@blockframes/model';
+import { Income, PricePerCurrency } from '@blockframes/model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 
@@ -22,7 +22,7 @@ export class IncomesComponent {
 
   public getAssociatedSource(income: Income) {
     try {
-      return getAssociatedSource(income, this.shell.waterfall.sources).name;
+      return this.shell.waterfall.sources.find(source => source.id === income.sourceId);
     } catch (error) {
       if (this.snackBar._openedSnackBarRef === null) this.snackBar.open(error, 'close', { duration: 5000 });
     }

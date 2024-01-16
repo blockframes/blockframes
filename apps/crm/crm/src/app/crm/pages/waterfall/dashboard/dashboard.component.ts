@@ -16,7 +16,6 @@ import {
   WaterfallContract,
   WaterfallRightholder,
   createProducerStatement,
-  getAssociatedSource,
   getOutgoingStatementPrerequists,
   hasContractWith,
   mainCurrency,
@@ -91,6 +90,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
       } else {
         this.snackBar.open('No statements found for this waterfall', 'close', { duration: 5000 });
+        this.currentState = undefined;
       }
 
       this.cdRef.markForCheck();
@@ -121,7 +121,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       const state = this.history[index + 1];
       const incomes = Object.values(state.incomes).map(incomeState => {
         const income = this.incomes.find(i => i.id === incomeState.id);
-        return { amount: incomeState.amount, source: getAssociatedSource(income, this.waterfall.sources) };
+        return { amount: incomeState.amount, source: this.waterfall.sources.find(s => s.id === income.sourceId) };
       });
 
       const incomesBySource = this.waterfall.sources.map(source => {

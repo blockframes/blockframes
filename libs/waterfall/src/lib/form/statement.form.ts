@@ -9,7 +9,6 @@ import {
   RightholderPayment,
   Statement,
   WaterfallSource,
-  getAssociatedSource,
   mainCurrency
 } from '@blockframes/model';
 import { FormEntity, FormList, compareDates, isDateAfter } from '@blockframes/utils/form';
@@ -167,7 +166,7 @@ function createStatementFormControl(statement?: Partial<FullStatement>) {
   }
 
   for (const source of statement?.sources ?? []) {
-    const incomes = statement?.incomes.filter(i => getAssociatedSource(i, statement.sources).id === source.id);
+    const incomes = statement?.incomes.filter(i => i.sourceId === source.id);
     controls[`incomes-${source.id}`] = FormList.factory(incomes, (el) => new IncomeForm(el));
   }
 
@@ -211,16 +210,15 @@ export class StatementForm extends FormEntity<StatementFormControl> {
     return this.value[`incomes-${sourceId}`] as Income[];
   }
 
-  addIncomes(incomes: Income[], sources: WaterfallSource[]) {
+  addIncomes(incomes: Income[]) {
     for (const income of incomes) {
-      this.addIncome(income, sources);
+      this.addIncome(income);
     }
   }
 
-  addIncome(income: Income, sources: WaterfallSource[]) {
-    const source = getAssociatedSource(income, sources);
-    if (!this.controls[source.id]) {
-      this.addControl(`incomes-${source.id}`, FormList.factory([income], (el) => new IncomeForm(el)));
+  addIncome(income: Income) {
+    if (!this.controls[income.sourceId]) {
+      this.addControl(`incomes-${income.sourceId}`, FormList.factory([income], (el) => new IncomeForm(el)));
     }
   }
 

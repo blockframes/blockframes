@@ -1,9 +1,9 @@
-<ng-container *ngIf="waterfall$ | async as waterfall">
+<ng-container *ngIf="versions$ | async as versions">
   <ng-container *ngIf="!lockedVersionId && (canBypassRules$ | async)">
-    <ng-container *ngIf="waterfall.versions.length !== 0 else initMode">
+    <ng-container *ngIf="versions.length !== 0 else initMode">
       <button mat-flat-button color="primary" [matMenuTriggerFor]="menu">Choose Waterfall Versions</button>
       <mat-menu class="bf-menu" #menu="matMenu">
-        <div mat-menu-item *ngFor="let version of waterfall.versions">
+        <div mat-menu-item *ngFor="let version of versions">
           <section>
             <mat-radio-group (click)="switchToVersion(version.id)" (change)="switchToVersion($event.value)">
               <mat-radio-button [checked]="versionId === version.id"  [value]="version.id">

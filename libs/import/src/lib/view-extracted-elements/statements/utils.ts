@@ -11,7 +11,10 @@ import {
   convertDocumentTo,
   WaterfallContract,
   ExpenseType,
-  createExpenseType
+  createExpenseType,
+  waterfallSources,
+  getDefaultVersionId,
+  allOf
 } from '@blockframes/model';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getStatementConfig } from './fieldConfigs';
@@ -65,6 +68,9 @@ export async function formatStatement(
     if (!data.statement.type) data.statement.type = 'mainDistributor';
 
     const statement = createStatement(data.statement);
+    const waterfall = await waterfallService.getValue(statement.waterfallId);
+    const defaultVersion = getDefaultVersionId(waterfall);
+    const sources = waterfallSources(waterfall, defaultVersion);
 
     if (!isDirectSalesStatement(statement)) {
       const document = await waterfallDocumentsService.getValue(data.contractId, { waterfallId: statement.waterfallId });
@@ -96,10 +102,26 @@ export async function formatStatement(
 
       statement.incomeIds.push(income.id);
 
-      // If sourceId is defined, income does not need territories & medias
-      if (income.sourceId) {
-        income.territories = [];
-        income.medias = [];
+      // If sourceId is not defined, sourceId is found by matching territories and medias
+      if (!income.sourceId) {
+        const candidates = sources.filter(source => allOf(income.territories).in(source.territories) && allOf(income.medias).in(source.medias));
+        if (candidates.length === 0) {
+          errors.push({
+            type: 'error',
+            name: 'Invalid source.',
+            reason: `Could not find source for income "${income.id}"`,
+            message: 'Check territories and medias or set source ID.'
+          });
+        } else if (candidates.length > 1) {
+          errors.push({
+            type: 'error',
+            name: 'Invalid source.',
+            reason: `Too many sources matching income "${income.id}" : ${candidates.map(c => c.id).join(',')}`,
+            message: 'Check territories and medias or set source ID.'
+          });
+        } else {
+          income.sourceId = candidates[0].id;
+        }
       }
 
       income.contractId = isDistributorStatement(statement) ? statement.contractId : undefined;

@@ -27,6 +27,9 @@ export class StatementEditComponent implements OnInit, OnDestroy, StartementForm
 
   public statement$ = this.statementId.pipe(
     switchMap((statementId: string) => this.statementService.valueChanges(statementId, { waterfallId: this.shell.waterfall.id })),
+    tap(statement => {
+      if (statement.versionId) this.shell.setVersionId(statement.versionId);
+    })
   );
 
   public waterfall$ = this.shell.waterfall$;
@@ -89,7 +92,7 @@ export class StatementEditComponent implements OnInit, OnDestroy, StartementForm
 
         if (!income.medias.length) income.medias = value.source.medias;
         if (!income.territories.length) income.territories = value.source.territories;
-        if (!income.medias.length || !income.territories.length) income.sourceId = value.source.id;
+        income.sourceId = value.source.id;
         return income;
       });
     }).flat();

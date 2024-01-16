@@ -8,7 +8,7 @@ import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.co
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { VersionEditorComponent } from '../version-editor/version-editor.component';
 import { WaterfallService } from '../../waterfall.service';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
@@ -19,12 +19,15 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 })
 export class VersionSelectorComponent implements OnInit {
 
-  public waterfall$ = this.shell.waterfall$;
+  public versions$ = this.shell.waterfall$.pipe(
+    map(waterfall => this.hideStandalone ? waterfall.versions.filter(v => !v.standalone) : waterfall.versions)
+  );
   public canBypassRules$ = this.shell.canBypassRules$;
   public canInitWaterfall$ = this.shell.canInitWaterfall$;
   public versionId: string;
   public lockedVersionId = this.shell.lockedVersionId;
   @Input() @boolean simulator = false;
+  @Input() @boolean hideStandalone = false;
   @Input() set initialVersion(value: string) { if (value) this.switchToVersion(value); }
   @Output() versionChanged = new EventEmitter<string>();
 

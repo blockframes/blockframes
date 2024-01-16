@@ -15,7 +15,7 @@
               <mat-select [disabled]="statement.status === 'reported'" [formControl]="sourcesControl" placeholder="Specify sources" multiple>
                 <mat-option *ngFor="let source of waterfallSources" [value]="source.id" [disabled]="source.disabled">{{ source.name }}</mat-option>
               </mat-select>
-              <mat-hint>You can select as many rights as you need</mat-hint>
+              <mat-hint>You can select as many sources as you need</mat-hint>
             </mat-form-field>
             <section>
               <button [disabled]="statement.status === 'reported'" mat-button (click)="declare()">

@@ -3,7 +3,6 @@ import { Income } from '../income';
 import { StorageFile } from '../media';
 import { DocumentMeta, createDocumentMeta } from '../meta';
 import { Media, RightholderRole, Territory, rightholderGroups } from '../static';
-import { allOf } from '../avail';
 import { ExpenseType } from '../expense';
 
 export interface WaterfallPermissions {
@@ -60,6 +59,11 @@ export function isDefaultVersion(waterfall: Waterfall, versionId: string) {
   return getDefaultVersionId(waterfall) === versionId;
 }
 
+export function isStandaloneVersion(waterfall: Waterfall, versionId: string) {
+  if (!versionId) return false;
+  return waterfall.versions.find(v => v.id === versionId)?.standalone;
+}
+
 export interface WaterfallFile extends StorageFile {
   id: string; // Same as the WaterfallDocument id
   privacy: 'protected';
@@ -98,16 +102,8 @@ export function waterfallSources(waterfall: Waterfall, versionId?: string): Wate
   });
 }
 
-export function getAssociatedSource(income: Income, sources: WaterfallSource[]) {
-  if (income.sourceId) return sources.find(s => s.id === income.sourceId);
-  const candidates = sources.filter(source => allOf(income.territories).in(source.territories) && allOf(income.medias).in(source.medias));
-  if (candidates.length === 0) throw new Error(`Could not find source for income "${income.id}"`);
-  if (candidates.length > 1) throw new Error(`Too many sources matching income "${income.id}" : ${candidates.map(c => c.id).join(',')}`);
-  return candidates[0];
-}
-
 export function getIncomesSources(incomes: Income[], sources: WaterfallSource[]) {
-  return Array.from(new Set(incomes.map(i => getAssociatedSource(i, sources))));
+  return Array.from(new Set(incomes.map(i => sources.find(s => s.id === i.sourceId))));
 }
 
 /**

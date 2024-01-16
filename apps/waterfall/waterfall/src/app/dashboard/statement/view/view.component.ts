@@ -16,7 +16,8 @@ import {
   getStatementSources,
   isDirectSalesStatement,
   isDistributorStatement,
-  isProducerStatement
+  isProducerStatement,
+  isStandaloneVersion
 } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { unique } from '@blockframes/utils/helpers';
@@ -145,7 +146,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
 
     if (reported) {
 
-      if (isProducerStatement(statement)) {
+      if (isProducerStatement(statement) && !isStandaloneVersion(this.shell.waterfall, statement.versionId)) {
         if (statement.versionId !== getDefaultVersionId(this.shell.waterfall)) {
           await this.duplicateParentStatements(statement);
         } else {
@@ -191,7 +192,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
       const rightIds = unique(sources.map(s => getAssociatedRights(s.id, statementRights, simulation.waterfall.state)).flat().map(r => r.id));
       const rights = statementRights.filter(r => rightIds.includes(r.id));
 
-      const updatedStatement = generatePayments(impactedStatement, simulation.waterfall.state, rights, incomes, sources);
+      const updatedStatement = generatePayments(impactedStatement, simulation.waterfall.state, rights, incomes);
       updatedStatement.payments.right = impactedStatement.payments.right.map(p => {
         const existingPaymentInfo = existingPaymentInfos.find(info => info.to === p.to);
         const payment = createRightPayment({ ...p, id: existingPaymentInfo.id, status: existingPaymentInfo.status });
@@ -242,7 +243,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
       const rightIds = unique(sources.map(s => getAssociatedRights(s.id, statementRights, simulation.waterfall.state)).flat().map(r => r.id));
       const rights = statementRights.filter(r => rightIds.includes(r.id));
 
-      const updatedStatement = generatePayments(impactedStatement, simulation.waterfall.state, rights, incomes, sources);
+      const updatedStatement = generatePayments(impactedStatement, simulation.waterfall.state, rights, incomes);
       updatedStatement.payments.right = impactedStatement.payments.right.map(p => {
         const existingPaymentInfo = existingRightPaymentInfos.find(info => info.to === p.to);
         const payment = createRightPayment({ ...p, id: existingPaymentInfo.id, status: existingPaymentInfo.status });

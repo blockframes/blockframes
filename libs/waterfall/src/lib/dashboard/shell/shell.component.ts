@@ -28,6 +28,7 @@ import {
   getDefaultVersionId,
   isDefaultVersion,
   waterfallSources,
+  isStandaloneVersion,
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { filter, map, pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
@@ -120,22 +121,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   );
 
   // ---------
-  // Statements, Incomes and Expenses
-  // ---------
-  public statements$ = combineLatest([this.movie$, this.versionId$]).pipe(
-    switchMap(([{ id: waterfallId }, versionId]) => this.statementService.statementsChanges(waterfallId, versionId))
-  );
-
-  public incomes$ = combineLatest([this.movie$, this.versionId$]).pipe(
-    switchMap(([{ id: waterfallId }, versionId]) => this.incomeService.incomesChanges(waterfallId, versionId))
-  );
-
-  public expenses$ = combineLatest([this.movie$, this.versionId$]).pipe(
-    switchMap(([{ id: waterfallId }, versionId]) => this.expenseService.expensesChanges(waterfallId, versionId))
-  );
-
-  // ---------
-  // Waterfall, Blocks, Rights and State
+  // Waterfall, Blocks, Rights, Statements, Incomes, Expenses and State
   // ---------
   public waterfall$ = this.movie$.pipe(
     switchMap(movie => this.waterfallService.valueChanges(movie.id)),
@@ -148,8 +134,24 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     map(([waterfall, versionId]) => waterfallSources(waterfall, versionId))
   );
 
-  public rights$ = combineLatest([this.waterfall$, this.versionId$]).pipe(
+  public rights$ = combineLatest([this.waterfall$, this.versionId$, this.isRefreshing$]).pipe(
+    filter(([_, __, isRefreshing]) => !isRefreshing),
     switchMap(([waterfall, versionId]) => this.rightService.rightsChanges(waterfall, versionId)),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  public statements$ = combineLatest([this.waterfall$, this.versionId$]).pipe(
+    switchMap(([waterfall, versionId]) => this.statementService.statementsChanges(waterfall, versionId)),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  public incomes$ = combineLatest([this.waterfall$, this.versionId$]).pipe(
+    switchMap(([waterfall, versionId]) => this.incomeService.incomesChanges(waterfall, versionId)),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  public expenses$ = combineLatest([this.movie$, this.statements$, this.versionId$]).pipe(
+    switchMap(([{ id: waterfallId }, statements, versionId]) => this.expenseService.expensesChanges(waterfallId, statements, versionId)),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
@@ -303,16 +305,17 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     return this.rightService.rights(this.waterfall, versionId);
   }
 
-  incomes(ids: string[] = [], versionId = this.versionId$.value) {
-    return this.incomeService.incomes(this.waterfall.id, ids, versionId);
+  incomes(ids?: string[], versionId = this.versionId$.value) {
+    return this.incomeService.incomes(this.waterfall, ids, versionId);
   }
 
   statements(versionId = this.versionId$.value) {
-    return this.statementService.statements(this.waterfall.id, versionId);
+    return this.statementService.statements(this.waterfall, versionId);
   }
 
-  expenses(ids: string[] = [], versionId = this.versionId$.value) {
-    return this.expenseService.expenses(this.waterfall.id, ids, versionId);
+  async expenses(ids?: string[], versionId = this.versionId$.value) {
+    const statements = await this.statements(versionId);
+    return this.expenseService.expenses(this.waterfall.id, statements, ids, versionId);
   }
 
   terms() {
@@ -323,6 +326,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     if (!versionId) return;
     if (this.versionId$.value === versionId) return;
     this.versionId$.next(versionId);
+    return true;
   }
 
   setDate(date: Date) {
@@ -361,12 +365,19 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     return this.waterfallService.duplicateVersion(waterfall, blocks, versionIdToDuplicate, version);
   }
 
+  /**
+   * If current version is not standalone, refresh all waterfalls except standalones
+   * If current version is standalone, refresh only the current one
+   * @returns 
+   */
   async refreshAllWaterfalls() {
     const canBypassRules = await firstValueFrom(this.canBypassRules$);
     if (!canBypassRules) throw new Error('You are not allowed to refresh waterfalls');
     const currentVersion = this.versionId$.value;
+    if (isStandaloneVersion(this.waterfall, currentVersion)) return this.refreshWaterfall();
     this.isRefreshing$.next(true);
-    for (const version of this.waterfall.versions) {
+    const notStandaloneVersions = this.waterfall.versions.filter(v => !v.standalone);
+    for (const version of notStandaloneVersions) {
       this.setVersionId(version.id);
       await this.refreshWaterfall(false);
     }

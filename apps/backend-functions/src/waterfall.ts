@@ -13,7 +13,8 @@ import {
   getDefaultVersionId,
   isContract,
   isDirectSalesStatement,
-  isDistributorStatement
+  isDistributorStatement,
+  isStandaloneVersion
 } from '@blockframes/model';
 import { getDocument, getCollection, getDocumentSnap } from '@blockframes/firebase-utils/firebase-utils';
 import { BlockframesChange, BlockframesSnapshot, removeAllSubcollections } from '@blockframes/firebase-utils';
@@ -140,8 +141,9 @@ export async function onWaterfallStatementUpdate(change: BlockframesChange<State
       const expenseRemovedIds = difference(before.expenseIds, after.expenseIds);
       const expenses = await Promise.all(expenseRemovedIds.map(id => getDocumentSnap(`expenses/${id}`, db)));
 
-      const defaultVersion = getDefaultVersionId(waterfall);
-      if (after.versionId && defaultVersion && after.versionId !== defaultVersion) {
+      const defaultVersionId = getDefaultVersionId(waterfall);
+      const isStandalone = isStandaloneVersion(waterfall, after.versionId);
+      if (!isStandalone && after.versionId && defaultVersionId && after.versionId !== defaultVersionId) {
         incomes.forEach(doc => {
           const i = doc.data() as Income;
           delete i.version[after.versionId];
@@ -179,8 +181,9 @@ export async function onWaterfallStatementDelete(docSnapshot: BlockframesSnapsho
       const incomes = await Promise.all(statement.incomeIds.map(id => getDocumentSnap(`incomes/${id}`, db)));
       const expenses = await Promise.all(statement.expenseIds.map(id => getDocumentSnap(`expenses/${id}`, db)));
 
-      const defaultVersion = getDefaultVersionId(waterfall);
-      if (statement.versionId && defaultVersion && statement.versionId !== defaultVersion) {
+      const defaultVersionId = getDefaultVersionId(waterfall);
+      const isStandalone = isStandaloneVersion(waterfall, statement.versionId);
+      if (!isStandalone && statement.versionId && defaultVersionId && statement.versionId !== defaultVersionId) {
         incomes.forEach(doc => {
           const i = doc.data() as Income;
           delete i.version[statement.versionId];

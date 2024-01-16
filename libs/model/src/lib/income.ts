@@ -15,10 +15,9 @@ export interface Income {
   titleId?: string;
   status: PaymentStatus;
   date: Date;
-  /** For waterfall purposes, either medias/territories or sourceId should be defined */
-  medias: Media[];
-  territories: Territory[];
-  sourceId: string;
+  medias: Media[]; // For waterfall purposes, optional
+  territories: Territory[]; // For waterfall purposes, optional
+  sourceId: string; // Should be defined for waterfall purposes
 }
 
 export function createIncome(params: Partial<Income> = {}): Income {

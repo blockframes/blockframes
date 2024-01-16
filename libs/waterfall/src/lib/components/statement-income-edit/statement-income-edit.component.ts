@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Income, Waterfall, getAssociatedSource } from '@blockframes/model';
+import { Income, Waterfall } from '@blockframes/model';
 import { IncomeEditForm } from '../../form/income-edit.form';
 
 interface StatementIncomeChangeData {
@@ -33,7 +33,7 @@ export class StatementIncomeEditComponent implements OnInit {
 
   public getConfig(incomeId: string) {
     const income = this.data.incomes.find(income => income.id === incomeId);
-    const source = getAssociatedSource(income, this.data.waterfall.sources);
+    const source = this.data.waterfall.sources.find(s => s.id === income.sourceId);
     return { income, source };
   }
 
