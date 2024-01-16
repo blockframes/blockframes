@@ -1,0 +1,10 @@
+
+<section *ngFor="let pool of (existingPools$ | async)">
+  <p>{{pool}}</p>
+  <button mat-icon-button (click)="editPool(pool)">
+    <mat-icon svgIcon="edit"></mat-icon>
+  </button>
+  <button mat-icon-button (click)="removePool(pool)">
+    <mat-icon svgIcon="delete"></mat-icon>
+  </button>
+</section>

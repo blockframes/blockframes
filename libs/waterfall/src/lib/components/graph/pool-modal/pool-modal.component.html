@@ -13,6 +13,6 @@
   </mat-form-field>
 
   <button mat-flat-button color="primary" [disabled]="!poolNameControl.value || poolRightsControl.value.length === 0" (click)="create()">
-    Create
+    {{ data.name ? 'Update' : 'Create'}}
   </button>
 </global-modal>

@@ -20,8 +20,10 @@ import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/grou
 import { WaterfallGraphComponent } from './graph.component';
 import { WaterfallGraphNodeModule } from './node/node.module';
 import { WaterfallGraphLabelModule } from './label/label.module';
+import { WaterfallPoolListModule } from './pool-list/pool-list.module';
 import { WaterfallRightListModule } from './right-list/right-list.module';
 import { WaterfallConditionsModule } from './conditions/conditions.module';
+
 
 @NgModule({
   declarations: [ WaterfallGraphComponent ],
@@ -33,6 +35,7 @@ import { WaterfallConditionsModule } from './conditions/conditions.module';
     AutocompleteModule,
     GroupMultiselectModule,
     BlockframesGraphModule,
+    WaterfallPoolListModule,
     WaterfallGraphNodeModule,
     WaterfallRightListModule,
     WaterfallGraphLabelModule,
