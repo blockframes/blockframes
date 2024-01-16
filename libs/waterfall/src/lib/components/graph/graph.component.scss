@@ -53,19 +53,16 @@
       }
     }
 
+    p.description {
+      margin: 24px;
+    }
+
     section.card,
     section.begin {
       padding: 12px;
       margin-bottom: 12px;
       display: flex;
       flex-direction: column;
-      div {
-        margin-top: 16px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 16px;
-      }
     }
 
     section.modal {
@@ -80,6 +77,14 @@
       div.add-next {
         grid-column-start: span 2;
       }
+    }
+
+    section.add {
+      margin: 16px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
     }
 
     section {

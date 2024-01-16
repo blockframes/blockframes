@@ -1,4 +1,5 @@
 
+import { WriteBatch } from 'firebase/firestore';
 import { BehaviorSubject, Subscription, combineLatest, tap } from 'rxjs';
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
@@ -29,7 +30,7 @@ import { createRightForm, setRightFormValue } from '../forms/right-form/right-fo
 import { createSourceForm, setSourceFormValue } from '../forms/source-form/source-form';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 import { Arrow, Node, computeDiff, createChild, createSibling, createStep, deleteStep, fromGraph, toGraph, updateParents } from './layout';
-import { AtomicWrite } from 'ngfire';
+
 
 @Component({
   selector: 'waterfall-graph',
@@ -345,12 +346,12 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     this.select(id);
   }
 
-  async delete() {
+  async delete(rightId?: string) {
     if (!this.canUpdateGraph) {
       this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
       return;
     }
-    const id = this.selected$.getValue();
+    const id = rightId ?? this.selected$.getValue();
     const right = this.rights.find(right => right.id === id);
     const source = this.sources.find(source => source.id === id);
 
@@ -359,7 +360,6 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     if (right) {
       if (right.groupId) {
         const group = this.rights.find(r => r.id === right.groupId);
-        if (group.type === 'vertical') return; // TODO
 
         const members = this.rights.filter(r => r.groupId === group.id && r.id !== right.id);
 
@@ -392,6 +392,25 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
             this.rightService.update(rightsToUpdate, { params: { waterfallId: this.waterfall.id }, write }),
             this.rightService.remove([id, group.id], { params: { waterfallId: this.waterfall.id }, write }),
           ]);
+          await write.commit();
+          return;
+        }
+
+        // delete the right and update the order (and name) of the remaining members
+        if (group.type === 'vertical') {
+          const vMembers = this.rights.filter(r => r.groupId === group.id).sort((a, b) => a.order - b.order);
+          const indexToRemove = vMembers.findIndex(r => r.id === id);
+          vMembers.splice(indexToRemove, 1);
+          vMembers.forEach((r, index) => {
+            r.order = index;
+            r.name = `Step ${index + 1}`;
+          });
+
+          const write = this.waterfallService.batch();
+          const promises: Promise<unknown>[] = [];
+          vMembers.forEach(r => promises.push(this.rightService.update(r.id, r, { params: { waterfallId: this.waterfall.id }, write })));
+          promises.push(this.rightService.remove(id, { params: { waterfallId: this.waterfall.id }, write }));
+          await Promise.all(promises);
           await write.commit();
           return;
         }
@@ -435,7 +454,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     this.select('');
   }
 
-  private async updateSources(sources: WaterfallSource[], write?: AtomicWrite) {
+  private async updateSources(sources: WaterfallSource[], write?: WriteBatch) {
     if (!this.version || !this.version.standalone) {
       const standaloneSources = this.shell.waterfall.sources.filter(s => s.version && Object.values(s.version).some(v => v.standalone));
       return this.waterfallService.update(this.waterfall.id, { id: this.waterfall.id, sources: [...sources, ...standaloneSources] }, { write });

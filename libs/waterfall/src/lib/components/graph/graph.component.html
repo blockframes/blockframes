@@ -160,18 +160,18 @@
     </ng-template>
   </ng-container>
   <ng-template #noSelection>
-    <!-- <ng-container *ngIf="(nodes$ | async).length; else emptyGraph">
+    <ng-container *ngIf="(nodes$ | async).length; else emptyGraph">
       <header>
         <h2>Receipt Share List</h2>
         <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'">
           <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
         </button>
       </header>
-      <p><strong>Pool</strong> is needed when several Receipts Shares come from different sources, but should be used in the same condition.</p>
+      <p class="description"><strong>Pool</strong> is needed when several Receipts Shares come from different sources, but should be used in the same condition.</p>
       <mat-tab-group>
         <mat-tab label="Receipts Shares">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-right-list></waterfall-right-list>
+            <waterfall-right-list (deleteRight)="delete($event)" (selectRight)="select($event)"></waterfall-right-list>
           </section>
         </mat-tab>
         <mat-tab label="Pools Only">
@@ -180,8 +180,18 @@
           </section>
         </mat-tab>
       </mat-tab-group>
+      <section class="add">
+        <button mat-flat-button color="primary" (click)="createNewSource()">
+          <mat-icon svgIcon="add"></mat-icon>
+          <span>Create new Source</span>
+        </button>
+        <button mat-flat-button color="primary" (click)="createNewRight()">
+          <mat-icon svgIcon="add"></mat-icon>
+          <span>Create new Right</span>
+        </button>
+      </section>
     </ng-container>
-    <ng-template #emptyGraph> -->
+    <ng-template #emptyGraph>
       <header>
         <h2>To Begin</h2>
       </header>
@@ -198,7 +208,7 @@
           <mat-icon svgIcon="help"></mat-icon>
           <span>Ask for Help</span>
         </button>
-        <div>
+        <section class="add">
           <button mat-flat-button color="primary" (click)="createNewSource()">
             <mat-icon svgIcon="add"></mat-icon>
             <span>Create new Source</span>
@@ -207,8 +217,8 @@
             <mat-icon svgIcon="add"></mat-icon>
             <span>Create new Right</span>
           </button>
-        </div>
+        </section>
       </section>
-    <!-- </ng-template> -->
+    </ng-template>
   </ng-template>
 </bf-card-modal>
