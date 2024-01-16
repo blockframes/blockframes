@@ -7,8 +7,8 @@ describe('Test standalone conditions', () => {
     it('ContractAmount with target > amount', () => {
       const actions: Action[] = [
         action('contract', { id: 'contract', amount: 50_000, date: new Date() }),
-        action('append', { id: 'seller', orgId: 'seller', percent: 1, previous: [], conditions: and([condition('contractAmount', { operator: '>=', target: 50_001 })]) }),
-        action('income', { id: 'income', contractId: 'contract', amount: 10_000, medias: [], territories: [], from: 'income', to: 'seller' })
+        action('append', { id: 'seller', date: new Date(), orgId: 'seller', percent: 1, previous: [], conditions: and([condition('contractAmount', { operator: '>=', target: 50_001 })]) }),
+        action('income', { id: 'income', date: new Date(), contractId: 'contract', amount: 10_000, medias: [], territories: [], from: 'income', to: 'seller' })
       ];
 
       const { state } = waterfall('foo-title', actions);
@@ -20,8 +20,8 @@ describe('Test standalone conditions', () => {
     it('ContractAmount with target < amount', () => {
       const actions: Action[] = [
         action('contract', { id: 'contract', amount: 50_000, date: new Date() }),
-        action('append', { id: 'seller', orgId: 'seller', percent: 1, previous: [], conditions: and([condition('contractAmount', { operator: '>=', target: 49_999 })]) }),
-        action('income', { id: 'income', contractId: 'contract', amount: 10_000, medias: [], territories: [], from: 'income', to: 'seller' })
+        action('append', { id: 'seller', date: new Date(), orgId: 'seller', percent: 1, previous: [], conditions: and([condition('contractAmount', { operator: '>=', target: 49_999 })]) }),
+        action('income', { id: 'income', date: new Date(), contractId: 'contract', amount: 10_000, medias: [], territories: [], from: 'income', to: 'seller' })
       ];
 
       const { state } = waterfall('foo-title', actions);
@@ -33,8 +33,8 @@ describe('Test standalone conditions', () => {
     it('ContractAmount with target == amount', () => {
       const actions: Action[] = [
         action('contract', { id: 'contract', amount: 50_000, date: new Date() }),
-        action('append', { id: 'seller', orgId: 'seller', percent: 1, previous: [], conditions: and([condition('contractAmount', { operator: '>=', target: 50_000 })]) }),
-        action('income', { id: 'income', contractId: 'contract', amount: 10_000, medias: [], territories: [], from: 'income', to: 'seller' })
+        action('append', { id: 'seller', date: new Date(), orgId: 'seller', percent: 1, previous: [], conditions: and([condition('contractAmount', { operator: '>=', target: 50_000 })]) }),
+        action('income', { id: 'income', date: new Date(), contractId: 'contract', amount: 10_000, medias: [], territories: [], from: 'income', to: 'seller' })
       ];
 
       const { state } = waterfall('foo-title', actions);
@@ -47,12 +47,12 @@ describe('Test standalone conditions', () => {
     it('without other condition', () => {
       const actions: Action[] = [
         action('append', {
-          id: 'mg-author', orgId: 'author', percent: 0.01, previous: [], pools: ['pool-a'],  conditions: and([
+          id: 'mg-author', date: new Date(), orgId: 'author', percent: 0.01, previous: [], pools: ['pool-a'], conditions: and([
             condition('poolShadowRevenu', { pool: 'pool-a', operator: '>=', target: 10_000 }),
           ])
         }),
 
-        action('income', { id: 'income', amount: 1_000_100, from: 'row_all', to: 'mg-author', territories: [], medias: [] }),
+        action('income', { id: 'income', date: new Date(), amount: 1_000_100, from: 'row_all', to: 'mg-author', territories: [], medias: [] }),
       ];
 
       const { state } = waterfall('foo-title', actions);
@@ -66,13 +66,13 @@ describe('Test standalone conditions', () => {
     it('with other matching conditions', () => {
       const actions: Action[] = [
         action('append', {
-          id: 'mg-author', orgId: 'author', percent: 0.01, previous: [], pools: ['pool-a'],  conditions: and([
+          id: 'mg-author', date: new Date(), orgId: 'author', percent: 0.01, previous: [], pools: ['pool-a'], conditions: and([
             condition('poolShadowRevenu', { pool: 'pool-a', operator: '>=', target: 10_000 }),
             condition('terms', { type: 'territories', operator: 'in', list: ['france'] })
           ])
         }),
 
-        action('income', { id: 'income', amount: 1_000_100, from: 'france_all', to: 'mg-author', territories: ['france'], medias: [] }),
+        action('income', { id: 'income', date: new Date(), amount: 1_000_100, from: 'france_all', to: 'mg-author', territories: ['france'], medias: [] }),
       ];
 
       const { state } = waterfall('foo-title', actions);
@@ -86,13 +86,13 @@ describe('Test standalone conditions', () => {
     it('with other non-matching conditions', () => {
       const actions: Action[] = [
         action('append', {
-          id: 'mg-author', orgId: 'author', percent: 0.01, previous: [], pools: ['pool-a'],  conditions: and([
+          id: 'mg-author', date: new Date(), orgId: 'author', percent: 0.01, previous: [], pools: ['pool-a'], conditions: and([
             condition('poolShadowRevenu', { pool: 'pool-a', operator: '>=', target: 10_000 }),
             condition('terms', { type: 'territories', operator: 'not-in', list: ['france'] })
           ])
         }),
 
-        action('income', { id: 'income', amount: 1_000_100, from: 'france_all', to: 'mg-author', territories: ['france'], medias: [] }),
+        action('income', { id: 'income', date: new Date(), amount: 1_000_100, from: 'france_all', to: 'mg-author', territories: ['france'], medias: [] }),
       ];
 
       const { state } = waterfall('foo-title', actions);
@@ -106,17 +106,17 @@ describe('Test standalone conditions', () => {
     it('with many rights pointing to same pool', () => {
       const actions: Action[] = [
         action('append', {
-          id: 'mg-author-1', orgId: 'author-1', percent: 0.01, previous: [], pools: ['pool-a'],  conditions: and([
+          id: 'mg-author-1', date: new Date(), orgId: 'author-1', percent: 0.01, previous: [], pools: ['pool-a'], conditions: and([
             condition('poolShadowRevenu', { pool: 'pool-a', operator: '>=', target: 10_000 }),
           ])
         }),
         action('append', {
-          id: 'mg-author-2', orgId: 'author-2', percent: 0.01, previous: [], pools: ['pool-a'],  conditions: and([
+          id: 'mg-author-2', date: new Date(), orgId: 'author-2', percent: 0.01, previous: [], pools: ['pool-a'], conditions: and([
             condition('poolShadowRevenu', { pool: 'pool-a', operator: '>=', target: 500 }),
           ])
         }),
-        action('income', { id: 'income-1', amount: 1_000_100, from: 'row_all', to: 'mg-author-1', territories: [], medias: [] }),
-        action('income', { id: 'income-2', amount: 1_000, from: 'fr_tv', to: 'mg-author-2', territories: [], medias: [] }),
+        action('income', { id: 'income-1', date: new Date(), amount: 1_000_100, from: 'row_all', to: 'mg-author-1', territories: [], medias: [] }),
+        action('income', { id: 'income-2', date: new Date(), amount: 1_000, from: 'fr_tv', to: 'mg-author-2', territories: [], medias: [] }),
       ];
 
       const { state } = waterfall('foo-title', actions);

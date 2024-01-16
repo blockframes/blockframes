@@ -4,8 +4,8 @@ import { Action, action } from './action';
 describe('Test standalone actions', () => {
   it('orgRevenu', () => {
     const actions: Action[] = [
-      action('append', { id: 'seller', orgId: 'seller', percent: 0.5, previous: [] }),
-      action('income', { id: 'income', amount: 10_000, medias: [], territories: [], from: 'income', to: 'seller' })
+      action('append', { id: 'seller', date: new Date(), orgId: 'seller', percent: 0.5, previous: [] }),
+      action('income', { id: 'income', date: new Date(), amount: 10_000, medias: [], territories: [], from: 'income', to: 'seller' })
     ];
 
     const { state } = waterfall('foo-title', actions);
@@ -16,8 +16,8 @@ describe('Test standalone actions', () => {
 
   it('orgTurnover', () => {
     const actions: Action[] = [
-      action('append', { id: 'seller', orgId: 'seller', percent: 0.5, previous: [] }),
-      action('income', { id: 'income', amount: 10_000, medias: [], territories: [], from: 'income', to: 'seller' })
+      action('append', { id: 'seller', date: new Date(), orgId: 'seller', percent: 0.5, previous: [] }),
+      action('income', { id: 'income', date: new Date(), amount: 10_000, medias: [], territories: [], from: 'income', to: 'seller' })
     ];
 
     const { state } = waterfall('foo-title', actions);
@@ -29,9 +29,9 @@ describe('Test standalone actions', () => {
   describe('poolRevenu', () => {
     it('with regular rights', () => {
       const actions: Action[] = [
-        action('append', { id: 'seller-1', orgId: 'seller-1', percent: 0.5, pools: ['seller-1-2'], previous: ['seller-2'] }),
-        action('append', { id: 'seller-2', orgId: 'seller-2', percent: 0.5, pools: ['seller-1-2'], previous: [] }),
-        action('income', { id: 'income', amount: 10_000, medias: [], territories: [], from: 'income', to: 'seller-1' })
+        action('append', { id: 'seller-1', date: new Date(), orgId: 'seller-1', percent: 0.5, pools: ['seller-1-2'], previous: ['seller-2'] }),
+        action('append', { id: 'seller-2', date: new Date(), orgId: 'seller-2', percent: 0.5, pools: ['seller-1-2'], previous: [] }),
+        action('income', { id: 'income', date: new Date(), amount: 10_000, medias: [], territories: [], from: 'income', to: 'seller-1' })
       ];
 
       const { state } = waterfall('foo-title', actions);
@@ -43,12 +43,12 @@ describe('Test standalone actions', () => {
     it('with horizontal group', () => {
       const actions: Action[] = [
         action('appendHorizontal', {
-          id: 'seller-group', blameId: 'seller-1', previous: [], children: [
+          id: 'seller-group', date: new Date(), blameId: 'seller-1', previous: [], children: [
             { type: 'right', id: 'seller-1', orgId: 'seller-1', percent: 0.5, pools: ['seller-1-2'] },
             { type: 'right', id: 'seller-2', orgId: 'seller-2', percent: 0.25, pools: ['seller-1-2'] }
           ]
         }),
-        action('income', { id: 'income', amount: 10_000, medias: [], territories: [], from: 'income', to: 'seller-group' })
+        action('income', { id: 'income', date: new Date(), amount: 10_000, medias: [], territories: [], from: 'income', to: 'seller-group' })
       ];
 
       const { state } = waterfall('foo-title', actions);
@@ -61,9 +61,9 @@ describe('Test standalone actions', () => {
   describe('poolTurnover', () => {
     it('with regular rights', () => {
       const actions: Action[] = [
-        action('append', { id: 'seller-1', orgId: 'seller-1', percent: 0.5, pools: ['seller-1-2'], previous: ['seller-2'] }),
-        action('append', { id: 'seller-2', orgId: 'seller-2', percent: 0.5, pools: ['seller-1-2'], previous: [] }),
-        action('income', { id: 'income', amount: 10_000, medias: [], territories: [], from: 'income', to: 'seller-1' })
+        action('append', { id: 'seller-1', date: new Date(), orgId: 'seller-1', percent: 0.5, pools: ['seller-1-2'], previous: ['seller-2'] }),
+        action('append', { id: 'seller-2', date: new Date(), orgId: 'seller-2', percent: 0.5, pools: ['seller-1-2'], previous: [] }),
+        action('income', { id: 'income', date: new Date(), amount: 10_000, medias: [], territories: [], from: 'income', to: 'seller-1' })
       ];
 
       const { state } = waterfall('foo-title', actions);
@@ -75,12 +75,12 @@ describe('Test standalone actions', () => {
     it('with horizontal group', () => {
       const actions: Action[] = [
         action('appendHorizontal', {
-          id: 'seller-group', blameId: 'seller-1', previous: [], children: [
+          id: 'seller-group', date: new Date(), blameId: 'seller-1', previous: [], children: [
             { type: 'right', id: 'seller-1', orgId: 'seller-1', percent: 0.5, pools: ['seller-1-2'] },
             { type: 'right', id: 'seller-2', orgId: 'seller-2', percent: 0.5, pools: ['seller-1-2'] }
           ]
         }),
-        action('income', { id: 'income', amount: 10_000, medias: [], territories: [], from: 'income', to: 'seller-group' })
+        action('income', { id: 'income', date: new Date(), amount: 10_000, medias: [], territories: [], from: 'income', to: 'seller-group' })
       ];
 
       const { state } = waterfall('foo-title', actions);
@@ -92,9 +92,9 @@ describe('Test standalone actions', () => {
 
   it('rightRevenu', () => {
     const actions: Action[] = [
-      action('append', { id: 'seller-1', orgId: 'seller-1', percent: 0.5, previous: ['seller-2'] }),
-      action('append', { id: 'seller-2', orgId: 'seller-2', percent: 0.5, previous: [] }),
-      action('income', { id: 'income', amount: 10_000, medias: [], territories: [], from: 'income', to: 'seller-1' })
+      action('append', { id: 'seller-1', date: new Date(), orgId: 'seller-1', percent: 0.5, previous: ['seller-2'] }),
+      action('append', { id: 'seller-2', date: new Date(), orgId: 'seller-2', percent: 0.5, previous: [] }),
+      action('income', { id: 'income', date: new Date(), amount: 10_000, medias: [], territories: [], from: 'income', to: 'seller-1' })
     ];
 
     const { state } = waterfall('foo-title', actions);

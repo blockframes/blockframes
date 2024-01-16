@@ -12,10 +12,6 @@
       <header fxLayout fxLayoutAlign="space-between center">
         <ng-container *ngIf="currentApp === 'waterfall'; else showMenuIcon">
           <a app-logo routerLink="."></a>
-          <!-- TODO REMOVE THIS BEFORE RELEASE issue#9336 -->
-          <button *ngIf="isAdmin$ | async" mat-button test-id="menu" color="warn" (click)="sidenav.toggle()">
-            DEV MENU
-          </button>
         </ng-container>
         <ng-template #showMenuIcon>
           <button mat-icon-button test-id="menu" (click)="sidenav.toggle()">

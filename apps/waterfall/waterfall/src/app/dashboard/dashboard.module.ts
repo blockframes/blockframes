@@ -79,29 +79,6 @@ const routes: Routes = [{
       ],
     },
     {
-      path: 'graph',
-      children: [
-        {
-          path: '',
-          redirectTo: 'terrawilly-group',
-          pathMatch: 'full'
-        },
-        {
-          path: ':waterfallId',
-          loadChildren: () => import('./graph/graph.module').then(m => m.GraphModule),
-        }
-      ]
-    },
-    {
-      path: 'table',
-      children: [
-        {
-          path: '',
-          loadChildren: () => import('./table/table.module').then(m => m.TableModule),
-        }
-      ]
-    },
-    {
       path: 'notifications',
       loadChildren: () => import('@blockframes/notification/notification.module').then(m => m.NotificationModule)
     },

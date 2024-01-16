@@ -169,8 +169,8 @@ export const createPoolState = (pool: Partial<PoolState>): PoolState => ({
 
 export interface IncomeState {
   id: string;
-  date?: Date; // TODO #9336 : once fixtures are removed, this should be required (remove "?")
-  from?: string; // TODO #9336 : once fixtures are removed, this should be required (remove "?")
+  date: Date;
+  from: string;
   to: string;
   amount: number;
   territories: Territory[];

@@ -57,9 +57,6 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
   public invitationCount$ = this.invitationService.invitationCount();
 
-  // TODO REMOVE THIS BEFORE RELEASE issue#9336
-  public isAdmin$ = this.authService.isBlockframesAdmin$;
-
   public mode$ = this.breakpointsService.ltMd.pipe(
     map(ltMd => ltMd ? 'over' : 'side'),
     shareReplay({ refCount: true, bufferSize: 1 }),

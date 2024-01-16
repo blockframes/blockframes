@@ -457,7 +457,7 @@ export function statementsToActions(statements: Statement[], incomes: Income[]) 
 // ACTIONS //
 /////////////
 interface BaseAction {
-  date?: Date; // TODO #9336 : once fixtures are removed, this should be required (remove "?")
+  date: Date;
 }
 
 export interface RightAction extends BaseAction {
@@ -756,7 +756,7 @@ export interface IncomeAction extends BaseAction {
   id: string;
   amount: number;
   to: string;
-  from?: string;
+  from: string;
   contractId?: string;
   territories: Territory[];
   medias: Media[];

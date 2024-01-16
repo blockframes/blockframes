@@ -8,7 +8,7 @@ export const appUrl = {
   market: 'https://archipelmarket.com',
   financiers: 'https://mediafinanciers.com',
   crm: 'https://crm.blockframes.io',
-  waterfall: 'https://blockframes.io',
+  waterfall: 'https://app.blockframes.io',
 };
 
 const firebaseConfig = {
@@ -41,9 +41,9 @@ const appConfigs = {
     appId: "1:1080507348015:web:ede10e0ebf25604e0002da",
     measurementId: "G-X8XFZQCL8Z"
   },
-  waterfall: { // TODO #9257 change this
-    appId: "1:1080507348015:web:413468c3253b02760002da",
-    measurementId: "G-XXXXXXXXXX"
+  waterfall: {
+    appId: "1:1080507348015:web:8395e7517cefa7850002da",
+    measurementId: "G-27DHYHLCE0"
   },
   default: {
     appId: "1:1080507348015:web:413468c3253b02760002da",
