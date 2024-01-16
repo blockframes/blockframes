@@ -136,6 +136,13 @@
           >
             {{member.name}}
           </mat-checkbox>
+          <ng-container *ngIf="member.pools.length">
+            <mat-chip-list>
+              <mat-chip *ngFor="let pool of member.pools" color="primary">
+                {{pool}}
+              </mat-chip>
+            </mat-chip-list>
+          </ng-container>
           <button mat-icon-button matTooltip="Edit Share Name" (click)="edit(member.id)">
             <mat-icon svgIcon="edit"></mat-icon>
           </button>

@@ -1,7 +1,7 @@
 
+import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 
 import { MatDialog } from '@angular/material/dialog';
 import { MatCheckboxChange } from '@angular/material/checkbox';
@@ -21,8 +21,6 @@ import { WaterfallPoolModalComponent } from '../pool-modal/pool-modal.component'
 })
 export class WaterfallRightListComponent implements OnInit, OnDestroy {
 
-  @Input() rights$: Observable<Right[]>;
-
   @Output() selectRight = new EventEmitter<string>();
   @Output() deleteRight = new EventEmitter<string>();
 
@@ -41,11 +39,11 @@ export class WaterfallRightListComponent implements OnInit, OnDestroy {
   constructor(
     private dialog: MatDialog,
     private rightService: RightService,
-    public shell: DashboardWaterfallShellComponent,
+    private shell: DashboardWaterfallShellComponent,
   ) { }
 
   ngOnInit() {
-    this.subs.push(this.rights$.subscribe(rights => {
+    this.subs.push(this.shell.rights$.subscribe(rights => {
       this.rights = rights;
       this.init(rights);
     }));
@@ -135,16 +133,22 @@ export class WaterfallRightListComponent implements OnInit, OnDestroy {
   }
 
   poolModal() {
-    const dialogRef = this.dialog.open(WaterfallPoolModalComponent, { data: { rights: this.rights, selected: this.selected } });
-    dialogRef.afterClosed().subscribe(async (result?: { name: string, rightIds: string[] }) => {
-      if (!result) return;
+    this.dialog.open(
+      WaterfallPoolModalComponent,
+      {
+        data: {
+          rights: this.rights,
+          selected: this.selected,
+          onConfirm: async ({ name, rightIds }: { name: string, rightIds: string[] }) => {
+            this.rightService.batch();
+            const updatedRight = rightIds.map(id => this.rights.find(r => r.id === id));
+            updatedRight.forEach(r => r.pools.push(name));
 
-      this.rightService.batch();
-      const updatedRight = result.rightIds.map(id => this.rights.find(r => r.id === id));
-      updatedRight.forEach(r => r.pools.push(result.name));
-
-      await this.rightService.update(updatedRight, { params: { waterfallId: this.shell.waterfall.id } });
-    });
+            await this.rightService.update(updatedRight, { params: { waterfallId: this.shell.waterfall.id } });
+          },
+        },
+      },
+    );
   }
 
   selectFilterPool(pool: string) {
@@ -155,7 +159,10 @@ export class WaterfallRightListComponent implements OnInit, OnDestroy {
       this.init(this.rights);
     } else {
       const poolRights = this.rights.filter(r => r.pools.some(p => this.poolsFilter.has(p)));
-      this.init(poolRights);
+      const groups = new Set(poolRights.map(r => r.groupId));
+      const filteredRightIds = new Set([...poolRights.map(r => r.id), ...groups]);
+      const filteredRights = this.rights.filter(r => filteredRightIds.has(r.id));
+      this.init(filteredRights);
     }
   }
 

@@ -171,7 +171,7 @@
       <mat-tab-group>
         <mat-tab label="Receipts Shares">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-right-list [rights$]="shell.rights$" (deleteRight)="delete($event)" (selectRight)="select($event)"></waterfall-right-list>
+            <waterfall-right-list (deleteRight)="delete($event)" (selectRight)="select($event)"></waterfall-right-list>
           </section>
         </mat-tab>
         <mat-tab label="Pools Only">

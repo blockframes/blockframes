@@ -9,6 +9,7 @@ import { Right } from '@blockframes/model';
 export interface PoolModalData {
   rights: Right[];
   selected: Set<string>;
+  onConfirm?: (newPool: { name: string, rightIds: string[] }) => void;
 };
 
 @Component({
@@ -30,13 +31,14 @@ export class WaterfallPoolModalComponent {
   }
 
   create() {
-    this.dialogRef.close({
+    this.data.onConfirm({
       name: this.poolNameControl.value,
       rightIds: this.poolRightsControl.value,
     });
+    this.dialogRef.close(true);
   }
 
   close() {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 }

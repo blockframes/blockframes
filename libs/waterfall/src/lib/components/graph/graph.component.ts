@@ -1,4 +1,5 @@
 
+import { WriteBatch } from 'firebase/firestore';
 import { BehaviorSubject, Subscription, combineLatest, tap } from 'rxjs';
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
@@ -29,7 +30,7 @@ import { createRightForm, setRightFormValue } from '../forms/right-form/right-fo
 import { createSourceForm, setSourceFormValue } from '../forms/source-form/source-form';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 import { Arrow, Node, computeDiff, createChild, createSibling, createStep, deleteStep, fromGraph, toGraph, updateParents } from './layout';
-import { AtomicWrite } from 'ngfire';
+
 
 @Component({
   selector: 'waterfall-graph',
@@ -78,7 +79,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     private service: GraphService,
     private rightService: RightService,
     private waterfallService: WaterfallService,
-    public shell: DashboardWaterfallShellComponent,
+    private shell: DashboardWaterfallShellComponent,
   ) { }
 
   ngOnInit() {
@@ -399,13 +400,11 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
         if (group.type === 'vertical') {
           const vMembers = this.rights.filter(r => r.groupId === group.id).sort((a, b) => a.order - b.order);
           const indexToRemove = vMembers.findIndex(r => r.id === id);
-          console.log(indexToRemove);
           vMembers.splice(indexToRemove, 1);
           vMembers.forEach((r, index) => {
             r.order = index;
             r.name = `Step ${index + 1}`;
           });
-          console.log(vMembers);
 
           const write = this.waterfallService.batch();
           const promises: Promise<unknown>[] = [];
@@ -455,7 +454,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     this.select('');
   }
 
-  private async updateSources(sources: WaterfallSource[], write?: AtomicWrite) {
+  private async updateSources(sources: WaterfallSource[], write?: WriteBatch) {
     if (!this.version || !this.version.standalone) {
       const standaloneSources = this.shell.waterfall.sources.filter(s => s.version && Object.values(s.version).some(v => v.standalone));
       return this.waterfallService.update(this.waterfall.id, { id: this.waterfall.id, sources: [...sources, ...standaloneSources] }, { write });

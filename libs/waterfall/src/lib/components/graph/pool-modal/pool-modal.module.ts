@@ -10,6 +10,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
+import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
+
 import { WaterfallPoolModalComponent } from './pool-modal.component';
 
 
@@ -18,6 +20,8 @@ import { WaterfallPoolModalComponent } from './pool-modal.component';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+
+    GlobalModalModule,
 
     MatIconModule,
     MatInputModule,
