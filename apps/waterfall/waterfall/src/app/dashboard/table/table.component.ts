@@ -10,7 +10,7 @@ import { waterfall } from '@blockframes/waterfall/main';
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableComponent {
+export class TableComponent { // TODO #9336 remove
   title = 'Rubber';
   currentColumn?: string;
   table: Cell[][] = [];

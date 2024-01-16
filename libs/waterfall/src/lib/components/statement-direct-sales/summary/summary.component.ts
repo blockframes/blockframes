@@ -9,7 +9,6 @@ import {
   filterStatements,
   generatePayments,
   getAssociatedRights,
-  getAssociatedSource,
   getCalculatedAmount,
   getIncomingAmount,
   getOrderedRights,
@@ -67,6 +66,12 @@ export class StatementDirectSalesSummaryComponent {
       const incomes = this.statement.incomeIds.map(id => _incomes.find(i => i.id === id));
       const expenses = this.statement.expenseIds.map(id => _expenses.find(e => e.id === id));
 
+      if (this.statement.status === 'reported') {
+        const incomes = _incomes.filter(i => this.statement.incomeIds.includes(i.id));
+        this.form.setAllValue({ ...this.statement, incomes, expenses, sources });
+        return this.statement;
+      }
+
       // Refresh waterfall if some incomes or expenses are not in the simulated waterfall
       const missingIncomeIds = this.statement.incomeIds.filter(i => !simulation.waterfall.state.incomes[i]);
       const missingExpenseIds = this.statement.expenseIds.filter(i => !simulation.waterfall.state.expenses[i]);
@@ -94,7 +99,7 @@ export class StatementDirectSalesSummaryComponent {
         this.statement.payments.right = [];
       }
 
-      const statement = generatePayments(this.statement, simulation.waterfall.state, rights, incomes, sources);
+      const statement = generatePayments(this.statement, simulation.waterfall.state, rights, incomes);
       this.form.setAllValue({ ...this.statement, incomes, expenses, sources });
       return statement;
     }),
@@ -117,7 +122,6 @@ export class StatementDirectSalesSummaryComponent {
 
       const displayedRights = getStatementRightsToDisplay(current, rights);
       const orderedRights = getOrderedRights(displayedRights, simulation.waterfall.state);
-
       const statementIncomes = incomes.filter(i => this.statement.incomeIds.includes(i.id));
 
       return sources.map(source => {
@@ -125,15 +129,15 @@ export class StatementDirectSalesSummaryComponent {
 
         // Remove sources where all incomes are hidden from reported statement 
         if (this.statement.status === 'reported') {
-          const sourceIncomes = statementIncomes.filter(i => getAssociatedSource(i, sources).id === source.id);
+          const sourceIncomes = statementIncomes.filter(i => i.sourceId === source.id);
           const allHidden = sourceIncomes.every(i => i.version[this.shell.versionId$.value]?.hidden);
           if (allHidden) return;
         }
 
         // Incomes declared by statement.senderId
-        const previousSourcePayments = previous.map(s => s.payments.income).flat().filter(income => getAssociatedSource(incomes.find(i => i.id === income.incomeId), this.waterfall.sources).id === source.id);
-        const currentSourcePayments = current.payments.income.filter(income => getAssociatedSource(incomes.find(i => i.id === income.incomeId), this.waterfall.sources).id === source.id);
-        const cumulatedSourcePayments = history.map(s => s.payments.income).flat().filter(income => getAssociatedSource(incomes.find(i => i.id === income.incomeId), this.waterfall.sources).id === source.id);
+        const previousSourcePayments = previous.map(s => s.payments.income).flat().filter(income => incomes.find(i => i.id === income.incomeId).sourceId === source.id);
+        const currentSourcePayments = current.payments.income.filter(income => incomes.find(i => i.id === income.incomeId).sourceId === source.id);
+        const cumulatedSourcePayments = history.map(s => s.payments.income).flat().filter(income => incomes.find(i => i.id === income.incomeId).sourceId === source.id);
         rows.push({
           section: 'Gross Receipts',
           previous: getTotalPerCurrency(previousSourcePayments),
@@ -169,9 +173,11 @@ export class StatementDirectSalesSummaryComponent {
             const expenseType = this.waterfall.expenseTypes.directSales.find(e => e.id === expenseTypeId);
             if (!expenseType) this.snackbar.open(`Expense type id "${expenseTypeId}" used in conditions of "${right.name}" is not defined.`, 'close', { duration: 5000 });
 
+            const cap = current.versionId && expenseType.cap.version[current.versionId] ? expenseType.cap.version[current.versionId] : expenseType.cap.default;
+
             rows.push({
               section: expenseType.name,
-              cap: expenseType.cap.default > 0 ? { [expenseType.currency]: expenseType.cap.default } : undefined, // TODO #9520 replace default by versionId
+              cap: cap > 0 ? { [expenseType.currency]: cap } : undefined,
               type: 'expense',
               previous: getTotalPerCurrency(previousExpenses),
               current: getTotalPerCurrency(currentExpenses),
@@ -267,9 +273,11 @@ export class StatementDirectSalesSummaryComponent {
             const expenseType = this.waterfall.expenseTypes.directSales.find(e => e.id === expenseTypeId);
             if (!expenseType) this.snackbar.open(`Expense type id "${expenseTypeId}" used in conditions of "${right.name}" is not defined.`, 'close', { duration: 5000 });
 
+            const cap = current.versionId && expenseType.cap.version[current.versionId] ? expenseType.cap.version[current.versionId] : expenseType.cap.default;
+
             rows.push({
               section: expenseType.name,
-              cap: expenseType.cap.default > 0 ? { [expenseType.currency]: expenseType.cap.default } : undefined, // TODO #9520 replace default by versionId
+              cap: cap > 0 ? { [expenseType.currency]: cap } : undefined,
               type: 'expense',
               previous: getTotalPerCurrency(previousExpenses),
               current: getTotalPerCurrency(currentExpenses),
@@ -281,12 +289,14 @@ export class StatementDirectSalesSummaryComponent {
 
           if (rightExpenseTypes.length > 0) stillToBeRecouped.push(...cumulatedRightPayment.map(r => ({ currency: r.currency, price: -r.price })));
 
-          const maxPerIncome = unique(currentRightPayment.map(r => r.incomeIds).flat()).map(incomeId => ({
-            income: incomes.find(i => i.id === incomeId),
-            max: getIncomingAmount(right.id, incomeId, simulation.waterfall.state.transfers),
-            current: getCalculatedAmount(right.id, incomeId, simulation.waterfall.state.transfers),
-            source: getAssociatedSource(incomes.find(i => i.id === incomeId), this.waterfall.sources)
-          })).filter(i => i.max > 0);
+          const maxPerIncome = unique(currentRightPayment.map(r => r.incomeIds).flat())
+            .map(incomeId => incomes.find(i => i.id === incomeId))
+            .map(income => ({
+              income,
+              max: getIncomingAmount(right.id, income.id, simulation.waterfall.state.transfers),
+              current: getCalculatedAmount(right.id, income.id, simulation.waterfall.state.transfers),
+              source: this.waterfall.sources.find(s => s.id === income.sourceId)
+            })).filter(i => i.max > 0);
 
           rows.push({
             section,

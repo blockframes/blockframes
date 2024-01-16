@@ -32,6 +32,7 @@ export class EmptyWaterfallComponent {
     this.dialog.open(VersionEditorComponent, {
       data: createModalData({
         mode: 'init',
+        isDefaultVersion: true,
         version: createVersion({ id: this.waterfallService.createId(), name: 'First version' }),
         rightholders: this.shell.waterfall.rightholders,
         onConfirm: async (_version: Version) => {

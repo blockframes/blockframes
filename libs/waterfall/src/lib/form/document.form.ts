@@ -10,18 +10,19 @@ import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { ExpenseType, RightholderRole, Term, WaterfallFile, mainCurrency } from '@blockframes/model';
 
 
-export function createExpenseTypeControl(config?: Partial<ExpenseType>) {
+export function createExpenseTypeControl(config?: Partial<ExpenseType>, versionIds: string[] = []) {
 
+  const defaultValue = config?.cap?.default ?? 0;
   const version = {};
-  for (const key in config?.cap?.version) {
-    version[key] = new FormControl<number>(config.cap.version[key] ?? 0);
+  for (const id of versionIds) {
+    version[id] = new FormControl<number>(config.cap.version[id] ?? defaultValue);
   }
   return {
     id: new FormControl<string>(config?.id ?? ''),
     name: new FormControl<string>(config?.name ?? ''),
     currency: new FormControl<string>(config?.currency ?? mainCurrency),
     cap: new FormGroup({
-      default: new FormControl<number>(config?.cap?.default ?? 0),
+      default: new FormControl<number>(defaultValue),
       version: new FormRecord(version)
     })
   };
@@ -30,8 +31,8 @@ export function createExpenseTypeControl(config?: Partial<ExpenseType>) {
 type ExpenseTypeControl = ReturnType<typeof createExpenseTypeControl>;
 
 export class ExpenseTypeForm extends FormEntity<ExpenseTypeControl> {
-  constructor(config?: Partial<ExpenseType>) {
-    super(createExpenseTypeControl(config));
+  constructor(config?: Partial<ExpenseType>, versionIds: string[] = []) {
+    super(createExpenseTypeControl(config, versionIds));
   }
 }
 

@@ -1,7 +1,12 @@
 <ng-container *ngIf="contract$ | async as contract">
-  <h3>Contract "{{ contract.name }}" from {{  contract.duration.from | date: 'MM/dd/yyyy' }} to {{  contract.duration.to | date: 'MM/dd/yyyy' }}</h3>
-  <h4 *ngIf="rootContract$ | async as rootContract">Amendment of <a [routerLink]="['../',rootContract.id]" target="_blank">{{ rootContract.name }}</a></h4>
-  <h4 *ngIf="(childContracts$ | async)?.length as length">{{ length }} amendment(s)</h4>
+  <header>
+    <section>
+      <h3>Contract "{{ contract.name }}" from {{  contract.duration.from | date: 'MM/dd/yyyy' }} to {{  contract.duration.to | date: 'MM/dd/yyyy' }}</h3>
+      <h4 *ngIf="rootContract$ | async as rootContract">Amendment of <a [routerLink]="['../',rootContract.id]" target="_blank">{{ rootContract.name }}</a></h4>
+      <h4 *ngIf="(childContracts$ | async)?.length as length">{{ length }} amendment(s)</h4>
+    </section>
+    <waterfall-version-selector></waterfall-version-selector>
+  </header>
 
   <section>
     <ul>

@@ -10,7 +10,6 @@ import {
   Expense,
   Right,
   PricePerCurrency,
-  getAssociatedSource,
   Payment,
   mainCurrency,
   isDistributorStatement,
@@ -34,7 +33,7 @@ import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 import { WaterfallState } from '@blockframes/waterfall/waterfall.service';
-import { filter, firstValueFrom, pluck, switchMap } from 'rxjs';
+import { filter, firstValueFrom, pluck, switchMap, tap } from 'rxjs';
 
 interface RightDetails {
   from: string,
@@ -68,6 +67,11 @@ export class StatementComponent implements OnInit {
   public statement$ = this.route.params.pipe(pluck('statementId')).pipe(
     switchMap((statementId: string) => this.statementService.valueChanges(statementId, { waterfallId: this.waterfall.id })),
     filter(statement => !!statement),
+    tap(statement => {
+      if (statement.versionId) {
+        if (this.shell.setVersionId(statement.versionId)) this.versionChanged();
+      }
+    })
   );
   public statement: Statement;
 
@@ -145,7 +149,7 @@ export class StatementComponent implements OnInit {
       delete this.statement.payments.rightholder;
     }
 
-    this.statement = generatePayments(this.statement, this.simulation.waterfall.state, this.rights, this.incomes, this.waterfall.sources);
+    this.statement = generatePayments(this.statement, this.simulation.waterfall.state, this.rights, this.incomes);
 
     this.cdRef.markForCheck();
   }
@@ -178,7 +182,7 @@ export class StatementComponent implements OnInit {
 
   public getAssociatedSource(income: Income) {
     try {
-      return getAssociatedSource(income, this.waterfall.sources).name;
+      return this.waterfall.sources.find(s => s.id === income.sourceId).name;
     } catch (error) {
       if (this.snackBar._openedSnackBarRef === null) this.snackBar.open(error, 'close', { duration: 5000 });
     }

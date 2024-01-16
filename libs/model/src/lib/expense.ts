@@ -38,7 +38,7 @@ export function createExpense(params: Partial<Expense> = {}): Expense {
 
 interface ExpenseCap {
   default: number;
-  version: Record<string, number>; // TODO #9520 key is versionId 
+  version: Record<string, number>;
 }
 
 export interface ExpenseType {

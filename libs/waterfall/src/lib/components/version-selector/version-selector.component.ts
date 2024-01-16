@@ -3,12 +3,12 @@ import { Component, ChangeDetectionStrategy, OnInit, Output, EventEmitter, Input
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 
-import { createVersion, getDefaultVersionId, Version } from '@blockframes/model';
+import { createVersion, getDefaultVersionId, isDefaultVersion, Version } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { VersionEditorComponent } from '../version-editor/version-editor.component';
 import { WaterfallService } from '../../waterfall.service';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
@@ -19,11 +19,15 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 })
 export class VersionSelectorComponent implements OnInit {
 
-  public waterfall$ = this.shell.waterfall$;
+  public versions$ = this.shell.waterfall$.pipe(
+    map(waterfall => this.hideStandalone ? waterfall.versions.filter(v => !v.standalone) : waterfall.versions)
+  );
   public canBypassRules$ = this.shell.canBypassRules$;
+  public canInitWaterfall$ = this.shell.canInitWaterfall$;
   public versionId: string;
   public lockedVersionId = this.shell.lockedVersionId;
   @Input() @boolean simulator = false;
+  @Input() @boolean hideStandalone = false;
   @Input() set initialVersion(value: string) { if (value) this.switchToVersion(value); }
   @Output() versionChanged = new EventEmitter<string>();
 
@@ -56,6 +60,7 @@ export class VersionSelectorComponent implements OnInit {
       data: createModalData({
         mode: 'edit',
         version,
+        isDefaultVersion: isDefaultVersion(this.shell.waterfall, versionId),
         rightholders: this.shell.waterfall.rightholders,
         onConfirm: async (version: Version, rightholderIds: string[] = []) => {
           const versions = this.shell.waterfall.versions.map(v => v.id === version.id ? version : v);
@@ -75,6 +80,7 @@ export class VersionSelectorComponent implements OnInit {
     this.dialog.open(VersionEditorComponent, {
       data: createModalData({
         mode: 'create',
+        isDefaultVersion: false,
         version: createVersion({ id: this.waterfallService.createId(), name: 'New version' }),
         rightholders: this.shell.waterfall.rightholders,
         onConfirm: async (_version: Version, rightholderIds: string[] = []) => {
@@ -95,6 +101,7 @@ export class VersionSelectorComponent implements OnInit {
     this.dialog.open(VersionEditorComponent, {
       data: createModalData({
         mode: 'init',
+        isDefaultVersion: true,
         version: createVersion({ id: this.waterfallService.createId(), name: 'First version' }),
         rightholders: this.shell.waterfall.rightholders,
         onConfirm: async (_version: Version, rightholderIds: string[] = []) => {

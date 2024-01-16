@@ -23,6 +23,7 @@ import {
   getOutgoingStatementPrerequists,
   hasContractWith,
   isProducerStatement,
+  isStandaloneVersion,
   sortStatements,
   statementType,
   statementsRolesMapping
@@ -86,7 +87,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
 
   private currentStateDate = new Date();
   private waterfall = this.shell.waterfall;
-  private sub: Subscription;
+  private subs: Subscription[] = [];
   private statementSender: WaterfallRightholder;
 
   constructor(
@@ -104,7 +105,6 @@ export class StatementsComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.rights = await this.shell.rights();
     const currentRightholder = await firstValueFrom(this.shell.currentRightholder$);
     if (!currentRightholder) {
       this.snackbar.open(`Organization "${this.orgService.org.name}" is not associated to any rightholders.`, 'close', { duration: 5000 });
@@ -119,30 +119,22 @@ export class StatementsComponent implements OnInit, OnDestroy {
       this.snackbar.open(`Producer is not defined.`, 'close', { duration: 5000 });
       return;
     }
-    const statements = await this.shell.statements();
-    this.isStatementSender = currentRightholder.id === this.statementSender.id;
-    this.statements = !this.isStatementSender ? filterRightholderStatements(statements, currentRightholder.id) : statements;
 
-    this.contracts = await this.shell.contracts();
-    this.statementTypes = Object.entries(statementsRolesConfig).map(([key, value]: [StatementType, StatementRolesConfig]) => (
-      {
-        selected: false,
-        key,
-        value: statementType[key],
-        ...value,
-        visible: key === 'producer' ? this.statements.some(s => !isProducerStatement(s) && s.status === 'reported') : value.visible
-      }
-    ));
+    await this.initTypes(currentRightholder);
+    const versionSub = this.shell.versionId$.subscribe(async versionId => {
+      const version = this.waterfall.versions.find(v => v.id === versionId);
+      if (version.standalone) await this.initTypes(currentRightholder, true);
+    });
+    this.subs.push(versionSub);
 
-    this.changeType('mainDistributor');
-
-    this.sub = combineLatest([
+    const sub = combineLatest([
       this.rightholderControl.valueChanges.pipe(startWith(this.rightholderControl.value)),
       this.shell.statements$
     ]).subscribe(([value, _statements]) => {
       const statements = !this.isStatementSender ? filterRightholderStatements(_statements, currentRightholder.id) : _statements;
-
-      if (this.selected !== 'directSales') {
+      if (!this.selected) {
+        this.rightholderContracts = [];
+      } else if (this.selected !== 'directSales') {
         this.rightholderContracts = getContractsWith([this.statementSender.id, value], this.contracts, this.currentStateDate)
           .filter(c => statementsRolesMapping[this.selected].includes(c.type))
           .filter(c => this.rights.some(r => r.contractId === c.id))
@@ -160,14 +152,34 @@ export class StatementsComponent implements OnInit, OnDestroy {
 
       this.cdr.markForCheck();
     });
+
+    this.subs.push(sub);
   }
 
   ngOnDestroy() {
-    this.sub?.unsubscribe();
+    this.subs.forEach(sub => sub.unsubscribe());
   }
 
-  public changeType(key: StatementType) {
-    if (this.selected === key) return;
+  private async initTypes(currentRightholder: WaterfallRightholder, isStandalone = false) {
+    this.rights = await this.shell.rights();
+    const statements = await this.shell.statements();
+    this.isStatementSender = currentRightholder.id === this.statementSender.id;
+    this.statements = !this.isStatementSender ? filterRightholderStatements(statements, currentRightholder.id) : statements;
+    this.contracts = await this.shell.contracts();
+    this.statementTypes = Object.entries(statementsRolesConfig).map(([key, value]: [StatementType, StatementRolesConfig]) => (
+      {
+        selected: false,
+        key,
+        value: statementType[key],
+        ...value,
+        visible: key === 'producer' ? this.statements.some(s => !isProducerStatement(s) && s.status === 'reported') : value.visible
+      }
+    ));
+    this.changeType('mainDistributor', isStandalone);
+  }
+
+  public changeType(key: StatementType, reload = false) {
+    if (!reload && this.selected === key) return;
     this.statementTypes = this.statementTypes.map(type => type.key === key ? { ...type, selected: !type.selected } : { ...type, selected: false });
     const selected = this.statementTypes.find(type => type.selected);
     this.selected = selected.key;
@@ -201,6 +213,8 @@ export class StatementsComponent implements OnInit, OnDestroy {
       }
     }
 
+    const standalone = isStandaloneVersion(this.waterfall, this.shell.versionId$.value);
+
     switch (type) {
       case 'mainDistributor':
       case 'salesAgent': {
@@ -211,8 +225,11 @@ export class StatementsComponent implements OnInit, OnDestroy {
           receiverId: this.statementSender.id, // Statement sender is the producer
           waterfallId: this.waterfall.id,
           duration,
-          type
+          type,
+          standalone
         });
+
+        if (statement.standalone) statement.versionId = this.shell.versionId$.value;
 
         const id = await this.statementService.add(statement, { params: { waterfallId: this.waterfall.id } });
         return this.router.navigate(['/c/o/dashboard/title/', this.waterfall.id, 'statement', id, 'edit']);
@@ -223,8 +240,11 @@ export class StatementsComponent implements OnInit, OnDestroy {
           senderId: this.statementSender.id,
           receiverId: rightholderId,
           waterfallId: this.waterfall.id,
-          duration
+          duration,
+          standalone
         });
+
+        if (statement.standalone) statement.versionId = this.shell.versionId$.value;
 
         const id = await this.statementService.add(statement, { params: { waterfallId: this.waterfall.id } });
         return this.router.navigate(['/c/o/dashboard/title/', this.waterfall.id, 'statement', id, 'edit']);
@@ -239,8 +259,11 @@ export class StatementsComponent implements OnInit, OnDestroy {
           receiverId: rightholderId,
           waterfallId: this.waterfall.id,
           incomeIds,
-          duration
+          duration,
+          standalone
         });
+
+        if (statement.standalone) statement.versionId = this.shell.versionId$.value;
 
         const id = await this.statementService.add(statement, { params: { waterfallId: this.waterfall.id } });
         return this.router.navigate(['/c/o/dashboard/title/', this.waterfall.id, 'statement', id]);

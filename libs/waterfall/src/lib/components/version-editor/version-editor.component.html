@@ -35,11 +35,11 @@
     <mat-form-field appearance="outline">
       <mat-label>Version Description</mat-label>
       <textarea matInput formControlName="description" placeholder="e.g. Following the amendments made to the Sales Agent's contract..." type="string" cdkTextareaAutosize cdkAutosizeMinRows="6" ></textarea>
-      <mat-hint>Clarify the purpose and changes in this Waterfall version for better understanding by you and other Right Holders.</mat-hint>
+      <mat-hint *ngIf="!data.isDefaultVersion">Clarify the purpose and changes in this Waterfall version for better understanding by you and other Right Holders.</mat-hint>
     </mat-form-field>
 
     <waterfall-rightholder-select 
-      *ngIf="data.mode !== 'init'"
+      *ngIf="!data.isDefaultVersion"
       [rightholders]="data.rightholders"
       [control]="form.get('rightholderIds')"
       multiple>

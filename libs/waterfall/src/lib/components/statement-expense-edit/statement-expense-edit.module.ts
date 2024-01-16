@@ -7,7 +7,8 @@ import { StatementExpenseEditComponent } from './statement-expense-edit.componen
 
 // Blockframes
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
-import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
+import { RightHolderNamePipeModule } from '../../pipes/rightholder-name.pipe';
+import { ExpenseTypePipeModule } from '../../pipes/expense-type.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -16,7 +17,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ExpenseTypePipeModule } from '@blockframes/waterfall/pipes/expense-type.pipe';
 
 @NgModule({
   declarations: [StatementExpenseEditComponent],

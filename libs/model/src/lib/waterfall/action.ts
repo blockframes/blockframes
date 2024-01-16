@@ -19,7 +19,7 @@ import {
 } from './state';
 import { getMinThreshold } from './threshold';
 import { assertNode, getChildRights, getGroup, getNode, getNodeOrg, isGroupChild, isRight, updateNode } from './node';
-import { WaterfallContract, WaterfallSource, getAssociatedSource } from './waterfall';
+import { WaterfallContract, WaterfallSource } from './waterfall';
 import { Income } from '../income';
 import { Expense, ExpenseType } from '../expense';
 import { Term } from '../terms';
@@ -333,11 +333,14 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
     // On waterfall side, the root contract is updated (updateContract), so we need to specify this one.
     const rootContract = contractAndAmendments.find(c => !c.rootId);
 
+    // An income should have at least one statement associated on current version
+    const statements = _statements.filter(s => s.incomeIds.includes(i.id));
+    if (!statements.length) continue;
+
     // Fetch overrides from statements. There can be multiple statements for a single income (distrib/direct sales and outgoing(s))
-    const statements = _statements.filter(s => s.incomeIds.includes(i.id)); // TODO #9520 check statement & income version
     const rightOverrides = statements.map(s => s.rightOverrides.filter(r => r.incomeId === i.id).map(r => ({ rightId: r.rightId, percent: r.percent / 100 }))).flat();
 
-    const source = getAssociatedSource(i, sources);
+    const source = sources.find(s => s.id === i.sourceId);
 
     const { [mainCurrency]: amount } = convertCurrenciesTo({ [i.currency]: i.price }, mainCurrency);
     actions.push(
@@ -358,10 +361,14 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
   return actions;
 }
 
-export function expensesToActions(expenses: Expense[]) {
+export function expensesToActions(expenses: Expense[], statements: Statement[]) {
   const actions: Action[] = [];
 
   for (const e of expenses.filter(e => e.status === 'received')) {
+
+    // An expense should have at least one statement associated on current version
+    if (!statements.filter(s => s.expenseIds?.includes(e.id)).length) continue;
+
     const { [mainCurrency]: amount } = convertCurrenciesTo({ [e.currency]: e.price }, mainCurrency);
     actions.push(
       action('expense', {

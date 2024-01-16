@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnChanges } from '@angular/core';
 
 import { ExpenseType, createExpenseType } from '@blockframes/model';
 import { FormList } from '@blockframes/utils/form';
@@ -12,12 +12,24 @@ import { ExpenseTypeForm } from '../../form/document.form';
   styleUrls: ['./expense-types.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExpenseTypesComponent {
+export class ExpenseTypesComponent implements OnChanges {
   @Input() form: FormList<ExpenseType, ExpenseTypeForm>;
+  @Input() versionId = 'default';
 
   constructor(
     private documentService: WaterfallDocumentsService,
   ) { }
+
+  ngOnChanges() {
+    if (this.versionId === 'default') {
+      this.form.enable();
+    } else {
+      this.form.disable();
+      for (const item of this.form.controls) {
+        item.get('cap').enable();
+      }
+    }
+  }
 
   add() {
     this.form.add(createExpenseType({ id: this.documentService.createId() }));

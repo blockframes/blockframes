@@ -4,6 +4,7 @@ import {
   Duration,
   Expense,
   Income,
+  PricePerCurrency,
   Right,
   RightOverride,
   Statement,
@@ -12,7 +13,6 @@ import {
   WaterfallSource,
   generatePayments,
   getAssociatedRights,
-  getAssociatedSource,
   getCalculatedAmount,
   getChildRights,
   getDefaultVersionId,
@@ -26,15 +26,17 @@ import {
   getStatementRightsToDisplay,
   getStatementSources,
   getTransferDetails,
+  isDefaultVersion,
   isDirectSalesStatement,
   isDistributorStatement,
   isSource,
+  isStandaloneVersion,
   isVerticalGroup,
   waterfallSources
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { StatementForm } from '../../../form/statement.form';
-import { BehaviorSubject, Subscription, combineLatest, debounceTime, map, shareReplay } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, combineLatest, debounceTime, map, shareReplay } from 'rxjs';
 import { unique } from '@blockframes/utils/helpers';
 import { MatDialog } from '@angular/material/dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
@@ -59,7 +61,7 @@ function getRightTurnover(incomeIds: string[], state: TitleState, right: Right, 
     .filter(row => {
       if (statementStatus === 'draft') return true;
       // Remove sources where all incomes are hidden from reported statement 
-      const sourceIncomes = statementIncomes.filter(i => getAssociatedSource(i, sources).id === row.source.id);
+      const sourceIncomes = statementIncomes.filter(i => i.sourceId === row.source.id);
       const allHidden = sourceIncomes.every(i => i.version[versionId]?.hidden);
       return !allHidden;
     })
@@ -84,12 +86,14 @@ function getRightTaken(rights: Right[], statement: Statement, state: TitleState,
   const taken = details.reduce((acc, s) => acc + s.taken, 0);
   const currentRightPayment = statement.payments.right.filter(p => p.to === right.id);
 
-  const maxPerIncome = unique(currentRightPayment.map(r => r.incomeIds).flat()).map(incomeId => ({
-    income: incomes.find(i => i.id === incomeId),
-    max: getIncomingAmount(right.id, incomeId, state.transfers),
-    current: getCalculatedAmount(right.id, incomeId, state.transfers),
-    source: getAssociatedSource(incomes.find(i => i.id === incomeId), sources)
-  })).filter(i => i.max > 0);
+  const maxPerIncome = unique(currentRightPayment.map(r => r.incomeIds).flat())
+    .map(incomeId => incomes.find(i => i.id === incomeId))
+    .map(income => ({
+      income,
+      max: getIncomingAmount(right.id, income.id, state.transfers),
+      current: getCalculatedAmount(right.id, income.id, state.transfers),
+      source: sources.find(s => s.id === income.sourceId)
+    })).filter(i => i.max > 0);
 
   return {
     name: right.name,
@@ -151,17 +155,19 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     this.shell.rights$, this.shell.simulation$
   ]).pipe(
     map(([incomeIds, sources, _incomes, _rights, simulation]) => {
+      if (this.statement.status === 'reported') {
+        const incomes = _incomes.filter(i => this.statement.incomeIds.includes(i.id));
+        this.form.setAllValue({ ...this.statement, incomes, sources });
+        return this.statement;
+      }
 
-      // Update statement incomeIds given the selected incoming distibutor or direct sales statements
+      // Update statement incomeIds given the selected incoming distributor or direct sales statements
       const incomes = incomeIds
         .map(id => _incomes.find(i => i.id === id))
-        .filter(i => sources.map(s => s.id).includes(getAssociatedSource(i, this.waterfall.sources).id));
+        .filter(i => sources.map(s => s.id).includes(i.sourceId));
 
       this.statement.incomeIds = incomes.map(i => i.id);
 
-      // Reset payments
-      this.statement.payments.right = [];
-      delete this.statement.payments.rightholder;
 
       const statementRights = getStatementRights(this.statement, _rights);
       const rightIds = unique(sources.map(s => getAssociatedRights(s.id, statementRights, simulation.waterfall.state)).flat().map(r => r.id));
@@ -173,7 +179,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
         delete this.statement.payments.rightholder;
       }
 
-      const statement = generatePayments(this.statement, simulation.waterfall.state, rights, incomes, sources);
+      const statement = generatePayments(this.statement, simulation.waterfall.state, rights, incomes);
       if (!this.form.pristine) statement.duration = this.form.get('duration').value as Duration;
       this.form.setAllValue({ ...statement, incomes, sources });
       return statement;
@@ -272,13 +278,22 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     })
   );
 
-  public expenses$ = combineLatest([this.statement$, this.shell.statements$, this.shell.expenses$]).pipe(
-    map(([statement, statements, expenses]) => {
+  public expenses$: Observable<(Expense & { cap?: PricePerCurrency })[]> = combineLatest([
+    this.statement$, this.shell.statements$,
+    this.shell.expenses$, this.shell.versionId$
+  ]).pipe(
+    map(([statement, statements, expenses, versionId]) => {
       const parentStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
         .filter(s => s.payments.right.some(r => r.incomeIds.some(id => statement.incomeIds.includes(id))));
       const expenseIds = parentStatements.map(s => s.expenseIds).flat();
-      return expenses.filter(e => expenseIds.includes(e.id))
-        .filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true);
+      return expenses.filter(e => expenseIds.includes(e.id)).map(e => {
+        const type = e.typeId ? this.waterfall.expenseTypes[e.contractId].find(t => t.id === e.typeId) : undefined;
+        if (!type) return e;
+        const versionKey = isDefaultVersion(this.shell.waterfall, versionId) ? 'default' : versionId;
+        const cap = type.cap.version[versionKey] !== undefined ? type.cap.version[versionKey] : type.cap.default;
+        if (cap === 0) return e;
+        return { ...e, cap: { [type.currency]: cap } };
+      }).filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true);
     })
   );
 
@@ -317,6 +332,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
   public canEditRightPayment(row: BreakdownRow, statement: Statement) {
     if (statement.status === 'reported') return false;
     if (row.maxPerIncome.every(i => i.max === 0)) return false;
+    if (isStandaloneVersion(this.shell.waterfall, this.shell.versionId$.value)) return false;
     if (this.shell.versionId$.value !== getDefaultVersionId(this.shell.waterfall)) return false;
     const incomeIds = row.maxPerIncome.map(i => i.income.id);
     if (statement.rightOverrides.find(c => c.rightId !== row.right.id && incomeIds.includes(c.incomeId))) return false;
@@ -327,8 +343,8 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     if (statement.status === 'reported') return false;
     if (this.shell.versionId$.value === getDefaultVersionId(this.shell.waterfall)) return false;
     if (statement.rightOverrides.length) return false;
-    const sources = waterfallSources(this.waterfall, this.shell.versionId$.value);
-    const incomes = this.incomes.filter(i => getAssociatedSource(i, sources).id === sourceId && this.incomeIds$.value.includes(i.id));
+    if (isStandaloneVersion(this.shell.waterfall, this.shell.versionId$.value)) return false;
+    const incomes = this.incomes.filter(i => i.sourceId === sourceId && this.incomeIds$.value.includes(i.id));
     const currentVersionDuplicates = this.statementDuplicates.filter(s => s.versionId === this.shell.versionId$.value);
     if (currentVersionDuplicates.some(s => incomes.some(i => s.incomeIds.includes(i.id)))) return false;
     return true;
@@ -338,6 +354,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     if (statement.status === 'reported') return false;
     if (this.shell.versionId$.value === getDefaultVersionId(this.shell.waterfall)) return false;
     if (statement.rightOverrides.length) return false;
+    if (isStandaloneVersion(this.shell.waterfall, this.shell.versionId$.value)) return false;
     const currentVersionDuplicates = this.statementDuplicates.filter(s => s.versionId === this.shell.versionId$.value);
     if (currentVersionDuplicates.some(s => s.expenseIds.includes(expenseId))) return false;
     return true;
@@ -369,8 +386,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
   }
 
   public editIncome(sourceId: string) {
-    const sources = waterfallSources(this.waterfall, this.shell.versionId$.value);
-    const incomes = this.incomes.filter(i => getAssociatedSource(i, sources).id === sourceId && this.incomeIds$.value.includes(i.id));
+    const incomes = this.incomes.filter(i => i.sourceId === sourceId && this.incomeIds$.value.includes(i.id));
     this.dialog.open(StatementIncomeEditComponent, {
       data: createModalData({
         incomes,

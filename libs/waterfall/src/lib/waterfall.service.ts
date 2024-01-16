@@ -283,9 +283,10 @@ function waterfallToDate(build: WaterfallState, date?: Date) {
 
 function groupActions(data: WaterfallData, versionId: string, isSimulation = false) {
   const sources = waterfallSources(data.waterfall, versionId);
+
   // @dev "sourcesToAction" may be activated for real waterfall also (generate bad display for graph generated with G6 but not with new one)
   const sourceActions = isSimulation ? sourcesToAction(sources) : [];
-  const incomeStatements = isSimulation ? data.statements : data.statements.filter(s => s.status === 'reported');
+  const incomesAndExpensesStatements = isSimulation ? data.statements : data.statements.filter(s => s.status === 'reported');
   // Skip hidden incomes for this version
   const incomes = isSimulation ? Object.values(data.incomes) : Object.values(data.incomes).filter(i => !i.version[versionId] || !i.version[versionId].hidden);
 
@@ -293,10 +294,10 @@ function groupActions(data: WaterfallData, versionId: string, isSimulation = fal
   const contractActions = contractsToActions(data.contracts, data.terms);
   const investmentActions = investmentsToActions(data.contracts, data.terms);
   const rightActions = rightsToActions(data.rights);
-  const incomeActions = incomesToActions(data.contracts, incomes, sources, incomeStatements);
+  const incomeActions = incomesToActions(data.contracts, incomes, sources, incomesAndExpensesStatements);
   // Skip hidden expenses for this version
   const expenses = isSimulation ? Object.values(data.expenses) : Object.values(data.expenses).filter(i => !i.version[versionId] || !i.version[versionId].hidden);
-  const expenseActions = expensesToActions(expenses);
+  const expenseActions = expensesToActions(expenses, incomesAndExpensesStatements);
   const paymentActions = statementsToActions(data.statements, incomes);
 
   const groupedActions = groupByDate([

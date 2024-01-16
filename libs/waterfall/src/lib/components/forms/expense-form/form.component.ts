@@ -34,7 +34,7 @@ export class ExpenseFormComponent implements OnInit {
   }
 
   public defaultExpenseValue(expenseType: ExpenseType): Partial<Expense> {
-    return { nature: 'Nature', capped: expenseType.cap.default > 0 }; // TODO #9520 replace default by versionId 
+    return { nature: 'Nature', capped: expenseType.cap.default > 0 };
   }
 
 }
