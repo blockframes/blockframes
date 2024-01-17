@@ -1668,7 +1668,7 @@
             "envFile": ".env",
             "commands": [
               "npx cross-env nx build waterfall --configuration=$NG_CONFIG",
-              "npx cross-env waterfall deploy --project=$PROJECT_ID --only hosting:waterfall"
+              "npx cross-env firebase deploy --project=$PROJECT_ID --only hosting:waterfall"
             ],
             "parallel": false,
             "color": true
