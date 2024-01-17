@@ -10,6 +10,7 @@ import { sortingDataAccessor } from '@blockframes/utils/table';
 import { MovieImportState, SpreadsheetImportError } from '../../utils';
 import { MovieService } from '@blockframes/movie/service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -42,6 +43,7 @@ export class TableExtractedMoviesComponent implements AfterViewInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private movieService: MovieService,
+    private waterfallService: WaterfallService,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -83,6 +85,9 @@ export class TableExtractedMoviesComponent implements AfterViewInit {
     this.cdr.markForCheck();
     const data = this.rows.data;
     importState.movie = await this.movieService.create(importState.movie);
+    if (importState.movie.app.waterfall?.status === 'accepted') {
+      await this.waterfallService.create(importState.movie.id, importState.movie.orgIds);
+    }
     importState.imported = true;
     this.rows.data = data;
 

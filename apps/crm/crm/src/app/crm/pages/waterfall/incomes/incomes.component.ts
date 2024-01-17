@@ -22,7 +22,7 @@ export class IncomesComponent {
 
   public getAssociatedSource(income: Income) {
     try {
-      return this.shell.waterfall.sources.find(source => source.id === income.sourceId);
+      return this.shell.waterfall.sources.find(source => source.id === income.sourceId).name;
     } catch (error) {
       if (this.snackBar._openedSnackBarRef === null) this.snackBar.open(error, 'close', { duration: 5000 });
     }
