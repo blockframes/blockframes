@@ -142,6 +142,7 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
     'contracts/',
     'docsIndex/',
     'events/',
+    'expenses/',
     'cms/',
     'campaigns/',
     'permissions/',
@@ -150,6 +151,7 @@ export function anonymizeDocument({ docPath, content: doc }: DbRecord) {
     'terms/',
     'incomes/',
     'offers/',
+    'waterfall/',
   ];
   if (!doc || ignorePaths.some((path) => docPath.includes(path))) return { docPath, content: doc };
 

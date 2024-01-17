@@ -528,7 +528,25 @@ export function getFieldConfigs(
 
       return { status, access: true, acceptedAt: null, submittedAt: null, refusedAt: null };
     },
-      /* bp */ orgIds: async (value: string) => {
+      /* bp */ 'app.waterfall': (value: string) => {
+      const defaultAccess: MovieAppConfig = {
+        status: 'accepted',
+        access: 'waterfall' === currentApp,
+        acceptedAt: null,
+        submittedAt: null,
+        refusedAt: null,
+      };
+
+      if (!value) throw optionalWarning('Blockframes Status', defaultAccess);
+      if (!value) return defaultAccess;
+
+      const status = getKeyIfExists('storeStatus', value);
+      if (!status) throw wrongValueError(value, 'Blockframes Status');
+      if (status !== 'accepted') throw wrongValueError(value, 'Blockframes Status');
+
+      return { status, access: true, acceptedAt: null, submittedAt: null, refusedAt: null };
+    },
+      /* bq */ orgIds: async (value: string) => {
       // ! required
       if (!value) throw mandatoryError(value, 'Owner Id');
       if (!value) return [userOrgId];
@@ -536,7 +554,7 @@ export function getFieldConfigs(
       if (!user) throw unknownEntityError(value, 'Owner Id');
       return [user.orgId];
     },
-     /* bq */ id: async (value: string) => value,
+      /* br */ id: async (value: string) => value,
   };
 
   // ! The order of the property should be the same as excel columns
@@ -899,11 +917,15 @@ export function getFieldConfigs(
       if (value) throw wrongTemplateError('admin');
       return null;
     },
-    /* bp */ orgIds: async (value: string) => {
+    /* bp */ 'app.waterfall': async (value: string) => {
       if (value) throw wrongTemplateError('admin');
       return null;
     },
-    /* bq */ id: async (value: string) => {
+    /* bq */ orgIds: async (value: string) => {
+      if (value) throw wrongTemplateError('admin');
+      return null;
+    },
+    /* br */ id: async (value: string) => {
       if (value) throw wrongTemplateError('admin');
       return null;
     }

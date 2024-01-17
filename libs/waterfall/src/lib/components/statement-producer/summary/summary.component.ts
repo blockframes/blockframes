@@ -316,7 +316,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
       if (!inError && this.shell.setDate(date)) this.shell.simulateWaterfall();
     });
 
-    this.incomes = await this.shell.incomes([], '');
+    this.incomes = await this.shell.incomes(undefined, '');
     const allStatements = await this.shell.statements('');
     this.statementDuplicates = allStatements.filter(s => !!s.duplicatedFrom);
   }
