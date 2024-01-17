@@ -12,6 +12,7 @@ const collections = {
   contracts: true,
   docsIndex: true,
   events: true,
+  expenses: false,
   incomes: false,
   invitations: true,
   movies: true,
