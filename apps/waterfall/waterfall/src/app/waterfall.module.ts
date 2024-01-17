@@ -2,13 +2,13 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { createRoutes } from '@blockframes/utils/routes/create-routes';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
-import { NoAuthGuard } from '@blockframes/auth/guard/no-auth.guard';
+import { NoLandingGuard } from '@blockframes/auth/guard/no-landing.guard';
 import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 
 const routes = createRoutes({
   landing: {
     path: '',
-    canActivate: [NoAuthGuard],
+    canActivate: [NoLandingGuard],
     loadChildren: () => import('./landing/landing.module').then(m => m.WaterfallLandingModule)
   },
   appsRoutes: [
