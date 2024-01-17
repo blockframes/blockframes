@@ -4,10 +4,20 @@
 
 <ng-container *ngFor="let member of vertical.members; let isFirst = first; let isLast = last; let index = index">
   <ng-container *ngIf="isFirst; else level">
-    <waterfall-graph-right [right]="member" [selected]="selected" (handleSelect)="handleSelect.emit(vertical.id)" hideAmount></waterfall-graph-right>
+    <waterfall-graph-right
+      hideAmount
+      [right]="member"
+      [selected]="selected === member.id || selected === '*'"
+      (handleSelect)="select(member.id)"
+    ></waterfall-graph-right>
   </ng-container>
   <ng-template #level>
-    <waterfall-graph-level [right]="member" [selected]="selected" (handleSelect)="handleSelect.emit(vertical.id)" hideAmount></waterfall-graph-level>
+    <waterfall-graph-level
+      hideAmount
+      [right]="member"
+      (handleSelect)="select(member.id)"
+      [selected]="selected === member.id || selected === '*'"
+    ></waterfall-graph-level>
   </ng-template>
   <svg *ngIf="!isLast" width="240" height="32" viewBox="0 0 240 32">
     <path stroke-width="2" stroke="#feb90f" fill="none" d="M 120 0 L 120 30 L 112 22 M 120 30 L 128 22"></path>
