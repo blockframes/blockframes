@@ -7,8 +7,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 import { Right } from '@blockframes/model';
-import { RightService } from '@blockframes/waterfall/right.service';
-import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
+import { RightService } from '../../../right.service';
+import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 
 import { WaterfallPoolModalComponent } from '../pool-modal/pool-modal.component';
 

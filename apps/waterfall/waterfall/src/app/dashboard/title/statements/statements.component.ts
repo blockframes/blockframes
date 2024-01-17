@@ -123,7 +123,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
     await this.initTypes(currentRightholder);
     const versionSub = this.shell.versionId$.subscribe(async versionId => {
       const version = this.waterfall.versions.find(v => v.id === versionId);
-      if (version.standalone) await this.initTypes(currentRightholder, true);
+      if (version?.standalone) await this.initTypes(currentRightholder, true);
     });
     this.subs.push(versionSub);
 
