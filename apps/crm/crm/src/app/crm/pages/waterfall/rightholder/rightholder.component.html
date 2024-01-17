@@ -1,0 +1,53 @@
+<ng-container *ngIf="rightholder$ | async as rightholder">
+  <h3>{{ rightholder.name }}</h3>
+
+  <form [formGroup]="rightholderForm">
+    <static-select [control]="rightholderForm.get('roles')" required multiple scope="rightholderRoles">
+      <mat-label>Waterfall Role</mat-label>
+      <mat-error>This field is mandatory</mat-error>
+    </static-select>
+    <mat-form-field appearance="outline">
+      <mat-label>Select Locked version</mat-label>
+      <mat-select [formControl]="rightholderForm.get('lockedVersionId')">
+        <mat-option value="">None</mat-option>
+        <mat-option *ngFor="let version of versions" [value]="version.id" >
+          {{ version.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <article>
+      <button mat-button color="primary" [disabled]=!rightholderForm.valid (click)="save()">
+        <mat-icon svgIcon="edit"></mat-icon>
+        <span>Update</span>
+      </button>
+    </article>
+  </form>
+
+  <h3>Rightholder Rights</h3>
+  <bf-table [source]="rights$ | async" clickable useFilter pagination="50">
+    <ng-template colRef="id" label="Id" let-id sort>
+      {{ id }}
+      <button mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
+        <mat-icon svgIcon="file_copy"></mat-icon>
+      </button>
+    </ng-template>
+    <ng-template colRef="name" label="Name" let-name sort>
+      {{ name }}
+    </ng-template>
+    <ng-template colRef="type" label="Type" let-type sort>
+      {{ type | toLabel: 'rightTypes' }}
+    </ng-template>
+    <ng-template colRef="groupId" label="Group" let-groupId sort>
+      {{ groupId ? groupId : '--' }}
+    </ng-template>
+    <ng-template colRef="percent" label="%" let-percent>
+      {{ percent ? percent  : '--' }}
+    </ng-template>
+    <ng-template colRef="conditions" label="Conditions" let-conditions>
+      {{ conditions?.conditions?.length ? conditions.conditions.length  : '--' }}
+    </ng-template>
+    <ng-template colRef="revenue" label="Right Revenue" let-revenue sort>
+      <price-per-currency [price]="revenue"></price-per-currency>
+    </ng-template>
+  </bf-table>
+</ng-container>

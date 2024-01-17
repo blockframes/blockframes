@@ -1,0 +1,168 @@
+<waterfall-statement-header *ngIf="sources$ | async as sources" [statement]="statement" [sources]="sources"></waterfall-statement-header>
+<section>
+  <mat-divider></mat-divider>
+  <p class="mat-body-2">Here is the <strong>Summary of your Statement</strong>. Please verify the information below.</p>
+
+  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment"></waterfall-statement-participation>
+
+  <article class="breakdown">
+    <header>
+      <span>Calculation breakdown</span>
+      <div>Net Receipts</div>
+    </header>
+
+    <ng-container *ngIf="sourcesBreakdown$ | async as breakdown">
+      <div class="surface" *ngFor="let item of breakdown; let isFirst = first">
+        <mat-expansion-panel [expanded]="isFirst">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <span>{{ item.name }}</span>
+              <price-per-currency [price]="item.net" default="€ 0"></price-per-currency>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <bf-table [source]="item.rows">
+            <ng-template colRef="" label="Section" let-item>
+              <span [class]="item.type">{{ item.section }}</span>
+            </ng-template>
+            <ng-template colRef="" label="Prior Period" let-item>
+              <price-per-currency [class]="item.type" [price]="item.previous" default="€ 0"></price-per-currency>
+            </ng-template>
+            <ng-template colRef="" label="Current Period" let-item>
+              <price-per-currency [class]="item.type" [price]="item.current" default="€ 0"></price-per-currency>
+            </ng-template>
+            <ng-template colRef="" label="Cumulative" let-item>
+              <price-per-currency [class]="item.type" [price]="item.cumulated" default="€ 0"></price-per-currency>
+            </ng-template>
+            <ng-template colRef="" label="" let-item>
+              <ng-container *ngIf="item.type === 'right'">
+                <button mat-icon-button 
+                  [disabled]="!canEditRightPayment(item, statement)"
+                  [matTooltip]="!canEditRightPayment(item, statement) ? 'This cannot be edited.' : 'Change current value'"
+                  (click)="editRightPayment(item, statement)"
+                >
+                  <mat-icon svgIcon="statement_warning"></mat-icon>
+                </button>
+                <ng-container *ngIf="hasOverrides(item, statement)">
+                  <button mat-icon-button 
+                    matTooltip="This value has been overridden."
+                    (click)="showOverrides(item, statement)"
+                  >
+                    <mat-icon svgIcon="comment"></mat-icon>
+                  </button>
+                </ng-container>
+              </ng-container>
+              <ng-container *ngIf="item.type === 'expense' && item.cap">
+                <span class="cap">CAP: <price-per-currency [price]="item.cap"></price-per-currency></span>
+              </ng-container>
+            </ng-template>
+          </bf-table>
+          <div class="to-be-recouped" *ngIf="item.stillToBeRecouped">
+            Still to be recouped:
+            <price-per-currency [price]="item.stillToBeRecouped" default="€ 0"></price-per-currency>
+          </div>
+        </mat-expansion-panel>
+      </div>
+    </ng-container>
+
+    <div class="total-net">
+      Total Net Receipts:
+      <price-per-currency *ngIf="totalNetReceipt$ | async as totalNet" [price]="totalNet" default="€ 0"></price-per-currency>
+    </div>
+    <mat-divider></mat-divider>
+
+    <ng-container *ngIf="rightsBreakdown$ | async as breakdown">
+      <div class="surface" *ngFor="let item of breakdown">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <span>{{ item.name }}</span>
+              <span>(<price-per-currency [price]="item.total" default="€ 0"></price-per-currency>)</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <bf-table [source]="item.rows">
+            <ng-template colRef="" label="Section" let-item>
+              <span [class]="item.type">{{ item.section }}</span>
+            </ng-template>
+            <ng-template colRef="" label="Prior Period" let-item>
+              <price-per-currency [class]="item.type" [price]="item.previous" default="€ 0"></price-per-currency>
+            </ng-template>
+            <ng-template colRef="" label="Current Period" let-item>
+              <price-per-currency [class]="item.type" [price]="item.current" default="€ 0"></price-per-currency>
+            </ng-template>
+            <ng-template colRef="" label="Cumulative" let-item>
+              <price-per-currency [class]="item.type" [price]="item.cumulated" default="€ 0"></price-per-currency>
+            </ng-template>
+            <ng-template colRef="" label="" let-item>
+              <ng-container *ngIf="item.type === 'right'">
+                <button mat-icon-button 
+                  [disabled]="!canEditRightPayment(item, statement)"
+                  [matTooltip]="!canEditRightPayment(item, statement) ? 'This cannot be edited.' : 'Change current value'"
+                  (click)="editRightPayment(item, statement)"
+                >
+                  <mat-icon svgIcon="statement_warning"></mat-icon>
+                </button>
+                <ng-container *ngIf="hasOverrides(item, statement)">
+                  <button mat-icon-button 
+                    matTooltip="This value has been overridden."
+                    (click)="showOverrides(item, statement)"
+                  >
+                    <mat-icon svgIcon="comment"></mat-icon>
+                  </button>
+                </ng-container>
+              </ng-container>
+              <ng-container *ngIf="item.type === 'expense' && item.cap">
+                <span class="cap">CAP: <price-per-currency [price]="item.cap"></price-per-currency></span>
+              </ng-container>
+            </ng-template>
+          </bf-table>
+          <div class="to-be-recouped" *ngIf="item.stillToBeRecouped">
+            Still to be recouped:
+            <price-per-currency [price]="item.stillToBeRecouped" default="€ 0"></price-per-currency>
+          </div>
+        </mat-expansion-panel>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="expenses$ | async as expenses">
+      <mat-divider *ngIf="expenses.length"></mat-divider>
+      <div class="surface" *ngIf="expenses.length">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <span>Expenses details</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <bf-table [source]="expenses" pagination="50">
+            <ng-template colRef="date" label="Date" let-date sort defaultSort>
+              {{ date | date: 'dd/MM/yyyy' }}
+            </ng-template>
+            <ng-template colRef="nature" label="Nature" let-nature sort>
+              {{ nature }}
+            </ng-template>
+            <ng-template colRef="" label="Type" let-item sort>
+              {{ item.typeId | expenseType : item.contractId : waterfall }}
+            </ng-template>
+            <ng-template colRef="" label="Price" let-item sort>
+              <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
+            </ng-template>
+            <ng-template colRef="capped" label="Capped" let-capped sort>
+              <mat-slide-toggle [checked]="capped" disabled color="primary"></mat-slide-toggle>
+            </ng-template>
+          </bf-table>
+        </mat-expansion-panel>
+      </div>
+    </ng-container>
+  </article>
+
+  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment"></waterfall-statement-participation>
+
+  <div class="surface comment">
+    <h3>Comment</h3>
+    <h4 class="mat-display-1">Need to add more information?</h4>
+    <p class="mat-body-2">You can add the comment that you’ll be seen by other waterfall members.</p>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Comment</mat-label>
+      <textarea matInput [formControl]="form.get('comment')" placeholder="Comment" type="string" cdkTextareaAutosize cdkAutosizeMinRows="6" ></textarea>
+    </mat-form-field>
+  </div>
+</section>

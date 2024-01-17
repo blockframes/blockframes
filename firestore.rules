@@ -332,30 +332,42 @@ service cloud.firestore {
     /// FUNCTIONS ///
 
     function isAllowedToUpdateMovie() {
-      return isOrgMember(userOrgId())
-        && isNotUpdatingId('id', existingData().id)
-        && isNotUpdatingField(['_meta', 'createdBy'])
-        && isNotUpdatingField(['_meta', 'createdAt'])
-        && isNotUpdatingField(['_type'])
-        && ( isNotUpdatingField(['app', 'catalog', 'status']) || ( existingData().app.catalog.access == true && incomingData().app.catalog.status in ['submitted', 'draft', 'archived'] ) )
-        && ( isNotUpdatingField(['app', 'festival', 'status']) || ( existingData().app.festival.access == true && incomingData().app.festival.status in ['submitted', 'draft', 'accepted', 'archived'] ) )
-        && ( isNotUpdatingField(['app', 'financiers', 'status']) || ( existingData().app.financiers.access == true && incomingData().app.financiers.status in ['submitted', 'draft', 'archived'] ) )
-        && ( isNotUpdatingField(['app', 'catalog', 'access']) || incomingData().app.catalog.access == false )
-        && ( isNotUpdatingField(['app', 'festival', 'access']) || incomingData().app.festival.access == false )
-        && ( isNotUpdatingField(['app', 'financiers', 'access']) || incomingData().app.financiers.access == false )
-        && orgCan('canUpdate', userOrgId(), existingData().id);
+      let orgId = userOrgId();
+      let currAppAccess = existingData().app;
+      let movie = incomingData();
+      let newAppAccess = movie.app;
+      return isOrgMember(orgId)
+        && isNotUpdatingId('id', movie.id)
+        && isNotUpdatingFieldDepth2(['_meta', 'createdBy'])
+        && isNotUpdatingFieldDepth2(['_meta', 'createdAt'])
+        && isNotUpdatingFieldDepth1(['_type'])
+        && ( isNotUpdatingFieldDepth3(['app', 'catalog', 'status']) || ( currAppAccess.catalog.access == true && newAppAccess.catalog.status in ['submitted', 'draft', 'archived'] ) )
+        && ( isNotUpdatingFieldDepth3(['app', 'waterfall', 'status']) || ( currAppAccess.waterfall.access == true && newAppAccess.waterfall.status in ['accepted'] ) )
+        && ( isNotUpdatingFieldDepth3(['app', 'festival', 'status']) || ( currAppAccess.festival.access == true && newAppAccess.festival.status in ['submitted', 'draft', 'accepted', 'archived'] ) )
+        // && ( isNotUpdatingFieldDepth3(['app', 'financiers', 'status']) || ( currAppAccess.financiers.access == true && newAppAccess.financiers.status in ['submitted', 'draft', 'archived'] ) )
+        && ( isNotUpdatingFieldDepth3(['app', 'catalog', 'access']) || newAppAccess.catalog.access == false )
+        && ( isNotUpdatingFieldDepth3(['app', 'waterfall', 'access']) || newAppAccess.waterfall.access == false )
+        && ( isNotUpdatingFieldDepth3(['app', 'festival', 'access']) || newAppAccess.festival.access == false )
+        // && ( isNotUpdatingFieldDepth3(['app', 'financiers', 'access']) || newAppAccess.financiers.access == false )
+        && ( orgCan('canUpdate', orgId, movie.id) || isWaterfallAdmin(movie.id) );
     }
 
     function checkStatus(data, status) {
       return data.app.catalog.status == status
         || data.app.festival.status == status
-        || data.app.financiers.status == status;
+        || data.app.financiers.status == status
+        || data.app.waterfall.status == status;
     }
 
     function checkAllStatusAreEqual(data, status) {
       return data.app.catalog.status == status
         && data.app.festival.status == status
         && data.app.financiers.status == status
+        // waterfall app is not checked because movies will always be "accepted"
+    }
+
+    function getMovie(movieId) {
+      return get(/databases/$(database)/documents/movies/$(movieId)).data;
     }
 
     ////////////////////////////////
@@ -402,24 +414,41 @@ service cloud.firestore {
 
     match /terms/{termId} {
       allow read: if isSignedInWithPassword() && notInMaintenance();
-      allow create: if (userOrgId() == getContract(incomingData().contractId).buyerId
-        || userOrgId() == getContract(incomingData().contractId).sellerId)
+      allow create: if (
+          userOrgId() == getContract(incomingData().contractId).buyerId || 
+          userOrgId() == getContract(incomingData().contractId).sellerId || 
+          canUpdateWaterfallDocument(incomingData().titleId, incomingData().contractId)
+        )
         && notInMaintenance();
-      allow update: if (userOrgId() == getContract(existingData().contractId).sellerId
-        || isBlockframesAdmin(userId()))
+      allow update: if (
+          userOrgId() == getContract(existingData().contractId).sellerId ||
+          canUpdateWaterfallDocument(existingData().titleId, existingData().contractId)
+        )
         && notInMaintenance();
-      allow delete: if false;
+      allow delete: if canUpdateWaterfallDocument(existingData().titleId, existingData().contractId) && notInMaintenance();
     }
 
     match /incomes/{incomeId} {
-      allow read: if userOrgId() in getContract(existingData().contractId).stakeholders
+      allow read: if (
+          userOrgId() in getContract(existingData().contractId).stakeholders || 
+          isWaterfallMember(existingData().titleId)
+        )
         && notInMaintenance();
-      allow create: if (userOrgId() == getContract(incomingData().contractId).buyerId)
+      allow create: if (
+          userOrgId() == getContract(incomingData().contractId).buyerId || 
+          canUpdateWaterfallDocument(incomingData().titleId, incomingData().contractId)
+        )
         && notInMaintenance();
-      allow update: if false;
-      allow delete: if false;
+      allow update: if canUpdateWaterfallDocument(existingData().titleId, existingData().contractId) && notInMaintenance();
+      allow delete: if canUpdateWaterfallDocument(existingData().titleId, existingData().contractId) && notInMaintenance();
     }
 
+    match /expenses/{expenseId} {
+      allow read: if isWaterfallMember(existingData().titleId) && notInMaintenance();
+      allow create: if canUpdateWaterfallDocument(incomingData().titleId, incomingData().contractId) && notInMaintenance();
+      allow update: if canUpdateWaterfallDocument(existingData().titleId, existingData().contractId) && notInMaintenance();
+      allow delete: if canUpdateWaterfallDocument(existingData().titleId, existingData().contractId) && notInMaintenance();
+    }
 
     // Get the data of an existing contract
     function getContract(contractId) {
@@ -534,6 +563,172 @@ service cloud.firestore {
       return existingData()._meta.createdBy == userId();
     }
 
+    ////////////////////////////////
+    // WATERFALL & BLOCKS RULES   //
+    ////////////////////////////////
+
+    match /waterfall/{waterfallId} {
+      allow read: if userHasValidOrg()
+        && notInMaintenance()
+        && isOrgMember(userOrgId())
+        && userOrgId() in existingData().orgIds;
+      allow create: if userHasValidOrg()
+        && isRequestFieldValueEqualToOrNotSetted(['id'], waterfallId)
+        && notInMaintenance()
+        && userOrgId() in getMovie(waterfallId).orgIds;
+      allow update: if userHasValidOrg()
+        && isNotUpdatingId('id', existingData().id)
+        && notInMaintenance()
+        && isOrgMember(userOrgId())
+        && ( isWaterfallAdmin(waterfallId) || ( isWaterfallMember(waterfallId) && isOnlyUpdatingRightholders() ) );
+      allow delete: if false;
+
+      match /blocks/{blockId} {
+        allow read: if userHasValidOrg()
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && isWaterfallMember(waterfallId);
+        allow create: if userHasValidOrg()
+          && isRequestFieldValueEqualToOrNotSetted(['id'], blockId)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && isWaterfallAdmin(waterfallId);
+        allow update: if userHasValidOrg()
+          && isNotUpdatingId('id', existingData().id)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && isWaterfallAdmin(waterfallId);
+        allow delete: if userHasValidOrg()
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && isWaterfallAdmin(waterfallId);
+      }
+
+      match /rights/{rightId} {
+        allow read: if userHasValidOrg()
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && isWaterfallMember(waterfallId);
+        allow create: if userHasValidOrg()
+          && isRequestFieldValueEqualToOrNotSetted(['id'], rightId)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && isWaterfallAdmin(waterfallId);
+        allow update: if userHasValidOrg()
+          && isNotUpdatingId('id', existingData().id)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && isWaterfallAdmin(waterfallId);
+        allow delete: if userHasValidOrg()
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && isWaterfallAdmin(waterfallId);
+      }
+
+      match /statements/{statementId} {
+        allow read: if userHasValidOrg()
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && isWaterfallMember(waterfallId);
+        allow create: if userHasValidOrg()
+          && isRequestFieldValueEqualToOrNotSetted(['id'], statementId)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && ( isWaterfallAdmin(waterfallId) || canManage(waterfallId, incomingData().senderId) );
+        allow update: if userHasValidOrg()
+          && isNotUpdatingId('id', existingData().id)
+          && isNotUpdatingId('senderId', existingData().senderId)
+          && isNotUpdatingId('receiverId', existingData().receiverId)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && ( isWaterfallAdmin(waterfallId) || canManage(waterfallId, existingData().senderId) );
+        allow delete: if userHasValidOrg()
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && ( isWaterfallAdmin(waterfallId) || canManage(waterfallId, existingData().senderId) );
+      }
+
+      match /permissions/{orgId} {
+        allow read: if userHasValidOrg()
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && ( userOrgId() == orgId || isWaterfallAdmin(waterfallId));
+        allow create: if userHasValidOrg()
+          && isRequestFieldValueEqualToOrNotSetted(['id'], orgId)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && ( isCreatingWaterfall(waterfallId) || isWaterfallAdmin(waterfallId) );
+        allow update: if userHasValidOrg()
+          && isNotUpdatingId('id', existingData().id)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && isWaterfallAdmin(waterfallId);
+        allow delete: if false;
+      }
+
+      match /documents/{documentId} {
+        allow read: if userHasValidOrg()
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && isWaterfallMember(waterfallId);
+        allow create: if userHasValidOrg()
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && isWaterfallMember(waterfallId);
+        allow update: if userHasValidOrg()
+          && isNotUpdatingId('id', existingData().id)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && canUpdateWaterfallDocument(waterfallId, documentId);
+        allow delete: if userHasValidOrg()
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && canUpdateWaterfallDocument(waterfallId, documentId);
+      }
+    }
+
+    function isCreatingWaterfall(waterfallId) {
+			return userOrgId() in getAfter(/databases/$(database)/documents/waterfall/$(waterfallId)).data.orgIds && 
+        exists(/databases/$(database)/documents/waterfall/$(waterfallId)) == false;
+    }
+
+    function isWaterfallAdmin(waterfallId) {
+      return getWaterfallPermissions(waterfallId).isAdmin == true;
+    }
+
+    function isWaterfallMember(waterfallId) {
+      return userOrgId() in getWaterfall(waterfallId).orgIds;
+    }
+
+    function canManage(waterfallId, rightholderId) {
+      return isWaterfallMember(waterfallId) && rightholderId in getWaterfallPermissions(waterfallId).rightholderIds;
+    }
+
+    function isOnlyUpdatingRightholders() {
+      return isNotUpdatingField(['_meta', 'createdBy'])
+        && isNotUpdatingField(['_meta', 'createdAt'])
+        && isNotUpdatingField(['orgIds'])
+        && isNotUpdatingField(['documents'])
+        && isNotUpdatingField(['sources'])
+        && isNotUpdatingField(['versions'])
+    }
+
+    function getWaterfallPermissions(waterfallId) {
+      return get(/databases/$(database)/documents/waterfall/$(waterfallId)/permissions/$(userOrgId())).data;
+    }
+
+    function getWaterfall(waterfallId) {
+      return get(/databases/$(database)/documents/waterfall/$(waterfallId)).data;
+    }
+
+    function canUpdateWaterfallDocument(waterfallId, documentId) {
+      return getWaterfallDocument(waterfallId, documentId).ownerId == userOrgId() || isWaterfallAdmin(waterfallId);
+    }
+
+    function getWaterfallDocument(waterfallId, documentId) {
+      return get(/databases/$(database)/documents/waterfall/$(waterfallId)/documents/$(documentId)).data;
+    }
+
     /////////////////////////////////////////////////////////////////////////////////
     ///                                  FUNCTIONS                                ///
     ///                  set of functions to help building rules                  ///
@@ -623,9 +818,10 @@ service cloud.firestore {
 
 		// Parameter "action" can either be "canCreate", "canRead", "canUpdate" or "canDelete"
     function orgCan(action, orgId, docId) {
-      return (getDocumentPermissions(orgId, docId).ownerId == orgId)
-        || (getDocumentPermissions(orgId, docId).isAdmin == true)
-        || (getDocumentPermissions(orgId, docId)[action] == true)
+      let documentPermissions = getDocumentPermissions(orgId, docId);
+      return (documentPermissions.ownerId == orgId)
+        || (documentPermissions.isAdmin == true)
+        || (documentPermissions[action] == true)
         || (isOrgAdmin(orgId) && orgId == docId);
     }
 
@@ -639,31 +835,47 @@ service cloud.firestore {
     }
 
     function isNotUpdatingFieldDepth3(fieldArray) {
-			return ( !incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) ||  incomingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]] == existingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]] )
-        || ( !incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) ||  incomingData()[fieldArray[0]][fieldArray[1]] == existingData()[fieldArray[0]][fieldArray[1]] )
-        || ( !incomingData().keys().hasAll([fieldArray[0]]) ||  incomingData()[fieldArray[0]] == existingData()[fieldArray[0]] );
+      let incoming = incomingData();
+      let existing = existingData();
+      let firstArg = fieldArray[0];
+      let secondArg = fieldArray[1];
+      let thirdArg = fieldArray[2];
+      let firstLevel = incoming[firstArg];
+      let secondLevel = firstLevel[secondArg];
+			return ( !secondLevel.keys().hasAll([thirdArg]) || secondLevel[thirdArg] == existing[firstArg][secondArg][thirdArg] )
+        || ( !firstLevel.keys().hasAll([secondArg]) || secondLevel == existing[firstArg][secondArg] )
+        || ( !incoming.keys().hasAll([firstArg]) || firstLevel == existing[firstArg] );
     }
 
     function isNotUpdatingFieldDepth2(fieldArray) {
-			return ( !incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) ||  incomingData()[fieldArray[0]][fieldArray[1]] == existingData()[fieldArray[0]][fieldArray[1]] )
-        || ( !incomingData().keys().hasAll([fieldArray[0]]) ||  incomingData()[fieldArray[0]] == existingData()[fieldArray[0]] );
+      let incoming = incomingData();
+      let existing = existingData();
+      let firstArg = fieldArray[0];
+      let secondArg = fieldArray[1];
+      let firstLevel = incoming[firstArg];
+			return ( !firstLevel.keys().hasAll([secondArg]) || firstLevel[secondArg] == existing[firstArg][secondArg] )
+        || ( !incoming.keys().hasAll([firstArg]) || firstLevel == existing[firstArg] );
     }
 
     function isNotUpdatingFieldDepth1(fieldArray) {
-			return ( !incomingData().keys().hasAll([fieldArray[0]]) ||  incomingData()[fieldArray[0]] == existingData()[fieldArray[0]] );
+      let incoming = incomingData();
+      let firstArg = fieldArray[0];
+			return ( !incoming.keys().hasAll([firstArg]) || incoming[firstArg] == existingData()[firstArg] );
     }
 
     // Checks that the user is not trying to change document id
     function isNotUpdatingId(fieldName, value) {
-			return ( !incomingData().keys().hasAll([fieldName]) ||  incomingData()[fieldName] == value );
+      let incoming = incomingData();
+			return ( !incoming.keys().hasAll([fieldName]) || incoming[fieldName] == value );
     }
 
     // Incoming field path must be setted with a value equal to "value"
     function isRequestFieldValueEqualTo(fieldArray, value) {
-      return (incomingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]][fieldArray[3]] == value)
-        || (incomingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]] == value)
-        || (incomingData()[fieldArray[0]][fieldArray[1]] == value)
-        || (incomingData()[fieldArray[0]] == value);
+      let incoming = incomingData();
+      return (incoming[fieldArray[0]][fieldArray[1]][fieldArray[2]][fieldArray[3]] == value)
+        || (incoming[fieldArray[0]][fieldArray[1]][fieldArray[2]] == value)
+        || (incoming[fieldArray[0]][fieldArray[1]] == value)
+        || (incoming[fieldArray[0]] == value);
     }
 
     // Incoming field is not sent or equal to value
@@ -673,28 +885,33 @@ service cloud.firestore {
 
     // The call doest not contain path fieldArray
     function isRequestFieldValueNotSetted(fieldArray) {
-    	return (!incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]))
-       || (!incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]))
-       || !incomingData().keys().hasAll([fieldArray[0]]);
+      let incoming = incomingData();
+    	return (!incoming[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]))
+       || (!incoming[fieldArray[0]].keys().hasAll([fieldArray[1]]))
+       || !incoming.keys().hasAll([fieldArray[0]]);
     }
 
     // The field is sent and not already existing
     function isCreatingField(fieldArray) {
-      return ( incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) && (resource == null || !existingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]])) )
-        || ( incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) && (resource == null || !existingData()[fieldArray[0]].keys().hasAll([fieldArray[1]])) )
-        || ( incomingData().keys().hasAll([fieldArray[0]]) && (resource == null || !existingData().keys().hasAll([fieldArray[0]])) );
+      let incoming = incomingData();
+      let existing = existingData();
+      return ( incoming[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) && (resource == null || !existing[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]])) )
+        || ( incoming[fieldArray[0]].keys().hasAll([fieldArray[1]]) && (resource == null || !existing[fieldArray[0]].keys().hasAll([fieldArray[1]])) )
+        || ( incoming.keys().hasAll([fieldArray[0]]) && (resource == null || !existing.keys().hasAll([fieldArray[0]])) );
     }
 
-    //updating only the specified fields?
+    // Is updating only the specified fields ?
     function onlyChange(fields) {
       return incomingData().diff(existingData()).affectedKeys().hasOnly(fields);
     }
 
     // The field is removed
     function isRemovingField(fieldArray) {
-      return ( existingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) && !incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) )
-        || ( existingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) && !incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) )
-        || ( existingData().keys().hasAll([fieldArray[0]]) && !incomingData().keys().hasAll([fieldArray[0]]) );
+      let incoming = incomingData();
+      let existing = existingData();
+      return ( existing[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) && !incoming[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) )
+        || ( existing[fieldArray[0]].keys().hasAll([fieldArray[1]]) && !incoming[fieldArray[0]].keys().hasAll([fieldArray[1]]) )
+        || ( existing.keys().hasAll([fieldArray[0]]) && !incoming.keys().hasAll([fieldArray[0]]) );
     }
 
     function notInMaintenance() {

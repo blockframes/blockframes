@@ -11,6 +11,7 @@
   <group-multiselect
     *ngIf="getControl('medias') as medias"
     scope="medias"
+    [withoutValues]="waterfallMediaGroups"
     label="Select Rights"
     displayAll="All Rights"
     filterPlaceholder="Specify right(s) to filter"

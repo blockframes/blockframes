@@ -164,3 +164,9 @@ export function convertToTimeString(time: number) {
 
   return `${dayStr}${hourStr}${minuteStr}${secondStr}` || '0s';
 }
+
+// Provide structuredClone method not available in node 16
+export function structuredClone(objectToClone: unknown) {
+  const stringified = JSON.stringify(objectToClone);
+  return JSON.parse(stringified);
+}

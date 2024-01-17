@@ -2,17 +2,17 @@ import { ContractService } from '@blockframes/contract/contract/service';
 import {
   adminOnlyWarning, alreadyExistError, checkParentTerm, getContract,
   getOrgId, getTitleId, ImportError, mandatoryError,
-  unknownEntityError, unusedMandateIdWarning, wrongValueError, SpreadsheetImportError, wrongTemplateError
-} from '@blockframes/import/utils';
+  unknownEntityError, unusedMandateIdWarning, wrongValueError, SpreadsheetImportError, wrongTemplateError,
+  getDate
+} from '../../utils';
 import { ExtractConfig, getStaticList, getGroupedList } from '@blockframes/utils/spreadsheet';
 import {
   ContractStatus, ImportContractStatus, Language, Mandate, Media, Movie,
-  Sale, Territory, User, Duration, ContractType
+  Sale, Territory, Duration, ContractType
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
-import { getDate } from '@blockframes/import/utils';
 import { FormatConfig } from './utils';
 
 export interface FieldsConfig {
@@ -23,11 +23,8 @@ export interface FieldsConfig {
     buyerId: string;
     id?: string;
     stakeholders: string[];
-    status: string,
+    status: ContractStatus;
   };
-  income: {
-    price: number;
-  },
   term: {
     territories_included: Territory[];
     territories_excluded: Territory[];
@@ -40,15 +37,13 @@ export interface FieldsConfig {
     caption: Language[];
   }[];
   parentTerm: string | number;
-  _titleId?: string;
 }
 
-export type FieldsConfigType = ExtractConfig<FieldsConfig>;
+type FieldsConfigType = ExtractConfig<FieldsConfig>;
 
-export interface Caches {
+interface Caches {
   orgNameCache: Record<string, string>,
   titleCache: Record<string, Movie>,
-  userCache: Record<string, User>,
   contractCache: Record<string, Mandate | Sale>,
 }
 
@@ -136,11 +131,11 @@ export function getContractConfig(option: ContractConfig) {
       },
         /* i */ 'term[].duration.from': (value: string) => {
         if (!value) throw mandatoryError(value, 'Duration From');
-        return getDate(value, 'Start of Contract') as Date;
+        return getDate(value, 'Start of Contract');
       },
         /* j */ 'term[].duration.to': (value: string) => {
         if (!value) throw mandatoryError(value, 'Duration To');
-        return getDate(value, 'End of Contract') as Date;
+        return getDate(value, 'End of Contract');
       },
         /* k */ 'term[].licensedOriginal': (value: string) => {
         const lower = value.toLowerCase();
@@ -267,11 +262,11 @@ export function getContractConfig(option: ContractConfig) {
       },
         /* h */ 'term[].duration.from': (value: string) => {
         if (!value) throw mandatoryError(value, 'Duration From');
-        return getDate(value, 'Start of Contract') as Date;
+        return getDate(value, 'Start of Contract');
       },
         /* i */ 'term[].duration.to': (value: string) => {
         if (!value) throw mandatoryError(value, 'Duration To');
-        return getDate(value, 'End of Contract') as Date;
+        return getDate(value, 'End of Contract');
       },
 
         /* j */ 'term[].licensedOriginal': (value: string) => {
@@ -320,12 +315,5 @@ export function getContractConfig(option: ContractConfig) {
     };
   }
 
-  switch (config.app) {
-    case 'catalog':
-      return getCatalogConfig();
-    default:
-      if (blockframesAdmin) return getAdminConfig();
-      throw wrongTemplateError('admin');
-  }
-
+  return config.app === 'catalog' ? getCatalogConfig() : getAdminConfig();
 }

@@ -1,0 +1,70 @@
+
+section {
+  padding: 24px;
+  display: block;
+
+  article {
+    padding: 24px;
+  }
+
+  article.breakdown {
+    background-color: rgba(#D3D5DC, 0.2);
+    border: 1px solid var(--foreground-divider);
+    border-radius: 4px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+
+    mat-panel-title {
+      font-weight: 800;
+      font-size: 26px;
+      line-height: 24px;
+      color: var(--foreground-third-text);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      span, div {
+        font-weight: 800;
+        font-size: 28px;
+        line-height: 24px;
+      }
+
+      span {
+        color: var(--foreground-text);
+      }
+
+      div {
+        color: var(--foreground-third-text);
+      }
+    }
+
+    div.surface {
+      margin-top: 24px;
+
+      bf-table {
+        padding: 0;
+        border: none;
+
+        mat-icon {
+          color: var(--primary);
+          vertical-align: middle;
+          margin-top: -2px;
+        }
+
+        price-per-currency.total , span.total, price-per-currency.right , span.right {
+          font-weight: bold;
+        }
+
+      }
+    }
+
+    span.cap {
+      color: #f6b650;
+      margin-left: 12px;
+    }
+  }
+}

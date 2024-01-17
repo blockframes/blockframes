@@ -24,11 +24,13 @@
 @use '../components/mat-icon' as icon;
 @use '../components/mat-toggle-button' as toggle-button;
 @use '../components/mat-sidenav' as sidenav;
+@use '../components/mat-stepper' as stepper;
 @use '../components/mat-dialog' as dialog;
 @use '../components/mat-tabs' as tabs;
 @use '../components/mat-tooltip' as tooltip;
 @use '../components/mat-datepicker' as datepicker;
-
+@use '../components/mat-checkbox' as checkbox;
+@use '../components/mat-menu' as menu;
 
 @include mat.core(typography.$bf-typography);
 // While density is private we need to set it here to avoid duplicated themes
@@ -102,6 +104,7 @@
     icon: map.get($foreground, 700),
     icons: map.get($foreground, 700),
     text: map.get($foreground, 700),
+    third-text: map.get($foreground, 800),
     slider-min: map.get($foreground, 700),
     slider-off: rgba(map.get($foreground, 700), 0.26),
     slider-off-active: rgba(map.get($foreground, 700), 0.38),
@@ -192,11 +195,14 @@
   @include toolbar.color($theme);
   @include toggle-button.color($theme);
   @include sidenav.color($theme);
+  @include stepper.color($theme);
   @include icon.color($theme);
   @include dialog.color($theme);
   @include datepicker.color($theme);
   @include table.color($theme);
   @include tooltip.color($theme);
+  @include checkbox.color($theme);
+  @include menu.color($theme);
 
   $config: mat.get-color-config($theme);
   $background: map.get($config, 'background');
@@ -226,6 +232,7 @@
   --foreground-disabled-text: #{mat.get-color-from-palette($foreground, 'disabled-text')};
   --foreground-divider: #{mat.get-color-from-palette($foreground, 'divider')};
   --foreground-text: #{mat.get-color-from-palette($foreground, 'text')};
+  --foreground-third-text: #{mat.get-color-from-palette($foreground, 'third-text')};
   --foreground-base: #{mat.get-color-from-palette($foreground, 'base')};
   --primary-lighter: #{mat.get-color-from-palette($primary, 200)};
   --primary-lighter-contrast: #{mat.get-color-from-palette($primary, 'lighter-contrast')};

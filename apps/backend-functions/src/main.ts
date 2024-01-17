@@ -41,6 +41,15 @@ import { downloadVideo } from './rescue';
 import { createPdf as _createPdf } from './createPdf';
 import { scheduledAirtable, synchronizeAirtable } from './airtable';
 import { onNegotiationCreated, onNegotiationUpdate } from './negotiation';
+import {
+  onWaterfallDelete,
+  onWaterfallDocumentDelete,
+  onWaterfallStatementDelete,
+  onWaterfallRightDelete,
+  onWaterfallUpdate,
+  removeWaterfallFile,
+  onWaterfallStatementUpdate
+} from './waterfall';
 import { projectId, storageBucket } from './environments/environment';
 
 console.log('Function instance loaded');
@@ -288,6 +297,45 @@ export const onNegotiationCreateEvent = onDocumentCreate('contracts/{contractId}
 //--------------------------------
 
 export const downloadVideoToStorage = functions(superHeavyConfig).https.onRequest(downloadVideo);
+
+//--------------------------------
+//          WATERFALL           //
+//--------------------------------
+
+/**
+ * Trigger: when a waterfall is updated
+ */
+export const onWaterfallUpdateEvent = onDocumentUpdate('waterfall/{waterfallID}', onWaterfallUpdate);
+
+/**
+ * Trigger: when a waterfall is deleted
+ */
+export const onWaterfallDeleteEvent = onDocumentDelete('waterfall/{waterfallID}', onWaterfallDelete);
+
+/**
+ * Trigger: when a waterfallDocument is deleted
+ */
+export const onWaterfallDocumentDeleteEvent = onDocumentDelete('waterfall/{waterfallID}/documents/{documentID}', onWaterfallDocumentDelete);
+
+/**
+ * Trigger: when a waterfallStatement is deleted
+ */
+export const onWaterfallStatementDeleteEvent = onDocumentDelete('waterfall/{waterfallID}/statements/{statementID}', onWaterfallStatementDelete);
+
+/**
+ * Trigger: when a waterfallStatement is updated
+ */
+export const onWaterfallStatementUpdateEvent = onDocumentUpdate('waterfall/{waterfallID}/statements/{statementID}', onWaterfallStatementUpdate);
+
+/**
+ * Trigger: when a waterfallRight is deleted
+ */
+export const onWaterfallRightDeleteEvent = onDocumentDelete('waterfall/{waterfallID}/rights/{rightID}', onWaterfallRightDelete);
+
+/**
+ * When user wants to remove a file without removing waterfallDocument
+ */
+export const deleteWaterfallFile = functions().https.onCall(removeWaterfallFile);
 
 //--------------------------------
 //        Airtable update       //

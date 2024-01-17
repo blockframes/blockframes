@@ -18,9 +18,9 @@ import {
   sanitizeFileName,
 } from '@blockframes/utils/file-sanitizer';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
-import { FileMetaData, StorageFile } from '@blockframes/model';
+import { FileMetaData, StorageFile, CollectionHoldingFile } from '@blockframes/model';
 import { allowedFiles, AllowedFileType, fileSizeToString, maxAllowedFileSize } from '@blockframes/model';
-import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../utils';
+import { FileLabel, getFileMetadata, getFileStoragePath } from '../../utils';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { BehaviorSubject, map, Subscription } from 'rxjs';
 import { getDeepValue } from '@blockframes/utils/pipes';

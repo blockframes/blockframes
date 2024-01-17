@@ -1,0 +1,69 @@
+<ng-container *ngIf="waterfall">
+  <header>
+    <div>
+      <h3>Dashboard</h3>
+      <waterfall-version-selector></waterfall-version-selector>
+    </div>
+    <section>
+      <article>
+        <mat-form-field appearance="fill">
+          <mat-label>Statements</mat-label>
+          <mat-select (selectionChange)="selectBlock($event.value)" [(value)]="currentBlock">
+            <mat-option *ngFor="let block of statementBlocks" [value]="block.id">
+              {{ block.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+  
+        <h3 *ngIf="currentState">
+          Total film revenue : <price-per-currency [price]="getTotalIncomes(currentState.incomes)"></price-per-currency>
+        </h3>
+      </article>
+      <apx-chart *ngIf="options.series.length"
+        [chart]="{ type: 'bar', stacked: true, height: 300 }" 
+        [series]="options.series"
+        [xaxis]="options.xAxis"
+        [tooltip]="{ y: formatter }">
+      </apx-chart>
+    </section>
+  </header>
+
+  <ng-container *ngIf="currentState">
+    <h3>Rightholders summary</h3>
+    <bf-table [source]="currentState.orgs | keyvalue" clickable (rowClick)="goTo($event.value.id)" pagination="50">
+      <ng-template colRef="value.id" label="Right Holder" let-id sort>
+        {{ id | rightholderName: waterfall }}
+      </ng-template>
+      <ng-template colRef="value.id" label="Roles" let-id sort>
+        {{ getRightholder(id).roles | toLabel: 'rightholderRoles' }}
+      </ng-template>
+      <ng-template colRef="value.revenu" label="Calculated Revenue" let-revenu sort>
+        <price-per-currency [price]="revenu.calculated | formatPair"></price-per-currency>
+      </ng-template>
+      <ng-template colRef="value.revenu" label="Actual Revenue" let-revenu sort>
+        <strong>
+          <price-per-currency [price]="revenu.actual | formatPair"></price-per-currency>
+        </strong>
+      </ng-template>
+      <ng-template colRef="value.id" label="Pending revenue" let-id sort>
+        <price-per-currency [price]="getPendingRevenue(id)"></price-per-currency>
+      </ng-template>
+      <ng-template colRef="value.turnover" label="Turnover" let-turnover sort>
+        <price-per-currency [price]="turnover.actual | formatPair"></price-per-currency>
+      </ng-template>
+      <ng-template colRef="value" label="Distributed" let-org sort>
+        <price-per-currency [price]="(org.turnover.actual - org.revenu.actual) | formatPair"></price-per-currency>
+      </ng-template>
+      <ng-template colRef="value" label="Action" let-rightholder sticky>
+        <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'rightholders', rightholder.id]" (click)="$event.stopPropagation()">
+          <mat-icon svgIcon="launch"></mat-icon>
+        </a>
+      </ng-template>
+    </bf-table>
+
+    <article *ngIf="outgoingStatements?.length">
+      <h3>Pending Outgoing Statements</h3>
+      <waterfall-statement-table defaultSort [columns]="columns" [statements]="outgoingStatements"></waterfall-statement-table>
+    </article>
+
+</ng-container>

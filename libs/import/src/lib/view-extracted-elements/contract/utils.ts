@@ -1,5 +1,5 @@
 import { where } from 'firebase/firestore';
-import { checkParentTerm, ContractsImportState, sheetHeaderLine, } from '@blockframes/import/utils';
+import { checkParentTerm, ContractsImportState, sheetHeaderLine } from '../../utils';
 import { MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import {
@@ -10,24 +10,30 @@ import {
   Movie,
   Organization,
   Term,
-  createMandate,
-  createSale,
+  createContract,
   Mandate,
   MovieLanguageSpecification,
   Sale,
-  User,
   Language,
   FullMandate,
-  FullSale
+  FullSale,
+  createTerm
 } from '@blockframes/model';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getContractConfig } from './fieldConfigs';
 import { TermService } from '@blockframes/contract/term/service';
 
-function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termId: string): Term {
+function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termId: string) {
 
-  const { medias, duration, territories_excluded = [], territories_included = [], exclusive, licensedOriginal } = rawTerm;
+  const {
+    medias,
+    duration,
+    territories_excluded = [],
+    territories_included = [],
+    exclusive,
+    licensedOriginal,
+  } = rawTerm;
 
   const languages: Term['languages'] = {};
 
@@ -47,7 +53,7 @@ function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termI
 
   const id = termId;
 
-  return {
+  return createTerm({
     id,
     languages,
     contractId,
@@ -57,7 +63,7 @@ function toTerm(rawTerm: FieldsConfig['term'][number], contractId: string, termI
     exclusive,
     licensedOriginal,
     criteria: [],
-  };
+  });
 }
 
 const getTitleContracts = (type: ContractType, titleId: string) => [
@@ -105,10 +111,9 @@ export async function formatContract(
   // Cache to avoid  querying db every time
   const orgNameCache: Record<string, string> = {};
   const titleCache: Record<string, Movie> = {};
-  const userCache: Record<string, User> = {};
   const contractCache: Record<string, Mandate | Sale> = {};
   const contracts: ContractsImportState[] = [];
-  const caches = { orgNameCache, titleCache, userCache, contractCache };
+  const caches = { orgNameCache, titleCache, contractCache };
 
   const option = {
     orgService,
@@ -126,10 +131,7 @@ export async function formatContract(
   const results = await extract<FieldsConfig>(sheetTab.rows, fieldsConfig, 11);
   for (const result of results) {
     const { data, errors } = result;
-
-    const contract = data.contract.type === 'mandate'
-      ? createMandate(data.contract as Mandate)
-      : createSale(data.contract as Sale);
+    const contract = createContract(data.contract);
 
     const { titleId, sellerId } = contract;
     if (titleId && sellerId) {
@@ -144,7 +146,7 @@ export async function formatContract(
       }
     }
 
-    const terms = (data.term ?? []).map(term => toTerm(term, contract.id, contractService.createId()));
+    const terms = (data.term ?? []).map(term => toTerm(term, contract.id, termService.createId()));
 
     // for **internal** sales we should check the parentTerm
     const isInternalSale = contract.type === 'sale' && contract.sellerId === config.centralOrg.id;
@@ -191,8 +193,6 @@ export async function formatContract(
         message: 'The terms of the imported sale have already been sold.'
       });
     }
-    // remove duplicate from stakeholders
-    contract.stakeholders = Array.from(new Set([...contract.stakeholders]));
 
     contracts.push({ contract, terms, errors, newContract: true });
   }

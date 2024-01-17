@@ -1,0 +1,10 @@
+<ng-container *ngIf="statements$ | async as statements">
+  <section>
+    <waterfall-version-selector></waterfall-version-selector>
+    <button mat-button color="primary" [disabled]="!statements.length" (click)="removeStatements(statements)">
+      <mat-icon svgIcon="delete"></mat-icon>
+      <span>Remove all statements</span>
+    </button>
+  </section>
+  <waterfall-statement-table defaultSort [columns]="columns" [actions]="actions" [statements]="statements" (delete)="removeStatements([$event])"></waterfall-statement-table>
+</ng-container>

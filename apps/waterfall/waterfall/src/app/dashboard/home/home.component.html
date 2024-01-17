@@ -1,0 +1,40 @@
+
+<ng-container *ngIf="titles$ | async as titles; else loading">
+  
+  <ng-container *ngIf="titles.length; else noMovies">
+    <header>
+      <h1>My Movies</h1>
+      <a mat-flat-button color="primary" routerLink="../title/create" matTooltip="Add Title">
+        <mat-icon svgIcon="add"></mat-icon>
+        <span>Add Movie</span>
+      </a>
+    </header>
+
+    <movie-table-grid 
+      [titles]="titles" 
+      [columns]="['poster','title.international','directors']"
+      mode="grid">
+    </movie-table-grid>
+
+  </ng-container>
+
+  <ng-template #noMovies>
+    <h1 class="no-movie">You have no Movie yet.</h1>
+    <p class="mat-body-1">
+      Please add a Movie that you're going to work with. After creating a movie you will be
+      <br>
+      able to add the Right Holders and have access to the Waterfall & Revenue distribution.
+    </p>
+    <a routerLink="../title/create" class="surface">
+      <img asset="add_title.svg" alt="Add title image">
+      <button mat-button color="primary">Add Movie</button>
+    </a>
+  </ng-template>
+
+</ng-container>
+
+<ng-template #loading>
+  <logo-spinner></logo-spinner>
+</ng-template>
+
+

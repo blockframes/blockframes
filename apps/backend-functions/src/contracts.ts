@@ -10,7 +10,10 @@ import {
   createInternalDocumentMeta,
   createNotification,
   createIncome,
-  createTerm
+  createTerm,
+  BaseContract,
+  isMandate,
+  isSale
 } from '@blockframes/model';
 import { queryDocument, getDocument, BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils';
 
@@ -22,9 +25,14 @@ type ContractNotificationValues = ContractNotificationType[keyof ContractNotific
 
 export async function onContractDelete(contractSnapshot: BlockframesSnapshot<Contract>) {
   const contract = contractSnapshot.data();
+  return cleanRelatedContractDocuments(contract);
+}
 
+export async function cleanRelatedContractDocuments(contract: BaseContract, options: { filterByTitleId: boolean } = { filterByTitleId: false }) {
   // Delete terms belonging to contract
-  const termsCollectionRef = db.collection('terms').where('contractId', '==', contract.id);
+  const termsCollectionRef = options.filterByTitleId ?
+    db.collection('terms').where('contractId', '==', contract.id).where('titleId', '==', contract.titleId) :
+    db.collection('terms').where('contractId', '==', contract.id);
   const termsSnap = await termsCollectionRef.get();
   for (const term of termsSnap.docs) {
     await term.ref.delete();
@@ -33,8 +41,10 @@ export async function onContractDelete(contractSnapshot: BlockframesSnapshot<Con
   // An offer can have multiple contracts
   // We don't want to delete the offer if it still have other contracts
   // We want to delete the offer only when we delete its last contract
-  if (contract.offerId) {
-    const offerContractsRef = db.collection('contracts').where('offerId', '==', contract.offerId);
+  if ((isMandate(contract) || isSale(contract)) && contract.offerId) {
+    const offerContractsRef = options.filterByTitleId ?
+      db.collection('contracts').where('offerId', '==', contract.offerId).where('titleId', '==', contract.titleId) :
+      db.collection('contracts').where('offerId', '==', contract.offerId);
     const offerContractsSnap = await offerContractsRef.get();
     if (offerContractsSnap.empty) {
       await db.doc(`offers/${contract.offerId}`).delete();
@@ -42,10 +52,21 @@ export async function onContractDelete(contractSnapshot: BlockframesSnapshot<Con
   }
 
   // Delete incomes documents, if any
-  const incomesCollectionRef = db.collection('incomes').where('contractId', '==', contract.id);
+  const incomesCollectionRef = options.filterByTitleId ?
+    db.collection('incomes').where('contractId', '==', contract.id).where('titleId', '==', contract.titleId) :
+    db.collection('incomes').where('contractId', '==', contract.id);
   const incomesSnap = await incomesCollectionRef.get();
   for (const income of incomesSnap.docs) {
     await income.ref.delete();
+  }
+
+  // Delete expenses documents, if any
+  const expensesCollectionRef = options.filterByTitleId ?
+    db.collection('expenses').where('contractId', '==', contract.id).where('titleId', '==', contract.titleId) :
+    db.collection('expenses').where('contractId', '==', contract.id);
+  const expensesSnap = await expensesCollectionRef.get();
+  for (const expense of expensesSnap.docs) {
+    await expense.ref.delete();
   }
 
   console.log(`Contract ${contract.id} removed`);

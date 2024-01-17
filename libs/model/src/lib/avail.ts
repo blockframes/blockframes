@@ -1,10 +1,10 @@
-
 import { max, min } from 'date-fns';
 import { Bucket, BucketContract } from './bucket';
 import { FullMandate, FullSale, Holdback, Mandate, Sale } from './contract';
-import { territories, territoriesISOA3 } from './static';
+import { mediaGroup, territories, territoriesISOA3 } from './static';
 import { Media, Territory, TerritoryISOA3, TerritoryISOA3Value, TerritoryValue } from './static/types';
 import { BucketTerm, Term, Duration } from './terms';
+import { WaterfallMandate, WaterfallSale } from './waterfall';
 
 export interface BaseAvailsFilter {
   medias: Media[],
@@ -23,7 +23,7 @@ interface AvailResult<A extends BaseAvailsFilter> {
   sales: FullSale[];
 }
 
-export function filterContractsByTitle(titleId: string, mandates: Mandate[], mandateTerms: Term[], sales: Sale[], saleTerms: Term[], bucket?: Bucket) {
+export function filterContractsByTitle(titleId: string, mandates: (Mandate | WaterfallMandate)[], mandateTerms: Term[], sales: (Sale | WaterfallSale)[], saleTerms: Term[], bucket?: Bucket) {
 
   // Gather only mandates & mandate terms related to this title
   const termsByMandate: Record<string, Term[]> = {};
@@ -33,10 +33,10 @@ export function filterContractsByTitle(titleId: string, mandates: Mandate[], man
   }
 
   const titleMandates = mandates.filter(mandate => mandate.titleId === titleId);
-  const fullMandates = titleMandates.map((m): FullMandate => ({
+  const fullMandates = titleMandates.map(m => ({
     ...m,
     terms: termsByMandate[m.id],
-  }));
+  })) as FullMandate[];
 
   // Gather only sales & sale terms related to this title
   const termsBySale: Record<string, Term[]> = {};
@@ -46,10 +46,10 @@ export function filterContractsByTitle(titleId: string, mandates: Mandate[], man
   }
 
   const titleSales = sales.filter(sale => sale.titleId === titleId);
-  const fullSales = titleSales.map((s): FullSale => ({
+  const fullSales = titleSales.map(s => ({
     ...s,
     terms: termsBySale[s.id],
-  }));
+  })) as FullSale[];
 
   const bucketContracts = bucket?.contracts.filter(s => s.titleId === titleId);
 
@@ -608,6 +608,60 @@ export function isTermOverlappingExistingContracts({ term, existingSales, existi
   const sold = !!sales.filter(a => term.territories.includes(a)).length;
 
   return { licensed, sold };
+}
+
+type MediaFamily = 'available' | 'all' | 'tv' | 'vod' | 'other';
+export interface TerritorySoldMarker {
+  slug: Territory,
+  isoA3: TerritoryISOA3Value,
+  label: TerritoryValue,
+  type: MediaFamily
+  contracts?: (FullSale | FullMandate)[]
+}
+
+export function territoriesSold(contracts: (FullSale | FullMandate)[]) {
+  const availabilities = {} as Record<Territory, TerritorySoldMarker>;
+  const allTerms = contracts.map(s => s.terms).flat();
+
+  Object.keys(territories).forEach((territory: Territory) => {
+    const termsTerritory = allTerms.filter(t => t.territories.includes(territory));
+    if (termsTerritory.length) {
+      const territoryContracts = Array.from(termsTerritory.map(t => contracts.find(s => s.id === t.contractId)));
+      const family = getMediaFamily(termsTerritory);
+      availabilities[territory] = {
+        type: family,
+        slug: territory,
+        isoA3: territoriesISOA3[territory],
+        label: territories[territory],
+        contracts: territoryContracts
+      }
+    } else {
+      availabilities[territory] = {
+        type: 'available',
+        slug: territory,
+        isoA3: territoriesISOA3[territory],
+        label: territories[territory],
+      }
+    }
+  });
+
+  const correctAvailabilities = Object.values(availabilities).filter(a => !!a.isoA3);
+  const available = correctAvailabilities.filter(a => a.type === 'available');
+  const all = correctAvailabilities.filter(a => a.type === 'all');
+  const tv = correctAvailabilities.filter(a => a.type === 'tv');
+  const vod = correctAvailabilities.filter(a => a.type === 'vod');
+  const other = correctAvailabilities.filter(a => a.type === 'other');
+  return { available, all, tv, vod, other };
+}
+
+function getMediaFamily(terms: Term[]): MediaFamily {
+  const medias = Array.from(new Set(terms.map(t => t.medias).flat()));
+  const groups = Array.from(new Set(medias.map(m => mediaGroup.find(g => g.items.includes(m)).label)));
+
+  if (groups.length === 1 && groups[0] === 'TV') return 'tv';
+  if (groups.length === 1 && groups[0] === 'VOD') return 'vod';
+  if (groups.length >= 3) return 'all';
+  return 'other';
 }
 
 // ----------------------------

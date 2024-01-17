@@ -1,0 +1,60 @@
+
+section {
+  margin: 32px 0;
+
+  mat-form-field {
+    width: 50%;
+  }
+
+  .title {
+    padding-right: 84px;
+  }
+}
+
+h2 {
+  mat-icon {
+    width: 20px;
+  }
+}
+
+div {
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  gap: 64px;
+}
+
+.mat-icon-button,
+.mat-mini-fab {
+  margin-top: 18px;
+}
+
+.divider {
+  gap: 24px;
+  align-items: center;
+  margin-bottom: 32px;
+
+  p {
+    margin: 0;
+    flex-shrink: 0;
+    cursor: pointer;
+    color: var(--primary);
+  }
+
+  mat-divider {
+    border-top-color: var(--primary);
+    border-top-width: 2px;
+    margin-left: 16px;
+    width: 100%;
+  }
+}
+
+article {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  img {
+    max-width: 453px;
+    max-height: 597px;
+  }
+}

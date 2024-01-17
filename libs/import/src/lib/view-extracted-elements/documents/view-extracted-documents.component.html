@@ -1,0 +1,12 @@
+<ng-container *ngIf="documentsToCreate$ | async as documentsToCreate; else isLoading">
+  <ng-container *ngIf="documentsToCreate.data.length">
+    <h3>Documents to Create</h3>
+    <import-table-extracted-documents [rows]="documentsToCreate"></import-table-extracted-documents>
+  </ng-container>
+</ng-container>
+<ng-template #isLoading>
+  <section fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner></mat-spinner>
+  </section>
+</ng-template>
+

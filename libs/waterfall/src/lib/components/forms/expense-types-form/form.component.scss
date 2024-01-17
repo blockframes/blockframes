@@ -1,0 +1,11 @@
+article {
+  display: flex;
+  flex-direction: column;
+  waterfall-expense-types {
+    display: block;
+  }
+  div {
+    display: flex;
+    justify-content: end;
+  }
+}

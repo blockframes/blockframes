@@ -10,6 +10,7 @@ import { InvitationActionModule } from '../action/action.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 import { EventFromInvitationPipeModule } from '@blockframes/invitation/pipes/event-from-invitation.pipe';
+import { MovieFromWaterfallInvitationPipeModule } from '@blockframes/invitation/pipes/waterfall-from-invitation.pipe';
 import { EventRangeModule } from '@blockframes/event/pipes/event-range.pipe';
 import { DisplayUserModule } from '@blockframes/utils/pipes/display-user.pipe';
 import { TimeSinceModule } from '@blockframes/utils/pipes/time-since.pipe';
@@ -35,6 +36,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     DisplayUserModule,
     DisplayNameModule,
     EventFromInvitationPipeModule,
+    MovieFromWaterfallInvitationPipeModule,
     EventRangeModule,
     TimeSinceModule,
     ToLabelModule,

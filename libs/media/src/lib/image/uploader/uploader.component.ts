@@ -5,8 +5,8 @@ import { MediaService } from '../../service';
 import { sanitizeFileName, getMimeType } from '@blockframes/utils/file-sanitizer';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FileMetaData, createStorageFile, allowedFiles, fileSizeToString, StorageFile } from '@blockframes/model';
-import { CollectionHoldingFile, FileLabel, getFileMetadata, getFileStoragePath } from '../../utils';
+import { FileMetaData, createStorageFile, allowedFiles, fileSizeToString, StorageFile, CollectionHoldingFile } from '@blockframes/model';
+import { FileLabel, getFileMetadata, getFileStoragePath } from '../../utils';
 import { FileUploaderService } from '../../file-uploader.service';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { getDeepValue } from '@blockframes/utils/pipes';
@@ -162,13 +162,17 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     if (this.listenToChanges) {
       const ref = this.firestore.getRef(`${this.metadata.collection}/${this.metadata.docId}`) as DocumentReference;
-      this.docSub = fromRef(ref).pipe(map(snap => snap.data())).subscribe(data => {
-        const media: StorageFile = this.formIndex !== undefined
-          ? getDeepValue(data, this.metadata.field)[this.formIndex]
-          : getDeepValue(data, this.metadata.field);
-        if (media?.storagePath) {
-          this.form.setValue(media);
-        }
+      this.docSub = fromRef(ref).pipe(map(snap => snap.data())).subscribe({
+        next: data => {
+          const media: StorageFile = this.formIndex !== undefined
+            ? getDeepValue(data, this.metadata.field)[this.formIndex]
+            : getDeepValue(data, this.metadata.field);
+          if (media?.storagePath) {
+            this.form.setValue(media);
+          }
+        },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        error: () => {}, // do nothing
       });
 
       if (this.pushSubToStack) this.newSubscription.emit(this.docSub);

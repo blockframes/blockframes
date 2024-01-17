@@ -1,0 +1,156 @@
+<waterfall-statement-header *ngIf="sources$ | async as sources" [statement]="statement" [sources]="sources"></waterfall-statement-header>
+<waterfall-statement-period [statement]="statement" [form]="form"></waterfall-statement-period>
+
+<section>
+  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment" label="Total Participation"></waterfall-statement-participation>
+</section>
+
+<waterfall-incoming-statements [statement]="statement" [form]="form" (incomeIds)="incomeIds$.next($event)"></waterfall-incoming-statements>
+
+<section>
+  <article class="breakdown">
+    <header>
+      <span>Calculation breakdown</span>
+      <div>Net Receipts</div>
+    </header>
+
+    <ng-container *ngIf="groupsBreakdown$ | async as breakdown">
+      <div class="surface" *ngFor="let item of breakdown; let isFirst = first">
+        <mat-expansion-panel [expanded]="isFirst">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <span>{{ item.group.name }}</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <bf-table [source]="item.rows">
+            <ng-template colRef="" label="Section" let-item>
+              <span [class]="item.type">{{ item.name }}</span>
+            </ng-template>
+            <ng-template colRef="" label="" let-item>
+              <span *ngIf="item.type === 'right'" [class]="item.type">{{ item.percent }} %</span>
+            </ng-template>
+            <ng-template colRef="" label="Net Receipts" let-item>
+              <price-per-currency [class]="item.type" [price]="item.taken | formatPair" default="€ 0"></price-per-currency>
+            </ng-template>
+            <ng-template colRef="" label="" let-item>
+              <ng-container *ngIf="item.type === 'right'">
+                <button mat-icon-button 
+                  [disabled]="!canEditRightPayment(item, statement)"
+                  [matTooltip]="!canEditRightPayment(item, statement) ? 'This cannot be edited.' : 'Change current value'"
+                  (click)="editRightPayment(item, statement)"
+                >
+                  <mat-icon svgIcon="statement_warning"></mat-icon>
+                </button>
+                <ng-container *ngIf="hasOverrides(item, statement)">
+                  <button mat-icon-button 
+                    matTooltip="This value has been overridden."
+                    (click)="showOverrides(item, statement)"
+                  >
+                    <mat-icon svgIcon="comment"></mat-icon>
+                  </button>
+                </ng-container>
+              </ng-container>
+            </ng-template>
+          </bf-table>
+        </mat-expansion-panel>
+      </div>
+    </ng-container>
+  </article>
+
+  <ng-container *ngIf="details$ | async as details">
+    <article *ngIf="details.length" class="breakdown">
+      <header>
+        <span>Calculation details</span>
+      </header>
+      <div class="surface" *ngFor="let item of details">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <span>{{ item.name }}</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <bf-table [source]="item.details" pagination="50">
+            <ng-template colRef="" label="#" let-index="index">
+              {{ index + 1 }}
+            </ng-template>
+            <ng-template colRef="from" label="From" let-from>
+              {{ from }}
+            </ng-template>
+            <ng-template colRef="to" label="To" let-to>
+              {{ to }}
+            </ng-template>
+            <ng-template colRef="" label="" let-item let-index="index">
+              <price-per-currency [price]="item.amount | formatPair" default="€ 0"></price-per-currency>
+              <ng-container *ngIf="index === 0">
+                <button mat-icon-button 
+                  [disabled]="!canEditIncome(item.fromId, statement)"
+                  [matTooltip]="!canEditIncome(item.fromId, statement) ? 'This cannot be edited.' : 'Change income value'"
+                  (click)="editIncome(item.fromId)"
+                >
+                <mat-icon svgIcon="statement_warning"></mat-icon>
+              </button>
+              </ng-container>
+            </ng-template>
+            <ng-template colRef="percent" label="%" let-percent>
+              {{ percent }}
+            </ng-template>
+            <ng-template colRef="taken" label="Taken" let-taken>
+              <strong>
+                <price-per-currency [price]="taken | formatPair" default="€ 0"></price-per-currency>
+              </strong>
+            </ng-template>
+          </bf-table>
+        </mat-expansion-panel>
+      </div>
+    </article>
+  </ng-container>
+
+  <ng-container *ngIf="expenses$ | async as expenses">
+    <article *ngIf="expenses.length" class="breakdown">
+      <header>
+        <span>Expenses</span>
+      </header>
+      <div class="surface" >
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <span>Distributor details</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <bf-table [source]="expenses" pagination="50">
+            <ng-template colRef="rightholderId" label="Rightholder" let-rightholderId sort>
+              {{ rightholderId | rightholderName: waterfall }}
+            </ng-template>
+            <ng-template colRef="date" label="Date" let-date sort defaultSort>
+              {{ date | date: 'dd/MM/yyyy' }}
+            </ng-template>
+            <ng-template colRef="nature" label="Nature" let-nature sort>
+              {{ nature }}
+            </ng-template>
+            <ng-template colRef="" label="Type" let-item sort>
+              {{ item.typeId | expenseType : item.contractId : waterfall }}
+            </ng-template>
+            <ng-template colRef="" label="Price" let-item sort>
+              <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
+              <button mat-icon-button 
+                [disabled]="!canEditExpense(item.id, statement)"
+                [matTooltip]="!canEditExpense(item.id, statement) ? 'This cannot be edited.' : 'Change expense value'"
+                (click)="editExpense(item.id)"
+                >
+                <mat-icon svgIcon="statement_warning"></mat-icon>
+              </button>
+            </ng-template>
+            <ng-template colRef="" label="Capped" let-item sort>
+              <mat-slide-toggle [checked]="item.capped" disabled color="primary"></mat-slide-toggle>
+              <ng-container *ngIf="item.cap">
+                <span class="cap">CAP: <price-per-currency [price]="item.cap"></price-per-currency></span>
+              </ng-container>
+            </ng-template>
+          </bf-table>
+        </mat-expansion-panel>
+      </div>
+    </article>
+  </ng-container>
+
+  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment" label="Total Participation"></waterfall-statement-participation>
+</section>

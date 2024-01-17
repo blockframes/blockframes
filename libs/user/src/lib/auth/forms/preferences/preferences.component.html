@@ -2,6 +2,7 @@
   <form [formGroup]="form">
     <group-multiselect
       scope="medias"
+      [withoutValues]="waterfallMediaGroups"
       label="Select Rights"
       displayAll="All Rights"
       filterPlaceholder="Select right(s)"

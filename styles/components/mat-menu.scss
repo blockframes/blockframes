@@ -1,0 +1,11 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+@mixin color($theme) {
+  .bf-menu {
+    max-width: 100%;
+    .mat-menu-content:not(:empty) {
+      padding-bottom: 0px;
+    }
+  }
+}

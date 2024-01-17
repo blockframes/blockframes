@@ -72,6 +72,8 @@ export const panelRoutes: Routes = [
   { path: 'contracts/:contractId/form', loadChildren: () => import('./pages/contracts/term-form/term-form.module').then(s => s.TermFormModule) },
   { path: 'offer/:offerId', loadChildren: () => import('./pages/offers/shell/shell.module').then(m => m.OfferShellModule) },
   { path: 'import', loadChildren: () => import('./pages/import/import.module').then(m => m.CrmImportModule) },
+  { path: 'waterfalls', loadChildren: () => import('./pages/waterfall/list/list.module').then(m => m.ListModule) },
+  { path: 'waterfall/:movieId', loadChildren: () => import('./pages/waterfall/view/view.module').then(m => m.WaterfallViewModule) },
 ];
 
 @NgModule({

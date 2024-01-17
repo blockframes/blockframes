@@ -15,7 +15,10 @@ import {
   Movie,
   Organization,
   MovieVideos,
-  ScreenerType
+  ScreenerType,
+  Waterfall,
+  WaterfallDocument,
+  WaterfallPermissions
 } from '@blockframes/model';
 import { tempUploadDir } from '@blockframes/utils/file-sanitizer';
 import { ImageParameters, formatParameters } from '@blockframes/media/image/directives/imgix-helpers';
@@ -120,6 +123,41 @@ export async function linkFile(data: storage.ObjectMetadata) {
             break;
 
           }
+          case 'waterfall': {
+
+            // only waterfall members can upload 
+            const userRef = db.collection('users').doc(uploaderUid);
+            const userSnap = await transaction.get(userRef);
+            await assertFile(userSnap.exists, notAllowedError);
+
+            const waterfallSnap = await getDocumentSnap(`waterfall/${metadata.docId}`);
+            await assertFile(waterfallSnap.exists, notAllowedError);
+
+            const [user, waterfall] = await Promise.all([
+              getDocument<User>(`users/${uploaderUid}`),
+              getDocument<Waterfall>(`waterfall/${metadata.docId}`)
+            ]);
+
+            const isAllowed = waterfall.orgIds.some(orgId => orgId === user.orgId);
+            await assertFile(isAllowed, notAllowedError);
+
+            // use metadata.id to get subCollection document and user.orgId to get permissions
+            const [subDocumentSnap, permissionsDoc] = await Promise.all([
+              getDocumentSnap(`waterfall/${metadata.docId}/documents/${metadata.id}`),
+              getDocument<WaterfallPermissions>(`waterfall/${metadata.docId}/permissions/${user.orgId}`)
+            ]);
+
+            if (subDocumentSnap.exists) {
+              // check if user is allowed to update already existing WaterfallDocument
+              const document = subDocumentSnap.data() as WaterfallDocument;
+              await assertFile(user.orgId === document.ownerId || permissionsDoc.isAdmin, notAllowedError);
+            } else {
+              // TODO #9389 init WaterfallDocument with ownerId = user.orgId
+              // Not implemented yet: should be used when we uploading a document without filling the document form
+            }
+
+            break;
+          }
           default: {
             await assertFile(false, `UNKNOWN COLLECTION : ${metadata.collection}`);
           }
@@ -175,13 +213,15 @@ export async function linkFile(data: storage.ObjectMetadata) {
         'documents.notes',
         'documents.videos',
         'promotional.still_photo',
-        'promotional.notes'
+        'promotional.notes',
+        'documents',
       ];
       const isList = fileLists.includes(metadata.field);
 
       if (fieldValue === undefined && isList) {
         fieldValue = [uploadData];
       } else if (Array.isArray(fieldValue)) {
+        if (uploadData.id) fieldValue = fieldValue.filter(f => f.id !== uploadData.id);
         fieldValue.push(uploadData);
       } else {
         fieldValue = uploadData;
@@ -236,7 +276,7 @@ export const getMediaToken = async (data: { file: StorageFile, parametersSet: Im
 
 }
 
-export const deleteMedia = async (file: StorageFile) => {
+const deleteMedia = async (file: StorageFile) => {
 
   const bucket = getStorage().bucket(storageBucket);
   const filePath = `${file.privacy}/${file.storagePath}`;
@@ -433,6 +473,29 @@ export async function cleanMovieMedias(before: Movie, after?: Movie): Promise<vo
     if (before.promotional.notes?.length) {
       before.promotional.notes.forEach(note => mediaToDelete.push(note));
     }
+  }
+
+  await Promise.all(mediaToDelete.map(m => deleteMedia(m)));
+
+}
+
+export async function cleanWaterfallMedias(before: Waterfall, after?: Waterfall): Promise<void> {
+
+  const mediaToDelete: StorageFile[] = [];
+  if (after) { // Updating
+
+    const documentsToDelete = checkFileList(
+      before.documents,
+      after.documents
+    );
+    mediaToDelete.push(...documentsToDelete);
+
+  } else { // Deleting
+
+    if (before.documents?.length) {
+      before.documents.forEach(doc => mediaToDelete.push(doc));
+    }
+
   }
 
   await Promise.all(mediaToDelete.map(m => deleteMedia(m)));

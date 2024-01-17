@@ -1,4 +1,4 @@
-export const app = ['catalog', 'festival', 'financiers', 'crm'] as const;
+export const app = ['catalog', 'festival', 'financiers', 'crm', 'waterfall'] as const;
 
 export const modules = ['dashboard', 'marketplace'] as const;
 
@@ -13,6 +13,7 @@ export const appShortName = {
   blockframes: 'BF',
   crm: 'CRM',
   cms: 'CMS',
+  waterfall: 'BF',
 };
 
 export const appName = {
@@ -22,6 +23,7 @@ export const appName = {
   blockframes: 'Blockframes',
   crm: 'Blockframes CRM',
   cms: 'Blockframes CMS',
+  waterfall: 'Blockframes',
 };
 
 export const appDescription = {
@@ -655,7 +657,8 @@ export const languagesISO3: Record<keyof typeof languages, string> = {
   zulu: 'zul',
 };
 
-export type MediaGroup = 'TV' | 'VOD' | 'Ancillary Rights' | 'Video (DVD, Blu-Ray)' | 'Festivals';
+export type MediaGroup = 'TV' | 'VOD' | 'Ancillary Rights' | 'Video (DVD, Blu-Ray)' | 'Festivals' | 'Theatrical Rights' | 'Derivative Rights';
+export const waterfallMediaGroups: MediaGroup[] = ['Theatrical Rights', 'Derivative Rights'];
 
 export type TerritoryGroup =
   | 'Africa'
@@ -684,7 +687,15 @@ export const medias = {
   educational: 'Educational',
   festival: 'Festival',
   rental: 'Rental',
+  theatrical: 'Theatrical',
+  nonTheatrical: 'Non theatrical',
   through: 'Sell Through',
+  merchandising: 'Merchandising',
+  music: 'Music',
+  remake: 'Remake, Prequel, Sequel',
+  multimedia: 'Multimedia',
+  multimediaExtract: 'Multimedia Extract',
+  tvExtract: 'TV Extract',
 } as const
 
 export const releaseMedias = {
@@ -850,6 +861,59 @@ export const stakeholderRoles = {
   broadcasterCoproducer: 'Broadcaster coproducer'
 } as const
 
+export const rightholderGroups = {
+  // Distributors
+  distributors: {
+    salesAgent: 'Sales Agent',
+    mainDistributor: 'Main Distributor',
+  },
+  // Roles only used for the sale map (should not be present in waterfall and statements)
+  sales: {
+    localDistributor: 'Local Distributor',
+    sale: 'Broadcaster',
+  },
+  // Producer 
+  producers: {
+    producer: 'Producer',
+  },
+  // Beneficiaries
+  beneficiaries: {
+    author: 'Author',
+    coProducer: 'Co-Producer',
+    financier: 'Financier',
+    institution: 'Institution',
+    performer: 'Cast',
+    other: 'Other'
+  },
+  // Custom groups
+  withStatements: ['salesAgent', 'mainDistributor', 'producer'] as string[], // Rightholders that can create a statement
+  investors: ['salesAgent', 'mainDistributor', 'coProducer', 'financier', 'institution'] as string[], // Rightholders (contracts) that can invest in a movie
+  withTerms: ['salesAgent', 'mainDistributor', 'localDistributor', 'sale', 'other'] as string[] // Contract types that should have terms
+} as const
+
+export const rightholderRoles = {
+  ...rightholderGroups.distributors,
+  ...rightholderGroups.sales,
+  ...rightholderGroups.producers,
+  ...rightholderGroups.beneficiaries,
+} as const
+
+export const statementsRolesMapping: Record<keyof typeof statementType, (keyof typeof rightholderRoles)[]> = {
+  mainDistributor: ['mainDistributor'],
+  salesAgent: ['salesAgent'],
+  directSales: ['producer'],
+  producer: Object.keys(rightholderGroups.beneficiaries) as (keyof typeof rightholderRoles)[],
+}
+
+export const rightTypes = {
+  commission: 'Commission',
+  expenses: 'Expenses Recoupment',
+  mg: 'MG Recoupment',
+  horizontal: 'Horizontal Group',
+  vertical: 'Vertical Group',
+  unknown: 'Unknown'
+} as const
+
 export const movieNoteRoles = {
   producer: 'Producer',
   director: 'Director',
@@ -906,7 +970,8 @@ export const organizationStatus = {
 
 export const invitationType = {
   attendEvent: 'Attend Event',
-  joinOrganization: 'Join Organization'
+  joinOrganization: 'Join Organization',
+  joinWaterfall: 'Join Waterfall',
 } as const
 
 export const invitationStatus = {
@@ -1697,6 +1762,32 @@ export const accessibility = {
   private: 'Private',
 } as const;
 
+export const paymentType = {
+  income: 'Income',
+  rightholder: 'Rightholder',
+  right: 'Right'
+} as const;
+
+export const paymentStatus = {
+  pending: 'Pending',
+  received: 'Received',
+  // processed: 'Processed' TODO enable when we have a way to process payments on app
+} as const;
+
+export const statementStatus = {
+  draft: 'Draft',
+  pending: 'Pending',
+  reported: 'Reported',
+  rejected: 'Rejected'
+} as const;
+
+export const statementType = {
+  salesAgent: 'Sales Agent',
+  mainDistributor: 'Main Distributor',
+  producer: 'Outgoing',
+  directSales: 'Direct Sales',
+} as const;
+
 /**
  * https://docs.google.com/spreadsheets/d/1z4FFNABgDyRGgD5AQZf-ebWbA_m-7hlueFMCVUuk2fI/edit#gid=279324582
  */
@@ -1783,6 +1874,8 @@ export const staticModel = {
   orgActivity,
   soundFormat,
   stakeholderRoles,
+  rightholderRoles,
+  rightTypes,
   movieNoteRoles,
   storeStatus,
   unitBox,
@@ -1799,7 +1892,11 @@ export const staticModel = {
   offerStatus,
   movieFormFields,
   accessibility,
-  movieSearchableElements
+  movieSearchableElements,
+  paymentType,
+  paymentStatus,
+  statementStatus,
+  statementType
 };
 
 export const emailErrorCode = ['E01-unauthorized', 'E02-general-error', 'E03-missing-api-key', 'E04-no-template-available'] as const;

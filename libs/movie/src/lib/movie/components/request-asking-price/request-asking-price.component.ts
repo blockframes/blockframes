@@ -7,7 +7,7 @@ import { AuthService } from '@blockframes/auth/service';
 import { MovieService } from '@blockframes/movie/service';
 import { FormStaticValueArray } from '@blockframes/utils/form';
 import { CallableFunctions } from 'ngfire';
-import { App, RequestAskingPriceData, smartJoin, toGroupLabel } from '@blockframes/model';
+import { App, RequestAskingPriceData, smartJoin, waterfallMediaGroups, toGroupLabel } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
@@ -20,6 +20,8 @@ export class RequestAskingPriceComponent {
 
   form: UntypedFormGroup;
   sending = false;
+
+  public waterfallMediaGroups = waterfallMediaGroups;
 
   constructor(
     private authService: AuthService,

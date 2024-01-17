@@ -1,0 +1,19 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  margin: 40px;
+}
+
+section {
+  display: flex;
+  justify-content: space-between;
+  padding: 24px;
+}
+
+mat-icon.icon-ok {
+  color: green;
+}
+
+mat-icon.icon-nok {
+  color: red;
+}

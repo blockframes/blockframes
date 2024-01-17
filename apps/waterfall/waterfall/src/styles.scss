@@ -1,0 +1,38 @@
+/* You can add global styles to this file, and also import other style files */
+@import "../../../../styles/style.scss";
+@import "../../../../styles/themes/builder.scss";
+@import "../../../../styles/themes/blockframes.scss";
+
+// @todo(#1617) Lazy Load this
+@import '~leaflet/dist/leaflet.css';
+
+.dark-theme {
+  $mat-theme: getTheme($dark-theme);
+  @include mat-theme($mat-theme);
+  // Transform into contrast-theme
+  .dark-contrast-theme {
+    $contrast-theme: getContrast($dark-theme);
+    $mat-contrast-theme: getTheme($contrast-theme);
+    @include mat-theme($mat-contrast-theme);
+    scrollbar-color: dark;
+  }
+  
+  // Not supported yet by browser. Here for future support
+  scrollbar-color: dark;
+}
+
+
+.light-theme {
+  $mat-theme: getTheme($light-theme);
+  @include mat-theme($mat-theme);
+  
+  // Not supported yet by browser. Here for future support
+  scrollbar-color: light;
+  // Transform into contrast-theme
+  .dark-contrast-theme {
+    $contrast-theme: getContrast($light-theme);
+    $mat-contrast-theme: getTheme($contrast-theme);
+    @include mat-theme($mat-contrast-theme);
+    scrollbar-color: dark;
+  }
+}

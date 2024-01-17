@@ -1,0 +1,46 @@
+<global-modal>
+  <h2>Declare the Payment</h2>
+  <header>
+    <article>
+      <span>
+        <mat-icon svgIcon="movie"></mat-icon><span matLine><strong>Movie: </strong>{{ data.movie.title.international }}</span>
+      </span>
+      <span>
+        <mat-icon svgIcon="calendar_today"></mat-icon><span matLine><strong>Covered Period: </strong>{{ data.statement.duration.from | date: 'dd/MM/yyyy' }} -  {{ data.statement.duration.to | date: 'dd/MM/yyyy' }}</span>
+      </span>
+      <span>
+        <mat-icon svgIcon="business"></mat-icon><span matLine><strong>{{ rightholderTag }}: </strong>{{ rightholderName }}</span>
+      </span>
+      <span>
+        <mat-icon svgIcon="calendar_today"></mat-icon><span matLine><strong>Statement Issued: </strong>{{ data.statement.reported | date: 'dd/MM/yyyy' }}</span>
+      </span>
+    </article>
+  </header>
+
+  <div *ngIf="data.statement.payments.rightholder as payment">
+    <mat-icon color="primary" svgIcon="payment"></mat-icon> Amount Due : <price-per-currency [price]="payment.price | formatPair: payment.currency" default="€ 0"></price-per-currency>
+  </div>
+
+  <p class="mat-body-1">You can verify the <a target="_blank" [routerLink]="['/c/o/dashboard/title', data.movie.id, 'statement', data.statement.id]">Declared Statement Details here</a>.</p>
+
+  <section>
+    <mat-form-field appearance="fill">
+      <input required matInput [formControl]="dateControl" [matDatepicker]="datePickerPayment" placeholder="MM/DD/YYYY">
+      <mat-datepicker-toggle matSuffix [for]="datePickerPayment">
+        <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
+      </mat-datepicker-toggle>
+      <mat-datepicker #datePickerPayment></mat-datepicker>
+      <mat-label>Payment Date</mat-label>
+    </mat-form-field>
+  </section>
+  
+  <mat-dialog-actions>
+    <button [disabled]="!dateControl.value" mat-flat-button color="primary" (click)="confirm(dateControl.value)">
+      <span>Declare Payment</span>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
+    </button>
+    <button mat-button (click)="close()">
+      Close window
+    </button>
+  </mat-dialog-actions>
+</global-modal>

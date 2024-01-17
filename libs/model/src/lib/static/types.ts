@@ -49,7 +49,13 @@ import {
   releaseMedias,
   screenerTypes,
   territoriesISOA2,
-  languagesISO3
+  rightholderRoles,
+  languagesISO3,
+  rightTypes,
+  paymentType,
+  paymentStatus,
+  statementStatus,
+  statementType
 } from './static-model';
 
 export type App = typeof app[number];
@@ -152,6 +158,10 @@ export type SoundFormat = keyof typeof soundFormat;
 export type StakeholderRole = keyof typeof stakeholderRoles;
 export type StakeholderRoleValue = keyof typeof stakeholderRoles[StakeholderRole] & string;
 
+export type RightholderRole = keyof typeof rightholderRoles;
+
+export type RightType = keyof typeof rightTypes;
+
 export type MovieNoteRole = keyof typeof movieNoteRoles;
 
 export type StoreStatus = keyof typeof storeStatus;
@@ -171,3 +181,12 @@ export type AccessibilityTypesValue = typeof accessibility[AccessibilityTypes];
 export type EmailErrorCode = typeof emailErrorCode[number];
 
 export type RequestStatus = 'available' | 'sending' | 'sent';
+
+export type PaymentType = keyof typeof paymentType;
+
+export type PaymentStatus = keyof typeof paymentStatus;
+
+export type StatementStatus = keyof typeof statementStatus;
+
+export type StatementType = keyof typeof statementType;
+export type StatementTypeValue = typeof statementType[StatementType];

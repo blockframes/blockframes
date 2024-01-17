@@ -1,7 +1,8 @@
 import { addYears, subYears } from 'date-fns';
 import { Person } from './identity';
 import { LanguageRecord } from './movie';
-import { App, Scope, staticModel } from './static';
+import { App, MovieCurrency, Scope, staticModel } from './static';
+import { mainCurrency } from './waterfall';
 
 export interface ErrorResultResponse {
   error: string;
@@ -282,6 +283,7 @@ export function toLabel(
   endWith?: string
 ): string {
   if (!value) return '';
+  if (!scope && typeof value === 'string') return value;
   try {
     if (Array.isArray(value)) {
       return smartJoin(
@@ -365,11 +367,38 @@ export const deletedIdentifier = {
   title: '(Deleted Title)'
 }
 
+export const externalOrgIdentifier = 'External';
+
+// TODO #9422
+export type PricePerCurrency = Partial<Record<MovieCurrency, number>>;
+
+export function getTotalPerCurrency(prices: { price: number, currency: MovieCurrency }[] = []): PricePerCurrency {
+  const totalPrice: PricePerCurrency = {};
+  prices.forEach(i => {
+    totalPrice[i.currency] ||= 0;
+    totalPrice[i.currency] += i.price;
+  });
+  return totalPrice;
+}
+
+// TODO #9422
+const pairs = {
+  'EUR-USD': 1.09,
+  'USD-EUR': 0.92,
+  'EUR-EUR': 1,
+  'USD-USD': 1,
+}
+export function convertCurrenciesTo(price: PricePerCurrency, to: MovieCurrency = mainCurrency): PricePerCurrency {
+  const prices = Object.entries(price).map(([currency, price]) => price * pairs[`${currency}-${to}`]);
+  const value = prices.reduce((a, b) => a + b, 0);
+  return { [to]: value || 0 };
+}
+
 /**
  * Sorts array of objects
  * Field can be "foo.date" to access deep attributes
- * @param objects
- * @returns
+ * @param objects 
+ * @returns 
  */
 export function sortByDate<T>(objects: T[], field: string) {
   const resolve = (path: string, obj: T) => path.split('.').reduce((prev, curr) => prev?.[curr], obj);

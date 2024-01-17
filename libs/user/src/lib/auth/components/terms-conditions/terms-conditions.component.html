@@ -1621,4 +1621,35 @@
       </mat-card>
     </section>
   </ng-container>
+  <ng-container *ngSwitchCase="'waterfall'">
+    <header>
+      <a mat-icon-button *ngIf="canGoBack" (click)="goBack()">
+        <mat-icon svgIcon="arrow_back"></mat-icon>
+      </a>
+      <h1>General Terms and Conditions of the Blockframes Service</h1>
+      <p>Last edited MM dd, YYYY</p>
+    </header>
+    <section fxLayout="row" fxLayoutAlign="center">
+      <mat-card>
+        <mat-card-content>
+          <article>
+            <h3> Article 1 - do not talk about Fight Club</h3>
+            <p>The first rule of Fight Club is: you do not talk about Fight Club.</p>
+          </article>
+          <article>
+            <h3> Article 2 - DO NOT talk about Fight Club</h3>
+            <p>The second rule of Fight Club is: you DO NOT talk about Fight Club! </p>
+          </article>
+          <article>
+            <h3> Article 3 - How to end a fight</h3>
+            <p>Third rule of Fight Club: if someone yells "stop!", goes limp, or taps out, the fight is over.</p>
+          </article>
+          <article>
+            <h3> Article 4 - Number of participants</h3>
+            <p>Fourth rule: only two guys to a fight.</p>
+          </article>
+        </mat-card-content>
+      </mat-card>
+    </section>
+  </ng-container>
 </ng-container>

@@ -1,0 +1,66 @@
+header {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  mat-chip-list {
+    mat-divider {
+      height: 32px;
+      width: 1px;
+      margin: 0 10px;
+    }
+    mat-chip {
+      cursor: pointer;
+    }
+  }
+
+  article {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    span {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      flex-grow: 2;
+      waterfall-rightholder-select {
+        width: 30%;
+      }
+      button, a {
+        mat-icon {
+          vertical-align: inherit;
+        }
+      }
+    }
+    div {
+      width: 30%;
+      text-align: right;
+    }
+  }
+}
+
+mat-tab-group {
+  div {
+    text-align: right;
+  }
+}
+
+section {
+  padding: 24px;
+}
+
+section.flex-center {
+  display: flex;
+  justify-content: center;
+}
+
+waterfall-statement-table {
+  margin-top: 24px;
+  display: block;
+}
+
+bf-tag.active {
+  background-color: var(--primary-lighter);
+  border: none;
+  color: #ffffff;
+}

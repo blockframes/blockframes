@@ -21,6 +21,7 @@ const collections = {
   permissions: true,
   terms: false,
   users: true,
+  waterfall: true,
 };
 
 /**
@@ -113,6 +114,9 @@ const orgMap: Partial<Record<Collections, string[]>> = {
     'stakeholders',
   ],
   movies: [
+    'orgIds'
+  ],
+  waterfall: [
     'orgIds'
   ],
   buckets: [

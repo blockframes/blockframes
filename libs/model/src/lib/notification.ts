@@ -56,6 +56,11 @@ export const notifications = {
   ] as const,
   financiers: [] as const,
   crm: [] as const,
+  waterfall: [
+    // User is invited to join Waterfall
+    'invitationToJoinWaterfallCreated',
+    'invitationToJoinWaterfallUpdated'
+  ] as const,
 }
 
 type AppNotificationType = typeof notifications;

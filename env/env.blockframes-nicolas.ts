@@ -8,6 +8,7 @@ export const appUrl = {
   market: 'https://festival-blockframes-nicolas.web.app',
   crm: 'https://crm-blockframes-nicolas.web.app',
   financiers: 'https://financiers-blockframes-nicolas.web.app',
+  waterfall: 'https://waterfall-blockframes-nicolas.web.app',
 };
 
 const firebaseConfig = {
@@ -35,12 +36,13 @@ export const algolia = {
   indexNameOrganizations: {
     festival: 'nicolas_festival_org',
     financiers: 'nicolas_financiers_org',
-    catalog: 'nicolas_catalog_org'
+    catalog: 'nicolas_catalog_org',
+    waterfall: 'nicolas_waterfall_org',
   },
   indexNameMovies: {
     festival: 'nicolas_festival_movies',
     financiers: 'nicolas_financiers_movies',
-    catalog: 'nicolas_catalog_movies',
+    catalog: 'nicolas_catalog_movies'
   },
   indexNameUsers: 'nicolas_users',
 };
@@ -53,6 +55,7 @@ export const supportEmails = {
   catalog: 'ngermain+catalog@cascade8.com',
   festival: 'ngermain+festival@cascade8.com',
   financiers: 'ngermain+financiers@cascade8.com',
+  waterfall: 'ngermain+waterfall@cascade8.com',
 }
 
 export const suffixE2ESupportEmail = 'nicolas';
@@ -68,7 +71,8 @@ export const mailchimp = {
 export const yandex = {
   festival: 0,
   financiers: 0,
-  catalog: 0
+  catalog: 0,
+  waterfall: 0
 };
 
 // Hotjar
@@ -76,7 +80,8 @@ export const yandex = {
 export const hotjar = {
   festival: 0,
   financiers: 0,
-  catalog: 0
+  catalog: 0,
+  waterfall: 0
 }
 
 // Intercom

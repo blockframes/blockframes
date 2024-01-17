@@ -14,7 +14,9 @@ import {
   AlgoliaOrganization,
   App,
   getOrgAppAccess,
-  filterInvitation
+  filterInvitation,
+  RightholderRole,
+  InvitationType
 } from '@blockframes/model';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
@@ -137,7 +139,7 @@ export class InvitationService extends BlockframesCollection<Invitation> {
    */
   request(orgId: string, fromUser: User | PublicUser = this.authService.profile) {
     return {
-      to: async (type: 'attendEvent' | 'joinOrganization', eventId?: string, write?: AtomicWrite) => {
+      to: async (type: InvitationType, eventId?: string, write?: AtomicWrite) => {
         const request = { mode: 'request', type } as Partial<Invitation>;
         if (type === 'attendEvent') {
           request.eventId = eventId;
@@ -158,11 +160,13 @@ export class InvitationService extends BlockframesCollection<Invitation> {
    */
   invite(idOrEmails: string | string[], fromOrg: Organization = this.orgService.org) {
     return {
-      to: (type: 'attendEvent' | 'joinOrganization', eventId?: string) => {
+      to: (type: InvitationType, objectId?: string, additionalData?: { roles?: RightholderRole[] }) => {
         const invitation = { mode: 'invitation', type } as Partial<Invitation>;
-        if (type === 'attendEvent') {
-          invitation.eventId = eventId;
-        }
+        if (type === 'attendEvent') invitation.eventId = objectId;
+        if (type === 'joinWaterfall') {
+          invitation.waterfallId = objectId;
+          invitation.data = additionalData;
+        };
         invitation.fromOrg = createPublicOrganization(fromOrg);
         const recipients = Array.isArray(idOrEmails) ? idOrEmails : [idOrEmails];
 

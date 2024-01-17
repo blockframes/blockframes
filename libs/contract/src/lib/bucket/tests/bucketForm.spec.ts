@@ -5,38 +5,26 @@ import {
   BucketTerritoryMarker,
   CalendarAvailsFilter,
   DurationMarker,
-  MapAvailsFilter
+  MapAvailsFilter,
+  createMandate,
+  createTerm
 } from '@blockframes/model';
 import { BucketForm } from '../form';
 
 function fakeMandate(mandate?: Partial<Mandate>): Mandate {
-  return {
-    type: 'mandate',
-    _meta: { createdBy: '', createdAt: new Date() },
-    id: '',
-    parentTermId: '',
-    sellerId: '',
-    stakeholders: [],
+  return createMandate({
     status: 'accepted',
-    termIds: [],
-    titleId: '',
     ...mandate,
-  }
+  });
 }
 
 function fakeTerm(term?: Partial<Term>): Term {
-  return {
-    contractId: '',
-    criteria: [],
+  return createTerm({
     duration: { from: new Date(), to: new Date() },
     exclusive: true,
-    id: '',
-    languages: {},
     licensedOriginal: true,
-    medias: [],
-    territories: [],
     ...term,
-  }
+  });
 }
 
 const mapFilterA: MapAvailsFilter = {

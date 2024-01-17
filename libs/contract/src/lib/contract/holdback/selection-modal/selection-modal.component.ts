@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
-import { Holdback, Movie, Scope } from '@blockframes/model';
+import { Holdback, Movie, Scope, waterfallMediaGroups } from '@blockframes/model';
 import { FormList } from '@blockframes/utils/form';
 import { HoldbackForm } from '../form';
 import { FormTableComponent } from '@blockframes/ui/form/table/form-table.component';
@@ -23,6 +23,8 @@ export class SelectionModalComponent implements OnInit {
     territories: 'Territories',
     medias: 'Media'
   };
+
+  public waterfallMediaGroups = waterfallMediaGroups;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)

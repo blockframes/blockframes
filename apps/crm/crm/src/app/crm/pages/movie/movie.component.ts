@@ -35,6 +35,7 @@ import { UserService } from '@blockframes/user/service';
 import { UntypedFormControl } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 @Component({
   selector: 'crm-movie',
@@ -65,6 +66,7 @@ export class MovieComponent implements OnInit {
     private movieService: MovieService,
     private organizationService: OrganizationService,
     private permissionsService: PermissionsService,
+    private waterfallService: WaterfallService,
     private eventService: EventService,
     private invitationService: InvitationService,
     private contractService: ContractService,
@@ -132,6 +134,12 @@ export class MovieComponent implements OnInit {
       this.movie.app.financiers.status === 'accepted'
     ) {
       this.movie.campaignStarted = new Date();
+    }
+
+    const hasWaterfall = await this.waterfallService.getValue(this.movie.id);
+
+    if (!hasWaterfall && this.movie.app.waterfall.access) {
+      await this.waterfallService.create(this.movie.id, this.movie.orgIds);
     }
 
     await this.movieService.update(this.movieId, this.movie);
@@ -250,6 +258,11 @@ export class MovieComponent implements OnInit {
      * For performances issues, we just say that some buckets may be impacted
      */
     output.push('Some buckets may be updated.');
+
+    const hasWaterfall = await this.waterfallService.getValue(this.movie.id);
+    if (hasWaterfall) {
+      output.push('Associated waterfall will be deleted.');
+    }
 
     return output;
   }

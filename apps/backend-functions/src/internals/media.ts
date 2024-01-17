@@ -13,7 +13,8 @@ import {
   Slate,
   Privacy,
   Movie,
-  User
+  User,
+  Waterfall
 } from '@blockframes/model';
 import { getDocument, getDocumentSnap } from '@blockframes/firebase-utils';
 
@@ -25,7 +26,7 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
 
   let userDoc = createPublicUser({ uid, email });
   const user = await getDocument<User>(`users/${uid}`);
-  if (user) { userDoc = createPublicUser(user);}
+  if (user) { userDoc = createPublicUser(user); }
 
   if ((!eventData || eventData?.accessibility === 'private') && !userDoc.orgId) {
     return false;
@@ -74,6 +75,15 @@ export async function isAllowedToAccessMedia(file: StorageFile, uid: string, eve
         if (!movieSnap.exists) { return false; }
         const movie = await getDocument<Movie>(`movies/${file.docId}`);
         canAccess = movie.orgIds.some(id => userDoc.orgId === id);
+        break;
+      }
+    case 'waterfall':
+      {
+        // Only waterfall members can access file
+        const waterfallSnap = await getDocumentSnap(`waterfall/${file.docId}`);
+        if (!waterfallSnap.exists) { return false; }
+        const waterfall = await getDocument<Waterfall>(`waterfall/${file.docId}`);
+        canAccess = waterfall.orgIds.some(id => userDoc.orgId === id);
         break;
       }
     default:

@@ -1,0 +1,42 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  margin: 40px;
+}
+
+header {
+  article {
+    align-self: flex-start;
+  }
+  div {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+  }
+}
+
+h3 {
+  margin-top: 40px;
+}
+
+section {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+
+  article {
+    width: 40%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  apx-chart {
+    width: 20%;
+  }
+}
+
+bf-table {
+  padding: 0;
+  border: none;
+}

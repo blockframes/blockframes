@@ -1,0 +1,22 @@
+header {
+  padding: 0 24px;
+  mat-icon {
+    vertical-align: middle;
+  }
+
+  h1 {
+    mat-icon {
+      font: icon;
+    }
+  }
+
+  article {
+    display: flex;
+    flex-direction: column;
+  }
+
+  section {
+    display: flex;
+    justify-content: space-between;
+  }
+}

@@ -1,0 +1,33 @@
+<ng-container *ngIf="statement$ | async as statement">
+
+  <waterfall-statement-distributor-summary *ngIf="['salesAgent', 'mainDistributor'].includes(statement.type)"  [form]="form" [statement]="statement"></waterfall-statement-distributor-summary>  
+  <waterfall-statement-direct-sales-summary *ngIf="statement.type === 'directSales'" [form]="form" [statement]="statement"></waterfall-statement-direct-sales-summary>
+  <waterfall-statement-producer-summary *ngIf="statement.type === 'producer'" [statement]="statement" [form]="form"></waterfall-statement-producer-summary>
+
+  <footer>
+    <a mat-flat-button routerLink="edit" *ngIf="statement.type !== 'producer' && statement.status === 'draft'">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+      <span>Back</span>
+    </a>
+    <button mat-flat-button 
+      color="primary"
+      [disabled]="statement.status === 'reported'"
+      (click)="report(statement)"
+      [matTooltip]="statement.status === 'reported' ? 'Statement is already reported.' : 'Report Statement'"
+    >
+      <span>Report Statement</span>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
+    </button>
+  </footer>
+
+  <footer>
+    <button mat-button 
+      (click)="save(statement)"
+      [disabled]="statement.status === 'reported'"
+      [matTooltip]="statement.status === 'reported' ? 'Reported statement cannot be edited.' : 'Save & Come back later'"
+    >
+      <mat-icon svgIcon="save"></mat-icon>
+      <span>Save & Come back later</span>
+    </button>
+  </footer>
+</ng-container>

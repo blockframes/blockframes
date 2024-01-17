@@ -1,0 +1,30 @@
+section.surface {
+  margin: 48px 24px 0 24px;
+
+  div {
+    margin-bottom: 24px;
+    span {
+      color: #f6b650
+    }
+  }
+
+  h3 {
+    font-weight: 800;
+    font-size: 26px;
+    line-height: 24px;
+    color: var(--foreground-third-text);
+  }
+
+  form.group {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 32px;
+    * {
+      flex: 1;
+    }
+
+    mat-slide-toggle {
+      margin-top: 26px;
+    }
+  }
+}

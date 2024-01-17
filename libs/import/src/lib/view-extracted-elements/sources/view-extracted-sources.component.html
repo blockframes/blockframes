@@ -1,0 +1,12 @@
+<ng-container *ngIf="sourcesToCreate$ | async as sourcesToCreate; else isLoading">
+  <ng-container *ngIf="sourcesToCreate.data.length">
+    <h3>Sources to Create</h3>
+    <import-table-extracted-sources [rows]="sourcesToCreate"></import-table-extracted-sources>
+  </ng-container>
+</ng-container>
+<ng-template #isLoading>
+  <section fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner></mat-spinner>
+  </section>
+</ng-template>
+

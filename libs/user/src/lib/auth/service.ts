@@ -35,7 +35,7 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
   };
   readonly path = 'users';
 
-  readonly idKey: 'uid';
+  readonly idKey = 'uid';
 
   private sub: Subscription;
 

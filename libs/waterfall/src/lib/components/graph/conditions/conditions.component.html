@@ -1,0 +1,47 @@
+
+
+<p>Please chose a condition that will influence your waterfall.</p>
+<p>According to the type you chose, the fields will adapt.</p>
+
+<div class="right">
+  <mat-form-field appearance="outline">
+    <mat-label>Receipt Share Type</mat-label>
+    <mat-select [formControl]="rightForm.controls.type">
+      <mat-option value="commission">Commission</mat-option>
+      <mat-option value="expense">Expense</mat-option>
+      <mat-option value="mg">MG</mat-option>
+      <mat-option value="unknown">Unknown</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Receipt Share Name</mat-label>
+    <input matInput type="text" [formControl]="rightForm.controls.name" />
+  </mat-form-field>
+</div>
+
+<hr />
+
+<ng-container *ngFor="let step of rightForm.controls.steps.value; let index = index">
+  <ng-container *ngIf="selectedStep === index; else item">
+    <p class="step">Step {{index + 1}}</p>
+  
+    <waterfall-condition-item *ngFor="let condition of step; let index = index" [condition]="condition" (edit)="editCondition(index)" (delete)="deleteCondition(index)"></waterfall-condition-item>
+
+    <waterfall-conditions-form [form]="conditionForm"></waterfall-conditions-form>
+
+    <div class="add-next">
+      <hr />
+      <p class="mat-caption">Add Next Condition</p>
+      <button mat-mini-fab color="primary" [disabled]="!newCondition" (click)="createCondition()">
+        <mat-icon svgIcon="add"></mat-icon>
+      </button>
+    </div>
+  </ng-container>
+  <ng-template #item>
+    <waterfall-step-item class="surface" [index]="index" [conditionCount]="step.length" (editStep)="selectStep(index)" (deleteStep)="removeStep(index)"></waterfall-step-item>
+  </ng-template>
+</ng-container>
+
+<div class="add-step">
+  <button mat-button color="primary" (click)="createStep.emit()">Add New Step</button>
+</div>

@@ -1,0 +1,26 @@
+<article *ngFor="let item of form.controls; let index = index; let last = last">
+  <mat-form-field appearance="outline">
+    <mat-label>Name</mat-label>
+    <input matInput type="text" placeholder="Name" [formControl]="item.controls.name"/>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>CAP max</mat-label>
+    <input matInput type="number" placeholder="CAP max" [formControl]="versionId === 'default' ? item.controls.cap.controls.default : item.controls.cap.controls.version.controls[versionId]" />
+  </mat-form-field>
+
+  <static-select [control]="item.controls.currency" [only]="['USD', 'EUR']" scope="movieCurrencies">
+    <mat-label>Currency</mat-label>
+  </static-select>
+
+  <ng-container *ngIf="!last; else isLast">
+    <button mat-icon-button class="delete" (click)="remove(index)" [matTooltip]="versionId === 'default' ? 'Delete Expense Type' : 'Not permitted'" [disabled]="versionId !== 'default'">
+      <mat-icon svgIcon="delete"></mat-icon>
+    </button>
+  </ng-container>
+  <ng-template #isLast>
+    <button mat-mini-fab color="primary" (click)="add()" [matTooltip]="versionId === 'default' ? 'Add Expense Type' : 'Not permitted'" [disabled]="versionId !== 'default'">
+      <mat-icon svgIcon="add"></mat-icon>
+    </button>
+  </ng-template>
+</article>

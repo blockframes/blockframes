@@ -15,6 +15,12 @@ export const rulesFixtures = {
     },
     id: 'O001',
   },
+  'permissions/O002': {
+    roles: {
+      'uid-user3': 'member',
+    },
+    id: 'O002',
+  },
   'permissions/O003': {
     id: 'O003',
   },
@@ -249,6 +255,9 @@ export const rulesFixtures = {
     note: '',
     orgIds: ['O001']
   },
+  'movies/WF-001': {
+    id: 'WF-001',
+  },
 
   // Events
   'events/E001': {
@@ -325,6 +334,62 @@ export const rulesFixtures = {
     id: 'C002',
     stakeholders: []
   },
+  'contracts/W001': {
+    id: 'W001',
+    buyerId: 'O001',
+  },
+  'contracts/W002': {
+    id: 'W002',
+    sellerId: 'O001',
+  },
+
+  // Terms
+  'terms/T00X': {
+    id: 'T00X',
+    contractId: 'XXX'
+  },
+  'terms/T003': {
+    id: 'T003',
+    contractId: 'W001'
+  },
+  'terms/T004': {
+    id: 'T004',
+    contractId: 'W002'
+  },
+  'terms/TW02': {
+    id: 'TW02',
+    titleId: 'MI-0d7',
+    contractId: 'D003'
+  },
+  'terms/TW12': {
+    id: 'TW12',
+    titleId: 'WF-001',
+    contractId: 'D003'
+  },
+
+  // Incomes
+  'incomes/I00X': {
+    id: 'I00X',
+    contractId: 'W001'
+  },
+  'incomes/I001': {
+    id: 'I001',
+    titleId: 'MI-0d7',
+    contractId: 'D002'
+  },
+  'incomes/I002': {
+    id: 'I002',
+    titleId: 'MI-0d7',
+    contractId: 'D003'
+  },
+  'incomes/I013': {
+    id: 'I013',
+    contractId: 'W002'
+  },
+  'incomes/I016': {
+    id: 'I016',
+    contractId: 'C001'
+  },
 
   // Consents
   'consents/O001': {
@@ -332,6 +397,97 @@ export const rulesFixtures = {
     access: [],
     share: []
   },
+
+  // Waterfall
+  'waterfall/MI-0d7': {
+    id: 'MI-0d7',
+    orgIds: ['O002']
+  },
+  'waterfall/MI-077': {
+    id: 'MI-077',
+    orgIds: ['O002']
+  },
+  'waterfall/WF-001': {
+    id: 'WF-001',
+    orgIds: ['O001']
+  },
+  'waterfall/MI-0d7/blocks/B001': {
+    id: 'B001',
+  },
+  'waterfall/WF-001/blocks/B001': {
+    id: 'B001',
+  },
+  'waterfall/M001/blocks/B001': {
+    id: 'B001',
+  },
+  'waterfall/MI-0d7/permissions/O002': {
+    id: 'O002',
+    isAdmin: false,
+    rightholderIds: ['RH002']
+  },
+  'waterfall/WF-001/permissions/O001': {
+    id: 'O001',
+    isAdmin: true,
+  },
+  'waterfall/WF-001/permissions/foo': {
+    id: 'foo',
+    isAdmin: false
+  },
+  'waterfall/MI-0d7/permissions/O003': {
+    id: 'O003',
+    isAdmin: false
+  },
+  'waterfall/M001/documents/D001': {
+    id: 'D001'
+  },
+  'waterfall/WF-001/documents/D001': {
+    id: 'D001'
+  },
+  'waterfall/MI-0d7/documents/D001': {
+    id: 'D001'
+  },
+  'waterfall/MI-0d7/documents/D003': {
+    id: 'D003',
+  },
+  'waterfall/M001/statements/S001': {
+    id: 'S001',
+  },
+  'waterfall/MI-0d7/statements/S001': {
+    id: 'S001',
+    senderId: 'RH003'
+  },
+  'waterfall/MI-0d7/statements/S002': {
+    id: 'S002',
+    senderId: 'RH002'
+  },
+  'waterfall/WF-001/statements/S001': {
+    id: 'S001',
+    senderId: 'RH003'
+  },
+  'waterfall/WF-001/statements/S002': {
+    id: 'S002',
+    senderId: 'RH002'
+  },
+  'waterfall/M001/rights/R001': {
+    id: 'R001',
+  },
+  'waterfall/MI-0d7/rights/R001': {
+    id: 'R001',
+  },
+  'waterfall/WF-001/rights/R001': {
+    id: 'R001',
+  },
+  'expenses/E001': {
+    id: 'E001',
+    titleId: 'MI-0d7',
+    contractId: 'D002'
+  },
+  'expenses/E002': {
+    id: 'E002',
+    titleId: 'MI-0d7',
+    contractId: 'D003'
+  },
+
 };
 
 

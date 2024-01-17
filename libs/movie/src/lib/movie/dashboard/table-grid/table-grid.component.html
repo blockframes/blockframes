@@ -25,11 +25,11 @@
         <li *ngFor="let item of items; trackBy:trackById" >
           <movie-card 
             [movie]="item"
-            [link]="[item.id]"
+            [link]="['/c/o/dashboard/title/', item.id]"
             size="poster"
             [showWishlistButton]="false"
-            ><!-- TODO #9330 add [showMovieFeature]="app !== 'waterfall' ? true : false"  -->
-            
+            [showMovieFeature]="app !== 'waterfall' ? true : false"
+          >
           </movie-card>
         </li>
       </ul>

@@ -1,0 +1,18 @@
+<global-modal>
+  <h1>Group Receipt Shares</h1>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Group of Receipt Shares</mat-label>
+    <mat-select multiple [formControl]="poolRightsControl">
+      <mat-option *ngFor="let right of data.rights" [value]="right.id">{{right.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Give a Name</mat-label>
+    <input matInput placeholder="Pool Name" [formControl]="poolNameControl" />
+  </mat-form-field>
+
+  <button mat-flat-button color="primary" [disabled]="!poolNameControl.value || poolRightsControl.value.length === 0" (click)="create()">
+    {{ data.name ? 'Update' : 'Create'}}
+  </button>
+</global-modal>

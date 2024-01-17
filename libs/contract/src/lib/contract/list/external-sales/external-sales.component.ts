@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Contract, DetailedContract, getTotalIncome } from '@blockframes/model';
+import { Contract, DetailedContract, getTotalPerCurrency } from '@blockframes/model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
@@ -19,7 +19,7 @@ export class ExternalSaleListComponent {
   ) { }
 
   @Input() set sales(sales: DetailedContract[]) {
-    this._sales.next(sales.map(s => ({ ...s, totalIncome: getTotalIncome(s.incomes) })));
+    this._sales.next(sales.map(s => ({ ...s, totalIncome: getTotalPerCurrency(s.incomes) })));
   }
 
   get sales() {

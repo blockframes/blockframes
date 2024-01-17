@@ -1,0 +1,40 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  margin: 40px;
+}
+
+waterfall-statement-header {
+  margin-bottom: 24px;
+}
+
+mat-form-field {
+  width: 30%;
+}
+
+h3 {
+  margin-top: 40px;
+}
+
+article.right-details {
+  bf-table {
+    margin-top: 16px;
+  }
+}
+
+article.payment-date {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+  margin: 32px 0;
+}
+
+button[mat-button] {
+  margin-bottom: 64px;
+}
+
+article.loader {
+  display: flex;
+  justify-content: center;
+}

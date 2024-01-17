@@ -8,6 +8,7 @@ export const appUrl = {
   market: 'https://blockframes-francois-festival.web.app',
   financiers: 'https://blockframes-francois-financier.web.app',
   crm: 'https://blockframes-francois-crm.web.app',
+  waterfall: 'https://blockframes-francois-waterfall.web.app',
 };
 
 const firebaseConfig = {
@@ -35,12 +36,13 @@ export const algolia = {
   indexNameOrganizations: {
     festival: 'francois_festival_org',
     financiers: 'francois_financiers_org',
-    catalog: 'francois_catalog_org'
+    catalog: 'francois_catalog_org',
+    waterfall: 'francois_waterfall_org',
   },
   indexNameMovies: {
     festival: 'francois_festival_movies',
     financiers: 'francois_financiers_movies',
-    catalog: 'francois_catalog_movies',
+    catalog: 'francois_catalog_movies'
   },
   indexNameUsers: 'francois_users'
 };
@@ -52,7 +54,8 @@ export const supportEmails = {
   default: 'fguezengar@cascade8.com',
   catalog: 'fguezengar+catalog@cascade8.com',
   festival: 'fguezengar+festival@cascade8.com',
-  financiers: 'fguezengar+financiers@cascade8.com'
+  financiers: 'fguezengar+financiers@cascade8.com',
+  waterfall: 'fguezengar+waterfall@cascade8.com',
 }
 
 export const suffixE2ESupportEmail = 'francois';
@@ -68,7 +71,8 @@ export const mailchimp = {
 export const yandex = {
   festival: 0,
   financiers: 0,
-  catalog: 0
+  catalog: 0,
+  waterfall: 0
 };
 
 // Hotjar
@@ -76,7 +80,8 @@ export const yandex = {
 export const hotjar = {
   festival: 0,
   financiers: 0,
-  catalog: 0
+  catalog: 0,
+  waterfall: 0
 }
 
 // Intercom

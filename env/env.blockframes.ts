@@ -8,6 +8,7 @@ export const appUrl = {
   market: 'https://archipelmarket.com',
   financiers: 'https://mediafinanciers.com',
   crm: 'https://crm.blockframes.io',
+  waterfall: 'https://app.blockframes.io',
 };
 
 const firebaseConfig = {
@@ -40,6 +41,10 @@ const appConfigs = {
     appId: "1:1080507348015:web:ede10e0ebf25604e0002da",
     measurementId: "G-X8XFZQCL8Z"
   },
+  waterfall: {
+    appId: "1:1080507348015:web:8395e7517cefa7850002da",
+    measurementId: "G-27DHYHLCE0"
+  },
   default: {
     appId: "1:1080507348015:web:413468c3253b02760002da",
     measurementId: "G-NHLYYB4DSP"
@@ -53,9 +58,9 @@ export function firebase(app?: keyof typeof appConfigs) {
     ...firebaseConfig,
     ...appConfigs[app]
   } : {
-      ...firebaseConfig,
-      ...appConfigs.default
-    }
+    ...firebaseConfig,
+    ...appConfigs.default
+  }
 }
 
 
@@ -68,12 +73,13 @@ export const algolia = {
   indexNameOrganizations: {
     festival: 'prod_festival_org',
     financiers: 'prod_financiers_org',
-    catalog: 'prod_catalog_org'
+    catalog: 'prod_catalog_org',
+    waterfall: 'prod_waterfall_org'
   },
   indexNameMovies: {
     festival: 'prod_festival_movies',
     financiers: 'prod_financiers_movies',
-    catalog: 'prod_catalog_movies',
+    catalog: 'prod_catalog_movies'
   },
   indexNameUsers: 'prod_users',
 };
@@ -85,7 +91,8 @@ export const supportEmails = {
   default: 'team@cascade8.com',
   catalog: 'support@archipelcontent.com',
   festival: 'support@archipelmarket.com',
-  financiers: 'support@mediafinanciers.com'
+  financiers: 'support@mediafinanciers.com',
+  waterfall: 'support@blockframes.io', // TODO #9257 change this
 }
 
 export const suffixE2ESupportEmail = undefined;
@@ -101,7 +108,8 @@ export const mailchimp = {
 export const yandex = {
   festival: 65689861,
   financiers: 70097020,
-  catalog: 56105038
+  catalog: 56105038,
+  waterfall: 0
 };
 
 // Hotjar
@@ -109,7 +117,8 @@ export const yandex = {
 export const hotjar = {
   festival: 2887217,
   financiers: 2887218,
-  catalog: 2887089
+  catalog: 2887089,
+  waterfall: 0 // TODO #9257 change this
 }
 
 // Intercom

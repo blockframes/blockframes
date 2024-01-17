@@ -1,0 +1,54 @@
+<ng-container *ngIf="movie$ | async as movie">
+  <header>
+    <a mat-icon-button (click)="goBack(movie.id)">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </a>
+    <h1>Right Holders Management</h1>
+  
+    <section>
+      <mat-icon svgIcon="movie"></mat-icon>
+      <strong>Movie:</strong> {{ movie.title.international }}
+    </section>
+  </header>
+  
+  <waterfall-right-holder-add [waterfallId]="movie.id" [invitations]="invitations$ | async"></waterfall-right-holder-add>
+
+  <article>
+    <mat-icon svgIcon="info"></mat-icon>
+    <p class="mat-caption">According to their role in waterfall, Right Holders will or not have access to the different documents.</p>
+  </article>
+
+  <ng-container *ngIf="invitations$ | async as invitations">
+    <bf-table *ngIf="invitations.length" [source]="invitations" pagination="10" useFilter name="Invited Right Holders">
+      <ng-template colRef="toUser" label="NAME" let-user sort  [filter]="filters.displayName">
+        <span *ngIf="user.firstName && user.lastName else notRegistered">{{ user | displayName }}</span>
+      </ng-template>
+      <ng-template colRef="guestOrg" label="ORGANIZATION NAME" let-guestOrg sort [filter]="filters.orgName">
+        <span *ngIf="guestOrg else notRegistered" >{{ guestOrg.name }}</span>
+      </ng-template>
+      <ng-template colRef="toUser.email" label="EMAIL" let-email sort>
+        <span>{{ email }}</span>
+      </ng-template>
+      <ng-template colRef="data.roles" label="ROLE" let-roles sort>
+        <span>{{ roles | toLabel: 'rightholderRoles' }}</span>
+      </ng-template>
+      <ng-template colRef="status" label="STATUS" let-status sort>
+        <bf-tag>{{ status | toLabel: 'invitationStatus' }}</bf-tag>
+      </ng-template>
+      <ng-template colRef="id" label="ACTIONS" let-id let-invitation="item" sticky>
+        <div>
+          <button *ngIf="invitation.status !== 'accepted'" mat-icon-button matTooltip="Resend Invitation" (click)="resendInvitation(invitation)">
+            <mat-icon svgIcon="refresh"></mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Remove Right Holder" (click)="removeRightHolder(invitation)">
+            <mat-icon svgIcon="person_off"></mat-icon>
+          </button>
+        </div>
+      </ng-template>
+    </bf-table>
+  </ng-container>
+</ng-container>
+
+<ng-template #notRegistered>
+  Not Registered yet
+</ng-template>

@@ -19,11 +19,13 @@
               <mat-icon matListIcon svgIcon="business"></mat-icon>
               <span matLine>Organization</span>
             </a>
-            <mat-list-item *ngIf="theme$ | async as theme">
-              <mat-slide-toggle [checked]="theme === 'dark'" (change)="setTheme($event)">
-                Use {{ theme === 'dark' ? 'Light' : 'Dark' }} Theme
-              </mat-slide-toggle>
-            </mat-list-item>
+            <ng-container *ngIf="canSwitchTheme">
+              <mat-list-item *ngIf="theme$ | async as theme">
+                <mat-slide-toggle [checked]="theme === 'dark'" (change)="setTheme($event)">
+                  Use {{ theme === 'dark' ? 'Light' : 'Dark' }} Theme
+                </mat-slide-toggle>
+              </mat-list-item>
+            </ng-container>
           </mat-nav-list>
           <footer widgetFooter>
             <button mat-button test-id="logout" color="warn" (click)="logout()" test-id="auth-logout">

@@ -6,10 +6,9 @@ import { centralOrgId } from '@env';
 import {
   Mandate,
   Sale,
-  createMandate,
-  createSale,
   Negotiation,
-  createDocumentMeta
+  createDocumentMeta,
+  createContract
 } from '@blockframes/model';
 import { DocumentSnapshot, limit, orderBy, where } from 'firebase/firestore';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
@@ -31,7 +30,7 @@ export class ContractService extends BlockframesCollection<Sale | Mandate> {
   protected fromFirestore(document: DocumentSnapshot<Sale | Mandate>): Sale | Mandate {
     if (!document.exists()) return;
     const contract = super.fromFirestore(document);
-    return contract.type === 'mandate' ? createMandate(contract) : createSale(contract);
+    return createContract(contract);
   }
 
   /** Return the last negotiation of the contractId */

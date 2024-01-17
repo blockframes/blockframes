@@ -23,10 +23,7 @@
   <contract-item [contract]="contract">
     <p price *ngIf="contract.totalIncome as totalIncome">
       <ng-container *ngIf="totalIncome.EUR > 0 || totalIncome.USD > 0; else askPrice">
-        <span *ngIf="totalIncome.USD"> {{ totalIncome.USD | currency:'USD' }} </span>
-        <span *ngIf="totalIncome.USD && totalIncome.EUR"> and</span>
-        <span *ngIf="totalIncome.EUR"> {{ totalIncome.EUR | currency:'EUR' }} </span>
-        <span *ngIf="!totalIncome.USD && !totalIncome.EUR"> - </span>
+        <price-per-currency [price]="totalIncome"></price-per-currency>
       </ng-container>
       <ng-template #askPrice>
         <span>Buyer requested Asking Price</span>

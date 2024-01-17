@@ -17,6 +17,7 @@ import { getKeyIfExists } from '@blockframes/utils/helpers';
 })
 export class GroupMultiselectComponent implements OnInit, OnDestroy {
   @Input() control: FormStaticValueArray<Scope>;
+  @Input() withoutValues: string[] = [];
   @Input() scope: GroupScope;
   @Input() label: string;
   @Input() selectIcon = 'world';
@@ -48,7 +49,14 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
   constructor(private dialog: MatDialog) {}
 
   ngOnInit() {
-    this.groups = staticGroups[this.scope];
+    const groups: StaticGroup[] = staticGroups[this.scope];
+    if (this.withoutValues.length) {
+      for (const group of groups) {
+        /* eslint-disable */
+        group.items = (group.items as any[]).filter((item: string) => !this.withoutValues.includes(item));
+      }
+    }
+    this.groups = groups.filter(g => g.items.length && !this.withoutValues.includes(g.label));
     this.items = this.getAllItems(this.groups);
 
     this.selectable = this.items.reduce((aggr, item) => ({ ...aggr, [item]: true }), {});

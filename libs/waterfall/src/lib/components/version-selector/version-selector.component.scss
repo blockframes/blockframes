@@ -1,0 +1,31 @@
+div {
+  height: auto;
+  overflow: visible;
+  max-width: 500px;
+  white-space: inherit;
+  
+  section {
+    display: flex;
+    gap: 16px;
+    align-items: end;
+    justify-content: space-between;
+    mat-icon {
+      align-self: center;
+    }
+    mat-radio-group {
+      width: 100%;
+    }
+  }
+
+  p {
+    padding: 12px;
+    line-height: 24px;
+  }
+}
+
+div.new-version {
+  padding: 0;
+  button {
+    width: 100%;
+  }
+}

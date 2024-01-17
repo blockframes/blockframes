@@ -1,0 +1,37 @@
+<header>
+  <section>
+    <h1 *ngIf="statement">
+      <span>{{ statement.type | toLabel: 'statementType' }} Statement #{{ statementNumber }}</span>
+      <mat-icon *ngIf="statement.duplicatedFrom" svgIcon="warning" color="warn" matTooltip="You are viewing a duplicated statement."></mat-icon>
+    </h1>
+    
+    <waterfall-version-selector 
+      [ngStyle]="{ display: statement.type !== 'producer' || statement.status !== 'draft' || statement.versionId ? 'none' : 'initial' }"
+      simulator
+      [initialVersion]="versionId"
+      (versionChanged)="versionChanged.emit($event)"
+      hideStandalone
+    ></waterfall-version-selector>
+  </section>
+  <article>
+    <span>
+      <mat-icon svgIcon="movie"></mat-icon><span matLine><strong>Movie: </strong>{{ shell.movie.title.international }}</span>
+    </span>
+    <span>
+      <mat-icon svgIcon="calendar_today"></mat-icon><span matLine><strong>Covered Period: </strong>{{ statement.duration.from | date: 'dd/MM/yyyy' }} -  {{ statement.duration.to | date: 'dd/MM/yyyy' }}</span>
+    </span>
+    <span *ngIf="contract">
+      <mat-icon svgIcon="document"></mat-icon><span matLine><strong>Contract: </strong>{{ contract.name }}</span>
+    </span>
+    <section>
+      <span>
+        <mat-icon svgIcon="business"></mat-icon><span matLine><strong>{{ rightholderTag }}: </strong>{{ rightholderName | titlecase }} <ng-container *ngIf="sources">({{ sources | join:'name' }})</ng-container></span>
+      </span>
+      <span>
+        <span *ngIf="statement.status === 'reported' && !!statement.reported">
+          Statement reported: {{ statement.reported | date: 'dd/MM/yyyy' }}
+        </span>
+      </span>
+    </section>
+  </article>
+</header>

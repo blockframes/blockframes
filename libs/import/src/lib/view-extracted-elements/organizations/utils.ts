@@ -3,7 +3,7 @@ import { UserService } from '@blockframes/user/service';
 import { createUser, User, createOrganization, Organization, Territory, Module, ModuleAccess, modules } from '@blockframes/model';
 import { extract, ExtractConfig, SheetTab } from '@blockframes/utils/spreadsheet';
 import { OrganizationService } from '@blockframes/organization/service';
-import { alreadyExistError, getOrgId, getUser, mandatoryError, optionalWarning, OrganizationsImportState, wrongValueError } from '@blockframes/import/utils';
+import { alreadyExistError, getOrgId, getUser, mandatoryError, optionalWarning, OrganizationsImportState, wrongValueError } from '../../utils';
 
 const separator = ',';
 

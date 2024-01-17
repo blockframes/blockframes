@@ -1,0 +1,26 @@
+
+<p class="name">{{vertical.name}}</p>
+
+
+<ng-container *ngFor="let member of vertical.members; let isFirst = first; let isLast = last; let index = index">
+  <ng-container *ngIf="isFirst; else level">
+    <waterfall-graph-right [right]="member" [selected]="selected" (handleSelect)="handleSelect.emit(vertical.id)" hideAmount></waterfall-graph-right>
+  </ng-container>
+  <ng-template #level>
+    <waterfall-graph-level [right]="member" [selected]="selected" (handleSelect)="handleSelect.emit(vertical.id)" hideAmount></waterfall-graph-level>
+  </ng-template>
+  <svg *ngIf="!isLast" width="240" height="32" viewBox="0 0 240 32">
+    <path stroke-width="2" stroke="#feb90f" fill="none" d="M 120 0 L 120 30 L 112 22 M 120 30 L 128 22"></path>
+  </svg>
+</ng-container>
+
+<price-per-currency class="amount" [price]="amount$ | async | formatPair" default="0€"></price-per-currency>
+
+<ng-container *ngIf="selected && editMode">
+  <button mat-mini-fab color="primary" class="right" (click)="handleAddSibling($event)">
+    <mat-icon svgIcon="add"></mat-icon>
+  </button>
+  <button mat-mini-fab color="primary" class="bottom" (click)="handleAddChild($event)">
+    <mat-icon svgIcon="add"></mat-icon>
+  </button>
+</ng-container>

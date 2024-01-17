@@ -1,0 +1,67 @@
+@import "@angular/flex-layout/mq";
+$banner-background: rgba(5, 7, 36);
+
+:host {
+  display: block;
+}
+
+// Maximum width for large screens
+.max-width {
+  max-width: 1920px; // equal to "lg" in Angular breakpoints
+  margin: auto;
+}
+
+landing-header {
+  header {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: flex-start;
+    background-image: url("/assets/images/banner_landing_new.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;  
+  }
+}
+
+@include layout-bp(xs) {
+  landing-header {
+    #header-to-scroll {
+      height: calc(100vh - 80px);
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+      padding-inline: 16px;
+      a {
+        margin-bottom: 32px;
+      }
+      button {
+        margin-top: auto;
+      }
+    }
+  }
+}
+
+@include layout-bp(gt-sm) {
+  #header-to-scroll {
+    gap: 32px;
+    button {
+      display: none;
+    }
+  }
+}
+
+@include layout-bp(gt-lg) {
+  landing-header {
+    header {
+      background-image: linear-gradient(
+        to right, 
+        $banner-background 0%,
+        rgba(0, 0, 0, 0) 40px,
+        rgba(0, 0, 0, 0) calc(100% - 40px),
+        $banner-background 100%
+      ),
+      url("/assets/images/banner_landing_new.jpg");
+    }
+  }
+}

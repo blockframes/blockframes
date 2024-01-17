@@ -1,8 +1,8 @@
 
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
-import { StorageFile } from '@blockframes/model';
-import { CollectionHoldingFile, FileLabel } from '@blockframes/media/utils';
+import { StorageFile, CollectionHoldingFile } from '@blockframes/model';
+import { FileLabel } from '@blockframes/media/utils';
 import { StorageFileForm } from '@blockframes/media/form/media.form';
 import { FormList } from '@blockframes/utils/form';
 import { AllowedFileType } from '@blockframes/model';

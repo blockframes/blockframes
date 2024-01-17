@@ -134,7 +134,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
   }
 
   public createOrg(orgName: string) {
-    this.orgForm.reset({ name: orgName });
+    const defaultOrg = this.app === 'waterfall' ? { name: orgName, appAccess: 'dashboard' } : { name: orgName };
+    this.orgForm.reset(defaultOrg);
     this.orgForm.enable();
     this.existingOrgId = '';
   }

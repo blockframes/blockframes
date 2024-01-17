@@ -140,6 +140,8 @@ export class TableComponent<T> implements AfterContentInit, OnDestroy {
     if (typeof pageSize === 'number') this.paginator.pageSize = pageSize;
   }
 
+  @Input() name: string;
+
   /** Emits the content of the row when clicked. Requires input "clickable" to be set  */
   @Output() rowClick = new EventEmitter<T>();
   @Output() page = new EventEmitter<PageState>();

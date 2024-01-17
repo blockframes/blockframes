@@ -1,0 +1,19 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+@mixin color($theme) {
+  .bf-checkbox {
+    width: 100%;
+    .mat-checkbox-layout {
+      display: flex;
+
+      .mat-checkbox-inner-container {
+        margin-left: 12px;
+      }
+    }
+    
+    .mat-checkbox-label {
+      width: 100%;
+    }
+  }
+}

@@ -1,0 +1,81 @@
+<section *ngIf="statement$ | async as statement">
+  <h3>Net Receipts Details</h3>
+  <mat-tab-group class="bf-tabs" *ngIf="distributors.length" selectedIndex="0" (selectedTabChange)="onTabChanged($event)">
+    <mat-tab *ngFor="let distributor of distributors" [label]="distributor.name">
+      <span *ngIf="distributorContracts[distributor.id]?.length > 1">
+        <mat-form-field appearance="outline">
+          <mat-icon matPrefix svgIcon="business"></mat-icon>
+          <mat-label>
+            Choose Contract you want to work with
+          </mat-label>
+          <mat-select [formControl]="contractControl">
+            <mat-option *ngFor="let contract of distributorContracts[distributor.id]" [value]="contract.id">
+              {{ contract.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <a *ngIf="contractControl.value" mat-icon-button [routerLink]="['../..', 'documents', contractControl.value]">
+          <mat-icon svgIcon="contract" matTooltip="See contract"></mat-icon>
+        </a>
+      </span>
+      <form [formGroup]="formArray" *ngIf="reportableStatements?.length">
+        <ul>
+          <ng-container *ngFor="let stm of reportableStatements; let i = index">
+            <ng-container *ngIf="contractControl.value else directSales">
+              <li [formGroupName]="i" *ngIf="stm.senderId === distributor.id && stm.contractId === contractControl.value">
+                <mat-checkbox [disabled]="statement.status === 'reported'" class="bf-checkbox" color="primary" [formControl]="formArray.controls[i].get('checked')" (click)="markAsDirty()">
+                  <article class="surface">
+                    <div class="circle">
+                      {{ stm.number }}
+                    </div>
+                    <div class="statement-info">
+                      <span>
+                        <h3>{{ stm.duration.from | date: 'dd/MM/yyyy' }} -  {{ stm.duration.to | date: 'dd/MM/yyyy' }}</h3>
+                        <a mat-icon-button [routerLink]="['..', stm.id]" target="_blank">
+                          <mat-icon svgIcon="document" matTooltip="View statement"></mat-icon>
+                        </a>
+                      </span>
+                      <p class="mat-body-1">Payment Date:  {{ stm.payments.rightholder.date | date: 'dd/MM/yyyy' }}
+                      </p>
+                    </div>
+                    <div class="statement-price">
+                      <h3 *ngIf="stm.payments.rightholder as payment">
+                        Net Receipts Paid:
+                        <price-per-currency [price]="payment.price | formatPair:payment.currency"></price-per-currency>
+                      </h3>
+                    </div>
+                  </article>
+                </mat-checkbox>
+              </li>
+            </ng-container>
+            <ng-template #directSales>
+              <li [formGroupName]="i" *ngIf="stm.senderId === distributor.id">
+                <mat-checkbox [disabled]="statement.status === 'reported'" class="bf-checkbox" color="primary" [formControl]="formArray.controls[i].get('checked')" (click)="markAsDirty()">
+                  <article class="surface">
+                    <div class="circle">
+                      {{ stm.number }}
+                    </div> 
+                    <div class="statement-info">
+                      <span>
+                        <h3>{{ stm.duration.from | date: 'dd/MM/yyyy' }} -  {{ stm.duration.to | date: 'dd/MM/yyyy' }}</h3>
+                        <a mat-icon-button [routerLink]="['..', stm.id]" target="_blank">
+                          <mat-icon svgIcon="document" matTooltip="View statement"></mat-icon>
+                        </a>
+                      </span>
+                      <p class="mat-body-1">
+                        Payment Date: 
+                        <ng-container *ngIf="stm.payments.right[0] as payment">
+                          {{ payment.date | date: 'dd/MM/yyyy' }}
+                        </ng-container>
+                      </p>
+                    </div>
+                  </article>
+                </mat-checkbox>
+              </li>
+            </ng-template>
+          </ng-container>
+        </ul>
+      </form>
+    </mat-tab>
+  </mat-tab-group>
+</section>

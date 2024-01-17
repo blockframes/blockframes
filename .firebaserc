@@ -6,7 +6,8 @@
     "francois": "blockframes-francois",
     "bruce": "blockframes-bruce",
     "nicolas": "blockframes-nicolas",
-    "pl": "blockframes-pl-3"
+    "pl": "blockframes-pl-3",
+    "vincent": "blockframes-vincent-2"
   },
   "targets": {
     "blockframes": {
@@ -25,6 +26,9 @@
         ],
         "cms": [
           "blockframes-cms"
+        ],
+        "waterfall": [
+          "blockframes-waterfall"
         ]
       }
     },
@@ -44,6 +48,9 @@
         ],
         "cms": [
           "staging-blockframes-cms"
+        ],
+        "waterfall": [
+          "staging-blockframes-waterfall"
         ]
       }
     },
@@ -63,6 +70,9 @@
         ],
         "cms": [
           "blockframes-francois-cms"
+        ],
+        "waterfall": [
+          "blockframes-francois-waterfall"
         ]
       }
     },
@@ -82,6 +92,9 @@
         ],
         "cms": [
           "cms-blockframes-bruce"
+        ],
+        "waterfall": [
+          "waterfall-blockframes-bruce"
         ]
       }
     },
@@ -108,8 +121,34 @@
         ],
         "cms": [
           "cms-blockframes-pl"
+        ],
+        "waterfall": [
+          "waterfall-blockframes-pl"
+        ]
+      }
+    },
+    "blockframes-vincent-2": {
+      "hosting": {
+        "catalog": [
+          "catalog-blockframes-demo"
+        ],
+        "festival": [
+          "festival-blockframes-demo"
+        ],
+        "crm": [
+          "crm-blockframes-demo"
+        ],
+        "financiers": [
+          "financiers-blockframes-demo"
+        ],
+        "cms": [
+          "cms-blockframes-demo"
+        ],
+        "waterfall": [
+          "waterfall-blockframes-demo-1"
         ]
       }
     }
-  }
+  },
+  "etags": {}
 }

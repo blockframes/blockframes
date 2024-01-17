@@ -24,6 +24,11 @@ export const algolia = {
   adminKey: functions.config().algolia?.api_key,
 };
 
+type AlgoliaIndexGroup = keyof Omit<typeof algoliaClient, 'appId'>;
+export const indexExists = (indexGroup: AlgoliaIndexGroup, app: App) => {
+  return !!algolia[indexGroup][app];
+}
+
 export const indexBuilder = (indexName: string, adminKey?: string) => {
   const client = algoliasearch(algolia.appId, adminKey || algolia.adminKey);
   return client.initIndex(indexName);
@@ -192,12 +197,14 @@ export function storeSearchableMovie(
 
     const movieAppAccess = app ? getMovieAppAccess(movie).filter(a => a === app) : getMovieAppAccess(movie);
 
-    const promises = movieAppAccess.map((appName) =>
-      indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject({
-        ...movieRecord,
-        storeStatus: movie.app[appName]?.status || '',
-      })
-    );
+    const promises = movieAppAccess
+      .filter(appName => indexExists('indexNameMovies', appName))
+      .map(appName =>
+        indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject({
+          ...movieRecord,
+          storeStatus: movie.app[appName]?.status || '',
+        })
+      );
 
     return Promise.all(promises);
   } catch (error) {

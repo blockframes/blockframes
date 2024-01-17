@@ -1,0 +1,142 @@
+<ng-container *ngIf="(isRefreshing$ | async) else showStatement">
+  <article class="loader">
+    <logo-spinner></logo-spinner>
+  </article>
+</ng-container>
+<ng-template #showStatement>
+  <ng-container *ngIf="statement">
+    <waterfall-statement-header *ngIf="sources" [statement]="statement" [sources]="sources" (versionChanged)="versionChanged()"></waterfall-statement-header>
+
+    <ul *ngIf="waterfall$ | async as waterfall">
+      <li *ngIf="statement.type !== 'directSales'"><strong>Receiver :</strong> {{ statement.receiverId | rightholderName: waterfall }}</li>
+      <li *ngIf="statement.contractId"><strong>Contract :</strong> {{ statement.contractId }}</li>
+      <li><strong>Status: </strong> {{ statement.status | toLabel: 'statementStatus' }}</li>
+      <li><strong>Turnover :</strong> <price-per-currency [price]="getRightholderActual('turnover')"></price-per-currency></li>
+      <li><strong>Revenue :</strong> <price-per-currency [price]="getRightholderActual('revenu')"></price-per-currency></li>
+    </ul>
+  
+    <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment" label="Total Participation"></waterfall-statement-participation>
+
+    <h3>Incomes</h3>
+    <bf-table [source]="incomes" useFilter pagination="50">
+      <ng-template colRef="id" label="Id" let-id sort>
+        {{ id }}
+      </ng-template>
+      <ng-template colRef="" label="Source" let-item sort>
+        {{ getAssociatedSource(item) }}
+      </ng-template>
+      <ng-template colRef="status" label="Status" let-status sort>
+        {{ status | toLabel: 'paymentStatus' }}
+      </ng-template>
+      <ng-template colRef="" label="Price" let-item sort>
+        <ng-container *ngIf="toPricePerCurrency(item) as amount">
+          <price-per-currency [price]="amount"></price-per-currency>
+        </ng-container>
+      </ng-template>
+    </bf-table>
+
+    <ng-container *ngIf="expenses.length">
+      <h3>Expenses</h3>
+      <bf-table [source]="expenses" useFilter pagination="50">
+        <ng-template colRef="id" label="Id" let-id sort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="nature" label="Nature" let-nature sort>
+          {{ nature }}
+        </ng-template>
+        <ng-template colRef="" label="Type" let-item sort>
+          {{ item.typeId | expenseType : item.contractId : (waterfall$ | async) }}
+        </ng-template>
+        <ng-template colRef="capped" label="Capped" let-capped sort>
+          <mat-slide-toggle [checked]="capped" disabled color="primary"></mat-slide-toggle>
+        </ng-template>
+        <ng-template colRef="status" label="Status" let-status sort>
+          {{ status | toLabel: 'paymentStatus' }}
+        </ng-template>
+        <ng-template colRef="" label="Price" let-item sort>
+          <ng-container *ngIf="toPricePerCurrency(item) as amount">
+            <price-per-currency [price]="amount"></price-per-currency>
+          </ng-container>
+        </ng-template>
+      </bf-table>
+    </ng-container>
+  
+    <h3>Rights</h3>
+    <bf-table [source]="rights | filterRights: statement" clickable useFilter pagination="50" (rowClick)="showRightDetails($event)">
+      <ng-template colRef="id" label="Id" let-id sort>
+        {{ id }}
+        <button mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
+          <mat-icon svgIcon="file_copy"></mat-icon>
+        </button>
+      </ng-template>
+      <ng-template colRef="name" label="Name" let-name sort>
+        {{ name }}
+      </ng-template>
+      <ng-template colRef="type" label="Type" let-type sort>
+        {{ type | toLabel: 'rightTypes' }}
+      </ng-template>
+      <ng-template colRef="percent" label="%" let-percent>
+        {{ percent ? percent  : '--' }}
+      </ng-template>
+      <ng-template colRef="id" label="Source(s)" let-id>
+        {{ getAssociatedSources(id) | maxLength:50 }}
+      </ng-template>
+      <ng-template colRef="id" label="Declared" let-id>
+        <strong>
+          <price-per-currency [price]="getRightPayment(id)"></price-per-currency>
+        </strong>
+      </ng-template>
+      <ng-template colRef="id" label="Calculated" let-id>
+        <price-per-currency [price]="getCalculatedAmount(id)"></price-per-currency>
+      </ng-template>
+      <ng-template colRef="id" label="Cumulated" let-id>
+        <price-per-currency [price]="getCumulatedAmount(id)"></price-per-currency>
+      </ng-template>
+      <ng-template colRef="id" label="Overall Cumulated" let-id>
+        <price-per-currency [price]="getCumulatedAmount(id, true)"></price-per-currency>
+      </ng-template>
+    </bf-table>
+  
+    <article *ngIf="rightDetails.length" class="right-details">
+      <h3>Details</h3>
+      <ng-container *ngFor="let details of rightDetails">
+        <bf-table [source]="details" pagination="50">
+          <ng-template colRef="" label="#" let-index="index">
+            {{ index + 1 }}
+          </ng-template>
+          <ng-template colRef="from" label="From" let-from>
+            {{ from }}
+          </ng-template>
+          <ng-template colRef="to" label="To" let-to>
+            {{ to }}
+          </ng-template>
+          <ng-template colRef="amount" label="Amount" let-amount>
+            <price-per-currency [price]="amount | formatPair"></price-per-currency>
+          </ng-template>
+          <ng-template colRef="percent" label="%" let-percent>
+            {{ percent }}
+          </ng-template>
+          <ng-template colRef="taken" label="Taken" let-taken>
+            <strong>
+              <price-per-currency [price]="taken | formatPair"></price-per-currency>
+            </strong>
+          </ng-template>
+        </bf-table>
+      </ng-container>
+    </article>
+
+    <article class="payment-date" *ngIf="statement.status === 'draft'">
+      <strong>Reported on :</strong>
+      <mat-form-field appearance="fill">
+        <input matInput [formControl]="reportDateControl" [matDatepicker]="datePickerReport" placeholder="MM/DD/YYYY">
+        <mat-datepicker-toggle matSuffix [for]="datePickerReport">
+          <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
+        </mat-datepicker-toggle>
+        <mat-datepicker #datePickerReport></mat-datepicker>
+      </mat-form-field>
+      <button mat-button color="primary" [disabled]="!reportDateControl.value" (click)="reportStatement(reportDateControl.value)">
+        Report statement
+      </button>
+    </article>
+  </ng-container>
+</ng-template>

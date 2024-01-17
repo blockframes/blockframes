@@ -1,0 +1,224 @@
+
+<section class="surface" [ngStyle]="{ width: showEdit ? '50%' : '100%' }" (dblclick)="select('')">
+  <header>
+    <div>
+      <h2>
+        <span>Waterfall Scheme</span>
+        <mat-icon 
+          *ngIf="isDefaultVersion && waterfall.versions.length > 1 && editMode"
+          color="warn"
+          svgIcon="warning"
+          matTooltip="You are editing the default version of this waterfall. Except already overwritten receipt share percentage and conditions, changes performed on this version will be applied to all not standalone versions."
+        ></mat-icon>
+      </h2>
+      <button mat-icon-button [matTooltip]="(showEdit ? 'Hide' : 'Show') + ' Edit Panel'" (click)="toggleEdit()">
+        <mat-icon [svgIcon]="showEdit ? 'chevron_right' : 'chevron_left'"></mat-icon>
+      </button>
+    </div>
+    <p>Please provide the condition details to establish the accurate waterfall</p>
+  </header>
+
+  <bf-graph-container>
+
+    <waterfall-graph-node
+      *ngFor="let node of (nodes$ | async)"
+      node
+      [node]="node"
+      [editMode]="editMode"
+      (addChild)="addChild($event)"
+      (handleSelect)="select($event)"
+      (addSibling)="addSibling($event)"
+      [selected]="(selected$ | async)"
+      [ngStyle]="{ left: node.x + 'px', top: node.y + 'px' }"
+    ></waterfall-graph-node>
+
+    <svg:path *ngFor="let arrow of (arrows$ | async)" edge [attr.d]="arrow.path" stroke-width="2" stroke="#9392A7" fill="none"></svg:path>
+    <waterfall-graph-label *ngFor="let arrow of (arrows$ | async)" node [ngStyle]="{ left: arrow.labelPosition.x + 'px', top: arrow.labelPosition.y + 'px' }" [arrow]="arrow"></waterfall-graph-label>
+
+  </bf-graph-container>
+</section>
+
+<bf-card-modal [ngStyle]="{ display: editMode && showEdit ? 'block' : 'none' }">
+  <ng-container *ngIf="selected$ | async as selected; else noSelection">
+    <ng-container *ngIf="isSourceSelected; else notSource">
+      <header>
+        <h2>Receipt Source</h2>
+        <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'">
+          <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="Save changes" (click)="updateSource()">
+          <mat-icon svgIcon="save"></mat-icon>
+        </button>
+        <button [disabled]="!canUpdateGraph" mat-icon-button matTooltip="Delete Source" (click)="delete()">
+          <mat-icon svgIcon="delete"></mat-icon>
+        </button>
+      </header>
+      <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
+        <group-multiselect
+          scope="medias"
+          label="Choose Media"
+          displayAll="All Medias"
+          filterPlaceholder="Specify territories to filter"
+          [control]="sourceForm.get('medias')"
+        ></group-multiselect>
+        <group-multiselect
+          scope="territories"
+          label="Choose Territories"
+          displayAll="World"
+          filterPlaceholder="Specify territories to filter"
+          [control]="sourceForm.get('territories')"
+        ></group-multiselect>
+        <mat-form-field appearance="outline">
+          <mat-label>Name</mat-label>
+          <input matInput type="text" placeholder="Receipt Share Name" [formControl]="sourceForm.get('name')" />
+        </mat-form-field>
+      </section>
+    </ng-container>
+    <ng-template #notSource>
+      <header>
+        <h2>Receipt Share</h2>
+        <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'">
+          <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="Save changes" (click)="updateRight()">
+          <mat-icon svgIcon="save"></mat-icon>
+        </button>
+        <button [disabled]="!canUpdateGraph" mat-icon-button matTooltip="Delete Right" (click)="delete()">
+          <mat-icon svgIcon="delete"></mat-icon>
+        </button>
+      </header>
+      <mat-tab-group>
+        <mat-tab label="Receipts Shares">
+          <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
+            <p>Fill the following fields to define the Receipt Share.</p>
+    
+            <mat-form-field appearance="outline">
+              <mat-label>Type</mat-label>
+              <mat-select [formControl]="rightForm.get('type')">
+                <mat-option value="commission">Commission</mat-option>
+                <mat-option value="expense">Expense</mat-option>
+                <mat-option value="mg">MG</mat-option>
+                <mat-option value="unknown">Unknown</mat-option>
+              </mat-select>
+            </mat-form-field>
+    
+            <bf-autocomplete
+              required
+              label="Right Holder Name"
+              [options]="rightholderNames$"
+              placeholder="Choose Company or put your own"
+              [form]="rightForm.get('org')"
+            ></bf-autocomplete>
+
+            <mat-form-field *ngIf="(relevantContracts$ | async).length" appearance="outline">
+              <mat-label>Contract</mat-label>
+              <mat-select [formControl]="rightForm.get('contract')">
+                <mat-option *ngFor="let contract of (relevantContracts$ | async)" [value]="contract.id">{{contract.name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline">
+              <mat-label>Name</mat-label>
+              <input matInput type="text" placeholder="Receipt Share Name" [formControl]="rightForm.get('name')" />
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline">
+              <mat-label>Percentage</mat-label>
+              <mat-icon svgIcon="percent" matPrefix></mat-icon>
+              <input matInput type="number" min="0" max="100" [formControl]="rightForm.get('percent')" />
+            </mat-form-field>
+    
+            <p>Receipt Sources</p>
+            <mat-form-field appearance="outline">
+              <mat-label>Source Name</mat-label>
+              <mat-select multiple [formControl]="rightForm.get('parents')">
+                <mat-option *ngFor="let node of (nodes$ | async)" [value]="node.id">{{node.name}}</mat-option>
+              </mat-select>
+              <mat-hint>You can add as many sources as you want.</mat-hint>
+            </mat-form-field>
+    
+            <div class="info">
+              <mat-icon svgIcon="info"></mat-icon>
+              <p>If you have multiple steps, you can set them up later inside conditions.</p>
+            </div>
+    
+            <div class="add-next">
+              <hr/>
+              <p class="mat-caption">Add Next Receipt Share</p>
+              <button [disabled]="!canUpdateGraph" mat-mini-fab color="primary" (click)="addChild(selected)">
+                <mat-icon svgIcon="add"></mat-icon>
+              </button>
+            </div>
+          </section>
+        </mat-tab>
+        <mat-tab label="Conditions">
+          <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
+            <waterfall-conditions [rightForm]="rightForm" (createStep)="createNewStep()" (deleteStep)="deleteStep($event)"></waterfall-conditions>
+          </section>
+        </mat-tab>
+      </mat-tab-group>
+    </ng-template>
+  </ng-container>
+  <ng-template #noSelection>
+    <ng-container *ngIf="(nodes$ | async).length; else emptyGraph">
+      <header>
+        <h2>Receipt Share List</h2>
+        <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'">
+          <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
+        </button>
+      </header>
+      <p class="description"><strong>Pool</strong> is needed when several Receipts Shares come from different sources, but should be used in the same condition.</p>
+      <mat-tab-group>
+        <mat-tab label="Receipts Shares">
+          <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
+            <waterfall-right-list (deleteRight)="delete($event)" (selectRight)="select($event)"></waterfall-right-list>
+          </section>
+        </mat-tab>
+        <mat-tab label="Pools Only">
+          <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
+            <waterfall-pool-list></waterfall-pool-list>
+          </section>
+        </mat-tab>
+      </mat-tab-group>
+      <section class="add">
+        <button mat-flat-button color="primary" (click)="createNewSource()">
+          <mat-icon svgIcon="add"></mat-icon>
+          <span>Create new Source</span>
+        </button>
+        <button mat-flat-button color="primary" (click)="createNewRight()">
+          <mat-icon svgIcon="add"></mat-icon>
+          <span>Create new Right</span>
+        </button>
+      </section>
+    </ng-container>
+    <ng-template #emptyGraph>
+      <header>
+        <h2>To Begin</h2>
+      </header>
+      <section class="begin">
+        <ol>
+          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+        </ol>
+        <button mat-button>
+          <mat-icon svgIcon="help"></mat-icon>
+          <span>Ask for Help</span>
+        </button>
+        <section class="add">
+          <button mat-flat-button color="primary" (click)="createNewSource()">
+            <mat-icon svgIcon="add"></mat-icon>
+            <span>Create new Source</span>
+          </button>
+          <button mat-flat-button color="primary" (click)="createNewRight()">
+            <mat-icon svgIcon="add"></mat-icon>
+            <span>Create new Right</span>
+          </button>
+        </section>
+      </section>
+    </ng-template>
+  </ng-template>
+</bf-card-modal>

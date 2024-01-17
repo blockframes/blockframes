@@ -1,0 +1,56 @@
+<form [formGroup]="form" (ngSubmit)="save()">
+  <algolia-autocomplete [indexGroup]="indexGroup" keyToDisplay="name" required [control]="orgControl" (selectionChange)="setOrg($event)">
+    <ng-template optionRef let-result>
+      <div flexLayout="row" class="org-logo" fxLayoutGap="16px" fxLayoutAlign="start center">
+        <img [ref]="result.logo | storageFile: 'orgs':'logo':result.id" asset="empty_organization.svg"
+          type="logo" alt="Organization Logo">
+        <span>{{ result.name }}</span>
+      </div>
+    </ng-template>
+  
+    <mat-label>Company Name</mat-label>
+    <mat-hint>
+      Select an existing company from the list.
+    </mat-hint>
+  </algolia-autocomplete>
+
+  <mat-checkbox [formControl]="form.get('isAdmin')">
+    Is waterfall admin ?
+  </mat-checkbox>
+
+  <waterfall-rightholder-select
+    [rightholders]="waterfall.rightholders"
+    [control]="form.get('rightholderIds')"
+    multiple
+    required>
+    <mat-label>Can manage</mat-label>
+  </waterfall-rightholder-select>
+
+  <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
+    <span>Submit</span>
+  </button>
+</form>
+
+<ng-container *ngIf="permissions$ | async as permissions">
+  <bf-table [source]="permissions" clickable (rowClick)="edit($event)" useFilter pagination="50">
+    <ng-template colRef="id" label="Id" let-id sort>
+      {{ id }}
+    </ng-template>
+    <ng-template colRef="id" label="Organization" let-id sort>
+      <ng-container *ngIf="id | getOrg | async as org">
+        <org-chip @fade [org]="org" baseUrl="/c/o/dashboard/crm/organization"></org-chip>
+      </ng-container>
+    </ng-template>
+    <ng-template colRef="rightholderIds"  label="Can manage" let-rightholderIds>
+      {{ rightholderIds | rightholderName: waterfall }}
+    </ng-template>
+    <ng-template colRef="isAdmin" label="Admin" let-isAdmin sort>
+      {{ isAdmin }}
+    </ng-template>
+    <ng-template colRef="id" label="Actions" let-id sticky>
+      <button mat-icon-button (click)="removePermissions(id);$event.stopPropagation()">
+        <mat-icon svgIcon="delete" matTooltip="Remove permissions"></mat-icon>
+      </button>
+    </ng-template>
+  </bf-table>
+</ng-container>

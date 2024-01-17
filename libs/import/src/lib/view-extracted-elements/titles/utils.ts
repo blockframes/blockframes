@@ -2,7 +2,7 @@ import { UserService } from '@blockframes/user/service';
 import {
   MovieImportState,
   getOptionalWarning,
-} from '@blockframes/import/utils';
+} from '../../utils';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import {
   LanguageRecord,

@@ -87,9 +87,17 @@
             <mat-form-field appearance="outline">
               <mat-label>Status</mat-label>
               <mat-select formControlName="status" required>
-                <mat-option *ngFor="let status of storeStatus | keyvalue" [value]="status.key">
-                  {{ status.value }}
-                </mat-option>
+                <ng-container *ngIf="app !== 'waterfall' else onlyAccepted">
+                  <mat-option *ngFor="let status of storeStatus | keyvalue" [value]="status.key">
+                    {{ status.value }}
+                  </mat-option>
+                </ng-container>
+
+                <ng-template #onlyAccepted>
+                  <mat-option *ngIf="app === 'waterfall'" value="accepted">
+                    {{ storeStatus.accepted }}
+                  </mat-option>
+                </ng-template>
               </mat-select>
             </mat-form-field>
 

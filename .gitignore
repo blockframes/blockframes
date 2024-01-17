@@ -72,3 +72,5 @@ report.*.json
 
 # Cypress Env
 **/cypress.env.json
+
+.angular

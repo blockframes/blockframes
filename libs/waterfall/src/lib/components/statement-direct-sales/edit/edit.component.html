@@ -1,0 +1,37 @@
+<ng-container *ngIf="statement$ | async as statement">
+  <waterfall-statement-header *ngIf="sources$ | async as sources" [statement]="statement" [sources]="sources"></waterfall-statement-header>
+  <waterfall-statement-period [statement]="statement" [form]="form"></waterfall-statement-period>
+
+  <mat-tab-group class="bf-tabs">
+    <mat-tab label="Direct Revenues">
+      <ng-template matTabContent>
+        <section class="surface">
+          <h3>Direct Revenues</h3>
+          <p class="mat-body-1">Specify the sources you would like to declare. We will personalize the Statement accordingly.</p>
+          <article>
+            <mat-form-field appearance="outline">
+              <mat-icon svgIcon="play_arrow" matPrefix></mat-icon>
+              <mat-label>Specify sources</mat-label>
+              <mat-select [disabled]="statement.status === 'reported'" [formControl]="sourcesControl" placeholder="Specify sources" multiple>
+                <mat-option *ngFor="let source of waterfallSources" [value]="source.id" [disabled]="source.disabled">{{ source.name }}</mat-option>
+              </mat-select>
+              <mat-hint>You can select as many sources as you need</mat-hint>
+            </mat-form-field>
+            <section>
+              <button [disabled]="statement.status === 'reported'" mat-button (click)="declare()">
+                <mat-icon svgIcon="summarize"></mat-icon>
+                <span>Declare</span>
+              </button>
+            </section>
+          </article>
+        </section>
+        <waterfall-income-form [statement]="statement" [form]="form" [sources]="sources$ | async"></waterfall-income-form>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Direct Expenses" *ngIf="displayExpensesTab(rights$ | async)">
+      <ng-template matTabContent>
+        <waterfall-expense-form [form]="form" [contractId]="statement.contractId"></waterfall-expense-form>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</ng-container>

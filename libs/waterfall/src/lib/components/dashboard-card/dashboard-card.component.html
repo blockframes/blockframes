@@ -1,0 +1,6 @@
+<section [class]="mode" [bgAsset]="mode === 'primary' ? 'bg_highlight.png' : 'bg.png'" *ngIf="price">
+  <article>
+    <mat-icon svgIcon="monetization"></mat-icon><span>{{ title }}</span>
+  </article>
+  <price-per-currency [price]="price"></price-per-currency>
+</section>

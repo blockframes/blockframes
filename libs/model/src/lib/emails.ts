@@ -108,6 +108,7 @@ export interface EmailTemplateRequest {
     movie?: MovieEmailData;
     offer?: OfferEmailData;
     buyer?: UserEmailData;
+    waterfall?: WaterfallEmailData;
     declineReason?: string;
     territories?: string;
     medias?: string;
@@ -141,6 +142,11 @@ interface TermEmailData {
   duration: { from: string, to: string };
   languages: string;
   exclusive: string;
+}
+
+export interface WaterfallEmailData {
+  titleId: string;
+  title: string;
 }
 
 const formatter = new Intl.NumberFormat('en-US');
@@ -233,6 +239,13 @@ export function getTermEmailData(terms: BucketTerm[]): TermEmailData[] {
     languages: toLanguageVersionString(term.languages),
     exclusive: term.exclusive ? 'Exclusive' : 'Non exclusive',
   }));
+}
+
+export function getWaterfallEmailData(movie: Movie): WaterfallEmailData {
+  return {
+    titleId : movie.id,
+    title: movie.title.international
+  };
 }
 
 function toTimezone(date: Date, timeZone: string) {

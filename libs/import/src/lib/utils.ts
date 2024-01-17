@@ -1,12 +1,31 @@
 import { MovieService } from '@blockframes/movie/service';
-import { Movie, Organization, User, Mandate, Sale, Term } from '@blockframes/model';
+import {
+  Movie,
+  Organization,
+  User,
+  Mandate,
+  Sale,
+  Term,
+  Income,
+  Expense,
+  WaterfallDocument,
+  WaterfallRightholder,
+  WaterfallSource,
+  Right,
+  createWaterfallRightholder,
+  Statement,
+  ExpenseType,
+} from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
-import { SheetTab, ValueWithError } from '@blockframes/utils/spreadsheet';
+import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { ContractService } from '@blockframes/contract/contract/service';
+import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import { UserService } from '@blockframes/user/service';
 import { where } from 'firebase/firestore';
+import { TermService } from '@blockframes/contract/term/service';
+import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
-export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts'] as const;
+export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts', 'documents', 'sources', 'rights', 'statements'] as const;
 
 export type SpreadsheetImportType = typeof spreadsheetImportTypes[number];
 
@@ -39,10 +58,34 @@ export interface ContractsImportState extends ImportState {
   terms: Term[];
 }
 
+export interface DocumentsImportState extends ImportState {
+  document: WaterfallDocument;
+  terms: Term[];
+  rightholders: Record<string, WaterfallRightholder[]>;
+}
+
 export interface OrganizationsImportState extends ImportState {
   org: Organization;
   superAdmin: User;
   newOrg: boolean;
+}
+
+export interface SourcesImportState extends ImportState {
+  source: WaterfallSource;
+  waterfallId: string;
+}
+
+export interface RightsImportState extends ImportState {
+  waterfallId: string;
+  right: Right;
+  rightholders: Record<string, WaterfallRightholder[]>;
+}
+
+export interface StatementsImportState extends ImportState {
+  statement: Statement;
+  incomes: Income[];
+  expenses: Expense[];
+  expenseTypes: Record<string, ExpenseType[]>;
 }
 
 /**
@@ -54,22 +97,30 @@ export const sheetHeaderLine: Record<SpreadsheetImportType, number> = {
   titles: 14,
   contracts: 10,
   organizations: 10,
+  documents: 10,
+  sources: 10,
+  rights: 2,
+  statements: 10,
 };
 
 export const sheetRanges: Record<SpreadsheetImportType, string> = {
   titles: `A${sheetHeaderLine.titles}:BZ1000`,
   contracts: `A${sheetHeaderLine.contracts}:Q300`,
+  documents: `A${sheetHeaderLine.documents}:U800`,
   organizations: `A${sheetHeaderLine.organizations}:Z100`,
+  sources: `A${sheetHeaderLine.sources}:G100`,
+  rights: `A${sheetHeaderLine.rights}:AZ100`,
+  statements: `A${sheetHeaderLine.statements}:V400`,
 };
 
 export async function getOrgId(
   name: string,
   orgService: OrganizationService,
   cache: Record<string, string>,
-  centralOrg: Organization
+  centralOrg?: Organization
 ) {
   if (!name) return '';
-  if (name === centralOrg.name || name === centralOrg.id) return centralOrg.id;
+  if (centralOrg && (name === centralOrg.name || name === centralOrg.id)) return centralOrg.id;
 
   if (cache[name]) return cache[name];
 
@@ -77,6 +128,26 @@ export async function getOrgId(
   const result = orgs.length === 1 ? orgs[0].id : '';
   cache[name] = result;
   return result;
+}
+
+export async function getRightholderId(
+  valueOrId: string,
+  waterfallId: string,
+  waterfallService: WaterfallService,
+  cache: Record<string, WaterfallRightholder[]>
+) {
+
+  const value = valueOrId.trim().toLowerCase();
+  if (!cache[waterfallId]) {
+    const { rightholders } = await waterfallService.getValue(waterfallId);
+    cache[waterfallId] = rightholders.map(r => ({ ...r, name: r.name.trim().toLowerCase() }));
+  }
+
+  const rightholder = cache[waterfallId].find(r => r.name === value || r.id === valueOrId);
+  if (rightholder) return rightholder.id;
+
+  cache[waterfallId].push(createWaterfallRightholder({ id: waterfallService.createId(), name: value, roles: [] }));
+  return cache[waterfallId].find(r => r.name === value || r.id === valueOrId).id;
 }
 
 export async function getTitleId(
@@ -127,6 +198,43 @@ export async function getContract(
     const contract = await contractService.getValue(id);
     cache[id] = contract;
     return contract;
+  } catch (err) {/**do nothing*/ }
+
+  return;
+}
+
+export async function getWaterfallDocument(
+  id: string,
+  waterfallDocumentsService: WaterfallDocumentsService,
+  cache: Record<string, WaterfallDocument>,
+  waterfallId: string
+) {
+  if (!id) return;
+
+  if (cache[id]) return cache[id];
+
+  try {
+    const contract = await waterfallDocumentsService.getValue(id, { waterfallId });
+    cache[id] = contract;
+    return contract;
+  } catch (err) {/**do nothing*/ }
+
+  return;
+}
+
+export async function getTerm(
+  id: string,
+  termService: TermService,
+  cache: Record<string, Term>
+) {
+  if (!id) return;
+
+  if (cache[id]) return cache[id];
+
+  try {
+    const term = await termService.getValue(id);
+    cache[id] = term;
+    return term;
   } catch (err) {/**do nothing*/ }
 
   return;
@@ -190,7 +298,7 @@ export async function getUser(
   return user;
 }
 
-export function getDate(value: string, name: string): Date | ValueWithError<Date> {
+export function getDate(value: string, name: string = 'Date') {
   let date = new Date(value);
 
   // some time excel might store the date as a the number of DAYS since 1900/1/1
@@ -214,7 +322,7 @@ export function getDate(value: string, name: string): Date | ValueWithError<Date
 
   // if date seems strange we throw an Error
   const year = date.getFullYear();
-  if (year < 1895 || year > 2200) throw outOfRangeDate(value)
+  if (year < 1895 || year > 2200) throw outOfRangeDate(value);
   // important dates be set to midnight for avails research
   date.setHours(0, 0, 0, 0);
   return date;
@@ -229,10 +337,10 @@ function outOfRangeDate(name: string): ImportLog<string> {
   return new ImportError(name, option);
 }
 
-export function mandatoryError<T = unknown>(value: T, name: string): ImportLog<T> {
+export function mandatoryError<T = unknown>(value: T, name: string, reason?: string): ImportLog<T> {
   const option: SpreadsheetImportError = {
     name: `Missing ${name}`,
-    reason: 'Mandatory field is missing.',
+    reason: reason || 'Mandatory field is missing.',
     message: 'Please fill in the corresponding sheet field.',
   };
   return new ImportError(value, option);
@@ -355,6 +463,25 @@ export function wrongValueWarning<T = unknown>(value: T, name: string, wrongData
     message: `${wrongData.slice(0, 3).join(', ')}...`
   };
   return new ImportWarning(value, option);
+}
+
+export function valueToId(value: string) {
+  return value
+    .trim()
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove accents
+    .replace(/[\])}[{(]/g, '') // remove brackets
+    .replace(/[-.,/\\()]/g, ' ') // replace special characters by space
+    .replace(/&/g, 'AND')
+    .replace(/<=/g, 'lte')
+    .replace(/>=/g, 'gte')
+    .replace(/!=/g, 'neq')
+    .replace(/</g, 'lt')
+    .replace(/>/g, 'gt')
+    .replace(/=/g, 'eq')
+    .split(' ')
+    .filter(v => !!v)
+    .join('_');
 }
 
 export abstract class ImportLog<T> extends Error {

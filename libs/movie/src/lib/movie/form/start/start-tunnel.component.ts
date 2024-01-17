@@ -19,6 +19,7 @@ const predefinedTitleConfig: Record<App, Partial<Movie>> = {
   festival: {},
   financiers: {},
   crm: {},
+  waterfall: {}
 };
 
 @Component({

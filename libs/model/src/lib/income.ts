@@ -1,5 +1,5 @@
 import { DocumentMeta } from './meta';
-import type { MovieCurrency } from './static/types';
+import type { Media, MovieCurrency, PaymentStatus, Territory } from './static/types';
 
 export interface Income {
   _meta?: DocumentMeta;
@@ -9,23 +9,15 @@ export interface Income {
   /** The contract that created this income */
   contractId: string;
   price: number;
+  version: Record<string, { hidden?: true, price: number }>;
   currency: MovieCurrency;
   offerId?: string;
   titleId?: string;
-  status: 'pending' | 'processed';
+  status: PaymentStatus;
   date: Date;
-}
-
-// TODO #9422
-export interface TotalIncome {
-  EUR: number;
-  USD: number;
-}
-
-export function getTotalIncome(incomes: Income[]) {
-  const initialTotal: TotalIncome = { EUR: 0, USD: 0 };
-  incomes.forEach(i => initialTotal[i.currency] += i.price);
-  return initialTotal;
+  medias: Media[]; // For waterfall purposes, optional
+  territories: Territory[]; // For waterfall purposes, optional
+  sourceId: string; // Should be defined for waterfall purposes
 }
 
 export function createIncome(params: Partial<Income> = {}): Income {
@@ -34,9 +26,13 @@ export function createIncome(params: Partial<Income> = {}): Income {
     termId: '',
     contractId: '',
     price: 0,
+    version: {},
     currency: 'EUR',
     status: 'pending',
     date: new Date(),
+    medias: [],
+    territories: [],
+    sourceId: '',
     ...params,
   };
 }

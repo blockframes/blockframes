@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
 // Material
@@ -16,10 +17,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Libraries
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
+import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 
 // Pipes
 import { ErrorCountPipeModule } from '../pipes/error-count.pipe';
@@ -29,17 +32,22 @@ import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 // Components
 import { TableExtractedContractsComponent } from './contracts/contracts.component';
 import { TableExtractedMoviesComponent } from './movies/movies.component';
-import { ViewImportErrorsComponent } from './view-import-errors/view-import-errors.component';
-import { RouterModule } from '@angular/router';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TableExtractedOrganizationsComponent } from './organizations/organizations.component';
-import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
+import { TableExtractedDocumentsComponent } from './documents/documents.component';
+import { TableExtractedSourcesComponent } from './sources/sources.component';
+import { TableExtractedRightsComponent } from './rights/rights.component';
+import { TableExtractedStatementsComponent } from './statements/statements.component';
+import { ViewImportErrorsComponent } from './view-import-errors/view-import-errors.component';
 
 @NgModule({
   declarations: [
     TableExtractedMoviesComponent,
     TableExtractedContractsComponent,
     TableExtractedOrganizationsComponent,
+    TableExtractedDocumentsComponent,
+    TableExtractedSourcesComponent,
+    TableExtractedRightsComponent,
+    TableExtractedStatementsComponent,
     ViewImportErrorsComponent,
   ],
   imports: [
@@ -76,6 +84,10 @@ import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.mod
     TableExtractedMoviesComponent,
     TableExtractedContractsComponent,
     TableExtractedOrganizationsComponent,
+    TableExtractedDocumentsComponent,
+    TableExtractedSourcesComponent,
+    TableExtractedRightsComponent,
+    TableExtractedStatementsComponent
   ],
 })
-export class TableExtractedElementsModule {}
+export class TableExtractedElementsModule { }

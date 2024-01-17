@@ -46,6 +46,7 @@
       "@blockframes/ui/*": ["libs/ui/src/lib/*"],
       "@blockframes/user/*": ["libs/user/src/lib/user/*"],
       "@blockframes/utils/*": ["libs/utils/src/lib/*"],
+      "@blockframes/waterfall/*": ["libs/waterfall/src/lib/*"],
       "@env": ["env/env.ts"]
     }
   },

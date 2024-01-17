@@ -1,0 +1,16 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  margin: 40px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  static-select, mat-form-field {
+    width: 30%
+  }
+  margin-bottom: 40px;
+}
+
