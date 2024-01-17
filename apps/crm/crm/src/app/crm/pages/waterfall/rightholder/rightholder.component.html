@@ -1,6 +1,8 @@
 <ng-container *ngIf="rightholder$ | async as rightholder">
-  <h3>{{ rightholder.name }}</h3>
-
+  <div>
+    <h3>{{ rightholder.name }}</h3>
+    <waterfall-version-selector></waterfall-version-selector>
+  </div>
   <form [formGroup]="rightholderForm">
     <static-select [control]="rightholderForm.get('roles')" required multiple scope="rightholderRoles">
       <mat-label>Waterfall Role</mat-label>
