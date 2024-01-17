@@ -1,8 +1,8 @@
 import { get } from '@blockframes/testing/cypress/browser';
 
 describe('Landing', () => {
-  it('landing page is accessible', () => {
+  it('landing page redirect to auth', () => {
     cy.visit('');
-    get('landing-waterfall').should('exist');
+    get('auth-login-view').should('exist');
   });
 });
