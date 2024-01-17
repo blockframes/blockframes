@@ -24,7 +24,7 @@
 <ng-container *ngIf="node.type === 'vertical'">
   <waterfall-graph-vertical
     [vertical]="node"
-    [selected]="selected === node.id"
+    [selected]="verticalSelection()"
     [editMode]="editMode"
     (handleSelect)="handleSelect.emit($event)"
     (addSibling)="addSibling.emit($event)"

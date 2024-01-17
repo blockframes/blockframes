@@ -16,7 +16,7 @@ import { VerticalNode } from '../layout';
 export class WaterfallGraphVerticalComponent {
 
   @Input() vertical: VerticalNode;
-  @Input() selected: boolean;
+  @Input() selected: '' | '*' | string;
   @Input() editMode = false;
 
   @Output() addChild = new EventEmitter<string>();
@@ -42,5 +42,14 @@ export class WaterfallGraphVerticalComponent {
     this.addChild.emit(this.vertical.id);
     event.stopPropagation();
     event.preventDefault();
+  }
+
+  select(stepId: string) {
+    if (this.selected === '') this.handleSelect.emit(this.vertical.id);
+    else if (this.selected === '*') this.handleSelect.emit(stepId);
+    else {
+      if (this.selected === stepId) this.handleSelect.emit(this.vertical.id);
+      else this.handleSelect.emit(stepId);
+    }
   }
 }
