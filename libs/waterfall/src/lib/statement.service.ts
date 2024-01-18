@@ -1,17 +1,8 @@
 import { Injectable } from '@angular/core';
 import { DocumentSnapshot } from '@firebase/firestore';
-import { Statement, Version, Waterfall, createStatement } from '@blockframes/model';
+import { Statement, convertStatementsTo, Waterfall, createStatement } from '@blockframes/model';
 import { BlockframesSubCollection } from '@blockframes/utils/abstract-service';
 import { map } from 'rxjs';
-
-function convertStatementsTo(_statements: Statement[], version: Version) {
-  if (!version?.id) return _statements;
-  if (version.standalone) return _statements.filter(s => s.versionId === version.id);
-  const statements = _statements.filter(s => !s.standalone);
-  const duplicatedStatements = statements.filter(s => !!s.duplicatedFrom);
-  const rootStatements = statements.filter(s => !s.duplicatedFrom);
-  return rootStatements.map(s => duplicatedStatements.find(d => d.duplicatedFrom === s.id && d.versionId === version.id) || s);
-}
 
 @Injectable({ providedIn: 'root' })
 export class StatementService extends BlockframesSubCollection<Statement> {

@@ -21,3 +21,16 @@ export interface PdfRequest {
   method: string,
   body: PdfParams
 };
+
+export interface StatementPdfParams {
+  waterfallId: string;
+  statementId: string;
+  number: number;
+  versionId: string;
+  fileName?: string;
+}
+
+export interface StatementPdfRequest {
+  method: string,
+  body: StatementPdfParams
+};
