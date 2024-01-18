@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { PricePerCurrency, Right, WaterfallRightholder, mainCurrency } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
-import { Observable, combineLatest, map, pluck, tap } from 'rxjs';
+import { Observable, combineLatest, map, pluck, startWith, tap } from 'rxjs';
 import { WaterfallRightholderForm } from '@blockframes/waterfall/form/right-holder.form';
 
 @Component({
@@ -20,10 +20,10 @@ export class RightholderComponent {
     tap(rightholder => this.rightholderForm.setValue(rightholder))
   );
 
-  public rights$: Observable<(Right & { revenue: PricePerCurrency })[]> = combineLatest([this.rightholder$, this.shell.state$, this.shell.rights$]).pipe(
+  public rights$: Observable<(Right & { revenue: PricePerCurrency })[]> = combineLatest([this.rightholder$, this.shell.state$.pipe(startWith(undefined)), this.shell.rights$]).pipe(
     map(([rightholder, state, rights]) => rights
       .filter(r => r.rightholderId === rightholder.id)
-      .map(r => ({ ...r, revenue: { [mainCurrency]: state.waterfall.state.rights[r.id]?.revenu.actual || 0 } }))
+      .map(r => ({ ...r, revenue: { [mainCurrency]: state?.waterfall.state.rights[r.id]?.revenu.actual || 0 } }))
     )
   );
 

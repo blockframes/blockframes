@@ -9,7 +9,7 @@ export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
   catalog: { email: 'team@archipelcontent.com', name: 'Archipel Content' },
   festival: { email: 'team@archipelmarket.com', name: 'Archipel Market' },
   financiers: { email: 'team@mediafinanciers.com', name: 'Media Financiers' },
-  waterfall: { email: 'team@cascade8.com', name: 'Blockframes' }, // TODO #9257 change this
+  waterfall: { email: 'team@cascade8.com', name: 'Blockframes' },
   crm: { email: 'team@cascade8.com', name: 'Cascade 8' },
   default: { email: 'team@cascade8.com', name: 'Cascade 8' },
 } as const;

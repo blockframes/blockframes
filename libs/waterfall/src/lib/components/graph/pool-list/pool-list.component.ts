@@ -4,9 +4,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { Right } from '@blockframes/model';
-import { RightService } from '@blockframes/waterfall/right.service';
+import { RightService } from '../../../right.service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
+import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 
 import { WaterfallPoolModalComponent } from '../pool-modal/pool-modal.component';
 
