@@ -8,7 +8,9 @@ import {
   PdfParams,
   PdfParamsFilters,
   pdfExportLimit,
-  toGroupLabel
+  toGroupLabel,
+  StatementPdfParams,
+  Statement
 } from '@blockframes/model';
 import { firebaseRegion, firebase } from '@env';
 import { EmulatorsConfig, EMULATORS_CONFIG } from './emulator-front-setup';
@@ -24,6 +26,13 @@ export interface DownloadSettings {
   titleIds: string[],
   orgId?: string,
   filters?: MovieAvailsSearch
+}
+
+export interface DownloadStatementSettings {
+  number: number;
+  statement: Statement;
+  waterfallId: string;
+  versionId: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -149,5 +158,41 @@ export class PdfService {
     }
 
     return filters;
+  }
+
+  async downloadStatement(settings: DownloadStatementSettings) {
+
+    const fileName = `${toLabel(settings.statement.type, 'statementType')} Statement ${settings.number}`;
+    const data: StatementPdfParams = {
+      statementId: settings.statement.id,
+      waterfallId: settings.waterfallId,
+      number: settings.number,
+      versionId: settings.versionId
+    };
+
+    const params = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }
+
+    const url = this.emulatorsConfig.functions
+      ? `http://localhost:5001/${projectId}/${firebaseRegion}/statementToPdf`
+      : `https://${firebaseRegion}-${projectId}.cloudfunctions.net/statementToPdf`
+
+    const status: boolean = await new Promise(resolve => {
+      fetch(url, params,).then(res => res.blob())
+        .then(blob => {
+          const url = URL.createObjectURL(blob);
+          const element = document.createElement('a');
+          element.setAttribute('href', url);
+          element.setAttribute('download', sanitizeFileName(`${fileName}.pdf`));
+          const event = new MouseEvent('click');
+          element.dispatchEvent(event);
+          resolve(true);
+        }).catch(_ => resolve(false));
+    });
+
+    return status;
   }
 }

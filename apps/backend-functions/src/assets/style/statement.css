@@ -1,0 +1,62 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Montserrat, Helvetica Neue, sans-serif;
+}
+
+.doc-title {
+  height: 300px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.doc-title .separator {
+  border-bottom: 4px solid #3C64F7;
+  margin: 48px auto;
+  width: 150px;
+  text-align: center;
+}
+
+.doc-title p {
+  font-size: 18px;
+  text-align: center;
+}
+
+h1 {
+  text-align: center;
+}
+
+.left-corner {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 310px;
+}
+
+.right-corner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 310px;
+}
+
+.hp-logo {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin-right: 64px;
+  width: 180px;
+  margin-bottom: 64px;
+}
+
+@media print {
+  .page {
+    page-break-after: always;
+  }
+}

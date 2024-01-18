@@ -95,9 +95,13 @@ export class StatementTableComponent {
     });
   }
 
-  async download(statement: Statement) {
-    const settings: DownloadStatementSettings = { statementId: statement.id };
-
+  async download(statement: Statement & { number: number }) {
+    const settings: DownloadStatementSettings = {
+      statement: statement,
+      waterfallId: this.waterfall.id,
+      number: statement.number,
+      versionId: this.shell.versionId$.value
+    };
     const snackbarRef = this.snackBar.open('Please wait, your statement is being generated...');
 
     this.cdr.markForCheck();

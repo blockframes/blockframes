@@ -1,5 +1,6 @@
 import { DocumentMeta } from './meta';
 import type { Media, MovieCurrency, PaymentStatus, Territory } from './static/types';
+import { WaterfallSource } from './waterfall';
 
 export interface Income {
   _meta?: DocumentMeta;
@@ -35,4 +36,12 @@ export function createIncome(params: Partial<Income> = {}): Income {
     sourceId: '',
     ...params,
   };
+}
+
+export function convertIncomesTo(incomes: Income[], versionId: string, sources: WaterfallSource[]) {
+  if (!versionId) return incomes;
+  return incomes.map(i => {
+    const price = (i.version && i.version[versionId] !== undefined) ? i.version[versionId].price : i.price;
+    return { ...i, price };
+  }).filter(i => sources.find(s => s.id === i.sourceId));
 }

@@ -3,7 +3,7 @@ import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStat
 import { Duration, createDuration } from '../terms';
 import { sortByDate, sum } from '../utils';
 import { TitleState, TransferState } from './state';
-import { Waterfall, WaterfallContract, WaterfallSource, getIncomesSources } from './waterfall';
+import { Version, Waterfall, WaterfallContract, WaterfallSource, getIncomesSources } from './waterfall';
 import { Right, RightOverride, createRightOverride, getRightCondition } from './right';
 import { getSources, isVerticalGroupChild, nodeExists, pathExists } from './node';
 import { Income, createIncome } from '../income';
@@ -633,4 +633,13 @@ export function getRightExpenseTypes(right: Right, statement: Statement, waterfa
   }
 
   return Array.from(expenseTargets);
+}
+
+export function convertStatementsTo(_statements: Statement[], version: Version) {
+  if (!version?.id) return _statements;
+  if (version.standalone) return _statements.filter(s => s.versionId === version.id);
+  const statements = _statements.filter(s => !s.standalone);
+  const duplicatedStatements = statements.filter(s => !!s.duplicatedFrom);
+  const rootStatements = statements.filter(s => !s.duplicatedFrom);
+  return rootStatements.map(s => duplicatedStatements.find(d => d.duplicatedFrom === s.id && d.versionId === version.id) || s);
 }
