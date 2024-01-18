@@ -43,9 +43,14 @@ const routes: Routes = [{
       data: { animation: 3 }
     },
     {
+      path: 'right-holders',
+      loadChildren: () => import('../right-holders/right-holders.module').then(m => m.RightHoldersModule),
+      data: { animation: 4 }
+    },
+    {
       path: 'sales',
       loadChildren: () => import('../sales/sales.module').then(m => m.SalesModule),
-      data: { animation: 4 }
+      data: { animation: 5 }
     },
   ]
 }];

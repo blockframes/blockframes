@@ -67,8 +67,8 @@ const routes: Routes = [{
               loadChildren: () => import('@blockframes/waterfall/dashboard/edit/edit.module').then(m => m.WaterfallEditFormModule),
             },
             {
-              path: 'right-holders',
-              loadChildren: () => import('./title/right-holders/right-holders.module').then(m => m.RightHoldersModule),
+              path: 'right-holders-management',
+              loadChildren: () => import('./title/right-holders-management/right-holders-management.module').then(m => m.RightHoldersManagementModule),
             },
             {
               path: 'statement',
