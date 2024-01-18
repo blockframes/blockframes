@@ -39,7 +39,7 @@ import { onContractDelete, onContractUpdate } from './contracts';
 import { onTermDelete } from './terms';
 import { downloadVideo } from './rescue';
 import { createPdf as _createPdf } from './createPdf';
-import { statementToPdf as _statementToPdf} from './statementToPdf';
+import { statementToPdf as _statementToPdf, statementToEmail as _statementToEmail } from './statementToPdf';
 import { scheduledAirtable, synchronizeAirtable } from './airtable';
 import { onNegotiationCreated, onNegotiationUpdate } from './negotiation';
 import {
@@ -337,6 +337,11 @@ export const onWaterfallRightDeleteEvent = onDocumentDelete('waterfall/{waterfal
  * Triggered to generate a PDF statement
  */
 export const statementToPdf = functions(heavyConfig).https.onRequest(_statementToPdf);
+
+/**
+ * Triggered to generate a PDF statement and send it by email
+ */
+export const statementToEmail = functions().https.onCall(_statementToEmail);
 
 /**
  * When user wants to remove a file without removing waterfallDocument

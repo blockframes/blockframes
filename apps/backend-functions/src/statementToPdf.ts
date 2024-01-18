@@ -2,13 +2,18 @@ import {
   Expense,
   Income,
   Movie,
+  PublicUser,
   Statement,
+  StatementPdfParams,
   StatementPdfRequest,
   Waterfall,
   WaterfallRightholder,
   convertExpensesTo,
   convertIncomesTo,
   convertStatementsTo,
+  getStatementData,
+  getUserEmailData,
+  getWaterfallEmailData,
   isDirectSalesStatement,
   isDistributorStatement
 } from '@blockframes/model';
@@ -17,6 +22,10 @@ import { gzipSync } from 'node:zlib';
 import { getCollection, getDocument } from '@blockframes/firebase-utils';
 import { toLabel } from '@blockframes/model';
 import { format } from 'date-fns';
+import { shareStatement } from './templates/mail';
+import { groupIds } from '@blockframes/utils/emails/ids';
+import { sendMailFromTemplate } from './internals/email';
+import { CallableContext } from 'firebase-functions/lib/common/providers/https';
 
 export const statementToPdf = async (req: StatementPdfRequest, res: Response) => {
   res.set('Access-Control-Allow-Origin', '*');
@@ -36,6 +45,29 @@ export const statementToPdf = async (req: StatementPdfRequest, res: Response) =>
     return;
   }
 
+  const buffer = await _statementToPdf(statementId, waterfallId, number, versionId);
+
+  const gzip = gzipSync(buffer);
+
+  res.set('Content-Encoding', 'gzip');
+  res.set('Content-Type', 'application/pdf');
+  res.set('Content-Length', buffer.length.toString());
+  res.status(200).send(gzip);
+  return;
+};
+
+export const statementToEmail = async (data: { request: StatementPdfParams, email: string }, context: CallableContext) => {
+  if (!context?.auth) throw new Error('Permission denied: missing auth context.');
+  const { statementId, waterfallId, number, versionId } = data.request;
+  if (!statementId || !waterfallId || !versionId) throw new Error('Permission denied: missing data.');
+
+  const buffer = await _statementToPdf(statementId, waterfallId, number, versionId);
+  await sendMailWithEnclosedStatement(waterfallId, { email: data.email }, data.request.fileName, buffer);
+  return true;
+};
+
+
+async function _statementToPdf(statementId: string, waterfallId: string, number: number, versionId: string) {
   const _statements = await getCollection<Statement>(`waterfall/${waterfallId}/statements`);
   const waterfall = await getDocument<Waterfall>(`waterfall/${waterfallId}`);
   const movie = await getDocument<Movie>(`movies/${waterfall.id}`);
@@ -50,16 +82,8 @@ export const statementToPdf = async (req: StatementPdfRequest, res: Response) =>
   const _expenses = await Promise.all(expenseIds.map(id => getDocument<Expense>(`expenses/${id}`)));
   const expenses = convertExpensesTo(_expenses, versionId, parentStatements);
 
-  const buffer = await generate('statement', movie, { ...statement, number }, waterfall.rightholders, incomes, expenses, parentStatements);
-
-  const gzip = gzipSync(buffer);
-
-  res.set('Content-Encoding', 'gzip');
-  res.set('Content-Type', 'application/pdf');
-  res.set('Content-Length', buffer.length.toString());
-  res.status(200).send(gzip);
-  return;
-};
+  return generate('statement', movie, { ...statement, number }, waterfall.rightholders, incomes, expenses, parentStatements);
+}
 
 async function generate(
   templateName: string,
@@ -146,4 +170,15 @@ async function generate(
   });
   await browser.close();
   return pdf;
+}
+
+/** Share a statement by email */
+async function sendMailWithEnclosedStatement(waterfallId: string, recipient: Partial<PublicUser>, fileName: string, buffer: Buffer) {
+  const movie = await getDocument<Movie>(`movies/${waterfallId}`);
+  const template = shareStatement(
+    getUserEmailData(recipient),
+    getStatementData(fileName, buffer),
+    getWaterfallEmailData(movie)
+  );
+  await sendMailFromTemplate(template, 'waterfall', groupIds.unsubscribeAll);
 }

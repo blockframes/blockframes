@@ -27,6 +27,7 @@ export interface StatementPdfParams {
   statementId: string;
   number: number;
   versionId: string;
+  fileName?: string;
 }
 
 export interface StatementPdfRequest {

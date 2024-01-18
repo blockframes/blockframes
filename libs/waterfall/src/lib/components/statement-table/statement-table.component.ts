@@ -4,11 +4,13 @@ import { MatDialog } from '@angular/material/dialog';
 import {
   Income,
   Statement,
+  StatementPdfParams,
   Waterfall,
   getDefaultVersionId,
   getIncomesSources,
   isDistributorStatement,
-  isProducerStatement
+  isProducerStatement,
+  toLabel
 } from '@blockframes/model';
 import { StatementPaymentComponent } from '../statement-payment/statement-payment.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
@@ -18,6 +20,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { sorts } from '@blockframes/ui/list/table/sorts';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { DownloadStatementSettings, PdfService } from '@blockframes/utils/pdf.service';
+import { CallableFunctions } from 'ngfire';
+
+
+function statementFileName(statement: Statement & { number: number }) {
+  return `${toLabel(statement.type, 'statementType')} Statement ${statement.number}`;
+}
 
 @Component({
   selector: 'waterfall-statement-table',
@@ -59,6 +67,7 @@ export class StatementTableComponent {
     private snackBar: MatSnackBar,
     private statementService: StatementService,
     private pdfService: PdfService,
+    private functions: CallableFunctions,
     private cdr: ChangeDetectorRef,
   ) { }
 
@@ -100,18 +109,37 @@ export class StatementTableComponent {
       statement: statement,
       waterfallId: this.waterfall.id,
       number: statement.number,
-      versionId: this.shell.versionId$.value
+      versionId: this.shell.versionId$.value,
+      fileName: statementFileName(statement)
     };
     const snackbarRef = this.snackBar.open('Please wait, your statement is being generated...');
 
-    this.cdr.markForCheck();
     const exportStatus = await this.pdfService.downloadStatement(settings);
     snackbarRef.dismiss();
     if (!exportStatus) {
       this.snackBar.open('An error occurred, please try again.', 'close', { duration: 5000 });
     }
+  }
 
-    this.cdr.markForCheck();
+  async share(statement: Statement & { number: number }) {
+    const request: StatementPdfParams = {
+      statementId: statement.id,
+      waterfallId: this.waterfall.id,
+      number: statement.number,
+      versionId: this.shell.versionId$.value,
+      fileName: statementFileName(statement)
+    };
+
+    const email = 'bdelorme@cascade8.com'; // TODO #9583 get from modal
+    const snackbarRef = this.snackBar.open(`Please wait, statement is being sent to "${email}" ...`);
+
+    const output = await this.functions.call<{ request: StatementPdfParams, email: string }, boolean>('statementToEmail', { request, email });
+    snackbarRef.dismiss();
+    if (!output) {
+      this.snackBar.open('An error occurred, please try again.', 'close', { duration: 5000 });
+    } else {
+      this.snackBar.open('The statement has been successfully sent!', 'close', { duration: 5000 });
+    }
   }
 }
 

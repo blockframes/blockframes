@@ -33,6 +33,7 @@ export interface DownloadStatementSettings {
   statement: Statement;
   waterfallId: string;
   versionId: string;
+  fileName: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -82,7 +83,7 @@ export class PdfService {
 
     const url = this.emulatorsConfig.functions
       ? `http://localhost:5001/${projectId}/${firebaseRegion}/createPdf`
-      : `https://${firebaseRegion}-${projectId}.cloudfunctions.net/createPdf`
+      : `https://${firebaseRegion}-${projectId}.cloudfunctions.net/createPdf`;
 
     const status: boolean = await new Promise(resolve => {
       fetch(url, params,).then(res => res.blob())
@@ -161,8 +162,6 @@ export class PdfService {
   }
 
   async downloadStatement(settings: DownloadStatementSettings) {
-
-    const fileName = `${toLabel(settings.statement.type, 'statementType')} Statement ${settings.number}`;
     const data: StatementPdfParams = {
       statementId: settings.statement.id,
       waterfallId: settings.waterfallId,
@@ -174,11 +173,11 @@ export class PdfService {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
-    }
+    };
 
     const url = this.emulatorsConfig.functions
       ? `http://localhost:5001/${projectId}/${firebaseRegion}/statementToPdf`
-      : `https://${firebaseRegion}-${projectId}.cloudfunctions.net/statementToPdf`
+      : `https://${firebaseRegion}-${projectId}.cloudfunctions.net/statementToPdf`;
 
     const status: boolean = await new Promise(resolve => {
       fetch(url, params,).then(res => res.blob())
@@ -186,7 +185,7 @@ export class PdfService {
           const url = URL.createObjectURL(blob);
           const element = document.createElement('a');
           element.setAttribute('href', url);
-          element.setAttribute('download', sanitizeFileName(`${fileName}.pdf`));
+          element.setAttribute('download', sanitizeFileName(`${settings.fileName}.pdf`));
           const event = new MouseEvent('click');
           element.dispatchEvent(event);
           resolve(true);

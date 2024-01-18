@@ -19,7 +19,7 @@ export const templateIds = {
       attendEvent: 'd-de129a43fb43430a8e1d4e8de4d43e46',
       attendNonPrivateEvent: 'd-13e08d0d89d94cc880a8f40b9880e683',
       joinOrganization: 'd-5c03ed5bde6d40768a44e3d1e1c95b67',
-      joinWaterfall: 'd-15fb499c411448dd9328af06d11eb0a0'
+      joinWaterfall: 'd-15fb499c411448dd9328af06d11eb0a0' // TODO #9585
     },
   },
   // Templates for the org management flow
@@ -52,7 +52,7 @@ export const templateIds = {
       missedScreening: 'd-1d75256d03cf486cac275033ecdcc389',
       attendedScreening: 'd-6a8df635e1ce42e2a2a7ef071f9159fc'
     },
-    joinWaterfall: {
+    joinWaterfall: { // TODO #9585
       created: 'd-8be5d46bcc764f04964ffbd17f094a52',
       accepted: 'd-80a560156925474292a3cf589f72f421',
       declined: 'd-6a5bd8adf8914e2394a068c2049696ac'
@@ -95,6 +95,9 @@ export const templateIds = {
     myContractWasAccepted: 'd-261e5613cbd84c3c99ea49b4f3e8cc20',// send to org whose contract was accepted
     myOrgDeclinedAContract: 'd-022cee72b5904d7386a838d6317054ad',// send to org who declined the contract
     myContractWasDeclined: 'd-b928481ce938423dabb34e50c264d320',// send to org whose contract was declined
+  },
+  statement: {
+    share: 'd-7a07c39d8c104674ad278669c9ce787a'
   }
 }
 

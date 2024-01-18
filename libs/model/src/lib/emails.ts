@@ -116,6 +116,7 @@ export interface EmailTemplateRequest {
     exclusive?: string;
     negotiation?: NegotiationEmailData;
     isInvitationReminder?: boolean;
+    statement?: StatementEmailData
   };
 }
 
@@ -144,7 +145,7 @@ interface TermEmailData {
   exclusive: string;
 }
 
-export interface WaterfallEmailData {
+export interface WaterfallEmailData { // TODO #9585
   titleId: string;
   title: string;
 }
@@ -243,7 +244,7 @@ export function getTermEmailData(terms: BucketTerm[]): TermEmailData[] {
 
 export function getWaterfallEmailData(movie: Movie): WaterfallEmailData {
   return {
-    titleId : movie.id,
+    titleId: movie.id,
     title: movie.title.international
   };
 }
@@ -319,4 +320,19 @@ export function getEventEmailData({ event, orgName, attachment = true, email, in
     calendar: attachment ? getEventEmailAttachment(event, organizerEmail, orgName, applicationUrl) : undefined,
     duration: getEventDuration(eventStartDate, eventEndDate)
   }
+}
+
+export interface StatementEmailData {
+  pdf: AttachmentData;
+}
+
+export function getStatementData(fileName = 'unknown', buffer: Buffer): StatementEmailData {
+  return {
+    pdf: {
+      filename: `${fileName}.pdf`,
+      content: buffer.toString('base64'),
+      disposition: 'attachment',
+      type: 'application/pdf',
+    }
+  };
 }
