@@ -42,4 +42,4 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     RouterModule.forChild([{ path: '', component: RightHoldersComponent }])
   ]
 })
-export class RightHoldersModule { } // TODO #9257 unused component/module : keep it for when we implement real rightholder management (aka real org) ?
+export class RightHoldersModule { } // TODO #9585 unused component/module. Re-use for: Collaboration step 2 - Stakeholder invitation

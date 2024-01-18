@@ -1,13 +1,12 @@
-
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 // Components
-import { RightHoldersComponent } from './right-holders.component';
+import { RightHoldersManagementComponent } from './right-holders-management.component';
 
 // Blockframes
-import { RightholderTableModule } from '@blockframes/waterfall/components/rightholder-table/rightholder-table.module';
+import { RightHolderFormModule } from '@blockframes/waterfall/components/right-holder-form/right-holder-form.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -15,18 +14,19 @@ import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
-    RightHoldersComponent,
+    RightHoldersManagementComponent,
   ],
   imports: [
     CommonModule,
-    RightholderTableModule,
+
+    RightHolderFormModule,
     
     // Material
     MatIconModule,
     MatButtonModule,
 
     // Routing
-    RouterModule.forChild([{ path: '', component: RightHoldersComponent }]),
+    RouterModule.forChild([{ path: '', component: RightHoldersManagementComponent }]),
   ],
 })
-export class RightHoldersModule { }
+export class RightHoldersManagementModule { }

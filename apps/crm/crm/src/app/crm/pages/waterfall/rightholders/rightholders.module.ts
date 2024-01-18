@@ -5,29 +5,24 @@ import { RouterModule } from '@angular/router';
 import { RightholdersComponent } from './rightholders.component';
 
 // Blockframes
-import { ToLabelModule } from '@blockframes/utils/pipes';
-import { TableModule } from '@blockframes/ui/list/table/table.module';
-import { VersionNamePipeModule } from '@blockframes/waterfall/pipes/version-name.pipe';
+import { RightholderTableModule } from '@blockframes/waterfall/components/rightholder-table/rightholder-table.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [RightholdersComponent],
   imports: [
     CommonModule,
 
-    TableModule,
-    ToLabelModule,
-    VersionNamePipeModule,
+    RightholderTableModule,
 
     MatIconModule,
     MatButtonModule,
     MatSnackBarModule,
-    MatTooltipModule,
+
     RouterModule.forChild([{ path: '', component: RightholdersComponent }])
   ]
 })

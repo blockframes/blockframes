@@ -30,6 +30,7 @@ export class RightHolderFormComponent {
 
   remove(index: number) {
     this.rightholdersForm.removeAt(index);
+    this.rightholdersForm.markAsDirty();
   }
 }
 
