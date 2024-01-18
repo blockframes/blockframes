@@ -1,16 +1,17 @@
 
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 import { MatDialog } from '@angular/material/dialog';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 
 import { Right } from '@blockframes/model';
-import { RightService } from '../../../right.service';
-import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
+import { RightService } from '../../../right.service';
 import { WaterfallPoolModalComponent } from '../pool-modal/pool-modal.component';
+import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 
 
 @Component({
@@ -20,6 +21,8 @@ import { WaterfallPoolModalComponent } from '../pool-modal/pool-modal.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaterfallRightListComponent implements OnInit, OnDestroy {
+
+  @Input() @boolean editMode = true;
 
   @Output() selectRight = new EventEmitter<string>();
   @Output() deleteRight = new EventEmitter<string>();
@@ -125,14 +128,17 @@ export class WaterfallRightListComponent implements OnInit, OnDestroy {
   }
 
   remove(id: string) {
+    if (!this.editMode) return;
     this.deleteRight.emit(id);
   }
 
   edit(id: string) {
+    if (!this.editMode) return;
     this.selectRight.emit(id);
   }
 
   poolModal() {
+    if (!this.editMode) return;
     this.dialog.open(
       WaterfallPoolModalComponent,
       {

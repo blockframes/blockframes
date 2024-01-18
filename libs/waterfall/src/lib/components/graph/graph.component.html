@@ -22,9 +22,8 @@
 
     <waterfall-graph-node
       *ngFor="let node of (nodes$ | async)"
-      node
       [node]="node"
-      [editMode]="editMode"
+      [editMode]="canUpdateGraph"
       (addChild)="addChild($event)"
       (handleSelect)="select($event)"
       (addSibling)="addSibling($event)"
@@ -46,10 +45,10 @@
         <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'">
           <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
         </button>
-        <button mat-icon-button matTooltip="Save changes" (click)="updateSource()">
+        <button mat-icon-button matTooltip="Save changes" (click)="updateSource()" [disabled]="!canUpdateGraph">
           <mat-icon svgIcon="save"></mat-icon>
         </button>
-        <button [disabled]="!canUpdateGraph" mat-icon-button matTooltip="Delete Source" (click)="delete()">
+        <button mat-icon-button matTooltip="Delete Source" (click)="delete()" [disabled]="!canUpdateGraph">
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </header>
@@ -80,10 +79,10 @@
         <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'">
           <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
         </button>
-        <button mat-icon-button matTooltip="Save changes" (click)="updateRight()">
+        <button mat-icon-button matTooltip="Save changes" (click)="updateRight()" [disabled]="!canUpdateGraph">
           <mat-icon svgIcon="save"></mat-icon>
         </button>
-        <button [disabled]="!canUpdateGraph" mat-icon-button matTooltip="Delete Right" (click)="delete()">
+        <button mat-icon-button matTooltip="Delete Right" (click)="delete()" [disabled]="!canUpdateGraph">
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </header>
@@ -145,7 +144,7 @@
             <div class="add-next">
               <hr/>
               <p class="mat-caption">Add Next Receipt Share</p>
-              <button [disabled]="!canUpdateGraph" mat-mini-fab color="primary" (click)="addChild(selected)">
+              <button mat-mini-fab color="primary" (click)="addChild(selected)"[disabled]="!canUpdateGraph" >
                 <mat-icon svgIcon="add"></mat-icon>
               </button>
             </div>
@@ -171,21 +170,21 @@
       <mat-tab-group>
         <mat-tab label="Receipts Shares">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-right-list (deleteRight)="delete($event)" (selectRight)="select($event)"></waterfall-right-list>
+            <waterfall-right-list (deleteRight)="delete($event)" (selectRight)="select($event)" [editMode]="canUpdateGraph"></waterfall-right-list>
           </section>
         </mat-tab>
         <mat-tab label="Pools Only">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-pool-list></waterfall-pool-list>
+            <waterfall-pool-list [editMode]="canUpdateGraph"></waterfall-pool-list>
           </section>
         </mat-tab>
       </mat-tab-group>
       <section class="add">
-        <button mat-flat-button color="primary" (click)="createNewSource()">
+        <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="!canUpdateGraph" >
           <mat-icon svgIcon="add"></mat-icon>
           <span>Create new Source</span>
         </button>
-        <button mat-flat-button color="primary" (click)="createNewRight()">
+        <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="!canUpdateGraph" >
           <mat-icon svgIcon="add"></mat-icon>
           <span>Create new Right</span>
         </button>
@@ -209,11 +208,11 @@
           <span>Ask for Help</span>
         </button>
         <section class="add">
-          <button mat-flat-button color="primary" (click)="createNewSource()">
+          <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="!canUpdateGraph" >
             <mat-icon svgIcon="add"></mat-icon>
             <span>Create new Source</span>
           </button>
-          <button mat-flat-button color="primary" (click)="createNewRight()">
+          <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="!canUpdateGraph" >
             <mat-icon svgIcon="add"></mat-icon>
             <span>Create new Right</span>
           </button>
