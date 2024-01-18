@@ -161,6 +161,7 @@ export const icons = [
   { name: 'volume_off', url: 'assets/icons/volume_off.svg' },
   { name: 'volume_up', url: 'assets/icons/volume_up.svg' },
   { name: 'warning', url: 'assets/icons/warning.svg' },
+  { name: 'water_drop', url: 'assets/icons/water_drop.svg' },
   { name: 'world', url: 'assets/icons/world.svg' },
 ] as const;
 
