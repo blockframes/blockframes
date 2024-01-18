@@ -1,6 +1,6 @@
 
 import { WriteBatch } from 'firebase/firestore';
-import { BehaviorSubject, Subscription, combineLatest, tap } from 'rxjs';
+import { BehaviorSubject, Subscription, combineLatest, map, tap } from 'rxjs';
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { MatDialog } from '@angular/material/dialog';
@@ -31,8 +31,8 @@ import { WaterfallService } from '../../waterfall.service';
 import { createRightForm, setRightFormValue } from '../forms/right-form/right-form';
 import { createSourceForm, setSourceFormValue } from '../forms/source-form/source-form';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
-import { Arrow, Node, computeDiff, createChild, createSibling, createStep, deleteStep, fromGraph, toGraph, updateParents } from './layout';
 import { WaterfallDeleteRightModalComponent } from './delete-right-modal/delete-right-modal.component';
+import { Arrow, Node, computeDiff, createChild, createSibling, createStep, deleteStep, fromGraph, toGraph, updateParents } from './layout';
 
 
 @Component({
@@ -91,8 +91,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     this.subscription = combineLatest([
       this.shell.rights$,
       this.shell.waterfall$,
-      this.shell.versionId$.pipe(tap(_ => this.unselect()))
-    ]).subscribe(async ([rights, waterfall, versionId]) => {
+      this.shell.versionId$.pipe(tap(_ => this.unselect())),
+      this.shell.statements$.pipe(map(statements => statements.filter(s => s.status === 'reported'))),
+    ]).subscribe(([rights, waterfall, versionId, statements]) => {
       this.rights = rights;
       this.version = waterfall.versions.find(v => v.id === versionId);
       this.sources = waterfallSources(waterfall, this.version?.id);
@@ -105,11 +106,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.rightForm.enable();
       this.sourceForm.enable();
       this.canUpdateGraph = true;
-      const statements = await this.shell.statements();
-      const reportedStatements = statements.filter(s => s.status === 'reported');
-      if ((this.version?.id && !this.isDefaultVersion && !this.version.standalone) || reportedStatements.length > 0) {
+      if ((this.version?.id && !this.isDefaultVersion && !this.version.standalone) || statements.length > 0) {
         this.rightForm.disable();
-        if(reportedStatements.length  > 0 ) {
+        if(statements.length  > 0 ) {
           this.rightForm.controls.percent.enable();
           this.rightForm.controls.steps.enable();
         }
