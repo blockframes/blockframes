@@ -17,6 +17,7 @@ import { StatementService } from '../../statement.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { sorts } from '@blockframes/ui/list/table/sorts';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { DownloadStatementSettings, PdfService } from '@blockframes/utils/pdf.service';
 
 @Component({
   selector: 'waterfall-statement-table',
@@ -38,6 +39,7 @@ export class StatementTableComponent {
   @Input() actions: Record<string, boolean> = {
     notify: true,
     edit: true,
+    share: true,
     download: true,
     view: true,
     payment: true
@@ -56,6 +58,7 @@ export class StatementTableComponent {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private statementService: StatementService,
+    private pdfService: PdfService,
     private cdr: ChangeDetectorRef,
   ) { }
 
@@ -90,6 +93,21 @@ export class StatementTableComponent {
         }
       })
     });
+  }
+
+  async download(statement: Statement) {
+    const settings: DownloadStatementSettings = { statementId: statement.id };
+
+    const snackbarRef = this.snackBar.open('Please wait, your statement is being generated...');
+
+    this.cdr.markForCheck();
+    const exportStatus = await this.pdfService.downloadStatement(settings);
+    snackbarRef.dismiss();
+    if (!exportStatus) {
+      this.snackBar.open('An error occurred, please try again.', 'close', { duration: 5000 });
+    }
+
+    this.cdr.markForCheck();
   }
 }
 

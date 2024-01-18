@@ -39,6 +39,7 @@ import { onContractDelete, onContractUpdate } from './contracts';
 import { onTermDelete } from './terms';
 import { downloadVideo } from './rescue';
 import { createPdf as _createPdf } from './createPdf';
+import { statementToPdf as _statementToPdf} from './statementToPdf';
 import { scheduledAirtable, synchronizeAirtable } from './airtable';
 import { onNegotiationCreated, onNegotiationUpdate } from './negotiation';
 import {
@@ -331,6 +332,11 @@ export const onWaterfallStatementUpdateEvent = onDocumentUpdate('waterfall/{wate
  * Trigger: when a waterfallRight is deleted
  */
 export const onWaterfallRightDeleteEvent = onDocumentDelete('waterfall/{waterfallID}/rights/{rightID}', onWaterfallRightDelete);
+
+/**
+ * Triggered to generate a PDF statement
+ */
+export const statementToPdf = functions(heavyConfig).https.onRequest(_statementToPdf);
 
 /**
  * When user wants to remove a file without removing waterfallDocument
