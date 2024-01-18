@@ -3,26 +3,28 @@ import { WriteBatch } from 'firebase/firestore';
 import { BehaviorSubject, Subscription, combineLatest, tap } from 'rxjs';
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import {
   Right,
+  Version,
   Condition,
   createRight,
   WaterfallSource,
   isConditionGroup,
   getContractsWith,
   isDefaultVersion,
+  waterfallSources,
   WaterfallContract,
   getDefaultVersionId,
   WaterfallRightholder,
   createWaterfallSource,
-  Version,
-  waterfallSources,
 } from '@blockframes/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { GraphService } from '@blockframes/ui/graph/graph.service';
 import { CardModalComponent } from '@blockframes/ui/card-modal/card-modal.component';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 import { RightService } from '../../right.service';
 import { WaterfallService } from '../../waterfall.service';
@@ -30,6 +32,7 @@ import { createRightForm, setRightFormValue } from '../forms/right-form/right-fo
 import { createSourceForm, setSourceFormValue } from '../forms/source-form/source-form';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 import { Arrow, Node, computeDiff, createChild, createSibling, createStep, deleteStep, fromGraph, toGraph, updateParents } from './layout';
+import { WaterfallDeleteRightModalComponent } from './delete-right-modal/delete-right-modal.component';
 
 
 @Component({
@@ -47,6 +50,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
   get editMode() { return this._editMode; }
   private _editMode = true;
+
   showEdit = true;
 
   rights: Right[];
@@ -75,6 +79,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   subscription: Subscription;
 
   constructor(
+    private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private service: GraphService,
     private rightService: RightService,
@@ -87,7 +92,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.shell.rights$,
       this.shell.waterfall$,
       this.shell.versionId$.pipe(tap(_ => this.unselect()))
-    ]).subscribe(([rights, waterfall, versionId]) => {
+    ]).subscribe(async ([rights, waterfall, versionId]) => {
       this.rights = rights;
       this.version = waterfall.versions.find(v => v.id === versionId);
       this.sources = waterfallSources(waterfall, this.version?.id);
@@ -100,10 +105,14 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.rightForm.enable();
       this.sourceForm.enable();
       this.canUpdateGraph = true;
-      if (this.version?.id && !this.isDefaultVersion && !this.version.standalone) {
+      const statements = await this.shell.statements();
+      const reportedStatements = statements.filter(s => s.status === 'reported');
+      if ((this.version?.id && !this.isDefaultVersion && !this.version.standalone) || reportedStatements.length > 0) {
         this.rightForm.disable();
-        this.rightForm.controls.percent.enable();
-        this.rightForm.controls.steps.enable();
+        if(reportedStatements.length  > 0 ) {
+          this.rightForm.controls.percent.enable();
+          this.rightForm.controls.steps.enable();
+        }
         this.sourceForm.disable();
         this.canUpdateGraph = false;
       }
@@ -351,6 +360,23 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
       return;
     }
+
+    const id = rightId ?? this.selected$.getValue();
+    const right = this.rights.find(right => right.id === id);
+    const source = this.sources.find(source => source.id === id);
+
+    this.dialog.open(
+      WaterfallDeleteRightModalComponent,
+      {
+        data: createModalData({
+          rightName: right?.name ?? source?.name ?? '',
+          onConfirm: () => this.handleDeletion(id),
+        }),
+      },
+    );
+  }
+
+  private async handleDeletion(rightId?: string) {
     const id = rightId ?? this.selected$.getValue();
     const right = this.rights.find(right => right.id === id);
     const source = this.sources.find(source => source.id === id);

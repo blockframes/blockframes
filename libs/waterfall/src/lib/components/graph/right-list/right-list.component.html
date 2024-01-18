@@ -1,6 +1,6 @@
 
 <section class="pool">
-  <button mat-button color="primary" [disabled]="selected.size === 0" (click)="poolModal()">
+  <button mat-button color="primary" [disabled]="selected.size === 0 || !editMode" (click)="poolModal()">
     <mat-icon svgIcon="add"></mat-icon>
     <span>Group Right Share</span>
   </button>
@@ -48,6 +48,7 @@
       </ng-container>
       <button
         mat-icon-button
+        [disabled]="!editMode"
         (click)="edit(right.id)"
         [matTooltip]="right.type === 'vertical' || right.type === 'horizontal' ? 'Edit Group Name' : 'Edit Share Name'"
       >
@@ -56,6 +57,7 @@
       <button
         *ngIf="right.type !== 'vertical' || right.type === 'horizontal'"
         mat-icon-button
+        [disabled]="!editMode"
         (click)="remove(right.id)"
         matTooltip="Delete Right Share"
       >
@@ -82,6 +84,7 @@
           </ng-container>
           <button
             mat-icon-button
+            [disabled]="!editMode"
             (click)="edit(member.id)"
             [matTooltip]="member.type === 'vertical' || member.type === 'horizontal' ? 'Edit Group Name' : 'Edit Share Name'"
           >
@@ -90,6 +93,7 @@
           <button
             *ngIf="right.type !== 'vertical' || right.type === 'horizontal'"
             mat-icon-button
+            [disabled]="!editMode"
             (click)="remove(member.id)"
             matTooltip="Delete Right Share"
           >
@@ -114,10 +118,10 @@
                   </mat-chip>
                 </mat-chip-list>
               </ng-container>
-              <button mat-icon-button matTooltip="Edit Share Name" (click)="edit(subMember.id)">
+              <button mat-icon-button matTooltip="Edit Share Name" (click)="edit(subMember.id)" [disabled]="!editMode">
                 <mat-icon svgIcon="edit"></mat-icon>
               </button>
-              <button mat-icon-button matTooltip="Delete Right Share" (click)="remove(subMember.id)">
+              <button mat-icon-button matTooltip="Delete Right Share" (click)="remove(subMember.id)" [disabled]="!editMode">
                 <mat-icon svgIcon="delete"></mat-icon>
               </button>
             </section>
@@ -143,10 +147,10 @@
               </mat-chip>
             </mat-chip-list>
           </ng-container>
-          <button mat-icon-button matTooltip="Edit Share Name" (click)="edit(member.id)">
+          <button mat-icon-button matTooltip="Edit Share Name" (click)="edit(member.id)" [disabled]="!editMode">
             <mat-icon svgIcon="edit"></mat-icon>
           </button>
-          <button mat-icon-button matTooltip="Delete Right Share" (click)="remove(member.id)">
+          <button mat-icon-button matTooltip="Delete Right Share" (click)="remove(member.id)" [disabled]="!editMode">
             <mat-icon svgIcon="delete"></mat-icon>
           </button>
         </section>

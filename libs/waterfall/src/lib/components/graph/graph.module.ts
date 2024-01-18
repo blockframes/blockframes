@@ -23,6 +23,7 @@ import { WaterfallGraphLabelModule } from './label/label.module';
 import { WaterfallPoolListModule } from './pool-list/pool-list.module';
 import { WaterfallRightListModule } from './right-list/right-list.module';
 import { WaterfallConditionsModule } from './conditions/conditions.module';
+import { WaterfallDeleteRightModalModule } from './delete-right-modal/delete-right-modal.module';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import { WaterfallConditionsModule } from './conditions/conditions.module';
     WaterfallRightListModule,
     WaterfallGraphLabelModule,
     WaterfallConditionsModule,
+    WaterfallDeleteRightModalModule,
 
     MatIconModule,
     MatTabsModule,
