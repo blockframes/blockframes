@@ -7,15 +7,21 @@ import {
   StatementPdfParams,
   StatementPdfRequest,
   Waterfall,
+  WaterfallContract,
+  WaterfallDocument,
   WaterfallRightholder,
+  convertDocumentTo,
   convertExpensesTo,
   convertIncomesTo,
   convertStatementsTo,
+  displayName,
   getStatementData,
   getUserEmailData,
   getWaterfallEmailData,
   isDirectSalesStatement,
-  isDistributorStatement
+  isDistributorStatement,
+  isProducerStatement,
+  smartJoin
 } from '@blockframes/model';
 import { Response } from 'firebase-functions';
 import { gzipSync } from 'node:zlib';
@@ -80,8 +86,26 @@ async function _statementToPdf(statementId: string, waterfallId: string, number:
   const incomes = convertIncomesTo(_incomes, versionId, waterfall.sources);
   const _expenses = await Promise.all(expenseIds.map(id => getDocument<Expense>(`expenses/${id}`)));
   const expenses = convertExpensesTo(_expenses, versionId, parentStatements);
+  let contract: WaterfallContract;
+  if (statement.contractId) {
+    const document = await getDocument<WaterfallDocument>(`waterfall/${waterfallId}/documents/${statement.contractId}`);
+    contract = convertDocumentTo<WaterfallContract>(document);
+  }
 
-  return generate('statement', movie, { ...statement, number }, waterfall.rightholders, incomes, expenses, parentStatements);
+  return generate(
+    'statement',
+    movie,
+    { ...statement, number },
+    waterfall.rightholders,
+    incomes,
+    expenses,
+    isProducerStatement(statement) ? parentStatements : [],
+    contract
+  );
+}
+
+const getDirectors = (m: Movie) => {
+  return smartJoin(m.directors.map(p => displayName(p).trim()).filter(p => p));
 }
 
 async function generate(
@@ -91,7 +115,8 @@ async function generate(
   rightholders: WaterfallRightholder[],
   incomes: Income[],
   expenses: Expense[],
-  parentStatements: Statement[]
+  parentStatements: Statement[] = [],
+  contract: WaterfallContract,
 ) {
   const [fs, hb, path, { default: puppeteer }] = await Promise.all([
     import('fs'),
@@ -122,13 +147,31 @@ async function generate(
       appLogo: `data:image/svg+xml;utf8,${encodeURIComponent(appLogo)}`,
     },
     data: {
-      movie,
-      statement,
-      rightholder,
-      duration: {
-        from: format(statement.duration.from, 'dd/MM/yyyy'),
-        to: format(statement.duration.to, 'dd/MM/yyyy'),
+      movie: {
+        ...movie,
+        directors: getDirectors(movie),
       },
+      statement: {
+        ...statement,
+        duration: {
+          from: format(statement.duration.from, 'dd/MM/yyyy'),
+          to: format(statement.duration.to, 'dd/MM/yyyy'),
+        },
+        sender: rightholders.find(r => r.id === statement.senderId).name,
+        receiver: rightholders.find(r => r.id === statement.receiverId).name,
+      },
+      contract: contract ? {
+        ...contract,
+        signatureDate: format(contract.signatureDate, 'dd/MM/yyyy'),
+      } : undefined,
+      rightholder,
+      parentStatements: parentStatements.map(s => ({
+        ...s,
+        duration: {
+          from: format(s.duration.from, 'dd/MM/yyyy'),
+          to: format(s.duration.to, 'dd/MM/yyyy'),
+        }
+      }))
     }
   };
 
