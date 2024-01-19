@@ -6,8 +6,9 @@ import { CommonModule } from '@angular/common';
 import { StatementHeaderComponent } from './statement-header.component';
 
 // Blockframes
-import { JoinPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 import { VersionSelectorModule } from '../version-selector/version-selector.module';
+import { StatementMainInfoModule } from '../statement-main-info/statement-main-info.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -19,8 +20,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CommonModule,
 
     ToLabelModule,
-    JoinPipeModule,
     VersionSelectorModule,
+    StatementMainInfoModule,
 
     // Material
     MatIconModule,

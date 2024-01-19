@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { StatementIncomeEditComponent } from './statement-income-edit.component';
@@ -36,8 +35,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatInputModule,
     MatChipsModule,
     MatTooltipModule,
-
-    RouterModule,
   ],
   exports: [StatementIncomeEditComponent]
 })

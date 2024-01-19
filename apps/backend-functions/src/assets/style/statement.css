@@ -6,6 +6,13 @@ body {
   font-family: Montserrat, Helvetica Neue, sans-serif;
 }
 
+@media print {
+  .page {
+    page-break-after: always;
+  }
+}
+
+/** FRONT PAGE **/
 .doc-title {
   height: 300px;
   position: absolute;
@@ -50,13 +57,65 @@ h1 {
   position: absolute;
   right: 0;
   bottom: 0;
-  margin-right: 64px;
+  margin-right: 32px;
   width: 180px;
-  margin-bottom: 64px;
+  margin-bottom: 32px;
 }
 
-@media print {
-  .page {
-    page-break-after: always;
-  }
+/** HEADER **/
+.statement-header {
+  height: 64px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.statement-header .logo {
+  margin-left: 8px;
+  width: 180px;
+  margin-top: 8px;
+}
+
+.statement-header .header {
+  margin-right: 8px;
+  margin-top: 8px;
+  color: #454E5D;
+  font-size: 12px;
+  text-align: right;
+}
+
+.statement-header-separator {
+  border-bottom: 1px solid #d3d5dc;
+  margin: 0;
+  width: 100%;
+  text-align: center;
+}
+
+/** FROM - TO **/
+.statement-parties{
+  display: flex;
+  gap: 64px;
+  padding: 24px;
+}
+
+.statement-parties .separator {
+  border-bottom: 4px solid #3C64F7;
+  margin: 12px 0;
+  width: 80px;
+}
+
+.statement-parties span {
+  color: #666B81;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.statement-parties h2 {
+  color: #454E5D;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.statement-parties .party-desc {
+  min-height: 60px;
 }

@@ -13,14 +13,71 @@
         <h1>{{pageTitle}}</h1>
         <h1>{{data.rightholder.name}}</h1>
         <div class="separator"></div>
-        <p><strong>Covered Period: </strong>{{data.duration.from}} - {{data.duration.to}}</p>
+        <p><strong>Covered Period: </strong>{{data.statement.duration.from}} - {{data.statement.duration.to}}</p>
       </div>
       <img class="hp-logo" src="{{images.appLogo}}">
       <img class="left-corner" src="{{images.leftCorner}}" >
     </div>
     <div class="page">
-      test2
+      <div class="statement-header">
+        <img class="logo" src="{{images.appLogo}}">
+        <div class="header">
+          <p>
+            <strong>
+              {{data.movie.title.international}}
+              {{#if data.movie.directors}} Directed by {{ data.movie.directors }} {{/if}}
+            </strong>
+            </br>
+            <strong>Covered Period: </strong> {{data.statement.duration.from}} - {{data.statement.duration.to}}
+          </p>
+        </div>
+      </div>
+      <div class="statement-header-separator"></div>
+      <div class="statement-parties">
+        <div>
+          <span>From</span>
+          <h2>{{data.statement.sender}}</h2>
+          <div class="party-desc">
+            123 Producer’s Address Street <br/>
+            69001 Lyon <br/>
+            France
+          </div>
+          <div class="separator"></div>
+        </div>
+        <div>
+          <span>To</span>
+          <h2>{{data.statement.receiver}}</h2>
+          <div class="party-desc">
+            {{#if data.contract}}
+              Contract: {{data.contract.name}}
+              <br/>
+              Signature date: {{data.contract.signatureDate}}
+            {{/if}}
+          </div>
+          <div class="separator"></div>
+        </div>
+      </div>
     </div>
+
+    {{#data.parentStatements}}
+      <div class="page">
+        <div class="statement-header">
+          <img class="logo" src="{{../images.appLogo}}">
+          <div class="header">
+            <p>
+              <strong>
+                {{../data.movie.title.international}}
+                {{#if ../directors}} Directed by {{ ../directors }} {{/if}}
+              </strong>
+              </br>
+              <strong>Covered Period: </strong> {{duration.from}} - {{duration.to}}
+            </p>
+          </div>
+        </div>
+        <div class="statement-header-separator"></div>
+        Distributor statement {{id}}
+      </div>
+    {{/data.parentStatements}}
 
   </body>
 

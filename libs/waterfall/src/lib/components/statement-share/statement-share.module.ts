@@ -1,13 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { StatementPaymentComponent } from './statement-payment.component';
+import { StatementShareComponent } from './statement-share.component';
 
 // Blockframes
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { StatementMainInfoModule } from '../statement-main-info/statement-main-info.module';
 
 // Material
@@ -16,16 +14,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
-  declarations: [StatementPaymentComponent],
+  declarations: [StatementShareComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
 
     GlobalModalModule,
-    PricePerCurrencyModule,
     StatementMainInfoModule,
 
     MatIconModule,
@@ -33,10 +30,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
-    MatDatepickerModule,
-
-    RouterModule,
+    MatChipsModule,
   ],
-  exports: [StatementPaymentComponent]
+  exports: [StatementShareComponent]
 })
-export class StatementPaymentModule { }
+export class StatementShareModule { }
