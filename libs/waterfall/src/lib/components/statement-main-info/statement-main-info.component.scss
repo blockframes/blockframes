@@ -1,0 +1,22 @@
+:host {
+  padding: 0 24px;
+  mat-icon {
+    vertical-align: middle;
+  }
+
+  article {
+    display: flex;
+    flex-direction: column;
+  }
+
+  section {
+    display: flex;
+    justify-content: space-between;
+    span {
+      a {
+        text-decoration: none;
+        padding: 0;
+      }
+    }
+  }
+}

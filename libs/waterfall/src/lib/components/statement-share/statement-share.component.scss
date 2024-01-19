@@ -5,8 +5,18 @@ h2 {
   line-height: 36px;
 }
 
-header { 
-  text-align: center;
+header {
+  p { 
+    text-align: center;
+  }
+}
+
+section {
+  padding: 0 24px;
+  margin-top: 24px;
+  mat-form-field {
+    width: 100%;
+  }
 }
 
 mat-dialog-actions {

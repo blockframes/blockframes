@@ -1,11 +1,36 @@
 <global-modal>
   <h2>Share your Statement</h2>
   <header>
-    <p class="mat-body-1">Provide and verify Recipient’s email before sending. You can add several Recipients in a time.</p>
+    <p class="mat-body-1">
+      Provide and verify Recipient’s email before sending. <br/> 
+      You can add several Recipients in a time.
+    </p>
   </header>
 
+  <waterfall-statement-main-info [movie]="data.movie" [statement]="data.statement" [waterfall]="data.waterfall" showLink></waterfall-statement-main-info>
+
+  <section>
+    <mat-form-field appearance="outline">
+      <mat-chip-list #chipList aria-label="email selection">
+        <mat-chip *ngFor="let email of form.value; let i = index" removable (removed)="form.removeAt(i)">
+          <span>{{email}}</span>
+          <mat-icon svgIcon="cancel" matChipRemove></mat-icon>
+        </mat-chip>
+        <input [formControl]="emailForm" placeholder="Add an email"
+               [matChipInputFor]="chipList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               [matChipInputAddOnBlur]="true"
+               (matChipInputTokenEnd)="add()">
+      </mat-chip-list>
+      <mat-label>Email Address</mat-label>
+      <mat-icon matSuffix svgIcon="mail"></mat-icon>
+      <mat-hint>Enter emails separated by a comma.</mat-hint>
+    </mat-form-field>
+    <p class="mat-caption text-warn" *ngIf="error"><i>{{ error }}</i></p>
+  </section>
+
   <mat-dialog-actions>
-    <button mat-flat-button color="primary" (click)="confirm()">
+    <button mat-flat-button color="primary" (click)="confirm()" [disabled]="emailForm.value === ''">
       <span>Send</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>

@@ -134,7 +134,7 @@ export class StatementTableComponent {
       data: createModalData({
         statement,
         waterfall: this.shell.waterfall,
-        versionId: this.shell.versionId$.value,
+        movie: this.shell.movie,
         onConfirm: async (emails: string[]) => {
           const emailStr = emails.length === 1 ? `"${emails[0]}"` : `${emails.length} emails`;
           const snackbarRef = this.snackBar.open(`Please wait, statement is being sent to ${emailStr} ...`);

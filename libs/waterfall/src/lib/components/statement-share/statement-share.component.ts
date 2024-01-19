@@ -1,11 +1,15 @@
-import { Component, ChangeDetectionStrategy, Inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Statement } from '@blockframes/model';
-import { FormControl } from '@angular/forms';
+import { Movie, Statement, Waterfall } from '@blockframes/model';
+import { FormControl, Validators } from '@angular/forms';
+import { COMMA, ENTER, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
+import { FormList } from '@blockframes/utils/form';
 
 interface StatementShareData {
   statement: Statement & { number: number };
-  onConfirm?: (emails: string[]) => void
+  waterfall: Waterfall;
+  movie: Movie;
+  onConfirm: (emails: string[]) => void
 }
 
 @Component({
@@ -14,9 +18,13 @@ interface StatementShareData {
   styleUrls: ['./statement-share.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StatementShareComponent implements OnInit {
+export class StatementShareComponent {
 
-  public input: FormControl;
+  public separatorKeysCodes = [ENTER, COMMA, SEMICOLON, SPACE];
+  public emailForm = new FormControl('', Validators.email);
+  public form = FormList.factory<string, FormControl>([], email => new FormControl(email, [Validators.required, Validators.email]));
+  public error: string;
+
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -24,17 +32,28 @@ export class StatementShareComponent implements OnInit {
     public dialogRef: MatDialogRef<StatementShareComponent>
   ) { }
 
-  ngOnInit() {
-
-    // this.form = new IncomeEditForm({ overrides });
+  add() {
+    this.error = undefined;
+    if (this.emailForm.value) {
+      const emails: string[] = this.emailForm.value.split(',');
+      const invalid = emails.filter(value => Validators.email({ value } as FormControl));
+      if (invalid.length) {
+        this.error = `The following emails are invalid: ${invalid.join(', ')}.`;
+      } else {
+        for (const email of emails) {
+          if (!this.form.value.includes(email)) {
+            this.form.add(email.trim());
+          }
+        }
+        this.emailForm.reset();
+      }
+    }
   }
 
-
   public confirm() {
-    //if (!this.form.valid) return;
-
-    const emails = ['bdelorme@cascade8.com']; // TODO #9583 get from modal
-
+    this.add();
+    if (this.error) return;
+    const emails = Array.from(new Set(this.form.value.map(email => email.trim().toLowerCase())));
     this.data.onConfirm(emails);
     this.dialogRef.close(true);
   }
