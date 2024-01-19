@@ -21,7 +21,6 @@ export class StatementHeaderComponent implements OnChanges {
   @Input() statement: Statement;
   @Input() sources: WaterfallSource[] = [];
   @Output() versionChanged = new EventEmitter<string>();
-  public rightholderName: string;
   public statementNumber: number;
   public contract: WaterfallContract;
   public versionId: string;
