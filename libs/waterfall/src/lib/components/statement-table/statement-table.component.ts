@@ -144,7 +144,7 @@ export class StatementTableComponent {
           if (!output) {
             this.snackBar.open('An error occurred, please try again.', 'close', { duration: 5000 });
           } else {
-            this.snackBar.open('The statement has been successfully sent!', 'close', { duration: 5000 });
+            this.snackBar.open('Your Statement has been successfully shared.', 'close', { duration: 5000 });
           }
         }
       })
