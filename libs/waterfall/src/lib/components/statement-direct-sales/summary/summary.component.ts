@@ -166,12 +166,15 @@ export class StatementDirectSalesSummaryComponent {
 
           const rightExpenseTypes = getRightExpenseTypes(right, current, this.waterfall);
           for (const expenseTypeId of rightExpenseTypes) {
+            const expenseType = this.waterfall.expenseTypes.directSales?.find(e => e.id === expenseTypeId);
+            if (!expenseType) {
+              this.snackbar.open(`Expense type id "${expenseTypeId}" used in conditions of "${right.name}" is not defined.`, 'close', { duration: 5000 });
+              continue;
+            }
+
             const currentExpenses = _expenses.filter(e => e.typeId === expenseTypeId && current.expenseIds.includes(e.id));
             const previousExpenses = _expenses.filter(e => e.typeId === expenseTypeId && previous.map(s => s.expenseIds).flat().includes(e.id));
             const cumulatedExpenses = _expenses.filter(e => e.typeId === expenseTypeId && history.map(s => s.expenseIds).flat().includes(e.id));
-
-            const expenseType = this.waterfall.expenseTypes.directSales?.find(e => e.id === expenseTypeId);
-            if (!expenseType) this.snackbar.open(`Expense type id "${expenseTypeId}" used in conditions of "${right.name}" is not defined.`, 'close', { duration: 5000 });
 
             const cap = current.versionId && expenseType.cap.version[current.versionId] ? expenseType.cap.version[current.versionId] : expenseType.cap.default;
 
@@ -266,12 +269,15 @@ export class StatementDirectSalesSummaryComponent {
 
           const rightExpenseTypes = getRightExpenseTypes(right, current, this.waterfall);
           for (const expenseTypeId of rightExpenseTypes) {
+            const expenseType = this.waterfall.expenseTypes.directSales?.find(e => e.id === expenseTypeId);
+            if (!expenseType) {
+              this.snackbar.open(`Expense type id "${expenseTypeId}" used in conditions of "${right.name}" is not defined.`, 'close', { duration: 5000 });
+              continue;
+            }
+
             const currentExpenses = _expenses.filter(e => e.typeId === expenseTypeId && current.expenseIds.includes(e.id));
             const previousExpenses = _expenses.filter(e => e.typeId === expenseTypeId && previous.map(s => s.expenseIds).flat().includes(e.id));
             const cumulatedExpenses = _expenses.filter(e => e.typeId === expenseTypeId && history.map(s => s.expenseIds).flat().includes(e.id));
-
-            const expenseType = this.waterfall.expenseTypes.directSales?.find(e => e.id === expenseTypeId);
-            if (!expenseType) this.snackbar.open(`Expense type id "${expenseTypeId}" used in conditions of "${right.name}" is not defined.`, 'close', { duration: 5000 });
 
             const cap = current.versionId && expenseType.cap.version[current.versionId] ? expenseType.cap.version[current.versionId] : expenseType.cap.default;
 
