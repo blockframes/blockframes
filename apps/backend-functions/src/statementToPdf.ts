@@ -139,7 +139,7 @@ async function generate(
   const html = template(data);
 
   // @dev to see html output (without header and footer), uncomment this line
-  fs.writeFileSync(path.resolve(`assets/templates/output-${templateName}.html`), html, 'utf8');
+  // fs.writeFileSync(path.resolve(`assets/templates/output-${templateName}.html`), html, 'utf8');
 
   // we are using headless mode
   const args = ['--no-sandbox', '--disable-setuid-sandbox'];

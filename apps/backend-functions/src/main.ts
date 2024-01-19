@@ -341,7 +341,7 @@ export const statementToPdf = functions(heavyConfig).https.onRequest(_statementT
 /**
  * Triggered to generate a PDF statement and send it by email
  */
-export const statementToEmail = functions().https.onCall(_statementToEmail);
+export const statementToEmail = functions(heavyConfig).https.onCall(_statementToEmail);
 
 /**
  * When user wants to remove a file without removing waterfallDocument
