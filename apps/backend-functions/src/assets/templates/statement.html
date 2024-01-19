@@ -71,7 +71,21 @@
           <span>Calculation breakdown</span>
           <div>Net Receipts</div>
         </div>
+        <div class="surface">
+          <div class="header">
+            <h3>Receipt Share Name</h3>
+          </div>
+        </div>
       </div>
+
+      {{#if (eq data.statement.type "producer")}}
+        <div class="breakdown">
+          <div class="header">
+            <span>Calculation details</span>
+          </div>
+        </div>
+      {{/if}}
+
       {{#if data.statement.comment}}
         <div class="surface">
           <h3>Comment</h3>

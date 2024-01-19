@@ -167,8 +167,9 @@ h1 {
   color: #1f2a3b;
 }
 
-/** COMMENT **/
+/** SURFACE **/
 .surface {
+  background-color: #FFFFFF;
   border: 1px solid #d3d5dc;
   border-radius: 4px;
   margin-top: 24px;
