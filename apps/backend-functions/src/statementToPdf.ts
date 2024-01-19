@@ -56,16 +56,15 @@ export const statementToPdf = async (req: StatementPdfRequest, res: Response) =>
   return;
 };
 
-export const statementToEmail = async (data: { request: StatementPdfParams, email: string }, context: CallableContext) => {
+export const statementToEmail = async (data: { request: StatementPdfParams, emails: string[] }, context: CallableContext) => {
   if (!context?.auth) throw new Error('Permission denied: missing auth context.');
   const { statementId, waterfallId, number, versionId } = data.request;
   if (!statementId || !waterfallId || !versionId) throw new Error('Permission denied: missing data.');
 
   const buffer = await _statementToPdf(statementId, waterfallId, number, versionId);
-  await sendMailWithEnclosedStatement(waterfallId, { email: data.email }, data.request.fileName, buffer);
+  await Promise.all(data.emails.map(email => sendMailWithEnclosedStatement(waterfallId, { email }, data.request.fileName, buffer)));
   return true;
 };
-
 
 async function _statementToPdf(statementId: string, waterfallId: string, number: number, versionId: string) {
   const _statements = await getCollection<Statement>(`waterfall/${waterfallId}/statements`);

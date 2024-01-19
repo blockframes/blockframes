@@ -1,0 +1,18 @@
+h2 {
+  text-align: center;
+  font-weight: 800;
+  font-size: 36px;
+  line-height: 36px;
+}
+
+header { 
+  text-align: center;
+}
+
+mat-dialog-actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
+  flex-wrap: inherit;
+}

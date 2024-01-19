@@ -1,0 +1,16 @@
+<global-modal>
+  <h2>Share your Statement</h2>
+  <header>
+    <p class="mat-body-1">Provide and verify Recipient’s email before sending. You can add several Recipients in a time.</p>
+  </header>
+
+  <mat-dialog-actions>
+    <button mat-flat-button color="primary" (click)="confirm()">
+      <span>Send</span>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
+    </button>
+    <button mat-button (click)="close()">
+      Close window
+    </button>
+  </mat-dialog-actions>
+</global-modal>

@@ -21,7 +21,7 @@ import { sorts } from '@blockframes/ui/list/table/sorts';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { DownloadStatementSettings, PdfService } from '@blockframes/utils/pdf.service';
 import { CallableFunctions } from 'ngfire';
-
+import { StatementShareComponent } from '../statement-share/statement-share.component';
 
 function statementFileName(statement: Statement & { number: number }) {
   return `${toLabel(statement.type, 'statementType')} Statement ${statement.number}`;
@@ -130,16 +130,25 @@ export class StatementTableComponent {
       fileName: statementFileName(statement)
     };
 
-    const email = 'bdelorme@cascade8.com'; // TODO #9583 get from modal
-    const snackbarRef = this.snackBar.open(`Please wait, statement is being sent to "${email}" ...`);
+    this.dialog.open(StatementShareComponent, {
+      data: createModalData({
+        statement,
+        waterfall: this.shell.waterfall,
+        versionId: this.shell.versionId$.value,
+        onConfirm: async (emails: string[]) => {
+          const emailStr = emails.length === 1 ? `"${emails[0]}"` : `${emails.length} emails`;
+          const snackbarRef = this.snackBar.open(`Please wait, statement is being sent to ${emailStr} ...`);
 
-    const output = await this.functions.call<{ request: StatementPdfParams, email: string }, boolean>('statementToEmail', { request, email });
-    snackbarRef.dismiss();
-    if (!output) {
-      this.snackBar.open('An error occurred, please try again.', 'close', { duration: 5000 });
-    } else {
-      this.snackBar.open('The statement has been successfully sent!', 'close', { duration: 5000 });
-    }
+          const output = await this.functions.call<{ request: StatementPdfParams, emails: string[] }, boolean>('statementToEmail', { request, emails });
+          snackbarRef.dismiss();
+          if (!output) {
+            this.snackBar.open('An error occurred, please try again.', 'close', { duration: 5000 });
+          } else {
+            this.snackBar.open('The statement has been successfully sent!', 'close', { duration: 5000 });
+          }
+        }
+      })
+    });
   }
 }
 
