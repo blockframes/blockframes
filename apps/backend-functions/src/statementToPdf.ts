@@ -124,6 +124,7 @@ async function generate(
     import('path'),
     import('puppeteer'),
   ]);
+  hb.registerHelper('eq', (a, b) => a == b);
 
   // Data
   const rightholderKey = statement.type === 'producer' ? 'receiverId' : 'senderId';

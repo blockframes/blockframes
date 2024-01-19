@@ -6,6 +6,10 @@ body {
   font-family: Montserrat, Helvetica Neue, sans-serif;
 }
 
+html {
+  -webkit-print-color-adjust: exact;
+}
+
 @media print {
   .page {
     page-break-after: always;
@@ -118,4 +122,64 @@ h1 {
 
 .statement-parties .party-desc {
   min-height: 60px;
+}
+
+/** STATEMENT PARTICIPATION **/
+.statement-participation {
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  background-color: #e2e7fe;
+  color: #3c64f7;
+  font-weight: 800;
+  font-size: 24px;
+  text-transform: uppercase;
+  line-height: 24px;
+  border-bottom: 1px solid #C0C0C0;
+}
+
+/** BREAKDOWN **/
+.breakdown {
+  background-color: #f2f4f8;
+  border: 1px solid #d3d5dc;
+  border-radius: 4px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  padding: 24px;
+}
+
+.breakdown .header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.breakdown .header div, .breakdown .header span {
+  font-weight: 800;
+  font-size: 24px;
+  line-height: 24px;
+}
+
+.breakdown .header span {
+  color: #454E5D;
+}
+.breakdown .header div {
+  color: #1f2a3b;
+}
+
+/** COMMENT **/
+.surface {
+  border: 1px solid #d3d5dc;
+  border-radius: 4px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  padding: 24px;
+}
+
+.surface h3 {
+  color: #1f2a3b;
+  font-weight: 800;
+  font-size: 22px;
+  line-height: 24px;
+  margin-top: 0px;
 }

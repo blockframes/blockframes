@@ -57,6 +57,27 @@
           <div class="separator"></div>
         </div>
       </div>
+      <div class="statement-participation">
+        <span>total participation:</span>
+        <span>
+          {{#if (eq data.statement.payments.rightholder.currency "EUR")}}€{{/if}}
+          {{#if (eq data.statement.payments.rightholder.currency "USD")}}${{/if}}
+          {{data.statement.payments.rightholder.price}}
+        </span>
+      </div>
+
+      <div class="breakdown">
+        <div class="header">
+          <span>Calculation breakdown</span>
+          <div>Net Receipts</div>
+        </div>
+      </div>
+      {{#if data.statement.comment}}
+        <div class="surface">
+          <h3>Comment</h3>
+          <p>{{data.statement.comment}}</p>
+        </div>
+      {{/if}}
     </div>
 
     {{#data.parentStatements}}
