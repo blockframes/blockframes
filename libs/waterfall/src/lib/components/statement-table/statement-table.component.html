@@ -73,7 +73,7 @@
       </button>
       <ng-container *ngIf="!!statement.payments.rightholder && statement.payments.rightholder.status !== 'received'">
         <button *ngIf="actions.payment" mat-icon-button [disabled]="(canBypassRules$ | async) !== true" (click)="payment(statement)">
-          <mat-icon color="primary" svgIcon="payment" matTooltip="Pending payment"></mat-icon>
+          <mat-icon color="primary" svgIcon="payment" matTooltip="Pending Payment"></mat-icon>
         </button>
       </ng-container>
     </ng-container>
