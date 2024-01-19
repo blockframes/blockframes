@@ -6,16 +6,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 
-import { WaterfallPoolModalComponent } from './pool-modal.component';
+import { WaterfallDeleteRightModalComponent } from './delete-right-modal.component';
 
 
 @NgModule({
-  declarations: [ WaterfallPoolModalComponent ],
+  declarations: [ WaterfallDeleteRightModalComponent ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -24,10 +23,9 @@ import { WaterfallPoolModalComponent } from './pool-modal.component';
 
     MatInputModule,
     MatDialogModule,
-    MatSelectModule,
     MatButtonModule,
     MatFormFieldModule,
   ],
-  exports: [ WaterfallPoolModalComponent ],
+  exports: [ WaterfallDeleteRightModalComponent ],
 })
-export class WaterfallPoolModalModule {}
+export class WaterfallDeleteRightModalModule {}
