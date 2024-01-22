@@ -184,3 +184,56 @@ h1 {
   line-height: 24px;
   margin-top: 0px;
 }
+
+.surface table {
+  color: #666b81;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.surface table td:first-of-type, .surface table th:first-of-type {
+  border-left: solid 1px #d3d5dc;
+}
+
+.surface table td:last-of-type, .surface table th:last-of-type {
+  border-right: solid 1px #d3d5dc;
+}
+
+.surface table th {
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.surface table td, .surface table th {
+  border-top: solid 1px #d3d5dc;
+  border-bottom: solid 1px #d3d5dc;
+  border-collapse: collapse;
+  font-size: 13px;
+  font-weight: 400;
+  padding: 16px;
+}
+
+.surface table tr.net td {
+  font-weight: bold;
+}
+
+.surface table.groups tr.total td, .surface table.groups tr.right td {
+  font-weight: bold;
+}
+
+div.total-net {
+  font-weight: 800;
+  font-size: 24px;
+  line-height: 24px;
+  text-align: right;
+  color: #1f2a3b;
+}
+
+div.to-be-recouped{
+  font-weight: 800;
+  font-size: 20px;
+  line-height: 24px;
+  text-align: right;
+  color: var(--foreground-third-text);
+  padding-top: 32px;
+}

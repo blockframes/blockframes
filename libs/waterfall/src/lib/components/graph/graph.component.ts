@@ -34,7 +34,6 @@ import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.co
 import { WaterfallDeleteRightModalComponent } from './delete-right-modal/delete-right-modal.component';
 import { Arrow, Node, computeDiff, createChild, createSibling, createStep, deleteStep, fromGraph, toGraph, updateParents } from './layout';
 
-
 @Component({
   selector: 'waterfall-graph',
   templateUrl: './graph.component.html',
@@ -55,6 +54,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   rights: Right[];
   waterfall = this.shell.waterfall;
+  private producer = this.waterfall.rightholders.find(r => r.roles.includes('producer'));
   private version: Version;
   isDefaultVersion: boolean;
   private defaultVersionId: string;
@@ -88,6 +88,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    if (!this.producer) this.snackBar.open(`Producer is not defined.`, 'close', { duration: 5000 });
     this.subscription = combineLatest([
       this.shell.rights$,
       this.shell.waterfall$,
@@ -108,7 +109,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.canUpdateGraph = true;
       if ((this.version?.id && !this.isDefaultVersion && !this.version.standalone) || statements.length > 0) {
         this.rightForm.disable();
-        if(statements.length  > 0 ) {
+        if (statements.length === 0) {
           this.rightForm.controls.percent.enable();
           this.rightForm.controls.steps.enable();
         }
@@ -166,7 +167,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     const rightId = this.selected$.getValue();
 
     const graph = this.nodes$.getValue();
-    updateParents(rightId, this.rightForm.controls.parents.value, graph);
+    updateParents(rightId, this.rightForm.controls.parents.value, graph, this.producer?.id);
     const newGraph = fromGraph(graph, this.version);
     const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
     const right = changes.updated.rights.find(right => right.id === rightId);
@@ -239,7 +240,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       return;
     }
     const graph = this.nodes$.getValue();
-    createSibling(id, graph);
+    createSibling(id, graph, this.producer?.id);
     const newGraph = fromGraph(graph, this.version);
     const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
 
@@ -259,7 +260,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       return;
     }
     const graph = this.nodes$.getValue();
-    createChild(id, graph);
+    createChild(id, graph, this.producer?.id);
     const newGraph = fromGraph(graph, this.version);
     const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
 

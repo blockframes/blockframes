@@ -95,6 +95,7 @@ export function createVertical(group: CreateVertical): VerticalState {
   const { id, children, previous, percent } = group;
   const childOrgs = Array.from(new Set(children.filter(c => c.type === 'right').map((c: any) => c.orgId)));
   if (childOrgs.length > 1) throw new Error(`Childrens of vertical group "${group.id}" must have the same organizations`);
+  if (!childOrgs[0]) throw new Error(`Childrens of vertical group "${group.id}" must have an organization`);
   return {
     id,
     percent: percent ?? 1,

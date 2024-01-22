@@ -1,6 +1,5 @@
 import { DocumentMeta } from './meta';
 import type { MovieCurrency, PaymentStatus } from './static/types';
-import { Statement } from './waterfall';
 
 export interface Expense {
   _meta?: DocumentMeta;
@@ -66,12 +65,4 @@ function createExpenseCap(params: Partial<ExpenseCap> = {}): ExpenseCap {
     default: params.default ?? 0,
     version: params.version ?? {},
   };
-}
-
-export function convertExpensesTo(expenses: Expense[], versionId: string, statements: Statement[]) {
-  if (!versionId) return expenses;
-  return expenses.map(e => {
-    const price = (e.version && e.version[versionId] !== undefined) ? e.version[versionId].price : e.price;
-    return { ...e, price };
-  }).filter(e => statements.find(s => s.expenseIds?.includes(e.id)));
 }

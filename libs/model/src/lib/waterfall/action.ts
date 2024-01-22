@@ -476,6 +476,7 @@ interface AppendRight extends RightAction {
 function append(state: TitleState, payload: AppendRight) {
   const { previous, ...baseRight } = payload;
   const right = createRightState({ previous: toArray(previous), ...baseRight });
+  if (!right.orgId) throw new Error(`Missing orgId on right "${right.id}"`);
   state.rights[right.id] = right;
   state.orgs[right.orgId] ||= createOrg({ id: right.orgId });
   for (const pool of right.pools) {
@@ -490,6 +491,7 @@ interface PrependRight extends RightAction {
 function prepend(state: TitleState, payload: PrependRight) {
   const { next, ...baseRight } = payload;
   const right = createRightState(baseRight);
+  if (!right.orgId) throw new Error(`Missing orgId on right "${right.id}"`);
   prependNode(state, toArray(next), payload.id);
   state.rights[right.id] = right;
   state.orgs[right.orgId] ||= createOrg({ id: right.orgId });
@@ -538,6 +540,7 @@ interface AppendHorizontal extends AppendGroup {
 }
 
 function appendHorizontal(state: TitleState, payload: AppendHorizontal) {
+  if (!payload.blameId) throw new Error('Missing blameId on horizontal group');
   createGroupChildren(state, payload.children);
   state.horizontals[payload.id] = createHorizontal({
     id: payload.id,
@@ -560,6 +563,7 @@ interface PrependHorizontal extends PrependGroup {
 }
 
 function prependHorizontal(state: TitleState, payload: PrependHorizontal) {
+  if (!payload.blameId) throw new Error('Missing blameId on horizontal group');
   createGroupChildren(state, payload.children);
   prependNode(state, toArray(payload.next), payload.id);
   state.horizontals[payload.id] = createHorizontal({
