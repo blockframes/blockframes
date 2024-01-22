@@ -90,7 +90,6 @@ async function _statementToPdf(statementId: string, waterfallId: string, number:
     movie,
     { ...statement, number },
     waterfall,
-    waterfall.rightholders,
     isProducerStatement(statement) ? parentStatements : [],
     contract
   );
@@ -105,10 +104,10 @@ async function generate(
   movie: Movie,
   statement: (Statement & { number: number }),
   waterfall: Waterfall,
-  rightholders: WaterfallRightholder[],
   _parentStatements: Statement[] = [],
   contract: WaterfallContract,
 ) {
+  const rightholders = waterfall.rightholders;
   const [fs, hb, path, { default: puppeteer }] = await Promise.all([
     import('fs'),
     import('handlebars'),
