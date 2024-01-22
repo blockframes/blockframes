@@ -117,12 +117,12 @@ async function generate(
   ]);
   hb.registerHelper('eq', (a, b) => a === b);
   hb.registerHelper('pricePerCurrency', (price: PricePerCurrency) => {
-    if (price.USD) return `${toLabel('USD', 'movieCurrenciesSymbols')} ${price.USD}`;
-    if (price.EUR) return `${toLabel('EUR', 'movieCurrenciesSymbols')} ${price.EUR}`;
+    if (price.USD) return `${toLabel('USD', 'movieCurrenciesSymbols')} ${(Math.round(price.USD * 100) / 100).toFixed(2)}`;
+    if (price.EUR) return `${toLabel('EUR', 'movieCurrenciesSymbols')} ${(Math.round(price.EUR * 100) / 100).toFixed(2)}`;
     return '€ O';
   });
   hb.registerHelper('formatPair', (price: number, currency: MovieCurrency) => {
-    return `${toLabel(currency, 'movieCurrenciesSymbols')} ${price}`;
+    return `${toLabel(currency, 'movieCurrenciesSymbols')} ${(Math.round(price * 100) / 100).toFixed(2)}`;
   });
   hb.registerHelper('date', (date: Date) => {
     return format(date, 'dd/MM/yyyy');
@@ -186,7 +186,7 @@ async function generate(
       contract,
       rightholder,
       parentStatements,
-      mainCurrency: mainCurrency === 'EUR' ? '€' : '$',
+      mainCurrency
     }
   };
 

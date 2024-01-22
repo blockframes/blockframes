@@ -130,7 +130,7 @@
                       {{/if}}
                     </td>
                     <td>
-                      {{../../data.mainCurrency}} {{taken}}
+                      {{formatPair taken ../../data.mainCurrency}}
                     </td>
                   </tr>
                 {{/rows}}
@@ -179,11 +179,11 @@
                   <td>{{from}}</td>
                   <td>{{to}}</td>
                   <td>
-                    {{../../data.mainCurrency}} {{amount}}
+                    {{formatPair amount ../../data.mainCurrency}}
                   </td>
                   <td>{{percent}}</td>
                   <td>
-                    {{../../data.mainCurrency}} {{taken}}
+                    {{formatPair taken ../../data.mainCurrency}}
                   </td>
                 </tr>
               {{/details}}
@@ -193,8 +193,8 @@
         </div>
       {{/if}}
 
-      <div class="breakdown">
-        {{#if data.statement.reportedData.rightsBreakdown}}
+      {{#if data.statement.reportedData.rightsBreakdown}}
+        <div class="breakdown">
           {{#data.statement.reportedData.rightsBreakdown}}
             <div class="surface">
               <div class="header">
@@ -237,9 +237,11 @@
               {{/if}}
             </div>
           {{/data.statement.reportedData.rightsBreakdown}}
-        {{/if}}
+        </div>
+      {{/if}}
 
-        {{#if data.statement.reportedData.expenses}}
+      {{#if data.statement.reportedData.expenses}}
+        <div class="breakdown">
           <div class="surface">
             <div class="header">
               <h3>
@@ -273,9 +275,9 @@
               {{/data.statement.reportedData.expenses}}
             </table>
           </div>
-        {{/if}}
-      </div>
-
+        </div>
+      {{/if}}
+      
       <div class="statement-participation">
         <span>total participation:</span>
         <span>
