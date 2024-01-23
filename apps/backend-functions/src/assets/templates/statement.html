@@ -57,12 +57,15 @@
           <div class="separator"></div>
         </div>
       </div>
-      <div class="statement-participation">
-        <span>total participation:</span>
-        <span>
-          {{formatPair data.statement.payments.rightholder.price data.statement.payments.rightholder.currency}}
-        </span>
-      </div>
+
+      {{#if data.statement.payments.rightholder}}
+        <div class="statement-participation">
+          <span>total participation:</span>
+          <span>
+            {{formatPair data.statement.payments.rightholder.price data.statement.payments.rightholder.currency}}
+          </span>
+        </div>
+      {{/if}}
 
       <div class="breakdown">
         <div class="header">
@@ -277,12 +280,14 @@
           </div>
         </div>
       {{/if}}
-      
-      <div class="statement-participation">
-        <span>total participation:</span>
-        <span>
-          {{formatPair data.statement.payments.rightholder.price data.statement.payments.rightholder.currency}}
-      </div>
+
+      {{#if data.statement.payments.rightholder}}
+        <div class="statement-participation">
+          <span>total participation:</span>
+          <span>
+            {{formatPair data.statement.payments.rightholder.price data.statement.payments.rightholder.currency}}
+        </div>
+      {{/if}}
 
       {{#if data.statement.comment}}
         <div class="surface">
@@ -332,12 +337,15 @@
             <div class="separator"></div>
           </div>
         </div>
-        <div class="statement-participation">
-          <span>total participation:</span>
-          <span>
-            {{formatPair payments.rightholder.price payments.rightholder.currency}}
-          </span>
-        </div>
+
+        {{#if payments.rightholder}}
+          <div class="statement-participation">
+            <span>total participation:</span>
+            <span>
+              {{formatPair payments.rightholder.price payments.rightholder.currency}}
+            </span>
+          </div>
+        {{/if}}
   
         <div class="breakdown">
           <div class="header">
@@ -466,12 +474,14 @@
           {{/if}}
         </div>
   
-        <div class="statement-participation">
-          <span>total participation:</span>
-          <span>
-            {{formatPair payments.rightholder.price payments.rightholder.currency}}
-        </div>
-  
+        {{#if payments.rightholder}}
+          <div class="statement-participation">
+            <span>total participation:</span>
+            <span>
+              {{formatPair payments.rightholder.price payments.rightholder.currency}}
+          </div>
+        {{/if}}
+
         {{#if comment}}
           <div class="surface">
             <h3>Comment</h3>
