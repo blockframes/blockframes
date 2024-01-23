@@ -48,7 +48,7 @@
   </ng-template>
   <ng-template *ngIf="columns.actions" colRef="" label="Actions" let-statement sticky>
     <a *ngIf="actions.crm" mat-icon-button [routerLink]="['/c/o/dashboard/crm/waterfall', statement.waterfallId, 'statements', statement.id]" (click)="$event.stopPropagation()">
-      <mat-icon svgIcon="edit" matTooltip="Edit Statement"></mat-icon>
+      <mat-icon svgIcon="visibility" matTooltip="View Statement"></mat-icon>
     </a>
     <button *ngIf="actions.delete" mat-icon-button (click)="delete.emit(statement)">
       <mat-icon svgIcon="delete" matTooltip="Delete statement"></mat-icon>
