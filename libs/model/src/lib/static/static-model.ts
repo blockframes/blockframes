@@ -915,6 +915,7 @@ export const rightTypes = {
   vertical: 'Vertical Group',
   rnpp: 'RNPP',
   residuals: 'Residuals',
+  royalties: 'Royalty fee',
   unknown: 'Unknown'
 } as const
 
