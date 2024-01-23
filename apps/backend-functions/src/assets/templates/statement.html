@@ -418,8 +418,8 @@
         {{/if}}
 
         <div class="group">
-          <div class="breakdown">
-            {{#if reportedData.rightsBreakdown}}
+          {{#if reportedData.rightsBreakdown}}
+            <div class="breakdown">
               {{#reportedData.rightsBreakdown}}
                 <div class="surface">
                   <div class="header">
@@ -462,9 +462,11 @@
                   {{/if}}
                 </div>
               {{/reportedData.rightsBreakdown}}
-            {{/if}}
-    
-            {{#if reportedData.expenses}}
+            </div>
+          {{/if}}
+  
+          {{#if reportedData.expenses}}
+            <div class="breakdown">
               <div class="surface">
                 <div class="header">
                   <h3>Expenses details</h3>
@@ -486,8 +488,8 @@
                   {{/reportedData.expenses}}
                 </table>
               </div>
-            {{/if}}
-          </div>
+            </div>
+          {{/if}}
     
           {{#if payments.rightholder}}
             <div class="statement-participation">
