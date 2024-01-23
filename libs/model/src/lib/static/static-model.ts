@@ -913,6 +913,8 @@ export const rightTypes = {
   mg: 'MG Recoupment',
   horizontal: 'Horizontal Group',
   vertical: 'Vertical Group',
+  rnpp: 'RNPP',
+  residuals: 'Residuals',
   unknown: 'Unknown'
 } as const
 
