@@ -9,15 +9,19 @@ import {
   createRightPayment,
   createRightholderPayment,
   createStatement,
+  filterStatements,
   generatePayments,
   getAssociatedRights,
   getDefaultVersionId,
+  getRightsBreakdown,
+  getSourcesBreakdown,
   getStatementRights,
   getStatementSources,
   isDirectSalesStatement,
   isDistributorStatement,
   isProducerStatement,
-  isStandaloneVersion
+  isStandaloneVersion,
+  sortStatements
 } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { unique } from '@blockframes/utils/helpers';
@@ -177,12 +181,15 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     const simulation = await firstValueFrom(this.shell.simulation$);
     const _rights = await this.shell.rights();
     const incomes = await this.shell.incomes();
+    const expenses = await this.shell.expenses();
 
     const impactedStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
       .filter(s => s.payments.right.some(r => r.incomeIds.some(id => incomeIds.includes(id))));
 
     // Rewrite right payments of impacted statements
     const statementsToUpdate = impactedStatements.map(impactedStatement => {
+      const filteredStatements = filterStatements(impactedStatement.type, [impactedStatement.senderId, impactedStatement.receiverId], impactedStatement.contractId, statements);
+      const history = sortStatements(filteredStatements);
       // Reset right payments
       const existingPaymentInfos = impactedStatement.payments.right.map(p => ({ id: p.id, to: p.to, date: p.date, status: p.status }));
       impactedStatement.payments.right = isDirectSalesStatement(impactedStatement) ? [] : impactedStatement.payments.right.filter(p => p.mode === 'internal');
@@ -200,6 +207,32 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
         return payment;
       });
 
+      updatedStatement.reportedData.sourcesBreakdown = getSourcesBreakdown(
+        this.shell.versionId$.value,
+        this.shell.waterfall,
+        sources,
+        updatedStatement,
+        incomes,
+        expenses,
+        history,
+        _rights,
+        simulation.waterfall.state
+      );
+
+      updatedStatement.reportedData.rightsBreakdown = getRightsBreakdown(
+        this.waterfall,
+        updatedStatement,
+        incomes,
+        expenses,
+        history,
+        _rights,
+        simulation.waterfall.state
+      );
+
+      updatedStatement.reportedData.expenses = updatedStatement.expenseIds
+        .map(id => expenses.find(e => e.id === id))
+        .filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true)
+
       return updatedStatement;
     });
     return this.statementService.update(statementsToUpdate, { params: { waterfallId: this.waterfall.id } });
@@ -216,6 +249,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     const simulation = await firstValueFrom(this.shell.simulation$);
     const _rights = await this.shell.rights();
     const incomes = await this.shell.incomes();
+    const expenses = await this.shell.expenses();
 
     const impactedStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
       .filter(s => !s.duplicatedFrom) // Skip already duplicated statements
@@ -223,6 +257,8 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
 
     // Rewrite right payments of impacted statements
     const statementsToUpdate = impactedStatements.map(impactedStatement => {
+      const filteredStatements = filterStatements(impactedStatement.type, [impactedStatement.senderId, impactedStatement.receiverId], impactedStatement.contractId, statements);
+      const history = sortStatements(filteredStatements);
       // Reset incomes payments
       const existingIncomePaymentInfos = impactedStatement.payments.income.map(p => ({ id: p.id, incomeId: p.incomeId }));
       impactedStatement.payments.income = [];
@@ -262,6 +298,32 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
         const payment = createIncomePayment({ ...p, id: existingPaymentInfo.id });
         return payment;
       });
+
+      updatedStatement.reportedData.sourcesBreakdown = getSourcesBreakdown(
+        this.shell.versionId$.value,
+        this.shell.waterfall,
+        sources,
+        updatedStatement,
+        incomes,
+        expenses,
+        history,
+        _rights,
+        simulation.waterfall.state
+      );
+
+      updatedStatement.reportedData.rightsBreakdown = getRightsBreakdown(
+        this.waterfall,
+        updatedStatement,
+        incomes,
+        expenses,
+        history,
+        _rights,
+        simulation.waterfall.state
+      );
+
+      updatedStatement.reportedData.expenses = updatedStatement.expenseIds
+        .map(id => expenses.find(e => e.id === id))
+        .filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true)
 
       return updatedStatement;
     });

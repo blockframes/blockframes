@@ -1,25 +1,17 @@
 import { Component, ChangeDetectionStrategy, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
-  Income,
+  MaxPerIncome,
   Right,
   RightOverride,
   Statement,
   Waterfall,
-  WaterfallSource,
   createRightOverride,
   isDirectSalesStatement,
   isProducerStatement,
   mainCurrency
 } from '@blockframes/model';
 import { ArbitraryChangeForm, RightOverrideAmount } from '../../form/arbitrary-change.form';
-
-export interface MaxPerIncome {
-  income: Income;
-  max: number;
-  current: number;
-  source: WaterfallSource
-}
 
 interface StatementArbitraryChangeData {
   mode?: 'view';

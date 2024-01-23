@@ -6,6 +6,10 @@ body {
   font-family: Montserrat, Helvetica Neue, sans-serif;
 }
 
+html {
+  -webkit-print-color-adjust: exact;
+}
+
 @media print {
   .page {
     page-break-after: always;
@@ -118,4 +122,118 @@ h1 {
 
 .statement-parties .party-desc {
   min-height: 60px;
+}
+
+/** STATEMENT PARTICIPATION **/
+.statement-participation {
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  background-color: #e2e7fe;
+  color: #3c64f7;
+  font-weight: 800;
+  font-size: 24px;
+  text-transform: uppercase;
+  line-height: 24px;
+  border-bottom: 1px solid #C0C0C0;
+}
+
+/** BREAKDOWN **/
+.breakdown {
+  background-color: #f2f4f8;
+  border: 1px solid #d3d5dc;
+  border-radius: 4px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  padding: 24px;
+}
+
+.breakdown .header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.breakdown .header div, .breakdown .header span {
+  font-weight: 800;
+  font-size: 24px;
+  line-height: 24px;
+}
+
+.breakdown .header span {
+  color: #454E5D;
+}
+.breakdown .header div {
+  color: #1f2a3b;
+}
+
+/** SURFACE **/
+.surface {
+  background-color: #FFFFFF;
+  border: 1px solid #d3d5dc;
+  border-radius: 4px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  padding: 24px;
+}
+
+.surface h3 {
+  color: #1f2a3b;
+  font-weight: 800;
+  font-size: 22px;
+  line-height: 24px;
+  margin-top: 0px;
+}
+
+.surface table {
+  color: #666b81;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.surface table td:first-of-type, .surface table th:first-of-type {
+  border-left: solid 1px #d3d5dc;
+}
+
+.surface table td:last-of-type, .surface table th:last-of-type {
+  border-right: solid 1px #d3d5dc;
+}
+
+.surface table th {
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.surface table td, .surface table th {
+  border-top: solid 1px #d3d5dc;
+  border-bottom: solid 1px #d3d5dc;
+  border-collapse: collapse;
+  font-size: 13px;
+  font-weight: 400;
+  padding: 16px;
+}
+
+.surface table tr.net td {
+  font-weight: bold;
+}
+
+.surface table.groups tr.total td, .surface table.groups tr.right td {
+  font-weight: bold;
+}
+
+div.total-net {
+  font-weight: 800;
+  font-size: 24px;
+  line-height: 24px;
+  text-align: right;
+  color: #1f2a3b;
+}
+
+div.to-be-recouped{
+  font-weight: 800;
+  font-size: 20px;
+  line-height: 24px;
+  text-align: right;
+  color: var(--foreground-third-text);
+  padding-top: 32px;
 }

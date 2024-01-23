@@ -79,7 +79,7 @@
         <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'">
           <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
         </button>
-        <button mat-icon-button matTooltip="Save changes" (click)="updateRight()" [disabled]="!canUpdateGraph">
+        <button mat-icon-button matTooltip="Save changes" (click)="updateRight()">
           <mat-icon svgIcon="save"></mat-icon>
         </button>
         <button mat-icon-button matTooltip="Delete Right" (click)="delete()" [disabled]="!canUpdateGraph">

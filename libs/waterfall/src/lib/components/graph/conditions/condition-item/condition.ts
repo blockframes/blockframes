@@ -9,8 +9,8 @@ function targetToString(target: TargetValue) {
   const { percent, id, in: t } = target;
   const splitted = t.split('.');
   const moneyType = splitted.length > 1 ? splitted[1] : splitted[0];
-  const targetType = splitted.length > 1 ? `${splitted[0] }` : '';
-  return `${percent}% of ${targetType}${id}'s ${moneyType}`;
+  const targetType = splitted.length > 1 ? `${splitted[0]}` : '';
+  return `${percent * 100}% of ${targetType}${id}'s ${moneyType}`;
 }
 
 function operatorToString(operator: string) {

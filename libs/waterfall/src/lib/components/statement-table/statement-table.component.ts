@@ -109,7 +109,7 @@ export class StatementTableComponent {
       statement: statement,
       waterfallId: this.waterfall.id,
       number: statement.number,
-      versionId: this.shell.versionId$.value,
+      versionId: statement.versionId,
       fileName: statementFileName(statement)
     };
     const snackbarRef = this.snackBar.open('Please wait, your statement is being generated...');
@@ -126,7 +126,7 @@ export class StatementTableComponent {
       statementId: statement.id,
       waterfallId: this.waterfall.id,
       number: statement.number,
-      versionId: this.shell.versionId$.value,
+      versionId: statement.versionId,
       fileName: statementFileName(statement)
     };
 

@@ -1,7 +1,7 @@
 import {
-  Expense,
-  Income,
   Movie,
+  MovieCurrency,
+  PricePerCurrency,
   PublicUser,
   Statement,
   StatementPdfParams,
@@ -11,8 +11,6 @@ import {
   WaterfallDocument,
   WaterfallRightholder,
   convertDocumentTo,
-  convertExpensesTo,
-  convertIncomesTo,
   convertStatementsTo,
   displayName,
   getStatementData,
@@ -21,6 +19,7 @@ import {
   isDirectSalesStatement,
   isDistributorStatement,
   isProducerStatement,
+  mainCurrency,
   smartJoin
 } from '@blockframes/model';
 import { Response } from 'firebase-functions';
@@ -80,12 +79,6 @@ async function _statementToPdf(statementId: string, waterfallId: string, number:
   const statement = statements.find(s => s.id === statementId);
   const parentStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
     .filter(s => s.payments.right.some(r => r.incomeIds.some(id => statement.incomeIds.includes(id))));
-  const expenseIds = parentStatements.map(s => s.expenseIds).flat();
-  const incomeIds = parentStatements.map(s => s.incomeIds).flat();
-  const _incomes = await Promise.all(incomeIds.map(id => getDocument<Income>(`incomes/${id}`)));
-  const incomes = convertIncomesTo(_incomes, versionId, waterfall.sources);
-  const _expenses = await Promise.all(expenseIds.map(id => getDocument<Expense>(`expenses/${id}`)));
-  const expenses = convertExpensesTo(_expenses, versionId, parentStatements);
   let contract: WaterfallContract;
   if (statement.contractId) {
     const document = await getDocument<WaterfallDocument>(`waterfall/${waterfallId}/documents/${statement.contractId}`);
@@ -96,9 +89,7 @@ async function _statementToPdf(statementId: string, waterfallId: string, number:
     'statement',
     movie,
     { ...statement, number },
-    waterfall.rightholders,
-    incomes,
-    expenses,
+    waterfall,
     isProducerStatement(statement) ? parentStatements : [],
     contract
   );
@@ -112,22 +103,56 @@ async function generate(
   templateName: string,
   movie: Movie,
   statement: (Statement & { number: number }),
-  rightholders: WaterfallRightholder[],
-  incomes: Income[],
-  expenses: Expense[],
-  parentStatements: Statement[] = [],
+  waterfall: Waterfall,
+  _parentStatements: Statement[] = [],
   contract: WaterfallContract,
 ) {
+  const rightholders = waterfall.rightholders;
   const [fs, hb, path, { default: puppeteer }] = await Promise.all([
     import('fs'),
     import('handlebars'),
     import('path'),
     import('puppeteer'),
   ]);
+  hb.registerHelper('eq', (a, b) => a === b);
+  hb.registerHelper('pricePerCurrency', (price: PricePerCurrency) => {
+    if (price.USD) return `${toLabel('USD', 'movieCurrenciesSymbols')} ${(Math.round(price.USD * 100) / 100).toFixed(2)}`;
+    if (price.EUR) return `${toLabel('EUR', 'movieCurrenciesSymbols')} ${(Math.round(price.EUR * 100) / 100).toFixed(2)}`;
+    return '€ O';
+  });
+  hb.registerHelper('formatPair', (price: number, currency: MovieCurrency) => {
+    return `${toLabel(currency, 'movieCurrenciesSymbols')} ${(Math.round(price * 100) / 100).toFixed(2)}`;
+  });
+  hb.registerHelper('date', (date: Date) => {
+    return format(date, 'dd/MM/yyyy');
+  });
+  hb.registerHelper('expenseType', (typeId: string, contractId: string) => {
+    return waterfall.expenseTypes[contractId || 'directSales']?.find(type => type.id === typeId)?.name || '--';
+  });
+  hb.registerHelper('rightholderName', (rightholderId: string) => {
+    return rightholders.find(r => r.id === rightholderId)?.name || '--';
+  });
 
   // Data
   const rightholderKey = statement.type === 'producer' ? 'receiverId' : 'senderId';
   const rightholder = rightholders.find(r => r.id === statement[rightholderKey]);
+  const totalNetReceipt = statement.reportedData.sourcesBreakdown?.map(s => s.net).reduce((acc, curr) => {
+    for (const currency of Object.keys(curr)) {
+      acc[currency] = (acc[currency] || 0) + curr[currency];
+    }
+    return acc;
+  }, {});
+  const parentStatements = _parentStatements.map(stm => ({
+    ...stm,
+    sender: rightholders.find(r => r.id === stm.senderId).name,
+    receiver: rightholders.find(r => r.id === stm.receiverId).name,
+    totalNetReceipt: stm.reportedData.sourcesBreakdown.map(s => s.net).reduce((acc, curr) => {
+      for (const currency of Object.keys(curr)) {
+        acc[currency] = (acc[currency] || 0) + curr[currency];
+      }
+      return acc;
+    }, {})
+  }));
 
   // CSS
   const css = fs.readFileSync(path.resolve(`assets/style/${templateName}.css`), 'utf8');
@@ -153,25 +178,14 @@ async function generate(
       },
       statement: {
         ...statement,
-        duration: {
-          from: format(statement.duration.from, 'dd/MM/yyyy'),
-          to: format(statement.duration.to, 'dd/MM/yyyy'),
-        },
         sender: rightholders.find(r => r.id === statement.senderId).name,
         receiver: rightholders.find(r => r.id === statement.receiverId).name,
+        totalNetReceipt,
       },
-      contract: contract ? {
-        ...contract,
-        signatureDate: format(contract.signatureDate, 'dd/MM/yyyy'),
-      } : undefined,
+      contract,
       rightholder,
-      parentStatements: parentStatements.map(s => ({
-        ...s,
-        duration: {
-          from: format(s.duration.from, 'dd/MM/yyyy'),
-          to: format(s.duration.to, 'dd/MM/yyyy'),
-        }
-      }))
+      parentStatements,
+      mainCurrency
     }
   };
 
