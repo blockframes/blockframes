@@ -115,6 +115,7 @@ async function generate(
     import('puppeteer'),
   ]);
   hb.registerHelper('eq', (a, b) => a === b);
+  hb.registerHelper('isLast', (index, array) => index === array.length - 1);
   hb.registerHelper('pricePerCurrency', (price: PricePerCurrency) => {
     if (price.USD) return `${toLabel('USD', 'movieCurrenciesSymbols')} ${(Math.round(price.USD * 100) / 100).toFixed(2)}`;
     if (price.EUR) return `${toLabel('EUR', 'movieCurrenciesSymbols')} ${(Math.round(price.EUR * 100) / 100).toFixed(2)}`;
@@ -220,8 +221,8 @@ async function generate(
     headerTemplate: cssHeader.join(''),
     footerTemplate: `<p></p>`, // If left empty, default is page number
     margin: {
-      top: '0px',
-      bottom: '0px',
+      top: '12px',
+      bottom: '12px',
     },
   });
   await browser.close();

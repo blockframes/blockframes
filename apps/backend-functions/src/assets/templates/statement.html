@@ -57,21 +57,25 @@
           <div class="separator"></div>
         </div>
       </div>
-      <div class="statement-participation">
-        <span>total participation:</span>
-        <span>
-          {{formatPair data.statement.payments.rightholder.price data.statement.payments.rightholder.currency}}
-        </span>
-      </div>
 
-      <div class="breakdown">
-        <div class="header">
-          <span>Calculation breakdown</span>
-          <div>Net Receipts</div>
+      {{#if data.statement.payments.rightholder}}
+        <div class="statement-participation">
+          <span>total participation:</span>
+          <span>
+            {{formatPair data.statement.payments.rightholder.price data.statement.payments.rightholder.currency}}
+          </span>
         </div>
+      {{/if}}
 
-        {{#if data.statement.reportedData.sourcesBreakdown}}
-          {{#data.statement.reportedData.sourcesBreakdown}}
+      {{#if data.statement.reportedData.sourcesBreakdown}}
+        {{#data.statement.reportedData.sourcesBreakdown}}
+          <div class="breakdown">
+            {{#if (eq @index 0)}}
+              <div class="header">
+                <span>Calculation breakdown</span>
+                <div>Net Receipts</div>
+              </div>
+            {{/if}}
             <div class="surface">
               <div class="header">
                 <h3>{{name}}</h3>
@@ -106,11 +110,29 @@
                 {{/rows}}
               </table>
             </div>
-          {{/data.statement.reportedData.sourcesBreakdown}}
-        {{/if}}
+            {{#if (isLast @index ../data.statement.reportedData.sourcesBreakdown)}}
+              {{#if ../data.statement.totalNetReceipt}}
+                <div class="total-net">
+                  Total Net Receipts:
+                  <span>
+                    {{pricePerCurrency ../data.statement.totalNetReceipt}}
+                  </span>
+                </div>
+              {{/if}}
+            {{/if}}
+          </div>
+        {{/data.statement.reportedData.sourcesBreakdown}}
+      {{/if}}
 
-        {{#if data.statement.reportedData.groupsBreakdown}}
-          {{#data.statement.reportedData.groupsBreakdown}}
+      {{#if data.statement.reportedData.groupsBreakdown}}
+        {{#data.statement.reportedData.groupsBreakdown}}
+          <div class="breakdown">
+            {{#if (eq @index 0)}}
+              <div class="header">
+                <span>Calculation breakdown</span>
+                <div>Net Receipts</div>
+              </div>
+            {{/if}}
             <div class="surface">
               <div class="header">
                 <h3>{{group.name}}</h3>
@@ -142,55 +164,47 @@
                 </div>
               {{/if}}
             </div>
-          {{/data.statement.reportedData.groupsBreakdown}}
-        {{/if}}
-
-        {{#if data.statement.totalNetReceipt}}
-          <div class="total-net">
-            Total Net Receipts:
-            <span>
-              {{pricePerCurrency data.statement.totalNetReceipt}}
-            </span>
           </div>
-        {{/if}}
-      
-      </div>
+        {{/data.statement.reportedData.groupsBreakdown}}
+      {{/if}}
 
       {{#if data.statement.reportedData.details}}
-        <div class="breakdown">
-          <div class="header">
-            <span>Calculation details</span>
-          </div>
-          {{#data.statement.reportedData.details}}
-          <div class="surface">
-            <div class="header">
-              <h3>{{name}}</h3>
-            </div>
-            <table class="groups">
-              <tr>
-                <th>From</th>
-                <th>To</th>
-                <th></th>
-                <th>%</th>
-                <th>Taken</th>
-              </tr>
-              {{#details}}
+        {{#data.statement.reportedData.details}}
+          <div class="breakdown">
+            {{#if (eq @index 0)}}
+              <div class="header">
+                <span>Calculation details</span>
+              </div>
+            {{/if}}
+            <div class="surface">
+              <div class="header">
+                <h3>{{name}}</h3>
+              </div>
+              <table class="groups">
                 <tr>
-                  <td>{{from}}</td>
-                  <td>{{to}}</td>
-                  <td>
-                    {{formatPair amount ../../data.mainCurrency}}
-                  </td>
-                  <td>{{percent}}</td>
-                  <td>
-                    {{formatPair taken ../../data.mainCurrency}}
-                  </td>
+                  <th>From</th>
+                  <th>To</th>
+                  <th></th>
+                  <th>%</th>
+                  <th>Taken</th>
                 </tr>
-              {{/details}}
-            </table>
+                {{#details}}
+                  <tr>
+                    <td>{{from}}</td>
+                    <td>{{to}}</td>
+                    <td>
+                      {{formatPair amount ../../data.mainCurrency}}
+                    </td>
+                    <td>{{percent}}</td>
+                    <td>
+                      {{formatPair taken ../../data.mainCurrency}}
+                    </td>
+                  </tr>
+                {{/details}}
+              </table>
+            </div>
           </div>
         {{/data.statement.reportedData.details}}
-        </div>
       {{/if}}
 
       {{#if data.statement.reportedData.rightsBreakdown}}
@@ -240,48 +254,52 @@
         </div>
       {{/if}}
 
-      {{#if data.statement.reportedData.expenses}}
-        <div class="breakdown">
-          <div class="surface">
-            <div class="header">
-              <h3>
-                {{#if (eq data.statement.type "producer")}}
-                  Distributor details
-                {{else}}
-                  Expenses details
-                {{/if}}
-              </h3>
-            </div>
-            <table>
-              <tr>
-                {{#if (eq data.statement.type "producer")}}
-                  <th>Rightholder</th>
-                {{/if}}
-                <th>Date</th>
-                <th>Nature</th>
-                <th>Type</th>
-                <th>Price</th>
-              </tr>
-              {{#data.statement.reportedData.expenses}}
-                <tr>
-                  {{#if (eq ../data.statement.type "producer")}}
-                    <td>{{rightholderName rightholderId}}</td>
+      <div class="group">
+        {{#if data.statement.reportedData.expenses}}
+          <div class="breakdown">
+            <div class="surface">
+              <div class="header">
+                <h3>
+                  {{#if (eq data.statement.type "producer")}}
+                    Distributor details
+                  {{else}}
+                    Expenses details
                   {{/if}}
-                  <td>{{date date}}</td>
-                  <td>{{nature}}</td>
-                  <td>{{expenseType typeId contractId}}</td>
-                  <td>{{formatPair price currency}}</td>
+                </h3>
+              </div>
+              <table>
+                <tr>
+                  {{#if (eq data.statement.type "producer")}}
+                    <th>Rightholder</th>
+                  {{/if}}
+                  <th>Date</th>
+                  <th>Nature</th>
+                  <th>Type</th>
+                  <th>Price</th>
                 </tr>
-              {{/data.statement.reportedData.expenses}}
-            </table>
+                {{#data.statement.reportedData.expenses}}
+                  <tr>
+                    {{#if (eq ../data.statement.type "producer")}}
+                      <td>{{rightholderName rightholderId}}</td>
+                    {{/if}}
+                    <td>{{date date}}</td>
+                    <td>{{nature}}</td>
+                    <td>{{expenseType typeId contractId}}</td>
+                    <td>{{formatPair price currency}}</td>
+                  </tr>
+                {{/data.statement.reportedData.expenses}}
+              </table>
+            </div>
           </div>
-        </div>
-      {{/if}}
-      
-      <div class="statement-participation">
-        <span>total participation:</span>
-        <span>
-          {{formatPair data.statement.payments.rightholder.price data.statement.payments.rightholder.currency}}
+        {{/if}}
+
+        {{#if data.statement.payments.rightholder}}
+          <div class="statement-participation">
+            <span>total participation:</span>
+            <span>
+              {{formatPair data.statement.payments.rightholder.price data.statement.payments.rightholder.currency}}
+          </div>
+        {{/if}}
       </div>
 
       {{#if data.statement.comment}}
@@ -332,21 +350,25 @@
             <div class="separator"></div>
           </div>
         </div>
-        <div class="statement-participation">
-          <span>total participation:</span>
-          <span>
-            {{formatPair payments.rightholder.price payments.rightholder.currency}}
-          </span>
-        </div>
-  
-        <div class="breakdown">
-          <div class="header">
-            <span>Calculation breakdown</span>
-            <div>Net Receipts</div>
+
+        {{#if payments.rightholder}}
+          <div class="statement-participation">
+            <span>total participation:</span>
+            <span>
+              {{formatPair payments.rightholder.price payments.rightholder.currency}}
+            </span>
           </div>
-  
-          {{#if reportedData.sourcesBreakdown}}
-            {{#reportedData.sourcesBreakdown}}
+        {{/if}}
+    
+        {{#if reportedData.sourcesBreakdown}}
+          {{#reportedData.sourcesBreakdown}}
+            <div class="breakdown">
+              {{#if (eq @index 0)}}
+                <div class="header">
+                  <span>Calculation breakdown</span>
+                  <div>Net Receipts</div>
+                </div>
+              {{/if}}
               <div class="surface">
                 <div class="header">
                   <h3>{{name}}</h3>
@@ -381,97 +403,103 @@
                   {{/rows}}
                 </table>
               </div>
-            {{/reportedData.sourcesBreakdown}}
-          {{/if}}
-  
-          {{#if totalNetReceipt}}
-            <div class="total-net">
-              Total Net Receipts:
-              <span>
-                {{pricePerCurrency totalNetReceipt}}
-              </span>
-            </div>
-          {{/if}}
-        
-        </div>
-
-        <div class="breakdown">
-          {{#if reportedData.rightsBreakdown}}
-            {{#reportedData.rightsBreakdown}}
-              <div class="surface">
-                <div class="header">
-                  <h3>{{name}}</h3>
-                  <div>{{pricePerCurrency total}}</div>
-                </div>
-                <table>
-                  <tr>
-                    <th>Section</th>
-                    <th>Prior Period</th>
-                    <th>Current Period</th>
-                    <th>Cumulative</th>
-                  </tr>
-                  {{#rows}}
-                    <tr class="{{#if type}}{{type}}{{/if}}">
-                      <td>{{section}}</td>
-                      <td>
-                        {{#if (eq type "right")}}({{/if}}
-                        {{pricePerCurrency previous}}
-                        {{#if (eq type "right")}}){{/if}}
-                      </td>
-                      <td>
-                        {{#if (eq type "right")}}({{/if}}
-                        {{pricePerCurrency current}}
-                        {{#if (eq type "right")}}){{/if}}
-                      </td>
-                      <td>
-                        {{#if (eq type "right")}}({{/if}}
-                        {{pricePerCurrency cumulated}}
-                        {{#if (eq type "right")}}){{/if}}
-                      </td>
-                    </tr>
-                  {{/rows}}
-                </table>
-                {{#if stillToBeRecouped}}
-                  <div class="to-be-recouped">
-                    Still to be recouped:
-                    {{pricePerCurrency stillToBeRecouped}}
+              {{#if (isLast @index ../reportedData.sourcesBreakdown)}}
+                {{#if ../totalNetReceipt}}
+                  <div class="total-net">
+                    Total Net Receipts:
+                    <span>
+                      {{pricePerCurrency ../totalNetReceipt}}
+                    </span>
                   </div>
                 {{/if}}
-              </div>
-            {{/reportedData.rightsBreakdown}}
+              {{/if}}
+            </div>
+          {{/reportedData.sourcesBreakdown}}
+        {{/if}}
+
+        <div class="group">
+          {{#if reportedData.rightsBreakdown}}
+            <div class="breakdown">
+              {{#reportedData.rightsBreakdown}}
+                <div class="surface">
+                  <div class="header">
+                    <h3>{{name}}</h3>
+                    <div>{{pricePerCurrency total}}</div>
+                  </div>
+                  <table>
+                    <tr>
+                      <th>Section</th>
+                      <th>Prior Period</th>
+                      <th>Current Period</th>
+                      <th>Cumulative</th>
+                    </tr>
+                    {{#rows}}
+                      <tr class="{{#if type}}{{type}}{{/if}}">
+                        <td>{{section}}</td>
+                        <td>
+                          {{#if (eq type "right")}}({{/if}}
+                          {{pricePerCurrency previous}}
+                          {{#if (eq type "right")}}){{/if}}
+                        </td>
+                        <td>
+                          {{#if (eq type "right")}}({{/if}}
+                          {{pricePerCurrency current}}
+                          {{#if (eq type "right")}}){{/if}}
+                        </td>
+                        <td>
+                          {{#if (eq type "right")}}({{/if}}
+                          {{pricePerCurrency cumulated}}
+                          {{#if (eq type "right")}}){{/if}}
+                        </td>
+                      </tr>
+                    {{/rows}}
+                  </table>
+                  {{#if stillToBeRecouped}}
+                    <div class="to-be-recouped">
+                      Still to be recouped:
+                      {{pricePerCurrency stillToBeRecouped}}
+                    </div>
+                  {{/if}}
+                </div>
+              {{/reportedData.rightsBreakdown}}
+            </div>
           {{/if}}
   
           {{#if reportedData.expenses}}
-            <div class="surface">
-              <div class="header">
-                <h3>Expenses details</h3>
-              </div>
-              <table>
-                <tr>
-                  <th>Date</th>
-                  <th>Nature</th>
-                  <th>Type</th>
-                  <th>Price</th>
-                </tr>
-                {{#reportedData.expenses}}
+            <div class="breakdown">
+              <div class="surface">
+                <div class="header">
+                  <h3>Expenses details</h3>
+                </div>
+                <table>
                   <tr>
-                    <td>{{date date}}</td>
-                    <td>{{nature}}</td>
-                    <td>{{expenseType typeId contractId}}</td>
-                    <td>{{formatPair price currency}}</td>
+                    <th>Date</th>
+                    <th>Nature</th>
+                    <th>Type</th>
+                    <th>Price</th>
                   </tr>
-                {{/reportedData.expenses}}
-              </table>
+                  {{#reportedData.expenses}}
+                    <tr>
+                      <td>{{date date}}</td>
+                      <td>{{nature}}</td>
+                      <td>{{expenseType typeId contractId}}</td>
+                      <td>{{formatPair price currency}}</td>
+                    </tr>
+                  {{/reportedData.expenses}}
+                </table>
+              </div>
+            </div>
+          {{/if}}
+    
+          {{#if payments.rightholder}}
+            <div class="statement-participation">
+              <span>total participation:</span>
+              <span>
+                {{formatPair payments.rightholder.price payments.rightholder.currency}}
             </div>
           {{/if}}
         </div>
-  
-        <div class="statement-participation">
-          <span>total participation:</span>
-          <span>
-            {{formatPair payments.rightholder.price payments.rightholder.currency}}
-        </div>
-  
+
         {{#if comment}}
           <div class="surface">
             <h3>Comment</h3>
