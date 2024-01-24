@@ -153,6 +153,7 @@ export function investmentsToActions(contracts: WaterfallContract[], terms: Term
     if (amount <= 0) continue;
     actions.push(action('invest', {
       amount,
+      contractId: c.id,
       orgId: c.buyerId, // Producer is always the licensor on theses types of contracts
       date: c.signatureDate
     }));
@@ -609,17 +610,20 @@ function updateRight(state: TitleState, payload: UpdateRight) {
 
 interface Investment extends BaseAction {
   orgId: OrgState['id'];
+  contractId: ContractState['id'];
   amount: number;
 }
 function invest(state: TitleState, payload: Investment) {
-  const { amount, orgId } = payload;
+  const { amount, orgId, contractId, date } = payload;
+  if (!date) throw new Error('Missing date on invest action');
   state.investment += amount;
   state.orgs[orgId] ||= createOrg({ id: orgId });
   state.orgs[orgId].investment += amount;
   state.orgs[orgId].operations.push({
     type: 'investment',
     amount,
-    date: payload.date ?? new Date(),
+    contractId,
+    date
   })
 }
 

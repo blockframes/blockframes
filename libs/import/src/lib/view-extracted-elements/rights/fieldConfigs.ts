@@ -33,16 +33,20 @@ import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 const isNumber = (v: string) => !isNaN(parseFloat(v));
 export type ImportedTarget = {
-  in: TargetIn | string | string[] | number
+  in: TargetIn | string | string[] | number;
   id?: string;
   percent?: number;
 };
 
 export interface ImportedCondition {
-  conditionName: ConditionName,
-  left: string,
-  operator: NumberOperator | ArrayOperator,
-  target: ImportedTarget
+  conditionName: ConditionName;
+  left: string;
+  operator: NumberOperator | ArrayOperator;
+  target: ImportedTarget;
+  interest?: {
+    rate: number;
+    isComposite: boolean;
+  }
 }
 
 export interface FieldsConfig {
@@ -142,14 +146,14 @@ export function getRightConfig(option: RightConfig) {
         /* k */ 'conditionA.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionA);
       },
-        /* l */ 'conditionA.target.in': (value: string) => {
-        return extractConditionTargetIn(value);
+        /* l */ 'conditionA.target.in': (value: string, data: FieldsConfig) => {
+        return extractConditionTargetIn(value, data.conditionA);
       },
         /* m */ 'conditionA.target.id': (value: string, data: FieldsConfig) => {
         return extractConditionTargetId(value, data.conditionA);
       },
-        /* n */ 'conditionA.target.percent': (value: string) => {
-        return Number(value) / 100 || 1;
+        /* n */ 'conditionA.target.percent': (value: string, data: FieldsConfig) => {
+        return extractConditionPercent(value, data.conditionA);
       },
         /* o */ 'conditionB.conditionName': (value: string) => {
         return getConditionName(value);
@@ -160,14 +164,14 @@ export function getRightConfig(option: RightConfig) {
         /* q */ 'conditionB.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionB);
       },
-        /* r */ 'conditionB.target.in': (value: string) => {
-        return extractConditionTargetIn(value);
+        /* r */ 'conditionB.target.in': (value: string, data: FieldsConfig) => {
+        return extractConditionTargetIn(value, data.conditionB);
       },
         /* s */ 'conditionB.target.id': (value: string, data: FieldsConfig) => {
         return extractConditionTargetId(value, data.conditionB);
       },
-        /* t */ 'conditionB.target.percent': (value: string) => {
-        return Number(value) / 100 || 1;
+        /* t */ 'conditionB.target.percent': (value: string, data: FieldsConfig) => {
+        return extractConditionPercent(value, data.conditionB);
       },
         /* u */ 'conditionC.conditionName': (value: string) => {
         return getConditionName(value);
@@ -178,14 +182,14 @@ export function getRightConfig(option: RightConfig) {
         /* w */ 'conditionC.operator': (value: string, data: FieldsConfig) => {
         return extractConditionOperator(value, data.conditionC);
       },
-        /* x */ 'conditionC.target.in': (value: string) => {
-        return extractConditionTargetIn(value);
+        /* x */ 'conditionC.target.in': (value: string, data: FieldsConfig) => {
+        return extractConditionTargetIn(value, data.conditionC);
       },
         /* y */ 'conditionC.target.id': (value: string, data: FieldsConfig) => {
         return extractConditionTargetId(value, data.conditionC);
       },
-        /* z */ 'conditionC.target.percent': (value: string) => {
-        return Number(value) / 100 || 1;
+        /* z */ 'conditionC.target.percent': (value: string, data: FieldsConfig) => {
+        return extractConditionPercent(value, data.conditionC);
       },
         /* aa */ 'right.contractId': async (value: string, data: FieldsConfig) => {
         const groupRightTypes: RightType[] = ['horizontal', 'vertical'];
@@ -221,9 +225,6 @@ export function getRightConfig(option: RightConfig) {
       value = getArrayOperator(value);
       if (value && !arrayOperator.includes(value as ArrayOperator)) throw mandatoryError(value, 'Operator', `Allowed values are : ${arrayOperator.map(o => `"${o}"`).join(' ')}`);
       return value as ArrayOperator;
-    } else if (cond.conditionName === 'interest') {
-      if (value) throw optionalWarning('Operator should be left empty for "interest" conditions');
-      return;
     } else if (cond.conditionName === 'event') {
       value = getNumberOperator(value);
       if (value && (numberOperator.includes(value as NumberOperator) || arrayOperator.includes(value as ArrayOperator))) {
@@ -251,7 +252,7 @@ export function getRightConfig(option: RightConfig) {
     return value as ArrayOperator;
   }
 
-  function extractConditionTargetIn(value: string): TargetIn {
+  function extractConditionTargetIn(value: string, cond: ImportedCondition): TargetIn {
     const helperWords = ['date', 'number', 'amount', 'territories', 'medias', 'contract', 'film cost', 'list'];
     if (!helperWords.includes(value.trim().toLowerCase())) {
 
@@ -265,6 +266,14 @@ export function getRightConfig(option: RightConfig) {
         switch (value.trim().toLowerCase()) {
           case 'expenses':
             return 'expense';
+          case 'investments with composite interests':
+            cond.conditionName = 'interest';
+            cond.interest = { rate: 0, isComposite: true };
+            return 'investment';
+          case 'investments with interests':
+            cond.conditionName = 'interest';
+            cond.interest = { rate: 0, isComposite: false };
+            return 'investment';
           default:
             throw mandatoryError(value, 'Invalid Target Type');
         }
@@ -297,6 +306,18 @@ export function getRightConfig(option: RightConfig) {
       cond.target.in = isNumber(value) ? Number(value) : value;
       return;
     }
+  }
+
+  function extractConditionPercent(_value: string, cond: ImportedCondition) {
+    let value = _value;
+
+    if (cond.conditionName === 'interest') {
+      const [rate, percent] = value.split(':').map(v => v.trim());
+      cond.interest.rate = Number(rate) / 100 || 1;
+      value = percent;
+    }
+
+    return Number(value) / 100 || 1;
   }
 
   function getActionName(value: string): ActionName {
