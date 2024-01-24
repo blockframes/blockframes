@@ -1,9 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Pipe, PipeTransform } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { ExpenseService } from '@blockframes/contract/expense/service';
-import { IncomeService } from '@blockframes/contract/income/service';
 import {
   Statement,
   Income,
@@ -26,7 +23,6 @@ import {
   getAssociatedRights,
   getStatementRightsToDisplay,
   generatePayments,
-  createMissingIncomes,
   getPathDetails,
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
@@ -57,12 +53,9 @@ export class StatementComponent implements OnInit {
   public expenses: Expense[] = [];
   public rights: Right[] = [];
   public rightDetails: RightDetails[][] = [];
-  public reportDateControl = new FormControl<Date>(new Date());
   private allRights: Right[];
   private contract: WaterfallContract;
-
   private simulation: WaterfallState;
-  public isRefreshing$ = this.shell.isRefreshing$;
 
   public statement$ = this.route.params.pipe(pluck('statementId')).pipe(
     switchMap((statementId: string) => this.statementService.valueChanges(statementId, { waterfallId: this.waterfall.id })),
@@ -78,8 +71,6 @@ export class StatementComponent implements OnInit {
   constructor(
     private shell: DashboardWaterfallShellComponent,
     private statementService: StatementService,
-    private incomeService: IncomeService,
-    private expenseService: ExpenseService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
@@ -90,7 +81,7 @@ export class StatementComponent implements OnInit {
   public async versionChanged() {
     this.allRights = await this.shell.rights();
     const statement = await firstValueFrom(this.statement$);
-    const incomes = await this.shell.incomes(statement.incomeIds);
+    this.incomes = await this.shell.incomes(statement.incomeIds);
 
     if (isDistributorStatement(statement) || isProducerStatement(statement)) {
       const _contracts = await this.shell.contracts([statement.contractId]);
@@ -110,11 +101,9 @@ export class StatementComponent implements OnInit {
     this.simulation = await this.shell.simulateWaterfall();
     this.snackBar.open('Waterfall initialized!', 'close', { duration: 5000 });
 
-    this.sources = getStatementSources(statement, this.waterfall.sources, incomes, this.allRights, this.simulation.waterfall.state)
+    this.sources = getStatementSources(statement, this.waterfall.sources, this.incomes, this.allRights, this.simulation.waterfall.state)
 
     if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
-      // Create missing incomes for the sources that are in the statement but do not have an income associated
-      this.incomes = await this.addMissingIncomes(this.sources, incomes, statement);
       this.statement = statement;
 
       // Refresh waterfall if some incomes or expenses are not in the simulated waterfall
@@ -132,7 +121,6 @@ export class StatementComponent implements OnInit {
         this.snackBar.open('Waterfall refreshed!', 'close', { duration: 5000 });
       }
     } else {
-      this.incomes = incomes;
       this.statement = statement;
     }
 
@@ -154,30 +142,8 @@ export class StatementComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  private async addMissingIncomes(incomeSources: WaterfallSource[], incomeStatements: Income[], statement: Statement) {
-    let incomes: Income[] = [...incomeStatements];
-
-    const missingIncomes = createMissingIncomes(incomeSources, incomeStatements, statement, this.waterfall);
-
-    if (missingIncomes.length) {
-      const newIncomeIds = await this.incomeService.add(missingIncomes);
-      const newIncomes = await this.incomeService.getValue(newIncomeIds);
-      statement.incomeIds = [...statement.incomeIds, ...newIncomeIds];
-      await this.statementService.update(statement, { params: { waterfallId: this.waterfall.id } });
-      incomes = [...incomes, ...newIncomes];
-    };
-
-    return incomes;
-  }
-
   public toPricePerCurrency(item: Income | Expense | Payment): PricePerCurrency {
     return { [item.currency]: item.price };
-  }
-
-  public getRightholderActual(type: 'revenu' | 'turnover') {
-    const orgState = this.simulation?.waterfall.state.orgs[this.statement.senderId];
-    const actual = orgState ? orgState[type].actual : 0;
-    return { [mainCurrency]: actual };
   }
 
   public getAssociatedSource(income: Income) {
@@ -234,43 +200,6 @@ export class StatementComponent implements OnInit {
       }));
     });
 
-    this.cdRef.markForCheck();
-  }
-
-  public async reportStatement(reported: Date) {
-    this.statement.status = 'reported';
-    this.statement.reported = reported;
-    this.statement.versionId = this.shell.versionId$.value;
-
-    // Add an id to the income payments if missing
-    if (isDistributorStatement(this.statement) || isDirectSalesStatement(this.statement)) {
-      this.statement.payments.income = this.statement.payments.income.map(p => ({ ...p, id: p.id || this.statementService.createId() }));
-    }
-
-    // Validate all internal "right" payments and add an id if missing
-    this.statement.payments.right = this.statement.payments.right.map(p => ({
-      ...p,
-      status: p.mode === 'internal' ? 'received' : p.status,
-      id: p.id || this.statementService.createId()
-    }));
-
-    // Add an id to the rightholder payment if missing
-    if (isDistributorStatement(this.statement) || isProducerStatement(this.statement)) {
-      this.statement.payments.rightholder.id = this.statement.payments.rightholder.id || this.statementService.createId();
-    }
-
-    const promises = [];
-    promises.push(this.statementService.update(this.statement, { params: { waterfallId: this.waterfall.id } }));
-    this.incomes = this.incomes.map(i => ({ ...i, status: 'received' }));
-    promises.push(this.incomeService.update(this.incomes));
-    this.expenses = this.expenses.map(e => ({ ...e, status: 'received' }));
-    promises.push(this.expenseService.update(this.expenses));
-
-    await Promise.all(promises);
-
-    this.snackBar.open('Refreshing waterfall... Please wait', 'close', { duration: 5000 });
-    await this.shell.refreshAllWaterfalls();
-    this.snackBar.open('Waterfall refreshed!', 'close', { duration: 5000 });
     this.cdRef.markForCheck();
   }
 
