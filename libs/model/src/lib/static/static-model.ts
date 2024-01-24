@@ -33,6 +33,8 @@ export const appDescription = {
     'Archipel Market is an ongoing film market platform, one tool for your year-round promotion and acquisitions.',
   financiers:
     'Media Financiers enables private investors to co-produce exclusive films and TV series on the same conditions as top professional content financiers.',
+  blockframes: // TODO #9257
+    'Blockframes is a set of tools to help you manage your film business.',
 };
 
 export const contractStatus = {
@@ -911,6 +913,9 @@ export const rightTypes = {
   mg: 'MG Recoupment',
   horizontal: 'Horizontal Group',
   vertical: 'Vertical Group',
+  rnpp: 'RNPP',
+  residuals: 'Residuals',
+  royalties: 'Royalty fee',
   unknown: 'Unknown'
 } as const
 

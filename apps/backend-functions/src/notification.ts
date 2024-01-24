@@ -935,7 +935,7 @@ async function sendInvitationToJoinWaterfallUpdatedEmail(recipient: User, notifi
     const user = await getDocument<User>(`users/${notification.user.uid}`);
     const userOrg = await getDocument<Organization>(`orgs/${user.orgId}`);
     const userOrgData = getOrgEmailData(userOrg);
-    const waterfallData = getWaterfallEmailData(movie)
+    const waterfallData = getWaterfallEmailData(movie);
     const userSubject = getUserEmailData(user);
     const toAdmin = getUserEmailData(recipient);
 

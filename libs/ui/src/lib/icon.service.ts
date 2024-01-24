@@ -131,6 +131,7 @@ export const icons = [
   { name: 'sellers', url: 'assets/icons/sellers.svg' },
   { name: 'send', url: 'assets/icons/send.svg' },
   { name: 'sentiment_satisfied', url: 'assets/icons/sentiment_satisfied.svg' },
+  { name: 'share', url: 'assets/icons/share.svg' },
   { name: 'shopping_basket', url: 'assets/icons/shopping_basket.svg' },
   { name: 'social_leaderboard', url: 'assets/icons/social_leaderboard.svg' },
   { name: 'specific_delivery_list', url: 'assets/icons/specific_delivery_list.svg' },
@@ -161,6 +162,7 @@ export const icons = [
   { name: 'volume_off', url: 'assets/icons/volume_off.svg' },
   { name: 'volume_up', url: 'assets/icons/volume_up.svg' },
   { name: 'warning', url: 'assets/icons/warning.svg' },
+  { name: 'water_drop', url: 'assets/icons/water_drop.svg' },
   { name: 'world', url: 'assets/icons/world.svg' },
 ] as const;
 

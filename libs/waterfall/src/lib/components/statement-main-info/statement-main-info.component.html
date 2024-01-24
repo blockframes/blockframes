@@ -1,0 +1,38 @@
+<article>
+  <span>
+    <mat-icon svgIcon="movie"></mat-icon><span matLine><strong>Movie: </strong>{{ movie.title.international }}</span>
+  </span>
+
+  <section>
+    <span>
+      <mat-icon svgIcon="calendar_today"></mat-icon><span matLine><strong>Covered Period: </strong>{{ statement.duration.from | date: 'dd/MM/yyyy' }} -  {{ statement.duration.to | date: 'dd/MM/yyyy' }}</span>
+    </span>
+    <span *ngIf="showLink && !contract">
+      <a mat-button [routerLink]="['/c/o/dashboard/title', statement.waterfallId, 'statement', statement.id]" target="_blank">
+        <mat-icon svgIcon="document" matTooltip="See statement"></mat-icon>
+        <span>See Statement</span>
+      </a>
+    </span>
+  </section>
+
+  <section *ngIf="contract">
+    <span>
+      <mat-icon svgIcon="document"></mat-icon><span matLine><strong>Contract: </strong>{{ contract.name }}</span>
+    </span>
+    <span *ngIf="showLink">
+      <a mat-button [routerLink]="['/c/o/dashboard/title', statement.waterfallId, 'statement', statement.id]" target="_blank">
+        <mat-icon svgIcon="document" matTooltip="See statement"></mat-icon>
+        <span>See Statement</span>
+      </a>
+    </span>
+  </section>
+
+  <section>
+    <span>
+      <mat-icon svgIcon="business"></mat-icon><span matLine><strong>{{ rightholderTag }}: </strong>{{ rightholderName | titlecase }} <ng-container *ngIf="sources">({{ sources | join:'name' }})</ng-container></span>
+    </span>
+    <span *ngIf="statement.status === 'reported' && !!statement.reported">
+      Statement Reported: {{ statement.reported | date: 'dd/MM/yyyy' }}
+    </span>
+  </section>
+</article>

@@ -28,7 +28,7 @@ import { ExpenseService } from '@blockframes/contract/expense/service';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 
 export interface FieldsConfig {
-  statement: Statement;
+  statement: Omit<Statement, 'reportedData'>;
   contractId?: string;
   incomes: {
     sourceId: string;

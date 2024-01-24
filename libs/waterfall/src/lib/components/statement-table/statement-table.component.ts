@@ -4,11 +4,13 @@ import { MatDialog } from '@angular/material/dialog';
 import {
   Income,
   Statement,
+  StatementPdfParams,
   Waterfall,
   getDefaultVersionId,
   getIncomesSources,
   isDistributorStatement,
-  isProducerStatement
+  isProducerStatement,
+  toLabel
 } from '@blockframes/model';
 import { StatementPaymentComponent } from '../statement-payment/statement-payment.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
@@ -17,6 +19,13 @@ import { StatementService } from '../../statement.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { sorts } from '@blockframes/ui/list/table/sorts';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { DownloadStatementSettings, PdfService } from '@blockframes/utils/pdf.service';
+import { CallableFunctions } from 'ngfire';
+import { StatementShareComponent } from '../statement-share/statement-share.component';
+
+function statementFileName(statement: Statement & { number: number }) {
+  return `${toLabel(statement.type, 'statementType')} Statement ${statement.number}`;
+}
 
 @Component({
   selector: 'waterfall-statement-table',
@@ -38,6 +47,7 @@ export class StatementTableComponent {
   @Input() actions: Record<string, boolean> = {
     notify: true,
     edit: true,
+    share: true,
     download: true,
     view: true,
     payment: true
@@ -56,6 +66,8 @@ export class StatementTableComponent {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private statementService: StatementService,
+    private pdfService: PdfService,
+    private functions: CallableFunctions,
     private cdr: ChangeDetectorRef,
   ) { }
 
@@ -87,6 +99,53 @@ export class StatementTableComponent {
 
           this.snackBar.open('Statement marked as paid !', 'close', { duration: 5000 });
           this.cdr.markForCheck();
+        }
+      })
+    });
+  }
+
+  async download(statement: Statement & { number: number }) {
+    const settings: DownloadStatementSettings = {
+      statement: statement,
+      waterfallId: this.waterfall.id,
+      number: statement.number,
+      versionId: statement.versionId,
+      fileName: statementFileName(statement)
+    };
+    const snackbarRef = this.snackBar.open('Please wait, your statement is being generated...');
+
+    const exportStatus = await this.pdfService.downloadStatement(settings);
+    snackbarRef.dismiss();
+    if (!exportStatus) {
+      this.snackBar.open('An error occurred, please try again.', 'close', { duration: 5000 });
+    }
+  }
+
+  async share(statement: Statement & { number: number }) {
+    const request: StatementPdfParams = {
+      statementId: statement.id,
+      waterfallId: this.waterfall.id,
+      number: statement.number,
+      versionId: statement.versionId,
+      fileName: statementFileName(statement)
+    };
+
+    this.dialog.open(StatementShareComponent, {
+      data: createModalData({
+        statement,
+        waterfall: this.shell.waterfall,
+        movie: this.shell.movie,
+        onConfirm: async (emails: string[]) => {
+          const emailStr = emails.length === 1 ? `"${emails[0]}"` : `${emails.length} emails`;
+          const snackbarRef = this.snackBar.open(`Please wait, statement is being sent to ${emailStr} ...`);
+
+          const output = await this.functions.call<{ request: StatementPdfParams, emails: string[] }, boolean>('statementToEmail', { request, emails });
+          snackbarRef.dismiss();
+          if (!output) {
+            this.snackBar.open('An error occurred, please try again.', 'close', { duration: 5000 });
+          } else {
+            this.snackBar.open('Your Statement has been successfully shared.', 'close', { duration: 5000 });
+          }
         }
       })
     });

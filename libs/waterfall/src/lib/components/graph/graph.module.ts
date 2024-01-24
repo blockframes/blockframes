@@ -16,6 +16,7 @@ import { BlockframesGraphModule } from '@blockframes/ui/graph/graph.module';
 import { CardModalModule } from '@blockframes/ui/card-modal/card-modal.module';
 import { AutocompleteModule } from '@blockframes/ui/autocomplete/autocomplete.module';
 import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/group/group.module';
+import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
 import { WaterfallGraphComponent } from './graph.component';
 import { WaterfallGraphNodeModule } from './node/node.module';
@@ -23,10 +24,11 @@ import { WaterfallGraphLabelModule } from './label/label.module';
 import { WaterfallPoolListModule } from './pool-list/pool-list.module';
 import { WaterfallRightListModule } from './right-list/right-list.module';
 import { WaterfallConditionsModule } from './conditions/conditions.module';
+import { WaterfallDeleteRightModalModule } from './delete-right-modal/delete-right-modal.module';
 
 
 @NgModule({
-  declarations: [ WaterfallGraphComponent ],
+  declarations: [WaterfallGraphComponent],
   imports: [
     ReactiveFormsModule,
     CommonModule,
@@ -35,11 +37,13 @@ import { WaterfallConditionsModule } from './conditions/conditions.module';
     AutocompleteModule,
     GroupMultiselectModule,
     BlockframesGraphModule,
+    StaticSelectModule,
     WaterfallPoolListModule,
     WaterfallGraphNodeModule,
     WaterfallRightListModule,
     WaterfallGraphLabelModule,
     WaterfallConditionsModule,
+    WaterfallDeleteRightModalModule,
 
     MatIconModule,
     MatTabsModule,
@@ -50,6 +54,6 @@ import { WaterfallConditionsModule } from './conditions/conditions.module';
     MatSnackBarModule,
     MatFormFieldModule,
   ],
-  exports: [ WaterfallGraphComponent ],
+  exports: [WaterfallGraphComponent],
 })
-export class WaterfallGraphModule {}
+export class WaterfallGraphModule { }

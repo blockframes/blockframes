@@ -18,6 +18,7 @@ import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 import { WaterfallRightholder, createAppConfig, createMovieAppConfig, createWaterfallRightholder } from '@blockframes/model';
 import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '../../form/right-holder.form';
 import { WaterfallDocumentForm } from '../../form/document.form';
+import { WaterfallPermissionsService } from '../../permissions.service';
 
 @Component({
   selector: 'waterfall-title-edit-form',
@@ -71,6 +72,7 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
     private orgService: OrganizationService,
     private uploadService: FileUploaderService,
     private waterfallService: WaterfallService,
+    private permissionService: WaterfallPermissionsService,
   ) { }
 
   async ngOnInit() {
@@ -80,6 +82,8 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
       this.movieService.createId() :
       this.route.snapshot.params.movieId;
 
+    const defaultRightholder = createWaterfallRightholder({ id: this.orgService.org.id, name: this.orgService.org.name, roles: ['producer'] });
+
     if (!this.createMode) {
       const [movie, waterfall] = await Promise.all([
         this.movieService.getValue(this.movieId),
@@ -88,10 +92,14 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
 
       this.movieForm.patchValue(movie);
       this.rightholdersForm.clear({ emitEvent: false });
-      if (waterfall.rightholders.length === 0) this.rightholdersForm.add(createWaterfallRightholder());
+      if (waterfall.rightholders.length === 0) {
+        this.rightholdersForm.add(defaultRightholder);
+        this.rightholdersForm.markAsDirty();
+      }
       waterfall.rightholders.forEach(rightholder => this.rightholdersForm.add(rightholder));
     } else {
-      this.rightholdersForm.add(createWaterfallRightholder({ name: this.orgService.org.name }));
+      this.rightholdersForm.add(defaultRightholder);
+      this.rightholdersForm.markAsDirty();
     }
     this.loading$.next(false);
   }
@@ -103,7 +111,7 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
   }
 
   // update a new movie along with its waterfall permissions
-  async update() {
+  async update(init: boolean = false) {
     if (!this.movieForm.pristine) {
       this.updating$.next(true);
 
@@ -138,10 +146,24 @@ export class WaterfallEditFormComponent implements OnInit, WaterfallFormGuardedC
 
       // ! `id` needs to be in the update object, because of a bug in ng-fire
       await this.waterfallService.update({ id: this.movieId, rightholders });
+
+      const defaultRightholder = rightholders.find(r => r.id === this.orgService.org.id);
+      if (defaultRightholder) {
+        try {
+          const permission = await this.permissionService.getValue(this.orgService.org.id, { waterfallId: this.movieId });
+          if (permission.isAdmin) {
+            permission.rightholderIds = Array.from(new Set(permission.rightholderIds.concat(defaultRightholder.id)));
+            await this.permissionService.update(permission, { params: { waterfallId: this.movieId } });
+          }
+        } catch (_) {
+          // Do nothing
+        }
+      }
+
       this.rightholdersForm.markAsPristine();
 
       this.updating$.next(false);
-      this.snackBar.open('Right Holders updated!', 'close', { duration: 3000 });
+      if (!init) this.snackBar.open('Right Holders updated!', 'close', { duration: 3000 });
     }
     this.stepper?.next();
   }

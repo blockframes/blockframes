@@ -102,6 +102,7 @@ export interface HorizontalNode extends NodeBase {
   type: 'horizontal';
   members: (VerticalNode | RightNode)[];
   percent: number;
+  blameId: string;
 }
 
 function createHorizontalNode(params: Partial<HorizontalNode> = {}): HorizontalNode {
@@ -111,6 +112,7 @@ function createHorizontalNode(params: Partial<HorizontalNode> = {}): HorizontalN
     type: 'horizontal',
     members: [],
     percent: 100,
+    blameId: '',
     ...params
   }
 }
@@ -224,6 +226,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
         width: (RIGHT_WIDTH * members.length) + (SPACING * (members.length + 1)),
         version: right.version,
         percent: right.percent,
+        blameId: right.blameId,
       });
       return horizontalNode;
     } else {
@@ -473,7 +476,7 @@ function getArrow(parent: Node, child: Node) {
   return arrow;
 }
 
-export function updateParents(nodeId: string, newParentIds: string[], graph: Node[]) {
+export function updateParents(nodeId: string, newParentIds: string[], graph: Node[], producerId: string) {
   const parentIndex: Record<string, string[]> = {};
   graph.forEach(node => {
     node.children.forEach(childId => {
@@ -576,6 +579,7 @@ export function updateParents(nodeId: string, newParentIds: string[], graph: Nod
       width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
       children: [...childrenIds],
       members: [...siblings, current as RightNode | VerticalNode],
+      blameId: producerId
     });
     graph.push(group);
 
@@ -599,7 +603,7 @@ export function updateParents(nodeId: string, newParentIds: string[], graph: Nod
   }
 }
 
-export function createSibling(olderSiblingId: string, graph: Node[]) {
+export function createSibling(olderSiblingId: string, graph: Node[], producerId: string) {
   const olderSibling = graph.find(node => node.id === olderSiblingId || (node.type === 'horizontal' && (node as HorizontalNode).members.some(member => member.id === olderSiblingId)));
   if (!olderSibling) return;
 
@@ -652,6 +656,7 @@ export function createSibling(olderSiblingId: string, graph: Node[]) {
       width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
       children: [...children],
       members: [olderSibling, right],
+      blameId: producerId,
     });
 
     parents.forEach(parent => parent.children.push(group.id));
@@ -660,7 +665,7 @@ export function createSibling(olderSiblingId: string, graph: Node[]) {
   }
 }
 
-export function createChild(parentId: string, graph: Node[]) {
+export function createChild(parentId: string, graph: Node[], producerId: string) {
   const parent = graph.find(node => node.id === parentId || (node.type === 'horizontal' && (node as HorizontalNode).members.some(member => member.id === parentId)));
   if (!parent) return;
 
@@ -700,6 +705,7 @@ export function createChild(parentId: string, graph: Node[]) {
       width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
       children: [...children],
       members: [...siblings, right],
+      blameId: producerId,
     });
 
     parent.children = [group.id];
@@ -823,6 +829,7 @@ function createHorizontal(node: HorizontalNode, version?: Version, parents?: str
     percent: node.percent,
     pools: [], // TODO
     version: node.version,
+    blameId: node.blameId,
   });
 
   if (version?.standalone) {

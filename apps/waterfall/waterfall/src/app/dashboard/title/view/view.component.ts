@@ -28,6 +28,10 @@ export class TitleViewComponent {
       label: 'Waterfall',
     },
     {
+      path: 'right-holders',
+      label: 'Right Holders',
+    },
+    {
       path: 'sales',
       label: 'World Sales',
     },
