@@ -1,5 +1,6 @@
 import { differenceInDays, getYear, min, max } from 'date-fns';
-import { OperationType } from './state';
+import { OperationType, TitleState } from './state';
+import { ConditionInterest } from './conditions';
 
 interface InterestOperation {
   type: OperationType | 'newYear';
@@ -7,7 +8,19 @@ interface InterestOperation {
   date: Date;
 }
 
-export function getSortedOperations(operations: InterestOperation[]) {
+export interface InterestDetail {
+  event: string;
+  invested: number;
+  revenues: number;
+  date: Date;
+  amountOwed: number;
+  periodDays: number;
+  periodInterests: number;
+  interests: number;
+  interestOwed: number;
+}
+
+function getSortedOperations(operations: InterestOperation[]) {
   const dates = operations.map(ops => ops.date);
   const minYear = getYear(min(dates));
   const maxYear = getYear(max(dates));
@@ -59,4 +72,43 @@ export function investmentWithInterest(
     totalInterest += currentInterest;
   }
   return invested + totalInterest;
+}
+
+export function interestDetail(contractId: string, payload: ConditionInterest, state: TitleState) {
+  const orgs = Object.values(state.orgs);
+  const orgOperations = orgs.find(org => org.operations.some(o => o.contractId === contractId)).operations;
+  const contractOperations = orgOperations
+    .filter(o => o.type === 'income' || (o.type === 'investment' && o.contractId === contractId))
+    .map(o => ({ ...o, date: new Date(o.date) }));
+
+  const operations = getSortedOperations(contractOperations);
+
+  const results: InterestDetail[] = [];
+  operations.forEach((operation, index) => {
+    const previousOperations = operations.slice(0, index + 1);
+    const currentInvestment = previousOperations.filter(o => o.type === 'investment').reduce((acc, cur) => acc + cur.amount, 0);
+
+    const total = investmentWithInterest(payload.rate, previousOperations, payload.isComposite);
+
+    const interests = total - currentInvestment;
+    const invested = operation.type === 'investment' ? operation.amount : 0;
+    const revenues = operation.type === 'income' ? operation.amount : 0;
+    const periodInterests = index === 0 ? 0 : interests - results[index - 1].interests;
+    const amountOwed = index === 0 ? invested : results[index - 1].amountOwed + invested - revenues;
+    const interestOwed = index === 0 ? 0 : periodInterests + results[index - 1].interestOwed + (amountOwed < 0 ? amountOwed : 0);
+    const item = {
+      event: operation.type,
+      invested,
+      revenues,
+      date: operation.date,
+      amountOwed,
+      periodDays: index === 0 ? 0 : differenceInDays(operation.date, results[index - 1].date),
+      periodInterests,
+      interests,
+      interestOwed: interestOwed > 0 ? interestOwed : 0
+    };
+    results.push(item);
+  });
+
+  return results;
 }
