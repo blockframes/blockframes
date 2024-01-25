@@ -330,7 +330,6 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     })
   );
 
-
   public waterfall = this.shell.waterfall;
 
   constructor(

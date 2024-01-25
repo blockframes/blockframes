@@ -295,6 +295,9 @@
 
         {{#if data.statement.reportedData.interests}}
           <div class="breakdown">
+            <div class="header">
+              <span>Interest Calculation</span>
+            </div>
             <div class="surface">
               <div class="header">
                 <h3>Interest Rate Details</h3>
@@ -313,13 +316,13 @@
                 {{#data.statement.reportedData.interests}}
                   <tr>
                     <td>{{event}}</td>
-                    <td>{{formatPair invested ../../data.mainCurrency}}</td>
-                    <td>{{formatPair revenues ../../data.mainCurrency}}</td>
+                    <td>{{formatPair invested ../data.mainCurrency}}</td>
+                    <td>{{formatPair revenues ../data.mainCurrency}}</td>
                     <td>{{date date}}</td>
-                    <td>{{formatPair amountOwed ../../data.mainCurrency}}</td>
+                    <td>{{formatPair amountOwed ../data.mainCurrency}}</td>
                     <td>{{periodDays}}</td>
-                    <td>{{formatPair periodInterests ../../data.mainCurrency}}</td>
-                    <td>{{formatPair interestOwed ../../data.mainCurrency}}</td>
+                    <td>{{formatPair periodInterests ../data.mainCurrency}}</td>
+                    <td>{{formatPair interestOwed ../data.mainCurrency}}</td>
                   </tr>
                 {{/data.statement.reportedData.interests}}
               </table>
