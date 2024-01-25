@@ -82,6 +82,7 @@ export function interestDetail(contractId: string, payload: ConditionInterest, s
     .map(o => ({ ...o, date: new Date(o.date) }));
 
   const operations = getSortedOperations(contractOperations);
+  const investments = operations.filter(o => o.type === 'investment');
 
   const results: InterestDetail[] = [];
   operations.forEach((operation, index) => {
@@ -96,8 +97,24 @@ export function interestDetail(contractId: string, payload: ConditionInterest, s
     const periodInterests = index === 0 ? 0 : interests - results[index - 1].interests;
     const amountOwed = index === 0 ? invested : results[index - 1].amountOwed + invested - revenues;
     const interestOwed = index === 0 ? 0 : periodInterests + results[index - 1].interestOwed + (amountOwed < 0 ? amountOwed : 0);
+
+    let event = '';
+    switch (operation.type) {
+      case 'income':
+        event = 'Payment';
+        break;
+      case 'newYear':
+        event = `End of ${operation.date.getFullYear() - 1}`;
+        break;
+      case 'investment':
+        event = `Investment #${investments.indexOf(operation) + 1}`
+        break;
+      default:
+        break;
+    }
+
     const item = {
-      event: operation.type,
+      event,
       invested,
       revenues,
       date: operation.date,
