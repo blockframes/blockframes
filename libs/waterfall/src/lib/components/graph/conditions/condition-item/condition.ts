@@ -1,6 +1,6 @@
 
-import { Condition, TargetValue } from '@blockframes/model';
-
+import { Condition, TargetValue, Waterfall } from '@blockframes/model';
+import { rightholderName } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 
 function targetToString(target: TargetValue) {
   if (typeof target === 'number') {
@@ -32,8 +32,7 @@ function operatorToString(operator: string) {
   }
 }
 
-
-export function conditionToString(condition?: Condition) {
+export function conditionToString(condition?: Condition, waterfall?: Waterfall) {
 
   if (!condition) return 'Unknown condition';
 
@@ -94,12 +93,12 @@ export function conditionToString(condition?: Condition) {
 
   if (condition.name === 'orgRevenu') {
     const { operator, orgId, target } = condition.payload;
-    return `Org ${orgId}'s revenue is ${operatorToString(operator)} ${targetToString(target)}`;
+    return `Org ${rightholderName(orgId, waterfall)}'s revenue is ${operatorToString(operator)} ${targetToString(target)}`;
   }
 
   if (condition.name === 'orgTurnover') {
     const { operator, orgId, target } = condition.payload;
-    return `Org ${orgId}'s turnover is ${operatorToString(operator)} ${targetToString(target)}`;
+    return `Org ${rightholderName(orgId, waterfall)}'s turnover is ${operatorToString(operator)} ${targetToString(target)}`;
   }
 
   if (condition.name === 'rightRevenu') {
@@ -137,10 +136,10 @@ export function conditionToString(condition?: Condition) {
     return `Pool ${pool}'s theoretical revenue is ${operatorToString(operator)} ${targetToString(target)}`;
   }
 
-  // TODO
-  // if (condition.name === 'interest') {
-  //   const { isComposite, orgId, rate } = condition.payload;
-  // }
+  if (condition.name === 'interest') {
+    const { isComposite, operator, orgId, rate, percent } = condition.payload;
+    return `Org ${rightholderName(orgId, waterfall)}'s revenue is ${operatorToString(operator)} of ${percent * 100}% of investments and ${isComposite ? 'composite' : ''} interest with a rate of ${rate * 100}%`;
+  }
 
   return 'Unknown condition';
 }

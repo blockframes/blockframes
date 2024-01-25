@@ -4,6 +4,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Condition } from '@blockframes/model';
 
 import { conditionToString } from './condition';
+import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 
 
 @Component({
@@ -20,7 +21,9 @@ export class WaterfallConditionItemComponent implements OnInit {
   
   text: string;
 
+  constructor(private shell: DashboardWaterfallShellComponent) { }
+
   ngOnInit() {
-    this.text = conditionToString(this.condition);
+    this.text = conditionToString(this.condition, this.shell.waterfall);
   }
 }

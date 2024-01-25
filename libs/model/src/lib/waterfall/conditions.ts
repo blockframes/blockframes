@@ -245,7 +245,7 @@ export const targetIn = ['orgs.revenu', 'orgs.turnover', 'orgs.expense', 'rights
 export type TargetIn = typeof targetIn[number];
 export type TargetValue = {
   id: string;
-  percent: number;
+  percent: number; // Between 0 and 1
   in: TargetIn
 } | number;
 export function toTargetValue(state: TitleState, target: TargetValue) {

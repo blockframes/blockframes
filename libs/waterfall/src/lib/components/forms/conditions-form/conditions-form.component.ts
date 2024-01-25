@@ -5,22 +5,9 @@ import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@a
 
 import {
   Right,
-  Condition,
-  GroupScope,
-  TargetValue,
-  ArrayOperator,
-  PoolCondition,
   arrayOperator,
-  ConditionTerms,
-  EventCondition,
-  GroupCondition,
   numberOperator,
-  NumberOperator,
-  RightCondition,
-  ConditionAmount,
-  ConditionDuration,
   WaterfallContract,
-  OrgRevenuCondition,
   rightholderGroups,
   getDeclaredAmount,
 } from '@blockframes/model';
@@ -45,20 +32,17 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
 
   @Input() form: ConditionForm;
 
-  revenueOwnerLabel$ = new BehaviorSubject('Owner');
-  revenueOwnerList$ = new BehaviorSubject<{ id: string, name: string }[]>([]);
+  public revenueOwnerLabel$ = new BehaviorSubject('Owner');
+  public revenueOwnerList$ = new BehaviorSubject<{ id: string, name: string }[]>([]);
+  public investments: WaterfallContract[] = [];
+  public numberOperator = numberOperator;
+  public arrayOperator = arrayOperator;
 
-  rights: Right[] = [];
-  groups: Right[] = [];
-  pools: string[] = [];
-  investments: WaterfallContract[] = [];
+  private rights: Right[] = [];
+  private groups: Right[] = [];
+  private pools: string[] = [];
 
-  numberOperator = numberOperator;
-  arrayOperator = arrayOperator;
-
-  subs: Subscription[] = [];
-
-  condition: Condition;
+  private subs: Subscription[] = [];
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
@@ -84,201 +68,6 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
           const amount = getDeclaredAmount(c);
           return amount[c.currency] > 0;
         });
-      }),
-
-      this.form.controls.revenuePercentage.valueChanges.subscribe(percent => {
-        const target: TargetValue = {
-          id: this.form.controls.revenueTarget.value,
-          percent,
-          in: 'investment'
-        };
-        if (this.form.controls.revenueOwnerType.value === 'org') {
-          const payload: OrgRevenuCondition = {
-            orgId: this.form.controls.revenueOwner.value,
-            operator: this.form.controls.revenueOperator.value as NumberOperator,
-            target,
-          };
-          this.condition = {
-            name: this.form.controls.revenueOwnerType.value + this.form.controls.revenueType.value as any,
-            payload,
-          };
-        }
-        if (this.form.controls.revenueOwnerType.value === 'right') {
-          const payload: RightCondition = {
-            rightId: this.form.controls.revenueOwner.value,
-            operator: this.form.controls.revenueOperator.value as NumberOperator,
-            target,
-          };
-          this.condition = {
-            name: this.form.controls.revenueOwnerType.value + this.form.controls.revenueType.value as any,
-            payload,
-          };
-        }
-        if (this.form.controls.revenueOwnerType.value === 'group') {
-          const payload: GroupCondition = {
-            groupId: this.form.controls.revenueOwner.value,
-            operator: this.form.controls.revenueOperator.value as NumberOperator,
-            target,
-          };
-          this.condition = {
-            name: this.form.controls.revenueOwnerType.value + this.form.controls.revenueType.value as any,
-            payload,
-          };
-        }
-        if (this.form.controls.revenueOwnerType.value === 'pool') {
-          const payload: PoolCondition = {
-            pool: this.form.controls.revenueOwner.value,
-            operator: this.form.controls.revenueOperator.value as NumberOperator,
-            target,
-          };
-          this.condition = {
-            name: this.form.controls.revenueOwnerType.value + this.form.controls.revenueType.value as any,
-            payload,
-          };
-        }
-      }),
-
-      this.form.controls.revenueAmount.valueChanges.subscribe(amount => {
-
-        if (this.form.controls.revenueOwnerType.value === 'org') {
-          const payload: OrgRevenuCondition = {
-            orgId: this.form.controls.revenueOwner.value,
-            operator: this.form.controls.revenueOperator.value as NumberOperator,
-            target: this.form.controls.revenueTargetType.value === 'amount'
-              ? amount
-              : {
-                id: this.form.controls.revenueTarget.value,
-                percent: this.form.controls.revenuePercentage.value,
-                in: this.form.controls.revenueTargetType.value === 'investment' ? 'investment' : 'orgs.expense'
-              },
-          };
-          this.condition = {
-            name: this.form.controls.revenueOwnerType.value + this.form.controls.revenueType.value as any,
-            payload,
-          };
-        }
-
-        if (this.form.controls.revenueOwnerType.value === 'right') {
-          const payload: RightCondition = {
-            rightId: this.form.controls.revenueOwner.value,
-            operator: this.form.controls.revenueOperator.value as NumberOperator,
-            target: this.form.controls.revenueTargetType.value === 'amount'
-              ? amount
-              : {
-                id: this.form.controls.revenueTarget.value,
-                percent: this.form.controls.revenuePercentage.value,
-                in: this.form.controls.revenueTargetType.value === 'investment' ? 'investment' : 'orgs.expense'
-              },
-          };
-          this.condition = {
-            name: this.form.controls.revenueOwnerType.value + this.form.controls.revenueType.value as any,
-            payload,
-          };
-        }
-
-        if (this.form.controls.revenueOwnerType.value === 'group') {
-          const payload: GroupCondition = {
-            groupId: this.form.controls.revenueOwner.value,
-            operator: this.form.controls.revenueOperator.value as NumberOperator,
-            target: this.form.controls.revenueTargetType.value === 'amount'
-              ? amount
-              : {
-                id: this.form.controls.revenueTarget.value,
-                percent: this.form.controls.revenuePercentage.value,
-                in: this.form.controls.revenueTargetType.value === 'investment' ? 'investment' : 'orgs.expense'
-              },
-          };
-          this.condition = {
-            name: this.form.controls.revenueOwnerType.value + this.form.controls.revenueType.value as any,
-            payload,
-          };
-        }
-
-        if (this.form.controls.revenueOwnerType.value === 'pool') {
-          const payload: PoolCondition = {
-            pool: this.form.controls.revenueOwner.value,
-            operator: this.form.controls.revenueOperator.value as NumberOperator,
-            target: this.form.controls.revenueTargetType.value === 'amount'
-              ? amount
-              : {
-                id: this.form.controls.revenueTarget.value,
-                percent: this.form.controls.revenuePercentage.value,
-                in: this.form.controls.revenueTargetType.value === 'investment' ? 'investment' : 'orgs.expense'
-              },
-          };
-          this.condition = {
-            name: this.form.controls.revenueOwnerType.value + this.form.controls.revenueType.value as any,
-            payload,
-          };
-        }
-      }),
-
-      this.form.controls.salesDateFrom.valueChanges.subscribe(date => {
-        const payload: ConditionDuration = {
-          from: date,
-          to: this.form.controls.salesDateOperator.value === 'between' ? this.form.controls.salesDateTo.value : undefined,
-        };
-        this.condition = {
-          name: this.form.controls.salesType.value as any,
-          payload,
-        };
-      }),
-      this.form.controls.salesDateTo.valueChanges.subscribe(date => {
-        const payload: ConditionDuration = {
-          from: this.form.controls.salesDateOperator.value === 'between' ? this.form.controls.salesDateFrom.value : undefined,
-          to: date,
-        };
-        this.condition = {
-          name: this.form.controls.salesType.value as any,
-          payload,
-        };
-      }),
-
-      this.form.controls.salesAmount.valueChanges.subscribe(amount => {
-        const payload: ConditionAmount = {
-          operator: this.form.controls.salesOperator.value as NumberOperator,
-          target: amount,
-        };
-        this.condition = {
-          name: 'contractAmount',
-          payload,
-        };
-      }),
-
-      this.form.controls.salesTerms.valueChanges.subscribe(terms => {
-        const payload: ConditionTerms = {
-          type: this.form.controls.salesTermsType.value as GroupScope,
-          operator: this.form.controls.salesTermsOperator.value as ArrayOperator,
-          list: terms,
-        };
-        this.condition = {
-          name: 'terms',
-          payload,
-        };
-      }),
-
-      this.form.controls.eventAmount.valueChanges.subscribe(amount => {
-        const payload: EventCondition = {
-          eventId: this.form.controls.eventName.value,
-          operator: this.form.controls.eventOperator.value as NumberOperator,
-          value: amount,
-        };
-        this.condition = {
-          name: 'event',
-          payload,
-        };
-      }),
-
-      this.form.controls.eventList.valueChanges.subscribe(list => {
-        const payload: EventCondition = {
-          eventId: this.form.controls.eventName.value,
-          operator: this.form.controls.eventOperator.value as ArrayOperator,
-          value: list,
-        };
-        this.condition = {
-          name: 'event',
-          payload,
-        };
       }),
     );
   }
