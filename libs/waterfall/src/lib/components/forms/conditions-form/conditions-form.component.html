@@ -56,7 +56,7 @@
     <mat-form-field appearance="outline" *ngIf="form.controls.revenueTargetType.value === 'investment'">
       <mat-label>Investments</mat-label>
       <mat-select [formControl]="form.controls.revenueTarget">
-        <mat-option *ngFor="let invest of investments" [value]="invest.id">{{ invest.id }}</mat-option>
+        <mat-option *ngFor="let invest of investments" [value]="invest.id">{{ invest.name }}</mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field appearance="outline" *ngIf="form.controls.revenueTargetType.value === 'expense'">
