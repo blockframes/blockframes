@@ -292,7 +292,7 @@ function groupActions(data: WaterfallData, versionId: string, isSimulation = fal
 
   const expenseTypesActions = expenseTypesToAction(Object.values(data.waterfall.expenseTypes).flat(), versionId);
   const contractActions = contractsToActions(data.contracts, data.terms);
-  const investmentActions = investmentsToActions(data.contracts, data.terms);
+  const investmentActions = investmentsToActions(data.contracts);
   const rightActions = rightsToActions(data.rights);
   const incomeActions = incomesToActions(data.contracts, incomes, sources, incomesAndExpensesStatements);
   // Skip hidden expenses for this version

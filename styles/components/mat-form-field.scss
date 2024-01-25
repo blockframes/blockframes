@@ -51,6 +51,13 @@
       }
     }
 
+    mat-datepicker-toggle.small {
+      button {
+        height: 20px;
+        line-height: 20px;
+      }
+    }
+
     mat-icon[matPrefix] {
       margin-left: 10px;
       margin-right: 10px;
@@ -58,7 +65,7 @@
   }
 
   // OUTLINE
-  .mat-form-field-appearance-outline {
+  .mat-form-field-appearance-outline { 
     .mat-form-field-outline {
       color: mat.get-color-from-palette($foreground, divider);
     }

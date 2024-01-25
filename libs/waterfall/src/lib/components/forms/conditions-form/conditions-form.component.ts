@@ -7,7 +7,7 @@ import {
   Right,
   Condition,
   GroupScope,
-  TargetValue, 
+  TargetValue,
   ArrayOperator,
   PoolCondition,
   arrayOperator,
@@ -20,13 +20,13 @@ import {
   ConditionAmount,
   ConditionDuration,
   WaterfallContract,
-  WaterfallDocument,
   OrgRevenuCondition,
+  rightholderGroups,
+  getDeclaredAmount,
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 
 import { ConditionForm } from './condition.form';
-
 
 const ownerLabels = {
   rightholder: 'Right Holder',
@@ -34,7 +34,6 @@ const ownerLabels = {
   group: 'Group',
   pool: 'Pool',
 };
-
 
 @Component({
   selector: 'waterfall-conditions-form',
@@ -52,7 +51,7 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
   rights: Right[] = [];
   groups: Right[] = [];
   pools: string[] = [];
-  investments: WaterfallDocument<WaterfallContract>[] = [];
+  investments: WaterfallContract[] = [];
 
   numberOperator = numberOperator;
   arrayOperator = arrayOperator;
@@ -60,7 +59,7 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
   subs: Subscription[] = [];
 
   condition: Condition;
-  
+
   constructor(
     private shell: DashboardWaterfallShellComponent,
   ) { }
@@ -70,7 +69,7 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
       this.shell.rights$.subscribe(rights => {
         const groupIds = new Set<string>();
         rights.forEach(right => {
-          if(right.groupId) groupIds.add(right.groupId);
+          if (right.groupId) groupIds.add(right.groupId);
         });
         this.rights = rights.filter(right => !groupIds.has(right.id));
         this.groups = rights.filter(right => groupIds.has(right.id));
@@ -79,8 +78,12 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
         this.pools = [...pools];
       }),
 
-      this.shell.documents$.subscribe(documents => {
-        this.investments = documents.filter(doc => doc.type === 'contract' && (doc.meta as WaterfallContract).price > 0) as WaterfallDocument<WaterfallContract>[];
+      this.shell.contracts$.subscribe(_contracts => {
+        const investmentContracts = _contracts.filter(c => rightholderGroups.investors.includes(c.type));
+        this.investments = investmentContracts.filter(c => {
+          const amount = getDeclaredAmount(c);
+          return amount[c.currency] > 0;
+        });
       }),
 
       this.form.controls.revenuePercentage.valueChanges.subscribe(percent => {
@@ -144,10 +147,10 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
             target: this.form.controls.revenueTargetType.value === 'amount'
               ? amount
               : {
-                  id: this.form.controls.revenueTarget.value,
-                  percent: this.form.controls.revenuePercentage.value,
-                  in: this.form.controls.revenueTargetType.value === 'investment' ? 'investment' : 'orgs.expense'
-                },
+                id: this.form.controls.revenueTarget.value,
+                percent: this.form.controls.revenuePercentage.value,
+                in: this.form.controls.revenueTargetType.value === 'investment' ? 'investment' : 'orgs.expense'
+              },
           };
           this.condition = {
             name: this.form.controls.revenueOwnerType.value + this.form.controls.revenueType.value as any,
@@ -162,10 +165,10 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
             target: this.form.controls.revenueTargetType.value === 'amount'
               ? amount
               : {
-                  id: this.form.controls.revenueTarget.value,
-                  percent: this.form.controls.revenuePercentage.value,
-                  in: this.form.controls.revenueTargetType.value === 'investment' ? 'investment' : 'orgs.expense'
-                },
+                id: this.form.controls.revenueTarget.value,
+                percent: this.form.controls.revenuePercentage.value,
+                in: this.form.controls.revenueTargetType.value === 'investment' ? 'investment' : 'orgs.expense'
+              },
           };
           this.condition = {
             name: this.form.controls.revenueOwnerType.value + this.form.controls.revenueType.value as any,
@@ -180,10 +183,10 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
             target: this.form.controls.revenueTargetType.value === 'amount'
               ? amount
               : {
-                  id: this.form.controls.revenueTarget.value,
-                  percent: this.form.controls.revenuePercentage.value,
-                  in: this.form.controls.revenueTargetType.value === 'investment' ? 'investment' : 'orgs.expense'
-                },
+                id: this.form.controls.revenueTarget.value,
+                percent: this.form.controls.revenuePercentage.value,
+                in: this.form.controls.revenueTargetType.value === 'investment' ? 'investment' : 'orgs.expense'
+              },
           };
           this.condition = {
             name: this.form.controls.revenueOwnerType.value + this.form.controls.revenueType.value as any,
@@ -198,10 +201,10 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
             target: this.form.controls.revenueTargetType.value === 'amount'
               ? amount
               : {
-                  id: this.form.controls.revenueTarget.value,
-                  percent: this.form.controls.revenuePercentage.value,
-                  in: this.form.controls.revenueTargetType.value === 'investment' ? 'investment' : 'orgs.expense'
-                },
+                id: this.form.controls.revenueTarget.value,
+                percent: this.form.controls.revenuePercentage.value,
+                in: this.form.controls.revenueTargetType.value === 'investment' ? 'investment' : 'orgs.expense'
+              },
           };
           this.condition = {
             name: this.form.controls.revenueOwnerType.value + this.form.controls.revenueType.value as any,

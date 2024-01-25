@@ -204,6 +204,7 @@ export function createWaterfallContract(params: Partial<WaterfallContract>): Wat
     status: 'pending',
     stakeholders: [],
     rootId: '',
+    price: [],
     ...params
   }
 }
@@ -258,9 +259,15 @@ interface WaterfallBudget {
   value?: string;
 }
 
+export interface WaterfallInvestment {
+  value: number;
+  date: Date;
+};
+
 export interface WaterfallContract extends BaseContract {
   type: RightholderRole;
   name: string;
+  price: WaterfallInvestment[];
 };
 
 export interface WaterfallSale extends WaterfallContract {
