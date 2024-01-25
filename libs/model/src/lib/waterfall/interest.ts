@@ -1,12 +1,6 @@
-import {
-  differenceInDays,
-  getYear,
-  min,
-  max,
-  endOfYear,
-  startOfYear,
-} from 'date-fns';
-import { OperationType } from './state';
+import { differenceInDays, getYear, min, max } from 'date-fns';
+import { OperationType, TitleState } from './state';
+import { ConditionInterest } from './conditions';
 
 interface InterestOperation {
   type: OperationType | 'newYear';
@@ -14,68 +8,30 @@ interface InterestOperation {
   date: Date;
 }
 
-/** 
- * Calculates how much from an income is taken based on the interest
- * @deprecated It's not used anymore as we calculate the threshold in another way
- */
-export function coversInterest(
-  rate: number,
-  operations: InterestOperation[],
-  isComposite = false,
-) {
+export interface InterestDetail {
+  event: string;
+  invested: number;
+  revenues: number;
+  date: Date;
+  amountOwed: number;
+  periodDays: number;
+  periodInterests: number;
+  interests: number;
+  interestOwed: number;
+}
+
+function getSortedOperations(operations: InterestOperation[]) {
   const dates = operations.map(ops => ops.date);
   const minYear = getYear(min(dates));
   const maxYear = getYear(max(dates));
   for (let year = minYear; year < maxYear; year++) {
-    operations.push({ type: 'newYear', amount: 0, date: new Date(year, 11, 31, 23, 59) });
+    /**
+     * @dev if new year is 31/12/YYYY 23:59 use
+     * operations.push({ type: 'newYear', amount: 0, date: new Date(year, 11, 31, 23, 59) });
+     */
+    operations.unshift({ type: 'newYear', amount: 0, date: new Date(year + 1, 0, 1, 0, 0) });
   }
-  const sorted = operations.sort((a, b) => a.date.getTime() - b.date.getTime());
-  let base = 0;
-  let yearInterest = 0;
-  let totalInterest = 0;
-  const lastIndex = sorted.length - 1;
-  for (let i = 0; i < sorted.length; i++) {
-    const { date, amount, type } = sorted[i];
-    if (type === 'income') {
-      // If there is still some base, continue
-      if (base > amount) {
-        base -= amount;
-        continue;
-      }
-
-      // If composite, totalInterest is already included in the base
-      if (isComposite) {
-        // If it covers before the last one, return the last income
-        if (i < lastIndex) return sorted[lastIndex].amount;
-        // Return what's required to covers the interest
-        return amount - base;
-      }
-
-      // If not composite, check if 
-      if (amount > base + totalInterest) {
-        if (i < lastIndex) return sorted[lastIndex].amount;
-        return amount - (base + totalInterest);
-      }
-
-      // If not composite but interest remains, base should be 0
-      base = 0;
-    } else if (type === 'investment') {
-      base += amount;
-    } else {
-      if (isComposite) base += yearInterest;
-      yearInterest = 0;
-    }
-    if (i === lastIndex) continue;
-    const totalDays = differenceInDays(endOfYear(date), startOfYear(date)) + 1;
-
-    const nextDate = sorted[i + 1].date;
-    const distance = differenceInDays(nextDate, date);
-
-    const currentInterest = (base * rate * distance) / totalDays;
-    yearInterest += currentInterest;
-    totalInterest += currentInterest;
-  }
-  return 0;
+  return operations.sort((a, b) => a.date.getTime() - b.date.getTime());
 }
 
 /** Get the total invested by an org with it's interest */
@@ -84,13 +40,7 @@ export function investmentWithInterest(
   operations: InterestOperation[],
   isComposite = false,
 ) {
-  const dates = operations.map(ops => ops.date);
-  const minYear = getYear(min(dates));
-  const maxYear = getYear(max(dates));
-  for (let year = minYear; year < maxYear; year++) {
-    operations.push({ type: 'newYear', amount: 0, date: new Date(year, 11, 31, 23, 59) });
-  }
-  const sorted = operations.sort((a, b) => a.date.getTime() - b.date.getTime());
+  const sorted = getSortedOperations(operations);
   let invested = 0;
   let totalInterest = 0;
   let base = 0;
@@ -108,8 +58,12 @@ export function investmentWithInterest(
       yearInterest = 0;
     }
     if (i === lastIndex) continue;
-    const totalDays = differenceInDays(endOfYear(date), startOfYear(date)) + 1;
-
+    /**
+     * @dev if interest is calculated with the real number of days in a year use :
+     * differenceInDays(endOfYear(date), startOfYear(date))
+     * also handle bissextile years ?
+     */
+    const totalDays = 365;
     const nextDate = sorted[i + 1].date;
     const distance = differenceInDays(nextDate, date);
 
@@ -120,27 +74,58 @@ export function investmentWithInterest(
   return invested + totalInterest;
 }
 
+export function interestDetail(contractId: string, payload: ConditionInterest, state: TitleState) {
+  const orgs = Object.values(state.orgs);
+  const orgOperations = orgs.find(org => org.operations.some(o => o.contractId === contractId)).operations;
+  const contractOperations = orgOperations
+    .filter(o => o.type === 'income' || (o.type === 'investment' && o.contractId === contractId))
+    .map(o => ({ ...o, date: new Date(o.date) }));
 
+  const operations = getSortedOperations(contractOperations);
+  const investments = operations.filter(o => o.type === 'investment');
 
-// Example
-// export const isCovered = () => coversInterest(
-//   0.04,
-//   [
-//     { type: 'investment', date: new Date('12/29/2006'), amount: 55000 },
-//     { type: 'investment', date: new Date('1/1/2007'), amount: 50000 },
-//     { type: 'investment', date: new Date('10/3/2007'), amount: 50000 },
-//     { type: 'income', date: new Date('1/31/2008'), amount: 7807.32 },
-//     { type: 'income', date: new Date('5/31/2008'), amount: 116123.27 },
-//     { type: 'income', date: new Date('12/31/2008'), amount: 2369.58 },
-//     { type: 'income', date: new Date('7/13/2009'), amount: 11274.34 },
-//     { type: 'income', date: new Date('12/31/2009'), amount: 1901.79 },
-//     { type: 'income', date: new Date('6/30/2010'), amount: 5933.57 },
-//     { type: 'income', date: new Date('6/30/2010'), amount: 758.5 }, // Careful
-//     { type: 'income', date: new Date('12/31/2010'), amount: 4794.88 },
-//     { type: 'income', date: new Date('6/30/2011'), amount: 7397.62 },
-//     { type: 'income', date: new Date('6/30/2011'), amount: 1542.5 },
-//     { type: 'income', date: new Date('12/31/2011'), amount: 2805.44 },
-//     { type: 'income', date: new Date('6/1/2013'), amount: 2805.44 },
-//   ],
-//   false
-// );
+  const results: InterestDetail[] = [];
+  operations.forEach((operation, index) => {
+    const previousOperations = operations.slice(0, index + 1);
+    const currentInvestment = previousOperations.filter(o => o.type === 'investment').reduce((acc, cur) => acc + cur.amount, 0);
+
+    const total = investmentWithInterest(payload.rate, previousOperations, payload.isComposite);
+
+    const interests = total - currentInvestment;
+    const invested = operation.type === 'investment' ? operation.amount : 0;
+    const revenues = operation.type === 'income' ? operation.amount : 0;
+    const periodInterests = index === 0 ? 0 : interests - results[index - 1].interests;
+    const amountOwed = index === 0 ? invested : results[index - 1].amountOwed + invested - revenues;
+    const interestOwed = index === 0 ? 0 : periodInterests + results[index - 1].interestOwed + (amountOwed < 0 ? amountOwed : 0);
+
+    let event = '';
+    switch (operation.type) {
+      case 'income':
+        event = 'Payment';
+        break;
+      case 'newYear':
+        event = `End of ${operation.date.getFullYear() - 1}`;
+        break;
+      case 'investment':
+        event = `Investment #${investments.indexOf(operation) + 1}`
+        break;
+      default:
+        break;
+    }
+
+    const item = {
+      event,
+      invested,
+      revenues,
+      date: operation.date,
+      amountOwed,
+      periodDays: index === 0 ? 0 : differenceInDays(operation.date, results[index - 1].date),
+      periodInterests,
+      interests,
+      interestOwed: interestOwed > 0 ? interestOwed : 0
+    };
+    results.push(item);
+  });
+
+  return results;
+}

@@ -115,6 +115,7 @@ export function createVertical(group: CreateVertical): VerticalState {
 export interface Operation {
   amount: number;
   type: OperationType;
+  contractId?: string;
   date: Date;
 }
 

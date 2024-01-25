@@ -87,7 +87,7 @@ function runThreshold(state: TitleState, payload: Income, incomeState: IncomeSta
     right.enabled = enabled;
     const incomeRight = initRight(incomeState, to);
     incomeRight.turnoverRate += enabled ? basePercent : 0;
-    if(rightOverride) {
+    if (rightOverride) {
       if (from) initTransfer(incomeState, from, to).checked = true;
       incomeRight.revenuRate += rightOverride.percent * basePercent;
       incomeRight.shadowRevenuRate += rightOverride.percent * basePercent;
@@ -307,11 +307,12 @@ const incomeConditions: AllIncomeConditions = {
     return (value - current) / turnoverRate;
   },
   interest(incomeState, state, condition) {
-    const { orgId, rate, isComposite } = condition;
+    const { orgId, contractId, percent, rate, isComposite } = condition;
     const revenuRate = incomeState.orgs[orgId].revenuRate;
     const current = state.orgs[orgId].revenu.calculated;
     const operations = state.orgs[orgId].operations;
-    const value = investmentWithInterest(rate, operations, isComposite);
+    const contractOperations = operations.filter(o => o.type === 'income' || (o.type === 'investment' && o.contractId === contractId));
+    const value = investmentWithInterest(rate, contractOperations, isComposite) * percent;
     if (current >= value) return Infinity;
     return (value - current) / revenuRate;
   }

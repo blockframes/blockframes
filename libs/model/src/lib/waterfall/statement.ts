@@ -11,6 +11,7 @@ import { getContractsWith } from '../contract';
 import { mainCurrency } from './action';
 import { ConditionWithTarget, isConditionWithTarget } from './conditions';
 import { Expense } from '../expense';
+import { InterestDetail } from './interest';
 
 export interface Payment {
   id: string;
@@ -125,7 +126,8 @@ export interface Statement {
     rightsBreakdown?: RightsBreakdown[];
     groupsBreakdown?: GroupsBreakdown[];
     details?: DetailsRow[];
-    expenses?: (Expense & { cap?: PricePerCurrency })[]
+    expenses?: (Expense & { cap?: PricePerCurrency })[];
+    interests?: InterestDetail[];
   }
 }
 

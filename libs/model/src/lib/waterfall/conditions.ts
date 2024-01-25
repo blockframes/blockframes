@@ -44,10 +44,10 @@ export const thresholdConditions = {
    */
   groupTurnover,
   /**
-   * Condition that will keep incoming amount (investment, income) until interests are covered.
-   * Interests are taken on incomes, investments and new years.
+   * Condition will match if calculated OrgRevenu is "operator (ex: less than)" than x (ex: 100%) percent of 
+   * investments + interests of contractId with [conposite] interest with a rate of y (ex: 4%) 
+   * Interests are calculated on each new income, investment and year.
    * Interest can be composite: interests of each period are incorporated into the capital to increase it gradually.
-   * Next interests will be calculated from increased capital.
    * (Income and investments must have a date)
    */
   interest,
@@ -573,14 +573,25 @@ function contractAmount(ctx: ConditionContext, payload: ConditionContractAmount)
 // INTEREST //
 //////////////
 
-interface ConditionInterest {
+export interface ConditionInterest {
   orgId: string;
+  contractId: string;
+  operator: NumberOperator;
+  percent: number;
   rate: number;
   isComposite?: boolean;
 }
+/**
+ * @param ctx 
+ * @param payload 
+ * @returns 
+ */
 function interest(ctx: ConditionContext, payload: ConditionInterest) {
   const { state } = ctx;
-  const { orgId, rate, isComposite } = payload;
+  const { orgId, contractId, operator, percent, rate, isComposite } = payload;
   const { revenu, operations } = state.orgs[orgId];
-  return revenu.calculated >= investmentWithInterest(rate, operations, isComposite);
+  const contractOperations = operations.filter(o => o.type === 'income' || (o.type === 'investment' && o.contractId === contractId));
+  const targetValue = investmentWithInterest(rate, contractOperations, isComposite) * percent;
+  const current = revenu.calculated;
+  return numericOperator(operator, current, targetValue);
 }

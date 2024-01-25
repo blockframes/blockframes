@@ -13,6 +13,7 @@ import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price
 import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 import { ExpenseTypesFormModule } from '@blockframes/waterfall/components/forms/expense-types-form/form.module';
 import { VersionSelectorModule } from '@blockframes/waterfall/components/version-selector/version-selector.module';
+import { InterestTableModule } from '@blockframes/waterfall/components/interests-table/interest-table.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -33,6 +34,7 @@ import { MatButtonModule } from '@angular/material/button';
     RightHolderNamePipeModule,
     ExpenseTypesFormModule,
     VersionSelectorModule,
+    InterestTableModule,
 
     MatIconModule,
     MatButtonModule,
