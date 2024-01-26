@@ -1,5 +1,5 @@
 
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 import { FormList } from '@blockframes/utils/form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
@@ -11,7 +11,6 @@ import { createWaterfallRightholder } from '@blockframes/model';
   selector: '[rightholdersForm]waterfall-right-holder-form',
   templateUrl: './right-holder-form.component.html',
   styleUrls: ['./right-holder-form.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RightHolderFormComponent {
 

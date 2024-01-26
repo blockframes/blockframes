@@ -10,6 +10,8 @@
 
   <p>Please add the companies that will be involved into the waterfall.</p>
 
+  <!-- <p>{{rightholdersForm | json}}</p> -->
+
   <article *ngFor="let item of rightholdersForm.controls; let index = index; let last = last">
     <mat-form-field appearance="outline">
       <mat-label>Company Name</mat-label>
@@ -31,5 +33,13 @@
         <mat-icon svgIcon="add"></mat-icon>
       </button>
     </ng-template>
+  </article>
+
+  <article *ngIf="rightholdersForm.controls.length === 0" class="no-rightholders">
+    <p>This title has no Right Holders. Start by creating one.</p>
+    <button mat-button color="primary" (click)="add()">
+      <span>Add Right Holder</span>
+      <mat-icon svgIcon="add"></mat-icon>
+    </button>
   </article>
 </section>

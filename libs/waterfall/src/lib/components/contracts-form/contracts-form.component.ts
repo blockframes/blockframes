@@ -48,7 +48,6 @@ export class ContractsFormComponent implements OnInit {
   @Input() movieId: string;
   @Input() documentForm: WaterfallDocumentForm;
 
-  @Output() skip = new EventEmitter();
 
   constructor(
     private waterfallService: WaterfallService,

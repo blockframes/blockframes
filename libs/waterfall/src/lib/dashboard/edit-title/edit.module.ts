@@ -6,21 +6,20 @@ import { CommonModule } from '@angular/common';
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatStepperModule } from '@angular/material/stepper';
 
 // Blockframes
-import { WaterfallFormGuard } from '../../guards/waterfall-form-guard';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
+
 import { TitleFormModule } from '../../components/forms/title-form/form.module';
 import { ContractsFormModule } from '../../components/contracts-form/contracts-form.module';
 import { RightHolderFormModule } from '../../components/right-holder-form/right-holder-form.module';
 
 // Pages
-import { WaterfallEditFormComponent } from './edit.component';
+import { WaterfallEditTitleComponent } from './edit.component';
 
 
 @NgModule({
-  declarations: [WaterfallEditFormComponent],
+  declarations: [WaterfallEditTitleComponent],
   imports: [
     CommonModule,
     TitleFormModule,
@@ -31,14 +30,12 @@ import { WaterfallEditFormComponent } from './edit.component';
     // Material
     MatIconModule,
     MatButtonModule,
-    MatStepperModule,
 
     // Routing
     RouterModule.forChild([{
       path: '', 
-      component: WaterfallEditFormComponent,
-      canDeactivate: [WaterfallFormGuard],
+      component: WaterfallEditTitleComponent,
     }]),
   ],
 })
-export class WaterfallEditFormModule { }
+export class WaterfallEditTitleModule { }

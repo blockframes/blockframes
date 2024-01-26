@@ -24,8 +24,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     FlexLayoutModule,
 
     // Blockframes
-    DisplayNameModule,
     ImageModule,
+    DisplayNameModule,
 
     // Material
     MatTabsModule,
