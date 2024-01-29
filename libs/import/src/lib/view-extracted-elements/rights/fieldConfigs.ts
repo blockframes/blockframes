@@ -269,11 +269,11 @@ export function getRightConfig(option: RightConfig) {
           case 'investments with composite interests':
             cond.conditionName = 'interest';
             cond.interest = { rate: 0, isComposite: true };
-            return 'investment';
+            return 'contracts.investment';
           case 'investments with interests':
             cond.conditionName = 'interest';
             cond.interest = { rate: 0, isComposite: false };
-            return 'investment';
+            return 'contracts.investment';
           default:
             throw mandatoryError(value, 'Invalid Target Type');
         }

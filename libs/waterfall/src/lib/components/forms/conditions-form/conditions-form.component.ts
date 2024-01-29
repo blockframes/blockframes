@@ -1,6 +1,5 @@
 
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { MatSelectChange } from '@angular/material/select';
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import {
@@ -10,17 +9,12 @@ import {
   WaterfallContract,
   rightholderGroups,
   getDeclaredAmount,
+  ConditionOwnerLabel,
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 
 import { ConditionForm } from './condition.form';
-
-const ownerLabels = {
-  rightholder: 'Right Holder',
-  revenueShare: 'Revenue Share',
-  group: 'Group',
-  pool: 'Pool',
-};
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'waterfall-conditions-form',
@@ -32,11 +26,11 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
 
   @Input() form: ConditionForm;
 
-  public revenueOwnerLabel$ = new BehaviorSubject('Owner');
   public revenueOwnerList$ = new BehaviorSubject<{ id: string, name: string }[]>([]);
   public investments: WaterfallContract[] = [];
   public numberOperator = numberOperator;
   public arrayOperator = arrayOperator;
+  public toggleRateControl = new FormControl(false);
 
   private rights: Right[] = [];
   private groups: Right[] = [];
@@ -69,6 +63,18 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
           return amount[c.currency] > 0;
         });
       }),
+
+      this.form.controls.revenueOwnerType.valueChanges.subscribe(value => {
+        if (value) this.selectRevenueOwnerType(value);
+      }),
+
+      this.form.controls.interestRate.valueChanges.subscribe(value => {
+        this.toggleRateControl.setValue(value > 0);
+      }),
+
+      this.toggleRateControl.valueChanges.subscribe(value => {
+        if (!value && this.form.controls.interestRate.value !== 0) this.form.controls.interestRate.setValue(0);
+      }),
     );
   }
 
@@ -76,11 +82,9 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
     this.subs.forEach(sub => sub.unsubscribe());
   }
 
-  selectRevenueOwnerType(event: MatSelectChange) {
-    this.revenueOwnerLabel$.next(ownerLabels[event.value] ?? 'Owner');
-
+  private selectRevenueOwnerType(revenueOwnerType: ConditionOwnerLabel) {
     let list: { id: string, name: string }[] = [];
-    switch (event.value) {
+    switch (revenueOwnerType) {
       case 'org':
         list = this.shell.waterfall.rightholders.map(rightHolder => ({ id: rightHolder.id, name: rightHolder.name }));
         break;

@@ -919,6 +919,13 @@ export const rightTypes = {
   unknown: 'Unknown'
 } as const
 
+export const conditionOwnerLabels = {
+  org: 'Right Holder',
+  right: 'Revenue Share',
+  group: 'Group',
+  pool: 'Pool',
+};
+
 export const movieNoteRoles = {
   producer: 'Producer',
   director: 'Director',
@@ -1901,7 +1908,8 @@ export const staticModel = {
   paymentType,
   paymentStatus,
   statementStatus,
-  statementType
+  statementType,
+  conditionOwnerLabels
 };
 
 export const emailErrorCode = ['E01-unauthorized', 'E02-general-error', 'E03-missing-api-key', 'E04-no-template-available'] as const;

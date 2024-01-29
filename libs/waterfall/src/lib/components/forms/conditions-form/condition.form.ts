@@ -19,6 +19,8 @@ import {
   TargetIn,
   GroupScope,
   ConditionName,
+  ConditionInterest,
+  ConditionOwnerLabel,
 } from '@blockframes/model';
 import { FormList } from '@blockframes/utils/form';
 
@@ -28,7 +30,7 @@ export function createConditionForm() {
 
 
     // Condition Type: Revenue Earned
-    revenueOwnerType: new FormControl<'org' | 'right' | 'pool' | 'group' | ''>(''), // Right Holder, Revenue Share, Group, Pool
+    revenueOwnerType: new FormControl<ConditionOwnerLabel | ''>(''), // Right Holder, Revenue Share, Group, Pool
     revenueOwner: new FormControl(''),
     revenueType: new FormControl<'Turnover' | 'Revenu' | 'ShadowRevenu' | ''>(''), // Turnover, Profit, Theoretical Profit
     revenueOperator: new FormControl<NumberOperator | ''>(''), // Numerical Operator (<, >, =, <=, >=)
@@ -71,13 +73,11 @@ export function createConditionForm() {
     eventList: FormList.factory([]), // *
     // --------------------
 
-    // Condition Type: Interest // TODO #9582
-    // interestTargetOrg = new FormControl(''); // Org (right holder)
-    // interestRate = new FormControl(0); // Numeric value
-    // interestComposite = new FormControl(false); // Boolean
+    // Condition Type: Interest
+    interestRate: new FormControl(0), // Numeric value
+    interestComposite: new FormControl(false), // Boolean
     // --------------------
 
-    // --------------------
   });
 }
 
@@ -164,13 +164,24 @@ export function setConditionForm(form: ConditionForm, condition?: Partial<Condit
       setConditionTarget(form, condition.payload.target);
       break;
     case 'interest':
-      // TODO #9582( percent * 100)
+      form.controls.conditionType.setValue('revenue');
+      form.controls.revenueOwnerType.setValue('org');
+      form.controls.revenueOwner.setValue(condition.payload.orgId ?? '');
+      form.controls.revenueType.setValue('Revenu');
+      form.controls.revenueOperator.setValue(condition.payload.operator ?? '');
+      form.controls.interestRate.setValue(condition.payload.rate * 100 ?? 0);
+      form.controls.interestComposite.setValue(condition.payload.isComposite ?? false);
+      setConditionTarget(form, {
+        id: condition.payload.contractId,
+        percent: condition.payload.percent,
+        in: 'contracts.investment'
+      });
       break;
     case 'amount':
     case 'termsLength':
     case 'contract':
     default:
-      // TODO #9582 check there is no way to create that type of condition ???
+      // TODO check there is no way to create that type of condition ???
       break;
   }
 }
@@ -289,16 +300,31 @@ function formToRevenueCondition(form: ConditionForm): Condition | undefined {
     case 'org': {
       if (!['Revenu', 'Turnover'].includes(revenueType)) return undefined;
 
+      const interestRate = form.controls.interestRate.value;
       const orgId = form.controls.revenueOwner.value;
+
+      if (targetIn === 'contracts.investment' && revenueType === 'Revenu' && interestRate > 0) {
+        const payload: ConditionInterest = {
+          orgId: form.controls.revenueOwner.value,
+          contractId: form.controls.revenueTarget.value,
+          percent: percent / 100,
+          operator,
+          rate: interestRate / 100,
+          isComposite: form.controls.interestComposite.value
+        }
+
+        return { name: 'interest', payload };
+      }
+
       const conditionName: ConditionName = `${revenueOwnerType}${revenueType}` as 'orgRevenu' | 'orgTurnover';
 
       let target: TargetValue | number;
 
-      if (targetIn === 'investment') { // TODO #9582 should be contracts.investements & nested if with interest else 
+      if (targetIn === 'contracts.investment') {
         if (!percent) return undefined;
         target = formToTarget(form, targetIn);
 
-      } else { // TODO #9582 targetIn === 'expense' => target.in === contracts.expenses
+      } else {
         if (!specificAmount) return undefined;
         target = specificAmount;
       }
@@ -315,11 +341,11 @@ function formToRevenueCondition(form: ConditionForm): Condition | undefined {
 
       let target: TargetValue | number;
 
-      if (targetIn === 'investment') { // TODO #9582 should be contracts.investements & nested if with interest else 
+      if (targetIn === 'contracts.investment') {
         if (!percent) return undefined;
         target = formToTarget(form, targetIn);
 
-      } else { // TODO #9582 targetIn === 'expense' => target.in === contracts.expenses
+      } else {
         if (!specificAmount) return undefined;
         target = specificAmount;
       }
@@ -336,11 +362,11 @@ function formToRevenueCondition(form: ConditionForm): Condition | undefined {
 
       let target: TargetValue | number;
 
-      if (targetIn === 'investment') { // TODO #9582 should be contracts.investements & nested if with interest else 
+      if (targetIn === 'contracts.investment') {
         if (!percent) return undefined;
         target = formToTarget(form, targetIn);
 
-      } else { // TODO #9582 targetIn === 'expense' => target.in === contracts.expenses
+      } else {
         if (!specificAmount) return undefined;
         target = specificAmount;
       }
@@ -357,11 +383,11 @@ function formToRevenueCondition(form: ConditionForm): Condition | undefined {
 
       let target: TargetValue | number;
 
-      if (targetIn === 'investment') { // TODO #9582 should be contracts.investements & nested if with interest else 
+      if (targetIn === 'contracts.investment') {
         if (!percent) return undefined;
         target = formToTarget(form, targetIn);
 
-      } else { // TODO #9582 targetIn === 'expense' => target.in === contracts.expenses
+      } else {
         if (!specificAmount) return undefined;
         target = specificAmount;
       }

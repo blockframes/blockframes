@@ -9,12 +9,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 import { WaterfallConditionsFormComponent } from './conditions-form.component';
-
 
 @NgModule({
   declarations: [ WaterfallConditionsFormComponent ],
@@ -24,6 +25,7 @@ import { WaterfallConditionsFormComponent } from './conditions-form.component';
 
     GroupMultiselectModule,
     ChipsAutocompleteModule,
+    ToLabelModule,
 
     MatIconModule,
     MatInputModule,
@@ -31,6 +33,7 @@ import { WaterfallConditionsFormComponent } from './conditions-form.component';
     MatSelectModule,
     MatFormFieldModule,
     MatDatepickerModule,
+    MatButtonToggleModule,
   ],
   exports: [ WaterfallConditionsFormComponent ],
 })

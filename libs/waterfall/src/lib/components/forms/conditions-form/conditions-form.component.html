@@ -1,11 +1,9 @@
-
 <mat-form-field appearance="outline">
   <mat-label>Condition Type</mat-label>
   <mat-select [formControl]="form.controls.conditionType">
     <mat-option value="revenue">Revenue Earned</mat-option>
     <mat-option value="sales">Sales</mat-option>
     <mat-option value="event">Event</mat-option>
-    <!-- <mat-option value="interest">Interest</mat-option> -->
   </mat-select>
 </mat-form-field>
 
@@ -13,7 +11,7 @@
   <ng-container *ngSwitchCase="'revenue'">
     <mat-form-field appearance="outline">
       <mat-label>By who?</mat-label>
-      <mat-select [formControl]="form.controls.revenueOwnerType" (selectionChange)="selectRevenueOwnerType($event)">
+      <mat-select [formControl]="form.controls.revenueOwnerType">
         <mat-option value="org">by right holder</mat-option>
         <mat-option value="right">by revenue share</mat-option>
         <mat-option value="group">by group</mat-option>
@@ -22,7 +20,7 @@
     </mat-form-field>
     
     <mat-form-field appearance="outline" *ngIf="form.controls.revenueOwnerType.value">
-      <mat-label>{{ revenueOwnerLabel$ | async }}</mat-label>
+      <mat-label>{{ form.controls.revenueOwnerType.value | toLabel: 'conditionOwnerLabels' }}</mat-label>
       <mat-select [formControl]="form.controls.revenueOwner">
         <mat-option *ngFor="let owner of (revenueOwnerList$ | async)" [value]="owner.id">{{ owner.name }}</mat-option>
       </mat-select>
@@ -48,12 +46,12 @@
       <mat-label>Target Type</mat-label>
       <mat-select [formControl]="form.controls.revenueTargetType">
         <mat-option value="amount">than a specific amount</mat-option>
-        <mat-option value="investment">than an investment</mat-option>
+        <mat-option value="contracts.investment">than an investment</mat-option>
         <mat-option value="expense">than an expense</mat-option>
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" *ngIf="form.controls.revenueTargetType.value === 'investment'">
+    <mat-form-field appearance="outline" *ngIf="form.controls.revenueTargetType.value === 'contracts.investment'">
       <mat-label>Investments</mat-label>
       <mat-select [formControl]="form.controls.revenueTarget">
         <mat-option *ngFor="let invest of investments" [value]="invest.id">{{ invest.name }}</mat-option>
@@ -66,10 +64,38 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" *ngIf="form.controls.revenueTargetType.value === 'investment' && form.controls.revenueTarget.value">
+    <mat-form-field appearance="outline" *ngIf="form.controls.revenueTargetType.value === 'contracts.investment' && form.controls.revenueTarget.value">
       <mat-label>Percentage</mat-label>
       <input matInput type="number" min="0" max="100" [formControl]="form.controls.revenuePercentage" />
     </mat-form-field>
+
+    <ng-container *ngIf="form.controls.revenueTargetType.value === 'contracts.investment' && 
+      form.controls.revenueTarget.value && form.controls.revenueOwnerType.value === 'org' && 
+      form.controls.revenueType.value === 'Revenu'">
+      <div class="toggle">
+        <p class="mat-caption">With interests</p>
+        <mat-button-toggle-group [formControl]="toggleRateControl">
+          <mat-button-toggle [value]="true">Yes</mat-button-toggle>
+          <mat-button-toggle [value]="false">No</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+  
+      <div class="group">
+        <ng-container *ngIf="toggleRateControl.value">
+          <mat-form-field appearance="outline">
+            <mat-label>Interest rate</mat-label>
+            <input matInput type="number" min="0" max="100" [formControl]="form.controls.interestRate" />
+          </mat-form-field>
+          <section>
+            <p class="mat-caption">Composite interest</p>
+            <mat-button-toggle-group [formControl]="form.controls.interestComposite">
+              <mat-button-toggle [value]="true">Yes</mat-button-toggle>
+              <mat-button-toggle [value]="false">No</mat-button-toggle>
+            </mat-button-toggle-group>
+          </section>
+        </ng-container>
+      </div>
+    </ng-container>
 
     <mat-form-field appearance="outline" *ngIf="form.controls.revenueTargetType.value === 'expense' && form.controls.revenueTarget.value">
       <mat-label>Cap</mat-label>
