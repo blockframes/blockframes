@@ -1,6 +1,6 @@
 
 import { Condition, TargetValue, Waterfall } from '@blockframes/model';
-import { rightholderName } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
+import { rightholderName } from '../../../../pipes/rightholder-name.pipe';
 
 function targetToString(target: TargetValue) {
   if (typeof target === 'number') {
