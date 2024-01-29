@@ -241,7 +241,20 @@ function or(conditions: (Condition | ConditionGroup)[]): ConditionGroup {
 
 const isNumber = (v: unknown): v is number => typeof v === 'number';
 
-export const targetIn = ['orgs.revenu', 'orgs.turnover', 'orgs.expense', 'rights.revenu', 'rights.turnover', 'pools.revenu', 'pools.turnover', 'investment', 'expense'] as const;
+export const targetIn = [
+  /**
+   * @deprecated not used (condiditon form does not allow it). Might be removed in future
+  'orgs.revenu', 
+  'orgs.turnover', 
+  'orgs.expense', 
+  'rights.revenu', 
+  'rights.turnover', 
+  'pools.revenu', 
+  'pools.turnover', 
+  'investment', */
+  'expense',
+  'contracts.investment'
+] as const;
 export type TargetIn = typeof targetIn[number];
 export type TargetValue = {
   id: string;
@@ -253,6 +266,8 @@ export function toTargetValue(state: TitleState, target: TargetValue) {
 
   const { id, percent } = target;
   switch (target.in) {
+    /**
+     * @deprecated not used. Might be removed in future
     case 'orgs.revenu': return state.orgs[id].revenu.calculated * percent;
     case 'orgs.turnover': return state.orgs[id].turnover.calculated * percent;
     case 'orgs.expense': return getExpensesValue(state, Object.values(state.expenses).filter(e => e.orgId === id)) * percent;
@@ -260,8 +275,9 @@ export function toTargetValue(state: TitleState, target: TargetValue) {
     case 'rights.turnover': return getNode(state, id).turnover.calculated * percent;
     case 'pools.revenu': return state.pools[id].revenu.calculated * percent;
     case 'pools.turnover': return state.pools[id].turnover.calculated * percent;
-    case 'investment': return state.investment * percent;
+    case 'investment': return state.investment * percent;*/
     case 'expense': return getExpensesValue(state, Object.values(state.expenses).filter(e => e.typeId === id)) * percent;
+    case 'contracts.investment': return getInvestmentValue(state, id) * percent;
     default: throw new Error(`Target "${target.in}" not supported.`);
   }
 }
@@ -291,6 +307,14 @@ function getExpensesValue(state: TitleState, expenses: ExpenseState[]) {
   });
 
   const values = expensesByType.map(e => e.expenses.capped + e.expenses.uncapped);
+  return sum(values);
+}
+
+function getInvestmentValue(state: TitleState, contractId: string) {
+  const orgs = Object.values(state.orgs);
+  const org = orgs.find(o => o.operations.some(op => op.contractId === contractId && op.type === 'investment'));
+  const operations = org?.operations.filter(op => op.contractId === contractId && op.type === 'investment') ?? [];
+  const values = operations.map(o => o.amount);
   return sum(values);
 }
 

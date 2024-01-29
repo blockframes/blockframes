@@ -1,5 +1,5 @@
 
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription, map } from 'rxjs';
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import {
@@ -31,6 +31,7 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
   public numberOperator = numberOperator;
   public arrayOperator = arrayOperator;
   public toggleRateControl = new FormControl(false);
+  public expenseTypes$ = this.shell.waterfall$.pipe(map(w => Object.values(w.expenseTypes)), map(e => e.flat()));
 
   private rights: Right[] = [];
   private groups: Right[] = [];

@@ -31,10 +31,6 @@ export class WaterfallConditionsComponent implements OnInit {
     });
   }
 
-  updateNewCondition(condition?: Condition) {
-    this.newCondition = condition;
-  }
-
   createCondition() {
     if (!this.newCondition) return;
 

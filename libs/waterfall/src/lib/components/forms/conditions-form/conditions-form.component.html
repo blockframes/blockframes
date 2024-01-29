@@ -59,12 +59,12 @@
     </mat-form-field>
     <mat-form-field appearance="outline" *ngIf="form.controls.revenueTargetType.value === 'expense'">
       <mat-label>Expenses</mat-label>
-      <mat-select [formControl]="form.controls.revenueTarget">
-        <mat-option value="todo">TODO (expense list)</mat-option>
+      <mat-select [formControl]="form.controls.revenueTarget" *ngIf="expenseTypes$ | async as expenseTypes">
+        <mat-option *ngFor="let expenseType of expenseTypes" [value]="expenseType.id">{{ expenseType.name }}</mat-option>
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" *ngIf="form.controls.revenueTargetType.value === 'contracts.investment' && form.controls.revenueTarget.value">
+    <mat-form-field appearance="outline" *ngIf="(form.controls.revenueTargetType.value === 'contracts.investment' || form.controls.revenueTargetType.value === 'expense') && form.controls.revenueTarget.value">
       <mat-label>Percentage</mat-label>
       <input matInput type="number" min="0" max="100" [formControl]="form.controls.revenuePercentage" />
     </mat-form-field>
@@ -97,20 +97,20 @@
       </div>
     </ng-container>
 
+    <!-- TODO #9582 should be used when creating an new expense type is possible
     <mat-form-field appearance="outline" *ngIf="form.controls.revenueTargetType.value === 'expense' && form.controls.revenueTarget.value">
       <mat-label>Cap</mat-label>
       <mat-select [formControl]="form.controls.revenueCap">
         <mat-option value="cap">Cap</mat-option>
         <mat-option value="uncap">Uncap</mat-option>
       </mat-select>
-    </mat-form-field>
+    </mat-form-field> -->
 
     <mat-form-field appearance="outline" *ngIf="form.controls.revenueTargetType.value === 'amount' || (form.controls.revenueTargetType.value === 'expense' && form.controls.revenueCap.value)">
       <mat-label>Amount</mat-label>
       <input matInput type="number" min="0" [formControl]="form.controls.revenueAmount" />
     </mat-form-field>
   </ng-container>
-
 
   <ng-container *ngSwitchCase="'sales'">
     <mat-form-field appearance="outline">

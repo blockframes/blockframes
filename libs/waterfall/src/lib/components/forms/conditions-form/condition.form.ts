@@ -320,10 +320,9 @@ function formToRevenueCondition(form: ConditionForm): Condition | undefined {
 
       let target: TargetValue | number;
 
-      if (targetIn === 'contracts.investment') {
+      if (targetIn !== 'amount') {
         if (!percent) return undefined;
         target = formToTarget(form, targetIn);
-
       } else {
         if (!specificAmount) return undefined;
         target = specificAmount;
@@ -341,10 +340,9 @@ function formToRevenueCondition(form: ConditionForm): Condition | undefined {
 
       let target: TargetValue | number;
 
-      if (targetIn === 'contracts.investment') {
+      if (targetIn !== 'amount') {
         if (!percent) return undefined;
         target = formToTarget(form, targetIn);
-
       } else {
         if (!specificAmount) return undefined;
         target = specificAmount;
@@ -362,10 +360,9 @@ function formToRevenueCondition(form: ConditionForm): Condition | undefined {
 
       let target: TargetValue | number;
 
-      if (targetIn === 'contracts.investment') {
+      if (targetIn !== 'amount') {
         if (!percent) return undefined;
         target = formToTarget(form, targetIn);
-
       } else {
         if (!specificAmount) return undefined;
         target = specificAmount;
@@ -383,10 +380,9 @@ function formToRevenueCondition(form: ConditionForm): Condition | undefined {
 
       let target: TargetValue | number;
 
-      if (targetIn === 'contracts.investment') {
+      if (targetIn !== 'amount') {
         if (!percent) return undefined;
         target = formToTarget(form, targetIn);
-
       } else {
         if (!specificAmount) return undefined;
         target = specificAmount;
