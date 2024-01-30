@@ -27,7 +27,7 @@
   
     <waterfall-condition-item *ngFor="let condition of step; let index = index" [condition]="condition" (edit)="editCondition(index)" (delete)="deleteCondition(index)"></waterfall-condition-item>
 
-    <waterfall-conditions-form [form]="conditionForm"></waterfall-conditions-form>
+    <waterfall-conditions-form [form]="conditionForm" [rightId]="rightId"></waterfall-conditions-form>
 
     <div class="add-next">
       <hr />

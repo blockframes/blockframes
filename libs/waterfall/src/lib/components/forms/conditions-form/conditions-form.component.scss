@@ -17,3 +17,9 @@ div.group {
     margin-top: 12px;
   }
 }
+
+section {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}

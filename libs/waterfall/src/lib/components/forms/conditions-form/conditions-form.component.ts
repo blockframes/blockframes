@@ -1,5 +1,5 @@
 
-import { BehaviorSubject, Subscription, map } from 'rxjs';
+import { BehaviorSubject, Subscription, combineLatest } from 'rxjs';
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import {
@@ -10,11 +10,23 @@ import {
   rightholderGroups,
   getDeclaredAmount,
   ConditionOwnerLabel,
+  isDefaultVersion,
+  getDefaultVersionId,
+  ExpenseType,
+  createExpenseType,
+  Waterfall,
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 
 import { ConditionForm } from './condition.form';
 import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { ExpenseTypesModalComponent } from '../../expense-types-modal/expense-types-modal.component';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormList } from '@blockframes/utils/form';
+import { ExpenseTypeForm } from '@blockframes/waterfall/form/document.form';
+import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 @Component({
   selector: 'waterfall-conditions-form',
@@ -25,27 +37,32 @@ import { FormControl } from '@angular/forms';
 export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
 
   @Input() form: ConditionForm;
+  @Input() rightId: string;
 
   public revenueOwnerList$ = new BehaviorSubject<{ id: string, name: string }[]>([]);
   public investments: WaterfallContract[] = [];
   public numberOperator = numberOperator;
   public arrayOperator = arrayOperator;
   public toggleRateControl = new FormControl(false);
-  public expenseTypes$ = this.shell.waterfall$.pipe(map(w => Object.values(w.expenseTypes)), map(e => e.flat()));
+  public expenseTypes: ExpenseType[] = [];
+  public waterfall$ = this.shell.waterfall$;
 
   private rights: Right[] = [];
   private groups: Right[] = [];
   private pools: string[] = [];
-
+  private contractId: string;
   private subs: Subscription[] = [];
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
+    private waterfallService: WaterfallService
   ) { }
 
   ngOnInit() {
     this.subs.push(
-      this.shell.rights$.subscribe(rights => {
+      combineLatest([this.shell.rights$, this.shell.contracts$, this.shell.waterfall$]).subscribe(([rights, contracts, waterfall]) => {
         const groupIds = new Set<string>();
         rights.forEach(right => {
           if (right.groupId) groupIds.add(right.groupId);
@@ -55,14 +72,17 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
         const pools = new Set<string>();
         rights.forEach(right => right.pools.filter(pool => pool).forEach(pool => pools.add(pool)));
         this.pools = [...pools];
-      }),
 
-      this.shell.contracts$.subscribe(_contracts => {
-        const investmentContracts = _contracts.filter(c => rightholderGroups.investors.includes(c.type));
+        const investmentContracts = contracts.filter(c => rightholderGroups.investors.includes(c.type));
         this.investments = investmentContracts.filter(c => {
           const amount = getDeclaredAmount(c);
           return amount[c.currency] > 0;
         });
+
+        const right = rights.find(r => r.id === this.rightId);
+        const isProducerRight = waterfall.rightholders.find(r => r.id === right.rightholderId)?.roles.includes('producer');
+        this.contractId = isProducerRight ? 'directSales' : right.contractId;
+        this.expenseTypes = waterfall.expenseTypes[this.contractId] || [];
       }),
 
       this.form.controls.revenueOwnerType.valueChanges.subscribe(value => {
@@ -101,5 +121,40 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
       default: break;
     }
     this.revenueOwnerList$.next(list);
+  }
+
+  public editExpenseType(waterfall: Waterfall) {
+    if (!this.contractId) {
+      this.snackBar.open('Please define contract first.', 'close', { duration: 5000 });
+      return;
+    }
+
+    const versionId = (!this.shell.versionId$.value || isDefaultVersion(this.shell.waterfall, this.shell.versionId$.value)) ? 'default' : this.shell.versionId$.value;
+    const versions = this.shell.waterfall.versions.map(v => v.id).filter(id => id !== getDefaultVersionId(this.shell.waterfall));
+    const form = FormList.factory<ExpenseType, ExpenseTypeForm>([], expenseType => new ExpenseTypeForm(expenseType, versions));
+
+    if (this.expenseTypes.length > 0) {
+      this.expenseTypes.forEach(expenseType => form.add(expenseType));
+    } else {
+      form.add(createExpenseType({ contractId: this.contractId }));
+    }
+
+    this.dialog.open(ExpenseTypesModalComponent, {
+      data: createModalData({
+        versionId,
+        form,
+        onConfirm: () => {
+          const { expenseTypes, id } = waterfall;
+          const expenseType = form.getRawValue().filter(c => !!c.name).map(c => createExpenseType({
+            ...c,
+            contractId: this.contractId,
+            id: c.id || this.waterfallService.createId(),
+          }));
+          expenseTypes[this.contractId] = expenseType;
+
+          return this.waterfallService.update({ id, expenseTypes });
+        }
+      })
+    });
   }
 }

@@ -14,6 +14,7 @@ import { createConditionForm, formToCondition, setConditionForm } from '../../fo
 export class WaterfallConditionsComponent implements OnInit {
 
   @Input() rightForm: RightForm;
+  @Input() rightId: string;
 
   @Output() createStep = new EventEmitter();
   @Output() deleteStep = new EventEmitter();

@@ -57,12 +57,19 @@
         <mat-option *ngFor="let invest of investments" [value]="invest.id">{{ invest.name }}</mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field appearance="outline" *ngIf="form.controls.revenueTargetType.value === 'expense'">
-      <mat-label>Expenses</mat-label>
-      <mat-select [formControl]="form.controls.revenueTarget" *ngIf="expenseTypes$ | async as expenseTypes">
-        <mat-option *ngFor="let expenseType of expenseTypes" [value]="expenseType.id">{{ expenseType.name }}</mat-option>
-      </mat-select>
-    </mat-form-field>
+    <ng-container *ngIf="form.controls.revenueTargetType.value === 'expense'">
+      <section>
+        <mat-form-field appearance="outline">
+          <mat-label>Expenses</mat-label>
+          <mat-select [formControl]="form.controls.revenueTarget">
+            <mat-option *ngFor="let expenseType of expenseTypes" [value]="expenseType.id">{{ expenseType.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button *ngIf="waterfall$ | async as waterfall" mat-icon-button (click)="editExpenseType(waterfall)" matTooltip="Manage Expenses">
+          <mat-icon svgIcon="edit"></mat-icon>
+        </button>
+      </section>
+    </ng-container>
 
     <mat-form-field appearance="outline" *ngIf="(form.controls.revenueTargetType.value === 'contracts.investment' || form.controls.revenueTargetType.value === 'expense') && form.controls.revenueTarget.value">
       <mat-label>Percentage</mat-label>
@@ -96,15 +103,6 @@
         </ng-container>
       </div>
     </ng-container>
-
-    <!-- TODO #9582 should be used when creating an new expense type is possible
-    <mat-form-field appearance="outline" *ngIf="form.controls.revenueTargetType.value === 'expense' && form.controls.revenueTarget.value">
-      <mat-label>Cap</mat-label>
-      <mat-select [formControl]="form.controls.revenueCap">
-        <mat-option value="cap">Cap</mat-option>
-        <mat-option value="uncap">Uncap</mat-option>
-      </mat-select>
-    </mat-form-field> -->
 
     <mat-form-field appearance="outline" *ngIf="form.controls.revenueTargetType.value === 'amount' || (form.controls.revenueTargetType.value === 'expense' && form.controls.revenueCap.value)">
       <mat-label>Amount</mat-label>
