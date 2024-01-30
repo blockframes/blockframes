@@ -1,6 +1,6 @@
 
 import { Observable, map, startWith, tap } from 'rxjs';
-import { Component, ChangeDetectionStrategy, ViewChild, Input, OnInit, Pipe, PipeTransform, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, Input, OnInit, Pipe, PipeTransform } from '@angular/core';
 
 import { WaterfallService } from '../../waterfall.service';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';

@@ -1,118 +1,110 @@
 
-<ng-container *ngIf="loading$ | async; else ready">
-  <article>
-    <logo-spinner></logo-spinner>
-  </article>
-</ng-container>
-<ng-template #ready>
-  <a mat-icon-button routerLink="..">
-    <mat-icon svgIcon="arrow_back"></mat-icon>
-  </a>
-  <h1>{{ createMode ? 'Create' : 'Edit' }} Waterfall for {{ movieName$ | async }}</h1>
+<a mat-icon-button routerLink="..">
+  <mat-icon svgIcon="arrow_back"></mat-icon>
+</a>
+<h1>{{ createMode ? 'Create' : 'Edit' }} Waterfall for {{ (movie$ | async).title.international }}</h1>
 
-  <mat-stepper #stepper>
-    <!-- override default stepper icons for the "edit" & "done" steps -->
-    <ng-template matStepperIcon="edit" let-index="index">
-      {{index + 1}}
-    </ng-template>
-    <ng-template matStepperIcon="done" let-index="index">
-      {{index + 1}}
-    </ng-template>
+<mat-stepper #stepper>
+  <!-- override default stepper icons for the "edit" & "done" steps -->
+  <ng-template matStepperIcon="edit" let-index="index">
+    {{index + 1}}
+  </ng-template>
+  <ng-template matStepperIcon="done" let-index="index">
+    {{index + 1}}
+  </ng-template>
 
-    <mat-step>
-      <ng-template matStepLabel>Add Contracts</ng-template>
-      <ng-template matStepContent>
-        <waterfall-contracts-form [movieId]="movieId" [documentForm]="documentForm"></waterfall-contracts-form>
-        <article>
-          <ng-container *ngIf="updating$ | async; else editContracts">
-            <logo-spinner></logo-spinner>
-          </ng-container>
-          <ng-template #editContracts>
-            <p *ngIf="invalidDocument$ | async" class="mat-hint">Add at least 1 contract to continue</p>
-            <button mat-flat-button color="primary" [disabled]="invalidDocument$ | async" (click)="next()">
-              <span>Continue</span>
-              <mat-icon svgIcon="arrow_forward"></mat-icon>
-            </button>
-            <a mat-button class="save" routerLink="..">
-              <mat-icon svgIcon="save"></mat-icon>
-              <span>Save & Come back later</span>
-            </a>
-          </ng-template>
-        </article>
-      </ng-template>
-    </mat-step>
-
-    <mat-step>
-      <ng-template matStepLabel>Add Right Holders</ng-template>
-      <waterfall-right-holder-form [rightholdersForm]="rightholdersForm"></waterfall-right-holder-form>
+  <mat-step>
+    <ng-template matStepLabel>Add Contracts</ng-template>
+    <ng-template matStepContent>
+      <waterfall-contracts-form [movieId]="movieId" [documentForm]="documentForm"></waterfall-contracts-form>
       <article>
-        <ng-container *ngIf="updating$ | async; else editRightHolders">
+        <ng-container *ngIf="updating$ | async; else editContracts">
           <logo-spinner></logo-spinner>
         </ng-container>
-        <ng-template #editRightHolders>
-          <p *ngIf="invalidRightholders$ | async" class="mat-hint">Add at least 1 "Producer"</p>
-          <section>
-            <button mat-button color="primary"(click)="previous()">
-              <mat-icon svgIcon="arrow_back"></mat-icon>
-              <span>Back</span>
-            </button>
-            <button mat-flat-button color="primary" (click)="updateRightHolders()" [disabled]="invalidRightholders$ | async">
-              <span>Continue</span>
-              <mat-icon svgIcon="arrow_forward"></mat-icon>
-            </button>
-          </section>
+        <ng-template #editContracts>
+          <p *ngIf="invalidDocument$ | async" class="mat-hint">Add at least 1 contract to continue</p>
+          <button mat-flat-button color="primary" [disabled]="invalidDocument$ | async" (click)="next()">
+            <span>Continue</span>
+            <mat-icon svgIcon="arrow_forward"></mat-icon>
+          </button>
           <a mat-button class="save" routerLink="..">
             <mat-icon svgIcon="save"></mat-icon>
             <span>Save & Come back later</span>
           </a>
         </ng-template>
       </article>
-    </mat-step>
-    
-    <mat-step>
-      <ng-template matStepLabel>Build Waterfall</ng-template>
-      <article class="surface">
-        <h1>Build your Waterfall</h1>
-        <p>Please choose if you want to create a waterfall yourself or import one, or else our team can do it for you.</p>
-        <p>Do you need help? <a>Contact our team.</a></p>
+    </ng-template>
+  </mat-step>
+
+  <mat-step>
+    <ng-template matStepLabel>Add Right Holders</ng-template>
+    <waterfall-right-holder-form [rightholdersForm]="rightholdersForm"></waterfall-right-holder-form>
+    <article>
+      <ng-container *ngIf="updating$ | async; else editRightHolders">
+        <logo-spinner></logo-spinner>
+      </ng-container>
+      <ng-template #editRightHolders>
+        <p *ngIf="invalidRightholders$ | async" class="mat-hint">Add at least 1 "Producer"</p>
         <section>
-          <a class="surface">
-            <img asset="add_draft.svg" alt="Create waterfall image">
-            <button mat-button color="primary">Create Waterfall yourself</button>
-          </a>
-          <a class="surface">
-            <img asset="add_files.svg" alt="Import waterfall image">
-            <button mat-button color="primary">Import Waterfall</button>
-          </a>
-          <a class="surface">
-            <img asset="feature_key3.svg" alt="Ask out team image">
-            <button mat-button color="primary">Ask Blockframes Team to do it!</button>
-          </a>
+          <button mat-button color="primary"(click)="previous()">
+            <mat-icon svgIcon="arrow_back"></mat-icon>
+            <span>Back</span>
+          </button>
+          <button mat-flat-button color="primary" (click)="updateRightHolders()" [disabled]="invalidRightholders$ | async">
+            <span>Continue</span>
+            <mat-icon svgIcon="arrow_forward"></mat-icon>
+          </button>
         </section>
-      </article>
-      <article>
-        <ng-container *ngIf="updating$ | async; else editWaterfall">
-          <logo-spinner></logo-spinner>
-        </ng-container>
-        <ng-template #editWaterfall>
-          <section>
-            <button mat-button color="primary" (click)="previous()">
-              <mat-icon svgIcon="arrow_back"></mat-icon>
-              <span>Back</span>
-            </button>
-            <button mat-flat-button color="primary" disabled>
-              <span>Continue</span>
-              <mat-icon svgIcon="arrow_forward"></mat-icon>
-            </button>
-          </section>
-          <a mat-button class="save" routerLink="..">
-            <mat-icon svgIcon="save"></mat-icon>
-            <span>Save & Come back later</span>
-          </a>
-        </ng-template>
-      </article>
-    </mat-step>
-    
-  </mat-stepper>
-
-</ng-template>
+        <a mat-button class="save" routerLink="..">
+          <mat-icon svgIcon="save"></mat-icon>
+          <span>Save & Come back later</span>
+        </a>
+      </ng-template>
+    </article>
+  </mat-step>
+  
+  <mat-step>
+    <ng-template matStepLabel>Build Waterfall</ng-template>
+    <article class="surface">
+      <h1>Build your Waterfall</h1>
+      <p>Please choose if you want to create a waterfall yourself or import one, or else our team can do it for you.</p>
+      <p>Do you need help? <a>Contact our team.</a></p>
+      <section>
+        <a class="surface">
+          <img asset="add_draft.svg" alt="Create waterfall image">
+          <button mat-button color="primary">Create Waterfall yourself</button>
+        </a>
+        <a class="surface">
+          <img asset="add_files.svg" alt="Import waterfall image">
+          <button mat-button color="primary">Import Waterfall</button>
+        </a>
+        <a class="surface">
+          <img asset="feature_key3.svg" alt="Ask out team image">
+          <button mat-button color="primary">Ask Blockframes Team to do it!</button>
+        </a>
+      </section>
+    </article>
+    <article>
+      <ng-container *ngIf="updating$ | async; else editWaterfall">
+        <logo-spinner></logo-spinner>
+      </ng-container>
+      <ng-template #editWaterfall>
+        <section>
+          <button mat-button color="primary" (click)="previous()">
+            <mat-icon svgIcon="arrow_back"></mat-icon>
+            <span>Back</span>
+          </button>
+          <button mat-flat-button color="primary" disabled>
+            <span>Continue</span>
+            <mat-icon svgIcon="arrow_forward"></mat-icon>
+          </button>
+        </section>
+        <a mat-button class="save" routerLink="..">
+          <mat-icon svgIcon="save"></mat-icon>
+          <span>Save & Come back later</span>
+        </a>
+      </ng-template>
+    </article>
+  </mat-step>
+  
+</mat-stepper>

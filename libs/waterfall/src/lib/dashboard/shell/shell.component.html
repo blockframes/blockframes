@@ -22,7 +22,7 @@
           <waterfall-cta fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
             <a mat-button color="primary" [routerLink]="['init']" class="main-dashboard-cta">
               <mat-icon svgIcon="water_drop"></mat-icon>
-              <ng-container *ngIf="waterfall.versions.length; else noWaterfall">
+              <ng-container *ngIf="canInitWaterfall$ | async; else noWaterfall">
                 <span>Waterfall Management</span>
               </ng-container>
               <ng-template #noWaterfall>
@@ -37,7 +37,7 @@
 
   <nav mat-tab-nav-bar *ngIf="!lite">
     <ng-container *ngFor="let link of routes">
-      <a mat-tab-link *ngIf="!link.shouldHide || waterfall.versions.length" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
+      <a mat-tab-link *ngIf="!link.shouldHide || (canInitWaterfall$ | async)" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
         [active]="rla.isActive">
         {{link.label}}
       </a>

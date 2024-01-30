@@ -75,7 +75,11 @@ export class WaterfallEditTitleComponent implements OnInit {
         const appAccess = createMovieAppConfig({ waterfall: createAppConfig({ status: 'accepted', access: true }) });
         await this.movieService.create({ ...this.movieForm.value, id: this.movieId, app: appAccess });
         this.uploadService.upload();
-        const defaultRightholder = createWaterfallRightholder({ id: this.orgService.org.id, name: this.orgService.org.name, roles: ['producer'] });
+        const defaultRightholder = createWaterfallRightholder({
+          id: this.orgService.org.id,
+          name: this.orgService.org.name,
+          roles: ['producer'],
+        });
         await this.waterfallService.create(this.movieId, [ orgId ], [ defaultRightholder ]);
         this.router.navigate(['../', this.movieId], { relativeTo: this.route });
 
@@ -83,8 +87,11 @@ export class WaterfallEditTitleComponent implements OnInit {
         await this.movieService.update({ ...this.movieForm.value, id: this.movieId });
         this.uploadService.upload();
         this.snackBar.open('Movie updated!', 'close', { duration: 3000 });
-        this.router.navigate(['../', this.movieId], { relativeTo: this.route });
+        this.router.navigate(['..'], { relativeTo: this.route });
       }
+    } else {
+      if (this.createMode) this.router.navigate(['../', this.movieId], { relativeTo: this.route });
+      else this.router.navigate(['..'], { relativeTo: this.route });
     }
   }
 }
