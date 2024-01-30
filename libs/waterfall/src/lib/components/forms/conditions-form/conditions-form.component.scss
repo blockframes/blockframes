@@ -9,6 +9,7 @@ div.group {
   display: flex;
   flex-wrap: wrap;
   column-gap: 32px;
+  align-items: baseline;
   * {
     flex: 1;
   }

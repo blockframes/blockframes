@@ -153,7 +153,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       } else {
         steps[0] = right.conditions?.conditions.filter(c => !isConditionGroup(c)) as Condition[] ?? [];
       }
-      const org = this.rightholders.find(r => r.id === right.rightholderId)?.name ?? '';;
+      const org = this.rightholders.find(r => r.id === right.rightholderId)?.name ?? '';
       const parents = this.nodes$.getValue().filter(node => node.children.includes(right.groupId || id)); // do not use ?? instead of ||, it will break since '' can be considered truthy
       setRightFormValue(this.rightForm, { ...right, rightholderId: org, nextIds: parents.map(parent => parent.id) }, steps);
     }
