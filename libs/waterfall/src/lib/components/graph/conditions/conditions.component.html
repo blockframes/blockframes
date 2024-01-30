@@ -25,14 +25,14 @@
   <ng-container *ngIf="selectedStep === index; else item">
     <p class="step">Step {{index + 1}}</p>
   
-    <waterfall-condition-item *ngFor="let condition of step; let index = index" [condition]="condition" (edit)="editCondition(index)" (delete)="deleteCondition(index)"></waterfall-condition-item>
+    <waterfall-condition-item [disabled]="disabled" *ngFor="let condition of step; let index = index" [condition]="condition" (edit)="editCondition(index)" (delete)="deleteCondition(index)"></waterfall-condition-item>
 
     <waterfall-conditions-form [form]="conditionForm" [rightId]="rightId"></waterfall-conditions-form>
 
     <div class="add-next">
       <hr />
       <p class="mat-caption">Add Next Condition</p>
-      <button mat-mini-fab color="primary" [disabled]="!newCondition" (click)="createCondition()">
+      <button mat-mini-fab color="primary" [disabled]="!newCondition || disabled" (click)="createCondition()">
         <mat-icon svgIcon="add"></mat-icon>
       </button>
     </div>
@@ -43,5 +43,5 @@
 </ng-container>
 
 <div class="add-step">
-  <button mat-button color="primary" (click)="createStep.emit()">Add New Step</button>
+  <button mat-button color="primary" [disabled]="disabled" (click)="createStep.emit()">Add New Step</button>
 </div>

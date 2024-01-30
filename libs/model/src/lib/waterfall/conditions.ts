@@ -243,7 +243,8 @@ const isNumber = (v: unknown): v is number => typeof v === 'number';
 
 export const targetIn = [
   /**
-   * @deprecated not used (condiditon form does not allow it). Might be removed in future
+   * @deprecated not used (condition form does not allow it). Might be removed in future.
+   * If orgs.expense is re-enabled, check "getRightExpenseTypes" in libs/model/src/lib/waterfall/statement.ts
   'orgs.revenu', 
   'orgs.turnover', 
   'orgs.expense', 

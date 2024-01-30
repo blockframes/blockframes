@@ -145,7 +145,7 @@ export function conditionToString(condition?: Condition, waterfall?: Waterfall) 
 
   if (condition.name === 'interest') {
     const { isComposite, operator, orgId, rate, percent } = condition.payload;
-    return `Org ${rightholderName(orgId, waterfall)}'s revenue is ${operatorToString(operator)} of ${percent * 100}% of investments and ${isComposite ? 'composite' : ''} interest with a rate of ${rate * 100}%`;
+    return `Org ${rightholderName(orgId, waterfall)}'s revenue is ${operatorToString(operator)} ${percent * 100}% of investments and ${isComposite ? 'composite' : ''} interest with a rate of ${rate * 100}%`;
   }
 
   return 'Unknown condition';
