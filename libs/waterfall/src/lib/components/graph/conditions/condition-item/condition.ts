@@ -11,6 +11,7 @@ function targetToString(target: TargetValue, waterfall?: Waterfall) {
   const moneyType = splitted.length > 1 ? splitted[1] : splitted[0];
   const targetType = splitted.length > 1 ? `${splitted[0]}` : '';
   let targetName = id;
+  // TODO #9623 improve with contract Name
   if (t === 'expense') {
     const expenseTypes = Object.values(waterfall?.expenseTypes || {}).flat();
     const expenseType = expenseTypes.find(e => e.id === id);
@@ -90,7 +91,7 @@ export function conditionToString(condition?: Condition, waterfall?: Waterfall) 
     let displayList = '';
     if (contractIds.length >= 3) displayList = `${contractIds[0]}, ${contractIds[1]}, ${contractIds[2]} and ${contractIds.length - 3} more`;
     else displayList = contractIds.join(', ');
-    return `Contract ${displayList} is ${operatorToString(operator)}`;
+    return `Contract ${displayList} is ${operatorToString(operator)}`; // TODO #9623 contractName with a caching system on shell ?
   }
 
   if (condition.name === 'contractAmount') {
@@ -110,7 +111,7 @@ export function conditionToString(condition?: Condition, waterfall?: Waterfall) 
 
   if (condition.name === 'rightRevenu') {
     const { operator, rightId, target } = condition.payload;
-    return `Right ${rightId}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
+    return `Right ${rightId}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall)}`; // TODO #9623 rightName ?
   }
 
   if (condition.name === 'rightTurnover') {
@@ -145,6 +146,7 @@ export function conditionToString(condition?: Condition, waterfall?: Waterfall) 
 
   if (condition.name === 'interest') {
     const { isComposite, operator, orgId, rate, percent } = condition.payload;
+    // TODO #9623 add contract Name
     return `Org ${rightholderName(orgId, waterfall)}'s revenue is ${operatorToString(operator)} ${percent * 100}% of investments and ${isComposite ? 'composite' : ''} interest with a rate of ${rate * 100}%`;
   }
 
