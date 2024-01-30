@@ -29,7 +29,8 @@ import {
   buildBlock,
   sourcesToAction,
   expenseTypesToAction,
-  waterfallSources
+  waterfallSources,
+  WaterfallRightholder
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { AuthService } from '@blockframes/auth/service';
@@ -92,12 +93,13 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     );
   }
 
-  public async create(id: string, orgIds: string[]) {
+  public async create(id: string, orgIds: string[], rightholders?: WaterfallRightholder[]) {
     const createdBy = this.authService.uid;
     const waterfall = createWaterfall({
       _meta: createDocumentMeta({ createdBy }),
       id,
       orgIds,
+      rightholders,
     });
 
     await this.runTransaction(async (tx) => {
@@ -114,7 +116,8 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
         waterfall.id,
         write as firestore.Transaction,
         orgId,
-        true
+        true,
+        waterfall.rightholders.map(r => r.id),
       );
     }
   }

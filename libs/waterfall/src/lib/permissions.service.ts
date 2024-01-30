@@ -23,12 +23,13 @@ export class WaterfallPermissionsService extends BlockframesSubCollection<Waterf
     return createWaterfallPermissions(permissions);
   }
 
-  public create(waterfallId: string, write: AtomicWrite, id: string, isAdmin: boolean = false) {
+  public create(waterfallId: string, write: AtomicWrite, id: string, isAdmin: boolean = false, rightholderIds?: string[]) {
     const createdBy = this.authService.uid;
     const perm = createWaterfallPermissions({
       _meta: createDocumentMeta({ createdBy }),
       id,
-      isAdmin
+      isAdmin,
+      rightholderIds,
     });
     const permRef = doc(this.db, `waterfall/${waterfallId}/permissions/${perm.id}`);
     (write as firestore.WriteBatch).set(permRef, perm);
