@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ExpenseType } from '@blockframes/model';
 import { FormList } from '@blockframes/utils/form';
-import { ExpenseTypeForm } from '@blockframes/waterfall/form/document.form';
+import { ExpenseTypeForm } from '../../form/document.form';
 
 interface ExpenseTypeData {
   form: FormList<ExpenseType, ExpenseTypeForm>;

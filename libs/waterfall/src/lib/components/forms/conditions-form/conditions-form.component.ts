@@ -25,8 +25,8 @@ import { ExpenseTypesModalComponent } from '../../expense-types-modal/expense-ty
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormList } from '@blockframes/utils/form';
-import { ExpenseTypeForm } from '@blockframes/waterfall/form/document.form';
-import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
+import { ExpenseTypeForm } from '../../../form/document.form';
+import { WaterfallService } from '../../../waterfall.service';
 
 @Component({
   selector: 'waterfall-conditions-form',
