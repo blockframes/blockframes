@@ -32,4 +32,12 @@
       </button>
     </ng-template>
   </article>
+
+  <article *ngIf="rightholdersForm.controls.length === 0" class="no-rightholders">
+    <p>This title has no Right Holders. Start by creating one.</p>
+    <button mat-button color="primary" (click)="add()">
+      <span>Add Right Holder</span>
+      <mat-icon svgIcon="add"></mat-icon>
+    </button>
+  </article>
 </section>
