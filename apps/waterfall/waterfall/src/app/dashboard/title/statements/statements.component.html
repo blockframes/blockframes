@@ -14,7 +14,7 @@
         <waterfall-version-selector></waterfall-version-selector>
       </article>
       <article>
-        <span>
+        <section>
           <ng-container *ngIf="rightholders.length > 0">
             <waterfall-rightholder-select *ngIf="selected !== 'directSales'"
               [rightholders]="rightholders"
@@ -37,15 +37,17 @@
               </mat-menu>
             </ng-container>
           </ng-container>
-        </span>
+        </section>
         <div *ngIf="selected !== 'directSales' && rightholderContracts.length === 1 && isStatementSender">
           <button mat-button (click)="createStatement(rightholderControl.value, rightholderContracts[0].id)">
-            <span>Add statement for {{ rightholderControl.value | rightholderName: waterfall }}</span>
+            <mat-icon svgIcon="add"></mat-icon>
+            <span>Add Statement</span>
           </button>
         </div>
         <div *ngIf="selected === 'directSales' && haveStatements && isStatementSender">
           <button mat-button (click)="createStatement(rightholderControl.value)">
-            <span>Add Direct Sales statement</span>
+            <mat-icon svgIcon="add"></mat-icon>
+            <span>Add Statement</span>
           </button>
         </div>
       </article>
@@ -58,10 +60,11 @@
             <ng-template matTabContent>
               <div *ngIf="isStatementSender">
                 <button mat-button (click)="createStatement(rightholderControl.value, rightholderContract.id)">
-                  <span>Add statement for {{ rightholderControl.value | rightholderName: waterfall }} ({{ rightholderContract.name }})</span>
+                  <mat-icon svgIcon="add"></mat-icon>
+                  <span>Add statement ({{ rightholderContract.name }})</span>
                 </button>
               </div>
-              <waterfall-statement-table [statements]="rightholderContract.statements"></waterfall-statement-table>
+              <waterfall-statement-table [statements]="rightholderContract.statements" (delete)="removeStatement($event)"></waterfall-statement-table>
             </ng-template>
           </mat-tab>
         </ng-container>
@@ -69,7 +72,7 @@
       </mat-tab-group>
 
       <ng-template #singleContract>
-        <waterfall-statement-table *ngIf="haveStatements" [statements]="rightholderContracts[0].statements"></waterfall-statement-table>
+        <waterfall-statement-table *ngIf="haveStatements" [statements]="rightholderContracts[0].statements" (delete)="removeStatement($event)"></waterfall-statement-table>
       </ng-template>
     </section>
 
@@ -79,7 +82,8 @@
 
     <section *ngIf="haveStatements && selected !== 'directSales' && isStatementSender" class="flex-center">
       <button mat-button (click)="addNew(selected)">
-        <span>Add New {{ selected | toLabel: 'statementType' }}</span>
+        <mat-icon svgIcon="add"></mat-icon>
+        <span>Add Statement for another {{ selected | toLabel: 'statementParty' }}</span>
       </button>
     </section>
   </ng-container>
