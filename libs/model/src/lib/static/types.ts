@@ -55,7 +55,8 @@ import {
   paymentType,
   paymentStatus,
   statementStatus,
-  statementType
+  statementType,
+  conditionOwnerLabels
 } from './static-model';
 
 export type App = typeof app[number];
@@ -161,6 +162,8 @@ export type StakeholderRoleValue = keyof typeof stakeholderRoles[StakeholderRole
 export type RightholderRole = keyof typeof rightholderRoles;
 
 export type RightType = keyof typeof rightTypes;
+
+export type ConditionOwnerLabel = keyof typeof conditionOwnerLabels;
 
 export type MovieNoteRole = keyof typeof movieNoteRoles;
 

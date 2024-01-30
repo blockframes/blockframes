@@ -14,7 +14,7 @@ import { StatementIncomeEditModule } from '../../statement-income-edit/statement
 import { ExpenseTypePipeModule } from '../../../pipes/expense-type.pipe';
 import { RightHolderNamePipeModule } from '../../../pipes/rightholder-name.pipe';
 import { StatementExpenseEditModule } from '../../statement-expense-edit/statement-expense-edit.module';
-import { InterestTableModule } from '@blockframes/waterfall/components/interests-table/interest-table.module';
+import { InterestTableModule } from '../../../components/interests-table/interest-table.module';
 
 // Components
 import { StatementProducerSummaryComponent } from './summary.component';

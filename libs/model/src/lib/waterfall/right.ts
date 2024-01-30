@@ -15,7 +15,7 @@ export interface Right {
   /** Parents (above) of this right */
   nextIds: string[];
   rightholderId: string;
-  percent: number;
+  percent: number; // Between 0 and 100
   conditions?: ConditionGroup;
   version: Record<string, RightVersion>;
   blameId?: string;

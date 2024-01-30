@@ -1,10 +1,10 @@
 
 <p>{{ text }}</p>
 <div>
-  <button mat-icon-button (click)="edit.emit()">
+  <button mat-icon-button [disabled]="disabled" (click)="edit.emit()">
     <mat-icon svgIcon="edit"></mat-icon>
   </button>
-  <button mat-icon-button (click)="delete.emit()">
+  <button mat-icon-button [disabled]="disabled" (click)="delete.emit()">
     <mat-icon svgIcon="delete"></mat-icon>
   </button>
 </div>

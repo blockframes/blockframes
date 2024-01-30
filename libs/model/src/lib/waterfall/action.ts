@@ -142,21 +142,24 @@ export function contractsToActions(contracts: WaterfallContract[], terms: Term[]
   return actions;
 }
 
-export function investmentsToActions(contracts: WaterfallContract[], terms: Term[]) {
+export function investmentsToActions(contracts: WaterfallContract[]) {
   const actions: Action[] = [];
   const investmentContracts = contracts.filter(c => rightholderGroups.investors.includes(c.type));
-
   for (const c of investmentContracts) {
     if (c.rootId) continue; // Only root contracts are considered as investments
-    const declaredAmount = getDeclaredAmount({ ...c, terms: terms.filter(t => t.contractId === c.id) });
-    const { [mainCurrency]: amount } = convertCurrenciesTo(declaredAmount, mainCurrency);
-    if (amount <= 0) continue;
-    actions.push(action('invest', {
-      amount,
-      contractId: c.id,
-      orgId: c.buyerId, // Producer is always the licensor on theses types of contracts
-      date: c.signatureDate
-    }));
+    if (!Array.isArray(c.price)) continue;
+    const investments = c.price;
+
+    for (const investment of investments) {
+      const { [mainCurrency]: amount } = convertCurrenciesTo({ [c.currency]: investment.value }, mainCurrency);
+      if (amount <= 0) continue;
+      actions.push(action('invest', {
+        amount,
+        contractId: c.id,
+        orgId: c.buyerId, // Producer is always the licensor on theses types of contracts
+        date: investment.date
+      }));
+    }
   }
 
   return actions;
@@ -623,7 +626,7 @@ function invest(state: TitleState, payload: Investment) {
     type: 'investment',
     amount,
     contractId,
-    date
+    date: new Date(date.getFullYear(), date.getMonth(), date.getDate())//--/--/--:0:0:0:0
   })
 }
 

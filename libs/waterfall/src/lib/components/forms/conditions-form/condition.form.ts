@@ -1,4 +1,3 @@
-
 import { FormControl, FormGroup } from '@angular/forms';
 
 import {
@@ -16,565 +15,395 @@ import {
   ConditionDuration,
   OrgRevenuCondition,
   ConditionContractAmount,
+  TargetValue,
+  TargetIn,
+  GroupScope,
+  ConditionName,
+  ConditionInterest,
+  ConditionOwnerLabel,
 } from '@blockframes/model';
 import { FormList } from '@blockframes/utils/form';
 
-
-
 export function createConditionForm() {
   return new FormGroup({
-    conditionType: new FormControl(''), // Revenue Earned, Sales Specificity, Event
+    conditionType: new FormControl<'revenue' | 'sales' | 'event' | ''>(''), // Revenue Earned, Sales Specificity, Event
 
 
-      // Condition Type: Revenue Earned
-      revenueOwnerType: new FormControl(''), // Right Holder, Revenue Share, Group, Pool
-      revenueOwner: new FormControl(''),
-      revenueType: new FormControl(''), // Turnover, Profit, Theoretical Profit
-      revenueOperator: new FormControl(''), // Numerical Operator (<, >, =, <=, >=)
-      revenueTargetType: new FormControl(''), // Specific Amount, Investment, Expense
-        // Target Type: Investment or Expense
-        revenueTarget: new FormControl(''), // Investment = every documents of type 'contract' with a price != 0, Expense = something inside this right's contract: see with @phpgeek
-        // Target Type: Investment
-        revenuePercentage: new FormControl(0), // * Numeric value
-        // Target Type: Expense
-        revenueCap: new FormControl(''), // Cap, Uncap
-        // Target Type: Specific Amount, Expense
-        revenueAmount: new FormControl(0), // * Numeric value
-      // --------------------
-
-
-      // Condition Type: Sales Specificity
-      salesType: new FormControl(''), // Payment Date, Contract Date, Contract Amount, Terms
-        // Sales Type: Payment Date, Contract Date
-        salesDateOperator: new FormControl(''), // Date Operator (before, after, between)
-          // Sales Date Operator: After, Between
-          salesDateFrom: new FormControl(new Date()), // * Date
-          // Sales Date Operator: Before, Between
-          salesDateTo: new FormControl(new Date()), // * Date
-        // Sales Type: Contract Amount
-        salesOperator: new FormControl(''), // Numerical Operator (<, >, =, <=, >=)
-        salesAmount: new FormControl(0), // * Numeric value
-        // Sales Type: Terms
-        salesTermsType: new FormControl(''), // Media, Territory
-        salesTermsOperator: new FormControl(''), // Inclusion Operator
-        salesTerms: new FormControl<Media[] | Territory[]>([]), // *
-      // --------------------
-
-
-      // Condition Type: Event
-      eventName: new FormControl(''), // Event
-      eventOperator: new FormControl(''), // Numerical Operator (<, >, =, <=, >=) or Inclusion Operator
-        // Operator: is numerical
-        eventAmount: new FormControl(0), // * Numeric value
-        // Operator: is inclusion
-        eventList: FormList.factory([]), // *
-      // --------------------
-
-      // Condition Type: Interest // TODO
-      // interestTargetOrg = new FormControl(''); // Org (right holder)
-      // interestRate = new FormControl(0); // Numeric value
-      // interestComposite = new FormControl(false); // Boolean
-      // --------------------
-
+    // Condition Type: Revenue Earned
+    revenueOwnerType: new FormControl<ConditionOwnerLabel | ''>(''), // Right Holder, Revenue Share, Group, Pool
+    revenueOwner: new FormControl(''),
+    revenueType: new FormControl<'Turnover' | 'Revenu' | 'ShadowRevenu' | ''>(''), // Turnover, Profit, Theoretical Profit
+    revenueOperator: new FormControl<NumberOperator | ''>(''), // Numerical Operator (<, >, =, <=, >=)
+    revenueTargetType: new FormControl<TargetIn | '' | 'amount'>(''), // Specific Amount, Investment, Expense
+    // Target Type: Investment or Expense
+    revenueTarget: new FormControl(''), // Investment = every documents of type 'contract' with a price != 0, Expense = something inside this right's contract: see with @phpgeek
+    // Target Type: Investment
+    revenuePercentage: new FormControl(0), // * Numeric value
+    // Target Type: Expense
+    revenueCap: new FormControl<'cap' | 'uncap' | ''>(''), // Cap, Uncap
+    // Target Type: Specific Amount, Expense
+    revenueAmount: new FormControl(0), // * Numeric value
     // --------------------
+
+
+    // Condition Type: Sales Specificity
+    salesType: new FormControl<ConditionName | ''>(''), // Payment Date, Contract Date, Contract Amount, Terms
+    // Sales Type: Payment Date, Contract Date
+    salesDateOperator: new FormControl<'before' | 'after' | 'between' | ''>(''), // Date Operator (before, after, between)
+    // Sales Date Operator: After, Between
+    salesDateFrom: new FormControl(new Date()), // * Date
+    // Sales Date Operator: Before, Between
+    salesDateTo: new FormControl(new Date()), // * Date
+    // Sales Type: Contract Amount
+    salesOperator: new FormControl<NumberOperator | ''>(''), // Numerical Operator (<, >, =, <=, >=)
+    salesAmount: new FormControl(0), // * Numeric value
+    // Sales Type: Terms
+    salesTermsType: new FormControl<GroupScope | ''>(''), // Media, Territory
+    salesTermsOperator: new FormControl<ArrayOperator | ''>(''), // Inclusion Operator
+    salesTerms: new FormControl<Media[] | Territory[]>([]), // *
+    // --------------------
+
+
+    // Condition Type: Event
+    eventName: new FormControl(''), // Event
+    eventOperator: new FormControl<NumberOperator | ArrayOperator | ''>(''), // Numerical Operator (<, >, =, <=, >=) or Inclusion Operator
+    // Operator: is numerical
+    eventAmount: new FormControl(0), // * Numeric value
+    // Operator: is inclusion
+    eventList: FormList.factory([]), // *
+    // --------------------
+
+    // Condition Type: Interest
+    interestRate: new FormControl(0), // Numeric value
+    interestComposite: new FormControl(false), // Boolean
+    // --------------------
+
   });
 }
 
-
 export type ConditionForm = ReturnType<typeof createConditionForm>;
 
-
 export function setConditionForm(form: ConditionForm, condition?: Partial<Condition>) {
+  if (!condition) return;
 
-  if (condition?.name === 'event') {
-    form.controls.conditionType.setValue('event');
-    form.controls.eventName.setValue(condition?.payload.eventId ?? '');
-    form.controls.eventOperator.setValue(condition?.payload.operator ?? '');
-    if (numberOperator.includes(condition?.payload.operator as any)) {
-      form.controls.eventAmount.setValue(condition?.payload.value as number ?? 0);
-    } else {
-      form.controls.eventList.setValue(condition?.payload.value as string[] ?? []);
-    }
+  switch (condition.name) {
+    case 'event':
+      form.controls.conditionType.setValue('event');
+      form.controls.eventName.setValue(condition.payload.eventId ?? '');
+      form.controls.eventOperator.setValue(condition.payload.operator ?? '');
+      if (numberOperator.includes(condition.payload.operator as NumberOperator)) {
+        form.controls.eventAmount.setValue(condition.payload.value as number ?? 0);
+      } else {
+        form.controls.eventList.setValue(condition.payload.value as string[] ?? []);
+      }
+      break;
+    case 'incomeDate':
+    case 'contractDate':
+      form.controls.conditionType.setValue('sales');
+      form.controls.salesType.setValue(condition.name);
+      if (condition.payload.from && condition.payload.to) {
+        form.controls.salesDateOperator.setValue('between');
+        form.controls.salesDateFrom.setValue(condition.payload.from);
+        form.controls.salesDateTo.setValue(condition.payload.to);
+      } else if (condition.payload.from) {
+        form.controls.salesDateOperator.setValue('after');
+        form.controls.salesDateFrom.setValue(condition.payload.from);
+      } else if (condition.payload.to) {
+        form.controls.salesDateOperator.setValue('before');
+        form.controls.salesDateTo.setValue(condition.payload.to);
+      }
+      break;
+    case 'terms':
+      form.controls.conditionType.setValue('sales');
+      form.controls.salesType.setValue('terms');
+      form.controls.salesTermsType.setValue(condition.payload.type);
+      form.controls.salesTermsOperator.setValue(condition.payload.operator);
+      form.controls.salesTerms.setValue(condition.payload.list);
+      break;
+    case 'contractAmount':
+      form.controls.conditionType.setValue('sales');
+      form.controls.salesType.setValue('contractAmount');
+      form.controls.salesOperator.setValue(condition.payload.operator ?? '');
+      form.controls.salesAmount.setValue(condition.payload.target as number ?? 0);
+      break;
+    case 'orgRevenu':
+    case 'orgTurnover':
+      form.controls.conditionType.setValue('revenue');
+      form.controls.revenueOwnerType.setValue('org');
+      form.controls.revenueOwner.setValue(condition.payload.orgId ?? '');
+      form.controls.revenueType.setValue(condition.name.replace('org', '') as 'Turnover' | 'Revenu');
+      form.controls.revenueOperator.setValue(condition.payload.operator ?? '');
+      setConditionTarget(form, condition.payload.target);
+      break;
+    case 'poolRevenu':
+    case 'poolShadowRevenu':
+    case 'poolTurnover':
+      form.controls.conditionType.setValue('revenue');
+      form.controls.revenueOwnerType.setValue('pool');
+      form.controls.revenueOwner.setValue(condition.payload.pool ?? '');
+      form.controls.revenueType.setValue(condition.name.replace('pool', '') as 'Turnover' | 'Revenu' | 'ShadowRevenu');
+      form.controls.revenueOperator.setValue(condition.payload.operator ?? '');
+      setConditionTarget(form, condition.payload.target);
+      break;
+    case 'rightRevenu':
+    case 'rightTurnover':
+      form.controls.conditionType.setValue('revenue');
+      form.controls.revenueOwnerType.setValue('right');
+      form.controls.revenueOwner.setValue(condition.payload.rightId ?? '');
+      form.controls.revenueType.setValue(condition.name.replace('right', '') as 'Turnover' | 'Revenu');
+      form.controls.revenueOperator.setValue(condition.payload.operator ?? '');
+      setConditionTarget(form, condition.payload.target);
+      break;
+    case 'groupRevenu':
+    case 'groupTurnover':
+      form.controls.conditionType.setValue('revenue');
+      form.controls.revenueOwnerType.setValue('group');
+      form.controls.revenueOwner.setValue(condition.payload.groupId ?? '');
+      form.controls.revenueType.setValue(condition.name.replace('group', '') as 'Turnover' | 'Revenu');
+      form.controls.revenueOperator.setValue(condition.payload.operator ?? '');
+      setConditionTarget(form, condition.payload.target);
+      break;
+    case 'interest':
+      form.controls.conditionType.setValue('revenue');
+      form.controls.revenueOwnerType.setValue('org');
+      form.controls.revenueOwner.setValue(condition.payload.orgId ?? '');
+      form.controls.revenueType.setValue('Revenu');
+      form.controls.revenueOperator.setValue(condition.payload.operator ?? '');
+      form.controls.interestRate.setValue(condition.payload.rate * 100 ?? 0);
+      form.controls.interestComposite.setValue(condition.payload.isComposite ?? false);
+      setConditionTarget(form, {
+        id: condition.payload.contractId,
+        percent: condition.payload.percent,
+        in: 'contracts.investment'
+      });
+      break;
+    case 'amount':
+    case 'termsLength':
+    case 'contract':
+    default:
+      // TODO check there is no way to create that type of condition ???
+      break;
   }
-
-  if (condition?.name === 'incomeDate') {
-    form.controls.conditionType.setValue('sales');
-    form.controls.salesType.setValue('incomeDate');
-    if (condition?.payload.from && condition?.payload.to) {
-      form.controls.salesDateOperator.setValue('between');
-      form.controls.salesDateFrom.setValue(condition?.payload.from);
-      form.controls.salesDateTo.setValue(condition?.payload.to);
-    } else if (condition?.payload.from) {
-      form.controls.salesDateOperator.setValue('after');
-      form.controls.salesDateFrom.setValue(condition?.payload.from);
-    } else if (condition?.payload.to) {
-      form.controls.salesDateOperator.setValue('before');
-      form.controls.salesDateTo.setValue(condition?.payload.to);
-    }
-  }
-
-  if (condition?.name === 'contractDate') {
-    form.controls.conditionType.setValue('sales');
-    form.controls.salesType.setValue('contractDate');
-    if (condition?.payload.from && condition?.payload.to) {
-      form.controls.salesDateOperator.setValue('between');
-      form.controls.salesDateFrom.setValue(condition?.payload.from);
-      form.controls.salesDateTo.setValue(condition?.payload.to);
-    } else if (condition?.payload.from) {
-      form.controls.salesDateOperator.setValue('after');
-      form.controls.salesDateFrom.setValue(condition?.payload.from);
-    } else if (condition?.payload.to) {
-      form.controls.salesDateOperator.setValue('before');
-      form.controls.salesDateTo.setValue(condition?.payload.to);
-    }
-  }
-
-  if (condition?.name === 'amount') {
-    // TODO there is no way to create that type of condition ???
-  }
-
-  if (condition?.name === 'terms') {
-    form.controls.conditionType.setValue('sales');
-    form.controls.salesType.setValue('terms');
-    form.controls.salesTermsType.setValue(condition.payload.type);
-    form.controls.salesTermsOperator.setValue(condition.payload.operator);
-    form.controls.salesTerms.setValue(condition.payload.list);
-  }
-
-  if (condition?.name === 'termsLength') {
-    // TODO there is no way to create that type of condition ???
-  }
-
-  if (condition?.name === 'contract') {
-    // TODO there is no way to create that type of condition ???
-  }
-
-  if (condition?.name === 'contractAmount') {
-    form.controls.conditionType.setValue('sales');
-    form.controls.salesType.setValue('contractAmount');
-    form.controls.salesOperator.setValue(condition?.payload.operator ?? '');
-    form.controls.salesAmount.setValue(condition?.payload.target as number ?? 0);
-  }
-
-  if (condition?.name === 'orgRevenu') {
-    form.controls.conditionType.setValue('revenue');
-    form.controls.revenueOwnerType.setValue('org');
-    form.controls.revenueOwner.setValue(condition?.payload.orgId ?? '');
-    form.controls.revenueType.setValue('Revenu');
-    form.controls.revenueOperator.setValue(condition?.payload.operator ?? '');
-
-    if (typeof condition?.payload.target === 'number') {
-      form.controls.revenueTargetType.setValue('amount');
-      form.controls.revenueAmount.setValue(condition?.payload.target as number ?? 0);
-    } else {
-      form.controls.revenueTarget.setValue(condition.payload.target.id);
-      form.controls.revenuePercentage.setValue(condition.payload.target.percent);
-      form.controls.revenueTargetType.setValue(condition.payload.target.in === 'expense' ? 'expense' : 'investment');
-    }
-  }
-
-  if (condition?.name === 'orgTurnover') {
-    form.controls.conditionType.setValue('revenue');
-    form.controls.revenueOwnerType.setValue('org');
-    form.controls.revenueOwner.setValue(condition?.payload.orgId ?? '');
-    form.controls.revenueType.setValue('Turnover');
-    form.controls.revenueOperator.setValue(condition?.payload.operator ?? '');
-
-    if (typeof condition?.payload.target === 'number') {
-      form.controls.revenueTargetType.setValue('amount');
-      form.controls.revenueAmount.setValue(condition?.payload.target as number ?? 0);
-    } else {
-      form.controls.revenueTarget.setValue(condition.payload.target.id);
-      form.controls.revenuePercentage.setValue(condition.payload.target.percent);
-      form.controls.revenueTargetType.setValue(condition.payload.target.in === 'expense' ? 'expense' : 'investment');
-    }
-  }
-
-  if (condition?.name === 'poolRevenu') {
-    form.controls.conditionType.setValue('revenue');
-    form.controls.revenueOwnerType.setValue('pool');
-    form.controls.revenueOwner.setValue(condition?.payload.pool ?? '');
-    form.controls.revenueType.setValue('Revenu');
-    form.controls.revenueOperator.setValue(condition?.payload.operator ?? '');
-
-    if (typeof condition?.payload.target === 'number') {
-      form.controls.revenueTargetType.setValue('amount');
-      form.controls.revenueAmount.setValue(condition?.payload.target as number ?? 0);
-    } else {
-      form.controls.revenueTarget.setValue(condition.payload.target.id);
-      form.controls.revenuePercentage.setValue(condition.payload.target.percent);
-      form.controls.revenueTargetType.setValue(condition.payload.target.in === 'expense' ? 'expense' : 'investment');
-    }
-  }
-
-  if (condition?.name === 'poolShadowRevenu') {
-    form.controls.conditionType.setValue('revenue');
-    form.controls.revenueOwnerType.setValue('pool');
-    form.controls.revenueOwner.setValue(condition?.payload.pool ?? '');
-    form.controls.revenueType.setValue('ShadowRevenu');
-    form.controls.revenueOperator.setValue(condition?.payload.operator ?? '');
-
-    if (typeof condition?.payload.target === 'number') {
-      form.controls.revenueTargetType.setValue('amount');
-      form.controls.revenueAmount.setValue(condition?.payload.target as number ?? 0);
-    } else {
-      form.controls.revenueTarget.setValue(condition.payload.target.id);
-      form.controls.revenuePercentage.setValue(condition.payload.target.percent);
-      form.controls.revenueTargetType.setValue(condition.payload.target.in === 'expense' ? 'expense' : 'investment');
-    }
-  }
-
-  if (condition?.name === 'poolTurnover') {
-    form.controls.conditionType.setValue('revenue');
-    form.controls.revenueOwnerType.setValue('pool');
-    form.controls.revenueOwner.setValue(condition?.payload.pool ?? '');
-    form.controls.revenueType.setValue('Turnover');
-    form.controls.revenueOperator.setValue(condition?.payload.operator ?? '');
-
-    if (typeof condition?.payload.target === 'number') {
-      form.controls.revenueTargetType.setValue('amount');
-      form.controls.revenueAmount.setValue(condition?.payload.target as number ?? 0);
-    } else {
-      form.controls.revenueTarget.setValue(condition.payload.target.id);
-      form.controls.revenuePercentage.setValue(condition.payload.target.percent);
-      form.controls.revenueTargetType.setValue(condition.payload.target.in === 'expense' ? 'expense' : 'investment');
-    }
-  }
-
-  if (condition?.name === 'rightRevenu') {
-    form.controls.conditionType.setValue('revenue');
-    form.controls.revenueOwnerType.setValue('right');
-    form.controls.revenueOwner.setValue(condition?.payload.rightId ?? '');
-    form.controls.revenueType.setValue('Revenu');
-    form.controls.revenueOperator.setValue(condition?.payload.operator ?? '');
-
-    if (typeof condition?.payload.target === 'number') {
-      form.controls.revenueTargetType.setValue('amount');
-      form.controls.revenueAmount.setValue(condition?.payload.target as number ?? 0);
-    } else {
-      form.controls.revenueTarget.setValue(condition.payload.target.id);
-      form.controls.revenuePercentage.setValue(condition.payload.target.percent);
-      form.controls.revenueTargetType.setValue(condition.payload.target.in === 'expense' ? 'expense' : 'investment');
-    }
-  }
-
-  if (condition?.name === 'rightTurnover') {
-    form.controls.conditionType.setValue('revenue');
-    form.controls.revenueOwnerType.setValue('right');
-    form.controls.revenueOwner.setValue(condition?.payload.rightId ?? '');
-    form.controls.revenueType.setValue('Turnover');
-    form.controls.revenueOperator.setValue(condition?.payload.operator ?? '');
-
-    if (typeof condition?.payload.target === 'number') {
-      form.controls.revenueTargetType.setValue('amount');
-      form.controls.revenueAmount.setValue(condition?.payload.target as number ?? 0);
-    } else {
-      form.controls.revenueTarget.setValue(condition.payload.target.id);
-      form.controls.revenuePercentage.setValue(condition.payload.target.percent);
-      form.controls.revenueTargetType.setValue(condition.payload.target.in === 'expense' ? 'expense' : 'investment');
-    }
-  }
-
-  if (condition?.name === 'groupRevenu') {
-    form.controls.conditionType.setValue('revenue');
-    form.controls.revenueOwnerType.setValue('group');
-    form.controls.revenueOwner.setValue(condition?.payload.groupId ?? '');
-    form.controls.revenueType.setValue('Revenu');
-    form.controls.revenueOperator.setValue(condition?.payload.operator ?? '');
-
-    if (typeof condition?.payload.target === 'number') {
-      form.controls.revenueTargetType.setValue('amount');
-      form.controls.revenueAmount.setValue(condition?.payload.target as number ?? 0);
-    } else {
-      form.controls.revenueTarget.setValue(condition.payload.target.id);
-      form.controls.revenuePercentage.setValue(condition.payload.target.percent);
-      form.controls.revenueTargetType.setValue(condition.payload.target.in === 'expense' ? 'expense' : 'investment');
-    }
-  }
-
-  if (condition?.name === 'groupTurnover') {
-    form.controls.conditionType.setValue('revenue');
-    form.controls.revenueOwnerType.setValue('group');
-    form.controls.revenueOwner.setValue(condition?.payload.groupId ?? '');
-    form.controls.revenueType.setValue('Turnover');
-    form.controls.revenueOperator.setValue(condition?.payload.operator ?? '');
-
-    if (typeof condition?.payload.target === 'number') {
-      form.controls.revenueTargetType.setValue('amount');
-      form.controls.revenueAmount.setValue(condition?.payload.target as number ?? 0);
-    } else {
-      form.controls.revenueTarget.setValue(condition.payload.target.id);
-      form.controls.revenuePercentage.setValue(condition.payload.target.percent);
-      form.controls.revenueTargetType.setValue(condition.payload.target.in === 'expense' ? 'expense' : 'investment');
-    }
-  }
-
-  // if (condition?.name === 'interest') {} // TODO
 }
 
-
+function setConditionTarget(form: ConditionForm, target?: TargetValue) {
+  if (!target) return;
+  if (typeof target === 'number') {
+    form.controls.revenueTargetType.setValue('amount');
+    form.controls.revenueAmount.setValue(target as number ?? 0);
+  } else {
+    form.controls.revenueTarget.setValue(target.id);
+    form.controls.revenuePercentage.setValue(target.percent * 100);
+    form.controls.revenueTargetType.setValue(target.in);
+  }
+}
 
 export function formToCondition(form: ConditionForm): Condition | undefined {
+  const conditionType = form.controls.conditionType.value;
+  if (conditionType === 'event') return formToEventCondition(form);
+  if (conditionType === 'sales') return formToIncomeCondition(form);
+  if (conditionType === 'revenue') return formToRevenueCondition(form);
+}
 
-  if (form.controls.conditionType.value === 'event') {
-    if (!form.controls.eventOperator.value) return undefined;
-    const operator = form.controls.eventOperator.value as NumberOperator | ArrayOperator;
-    if (operator === 'in' || operator === 'not-in') {
-      if (!form.controls.eventList.value.length) return undefined;
-    } else {
-      if (!form.controls.eventAmount.value) return undefined;
+/**
+ * Conditions about events
+ * @param form 
+ * @returns 
+ */
+function formToEventCondition(form: ConditionForm): Condition | undefined {
+  const operator = form.controls.eventOperator.value;
+  if (!operator) return undefined;
+
+  if (operator === 'in' || operator === 'not-in') {
+    if (!form.controls.eventList.value.length) return undefined;
+  } else {
+    if (!form.controls.eventAmount.value) return undefined;
+  }
+
+  const name = 'event';
+  const payload: EventCondition = {
+    eventId: form.controls.eventName.value,
+    operator,
+    value: form.controls.eventAmount.value ?? form.controls.eventList.value
+  };
+  return { name, payload };
+}
+
+/**
+ * Conditions about incomes
+ * @param form 
+ * @returns 
+ */
+function formToIncomeCondition(form: ConditionForm): Condition | undefined {
+  const conditionName = form.controls.salesType.value;
+  if (!conditionName) return undefined;
+
+  if (conditionName === 'incomeDate' || conditionName === 'contractDate') {
+    const operator = form.controls.salesDateOperator.value;
+    if (!operator) return undefined;
+
+    const from = form.controls.salesDateFrom.value;
+    const to = form.controls.salesDateTo.value;
+
+    if (operator === 'between') {
+      if (!from || !to) return undefined;
+    } else if (operator === 'after') {
+      if (!from) return undefined;
+    } else if (operator === 'before') {
+      if (!to) return undefined;
     }
 
-    const name = 'event';
-    const payload: EventCondition = {
-      eventId: form.controls.eventName.value,
-      operator: form.controls.eventOperator.value as NumberOperator | ArrayOperator,
-      value: form.controls.eventAmount.value ?? form.controls.eventList.value
+    const payload: ConditionDuration = { from, to };
+    return { name: conditionName, payload };
+  }
+
+  if (conditionName === 'contractAmount') {
+    const target = form.controls.salesAmount.value;
+    if (!target) return undefined;
+
+    const payload: ConditionContractAmount = {
+      operator: form.controls.salesOperator.value as NumberOperator,
+      target
     };
-    return { name, payload };
+    return { name: conditionName, payload };
   }
 
-  if (form.controls.conditionType.value === 'sales') {
-    if (!form.controls.salesType.value) return undefined;
-    else if (form.controls.salesType.value === 'incomeDate' || form.controls.salesType.value === 'contractDate') {
-      if (!form.controls.salesDateOperator.value) return undefined;
-      const operator = form.controls.salesDateOperator.value as 'before' | 'after' | 'between';
-      if (operator === 'between') {
-        if (!form.controls.salesDateFrom.value || !form.controls.salesDateTo.value) return undefined;
-      } else if (operator === 'after') {
-        if (!form.controls.salesDateFrom.value) return undefined;
-      } else if (operator === 'before') {
-        if (!form.controls.salesDateTo.value) return undefined;
-      }
-      const name = form.controls.salesType.value;
-      const payload: ConditionDuration = {
-        from: form.controls.salesDateFrom.value,
-        to: form.controls.salesDateTo.value
-      };
-      return { name, payload };
-    } else if (form.controls.salesType.value === 'contractAmount') {
-      if (!form.controls.salesAmount.value) return undefined;
-      const name = 'contractAmount';
-      const payload: ConditionContractAmount = {
-        operator: form.controls.salesOperator.value as NumberOperator,
-        target: form.controls.salesAmount.value
-      };
-      return { name, payload };
-    } else if (form.controls.salesType.value === 'terms') {
-      if (!form.controls.salesTerms) return undefined;
-      const name = 'terms';
-      const payload: ConditionTerms = {
-        operator: form.controls.salesTermsOperator.value as ArrayOperator,
-        type: form.controls.salesTermsType.value as 'medias' | 'territories',
-        list: form.controls.salesTerms.value
-      };
-      return { name, payload };
-    }
-    
-  }
-  
-  if (form.controls.conditionType.value === 'revenue') {
-    if (!form.controls.revenueTargetType.value) return undefined;
+  if (conditionName === 'terms') {
+    if (!form.controls.salesTerms.value.length) return undefined;
 
-    if (form.controls.revenueOwnerType.value === 'org' && form.controls.revenueType.value === 'Revenu') {
-      if (form.controls.revenueTargetType.value === 'investment') {
-        if (!form.controls.revenuePercentage.value) return undefined;
-        const payload: OrgRevenuCondition = {
+    const payload: ConditionTerms = {
+      operator: form.controls.salesTermsOperator.value as ArrayOperator,
+      type: form.controls.salesTermsType.value as GroupScope,
+      list: form.controls.salesTerms.value
+    };
+    return { name: conditionName, payload };
+  }
+}
+
+/**
+ * Conditions about revenue/turnover of an org, right, group or pool
+ * @param form 
+ * @returns 
+ */
+function formToRevenueCondition(form: ConditionForm): Condition | undefined {
+  const targetIn = form.controls.revenueTargetType.value;
+
+  if (!targetIn) return undefined;
+
+  const operator = form.controls.revenueOperator.value as NumberOperator;
+  const specificAmount = form.controls.revenueAmount.value;
+  const percent = form.controls.revenuePercentage.value;
+  const revenueOwnerType = form.controls.revenueOwnerType.value;
+  const revenueType = form.controls.revenueType.value;
+
+  switch (revenueOwnerType) {
+    case 'org': {
+      if (!['Revenu', 'Turnover'].includes(revenueType)) return undefined;
+
+      const interestRate = form.controls.interestRate.value;
+      const orgId = form.controls.revenueOwner.value;
+
+      if (targetIn === 'contracts.investment' && revenueType === 'Revenu' && interestRate > 0) {
+        const payload: ConditionInterest = {
           orgId: form.controls.revenueOwner.value,
-          operator: form.controls.revenueOperator.value as NumberOperator,
-          target: {
-            in: 'investment',
-            id: form.controls.revenueTarget.value,
-            percent: form.controls.revenuePercentage.value
-          }
-        };
-        return { name: 'orgRevenu', payload };
-      } else {
-        if (!form.controls.revenueAmount.value) return undefined;
-        const payload: OrgRevenuCondition = {
-          orgId: form.controls.revenueOwner.value,
-          operator: form.controls.revenueOperator.value as NumberOperator,
-          target: form.controls.revenueAmount.value
-        };
-        return { name: 'orgRevenu', payload };
+          contractId: form.controls.revenueTarget.value,
+          percent: percent / 100,
+          operator,
+          rate: interestRate / 100,
+          isComposite: form.controls.interestComposite.value
+        }
+
+        return { name: 'interest', payload };
       }
-    } else if (form.controls.revenueOwnerType.value === 'org' && form.controls.revenueType.value === 'Turnover') {
-      if (form.controls.revenueTargetType.value === 'investment') {
-        if (!form.controls.revenuePercentage.value) return undefined;
-        const payload: OrgRevenuCondition = {
-          orgId: form.controls.revenueOwner.value,
-          operator: form.controls.revenueOperator.value as NumberOperator,
-          target: {
-            in: 'investment',
-            id: form.controls.revenueTarget.value,
-            percent: form.controls.revenuePercentage.value
-          }
-        };
-        return { name: 'orgTurnover', payload };
+
+      const conditionName: ConditionName = `${revenueOwnerType}${revenueType}` as 'orgRevenu' | 'orgTurnover';
+
+      let target: TargetValue | number;
+
+      if (targetIn !== 'amount') {
+        if (!percent) return undefined;
+        target = formToTarget(form, targetIn);
       } else {
-        if (!form.controls.revenueAmount.value) return undefined;
-        const payload: OrgRevenuCondition = {
-          orgId: form.controls.revenueOwner.value,
-          operator: form.controls.revenueOperator.value as NumberOperator,
-          target: form.controls.revenueAmount.value
-        };
-        return { name: 'orgTurnover', payload };
+        if (!specificAmount) return undefined;
+        target = specificAmount;
       }
-    } else if (form.controls.revenueOwnerType.value === 'right' && form.controls.revenueType.value === 'Revenu') {
-      if (form.controls.revenueTargetType.value === 'investment') {
-        if (!form.controls.revenuePercentage.value) return undefined;
-        const payload: RightCondition = {
-          rightId: form.controls.revenueOwner.value,
-          operator: form.controls.revenueOperator.value as NumberOperator,
-          target: {
-            in: 'investment',
-            id: form.controls.revenueTarget.value,
-            percent: form.controls.revenuePercentage.value
-          }
-        };
-        return { name: 'rightRevenu', payload };
-      } else {
-        if (!form.controls.revenueAmount.value) return undefined;
-        const payload: RightCondition = {
-          rightId: form.controls.revenueOwner.value,
-          operator: form.controls.revenueOperator.value as NumberOperator,
-          target: form.controls.revenueAmount.value
-        };
-        return { name: 'rightRevenu', payload };
-      }
-    } else if (form.controls.revenueOwnerType.value === 'right' && form.controls.revenueType.value === 'Turnover') {
-      if (form.controls.revenueTargetType.value === 'investment') {
-        if (!form.controls.revenuePercentage.value) return undefined;
-        const payload: RightCondition = {
-          rightId: form.controls.revenueOwner.value,
-          operator: form.controls.revenueOperator.value as NumberOperator,
-          target: {
-            in: 'investment',
-            id: form.controls.revenueTarget.value,
-            percent: form.controls.revenuePercentage.value
-          }
-        };
-        return { name: 'rightTurnover', payload };
-      } else {
-        if (!form.controls.revenueAmount.value) return undefined;
-        const payload: RightCondition = {
-          rightId: form.controls.revenueOwner.value,
-          operator: form.controls.revenueOperator.value as NumberOperator,
-          target: form.controls.revenueAmount.value
-        };
-        return { name: 'rightTurnover', payload };
-      }
-    } else if (form.controls.revenueOwnerType.value === 'group' && form.controls.revenueType.value === 'Revenu') {
-      if (form.controls.revenueTargetType.value === 'investment') {
-        if (!form.controls.revenuePercentage.value) return undefined;
-        const payload: GroupCondition = {
-          groupId: form.controls.revenueOwner.value,
-          operator: form.controls.revenueOperator.value as NumberOperator,
-          target: {
-            in: 'investment',
-            id: form.controls.revenueTarget.value,
-            percent: form.controls.revenuePercentage.value
-          }
-        };
-        return { name: 'groupRevenu', payload };
-      } else {
-        if (!form.controls.revenueAmount.value) return undefined;
-        const payload: GroupCondition = {
-          groupId: form.controls.revenueOwner.value,
-          operator: form.controls.revenueOperator.value as NumberOperator,
-          target: form.controls.revenueAmount.value
-        };
-        return { name: 'groupRevenu', payload };
-      }
-    } else if (form.controls.revenueOwnerType.value === 'group' && form.controls.revenueType.value === 'Turnover') {
-      if (form.controls.revenueTargetType.value === 'investment') {
-        if (!form.controls.revenuePercentage.value) return undefined;
-        const payload: GroupCondition = {
-          groupId: form.controls.revenueOwner.value,
-          operator: form.controls.revenueOperator.value as NumberOperator,
-          target: {
-            in: 'investment',
-            id: form.controls.revenueTarget.value,
-            percent: form.controls.revenuePercentage.value
-          }
-        };
-        return { name: 'groupTurnover', payload };
-      } else {
-        if (!form.controls.revenueAmount.value) return undefined;
-        const payload: GroupCondition = {
-          groupId: form.controls.revenueOwner.value,
-          operator: form.controls.revenueOperator.value as NumberOperator,
-          target: form.controls.revenueAmount.value
-        };
-        return { name: 'groupTurnover', payload };
-      }
-    } else if (form.controls.revenueOwnerType.value === 'pool' && form.controls.revenueType.value === 'Revenu') {
-      if (form.controls.revenueTargetType.value === 'investment') {
-        if (!form.controls.revenuePercentage.value) return undefined;
-        const payload: PoolCondition = {
-          pool: form.controls.revenueOwner.value,
-          operator: form.controls.revenueOperator.value as NumberOperator,
-          target: {
-            in: 'investment',
-            id: form.controls.revenueTarget.value,
-            percent: form.controls.revenuePercentage.value
-          }
-        };
-        return { name: 'poolRevenu', payload };
-      } else {
-        if (!form.controls.revenueAmount.value) return undefined;
-        const payload: PoolCondition = {
-          pool: form.controls.revenueOwner.value,
-          operator: form.controls.revenueOperator.value as NumberOperator,
-          target: form.controls.revenueAmount.value
-        };
-        return { name: 'poolRevenu', payload };
-      }
-    } else if (form.controls.revenueOwnerType.value === 'pool' && form.controls.revenueType.value === 'ShadowRevenu') {
-      if (form.controls.revenueTargetType.value === 'investment') {
-        if (!form.controls.revenuePercentage.value) return undefined;
-        const payload: PoolCondition = {
-          pool: form.controls.revenueOwner.value,
-          operator: form.controls.revenueOperator.value as NumberOperator,
-          target: {
-            in: 'investment',
-            id: form.controls.revenueTarget.value,
-            percent: form.controls.revenuePercentage.value
-          }
-        };
-        return { name: 'poolShadowRevenu', payload };
-      } else {
-        if (!form.controls.revenueAmount.value) return undefined;
-        const payload: PoolCondition = {
-          pool: form.controls.revenueOwner.value,
-          operator: form.controls.revenueOperator.value as NumberOperator,
-          target: form.controls.revenueAmount.value
-        };
-        return { name: 'poolShadowRevenu', payload };
-      }
-    } else if (form.controls.revenueOwnerType.value === 'pool' && form.controls.revenueType.value === 'Turnover') {
-      if (form.controls.revenueTargetType.value === 'investment') {
-        if (!form.controls.revenuePercentage.value) return undefined;
-        const payload: PoolCondition = {
-          pool: form.controls.revenueOwner.value,
-          operator: form.controls.revenueOperator.value as NumberOperator,
-          target: {
-            in: 'investment',
-            id: form.controls.revenueTarget.value,
-            percent: form.controls.revenuePercentage.value
-          }
-        };
-        return { name: 'poolTurnover', payload };
-      } else {
-        if (!form.controls.revenueAmount.value) return undefined;
-        const payload: PoolCondition = {
-          pool: form.controls.revenueOwner.value,
-          operator: form.controls.revenueOperator.value as NumberOperator,
-          target: form.controls.revenueAmount.value
-        };
-        return { name: 'poolTurnover', payload };
-      }
+
+      const payload: OrgRevenuCondition = { orgId, operator, target };
+
+      return { name: conditionName, payload };
     }
+    case 'right': {
+      if (!['Revenu', 'Turnover'].includes(revenueType)) return undefined;
+
+      const rightId = form.controls.revenueOwner.value;
+      const conditionName: ConditionName = `${revenueOwnerType}${revenueType}` as 'rightRevenu' | 'rightTurnover';
+
+      let target: TargetValue | number;
+
+      if (targetIn !== 'amount') {
+        if (!percent) return undefined;
+        target = formToTarget(form, targetIn);
+      } else {
+        if (!specificAmount) return undefined;
+        target = specificAmount;
+      }
+
+      const payload: RightCondition = { rightId, operator, target };
+
+      return { name: conditionName, payload };
+    }
+    case 'group': {
+      if (!['Revenu', 'Turnover'].includes(revenueType)) return undefined;
+
+      const groupId = form.controls.revenueOwner.value;
+      const conditionName: ConditionName = `${revenueOwnerType}${revenueType}` as 'groupRevenu' | 'groupTurnover';
+
+      let target: TargetValue | number;
+
+      if (targetIn !== 'amount') {
+        if (!percent) return undefined;
+        target = formToTarget(form, targetIn);
+      } else {
+        if (!specificAmount) return undefined;
+        target = specificAmount;
+      }
+
+      const payload: GroupCondition = { groupId, operator, target };
+
+      return { name: conditionName, payload };
+    }
+    case 'pool': {
+      if (!['Revenu', 'Turnover', 'ShadowRevenu'].includes(revenueType)) return undefined;
+
+      const pool = form.controls.revenueOwner.value;
+      const conditionName: ConditionName = `${revenueOwnerType}${revenueType}` as 'poolRevenu' | 'poolTurnover' | 'poolShadowRevenu';
+
+      let target: TargetValue | number;
+
+      if (targetIn !== 'amount') {
+        if (!percent) return undefined;
+        target = formToTarget(form, targetIn);
+      } else {
+        if (!specificAmount) return undefined;
+        target = specificAmount;
+      }
+
+      const payload: PoolCondition = { pool, operator, target };
+
+      return { name: conditionName, payload };
+    }
+
+
+    default:
+      break;
+  }
+}
+
+function formToTarget(form: ConditionForm, targetIn: TargetIn): TargetValue {
+  return {
+    in: targetIn,
+    id: form.controls.revenueTarget.value,
+    percent: form.controls.revenuePercentage.value / 100
   }
 }
 

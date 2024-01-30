@@ -1,7 +1,26 @@
-
 :host {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 16px;
   row-gap: 0;
+}
+
+div.group {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 32px;
+  align-items: baseline;
+  * {
+    flex: 1;
+  }
+
+  mat-form-field {
+    margin-top: 12px;
+  }
+}
+
+section {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
 }

@@ -59,6 +59,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   isDefaultVersion: boolean;
   private defaultVersionId: string;
   canUpdateGraph = true;
+  canUpdateConditions = true;
   sources: WaterfallSource[];
   rightholders: WaterfallRightholder[];
 
@@ -107,11 +108,14 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.rightForm.enable();
       this.sourceForm.enable();
       this.canUpdateGraph = true;
+      this.canUpdateConditions = true;
       if ((this.version?.id && !this.isDefaultVersion && !this.version.standalone) || statements.length > 0) {
         this.rightForm.disable();
+        this.canUpdateConditions = false;
         if (statements.length === 0) {
           this.rightForm.controls.percent.enable();
           this.rightForm.controls.steps.enable();
+          this.canUpdateConditions = true;
         }
         this.sourceForm.disable();
         this.canUpdateGraph = false;
@@ -153,7 +157,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       } else {
         steps[0] = right.conditions?.conditions.filter(c => !isConditionGroup(c)) as Condition[] ?? [];
       }
-      const org = this.rightholders.find(r => r.id === right.rightholderId)?.name ?? '';;
+      const org = this.rightholders.find(r => r.id === right.rightholderId)?.name ?? '';
       const parents = this.nodes$.getValue().filter(node => node.children.includes(right.groupId || id)); // do not use ?? instead of ||, it will break since '' can be considered truthy
       setRightFormValue(this.rightForm, { ...right, rightholderId: org, nextIds: parents.map(parent => parent.id) }, steps);
     }
