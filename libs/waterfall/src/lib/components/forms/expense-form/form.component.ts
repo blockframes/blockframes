@@ -6,7 +6,7 @@ import { Observable, map } from 'rxjs';
 
 const expenseColumns = {
   nature: 'Nature',
-  '': 'Price',
+  '': 'Amount',
   capped: 'Capped',
 }
 

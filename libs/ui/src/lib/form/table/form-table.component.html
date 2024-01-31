@@ -15,7 +15,7 @@
         </ng-template>
       </ng-container>
 
-      <ng-template colRef="action" let-index="index" let-item="item" sticky>
+      <ng-template colRef="action" let-index="index" label="Actions" let-item="item" sticky>
         <div class="action-buttons">
           <button type="button" mat-icon-button (click)="edit(index)" matTooltip="Edit">
             <mat-icon svgIcon="edit"></mat-icon>
