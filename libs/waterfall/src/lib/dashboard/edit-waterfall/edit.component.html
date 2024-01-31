@@ -1,8 +1,5 @@
 
-<a mat-icon-button routerLink="..">
-  <mat-icon svgIcon="arrow_back"></mat-icon>
-</a>
-<h1 *ngIf="movie$ | async as movie">{{ createMode ? 'Create' : 'Edit' }} Waterfall for {{ movie.title.international }}</h1>
+<h1>{{ createMode ? 'Create' : 'Edit' }} Waterfall for {{ (movie$ | async).title.international }}</h1>
 
 <mat-stepper #stepper>
   <!-- override default stepper icons for the "edit" & "done" steps -->
@@ -62,28 +59,33 @@
       </ng-template>
     </article>
   </mat-step>
-  
+
   <mat-step>
     <ng-template matStepLabel>Build Waterfall</ng-template>
-    <article class="surface">
-      <h1>Build your Waterfall</h1>
-      <p>Please choose if you want to create a waterfall yourself or import one, or else our team can do it for you.</p>
-      <p>Do you need help? <a>Contact our team.</a></p>
-      <section>
-        <a class="surface">
-          <img asset="add_draft.svg" alt="Create waterfall image">
-          <button mat-button color="primary">Create Waterfall yourself</button>
-        </a>
-        <a class="surface">
-          <img asset="add_files.svg" alt="Import waterfall image">
-          <button mat-button color="primary">Import Waterfall</button>
-        </a>
-        <a class="surface">
-          <img asset="feature_key3.svg" alt="Ask out team image">
-          <button mat-button color="primary">Ask Blockframes Team to do it!</button>
-        </a>
-      </section>
-    </article>
+    <ng-container *ngIf="(manualCreation$ | async) || shell.waterfall.sources.length > 0 || shell.rights.length > 0; else noWaterfall">
+      <waterfall-graph></waterfall-graph>
+    </ng-container>
+    <ng-template #noWaterfall>
+      <article class="surface">
+        <h1>Build your Waterfall</h1>
+        <p>Please choose if you want to create a waterfall yourself or import one, or else our team can do it for you.</p>
+        <p>Do you need help? <a>Contact our team.</a></p>
+        <section>
+          <a class="surface" (click)="displayGraph()">
+            <img asset="add_draft.svg" alt="Create waterfall image">
+            <button mat-button color="primary">Create Waterfall yourself</button>
+          </a>
+          <div class="surface">
+            <img asset="add_files.svg" alt="Import waterfall image">
+            <button mat-button color="primary" disabled>Import Waterfall</button>
+          </div>
+          <a class="surface" (click)="openIntercom()">
+            <img asset="feature_key3.svg" alt="Ask out team image">
+            <button mat-button color="primary">Ask Blockframes Team to do it!</button>
+          </a>
+        </section>
+      </article>
+    </ng-template>
     <article>
       <ng-container *ngIf="updating$ | async; else editWaterfall">
         <logo-spinner></logo-spinner>
@@ -94,8 +96,8 @@
             <mat-icon svgIcon="arrow_back"></mat-icon>
             <span>Back</span>
           </button>
-          <button mat-flat-button color="primary" disabled>
-            <span>Continue</span>
+          <button mat-flat-button color="primary" [disabled]="(shell.canInitWaterfall$ | async) === false" (click)="publishWaterfall()">
+            <span>{{ createMode ? 'Publish' : 'Update' }} Waterfall</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </button>
         </section>
@@ -106,5 +108,5 @@
       </ng-template>
     </article>
   </mat-step>
-  
+
 </mat-stepper>

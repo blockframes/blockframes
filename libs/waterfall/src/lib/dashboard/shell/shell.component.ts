@@ -166,6 +166,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
 
   public canInitWaterfall$ = combineLatest([this.hasMinimalRights$, this.contracts$]).pipe(
     map(([hasMinimalRights, contracts]) => {
+      // TODO add more checks here
       if (!hasMinimalRights) return false;
       if (!contracts.length) return false;
       return true;

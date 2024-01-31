@@ -1,21 +1,22 @@
 
 // Angular
+import { Intercom } from 'ng-intercom';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, map, startWith, tap } from 'rxjs';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
-import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, Optional } from '@angular/core';
 
 // Blockframes
 import { FormList } from '@blockframes/utils/form';
 import { MovieService } from '@blockframes/movie/service';
-import { WaterfallRightholder, createWaterfallRightholder } from '@blockframes/model';
+import { WaterfallRightholder, createWaterfallRightholder, hasDefaultVersion } from '@blockframes/model';
 
 import { WaterfallService } from '../../waterfall.service';
 import { WaterfallDocumentForm } from '../../form/document.form';
 import { WaterfallDocumentsService } from '../../documents.service';
-import { WaterfallPermissionsService } from '../../permissions.service';
+import { DashboardWaterfallShellComponent } from '../shell/shell.component';
 import { WaterfallFormGuardedComponent } from '../../guards/waterfall-form-guard';
 import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '../../form/right-holder.form';
 
@@ -44,7 +45,7 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
     startWith(true),
   );
 
-  invalidRightholders$ = this.waterfallService.valueChanges(this.movieId).pipe(
+  invalidRightholders$ = this.shell.waterfall$.pipe(
     tap(waterfall => {
       this.rightholdersForm.clear({ emitEvent: false });
       waterfall.rightholders.forEach(rightholder => this.rightholdersForm.add(createWaterfallRightholder(rightholder)));
@@ -53,16 +54,18 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
     startWith(true),
   );
 
-  createMode = this.route.snapshot.data.createMode ?? true;
+  createMode = !hasDefaultVersion(this.shell.waterfall);
+  manualCreation$ = new BehaviorSubject(false);
 
   constructor(
     private router: Router,
     private snackBar: MatSnackBar,
     private route: ActivatedRoute,
     private movieService: MovieService,
+    @Optional() private intercom: Intercom,
     private waterfallService: WaterfallService,
+    public shell: DashboardWaterfallShellComponent,
     private documentService: WaterfallDocumentsService,
-    private permissionService: WaterfallPermissionsService,
   ) { }
 
   previous() {
@@ -75,10 +78,6 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
     const end = this.stepper.selectedIndex === this.stepper.steps.length - 1;
     if (end) this.router.navigate(['..'], { relativeTo: this.route });
     else this.stepper?.next();
-  }
-
-  back() {
-    this.router.navigate(['..'], { relativeTo: this.route });
   }
 
   async updateRightHolders() {
@@ -105,5 +104,21 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
 
     this.updating$.next(false);
     this.snackBar.open('Right Holders updated!', 'close', { duration: 3000 });
+  }
+
+  displayGraph() {
+    this.manualCreation$.next(true);
+  }
+
+  openIntercom() {
+    return this.intercom.show('I need help to create a waterfall');
+  }
+
+  async publishWaterfall() {
+    this.updating$.next(true);
+    await this.shell.refreshWaterfall();
+    this.updating$.next(false);
+    this.snackBar.open(`Waterfall ${ this.createMode ? 'Published' : 'Updated' }!`, 'close', { duration: 3000 });
+    this.router.navigate(['..'], { relativeTo: this.route });
   }
 }
