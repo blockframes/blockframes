@@ -15,7 +15,9 @@ export class CardModalComponent implements AfterViewInit {
   @ViewChild('container') container: ElementRef<HTMLElement>;
 
   ngAfterViewInit() {
-    this.height = `${this.container.nativeElement.offsetHeight}px`;
+    if (this.container.nativeElement.offsetHeight >= 512) {
+      this.height = `${this.container.nativeElement.offsetHeight}px`;
+    }
   }
 
   toggle() {
