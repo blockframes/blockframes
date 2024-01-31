@@ -602,16 +602,6 @@ export function createMissingIncomes(incomeSources: WaterfallSource[], statement
   return missingIncomes;
 }
 
-export function getStatementRightholderTag(statement: Statement) {
-  if (isProducerStatement(statement)) {
-    return 'Beneficiary';
-  } else if (isDistributorStatement(statement)) {
-    return 'Distributor';
-  } else if (isDirectSalesStatement(statement)) {
-    return 'Producer';
-  }
-}
-
 export function hasRightsWithExpenseCondition(_rights: Right[], statement: Statement, waterfall: Waterfall) {
   const rights = _rights.filter(r => r.rightholderId === statement.senderId);
   return rights.some(r => getRightExpenseTypes(r, statement, waterfall).length > 0);

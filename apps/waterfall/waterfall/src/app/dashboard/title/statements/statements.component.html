@@ -18,7 +18,7 @@
           <waterfall-rightholder-select *ngIf="selected !== 'directSales'"
             [rightholders]="rightholders"
             [control]="rightholderControl">
-            <mat-label>Right Holder</mat-label>
+            <mat-label>{{ selected | toLabel: 'statementParty'}}</mat-label>
           </waterfall-rightholder-select>
           <ng-container *ngIf="selected !== 'directSales'">
             <a *ngIf="rightholderContracts.length === 1 && rightholderContracts[0].id" mat-icon-button [routerLink]="['..', 'documents', rightholderContracts[0].id]">

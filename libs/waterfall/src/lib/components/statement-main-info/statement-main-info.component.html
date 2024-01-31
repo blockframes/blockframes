@@ -13,11 +13,14 @@
         <span>See Statement</span>
       </a>
     </span>
+    <span *ngIf="showLink && contract">
+      Statement Reported: {{ statement.reported | date: 'dd/MM/yyyy' }}
+    </span>
   </section>
 
   <section *ngIf="contract">
     <span>
-      <mat-icon svgIcon="document"></mat-icon><span matLine><strong>Contract: </strong>{{ contract.name }}</span>
+      <mat-icon svgIcon="document"></mat-icon><span matLine><strong>Contract: </strong>{{ contract.name }} <ng-container *ngIf="sources">({{ sources | join:'name' }})</ng-container></span>
     </span>
     <span *ngIf="showLink">
       <a mat-button [routerLink]="['/c/o/dashboard/title', statement.waterfallId, 'statement', statement.id]" target="_blank">
@@ -25,11 +28,14 @@
         <span>See Statement</span>
       </a>
     </span>
+    <span *ngIf="!showLink && statement.status === 'reported' && !!statement.reported">
+      Statement Reported: {{ statement.reported | date: 'dd/MM/yyyy' }}
+    </span>
   </section>
 
-  <section>
+  <section *ngIf="statement.type === 'directSales' && sources">
     <span>
-      <mat-icon svgIcon="business"></mat-icon><span matLine><strong>{{ rightholderTag }}: </strong>{{ rightholderName | titlecase }} <ng-container *ngIf="sources">({{ sources | join:'name' }})</ng-container></span>
+      <mat-icon svgIcon="document"></mat-icon><span matLine><strong>Sources: </strong> {{ sources | join:'name' }}</span>
     </span>
     <span *ngIf="statement.status === 'reported' && !!statement.reported">
       Statement Reported: {{ statement.reported | date: 'dd/MM/yyyy' }}

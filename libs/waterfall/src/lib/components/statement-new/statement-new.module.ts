@@ -8,6 +8,7 @@ import { StatementNewComponent } from './statement-new.component';
 // Blockframes
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 import { RightholderSelectModule } from '../rightholder-select/rightholder-select.module';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatDialogModule } from '@angular/material/dialog';
@@ -25,6 +26,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
     GlobalModalModule,
     RightholderSelectModule,
+    ToLabelModule,
     
     MatDialogModule,
     MatIconModule,
