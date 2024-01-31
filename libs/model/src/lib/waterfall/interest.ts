@@ -76,8 +76,9 @@ export function investmentWithInterest(
 
 export function interestDetail(contractId: string, payload: ConditionInterest, state: TitleState) {
   const orgs = Object.values(state.orgs);
-  const orgOperations = orgs.find(org => org.operations.some(o => o.contractId === contractId)).operations;
-  const contractOperations = orgOperations
+  const orgState = orgs.find(org => org.operations.some(o => o.contractId === contractId));
+  if (!orgState?.operations) return [];
+  const contractOperations = orgState.operations
     .filter(o => o.type === 'income' || (o.type === 'investment' && o.contractId === contractId))
     .map(o => ({ ...o, date: new Date(o.date) }));
 

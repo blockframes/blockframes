@@ -6,7 +6,8 @@ import {
   Statement,
   Territory,
   WaterfallRightholder,
-  isProducerStatement
+  isProducerStatement,
+  mainCurrency
 } from '@blockframes/model';
 import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
 import {
@@ -173,7 +174,7 @@ export function getStatementConfig(option: StatementConfig) {
     if (value?.trim() === '€') return 'EUR';
     if (value?.trim() === '$') return 'USD';
     if (value?.trim() === '£') return 'GBP';
-    return getKeyIfExists('movieCurrencies', value) || 'EUR';
+    return getKeyIfExists('movieCurrencies', value) || mainCurrency;
   }
 
   return getAdminConfig();

@@ -134,6 +134,11 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
     }
   }
 
+  @Input() set small(value: boolean) {
+    if (coerceBooleanProperty(value)) this.size = 'small';
+  }
+  public size = 'default';
+
   @Output() timeChange = new EventEmitter();
 
   get empty() {
