@@ -25,13 +25,12 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 import { GraphService } from '@blockframes/ui/graph/graph.service';
 import { CardModalComponent } from '@blockframes/ui/card-modal/card-modal.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-
+import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { RightService } from '../../right.service';
 import { WaterfallService } from '../../waterfall.service';
 import { createRightForm, setRightFormValue } from '../forms/right-form/right-form';
 import { createSourceForm, setSourceFormValue } from '../forms/source-form/source-form';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
-import { WaterfallDeleteRightModalComponent } from './delete-right-modal/delete-right-modal.component';
 import { Arrow, Node, computeDiff, createChild, createSibling, createStep, deleteStep, fromGraph, toGraph, updateParents } from './layout';
 
 @Component({
@@ -367,17 +366,17 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
     const id = rightId ?? this.selected$.getValue();
     const right = this.rights.find(right => right.id === id);
-    const source = this.sources.find(source => source.id === id);
 
-    this.dialog.open(
-      WaterfallDeleteRightModalComponent,
-      {
-        data: createModalData({
-          rightName: right?.name ?? source?.name ?? '',
-          onConfirm: () => this.handleDeletion(id),
-        }),
-      },
-    );
+    this.dialog.open(ConfirmInputComponent, {
+      data: createModalData({
+        title: `Delete ${right ? 'Receipt Shares' : 'Source'}`,
+        subtitle: `Pay attention, if you delete the following ${right ? 'Receipt Shares' : 'Source'}, it will have an impact on conditions and the whole Waterfall.`,
+        text: `Please type "DELETE" to confirm.`,
+        confirmationWord: 'DELETE',
+        confirmButtonText: `Delete ${right ? 'Receipt Shares' : 'Source'}`,
+        onConfirm: () => this.handleDeletion(id),
+      })
+    });
   }
 
   private async handleDeletion(rightId?: string) {
