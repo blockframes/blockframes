@@ -74,7 +74,6 @@ function filterRightholderStatements(statements: Statement[], rightholderId: str
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatementsComponent implements OnInit, OnDestroy {
-  public waterfall$ = this.shell.waterfall$;
   public statements: Statement[] = [];
   public rightholderContracts: (Partial<WaterfallContract> & { statements: (Statement & { number: number })[] })[] = [];
   public haveStatements: boolean;
