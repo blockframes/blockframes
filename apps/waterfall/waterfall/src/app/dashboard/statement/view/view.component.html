@@ -4,8 +4,8 @@
   <waterfall-statement-direct-sales-summary *ngIf="statement.type === 'directSales'" [form]="form" [statement]="statement"></waterfall-statement-direct-sales-summary>
   <waterfall-statement-producer-summary *ngIf="statement.type === 'producer'" [statement]="statement" [form]="form"></waterfall-statement-producer-summary>
 
-  <footer>
-    <a mat-flat-button routerLink="edit" *ngIf="statement.type !== 'producer' && statement.status === 'draft'">
+  <footer *ngIf="statement.status === 'draft'">
+    <a mat-flat-button routerLink="edit" *ngIf="statement.type !== 'producer'">
       <mat-icon svgIcon="arrow_back"></mat-icon>
       <span>Back</span>
     </a>
@@ -20,7 +20,7 @@
     </button>
   </footer>
 
-  <footer>
+  <footer *ngIf="statement.status === 'draft'">
     <button mat-button 
       (click)="save(statement)"
       [disabled]="statement.status === 'reported'"

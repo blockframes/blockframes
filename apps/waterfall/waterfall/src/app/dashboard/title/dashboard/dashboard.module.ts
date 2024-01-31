@@ -24,6 +24,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [DashboardComponent],
@@ -47,6 +48,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatIconModule,
     MatFormFieldModule,
     MatSnackBarModule,
+    MatTooltipModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: DashboardComponent }]),
