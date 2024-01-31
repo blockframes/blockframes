@@ -64,7 +64,8 @@ const routes: Routes = [{
             {
               path: 'init',
               data: { createMode: true },
-              loadChildren: () => import('@blockframes/waterfall/dashboard/edit-waterfall/edit.module').then(m => m.WaterfallEditFormModule),
+              
+              loadChildren: () => import('./title/waterfall-edit/waterfall-edit.module').then(m => m.WaterfallEditModule),
             },
             {
               path: 'edit',

@@ -11,6 +11,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 // Blockframes
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
+import { WaterfallGraphModule } from '@blockframes/waterfall/components/graph/graph.module';
 
 import { WaterfallFormGuard } from '../../guards/waterfall-form-guard';
 import { TitleFormModule } from '../../components/forms/title-form/form.module';
@@ -30,6 +31,7 @@ import { WaterfallEditFormComponent } from './edit.component';
     TitleFormModule,
     LogoSpinnerModule,
     ContractsFormModule,
+    WaterfallGraphModule,
     RightHolderFormModule,
 
     // Material
