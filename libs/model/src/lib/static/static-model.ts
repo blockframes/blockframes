@@ -33,8 +33,8 @@ export const appDescription = {
     'Archipel Market is an ongoing film market platform, one tool for your year-round promotion and acquisitions.',
   financiers:
     'Media Financiers enables private investors to co-produce exclusive films and TV series on the same conditions as top professional content financiers.',
-  blockframes: // TODO #9257
-    'Blockframes is a set of tools to help you manage your film business.',
+  blockframes:
+    'Blockframes is a rights and revenues management tool designed for producers and financiers.',
 };
 
 export const contractStatus = {
