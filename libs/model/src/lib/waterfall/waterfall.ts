@@ -50,6 +50,10 @@ export function getDefaultVersion(waterfall: Waterfall) {
   return waterfall.versions.find(v => v.default);
 }
 
+export function hasDefaultVersion(waterfall: Waterfall) {
+  return !!getDefaultVersion(waterfall);
+}
+
 export function getDefaultVersionId(waterfall: Waterfall) {
   return getDefaultVersion(waterfall)?.id;
 }
