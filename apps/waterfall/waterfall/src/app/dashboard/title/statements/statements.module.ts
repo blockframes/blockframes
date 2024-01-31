@@ -11,6 +11,7 @@ import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/righthol
 import { StatementTableModule } from '@blockframes/waterfall/components/statement-table/statement-table.module';
 import { StatementNewModule } from '@blockframes/waterfall/components/statement-new/statement-new.module';
 import { VersionSelectorModule } from '@blockframes/waterfall/components/version-selector/version-selector.module';
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 
 // Pages
 import { StatementsComponent } from './statements.component';
@@ -39,6 +40,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     StatementTableModule,
     StatementNewModule,
     VersionSelectorModule,
+    LogoSpinnerModule,
 
     // Material
     MatFormFieldModule,

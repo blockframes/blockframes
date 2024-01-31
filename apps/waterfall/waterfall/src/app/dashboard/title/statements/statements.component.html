@@ -51,7 +51,7 @@
       </article>
     </header>
 
-    <section>
+    <section *ngIf="(isRefreshing$ | async) === false; else loading">
       <mat-tab-group class="bf-tabs" *ngIf="rightholderContracts.length > 1 else singleContract">
         <ng-container *ngFor="let rightholderContract of rightholderContracts">
           <mat-tab *ngIf="rightholderContract.statements.length > 0" [label]="rightholderContract.name">
@@ -92,3 +92,7 @@
     </section>
   </ng-template>
 </ng-container>
+
+<ng-template #loading>
+  <logo-spinner></logo-spinner>
+</ng-template>
