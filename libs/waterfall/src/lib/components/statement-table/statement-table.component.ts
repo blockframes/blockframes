@@ -41,7 +41,7 @@ export class StatementTableComponent {
     due: 'Amount Due',
     paid: 'Amount Paid',
     date: 'Payment Date',
-    status: 'Reported',
+    status: 'Status',
     actions: 'Actions',
   };
   @Input() actions: Record<string, boolean> = {
@@ -50,7 +50,8 @@ export class StatementTableComponent {
     share: true,
     download: true,
     view: true,
-    payment: true
+    payment: true,
+    deleteDraft: true,
   };
   @Output() delete = new EventEmitter<Statement>();
   @Input() @boolean defaultSort = false;
