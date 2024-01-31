@@ -17,5 +17,6 @@ export class StatementMainInfoComponent {
   @Input() contract: WaterfallContract;
   @Input() sources: WaterfallSource[];
   @Input() @boolean showLink = false;
+  @Input() @boolean lite = false;
 
 }
