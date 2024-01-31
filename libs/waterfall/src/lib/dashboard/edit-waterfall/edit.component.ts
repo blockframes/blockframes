@@ -114,9 +114,9 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
     return this.intercom.show('I need help to create a waterfall');
   }
 
-  publishWaterfall() {
+  async publishWaterfall() {
     this.updating$.next(true);
-    this.shell.refreshWaterfall();
+    await this.shell.refreshWaterfall();
     this.updating$.next(false);
     this.snackBar.open(`Waterfall ${ this.createMode ? 'Published' : 'Updated' }!`, 'close', { duration: 3000 });
     this.router.navigate(['..'], { relativeTo: this.route });

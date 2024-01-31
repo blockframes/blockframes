@@ -59,7 +59,7 @@
       </ng-template>
     </article>
   </mat-step>
-  
+
   <mat-step>
     <ng-template matStepLabel>Build Waterfall</ng-template>
     <ng-container *ngIf="(manualCreation$ | async) || shell.waterfall.sources.length > 0 || shell.rights.length > 0; else noWaterfall">
@@ -108,5 +108,5 @@
       </ng-template>
     </article>
   </mat-step>
-  
+
 </mat-stepper>
