@@ -1,6 +1,6 @@
 
 import { Observable, map, startWith, tap } from 'rxjs';
-import { Component, ChangeDetectionStrategy, ViewChild, Input, OnInit, Pipe, PipeTransform, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, Input, OnInit, Pipe, PipeTransform } from '@angular/core';
 
 import { WaterfallService } from '../../waterfall.service';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
@@ -48,7 +48,6 @@ export class ContractsFormComponent implements OnInit {
   @Input() movieId: string;
   @Input() documentForm: WaterfallDocumentForm;
 
-  @Output() skip = new EventEmitter();
 
   constructor(
     private waterfallService: WaterfallService,
@@ -107,6 +106,7 @@ export class ContractsFormComponent implements OnInit {
       startDate: contract.duration?.from,
       endDate: contract.duration?.to,
       price: contract.price,
+      currency: contract.currency,
       terms,
       file: file,
       expenseTypes,
@@ -170,7 +170,8 @@ export class ContractsFormComponent implements OnInit {
           from: this.documentForm.controls.startDate.value,
           to: this.documentForm.controls.endDate.value,
         },
-        price: this.documentForm.controls.price.value,
+        price: this.documentForm.controls.price.value.filter(p => p.value > 0),
+        currency: this.documentForm.controls.currency.value,
       }),
     });
 

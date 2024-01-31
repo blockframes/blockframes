@@ -1,40 +1,32 @@
 
-import { BehaviorSubject, Subscription } from 'rxjs';
-import { MatSelectChange } from '@angular/material/select';
+import { BehaviorSubject, Subscription, combineLatest } from 'rxjs';
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import {
   Right,
-  Condition,
-  GroupScope,
-  TargetValue, 
-  ArrayOperator,
-  PoolCondition,
   arrayOperator,
-  ConditionTerms,
-  EventCondition,
-  GroupCondition,
   numberOperator,
-  NumberOperator,
-  RightCondition,
-  ConditionAmount,
-  ConditionDuration,
   WaterfallContract,
-  WaterfallDocument,
-  OrgRevenuCondition,
+  rightholderGroups,
+  getDeclaredAmount,
+  ConditionOwnerLabel,
+  isDefaultVersion,
+  getDefaultVersionId,
+  ExpenseType,
+  createExpenseType,
+  Waterfall,
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 
 import { ConditionForm } from './condition.form';
-
-
-const ownerLabels = {
-  rightholder: 'Right Holder',
-  revenueShare: 'Revenue Share',
-  group: 'Group',
-  pool: 'Pool',
-};
-
+import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { ExpenseTypesModalComponent } from '../../expense-types-modal/expense-types-modal.component';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormList } from '@blockframes/utils/form';
+import { ExpenseTypeForm } from '../../../form/document.form';
+import { WaterfallService } from '../../../waterfall.service';
 
 @Component({
   selector: 'waterfall-conditions-form',
@@ -45,237 +37,64 @@ const ownerLabels = {
 export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
 
   @Input() form: ConditionForm;
+  @Input() rightId: string;
 
-  revenueOwnerLabel$ = new BehaviorSubject('Owner');
-  revenueOwnerList$ = new BehaviorSubject<{ id: string, name: string }[]>([]);
+  public revenueOwnerList$ = new BehaviorSubject<{ id: string, name: string }[]>([]);
+  public investments: WaterfallContract[] = [];
+  public numberOperator = numberOperator;
+  public arrayOperator = arrayOperator;
+  public toggleRateControl = new FormControl(false);
+  public expenseTypes: ExpenseType[] = [];
+  public waterfall$ = this.shell.waterfall$;
 
-  rights: Right[] = [];
-  groups: Right[] = [];
-  pools: string[] = [];
-  investments: WaterfallDocument<WaterfallContract>[] = [];
+  private rights: Right[] = [];
+  private groups: Right[] = [];
+  private pools: string[] = [];
+  private contractId: string;
+  private subs: Subscription[] = [];
 
-  numberOperator = numberOperator;
-  arrayOperator = arrayOperator;
-
-  subs: Subscription[] = [];
-
-  condition: Condition;
-  
   constructor(
     private shell: DashboardWaterfallShellComponent,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
+    private waterfallService: WaterfallService
   ) { }
 
   ngOnInit() {
     this.subs.push(
-      this.shell.rights$.subscribe(rights => {
+      combineLatest([this.shell.rights$, this.shell.contracts$, this.shell.waterfall$]).subscribe(([rights, contracts, waterfall]) => {
         const groupIds = new Set<string>();
         rights.forEach(right => {
-          if(right.groupId) groupIds.add(right.groupId);
+          if (right.groupId) groupIds.add(right.groupId);
         });
         this.rights = rights.filter(right => !groupIds.has(right.id));
         this.groups = rights.filter(right => groupIds.has(right.id));
         const pools = new Set<string>();
         rights.forEach(right => right.pools.filter(pool => pool).forEach(pool => pools.add(pool)));
         this.pools = [...pools];
+
+        const investmentContracts = contracts.filter(c => rightholderGroups.investors.includes(c.type));
+        this.investments = investmentContracts.filter(c => {
+          const amount = getDeclaredAmount(c);
+          return amount[c.currency] > 0;
+        });
+
+        const right = rights.find(r => r.id === this.rightId);
+        const isProducerRight = waterfall.rightholders.find(r => r.id === right.rightholderId)?.roles.includes('producer');
+        this.contractId = isProducerRight ? 'directSales' : right.contractId;
+        this.expenseTypes = waterfall.expenseTypes[this.contractId] || [];
       }),
 
-      this.shell.documents$.subscribe(documents => {
-        this.investments = documents.filter(doc => doc.type === 'contract' && (doc.meta as WaterfallContract).price > 0) as WaterfallDocument<WaterfallContract>[];
+      this.form.controls.revenueOwnerType.valueChanges.subscribe(value => {
+        if (value) this.selectRevenueOwnerType(value);
       }),
 
-      this.form.controls.revenuePercentage.valueChanges.subscribe(percent => {
-        const target: TargetValue = {
-          id: this.form.controls.revenueTarget.value,
-          percent,
-          in: 'investment'
-        };
-        if (this.form.controls.revenueOwnerType.value === 'org') {
-          const payload: OrgRevenuCondition = {
-            orgId: this.form.controls.revenueOwner.value,
-            operator: this.form.controls.revenueOperator.value as NumberOperator,
-            target,
-          };
-          this.condition = {
-            name: this.form.controls.revenueOwnerType.value + this.form.controls.revenueType.value as any,
-            payload,
-          };
-        }
-        if (this.form.controls.revenueOwnerType.value === 'right') {
-          const payload: RightCondition = {
-            rightId: this.form.controls.revenueOwner.value,
-            operator: this.form.controls.revenueOperator.value as NumberOperator,
-            target,
-          };
-          this.condition = {
-            name: this.form.controls.revenueOwnerType.value + this.form.controls.revenueType.value as any,
-            payload,
-          };
-        }
-        if (this.form.controls.revenueOwnerType.value === 'group') {
-          const payload: GroupCondition = {
-            groupId: this.form.controls.revenueOwner.value,
-            operator: this.form.controls.revenueOperator.value as NumberOperator,
-            target,
-          };
-          this.condition = {
-            name: this.form.controls.revenueOwnerType.value + this.form.controls.revenueType.value as any,
-            payload,
-          };
-        }
-        if (this.form.controls.revenueOwnerType.value === 'pool') {
-          const payload: PoolCondition = {
-            pool: this.form.controls.revenueOwner.value,
-            operator: this.form.controls.revenueOperator.value as NumberOperator,
-            target,
-          };
-          this.condition = {
-            name: this.form.controls.revenueOwnerType.value + this.form.controls.revenueType.value as any,
-            payload,
-          };
-        }
+      this.form.controls.interestRate.valueChanges.subscribe(value => {
+        this.toggleRateControl.setValue(value > 0);
       }),
 
-      this.form.controls.revenueAmount.valueChanges.subscribe(amount => {
-
-        if (this.form.controls.revenueOwnerType.value === 'org') {
-          const payload: OrgRevenuCondition = {
-            orgId: this.form.controls.revenueOwner.value,
-            operator: this.form.controls.revenueOperator.value as NumberOperator,
-            target: this.form.controls.revenueTargetType.value === 'amount'
-              ? amount
-              : {
-                  id: this.form.controls.revenueTarget.value,
-                  percent: this.form.controls.revenuePercentage.value,
-                  in: this.form.controls.revenueTargetType.value === 'investment' ? 'investment' : 'orgs.expense'
-                },
-          };
-          this.condition = {
-            name: this.form.controls.revenueOwnerType.value + this.form.controls.revenueType.value as any,
-            payload,
-          };
-        }
-
-        if (this.form.controls.revenueOwnerType.value === 'right') {
-          const payload: RightCondition = {
-            rightId: this.form.controls.revenueOwner.value,
-            operator: this.form.controls.revenueOperator.value as NumberOperator,
-            target: this.form.controls.revenueTargetType.value === 'amount'
-              ? amount
-              : {
-                  id: this.form.controls.revenueTarget.value,
-                  percent: this.form.controls.revenuePercentage.value,
-                  in: this.form.controls.revenueTargetType.value === 'investment' ? 'investment' : 'orgs.expense'
-                },
-          };
-          this.condition = {
-            name: this.form.controls.revenueOwnerType.value + this.form.controls.revenueType.value as any,
-            payload,
-          };
-        }
-
-        if (this.form.controls.revenueOwnerType.value === 'group') {
-          const payload: GroupCondition = {
-            groupId: this.form.controls.revenueOwner.value,
-            operator: this.form.controls.revenueOperator.value as NumberOperator,
-            target: this.form.controls.revenueTargetType.value === 'amount'
-              ? amount
-              : {
-                  id: this.form.controls.revenueTarget.value,
-                  percent: this.form.controls.revenuePercentage.value,
-                  in: this.form.controls.revenueTargetType.value === 'investment' ? 'investment' : 'orgs.expense'
-                },
-          };
-          this.condition = {
-            name: this.form.controls.revenueOwnerType.value + this.form.controls.revenueType.value as any,
-            payload,
-          };
-        }
-
-        if (this.form.controls.revenueOwnerType.value === 'pool') {
-          const payload: PoolCondition = {
-            pool: this.form.controls.revenueOwner.value,
-            operator: this.form.controls.revenueOperator.value as NumberOperator,
-            target: this.form.controls.revenueTargetType.value === 'amount'
-              ? amount
-              : {
-                  id: this.form.controls.revenueTarget.value,
-                  percent: this.form.controls.revenuePercentage.value,
-                  in: this.form.controls.revenueTargetType.value === 'investment' ? 'investment' : 'orgs.expense'
-                },
-          };
-          this.condition = {
-            name: this.form.controls.revenueOwnerType.value + this.form.controls.revenueType.value as any,
-            payload,
-          };
-        }
-      }),
-
-      this.form.controls.salesDateFrom.valueChanges.subscribe(date => {
-        const payload: ConditionDuration = {
-          from: date,
-          to: this.form.controls.salesDateOperator.value === 'between' ? this.form.controls.salesDateTo.value : undefined,
-        };
-        this.condition = {
-          name: this.form.controls.salesType.value as any,
-          payload,
-        };
-      }),
-      this.form.controls.salesDateTo.valueChanges.subscribe(date => {
-        const payload: ConditionDuration = {
-          from: this.form.controls.salesDateOperator.value === 'between' ? this.form.controls.salesDateFrom.value : undefined,
-          to: date,
-        };
-        this.condition = {
-          name: this.form.controls.salesType.value as any,
-          payload,
-        };
-      }),
-
-      this.form.controls.salesAmount.valueChanges.subscribe(amount => {
-        const payload: ConditionAmount = {
-          operator: this.form.controls.salesOperator.value as NumberOperator,
-          target: amount,
-        };
-        this.condition = {
-          name: 'contractAmount',
-          payload,
-        };
-      }),
-
-      this.form.controls.salesTerms.valueChanges.subscribe(terms => {
-        const payload: ConditionTerms = {
-          type: this.form.controls.salesTermsType.value as GroupScope,
-          operator: this.form.controls.salesTermsOperator.value as ArrayOperator,
-          list: terms,
-        };
-        this.condition = {
-          name: 'terms',
-          payload,
-        };
-      }),
-
-      this.form.controls.eventAmount.valueChanges.subscribe(amount => {
-        const payload: EventCondition = {
-          eventId: this.form.controls.eventName.value,
-          operator: this.form.controls.eventOperator.value as NumberOperator,
-          value: amount,
-        };
-        this.condition = {
-          name: 'event',
-          payload,
-        };
-      }),
-
-      this.form.controls.eventList.valueChanges.subscribe(list => {
-        const payload: EventCondition = {
-          eventId: this.form.controls.eventName.value,
-          operator: this.form.controls.eventOperator.value as ArrayOperator,
-          value: list,
-        };
-        this.condition = {
-          name: 'event',
-          payload,
-        };
+      this.toggleRateControl.valueChanges.subscribe(value => {
+        if (!value && this.form.controls.interestRate.value !== 0) this.form.controls.interestRate.setValue(0);
       }),
     );
   }
@@ -284,11 +103,9 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
     this.subs.forEach(sub => sub.unsubscribe());
   }
 
-  selectRevenueOwnerType(event: MatSelectChange) {
-    this.revenueOwnerLabel$.next(ownerLabels[event.value] ?? 'Owner');
-
+  private selectRevenueOwnerType(revenueOwnerType: ConditionOwnerLabel) {
     let list: { id: string, name: string }[] = [];
-    switch (event.value) {
+    switch (revenueOwnerType) {
       case 'org':
         list = this.shell.waterfall.rightholders.map(rightHolder => ({ id: rightHolder.id, name: rightHolder.name }));
         break;
@@ -304,5 +121,40 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
       default: break;
     }
     this.revenueOwnerList$.next(list);
+  }
+
+  public editExpenseType(waterfall: Waterfall) {
+    if (!this.contractId) {
+      this.snackBar.open('Please define contract first.', 'close', { duration: 5000 });
+      return;
+    }
+
+    const versionId = (!this.shell.versionId$.value || isDefaultVersion(this.shell.waterfall, this.shell.versionId$.value)) ? 'default' : this.shell.versionId$.value;
+    const versions = this.shell.waterfall.versions.map(v => v.id).filter(id => id !== getDefaultVersionId(this.shell.waterfall));
+    const form = FormList.factory<ExpenseType, ExpenseTypeForm>([], expenseType => new ExpenseTypeForm(expenseType, versions));
+
+    if (this.expenseTypes.length > 0) {
+      this.expenseTypes.forEach(expenseType => form.add(expenseType));
+    } else {
+      form.add(createExpenseType({ contractId: this.contractId }));
+    }
+
+    this.dialog.open(ExpenseTypesModalComponent, {
+      data: createModalData({
+        versionId,
+        form,
+        onConfirm: () => {
+          const { expenseTypes, id } = waterfall;
+          const expenseType = form.getRawValue().filter(c => !!c.name).map(c => createExpenseType({
+            ...c,
+            contractId: this.contractId,
+            id: c.id || this.waterfallService.createId(),
+          }));
+          expenseTypes[this.contractId] = expenseType;
+
+          return this.waterfallService.update({ id, expenseTypes });
+        }
+      })
+    });
   }
 }

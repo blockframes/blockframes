@@ -4,6 +4,7 @@ import { Negotiation } from './negociation';
 import type { Media, Territory, ContractStatus, ContractType, MovieCurrency } from './static';
 import { Duration, Term } from './terms';
 import { PricePerCurrency, sortByDate } from './utils';
+import { WaterfallInvestment } from './waterfall';
 
 export interface Holdback {
   territories: Territory[];
@@ -18,7 +19,6 @@ export interface BaseContract {
   status: ContractStatus;
   titleId: string;
   signatureDate?: Date;
-  price?: number;
   currency?: MovieCurrency;
   duration?: Duration;
   /** List of discontinued terms */
@@ -34,6 +34,7 @@ export interface BaseContract {
 }
 
 export interface Contract extends BaseContract {
+  price?: number;
   type: ContractType;
   /** Parent term on which this contract is created */
   parentTermId: string;
@@ -141,14 +142,23 @@ export function isSale(contract: Partial<BaseContract>): contract is Sale {
 
 /**
  * Returns declared amount of a contract.
- * Amount can be located on contract document or on its terms for more detailed data
+ * Amount can be located on contract document (number or array of investments) or on its terms for more detailed data
  * @param contract 
  * @returns 
  */
-export function getDeclaredAmount(contract: BaseContract & { terms: Term[] }): PricePerCurrency {
-  if (contract.price && contract.price > 0) return { [contract.currency]: contract.price };
+export function getDeclaredAmount(contract: BaseContract & { terms?: Term[], price?: number | WaterfallInvestment[] }): PricePerCurrency {
   const amount: PricePerCurrency = {};
-  contract.terms.forEach(t => {
+  if (contract.price) {
+    if (!Array.isArray(contract.price) && contract.price > 0) return { [contract.currency]: contract.price };
+    else if (Array.isArray(contract.price) && contract.price.some(p => p.value > 0)) {
+      contract.price.forEach(p => {
+        amount[contract.currency] ||= 0;
+        amount[contract.currency] += p.value;
+      });
+      return amount;
+    }
+  }
+  (contract.terms || []).forEach(t => {
     amount[t.currency] ||= 0;
     amount[t.currency] += t.price;
   });

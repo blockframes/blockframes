@@ -1,0 +1,26 @@
+<global-modal>
+  <h2>
+    <span>Manage Expenses</span>
+    <mat-icon 
+      *ngIf="data.versionId !== 'default'"
+      color="warn"
+      svgIcon="warning"
+      matTooltip="You are managing expenses for a non-default version of the waterfall. Only max CAP can be edited."
+    ></mat-icon>
+  </h2>
+  <header>
+    <p class="mat-body-1">Provide categories and caps of expenses that will be used in waterfall calculation.</p>
+  </header>
+
+  <waterfall-expense-types [form]="data.form" [versionId]="data.versionId"></waterfall-expense-types>
+
+  <mat-dialog-actions>
+    <button mat-flat-button color="primary" (click)="confirm()">
+      <span>Edit</span>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
+    </button>
+    <button mat-button (click)="close()">
+      Close window
+    </button>
+  </mat-dialog-actions>
+</global-modal>

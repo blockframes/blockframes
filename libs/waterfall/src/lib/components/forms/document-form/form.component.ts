@@ -9,7 +9,14 @@ import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy, Output, E
 // Blockframes
 import { rightholderGroups, RightholderRole, Waterfall } from '@blockframes/model';
 import { BucketTermForm, createBucketTermControl } from '@blockframes/contract/bucket/form';
-import { createExpenseTypeControl, ExpenseTypeForm, WaterfallDocumentForm, WaterfallDocumentFormValue } from '../../../form/document.form';
+import {
+  createExpenseTypeControl,
+  createWaterfallInvestmentControl,
+  ExpenseTypeForm,
+  WaterfallDocumentForm,
+  WaterfallDocumentFormValue,
+  WaterfallInvestmentForm
+} from '../../../form/document.form';
 
 @Component({
   selector: '[waterfall][form] waterfall-document-form',
@@ -42,6 +49,7 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     if (this.form.controls.terms.length === 0) this.addTerm();
+    if (this.form.controls.price.length === 0) this.addInvest();
     const names = this.waterfall.rightholders.map(r => r.name);
     this.licensee$.next(names);
     this.licensor$.next(names);
@@ -92,6 +100,10 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
 
   addTerm() {
     this.form.controls.terms.push(BucketTermForm.factory({}, createBucketTermControl));
+  }
+
+  addInvest() {
+    this.form.controls.price.push(WaterfallInvestmentForm.factory({}, createWaterfallInvestmentControl));
   }
 
   change($event: 'removed' | 'added') {

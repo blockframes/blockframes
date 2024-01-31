@@ -18,7 +18,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    span {
+    section {
       display: flex;
       gap: 24px;
       align-items: center;
@@ -63,4 +63,10 @@ bf-tag.active {
   background-color: var(--primary-lighter);
   border: none;
   color: #ffffff;
+}
+
+logo-spinner {
+  display: block;
+  width: 100px;
+  margin: auto;
 }

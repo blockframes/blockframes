@@ -33,8 +33,8 @@ export const appDescription = {
     'Archipel Market is an ongoing film market platform, one tool for your year-round promotion and acquisitions.',
   financiers:
     'Media Financiers enables private investors to co-produce exclusive films and TV series on the same conditions as top professional content financiers.',
-  blockframes: // TODO #9257
-    'Blockframes is a set of tools to help you manage your film business.',
+  blockframes:
+    'Blockframes is a rights and revenues management tool designed for producers and financiers.',
 };
 
 export const contractStatus = {
@@ -913,11 +913,19 @@ export const rightTypes = {
   mg: 'MG Recoupment',
   horizontal: 'Horizontal Group',
   vertical: 'Vertical Group',
-  rnpp: 'RNPP',
+  rnpp: 'Producer\'s Net Participation',
+  investments: 'Investment Recoupment',
   residuals: 'Residuals',
-  royalties: 'Royalty fee',
-  unknown: 'Unknown'
+  royalties: 'Royalties',
+  unknown: 'Other'
 } as const
+
+export const conditionOwnerLabels = {
+  org: 'Right Holder',
+  right: 'Revenue Share',
+  group: 'Group',
+  pool: 'Pool',
+};
 
 export const movieNoteRoles = {
   producer: 'Producer',
@@ -1793,6 +1801,13 @@ export const statementType = {
   directSales: 'Direct Sales',
 } as const;
 
+export const statementParty = {
+  salesAgent: 'Sales Agent',
+  mainDistributor: 'Distributor',
+  producer: 'Beneficiary',
+  directSales: 'Direct Sales',
+} as const;
+
 /**
  * https://docs.google.com/spreadsheets/d/1z4FFNABgDyRGgD5AQZf-ebWbA_m-7hlueFMCVUuk2fI/edit#gid=279324582
  */
@@ -1901,7 +1916,9 @@ export const staticModel = {
   paymentType,
   paymentStatus,
   statementStatus,
-  statementType
+  statementType, 
+  statementParty,
+  conditionOwnerLabels
 };
 
 export const emailErrorCode = ['E01-unauthorized', 'E02-general-error', 'E03-missing-api-key', 'E04-no-template-available'] as const;

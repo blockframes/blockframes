@@ -7,8 +7,15 @@ import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { BucketTermForm } from '@blockframes/contract/bucket/form';
 import { creatTermControl } from '@blockframes/contract/negotiation';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { ExpenseType, RightholderRole, Term, WaterfallFile, mainCurrency } from '@blockframes/model';
-
+import {
+  ExpenseType,
+  MovieCurrency,
+  RightholderRole,
+  Term,
+  WaterfallFile,
+  WaterfallInvestment,
+  mainCurrency
+} from '@blockframes/model';
 
 export function createExpenseTypeControl(config?: Partial<ExpenseType>, versionIds: string[] = []) {
 
@@ -36,6 +43,21 @@ export class ExpenseTypeForm extends FormEntity<ExpenseTypeControl> {
   }
 }
 
+export function createWaterfallInvestmentControl(config?: Partial<WaterfallInvestment>) {
+  return {
+    value: new FormControl(config?.value ?? 0),
+    date: new FormControl(config?.date ?? new Date()),
+  };
+}
+
+type WaterfallInvestmentControl = ReturnType<typeof createWaterfallInvestmentControl>;
+
+export class WaterfallInvestmentForm extends FormEntity<WaterfallInvestmentControl> {
+  constructor(config?: Partial<WaterfallInvestment>) {
+    super(createWaterfallInvestmentControl(config));
+  }
+}
+
 export interface WaterfallDocumentFormValue {
   id: string;
   name: string;
@@ -49,7 +71,8 @@ export interface WaterfallDocumentFormValue {
   startDate: Date;
   endDate: Date;
 
-  price: number;
+  currency: MovieCurrency;
+  price: WaterfallInvestment[];
 
   terms: Term[];
 
@@ -72,7 +95,8 @@ function createWaterfallDocumentFormControl(contract: (Partial<WaterfallDocument
     startDate: new FormControl(contract.startDate ?? new Date()),
     endDate: new FormControl(contract.endDate ?? new Date()),
 
-    price: new FormControl(contract.price ?? 0),
+    currency: new FormControl<MovieCurrency>(contract.currency ?? mainCurrency),
+    price: FormList.factory(contract?.price, c => WaterfallInvestmentForm.factory(c, createWaterfallInvestmentControl)),
 
     terms: FormList.factory(contract.terms, term => BucketTermForm.factory(term, creatTermControl)),
 
@@ -102,11 +126,12 @@ export class WaterfallDocumentForm extends FormEntity<WaterfallDocumentFormContr
       signatureDate: data.signatureDate || new Date(),
       startDate: data.startDate || new Date(),
       endDate: data.endDate || new Date(),
-      price: data.price || 0,
       file: data.file || { id: data.id },
+      currency: data.currency || mainCurrency,
     });
     this.controls.terms.patchAllValue(data.terms || []);
     this.controls.expenseTypes.patchAllValue(data.expenseTypes || []);
+    this.controls.price.patchAllValue(data.price || []);
     this.markAsPristine();
   }
 }

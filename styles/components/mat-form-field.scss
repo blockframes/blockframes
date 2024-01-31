@@ -51,6 +51,13 @@
       }
     }
 
+    mat-datepicker-toggle.small {
+      button {
+        height: 20px;
+        line-height: 20px;
+      }
+    }
+
     mat-icon[matPrefix] {
       margin-left: 10px;
       margin-right: 10px;

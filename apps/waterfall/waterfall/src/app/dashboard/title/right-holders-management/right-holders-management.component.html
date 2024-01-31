@@ -7,6 +7,6 @@
     <mat-icon svgIcon="movie"></mat-icon><span matLine><strong>Movie: </strong>{{ movie.title.international }}</span>
   </span>
 
-  <waterfall-right-holder-form *ngIf="rightholdersForm.controls.length" [rightholdersForm]="rightholdersForm"></waterfall-right-holder-form>
+  <waterfall-right-holder-form *ngIf="rightholdersForm.controls.length" [rightholdersForm]="rightholdersForm" autoSave></waterfall-right-holder-form>
 
 </section>

@@ -11,6 +11,7 @@ import { getContractsWith } from '../contract';
 import { mainCurrency } from './action';
 import { ConditionWithTarget, isConditionWithTarget } from './conditions';
 import { Expense } from '../expense';
+import { InterestDetail } from './interest';
 
 export interface Payment {
   id: string;
@@ -125,7 +126,8 @@ export interface Statement {
     rightsBreakdown?: RightsBreakdown[];
     groupsBreakdown?: GroupsBreakdown[];
     details?: DetailsRow[];
-    expenses?: (Expense & { cap?: PricePerCurrency })[]
+    expenses?: (Expense & { cap?: PricePerCurrency })[];
+    interests?: InterestDetail[];
   }
 }
 
@@ -622,7 +624,7 @@ export function hasRightsWithExpenseCondition(_rights: Right[], statement: State
  * @param waterfall
  * @returns 
  */
-export function getRightExpenseTypes(right: Right, statement: Statement, waterfall: Waterfall) {
+function getRightExpenseTypes(right: Right, statement: Statement, waterfall: Waterfall) {
   const conditions = getRightCondition(right);
   const conditionsWithTarget = conditions.filter(c => isConditionWithTarget(c)) as ConditionWithTarget[];
 
@@ -630,6 +632,9 @@ export function getRightExpenseTypes(right: Right, statement: Statement, waterfa
     .map(c => (typeof c.payload.target === 'object' && c.payload.target.in === 'expense') ? c.payload.target.id : undefined)
     .filter(id => !!id);
 
+  /** 
+  * @deprecated not used. Might be removed in future
+  * If target "orgs.expense" in "targetIn" libs/model/src/lib/waterfall/conditions.ts is re-enabled, uncomment this code
   const [orgId] = conditionsWithTarget
     .map(c => (typeof c.payload.target === 'object' && c.payload.target.in === 'orgs.expense') ? c.payload.target.id : undefined)
     .filter(id => !!id);
@@ -639,7 +644,7 @@ export function getRightExpenseTypes(right: Right, statement: Statement, waterfa
     if (orgId !== statement.senderId) throw new Error(`Statement senderId ${statement.senderId} does not match expense target orgId ${orgId}`);
     const orgExpenseTargets = waterfall.expenseTypes[statement.contractId || 'directSales'].map(e => e.id);
     expenseTargets.push(...orgExpenseTargets);
-  }
+  }*/
 
   return Array.from(expenseTargets);
 }

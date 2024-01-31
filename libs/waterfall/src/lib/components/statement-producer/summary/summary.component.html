@@ -152,5 +152,23 @@
     </article>
   </ng-container>
 
+  <ng-container *ngIf="interests$ | async as interests">
+    <article *ngIf="interests.length" class="breakdown">
+      <header>
+        <span>Interest Calculation</span>
+      </header>
+      <div class="surface" >
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <span>Interest Rate Details</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <waterfall-interest-table [interests]="interests"></waterfall-interest-table>
+        </mat-expansion-panel>
+      </div>
+    </article>
+  </ng-container>
+
   <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment" label="Total Participation"></waterfall-statement-participation>
 </section>

@@ -44,10 +44,10 @@ export const thresholdConditions = {
    */
   groupTurnover,
   /**
-   * Condition that will keep incoming amount (investment, income) until interests are covered.
-   * Interests are taken on incomes, investments and new years.
+   * Condition will match if calculated OrgRevenu is "operator (ex: less than)" than x (ex: 100%) percent of 
+   * investments + interests of contractId with [conposite] interest with a rate of y (ex: 4%) 
+   * Interests are calculated on each new income, investment and year.
    * Interest can be composite: interests of each period are incorporated into the capital to increase it gradually.
-   * Next interests will be calculated from increased capital.
    * (Income and investments must have a date)
    */
   interest,
@@ -241,11 +241,25 @@ function or(conditions: (Condition | ConditionGroup)[]): ConditionGroup {
 
 const isNumber = (v: unknown): v is number => typeof v === 'number';
 
-export const targetIn = ['orgs.revenu', 'orgs.turnover', 'orgs.expense', 'rights.revenu', 'rights.turnover', 'pools.revenu', 'pools.turnover', 'investment', 'expense'] as const;
+export const targetIn = [
+  /**
+   * @deprecated not used (condition form does not allow it). Might be removed in future.
+   * If orgs.expense is re-enabled, check "getRightExpenseTypes" in libs/model/src/lib/waterfall/statement.ts
+  'orgs.revenu', 
+  'orgs.turnover', 
+  'orgs.expense', 
+  'rights.revenu', 
+  'rights.turnover', 
+  'pools.revenu', 
+  'pools.turnover', 
+  'investment', */
+  'expense',
+  'contracts.investment'
+] as const;
 export type TargetIn = typeof targetIn[number];
 export type TargetValue = {
   id: string;
-  percent: number;
+  percent: number; // Between 0 and 1
   in: TargetIn
 } | number;
 export function toTargetValue(state: TitleState, target: TargetValue) {
@@ -253,6 +267,8 @@ export function toTargetValue(state: TitleState, target: TargetValue) {
 
   const { id, percent } = target;
   switch (target.in) {
+    /**
+     * @deprecated not used. Might be removed in future
     case 'orgs.revenu': return state.orgs[id].revenu.calculated * percent;
     case 'orgs.turnover': return state.orgs[id].turnover.calculated * percent;
     case 'orgs.expense': return getExpensesValue(state, Object.values(state.expenses).filter(e => e.orgId === id)) * percent;
@@ -260,8 +276,9 @@ export function toTargetValue(state: TitleState, target: TargetValue) {
     case 'rights.turnover': return getNode(state, id).turnover.calculated * percent;
     case 'pools.revenu': return state.pools[id].revenu.calculated * percent;
     case 'pools.turnover': return state.pools[id].turnover.calculated * percent;
-    case 'investment': return state.investment * percent;
+    case 'investment': return state.investment * percent;*/
     case 'expense': return getExpensesValue(state, Object.values(state.expenses).filter(e => e.typeId === id)) * percent;
+    case 'contracts.investment': return getInvestmentValue(state, id) * percent;
     default: throw new Error(`Target "${target.in}" not supported.`);
   }
 }
@@ -291,6 +308,14 @@ function getExpensesValue(state: TitleState, expenses: ExpenseState[]) {
   });
 
   const values = expensesByType.map(e => e.expenses.capped + e.expenses.uncapped);
+  return sum(values);
+}
+
+function getInvestmentValue(state: TitleState, contractId: string) {
+  const orgs = Object.values(state.orgs);
+  const org = orgs.find(o => o.operations.some(op => op.contractId === contractId && op.type === 'investment'));
+  const operations = org?.operations.filter(op => op.contractId === contractId && op.type === 'investment') ?? [];
+  const values = operations.map(o => o.amount);
   return sum(values);
 }
 
@@ -573,14 +598,25 @@ function contractAmount(ctx: ConditionContext, payload: ConditionContractAmount)
 // INTEREST //
 //////////////
 
-interface ConditionInterest {
+export interface ConditionInterest {
   orgId: string;
+  contractId: string;
+  operator: NumberOperator;
+  percent: number;
   rate: number;
   isComposite?: boolean;
 }
+/**
+ * @param ctx 
+ * @param payload 
+ * @returns 
+ */
 function interest(ctx: ConditionContext, payload: ConditionInterest) {
   const { state } = ctx;
-  const { orgId, rate, isComposite } = payload;
+  const { orgId, contractId, operator, percent, rate, isComposite } = payload;
   const { revenu, operations } = state.orgs[orgId];
-  return revenu.calculated >= investmentWithInterest(rate, operations, isComposite);
+  const contractOperations = operations.filter(o => o.type === 'income' || (o.type === 'investment' && o.contractId === contractId));
+  const targetValue = investmentWithInterest(rate, contractOperations, isComposite) * percent;
+  const current = revenu.calculated;
+  return numericOperator(operator, current, targetValue);
 }

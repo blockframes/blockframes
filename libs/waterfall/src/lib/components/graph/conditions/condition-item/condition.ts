@@ -1,8 +1,8 @@
 
-import { Condition, TargetValue } from '@blockframes/model';
+import { Condition, TargetValue, Waterfall } from '@blockframes/model';
+import { rightholderName } from '../../../../pipes/rightholder-name.pipe';
 
-
-function targetToString(target: TargetValue) {
+function targetToString(target: TargetValue, waterfall?: Waterfall) {
   if (typeof target === 'number') {
     return `${target}€`;
   }
@@ -10,7 +10,15 @@ function targetToString(target: TargetValue) {
   const splitted = t.split('.');
   const moneyType = splitted.length > 1 ? splitted[1] : splitted[0];
   const targetType = splitted.length > 1 ? `${splitted[0]}` : '';
-  return `${percent * 100}% of ${targetType}${id}'s ${moneyType}`;
+  let targetName = id;
+  // TODO #9623 improve with contract Name
+  if (t === 'expense') {
+    const expenseTypes = Object.values(waterfall?.expenseTypes || {}).flat();
+    const expenseType = expenseTypes.find(e => e.id === id);
+    if (expenseType) targetName = expenseType.name;
+  }
+
+  return `${percent * 100}% of ${targetType}${targetName}'s ${moneyType}`;
 }
 
 function operatorToString(operator: string) {
@@ -32,8 +40,7 @@ function operatorToString(operator: string) {
   }
 }
 
-
-export function conditionToString(condition?: Condition) {
+export function conditionToString(condition?: Condition, waterfall?: Waterfall) {
 
   if (!condition) return 'Unknown condition';
 
@@ -63,7 +70,7 @@ export function conditionToString(condition?: Condition) {
 
   if (condition.name === 'amount') {
     const { operator, target } = condition.payload;
-    return `Amount is ${operatorToString(operator)} ${targetToString(target)}`;
+    return `Amount is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
   }
 
   if (condition.name === 'terms') {
@@ -76,7 +83,7 @@ export function conditionToString(condition?: Condition) {
 
   if (condition.name === 'termsLength') {
     const { operator, target } = condition.payload;
-    return `Terms length is ${operatorToString(operator)} ${targetToString(target)}`;
+    return `Terms length is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
   }
 
   if (condition.name === 'contract') {
@@ -84,63 +91,64 @@ export function conditionToString(condition?: Condition) {
     let displayList = '';
     if (contractIds.length >= 3) displayList = `${contractIds[0]}, ${contractIds[1]}, ${contractIds[2]} and ${contractIds.length - 3} more`;
     else displayList = contractIds.join(', ');
-    return `Contract ${displayList} is ${operatorToString(operator)}`;
+    return `Contract ${displayList} is ${operatorToString(operator)}`; // TODO #9623 contractName with a caching system on shell ?
   }
 
   if (condition.name === 'contractAmount') {
     const { operator, target } = condition.payload;
-    return `Contract amount is ${operatorToString(operator)} ${targetToString(target)}`;
+    return `Contract amount is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
   }
 
   if (condition.name === 'orgRevenu') {
     const { operator, orgId, target } = condition.payload;
-    return `Org ${orgId}'s revenue is ${operatorToString(operator)} ${targetToString(target)}`;
+    return `Org ${rightholderName(orgId, waterfall)}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
   }
 
   if (condition.name === 'orgTurnover') {
     const { operator, orgId, target } = condition.payload;
-    return `Org ${orgId}'s turnover is ${operatorToString(operator)} ${targetToString(target)}`;
+    return `Org ${rightholderName(orgId, waterfall)}'s turnover is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
   }
 
   if (condition.name === 'rightRevenu') {
     const { operator, rightId, target } = condition.payload;
-    return `Right ${rightId}'s revenue is ${operatorToString(operator)} ${targetToString(target)}`;
+    return `Right ${rightId}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall)}`; // TODO #9623 rightName ?
   }
 
   if (condition.name === 'rightTurnover') {
     const { operator, rightId, target } = condition.payload;
-    return `Right ${rightId}'s turnover is ${operatorToString(operator)} ${targetToString(target)}`;
+    return `Right ${rightId}'s turnover is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
   }
 
   if (condition.name === 'groupRevenu') {
     const { operator, groupId, target } = condition.payload;
-    return `Group ${groupId}'s revenue is ${operatorToString(operator)} ${targetToString(target)}`;
+    return `Group ${groupId}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
   }
 
   if (condition.name === 'groupTurnover') {
     const { operator, groupId, target } = condition.payload;
-    return `Group ${groupId}'s turnover is ${operatorToString(operator)} ${targetToString(target)}`;
+    return `Group ${groupId}'s turnover is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
   }
 
   if (condition.name === 'poolRevenu') {
     const { operator, target, pool } = condition.payload;
-    return `Pool ${pool}'s revenue is ${operatorToString(operator)} ${targetToString(target)}`;
+    return `Pool ${pool}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
   }
 
   if (condition.name === 'poolTurnover') {
     const { operator, target, pool } = condition.payload;
-    return `Pool ${pool}'s turnover is ${operatorToString(operator)} ${targetToString(target)}`;
+    return `Pool ${pool}'s turnover is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
   }
 
   if (condition.name === 'poolShadowRevenu') {
     const { operator, target, pool } = condition.payload;
-    return `Pool ${pool}'s theoretical revenue is ${operatorToString(operator)} ${targetToString(target)}`;
+    return `Pool ${pool}'s theoretical revenue is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
   }
 
-  // TODO
-  // if (condition.name === 'interest') {
-  //   const { isComposite, orgId, rate } = condition.payload;
-  // }
+  if (condition.name === 'interest') {
+    const { isComposite, operator, orgId, rate, percent } = condition.payload;
+    // TODO #9623 add contract Name
+    return `Org ${rightholderName(orgId, waterfall)}'s revenue is ${operatorToString(operator)} ${percent * 100}% of investments and ${isComposite ? 'composite' : ''} interest with a rate of ${rate * 100}%`;
+  }
 
   return 'Unknown condition';
 }

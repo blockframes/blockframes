@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy, OnChanges
 import { FormControl } from '@angular/forms';
 import {
   ProducerBreakdownRow as BreakdownRow,
+  ConditionInterest,
   DetailsRow,
   Duration,
   Expense,
@@ -24,6 +25,7 @@ import {
   getOrderedRights,
   getPath,
   getPathDetails,
+  getRightCondition,
   getSources,
   getStatementRights,
   getStatementRightsToDisplay,
@@ -34,7 +36,8 @@ import {
   isDistributorStatement,
   isSource,
   isStandaloneVersion,
-  isVerticalGroup
+  isVerticalGroup,
+  interestDetail
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { StatementForm } from '../../../form/statement.form';
@@ -301,6 +304,27 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
         this.statement.reportedData.expenses = expenses;
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
       } else if (this.statement.status !== 'reported' && reportedData.expenses) {
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
+      }
+    })
+  );
+
+  public interests$ = combineLatest([this.shell.rights$, this.shell.simulation$]).pipe(
+    map(([_rights, state]) => {
+      if (this.statement.status === 'reported' && this.statement.reportedData.interests) return this.statement.reportedData.interests;
+      const rights = getStatementRightsToDisplay(this.statement, _rights);
+      const allConditions = rights.map(right => getRightCondition(right)).filter(condition => !!condition).flat();
+      const interestCondition = allConditions.find(condition => condition.name === 'interest');
+      if (!interestCondition) return;
+      const payload = interestCondition.payload as ConditionInterest;
+      return interestDetail(this.statement.contractId, payload, state.waterfall.state);
+    }),
+    tap(async interests => {
+      const reportedData = this.statement.reportedData;
+      if (this.statement.status === 'reported' && !reportedData.interests) {
+        this.statement.reportedData.interests = interests;
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
+      } else if (this.statement.status !== 'reported' && reportedData.interests) {
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
       }
     })

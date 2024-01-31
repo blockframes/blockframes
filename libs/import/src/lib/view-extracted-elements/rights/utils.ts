@@ -168,7 +168,11 @@ function formatCondition(cond: ImportedCondition, rightholders: WaterfallRightho
         name: 'interest',
         payload: {
           orgId: cond.left,
-          rate: formatTarget(cond.target)
+          contractId: cond.target.id,
+          operator: cond.operator as NumberOperator,
+          percent: cond.target.percent,
+          rate: cond.interest.rate,
+          isComposite: cond.interest.isComposite
         }
       }
     }
