@@ -2,7 +2,7 @@
 <a mat-icon-button routerLink="..">
   <mat-icon svgIcon="arrow_back"></mat-icon>
 </a>
-<h1>{{ createMode ? 'Create' : 'Edit' }} Waterfall for {{ (movie$ | async).title.international }}</h1>
+<h1 *ngIf="movie$ | async as movie">{{ createMode ? 'Create' : 'Edit' }} Waterfall for {{ movie.title.international }}</h1>
 
 <mat-stepper #stepper>
   <!-- override default stepper icons for the "edit" & "done" steps -->

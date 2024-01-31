@@ -23,6 +23,11 @@ const routes = createRoutes({
       pathMatch: 'full'
     },
     {
+      path: 'marketplace/home',
+      redirectTo: 'dashboard',
+      pathMatch: 'full'
+    },
+    {
       path: 'dashboard',
       canActivate: [ModuleGuard],
       loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)

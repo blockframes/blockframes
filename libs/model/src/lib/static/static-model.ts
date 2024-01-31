@@ -1800,6 +1800,13 @@ export const statementType = {
   directSales: 'Direct Sales',
 } as const;
 
+export const statementParty = {
+  salesAgent: 'Sales Agent',
+  mainDistributor: 'Distributor',
+  producer: 'Beneficiary',
+  directSales: 'Direct Sales',
+} as const;
+
 /**
  * https://docs.google.com/spreadsheets/d/1z4FFNABgDyRGgD5AQZf-ebWbA_m-7hlueFMCVUuk2fI/edit#gid=279324582
  */
@@ -1908,7 +1915,8 @@ export const staticModel = {
   paymentType,
   paymentStatus,
   statementStatus,
-  statementType,
+  statementType, 
+  statementParty,
   conditionOwnerLabels
 };
 

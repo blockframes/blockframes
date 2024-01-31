@@ -80,7 +80,7 @@ export class WaterfallEditTitleComponent implements OnInit {
           name: this.orgService.org.name,
           roles: ['producer'],
         });
-        await this.waterfallService.create(this.movieId, [ orgId ], [ defaultRightholder ]);
+        await this.waterfallService.create(this.movieId, [orgId], [defaultRightholder]);
         this.router.navigate(['../', this.movieId], { relativeTo: this.route });
 
       } else {
