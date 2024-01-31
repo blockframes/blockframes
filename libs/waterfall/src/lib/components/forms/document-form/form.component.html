@@ -68,7 +68,7 @@
 <ng-container *ngFor="let invest of form.get('price').controls">
   <div class="group">
     <mat-form-field appearance="outline">
-      <mat-label>Investment / Minimum Guaranteed</mat-label>
+      <mat-label>Investment | Minimum Guarantee</mat-label>
       <mat-icon *ngIf="form.get('currency').value" [svgIcon]="form.get('currency').value" matSuffix></mat-icon>
       <input matInput type="number" [formControl]="invest.get('value')" />
     </mat-form-field>

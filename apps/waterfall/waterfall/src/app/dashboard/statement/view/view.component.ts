@@ -149,6 +149,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     await this.shell.simulateWaterfall();
 
     if (reported) {
+      const snackbarRef = this.snackBar.open('Please wait, statement is being reported...');
 
       if (isProducerStatement(statement) && !isStandaloneVersion(this.shell.waterfall, statement.versionId)) {
         if (statement.versionId !== getDefaultVersionId(this.shell.waterfall)) {
@@ -160,6 +161,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
 
       // Statement is reported, actual waterfalls are refreshed
       await this.shell.refreshAllWaterfalls();
+      snackbarRef.dismiss();
       this.snackBar.open('Statement reported !', 'close', { duration: 5000 });
     } else {
       this.snackBar.open('Statement updated !', 'close', { duration: 5000 });

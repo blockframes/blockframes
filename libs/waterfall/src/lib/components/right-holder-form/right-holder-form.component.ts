@@ -16,6 +16,7 @@ import { createWaterfallRightholder } from '@blockframes/model';
 export class RightHolderFormComponent {
 
   @Input() @boolean skippable = false;
+  @Input() @boolean autoSave = false;
   @Input() rightholdersForm: FormList<WaterfallRightholderFormValue, WaterfallRightholderForm>;
 
   @Output() skip = new EventEmitter<void>();

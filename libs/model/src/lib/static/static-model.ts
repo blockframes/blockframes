@@ -913,10 +913,11 @@ export const rightTypes = {
   mg: 'MG Recoupment',
   horizontal: 'Horizontal Group',
   vertical: 'Vertical Group',
-  rnpp: 'RNPP',
+  rnpp: 'Producer\'s Net Participation',
+  investments: 'Investment Recoupment',
   residuals: 'Residuals',
-  royalties: 'Royalty fee',
-  unknown: 'Unknown'
+  royalties: 'Royalties',
+  unknown: 'Other'
 } as const
 
 export const conditionOwnerLabels = {
