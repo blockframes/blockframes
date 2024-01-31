@@ -1,7 +1,7 @@
 
 :host {
   display: block;
-  padding: 48px 24px;
+  padding: 0 24px 48px 24px;
 }
 
 article {
@@ -21,8 +21,8 @@ section {
   display: flex;
   justify-content: center;
 
-  a.surface {
-    cursor: pointer;
+  a.surface,
+  div.surface {
     margin-top: 42px;
     display: flex;
     flex-direction: column;
@@ -35,4 +35,11 @@ section {
       align-self: center;
     }
   }
+  a.surface {
+    cursor: pointer;
+  }
+}
+
+waterfall-graph {
+  margin-top: 24px;
 }
