@@ -84,6 +84,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
   public statementTypes: StatementChipConfig[] = [];
   public selected: StatementType;
   public isStatementSender: boolean;
+  public isRefreshing$ = this.shell.isRefreshing$;
 
   private currentStateDate = new Date();
   private waterfall = this.shell.waterfall;

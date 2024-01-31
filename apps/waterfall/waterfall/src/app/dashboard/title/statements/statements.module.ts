@@ -10,6 +10,7 @@ import { EmptyStatementCardModule } from '@blockframes/waterfall/components/empt
 import { StatementTableModule } from '@blockframes/waterfall/components/statement-table/statement-table.module';
 import { StatementNewModule } from '@blockframes/waterfall/components/statement-new/statement-new.module';
 import { VersionSelectorModule } from '@blockframes/waterfall/components/version-selector/version-selector.module';
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 
 // Pages
@@ -38,6 +39,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     StatementTableModule,
     StatementNewModule,
     VersionSelectorModule,
+    LogoSpinnerModule,
     ConfirmModule,
 
     // Material
