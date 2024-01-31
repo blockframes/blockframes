@@ -8,7 +8,10 @@
     </button>
   </article>
 
-  <p>Please add the companies that will be involved into the waterfall.</p>
+  <p>
+    Please add the companies that will be involved into the waterfall.
+    <ng-container *ngIf="autoSave"> Changes are saved automatically.</ng-container>
+  </p>
 
   <article *ngFor="let item of rightholdersForm.controls; let index = index; let last = last">
     <mat-form-field appearance="outline">
