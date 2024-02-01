@@ -50,7 +50,7 @@ const routes: Routes = [{
         {
           path: 'create',
           data: { createMode: true },
-          loadChildren: () => import('@blockframes/waterfall/dashboard/edit/edit.module').then(m => m.WaterfallEditFormModule),
+          loadChildren: () => import('@blockframes/waterfall/dashboard/edit-title/edit.module').then(m => m.WaterfallEditTitleModule),
         },
         {
           path: ':movieId',
@@ -62,13 +62,18 @@ const routes: Routes = [{
               data: { redirect: '/c/o/dashboard/home' }
             },
             {
-              path: 'edit',
-              data: { createMode: false },
-              loadChildren: () => import('@blockframes/waterfall/dashboard/edit/edit.module').then(m => m.WaterfallEditFormModule),
+              path: 'init',
+              data: { createMode: true },
+              loadChildren: () => import('./title/waterfall-edit/waterfall-edit.module').then(m => m.WaterfallEditModule),
             },
             {
-              path: 'right-holders',
-              loadChildren: () => import('./title/right-holders/right-holders.module').then(m => m.RightHoldersModule),
+              path: 'edit',
+              data: { createMode: false },
+              loadChildren: () => import('@blockframes/waterfall/dashboard/edit-title/edit.module').then(m => m.WaterfallEditTitleModule),
+            },
+            {
+              path: 'right-holders-management',
+              loadChildren: () => import('./title/right-holders-management/right-holders-management.module').then(m => m.RightHoldersManagementModule),
             },
             {
               path: 'statement',

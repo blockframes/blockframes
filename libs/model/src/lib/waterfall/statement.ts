@@ -1,15 +1,17 @@
 import { DocumentMeta } from '../meta';
 import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups, RightType } from '../static';
 import { Duration, createDuration } from '../terms';
-import { sortByDate, sum } from '../utils';
+import { PricePerCurrency, getTotalPerCurrency, sortByDate, sum, toLabel } from '../utils';
 import { TitleState, TransferState } from './state';
-import { Waterfall, WaterfallContract, WaterfallSource, getIncomesSources } from './waterfall';
+import { Version, Waterfall, WaterfallContract, WaterfallSource, getIncomesSources } from './waterfall';
 import { Right, RightOverride, createRightOverride, getRightCondition } from './right';
 import { getSources, isVerticalGroupChild, nodeExists, pathExists } from './node';
 import { Income, createIncome } from '../income';
 import { getContractsWith } from '../contract';
 import { mainCurrency } from './action';
 import { ConditionWithTarget, isConditionWithTarget } from './conditions';
+import { Expense } from '../expense';
+import { InterestDetail } from './interest';
 
 export interface Payment {
   id: string;
@@ -119,6 +121,14 @@ export interface Statement {
   };
   comment: string;
   rightOverrides: RightOverride[];
+  reportedData: { // Final data of the statement once it is reported
+    sourcesBreakdown?: SourcesBreakdown[];
+    rightsBreakdown?: RightsBreakdown[];
+    groupsBreakdown?: GroupsBreakdown[];
+    details?: DetailsRow[];
+    expenses?: (Expense & { cap?: PricePerCurrency })[];
+    interests?: InterestDetail[];
+  }
 }
 
 export interface DistributorStatement extends Statement {
@@ -173,6 +183,7 @@ function createStatementBase(params: Partial<Statement> = {}): Statement {
       right: params.payments?.right ? params.payments.right.map(createRightPayment) : []
     },
     comment: params.comment || '',
+    reportedData: {},
     ...params,
     duration: createDuration(params?.duration),
     rightOverrides: params.rightOverrides ? params.rightOverrides.map(createRightOverride) : []
@@ -613,7 +624,7 @@ export function hasRightsWithExpenseCondition(_rights: Right[], statement: State
  * @param waterfall
  * @returns 
  */
-export function getRightExpenseTypes(right: Right, statement: Statement, waterfall: Waterfall) {
+function getRightExpenseTypes(right: Right, statement: Statement, waterfall: Waterfall) {
   const conditions = getRightCondition(right);
   const conditionsWithTarget = conditions.filter(c => isConditionWithTarget(c)) as ConditionWithTarget[];
 
@@ -621,6 +632,9 @@ export function getRightExpenseTypes(right: Right, statement: Statement, waterfa
     .map(c => (typeof c.payload.target === 'object' && c.payload.target.in === 'expense') ? c.payload.target.id : undefined)
     .filter(id => !!id);
 
+  /** 
+  * @deprecated not used. Might be removed in future
+  * If target "orgs.expense" in "targetIn" libs/model/src/lib/waterfall/conditions.ts is re-enabled, uncomment this code
   const [orgId] = conditionsWithTarget
     .map(c => (typeof c.payload.target === 'object' && c.payload.target.in === 'orgs.expense') ? c.payload.target.id : undefined)
     .filter(id => !!id);
@@ -630,7 +644,329 @@ export function getRightExpenseTypes(right: Right, statement: Statement, waterfa
     if (orgId !== statement.senderId) throw new Error(`Statement senderId ${statement.senderId} does not match expense target orgId ${orgId}`);
     const orgExpenseTargets = waterfall.expenseTypes[statement.contractId || 'directSales'].map(e => e.id);
     expenseTargets.push(...orgExpenseTargets);
-  }
+  }*/
 
   return Array.from(expenseTargets);
 }
+
+export function convertStatementsTo(_statements: Statement[], version: Version) {
+  if (!version?.id) return _statements;
+  if (version.standalone) return _statements.filter(s => s.versionId === version.id);
+  const statements = _statements.filter(s => !s.standalone);
+  const duplicatedStatements = statements.filter(s => !!s.duplicatedFrom);
+  const rootStatements = statements.filter(s => !s.duplicatedFrom);
+  return rootStatements.map(s => duplicatedStatements.find(d => d.duplicatedFrom === s.id && d.versionId === version.id) || s);
+}
+
+export interface MaxPerIncome {
+  income: Income;
+  max: number;
+  current: number;
+  source: WaterfallSource
+}
+
+export interface BreakdownRow {
+  section: string;
+  type?: 'right' | 'net' | 'expense';
+  previous: PricePerCurrency;
+  current: PricePerCurrency;
+  cumulated: PricePerCurrency;
+  right?: Right;
+  cap?: PricePerCurrency;
+  maxPerIncome?: MaxPerIncome[];
+}
+
+export interface ProducerBreakdownRow {
+  name: string;
+  percent?: number;
+  taken: number;
+  type?: 'source' | 'total' | 'right';
+  right?: Right;
+  source?: WaterfallSource & { taken: number };
+  maxPerIncome?: MaxPerIncome[];
+}
+
+export interface SourcesBreakdown {
+  name: string;
+  rows: BreakdownRow[];
+  net: PricePerCurrency;
+  stillToBeRecouped: PricePerCurrency;
+}
+
+export interface RightsBreakdown {
+  name: string;
+  rows: BreakdownRow[];
+  total: PricePerCurrency;
+  stillToBeRecouped: PricePerCurrency;
+}
+
+export interface GroupsBreakdown {
+  group: Right;
+  rights: Right[];
+  rows: ProducerBreakdownRow[];
+}
+
+export interface DetailsRow {
+  name: string,
+  details: {
+    from: string,
+    fromId: string,
+    to: string,
+    amount: number,
+    taken: number,
+    percent: number,
+  }[]
+}
+
+/**
+ * For Distributor and Direct Sales statements.
+ * @param versionId 
+ * @param waterfall 
+ * @param sources 
+ * @param current 
+ * @param incomes 
+ * @param _expenses 
+ * @param _history 
+ * @param rights 
+ * @param state 
+ * @returns 
+ */
+export function getSourcesBreakdown(
+  versionId: string,
+  waterfall: Waterfall,
+  sources: WaterfallSource[],
+  current: Statement,
+  incomes: Income[],
+  _expenses: Expense[],
+  _history: (Statement & { number: number })[],
+  rights: Right[],
+  state: TitleState): SourcesBreakdown[] {
+  const indexOfCurrent = _history.findIndex(s => s.id === current.id || s.id === current.duplicatedFrom);
+  _history[indexOfCurrent] = { ...current, number: _history[indexOfCurrent].number };
+  const previous = _history.slice(indexOfCurrent + 1);
+  const history = _history.slice(indexOfCurrent);
+
+  const displayedRights = getStatementRightsToDisplay(current, rights);
+  const orderedRights = getOrderedRights(displayedRights, state);
+  const statementIncomes = incomes.filter(i => current.incomeIds.includes(i.id));
+  const expenseTypes = isDirectSalesStatement(current) ? waterfall.expenseTypes.directSales : waterfall.expenseTypes[current.contractId];
+  return sources.map(source => {
+    const rows: BreakdownRow[] = [];
+
+    // Remove sources where all incomes are hidden from reported statement 
+    if (current.status === 'reported') {
+      const sourceIncomes = statementIncomes.filter(i => i.sourceId === source.id);
+      const allHidden = sourceIncomes.every(i => i.version[versionId]?.hidden);
+      if (allHidden) return;
+    }
+
+    // Incomes declared by statement.senderId
+    const previousSourcePayments = previous.map(s => s.payments.income).flat().filter(income => incomes.find(i => i.id === income.incomeId).sourceId === source.id);
+    const currentSourcePayments = current.payments.income.filter(income => incomes.find(i => i.id === income.incomeId).sourceId === source.id);
+    const cumulatedSourcePayments = history.map(s => s.payments.income).flat().filter(income => incomes.find(i => i.id === income.incomeId).sourceId === source.id);
+    rows.push({
+      section: 'Gross Receipts',
+      previous: getTotalPerCurrency(previousSourcePayments),
+      current: getTotalPerCurrency(currentSourcePayments),
+      cumulated: getTotalPerCurrency(cumulatedSourcePayments)
+    });
+
+    const rights = orderedRights.filter(right => {
+      const rightSources = getSources(state, right.id);
+      return rightSources.length === 1 && rightSources[0].id === source.id;
+    });
+
+    // What senderId took from source to pay his rights
+    const previousSum: RightPayment[] = [];
+    const currentSum: RightPayment[] = [];
+    const cumulatedSum: RightPayment[] = [];
+    const stillToBeRecouped: { price: number, currency: MovieCurrency }[] = [];
+    for (const right of rights) {
+      const section = right.type ? `${right.name} (${toLabel(right.type, 'rightTypes')} - ${right.percent}%)` : `${right.name} (${right.percent}%)`;
+      const previousRightPayment = previous.map(s => s.payments.right).flat().filter(p => p.to === right.id);
+      previousSum.push(...previousRightPayment.map(r => ({ ...r, price: -r.price })));
+      const currentRightPayment = current.payments.right.filter(p => p.to === right.id);
+      currentSum.push(...currentRightPayment.map(r => ({ ...r, price: -r.price })));
+      const cumulatedRightPayment = history.map(s => s.payments.right).flat().filter(p => p.to === right.id);
+      cumulatedSum.push(...cumulatedRightPayment.map(r => ({ ...r, price: -r.price })));
+
+      const rightExpenseTypes = getRightExpenseTypes(right, current, waterfall);
+      for (const expenseTypeId of rightExpenseTypes) {
+        const expenseType = expenseTypes?.find(e => e.id === expenseTypeId);
+
+        if (!expenseType) {
+          if (isDirectSalesStatement(current)) {
+            throw new Error(`Expense type id "${expenseTypeId}" used in conditions of "${right.name}" is not defined.`);
+          } else {
+            throw new Error(`Expense type id "${expenseTypeId}" used in conditions of "${right.name}" is not defined in contract "${current.contractId}".`);
+          }
+        }
+
+        const currentExpenses = _expenses.filter(e => e.typeId === expenseTypeId && current.expenseIds.includes(e.id));
+        const previousExpenses = _expenses.filter(e => e.typeId === expenseTypeId && previous.map(s => s.expenseIds).flat().includes(e.id));
+        const cumulatedExpenses = _expenses.filter(e => e.typeId === expenseTypeId && history.map(s => s.expenseIds).flat().includes(e.id));
+
+        const cap = current.versionId && expenseType.cap.version[current.versionId] ? expenseType.cap.version[current.versionId] : expenseType.cap.default;
+
+        rows.push({
+          section: expenseType.name,
+          cap: cap > 0 ? { [expenseType.currency]: cap } : undefined,
+          type: 'expense',
+          previous: getTotalPerCurrency(previousExpenses),
+          current: getTotalPerCurrency(currentExpenses),
+          cumulated: getTotalPerCurrency(cumulatedExpenses)
+        });
+
+        stillToBeRecouped.push(...cumulatedExpenses);
+      }
+
+      if (rightExpenseTypes.length > 0) stillToBeRecouped.push(...cumulatedRightPayment.map(r => ({ currency: r.currency, price: -r.price })));
+
+      const maxPerIncome = Array.from(new Set(currentRightPayment.map(r => r.incomeIds).flat())).map(incomeId => ({
+        income: incomes.find(i => i.id === incomeId),
+        max: getIncomingAmount(right.id, incomeId, state.transfers),
+        current: getCalculatedAmount(right.id, incomeId, state.transfers),
+        source
+      })).filter(i => i.max > 0);
+
+      rows.push({
+        section,
+        type: 'right',
+        right,
+        previous: getTotalPerCurrency(previousRightPayment),
+        current: getTotalPerCurrency(currentRightPayment),
+        cumulated: getTotalPerCurrency(cumulatedRightPayment),
+        maxPerIncome
+      });
+    }
+
+    // Net receipts
+    const currentNet = getTotalPerCurrency([...currentSourcePayments, ...currentSum]);
+    rows.push({
+      section: `${source.name} (Net Receipts)`,
+      type: 'net',
+      previous: getTotalPerCurrency([...previousSourcePayments, ...previousSum]),
+      current: currentNet,
+      cumulated: getTotalPerCurrency([...cumulatedSourcePayments, ...cumulatedSum])
+    });
+
+    return {
+      name: source.name,
+      rows,
+      net: currentNet,
+      stillToBeRecouped: stillToBeRecouped.length ? getTotalPerCurrency(stillToBeRecouped) : undefined
+    };
+  }).filter(r => r);
+}
+
+/**
+ * For Distributor and Direct Sales statements.
+ * @param waterfall 
+ * @param current 
+ * @param incomes 
+ * @param _expenses 
+ * @param _history 
+ * @param rights 
+ * @param state 
+ * @returns 
+ */
+export function getRightsBreakdown(
+  waterfall: Waterfall,
+  current: Statement,
+  incomes: Income[],
+  _expenses: Expense[],
+  _history: (Statement & { number: number })[],
+  rights: Right[],
+  state: TitleState): RightsBreakdown[] {
+
+  const indexOfCurrent = _history.findIndex(s => s.id === current.id || s.id === current.duplicatedFrom);
+  _history[indexOfCurrent] = { ...current, number: _history[indexOfCurrent].number };
+  const previous = _history.slice(indexOfCurrent + 1);
+  const history = _history.slice(indexOfCurrent);
+
+  const displayedRights = getStatementRightsToDisplay(current, rights);
+  const orderedRights = getOrderedRights(displayedRights, state);
+  const rightsWithManySources = orderedRights.filter(right => getSources(state, right.id).length > 1);
+
+  const rightTypes = Array.from(new Set(rightsWithManySources.map(right => right.type)));
+  const expenseTypes = isDirectSalesStatement(current) ? waterfall.expenseTypes.directSales : waterfall.expenseTypes[current.contractId];
+  return rightTypes.map(type => {
+    const rows: BreakdownRow[] = [];
+
+    const stillToBeRecouped: { price: number, currency: MovieCurrency }[] = [];
+    for (const right of rightsWithManySources) {
+      if (right.type !== type) continue;
+
+      const section = `${right.name} (${right.percent}%)`;
+      const previousRightPayment = previous.map(s => s.payments.right).flat().filter(p => p.to === right.id);
+      const currentRightPayment = current.payments.right.filter(p => p.to === right.id);
+      const cumulatedRightPayment = history.map(s => s.payments.right).flat().filter(p => p.to === right.id);
+
+      const rightExpenseTypes = getRightExpenseTypes(right, current, waterfall);
+      for (const expenseTypeId of rightExpenseTypes) {
+        const expenseType = expenseTypes?.find(e => e.id === expenseTypeId);
+
+        if (!expenseType) {
+          if (isDirectSalesStatement(current)) {
+            throw new Error(`Expense type id "${expenseTypeId}" used in conditions of "${right.name}" is not defined.`);
+          } else {
+            throw new Error(`Expense type id "${expenseTypeId}" used in conditions of "${right.name}" is not defined in contract "${current.contractId}".`);
+          }
+        }
+
+        const currentExpenses = _expenses.filter(e => e.typeId === expenseTypeId && current.expenseIds.includes(e.id));
+        const previousExpenses = _expenses.filter(e => e.typeId === expenseTypeId && previous.map(s => s.expenseIds).flat().includes(e.id));
+        const cumulatedExpenses = _expenses.filter(e => e.typeId === expenseTypeId && history.map(s => s.expenseIds).flat().includes(e.id));
+
+        const cap = current.versionId && expenseType.cap.version[current.versionId] ? expenseType.cap.version[current.versionId] : expenseType.cap.default;
+
+        rows.push({
+          section: expenseType.name,
+          cap: cap > 0 ? { [expenseType.currency]: cap } : undefined,
+          type: 'expense',
+          previous: getTotalPerCurrency(previousExpenses),
+          current: getTotalPerCurrency(currentExpenses),
+          cumulated: getTotalPerCurrency(cumulatedExpenses)
+        });
+
+        stillToBeRecouped.push(...cumulatedExpenses);
+      }
+
+      if (rightExpenseTypes.length > 0) stillToBeRecouped.push(...cumulatedRightPayment.map(r => ({ currency: r.currency, price: -r.price })));
+
+      const maxPerIncome = Array.from(new Set(currentRightPayment.map(r => r.incomeIds).flat()))
+        .map(incomeId => incomes.find(i => i.id === incomeId))
+        .map(income => ({
+          income,
+          max: getIncomingAmount(right.id, income.id, state.transfers),
+          current: getCalculatedAmount(right.id, income.id, state.transfers),
+          source: waterfall.sources.find(s => s.id === income.sourceId)
+        })).filter(i => i.max > 0);
+
+      rows.push({
+        section,
+        type: 'right',
+        right,
+        previous: getTotalPerCurrency(previousRightPayment),
+        current: getTotalPerCurrency(currentRightPayment),
+        cumulated: getTotalPerCurrency(cumulatedRightPayment),
+        maxPerIncome
+      });
+    }
+
+    const total = rows.filter(r => r.type === 'right').map(r => r.current).reduce((acc, curr) => {
+      for (const currency of Object.keys(curr)) {
+        acc[currency] = (acc[currency] || 0) + curr[currency];
+      }
+      return acc;
+    }, {});
+
+    return {
+      name: toLabel(type, 'rightTypes'),
+      rows,
+      total,
+      stillToBeRecouped: stillToBeRecouped.length ? getTotalPerCurrency(stillToBeRecouped) : undefined
+    };
+  });
+}
+

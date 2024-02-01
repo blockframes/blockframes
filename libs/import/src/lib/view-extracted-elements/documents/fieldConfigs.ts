@@ -20,7 +20,8 @@ import {
   Term,
   MovieCurrency,
   WaterfallDocument,
-  WaterfallRightholder
+  WaterfallRightholder,
+  WaterfallInvestment
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -43,7 +44,7 @@ export interface FieldsConfig {
     type: RightholderRole;
     sellerId: string;
     buyerId: string;
-    price?: number;
+    price: WaterfallInvestment[];
     currency?: MovieCurrency;
     duration?: Duration;
   },
@@ -152,8 +153,8 @@ export function getDocumentConfig(option: DocumentConfig) {
         if (!value) throw mandatoryError(value, 'Licensee');
         return getRightholderId(value, data.document.waterfallId, waterfallService, rightholderCache);
       },
-        /* j */ 'meta.price': (value: string) => {
-        return Number(value);
+        /* j */ 'meta.price': (value: string, data: FieldsConfig) => {
+        return [{ value: Number(value), date: data.document.signatureDate }];
       },
         /* k */ 'meta.currency': (value: string): MovieCurrency => {
         if (value?.trim() === '€') return 'EUR';

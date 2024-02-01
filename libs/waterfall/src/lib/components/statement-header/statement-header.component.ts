@@ -7,7 +7,6 @@ import {
   getStatementNumber,
   filterStatements,
   WaterfallContract,
-  getStatementRightholderTag,
   isProducerStatement
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
@@ -22,8 +21,6 @@ export class StatementHeaderComponent implements OnChanges {
   @Input() statement: Statement;
   @Input() sources: WaterfallSource[] = [];
   @Output() versionChanged = new EventEmitter<string>();
-  public rightholderTag: string;
-  public rightholderName: string;
   public statementNumber: number;
   public contract: WaterfallContract;
   public versionId: string;
@@ -39,7 +36,6 @@ export class StatementHeaderComponent implements OnChanges {
     if (!this.contract && !!this.statement.contractId) this.contract = (await this.shell.contracts([this.statement.contractId]))[0];
     const rightholderKey = this.statement.type === 'producer' ? 'receiverId' : 'senderId';
     const rightholder = this.shell.waterfall.rightholders.find(r => r.id === this.statement[rightholderKey]);
-    this.rightholderName = rightholder.name;
 
     // Set version to the one of the statement if any and unless a locked version is found for an outgoing statement
     this.versionId = this.statement.versionId;
@@ -48,8 +44,6 @@ export class StatementHeaderComponent implements OnChanges {
         this.versionId = rightholder.lockedVersionId;
       }
     }
-
-    this.rightholderTag = getStatementRightholderTag(this.statement);
 
     const filteredStatements = filterStatements(this.statement.type, [this.statement.senderId, this.statement.receiverId], this.statement.contractId, this.statements);
     this.statementNumber = getStatementNumber(this.statement, filteredStatements);

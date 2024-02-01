@@ -1,7 +1,7 @@
 <waterfall-statement-header *ngIf="sources$ | async as sources" [statement]="statement" [sources]="sources"></waterfall-statement-header>
 <section>
   <mat-divider></mat-divider>
-  <p class="mat-body-2">Here is the <strong>Summary of your Statement</strong>. Please verify the information below.</p>
+  <p class="mat-body-2" *ngIf="statement.status === 'draft'">Here is the <strong>Summary of your Statement</strong>. Please verify the information below.</p>
 
   <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment"></waterfall-statement-participation>
 
@@ -156,7 +156,7 @@
 
   <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment"></waterfall-statement-participation>
 
-  <div class="surface comment">
+  <div class="surface comment" *ngIf="statement.status === 'draft'; else reportedComment">
     <h3>Comment</h3>
     <h4 class="mat-display-1">Need to add more information?</h4>
     <p class="mat-body-2">You can add the comment that you’ll be seen by other waterfall members.</p>
@@ -165,4 +165,10 @@
       <textarea matInput [formControl]="form.get('comment')" placeholder="Comment" type="string" cdkTextareaAutosize cdkAutosizeMinRows="6" ></textarea>
     </mat-form-field>
   </div>
+  <ng-template #reportedComment>
+    <div class="surface comment" *ngIf="statement.comment">
+      <h3>Comment</h3>
+      <p class="mat-body-2">{{ statement.comment }}</p>
+    </div>
+  </ng-template>
 </section>

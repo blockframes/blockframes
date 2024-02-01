@@ -1,9 +1,10 @@
 <section class="surface">
-  <a mat-icon-button routerLink="..">
-    <mat-icon svgIcon="arrow_back"></mat-icon>
-  </a>
-  <h1>Manage Right Holders</h1>
-
-  <waterfall-right-holder-form *ngIf="rightholdersForm.controls.length" [rightholdersForm]="rightholdersForm"></waterfall-right-holder-form>
-
+  <header>
+    <h1>Involved Right Holders</h1>
+    <a *ngIf="shell.canBypassRules$" mat-button [routerLink]="['../right-holders-management']" >
+      <mat-icon svgIcon="edit"></mat-icon>
+      <span>Manage Right Holders</span>
+    </a>
+  </header>
+  <waterfall-rightholder-table *ngIf="shell.waterfall$ | async as waterfall" [waterfall]="waterfall"></waterfall-rightholder-table>
 </section>

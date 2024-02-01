@@ -76,6 +76,8 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
 
   if (data.event?.calendar) {
     msg.attachments = [data.event.calendar];
+  } else if (data.statement?.pdf) {
+    msg.attachments = [data.statement.pdf];
   }
 
   return send(msg);

@@ -166,6 +166,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
 
   public canInitWaterfall$ = combineLatest([this.hasMinimalRights$, this.contracts$]).pipe(
     map(([hasMinimalRights, contracts]) => {
+      // TODO add more checks here
       if (!hasMinimalRights) return false;
       if (!contracts.length) return false;
       return true;
@@ -374,7 +375,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     const canBypassRules = await firstValueFrom(this.canBypassRules$);
     if (!canBypassRules) throw new Error('You are not allowed to refresh waterfalls');
     const currentVersion = this.versionId$.value;
-    if (isStandaloneVersion(this.waterfall, currentVersion)) return this.refreshWaterfall();
+    if (!currentVersion || isStandaloneVersion(this.waterfall, currentVersion)) return this.refreshWaterfall();
     this.isRefreshing$.next(true);
     const notStandaloneVersions = this.waterfall.versions.filter(v => !v.standalone);
     for (const version of notStandaloneVersions) {
@@ -389,7 +390,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     const canBypassRules = await firstValueFrom(this.canBypassRules$);
     if (!canBypassRules) throw new Error('You are not allowed to refresh waterfall');
     if (markAsRefreshing) this.isRefreshing$.next(true);
-    const data = await this.loadData();
+    const data = this.versionId$.value ? await this.loadData() : undefined;
     const waterfall = this.versionId$.value ? await this.waterfallService.refreshWaterfall(data, this.versionId$.value) : await this.initWaterfall();
     if (markAsRefreshing) this.isRefreshing$.next(false);
     return waterfall;

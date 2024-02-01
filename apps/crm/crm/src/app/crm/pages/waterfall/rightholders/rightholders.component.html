@@ -5,26 +5,5 @@
       <span>Remove all rightholders</span>
     </button>
   </section>
-  <bf-table [source]="waterfall.rightholders" clickable (rowClick)="goTo($event.id)" useFilter pagination="50">
-    <ng-template colRef="id" label="Id" let-id sort>
-      {{ id }}
-    </ng-template>
-    <ng-template colRef="name" label="Name" let-name sort defaultSort>
-      {{ name }}
-    </ng-template>
-    <ng-template colRef="roles" label="Roles" let-roles sort>
-      {{ roles | toLabel: 'rightholderRoles' }}
-    </ng-template>
-    <ng-template colRef="lockedVersionId" label="Locked Version" let-lockedVersionId sort>
-      {{ lockedVersionId ? (lockedVersionId | versionName: waterfall) : '--' }}
-    </ng-template>
-    <ng-template colRef="" label="Action" let-rightholder sticky>
-      <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'rightholders', rightholder.id]" (click)="$event.stopPropagation()">
-        <mat-icon svgIcon="launch"></mat-icon>
-      </a>
-      <button mat-icon-button (click)="removeRightholders([rightholder]); $event.stopPropagation()">
-        <mat-icon svgIcon="delete" matTooltip="Delete rightholder"></mat-icon>
-      </button>
-    </ng-template>
-  </bf-table>
+  <waterfall-rightholder-table [waterfall]="waterfall" [columns]="columns" (delete)="removeRightholders([$event])" (rowClick)="goTo($event)"></waterfall-rightholder-table>
 </ng-container>

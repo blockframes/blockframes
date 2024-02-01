@@ -1,0 +1,12 @@
+<section class="surface">
+  <a mat-icon-button routerLink="..">
+    <mat-icon svgIcon="arrow_back"></mat-icon>
+  </a>
+  <h1>Right Holders Management</h1>
+  <span *ngIf="movie$ | async as movie">
+    <mat-icon svgIcon="movie"></mat-icon><span matLine><strong>Movie: </strong>{{ movie.title.international }}</span>
+  </span>
+
+  <waterfall-right-holder-form *ngIf="rightholdersForm.controls.length" [rightholdersForm]="rightholdersForm" autoSave></waterfall-right-holder-form>
+
+</section>

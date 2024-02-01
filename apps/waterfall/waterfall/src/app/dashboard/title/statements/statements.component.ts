@@ -36,6 +36,7 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 import { StatementNewComponent } from '@blockframes/waterfall/components/statement-new/statement-new.component';
 import { OrganizationService } from '@blockframes/organization/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 
 interface StatementRolesConfig {
   roles: RightholderRole[],
@@ -73,7 +74,6 @@ function filterRightholderStatements(statements: Statement[], rightholderId: str
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatementsComponent implements OnInit, OnDestroy {
-  public waterfall$ = this.shell.waterfall$;
   public statements: Statement[] = [];
   public rightholderContracts: (Partial<WaterfallContract> & { statements: (Statement & { number: number })[] })[] = [];
   public haveStatements: boolean;
@@ -84,6 +84,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
   public statementTypes: StatementChipConfig[] = [];
   public selected: StatementType;
   public isStatementSender: boolean;
+  public isRefreshing$ = this.shell.isRefreshing$;
 
   private currentStateDate = new Date();
   private waterfall = this.shell.waterfall;
@@ -123,7 +124,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
     await this.initTypes(currentRightholder);
     const versionSub = this.shell.versionId$.subscribe(async versionId => {
       const version = this.waterfall.versions.find(v => v.id === versionId);
-      if (version.standalone) await this.initTypes(currentRightholder, true);
+      if (version?.standalone) await this.initTypes(currentRightholder, true);
     });
     this.subs.push(versionSub);
 
@@ -312,6 +313,24 @@ export class StatementsComponent implements OnInit, OnDestroy {
           await this.createStatement(statementId, contractId, type);
         }
       })
+    });
+  }
+
+  public async removeStatement(statement: Statement) {
+    if (statement.status !== 'draft') return;
+
+    this.dialog.open(ConfirmComponent, {
+      data: createModalData({
+        title: 'Are you sure?',
+        question: 'If you remove a statement from the waterfall, you will be able to create it again.',
+        confirm: 'Yes, remove statement.',
+        cancel: 'No, keep statement.',
+        onConfirm: async () => {
+          await this.statementService.remove(statement.id, { params: { waterfallId: statement.waterfallId } })
+          this.snackbar.open(`Statement deleted from waterfall !`, 'close', { duration: 5000 });
+        }
+      }, 'small'),
+      autoFocus: false
     });
   }
 }

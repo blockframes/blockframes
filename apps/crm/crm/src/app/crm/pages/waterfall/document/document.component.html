@@ -124,4 +124,14 @@
       <waterfall-expense-types-form [contractId]="contract.id"></waterfall-expense-types-form>
     </div>
   </article>
+
+  <ng-container *ngIf="interests$ | async as interests">
+    <article *ngIf="interests.length">
+      <h3>Interest Rate Details</h3>
+      <div class="surface">
+        <waterfall-interest-table [interests]="interests"></waterfall-interest-table>
+      </div>
+    </article>
+  </ng-container>
+  
 </ng-container>

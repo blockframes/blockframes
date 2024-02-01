@@ -1,5 +1,5 @@
 
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormList } from '@blockframes/utils/form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
@@ -11,11 +11,12 @@ import { createWaterfallRightholder } from '@blockframes/model';
   selector: '[rightholdersForm]waterfall-right-holder-form',
   templateUrl: './right-holder-form.component.html',
   styleUrls: ['./right-holder-form.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RightHolderFormComponent {
 
   @Input() @boolean skippable = false;
+  @Input() @boolean autoSave = false;
   @Input() rightholdersForm: FormList<WaterfallRightholderFormValue, WaterfallRightholderForm>;
 
   @Output() skip = new EventEmitter<void>();
@@ -30,6 +31,7 @@ export class RightHolderFormComponent {
 
   remove(index: number) {
     this.rightholdersForm.removeAt(index);
+    this.rightholdersForm.markAsDirty();
   }
 }
 

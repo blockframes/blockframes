@@ -79,7 +79,7 @@ export class DashboardComponent {
     map(state => state.waterfall.state),
     map(state => Object.values(state.orgs).map(org => ({
       ...org,
-      name: titleCase(this.waterfall.rightholders.find(r => r.id === org.id).name),
+      name: titleCase(this.waterfall.rightholders.find(r => r.id === org.id)?.name),
       expense: sum(Object.values(state.expenses).filter(e => e.orgId === org.id).map(e => e.amount)),
     })))
   );
@@ -281,7 +281,7 @@ export class DashboardComponent {
   public rightholdersRevenueSummary$ = combineLatest([this.incomes$, this.rightholdersState$]).pipe(
     map(([incomes, orgs]) => {
       return orgs.map(org => ({
-        name: this.waterfall.rightholders.find(r => r.id === org.id).name,
+        name: org.name,
         investment: { [mainCurrency]: org.investment },
         expense: { [mainCurrency]: org.expense },
         turnover: { [mainCurrency]: org.turnover.actual },

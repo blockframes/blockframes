@@ -32,7 +32,8 @@ import {
   EmailTemplateRequest,
   displayName,
   RequestAskingPriceData,
-  WaterfallEmailData
+  WaterfallEmailData,
+  StatementEmailData
 } from '@blockframes/model';
 import { format } from 'date-fns';
 import { e2eSupportEmail } from '@blockframes/utils/constants';
@@ -729,4 +730,14 @@ export function invitationToJoinWaterfallUpdated(
     pageUrl: `${appUrl.waterfall}/c/o/dashboard/title/${orgId}`
   };
   return { to: toAdmin.email, templateId, data };
+}
+
+/** Generates a transactional email request to share a Waterfall statement by email. */
+export function shareStatement(toUser: UserEmailData, statement: StatementEmailData, waterfall: WaterfallEmailData,): EmailTemplateRequest {
+  const data = {
+    user: toUser,
+    statement,
+    waterfall,
+  };
+  return { to: toUser.email, templateId: templateIds.statement.share, data };
 }

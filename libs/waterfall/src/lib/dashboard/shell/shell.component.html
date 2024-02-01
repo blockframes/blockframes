@@ -19,17 +19,29 @@
           </article>
         </section>
         <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" >
-          <ng-content select="waterfall-cta"></ng-content>
+          <waterfall-cta fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
+            <a mat-button color="primary" [routerLink]="['init']" class="main-dashboard-cta">
+              <mat-icon svgIcon="water_drop"></mat-icon>
+              <ng-container *ngIf="canInitWaterfall$ | async; else noWaterfall">
+                <span>Waterfall Management</span>
+              </ng-container>
+              <ng-template #noWaterfall>
+                <span>Create Waterfall</span>
+              </ng-template>
+            </a>
+          </waterfall-cta>
         </aside>
       </ng-container>
     </section>
   </header>
 
   <nav mat-tab-nav-bar *ngIf="!lite">
-    <a mat-tab-link *ngFor="let link of routes" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
-      [active]="rla.isActive">
-      {{link.label}}
-    </a>
+    <ng-container *ngFor="let link of routes">
+      <a mat-tab-link *ngIf="!link.shouldHide || (canInitWaterfall$ | async)" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
+        [active]="rla.isActive">
+        {{link.label}}
+      </a>
+    </ng-container>
   </nav>
 
   <div [@routeAnimation]="animationOutlet(outlet)">

@@ -48,29 +48,32 @@
   </ng-template>
   <ng-template *ngIf="columns.actions" colRef="" label="Actions" let-statement sticky>
     <a *ngIf="actions.crm" mat-icon-button [routerLink]="['/c/o/dashboard/crm/waterfall', statement.waterfallId, 'statements', statement.id]" (click)="$event.stopPropagation()">
-      <mat-icon svgIcon="edit" matTooltip="Edit Statement"></mat-icon>
+      <mat-icon svgIcon="visibility" matTooltip="View Statement"></mat-icon>
     </a>
     <button *ngIf="actions.delete" mat-icon-button (click)="delete.emit(statement)">
       <mat-icon svgIcon="delete" matTooltip="Delete statement"></mat-icon>
     </button>
+    <button *ngIf="actions.deleteDraft && statement.status === 'draft'" mat-icon-button (click)="delete.emit(statement)">
+      <mat-icon svgIcon="delete" matTooltip="Delete statement"></mat-icon>
+    </button>
     <ng-container *ngIf="statement.status === 'draft'">
-      <a *ngIf="actions.notify" mat-icon-button [routerLink]="['..', 'statement', statement.id, 'notify']">
-        <mat-icon svgIcon="notifications" matTooltip="Notify Right Holder"></mat-icon>
-      </a>
       <a *ngIf="actions.edit" mat-icon-button [routerLink]="['..', 'statement', statement.id, 'edit']">
         <mat-icon svgIcon="edit" matTooltip="Edit Statement"></mat-icon>
       </a>
     </ng-container>
     <ng-container *ngIf="statement.status === 'reported'">
       <button *ngIf="actions.download" mat-icon-button>
-        <mat-icon svgIcon="cloud_download" matTooltip="Download Statement"></mat-icon>
+        <mat-icon svgIcon="cloud_download" matTooltip="Download Statement" (click)="download(statement)"></mat-icon>
       </button>
-      <a *ngIf="actions.view" mat-icon-button  target="_blank" [routerLink]="['..', 'statement', statement.id]">
+      <a *ngIf="actions.view" mat-icon-button [routerLink]="['..', 'statement', statement.id]">
         <mat-icon svgIcon="visibility" matTooltip="View Statement"></mat-icon>
       </a>
+      <button *ngIf="actions.share" mat-icon-button>
+        <mat-icon svgIcon="share" matTooltip="Share Statement" (click)="share(statement)"></mat-icon>
+      </button>
       <ng-container *ngIf="!!statement.payments.rightholder && statement.payments.rightholder.status !== 'received'">
         <button *ngIf="actions.payment" mat-icon-button [disabled]="(canBypassRules$ | async) !== true" (click)="payment(statement)">
-          <mat-icon color="primary" svgIcon="payment" matTooltip="Pending payment"></mat-icon>
+          <mat-icon color="primary" svgIcon="payment" matTooltip="Pending Payment"></mat-icon>
         </button>
       </ng-container>
     </ng-container>

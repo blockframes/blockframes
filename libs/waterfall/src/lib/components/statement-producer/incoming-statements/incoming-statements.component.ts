@@ -66,7 +66,7 @@ export class IncomingStatementComponent implements OnInit, OnDestroy {
       this.subs.push(statementSub);
     } else {
       const rights = await this.shell.rights(versionId);
-      const incomes = await this.shell.incomes([], versionId);
+      const incomes = await this.shell.incomes(undefined, versionId);
       const formArraySub = this.formArray.valueChanges.pipe(
         pairwise(),
         filter(([prev, curr]) => {

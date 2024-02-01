@@ -142,20 +142,24 @@ export function contractsToActions(contracts: WaterfallContract[], terms: Term[]
   return actions;
 }
 
-export function investmentsToActions(contracts: WaterfallContract[], terms: Term[]) {
+export function investmentsToActions(contracts: WaterfallContract[]) {
   const actions: Action[] = [];
   const investmentContracts = contracts.filter(c => rightholderGroups.investors.includes(c.type));
-
   for (const c of investmentContracts) {
     if (c.rootId) continue; // Only root contracts are considered as investments
-    const declaredAmount = getDeclaredAmount({ ...c, terms: terms.filter(t => t.contractId === c.id) });
-    const { [mainCurrency]: amount } = convertCurrenciesTo(declaredAmount, mainCurrency);
-    if (amount <= 0) continue;
-    actions.push(action('invest', {
-      amount,
-      orgId: c.buyerId, // Producer is always the licensor on theses types of contracts
-      date: c.signatureDate
-    }));
+    if (!Array.isArray(c.price)) continue;
+    const investments = c.price;
+
+    for (const investment of investments) {
+      const { [mainCurrency]: amount } = convertCurrenciesTo({ [c.currency]: investment.value }, mainCurrency);
+      if (amount <= 0) continue;
+      actions.push(action('invest', {
+        amount,
+        contractId: c.id,
+        orgId: c.buyerId, // Producer is always the licensor on theses types of contracts
+        date: investment.date
+      }));
+    }
   }
 
   return actions;
@@ -476,6 +480,7 @@ interface AppendRight extends RightAction {
 function append(state: TitleState, payload: AppendRight) {
   const { previous, ...baseRight } = payload;
   const right = createRightState({ previous: toArray(previous), ...baseRight });
+  if (!right.orgId) throw new Error(`Missing orgId on right "${right.id}"`);
   state.rights[right.id] = right;
   state.orgs[right.orgId] ||= createOrg({ id: right.orgId });
   for (const pool of right.pools) {
@@ -490,6 +495,7 @@ interface PrependRight extends RightAction {
 function prepend(state: TitleState, payload: PrependRight) {
   const { next, ...baseRight } = payload;
   const right = createRightState(baseRight);
+  if (!right.orgId) throw new Error(`Missing orgId on right "${right.id}"`);
   prependNode(state, toArray(next), payload.id);
   state.rights[right.id] = right;
   state.orgs[right.orgId] ||= createOrg({ id: right.orgId });
@@ -538,6 +544,7 @@ interface AppendHorizontal extends AppendGroup {
 }
 
 function appendHorizontal(state: TitleState, payload: AppendHorizontal) {
+  if (!payload.blameId) throw new Error('Missing blameId on horizontal group');
   createGroupChildren(state, payload.children);
   state.horizontals[payload.id] = createHorizontal({
     id: payload.id,
@@ -560,6 +567,7 @@ interface PrependHorizontal extends PrependGroup {
 }
 
 function prependHorizontal(state: TitleState, payload: PrependHorizontal) {
+  if (!payload.blameId) throw new Error('Missing blameId on horizontal group');
   createGroupChildren(state, payload.children);
   prependNode(state, toArray(payload.next), payload.id);
   state.horizontals[payload.id] = createHorizontal({
@@ -605,17 +613,20 @@ function updateRight(state: TitleState, payload: UpdateRight) {
 
 interface Investment extends BaseAction {
   orgId: OrgState['id'];
+  contractId: ContractState['id'];
   amount: number;
 }
 function invest(state: TitleState, payload: Investment) {
-  const { amount, orgId } = payload;
+  const { amount, orgId, contractId, date } = payload;
+  if (!date) throw new Error('Missing date on invest action');
   state.investment += amount;
   state.orgs[orgId] ||= createOrg({ id: orgId });
   state.orgs[orgId].investment += amount;
   state.orgs[orgId].operations.push({
     type: 'investment',
     amount,
-    date: payload.date ?? new Date(),
+    contractId,
+    date: new Date(date.getFullYear(), date.getMonth(), date.getDate())//--/--/--:0:0:0:0
   })
 }
 

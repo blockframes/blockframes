@@ -125,6 +125,7 @@
             "commands": [
               "npx cross-env nx build backend-functions --configuration=$NG_CONFIG",
               "npx cross-env npm run deploy:functions:config $PROJECT_ID",
+              "npx cross-env SKIP_PREDEPLOY_HOOKS=true firebase deploy --project=$PROJECT_ID --force --only functions || exit 0",
               "npx cross-env SKIP_PREDEPLOY_HOOKS=true firebase deploy --project=$PROJECT_ID --force --only functions"
             ],
             "parallel": false,
@@ -1668,7 +1669,7 @@
             "envFile": ".env",
             "commands": [
               "npx cross-env nx build waterfall --configuration=$NG_CONFIG",
-              "npx cross-env waterfall deploy --project=$PROJECT_ID --only hosting:waterfall"
+              "npx cross-env firebase deploy --project=$PROJECT_ID --only hosting:waterfall"
             ],
             "parallel": false,
             "color": true

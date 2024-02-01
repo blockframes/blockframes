@@ -2,15 +2,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
 import { TitleViewComponent } from './view.component';
 import { DashboardWaterfallShellModule } from '@blockframes/waterfall/dashboard/shell/shell.module';
 
 // Material
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 
 
 const routes: Routes = [{
@@ -43,9 +40,14 @@ const routes: Routes = [{
       data: { animation: 3 }
     },
     {
+      path: 'right-holders',
+      loadChildren: () => import('../right-holders/right-holders.module').then(m => m.RightHoldersModule),
+      data: { animation: 4 }
+    },
+    {
       path: 'sales',
       loadChildren: () => import('../sales/sales.module').then(m => m.SalesModule),
-      data: { animation: 4 }
+      data: { animation: 5 }
     },
   ]
 }];
@@ -54,14 +56,11 @@ const routes: Routes = [{
   declarations: [TitleViewComponent],
   imports: [
     CommonModule,
-    FlexLayoutModule,
 
     // Blockframes
     DashboardWaterfallShellModule,
 
     // Material
-    MatIconModule,
-    MatButtonModule,
 
     // Routes
     RouterModule.forChild(routes),

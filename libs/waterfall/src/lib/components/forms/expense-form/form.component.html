@@ -1,6 +1,5 @@
 <section *ngFor="let expenseType of (expenseTypes$ | async)" class="surface">
   <h3>{{ expenseType.name }}</h3>
-  <p class="mat-body-1">Please note, only the capped sums will be used for the calculation.</p>
   <div>
     <ng-container *ngIf="expenseType.cap.default > 0 else uncapped">
       <strong>{{ expenseType.name }} CAP:</strong> <price-per-currency [price]="expenseType.id | expenseTypeAmount : (simulation$ | async).waterfall.state"></price-per-currency> <span> ( max <price-per-currency [price]="expenseType.cap.default | formatPair: expenseType.currency"></price-per-currency>)</span>

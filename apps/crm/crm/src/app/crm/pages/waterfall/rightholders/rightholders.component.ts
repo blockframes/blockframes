@@ -15,6 +15,14 @@ export class RightholdersComponent {
 
   public waterfall$ = this.shell.waterfall$;
 
+  public columns: Record<string, string> = {
+    id: 'Id',
+    name: 'Organization Name',
+    roles: 'Waterfall Roles',
+    lockedVersionId: 'Locked Version',
+    actions: 'Actions',
+  };
+
   constructor(
     private waterfallService: WaterfallService,
     private route: ActivatedRoute,

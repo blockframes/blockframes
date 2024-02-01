@@ -1,8 +1,12 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy, OnChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {
+  ProducerBreakdownRow as BreakdownRow,
+  ConditionInterest,
+  DetailsRow,
   Duration,
   Expense,
+  GroupsBreakdown,
   Income,
   PricePerCurrency,
   Right,
@@ -21,6 +25,7 @@ import {
   getOrderedRights,
   getPath,
   getPathDetails,
+  getRightCondition,
   getSources,
   getStatementRights,
   getStatementRightsToDisplay,
@@ -32,15 +37,15 @@ import {
   isSource,
   isStandaloneVersion,
   isVerticalGroup,
-  waterfallSources
+  interestDetail
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { StatementForm } from '../../../form/statement.form';
-import { BehaviorSubject, Observable, Subscription, combineLatest, debounceTime, map, shareReplay } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, combineLatest, debounceTime, map, shareReplay, tap } from 'rxjs';
 import { unique } from '@blockframes/utils/helpers';
 import { MatDialog } from '@angular/material/dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { MaxPerIncome, StatementArbitraryChangeComponent } from '../../statement-arbitrary-change/statement-arbitrary-change.component';
+import { StatementArbitraryChangeComponent } from '../../statement-arbitrary-change/statement-arbitrary-change.component';
 import { StatementService } from '../../../statement.service';
 import { StatementIncomeEditComponent } from '../../statement-income-edit/statement-income-edit.component';
 import { IncomeService } from '@blockframes/contract/income/service';
@@ -103,28 +108,6 @@ function getRightTaken(rights: Right[], statement: Statement, state: TitleState,
     right,
     maxPerIncome
   };
-}
-
-interface BreakdownRow {
-  name: string;
-  percent?: number;
-  taken: number;
-  type?: 'source' | 'total' | 'right';
-  right?: Right;
-  source?: WaterfallSource & { taken: number };
-  maxPerIncome?: MaxPerIncome[];
-}
-
-interface DetailsRow {
-  name: string,
-  details: {
-    from: string,
-    fromId: string,
-    to: string,
-    amount: number,
-    taken: number,
-    percent: number,
-  }[]
 }
 
 @Component({
@@ -192,7 +175,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     this.shell.simulation$, this.sources$
   ]).pipe(
     map(([statement, rights, incomes, simulation, sources]) => {
-
+      if (statement.status === 'reported' && statement.reportedData.groupsBreakdown) return statement.reportedData.groupsBreakdown;
       const displayedRights = getStatementRightsToDisplay(statement, rights);
       const orderedRights = getOrderedRights(displayedRights, simulation.waterfall.state);
       const statementIncomes = incomes.filter(i => statement.incomeIds.includes(i.id));
@@ -238,7 +221,16 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
         }
       }
 
-      return Object.values(groups).filter(g => g.rows.filter(r => r.type === 'source').length);
+      return Object.values(groups).filter(g => g.rows.filter(r => r.type === 'source').length) as GroupsBreakdown[];
+    }),
+    tap(async groupsBreakdown => {
+      const reportedData = this.statement.reportedData;
+      if (this.statement.status === 'reported' && !reportedData.groupsBreakdown) {
+        this.statement.reportedData.groupsBreakdown = groupsBreakdown;
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
+      } else if (this.statement.status !== 'reported' && reportedData.groupsBreakdown) {
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
+      }
     })
   );
 
@@ -247,6 +239,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     this.statement$, this.shell.rights$
   ]).pipe(
     map(([groups, simulation, statement, rights]) => {
+      if (statement.status === 'reported' && statement.reportedData.details) return statement.reportedData.details;
       const sourcesDetails = groups.map(g => g.rows.filter(r => r.type === 'source')).flat();
 
       const items: DetailsRow[] = [];
@@ -275,6 +268,15 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
       }
 
       return items;
+    }),
+    tap(async details => {
+      const reportedData = this.statement.reportedData;
+      if (this.statement.status === 'reported' && !reportedData.details) {
+        this.statement.reportedData.details = details;
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
+      } else if (this.statement.status !== 'reported' && reportedData.details) {
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
+      }
     })
   );
 
@@ -283,6 +285,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     this.shell.expenses$, this.shell.versionId$
   ]).pipe(
     map(([statement, statements, expenses, versionId]) => {
+      if (statement.status === 'reported' && statement.reportedData.expenses) return statement.reportedData.expenses;
       const parentStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
         .filter(s => s.payments.right.some(r => r.incomeIds.some(id => statement.incomeIds.includes(id))));
       const expenseIds = parentStatements.map(s => s.expenseIds).flat();
@@ -294,6 +297,36 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
         if (cap === 0) return e;
         return { ...e, cap: { [type.currency]: cap } };
       }).filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true);
+    }),
+    tap(async expenses => {
+      const reportedData = this.statement.reportedData;
+      if (this.statement.status === 'reported' && !reportedData.expenses) {
+        this.statement.reportedData.expenses = expenses;
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
+      } else if (this.statement.status !== 'reported' && reportedData.expenses) {
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
+      }
+    })
+  );
+
+  public interests$ = combineLatest([this.shell.rights$, this.shell.simulation$]).pipe(
+    map(([_rights, state]) => {
+      if (this.statement.status === 'reported' && this.statement.reportedData.interests) return this.statement.reportedData.interests;
+      const rights = getStatementRightsToDisplay(this.statement, _rights);
+      const allConditions = rights.map(right => getRightCondition(right)).filter(condition => !!condition).flat();
+      const interestCondition = allConditions.find(condition => condition.name === 'interest');
+      if (!interestCondition) return;
+      const payload = interestCondition.payload as ConditionInterest;
+      return interestDetail(this.statement.contractId, payload, state.waterfall.state);
+    }),
+    tap(async interests => {
+      const reportedData = this.statement.reportedData;
+      if (this.statement.status === 'reported' && !reportedData.interests) {
+        this.statement.reportedData.interests = interests;
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
+      } else if (this.statement.status !== 'reported' && reportedData.interests) {
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
+      }
     })
   );
 
@@ -316,7 +349,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
       if (!inError && this.shell.setDate(date)) this.shell.simulateWaterfall();
     });
 
-    this.incomes = await this.shell.incomes([], '');
+    this.incomes = await this.shell.incomes(undefined, '');
     const allStatements = await this.shell.statements('');
     this.statementDuplicates = allStatements.filter(s => !!s.duplicatedFrom);
   }

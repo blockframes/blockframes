@@ -11,6 +11,7 @@ import { StatementPaymentModule } from '../statement-payment/statement-payment.m
 import { RightHolderNamePipeModule } from '../../pipes/rightholder-name.pipe';
 import { ContractPipeModule } from '@blockframes/contract/contract/pipe';
 import { VersionNamePipeModule } from '../../pipes/version-name.pipe';
+import { StatementShareModule } from '../statement-share/statement-share.module';
 
 // Component
 import { IncomesSourcesPipe, StatementTableComponent } from './statement-table.component';
@@ -36,6 +37,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     JoinPipeModule,
     MaxLengthModule,
     VersionNamePipeModule,
+    StatementShareModule,
 
     // Material
     MatIconModule,

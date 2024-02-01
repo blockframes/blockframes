@@ -9,8 +9,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatStepperModule } from '@angular/material/stepper';
 
 // Blockframes
-import { WaterfallFormGuard } from '../../guards/waterfall-form-guard';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
+
+import { WaterfallFormGuard } from '../../guards/waterfall-form-guard';
+import { WaterfallGraphModule } from '../../components/graph/graph.module';
 import { TitleFormModule } from '../../components/forms/title-form/form.module';
 import { ContractsFormModule } from '../../components/contracts-form/contracts-form.module';
 import { RightHolderFormModule } from '../../components/right-holder-form/right-holder-form.module';
@@ -23,9 +26,12 @@ import { WaterfallEditFormComponent } from './edit.component';
   declarations: [WaterfallEditFormComponent],
   imports: [
     CommonModule,
+
+    ImageModule,
     TitleFormModule,
     LogoSpinnerModule,
     ContractsFormModule,
+    WaterfallGraphModule,
     RightHolderFormModule,
 
     // Material

@@ -1,0 +1,45 @@
+
+:host {
+  display: block;
+  padding: 0 24px 48px 24px;
+}
+
+article {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 32px;
+
+  a.save {
+    margin-top: 24px;
+  }
+}
+
+section {
+  gap: 12px;
+  display: flex;
+  justify-content: center;
+
+  a.surface,
+  div.surface {
+    margin-top: 42px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 330px;
+    
+    img {
+      width: 100px;
+      align-self: center;
+    }
+  }
+  a.surface {
+    cursor: pointer;
+  }
+}
+
+waterfall-graph {
+  margin-top: 24px;
+}

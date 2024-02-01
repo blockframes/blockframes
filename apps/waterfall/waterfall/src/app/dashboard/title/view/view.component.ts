@@ -13,23 +13,30 @@ export class TitleViewComponent {
   navLinks: RouteDescription[] = [
     {
       path: 'dashboard',
-      label: 'Dashboard'
+      label: 'Dashboard',
     },
     {
       path: 'statements',
-      label: 'Statements'
+      label: 'Statements',
+      shouldHide: true,
     },
     {
       path: 'documents',
-      label: 'Documents'
+      label: 'Documents',
     },
     {
       path: 'waterfall',
       label: 'Waterfall',
+      shouldHide: true,
+    },
+    {
+      path: 'right-holders',
+      label: 'Right Holders',
     },
     {
       path: 'sales',
       label: 'World Sales',
+      shouldHide: true,
     },
   ];
 
