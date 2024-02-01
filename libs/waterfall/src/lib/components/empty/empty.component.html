@@ -47,7 +47,7 @@
       <button mat-button color="primary" matTooltip="Initialize Waterfall">Initialize Waterfall</button>
     </a>
     <ng-template #canNotInit>
-      <a class="surface" [routerLink]="showImportLinks === false ? '../init' : ''">
+      <a class="surface" [routerLink]="showImportLinks === false ? '../init' : undefined">
         <img asset="add_draft.svg" alt="Add waterfall image">
         <button mat-button [disabled]="showImportLinks === true" color="primary" [matTooltip]="showImportLinks === false ? 'Create Waterfall' : 'Not enough data to initialize waterfall'">Initialize Waterfall</button>
       </a>
