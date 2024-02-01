@@ -9,8 +9,9 @@
 
   <ng-container *ngIf="shell.canBypassRules$ | async else notAdmin">
     <p class="mat-body-1">
-      Please initalize a first version that you're going to work with.
+      Please initialize a first version that you're going to work with.
     </p>
+
     <ul *ngIf="showImportLinks">
       <li>              
         <a mat-button routerLink="/c/o/dashboard/crm/import/documents">
@@ -40,15 +41,15 @@
         <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="(shell.incomes$ | async)?.length else notImported"></mat-icon>
       </li>
     </ul>
-    
+
     <a *ngIf="shell.canInitWaterfall$ | async else canNotInit" (click)="initWaterfall()" class="surface">
       <img asset="add_draft.svg" alt="Add waterfall image">
       <button mat-button color="primary" matTooltip="Initialize Waterfall">Initialize Waterfall</button>
     </a>
     <ng-template #canNotInit>
-      <a class="surface">
+      <a class="surface" [routerLink]="showImportLinks === false ? '../init' : undefined">
         <img asset="add_draft.svg" alt="Add waterfall image">
-        <button mat-button disabled color="primary" matTooltip="Not enough data to initialize waterfall">Initialize Waterfall</button>
+        <button mat-button [disabled]="showImportLinks === true" color="primary" [matTooltip]="showImportLinks === false ? 'Create Waterfall' : 'Not enough data to initialize waterfall'">Initialize Waterfall</button>
       </a>
     </ng-template>
   </ng-container>
