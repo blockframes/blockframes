@@ -175,6 +175,8 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
       if (emptyRightHolders) return false;
 
       const producerIds = waterfall.rightholders.filter(r => r.roles.includes('producer')).map(r => r.id);
+      if (producerIds.length !== 1) return false;
+
       const emptyContracts = rightsToCheck.some(r => !r.contractId && !producerIds.includes(r.rightholderId));
       if (emptyContracts) return false;
 

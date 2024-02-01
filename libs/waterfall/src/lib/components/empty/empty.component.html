@@ -42,10 +42,16 @@
       </li>
     </ul>
 
-    <a class="surface" routerLink="../init">
+    <a *ngIf="shell.canInitWaterfall$ | async else canNotInit" (click)="initWaterfall()" class="surface">
       <img asset="add_draft.svg" alt="Add waterfall image">
-      <button mat-button color="primary" matTooltip="Not enough data to initialize waterfall">Initialize Waterfall</button>
+      <button mat-button color="primary" matTooltip="Initialize Waterfall">Initialize Waterfall</button>
     </a>
+    <ng-template #canNotInit>
+      <a class="surface" [routerLink]="showImportLinks === false ? '../init' : ''">
+        <img asset="add_draft.svg" alt="Add waterfall image">
+        <button mat-button [disabled]="showImportLinks === true" color="primary" [matTooltip]="showImportLinks === false ? 'Create Waterfall' : 'Not enough data to initialize waterfall'">Initialize Waterfall</button>
+      </a>
+    </ng-template>
   </ng-container>
 </ng-template>
 

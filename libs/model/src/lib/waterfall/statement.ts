@@ -1,10 +1,10 @@
 import { DocumentMeta } from '../meta';
-import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups, RightType } from '../static';
+import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups } from '../static';
 import { Duration, createDuration } from '../terms';
 import { PricePerCurrency, getTotalPerCurrency, sortByDate, sum, toLabel } from '../utils';
 import { TitleState, TransferState } from './state';
 import { Version, Waterfall, WaterfallContract, WaterfallSource, getIncomesSources } from './waterfall';
-import { Right, RightOverride, createRightOverride, getRightCondition } from './right';
+import { Right, RightOverride, createRightOverride, getRightCondition, skipGroups } from './right';
 import { getSources, isVerticalGroupChild, nodeExists, pathExists } from './node';
 import { Income, createIncome } from '../income';
 import { getContractsWith } from '../contract';
@@ -454,12 +454,6 @@ function getFirstChildOfVerticalGroups(rights: Right[], state: TitleState) {
   }
 
   return firstChilds;
-}
-
-export function skipGroups(rights: Right[]) {
-  // Groups are skipped here and revenue will be re-calculated from the childrens
-  const groupRightTypes: RightType[] = ['horizontal', 'vertical'];
-  return rights.filter(r => !groupRightTypes.includes(r.type));
 }
 
 /**
