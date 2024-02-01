@@ -2,7 +2,11 @@
   <h3>{{ expenseType.name }}</h3>
   <div>
     <ng-container *ngIf="expenseType.cap.default > 0 else uncapped">
-      <strong>{{ expenseType.name }} CAP:</strong> <price-per-currency [price]="expenseType.id | expenseTypeAmount : (simulation$ | async).waterfall.state"></price-per-currency> <span> ( max <price-per-currency [price]="expenseType.cap.default | formatPair: expenseType.currency"></price-per-currency>)</span>
+      <ng-container *ngIf="(realTimeExpenses$ | async) as realTimeExpenses">
+        <strong>Total capped expenses declared:</strong> 
+        <price-per-currency [convertTo]="mainCurrency" [price]="realTimeExpenses[expenseType.id]"></price-per-currency> 
+        <span [class]="realTimeExpenses[expenseType.id] | expenseTypeStatus: (expenseType.cap.default | formatPair: expenseType.currency)"> ( CAP <price-per-currency [price]="expenseType.cap.default | formatPair: expenseType.currency"></price-per-currency>)</span>
+      </ng-container>
     </ng-container>
     <ng-template #uncapped>
       <p class="mat-body-1">Uncapped</p>
@@ -13,17 +17,17 @@
     <ng-template colRef="" label="Amount" let-item>
       <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
     </ng-template>
-    <ng-template colRef="nature" label="Nature" let-nature>
+    <ng-template colRef="nature" label="Expenses name" let-nature>
       {{ nature }}
     </ng-template>
     <ng-template colRef="capped" label="Capped" let-capped>
-      <mat-slide-toggle [checked]="capped" disabled color="primary"></mat-slide-toggle>
+      {{ capped ? 'Yes' : 'No' }}
     </ng-template>
     <!-- Local Form -->
     <ng-template formView let-expenseForm>
       <form [formGroup]="expenseForm" class="group">
         <mat-form-field appearance="outline">
-          <mat-label>Nature</mat-label>
+          <mat-label>Expenses name</mat-label>
           <input matInput [formControl]="expenseForm.get('nature')" required/>
         </mat-form-field>
 
@@ -37,7 +41,7 @@
           <mat-icon matPrefix *ngIf="expenseForm.get('currency').value" [svgIcon]="expenseForm.get('currency').value"></mat-icon>
         </mat-form-field>
 
-        <mat-slide-toggle *ngIf="expenseType.cap.default > 0" [formControl]="expenseForm.get('capped')" color="primary"></mat-slide-toggle>
+        <mat-slide-toggle *ngIf="expenseType.cap.default > 0" [formControl]="expenseForm.get('capped')" color="primary">Is capped?</mat-slide-toggle>
       </form>
 
     </ng-template>

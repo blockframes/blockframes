@@ -3,8 +3,11 @@ section.surface {
 
   div {
     margin-bottom: 24px;
-    span {
-      color: #f6b650
+    span.warning {
+      color: #f6b650;
+    }
+    span.alert {
+      color: var(--warn);
     }
   }
 
