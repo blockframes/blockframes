@@ -135,6 +135,7 @@ commands:
             npm run deploy:storage &&
             npm run deploy:firestore &&
             npx nx run-many --target=deploy --all
+          no_output_timeout: 30m
   build_deploy_upgrade:
     description: 'Build & deploy Blockframes apps to Firebase & run upgrade if needed'
     steps:
