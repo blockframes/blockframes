@@ -456,7 +456,7 @@ function getFirstChildOfVerticalGroups(rights: Right[], state: TitleState) {
   return firstChilds;
 }
 
-function skipGroups(rights: Right[]) {
+export function skipGroups(rights: Right[]) {
   // Groups are skipped here and revenue will be re-calculated from the childrens
   const groupRightTypes: RightType[] = ['horizontal', 'vertical'];
   return rights.filter(r => !groupRightTypes.includes(r.type));
