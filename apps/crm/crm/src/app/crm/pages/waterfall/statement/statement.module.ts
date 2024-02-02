@@ -20,7 +20,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [StatementComponent, FilterRightsPipe],
@@ -44,7 +43,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatButtonModule,
     MatSnackBarModule,
     MatTooltipModule,
-    MatSlideToggleModule,
 
     RouterModule.forChild([{ path: '', component: StatementComponent }])
   ]

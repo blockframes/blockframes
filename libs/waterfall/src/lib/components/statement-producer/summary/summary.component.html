@@ -124,13 +124,13 @@
             <ng-template colRef="date" label="Date" let-date sort defaultSort>
               {{ date | date: 'dd/MM/yyyy' }}
             </ng-template>
-            <ng-template colRef="nature" label="Nature" let-nature sort>
+            <ng-template colRef="nature" label="Expenses name" let-nature sort>
               {{ nature }}
             </ng-template>
             <ng-template colRef="" label="Type" let-item sort>
               {{ item.typeId | expenseType : item.contractId : waterfall }}
             </ng-template>
-            <ng-template colRef="" label="Price" let-item sort>
+            <ng-template colRef="" label="Amount" let-item sort>
               <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
               <button mat-icon-button 
                 [disabled]="!canEditExpense(item.id, statement)"
@@ -141,9 +141,9 @@
               </button>
             </ng-template>
             <ng-template colRef="" label="Capped" let-item sort>
-              <mat-slide-toggle [checked]="item.capped" disabled color="primary"></mat-slide-toggle>
+              {{ item.capped ? 'Yes' : 'No' }}
               <ng-container *ngIf="item.cap">
-                <span class="cap">CAP: <price-per-currency [price]="item.cap"></price-per-currency></span>
+                <span class="cap">( CAP: <price-per-currency [price]="item.cap"></price-per-currency> )</span>
               </ng-container>
             </ng-template>
           </bf-table>

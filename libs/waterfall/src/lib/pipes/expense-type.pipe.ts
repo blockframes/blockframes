@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { PricePerCurrency, TitleState, Waterfall, mainCurrency, sum } from '@blockframes/model';
+import { PricePerCurrency, Waterfall, convertCurrenciesTo, mainCurrency } from '@blockframes/model';
 
 @Pipe({ name: 'expenseType' })
 export class ExpenseTypePipe implements PipeTransform {
@@ -8,16 +8,19 @@ export class ExpenseTypePipe implements PipeTransform {
   }
 }
 
-@Pipe({ name: 'expenseTypeAmount' })
-export class ExpenseTypeAmountPipe implements PipeTransform {
-  transform(expenseTypeId: string, state: TitleState): PricePerCurrency {
-    const expenses = Object.values(state.expenses).filter(e => e.typeId === expenseTypeId).map(e => e.amount);
-    return { [mainCurrency]: sum(expenses) };
+@Pipe({ name: 'expenseTypeStatus' })
+export class ExpenseTypeStatusPipe implements PipeTransform {
+  transform(amount: PricePerCurrency, cap: PricePerCurrency, currency = mainCurrency): string {
+    const currentValue = convertCurrenciesTo(amount, currency)[currency];
+    const capValue = convertCurrenciesTo(cap, currency)[currency];
+    if (currentValue / capValue <= 0.8) return 'ok';
+    if (currentValue / capValue >= 1) return 'alert';
+    if (currentValue / capValue > 0.8) return 'warning';
   }
 }
 
 @NgModule({
-  declarations: [ExpenseTypePipe, ExpenseTypeAmountPipe],
-  exports: [ExpenseTypePipe, ExpenseTypeAmountPipe],
+  declarations: [ExpenseTypePipe, ExpenseTypeStatusPipe],
+  exports: [ExpenseTypePipe, ExpenseTypeStatusPipe],
 })
 export class ExpenseTypePipeModule { }

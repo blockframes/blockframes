@@ -71,8 +71,11 @@ section {
           font-style: italic;
         }
 
-        span.cap {
-          color: #f6b650
+        span.warning {
+          color: #f6b650;
+        }
+        span.alert {
+          color: var(--warn);
         }
 
         mat-icon {
