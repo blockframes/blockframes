@@ -1,7 +1,7 @@
 
 import { WriteBatch } from 'firebase/firestore';
 import { BehaviorSubject, Subscription, combineLatest, map, tap } from 'rxjs';
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Optional, ViewChild } from '@angular/core';
 
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -32,6 +32,7 @@ import { createRightForm, setRightFormValue } from '../forms/right-form/right-fo
 import { createSourceForm, setSourceFormValue } from '../forms/source-form/source-form';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 import { Arrow, Node, computeDiff, createChild, createSibling, createStep, deleteStep, fromGraph, toGraph, updateParents } from './layout';
+import { Intercom } from 'ng-intercom';
 
 @Component({
   selector: 'waterfall-graph',
@@ -85,6 +86,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     private rightService: RightService,
     private waterfallService: WaterfallService,
     private shell: DashboardWaterfallShellComponent,
+    @Optional() private intercom: Intercom,
   ) { }
 
   ngOnInit() {
@@ -125,6 +127,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  openIntercom() {
+    return this.intercom.show('I need help to create a waterfall');
   }
 
   async select(id: string) {
