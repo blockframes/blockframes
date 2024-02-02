@@ -118,7 +118,7 @@ export const hotjar = {
   festival: 2887217,
   financiers: 2887218,
   catalog: 2887089,
-  waterfall: 0 // TODO #9257 change this
+  waterfall: 3849575
 }
 
 // Intercom
