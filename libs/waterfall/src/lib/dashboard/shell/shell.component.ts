@@ -160,25 +160,33 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     map(([waterfall, rights, versionId]) => {
       const sources = waterfallSources(waterfall, versionId);
       if (!sources.length) return false;
-      const destinationRightIds = unique(sources.map(s => s.destinationId));
-      return destinationRightIds.every(id => rights.map(r => r.id).includes(id));
-    })
-  );
-
-  public canInitWaterfall$ = combineLatest([this.hasMinimalRights$, this.contracts$, this.rights$, this.waterfall$]).pipe(
-    map(([hasMinimalRights, contracts, rights, waterfall]) => {
-      if (!hasMinimalRights) return false;
-      if (!contracts.length) return false;
 
       const rightsToCheck = skipGroups(rights);
       const emptyRightHolders = rightsToCheck.some(r => !r.rightholderId);
       if (emptyRightHolders) return false;
 
       const producerIds = waterfall.rightholders.filter(r => r.roles.includes('producer')).map(r => r.id);
-      if (producerIds.length !== 1) return false;
 
       const emptyContracts = rightsToCheck.some(r => !r.contractId && !producerIds.includes(r.rightholderId));
       if (emptyContracts) return false;
+
+      const destinationRightIds = unique(sources.map(s => s.destinationId));
+      return destinationRightIds.every(id => rights.map(r => r.id).includes(id));
+    })
+  );
+
+  public hasProducer$ = this.waterfall$.pipe(
+    map(waterfall => {
+      const producers = waterfall.rightholders.filter(r => r.roles.includes('producer'));
+      return producers.length === 1;
+    })
+  );
+
+  public canInitWaterfall$ = combineLatest([this.hasMinimalRights$, this.contracts$, this.hasProducer$]).pipe(
+    map(([hasMinimalRights, contracts, hasProducer]) => {
+      if (!hasMinimalRights) return false;
+      if (!contracts.length) return false;
+      if (!hasProducer) return false;
 
       return true;
     })
