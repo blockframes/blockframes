@@ -66,25 +66,33 @@
       <waterfall-graph></waterfall-graph>
     </ng-container>
     <ng-template #noWaterfall>
-      <article class="surface">
-        <h1>Build your Waterfall</h1>
-        <p>Please choose if you want to create a waterfall yourself or import one, or else our team can do it for you.</p>
-        <p>Do you need help? <a>Contact our team.</a></p>
-        <section>
-          <a class="surface" (click)="displayGraph()">
-            <img asset="add_draft.svg" alt="Create waterfall image">
-            <button mat-button color="primary">Create Waterfall yourself</button>
-          </a>
-          <div class="surface">
-            <img asset="add_files.svg" alt="Import waterfall image">
-            <button mat-button color="primary" disabled>Import Waterfall</button>
-          </div>
-          <a class="surface" (click)="openIntercom()">
-            <img asset="feature_key3.svg" alt="Ask out team image">
-            <button mat-button color="primary">Ask Blockframes Team to do it!</button>
-          </a>
+      <ng-container *ngIf="showImportLinks$ | async; else showOptions">
+        <section class="surface">
+          <waterfall-rights-import></waterfall-rights-import>
+          <waterfall-sources-import></waterfall-sources-import>
         </section>
-      </article>
+      </ng-container>
+      <ng-template #showOptions>
+        <article class="surface">
+          <h1>Build your Waterfall</h1>
+          <p>Please choose if you want to create a waterfall yourself or import one, or else our team can do it for you.</p>
+          <p>Do you need help? <a>Contact our team.</a></p>
+          <section>
+            <a class="surface" (click)="displayGraph()">
+              <img asset="add_draft.svg" alt="Create waterfall image">
+              <button mat-button color="primary">Create Waterfall yourself</button>
+            </a>
+            <div class="surface"><!-- (click)="displayImport()"> -->
+              <img asset="add_files.svg" alt="Import waterfall image">
+              <button mat-button color="primary" disabled>Import Waterfall</button>
+            </div>
+            <a class="surface" (click)="openIntercom()">
+              <img asset="feature_key3.svg" alt="Ask out team image">
+              <button mat-button color="primary">Ask Blockframes Team to do it!</button>
+            </a>
+          </section>
+        </article>
+      </ng-template>
     </ng-template>
     <article>
       <ng-container *ngIf="updating$ | async; else editWaterfall">
@@ -110,3 +118,7 @@
   </mat-step>
 
 </mat-stepper>
+
+<ng-template #notImported>
+  <mat-icon svgIcon="cancel" class="icon-nok"></mat-icon>
+</ng-template>

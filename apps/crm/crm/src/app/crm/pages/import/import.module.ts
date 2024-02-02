@@ -40,11 +40,11 @@ const routes: Routes = [{
     },
     {
       path: 'sources',
-      loadChildren: () => import('@blockframes/waterfall/import/sources/import.module').then(m => m.SourceImportModule),
+      loadChildren: () => import('./sources/sources.module').then(m => m.WaterfallImportSourcesModule),
     },
     {
       path: 'rights',
-      loadChildren: () => import('@blockframes/waterfall/import/rights/import.module').then(m => m.RightImportModule),
+      loadChildren: () => import('./rights/rights.module').then(m => m.WaterfallImportRightsModule),
     },
     {
       path: 'statements',

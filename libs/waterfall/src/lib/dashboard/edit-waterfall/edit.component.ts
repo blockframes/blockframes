@@ -56,6 +56,7 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
 
   createMode = !hasDefaultVersion(this.shell.waterfall);
   manualCreation$ = new BehaviorSubject(false);
+  showImportLinks$ = new BehaviorSubject(false);
 
   constructor(
     private router: Router,
@@ -108,6 +109,10 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
 
   displayGraph() {
     this.manualCreation$.next(true);
+  }
+
+  displayImport() {
+    this.showImportLinks$.next(true);
   }
 
   openIntercom() {

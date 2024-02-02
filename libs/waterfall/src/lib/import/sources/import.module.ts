@@ -1,7 +1,6 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Material
@@ -16,11 +15,6 @@ import { ViewExtractedElementsModule } from '@blockframes/import/view-extracted-
 // Components
 import { SourceImportComponent } from './import.component';
 
-
-const routes = [{
-  path: '',
-  component: SourceImportComponent,
-}];
 
 @NgModule({
   declarations: [SourceImportComponent],
@@ -37,8 +31,7 @@ const routes = [{
     MatIconModule,
     MatButtonModule,
 
-    // Routes
-    RouterModule.forChild(routes)
-  ]
+  ],
+  exports: [SourceImportComponent],
 })
 export class SourceImportModule { }

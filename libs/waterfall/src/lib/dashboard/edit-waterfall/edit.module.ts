@@ -20,6 +20,8 @@ import { RightHolderFormModule } from '../../components/right-holder-form/right-
 
 // Pages
 import { WaterfallEditFormComponent } from './edit.component';
+import { RightImportModule } from '@blockframes/waterfall/import/rights/import.module';
+import { SourceImportModule } from '@blockframes/waterfall/import/sources/import.module';
 
 
 @NgModule({
@@ -30,6 +32,8 @@ import { WaterfallEditFormComponent } from './edit.component';
     ImageModule,
     TitleFormModule,
     LogoSpinnerModule,
+    RightImportModule,
+    SourceImportModule,
     ContractsFormModule,
     WaterfallGraphModule,
     RightHolderFormModule,
