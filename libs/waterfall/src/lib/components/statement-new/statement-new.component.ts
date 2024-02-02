@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, Inject, OnInit, OnDestroy, ChangeDe
 import { FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import {
   Right,
   Statement,
@@ -45,6 +46,7 @@ export class StatementNewComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef<StatementNewComponent>,
     private cdr: ChangeDetectorRef,
     private snackbar: MatSnackBar,
+    private router: Router
   ) { }
 
   public ngOnInit() {
@@ -67,7 +69,12 @@ export class StatementNewComponent implements OnInit, OnDestroy {
         .filter(c => this.data.rights.some(r => r.contractId === c.id));
 
       if (!this.rightholderContracts.length) {
-        this.snackbar.open('Could not find any contract with associated rights.', 'close', { duration: 5000 });
+        this.snackbar.open('Could not find any contract with associated rights.', 'WATERFALL MANAGEMENT', { duration: 5000 })
+          .onAction()
+          .subscribe(() => {
+            this.dialogRef.close(false);
+            this.router.navigate(['c/o/dashboard/title', this.data.waterfall.id, 'init'])
+          });
       }
 
       this.contractControl.setValue('');

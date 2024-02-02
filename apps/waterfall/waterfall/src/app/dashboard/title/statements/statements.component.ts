@@ -117,14 +117,25 @@ export class StatementsComponent implements OnInit, OnDestroy {
      */
     this.statementSender = this.waterfall.rightholders.find(r => r.roles.includes('producer'));
     if (!this.statementSender) {
-      this.snackbar.open(`Producer is not defined.`, 'close', { duration: 5000 });
+      this.snackbar.open('Producer is not defined.', 'WATERFALL MANAGEMENT', { duration: 5000 })
+        .onAction()
+        .subscribe(() => {
+          this.router.navigate(['c/o/dashboard/title', this.shell.waterfall.id, 'init'])
+        });
       return;
     }
 
     await this.initTypes(currentRightholder);
-    const versionSub = this.shell.versionId$.subscribe(async versionId => {
+    const versionSub = combineLatest([this.shell.versionId$, this.shell.rights$]).subscribe(async ([versionId, rights]) => {
       const version = this.waterfall.versions.find(v => v.id === versionId);
       if (version?.standalone) await this.initTypes(currentRightholder, true);
+      if (!rights.find(r => r.rightholderId === this.statementSender.id)) {
+        this.snackbar.open('Producer should have at least one receipt share in the waterfall.', 'WATERFALL MANAGEMENT', { duration: 5000 })
+          .onAction()
+          .subscribe(() => {
+            this.router.navigate(['c/o/dashboard/title', this.shell.waterfall.id, 'init'])
+          });
+      }
     });
     this.subs.push(versionSub);
 
