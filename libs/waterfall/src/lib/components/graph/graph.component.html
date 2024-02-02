@@ -11,7 +11,7 @@
           matTooltip="You are editing the default version of this waterfall. Except already overwritten receipt share percentage and conditions, changes performed on this version will be applied to all not standalone versions."
         ></mat-icon>
       </h2>
-      <button mat-icon-button [matTooltip]="(showEdit ? 'Hide' : 'Show') + ' Edit Panel'" (click)="toggleEdit()">
+      <button *ngIf="editMode" mat-icon-button [matTooltip]="(showEdit ? 'Hide' : 'Show') + ' Edit Panel'" (click)="toggleEdit()">
         <mat-icon [svgIcon]="showEdit ? 'chevron_right' : 'chevron_left'"></mat-icon>
       </button>
     </div>
@@ -176,39 +176,49 @@
       <section class="add">
         <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="!canUpdateGraph" >
           <mat-icon svgIcon="add"></mat-icon>
-          <span>Create new Source</span>
+          <span>Create new Receipt Sources</span>
         </button>
         <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="!canUpdateGraph" >
           <mat-icon svgIcon="add"></mat-icon>
-          <span>Create new Right</span>
+          <span>Create new Receipt Rights</span>
         </button>
       </section>
     </ng-container>
     <ng-template #emptyGraph>
       <header>
-        <h2>To Begin</h2>
+        <h2>Instructions</h2>
       </header>
       <section class="begin">
+        <h3>Title Waterfall Creation Guide</h3>
+        <p class="mat-body-1">Welcome to the section dedicated to crafting the revenue distribution (waterfall) for your film or series (Title). Please adhere to the following structured guidelines to ensure an accurate and efficient setup:</p>
+
+        <h3>Understanding the Waterfall Schema:</h3>
+        <p class="mat-body-1">This schema illustrates the revenue flow, systematically channeling funds from the top tier downwards.</p>
+
+        <h3>Identifying Receipt Sources:</h3>
+        <p class="mat-body-1">These are the origins of your revenue. Typically, they encompass various media and geographical territories.</p>
+
+        <h3>Allocating Receipt Shares:</h3>
+        <p class="mat-body-1">Receipt Shares represent the entitlements granted to each stakeholder, allowing them to claim a portion of the earnings. This may include commission fees, recoupment of expenses, the producer’s net revenue share, or other rights afforded to stakeholders.</p>
+
+        <h3>Step-by-Step Waterfall Creation:</h3>
         <ol>
-          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+          <li>Individual Stakeholder Focus: Tackle the waterfall creation one stakeholder at a time. It’s advisable to start with the sales agent and main distributor’s mandates.</li>
+          <li>Establish Receipt Sources: For each stakeholder, identify and list all the Receipt Sources from which they derive revenue.</li>
+          <li>Structure Receipt Shares: Begin by allocating Receipt Shares that draw from the initial earnings ('first euros'). Subsequently, establish subsequent shares in a sequential manner.</li>
         </ol>
-        <button mat-button>
+        <button mat-button (click)="openIntercom()">
           <mat-icon svgIcon="help"></mat-icon>
           <span>Ask for Help</span>
         </button>
         <section class="add">
           <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="!canUpdateGraph" >
             <mat-icon svgIcon="add"></mat-icon>
-            <span>Create new Source</span>
+            <span>Create new Receipt Sources</span>
           </button>
           <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="!canUpdateGraph" >
             <mat-icon svgIcon="add"></mat-icon>
-            <span>Create new Right</span>
+            <span>Create new Receipt Rights</span>
           </button>
         </section>
       </section>

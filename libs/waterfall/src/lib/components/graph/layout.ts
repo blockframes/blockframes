@@ -476,6 +476,8 @@ function getArrow(parent: Node, child: Node) {
   return arrow;
 }
 
+const createNodeId = (str: string) => `${str}-${Math.random().toString(36).slice(2, 11)}`;
+
 export function updateParents(nodeId: string, newParentIds: string[], graph: Node[], producerId: string) {
   const parentIndex: Record<string, string[]> = {};
   graph.forEach(node => {
@@ -572,10 +574,9 @@ export function updateParents(nodeId: string, newParentIds: string[], graph: Nod
     graph.splice(graph.findIndex(n => n.id === nodeId), 1); // remove node from the graph
 
     // create a new group and add it to the graph
-    const randGroup = Math.random().toString(36).slice(2, 11);
     const group = createHorizontalNode({
-      id: `z-group-${randGroup}`, // TODO REAL ID
-      name: `Group ${randGroup}`, // TODO
+      id: createNodeId('z-group'),
+      name: 'New group',
       width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
       children: [...childrenIds],
       members: [...siblings, current as RightNode | VerticalNode],
@@ -608,19 +609,17 @@ export function createSibling(olderSiblingId: string, graph: Node[], producerId:
   if (!olderSibling) return;
 
   if (olderSibling.type === 'source') {
-    const rand = Math.random().toString(36).slice(2, 11);
     const source = createSourceNode({
-      id: `z-source-${rand}`, // TODO REAL ID
-      name: `Source ${rand}`, // TODO
+      id: createNodeId('z-source'),
+      name: 'New source',
     });
     graph.push(source);
     return;
 
   } else if (olderSibling.type === 'horizontal') {
-    const rand = Math.random().toString(36).slice(2, 11);
     const right = createRightNode({
-      id: `z-right-${rand}`, // TODO REAL ID
-      name: `Right ${rand}`, // TODO
+      id: createNodeId('z-right'),
+      name: 'New right',
     });
     olderSibling.members.push(right);
     return;
@@ -636,10 +635,9 @@ export function createSibling(olderSiblingId: string, graph: Node[], producerId:
     olderSibling.children = []; // siblings will be grouped so they have no children anymore
 
     // create a new right
-    const randRight = Math.random().toString(36).slice(2, 11);
     const right = createRightNode({
-      id: `z-right-${randRight}`, // TODO REAL ID
-      name: `Right ${randRight}`, // TODO
+      id: createNodeId('z-right'),
+      name: 'New right',
     });
 
     if (parents.length === 0) { // simply create a right
@@ -649,10 +647,9 @@ export function createSibling(olderSiblingId: string, graph: Node[], producerId:
 
     // create a new group with the new right and its siblings as members
     // the children of this new group is the whole children of the siblings
-    const randGroup = Math.random().toString(36).slice(2, 11);
     const group = createHorizontalNode({
-      id: `z-group-${randGroup}`, // TODO REAL ID
-      name: `Group ${randGroup}`, // TODO
+      id: createNodeId('z-group'),
+      name: 'New group',
       width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
       children: [...children],
       members: [olderSibling, right],
@@ -670,10 +667,9 @@ export function createChild(parentId: string, graph: Node[], producerId: string)
   if (!parent) return;
 
   if (parent.children.length === 0) { // simply create a right
-    const rand = Math.random().toString(36).slice(2, 11);
     const right = createRightNode({
-      id: `z-right-${rand}`, // TODO REAL ID
-      name: `Right ${rand}`, // TODO
+      id: createNodeId('z-right'),
+      name: 'New right',
     });
     parent.children.push(right.id);
     graph.push(right);
@@ -690,18 +686,16 @@ export function createChild(parentId: string, graph: Node[], producerId: string)
     });
 
     // create a new right
-    const randRight = Math.random().toString(36).slice(2, 11);
     const right = createRightNode({
-      id: `z-right-${randRight}`, // TODO REAL ID
-      name: `Right ${randRight}`, // TODO
+      id: createNodeId('z-right'),
+      name: 'New right',
     });
 
     // create a new group with the new right and its siblings as members
     // the children of this new group is the whole children of the siblings
-    const randGroup = Math.random().toString(36).slice(2, 11);
     const group = createHorizontalNode({
-      id: `z-group-${randGroup}`, // TODO REAL ID
-      name: `Group ${randGroup}`, // TODO
+      id: createNodeId('z-group'),
+      name: 'New group',
       width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
       children: [...children],
       members: [...siblings, right],
@@ -731,10 +725,8 @@ export function createStep(nodeId: string, graph: Node[]) {
     node.children = [];
 
     // create a new step right
-    const rand1 = Math.random().toString(36).slice(2, 11);
-    const step1 = `z-right-${rand1}`; // TODO REAL ID
     const right1 = createRightNode({
-      id: step1,
+      id: createNodeId('z-right'),
       name: `Step 2`,
       rightHolderId: node.rightHolderId ?? '',
       version: node.version,
@@ -742,10 +734,9 @@ export function createStep(nodeId: string, graph: Node[]) {
 
     // create a new vertical group
     const members = [node, right1];
-    const randGroup = Math.random().toString(36).slice(2, 11);
     const verticalNode = createVerticalNode({
-      id: `z-group-${randGroup}`, // TODO REAL ID
-      name: `Group ${randGroup}`, // TODO
+      id: createNodeId('z-group'),
+      name: 'New group',
       members,
       children,
       height: RIGHT_HEIGHT + (LEVEL_HEIGHT * (members.length - 1)) + (SPACING * (members.length + 1)),
@@ -762,10 +753,8 @@ export function createStep(nodeId: string, graph: Node[]) {
 
     // if current node is already a vertical group simply add a new member
   } else if (node.type === 'vertical') {
-    const rand = Math.random().toString(36).slice(2, 11);
-    const id = `z-right-${rand}`; // TODO REAL ID
     const right = createRightNode({
-      id,
+      id: createNodeId('z-right'),
       name: `Step ${node.members.length + 1}`,
       rightHolderId: node.members[0].rightHolderId ?? '',
       version: node.version,

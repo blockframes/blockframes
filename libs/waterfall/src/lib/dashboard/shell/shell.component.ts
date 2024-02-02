@@ -258,6 +258,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   @Input() routes: RouteDescription[];
   @Input() editRoute?: string | string[];
   @Input() @boolean lite = false;
+  @Input() @boolean hideCta = false;
 
   constructor(
     @Inject(APP) public app: App,
