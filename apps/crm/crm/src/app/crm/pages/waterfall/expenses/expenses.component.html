@@ -19,17 +19,17 @@
     <ng-template colRef="date" label="Date" let-date sort defaultSort>
       {{ date | date: 'dd/MM/yyyy' }}
     </ng-template>
-    <ng-template colRef="nature" label="Nature" let-nature sort>
+    <ng-template colRef="nature" label="Expenses name" let-nature sort>
       {{ nature }}
     </ng-template>
     <ng-template colRef="" label="Type" let-item sort>
       {{ item.typeId | expenseType : item.contractId : waterfall }}
     </ng-template>
-    <ng-template colRef="" label="Price" let-item sort>
+    <ng-template colRef="" label="Amount" let-item sort>
       <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
     </ng-template>
     <ng-template colRef="capped" label="Capped" let-capped sort>
-      <mat-slide-toggle [checked]="capped" disabled color="primary"></mat-slide-toggle>
+      {{ capped ? 'Yes' : 'No' }}
     </ng-template>
     <ng-template colRef="status" label="Status" let-status sort>
       {{ status | toLabel: 'paymentStatus' }}

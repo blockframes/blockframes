@@ -25,7 +25,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [StatementProducerSummaryComponent],
@@ -52,7 +51,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatIconModule,
     MatTooltipModule,
     MatDialogModule,
-    MatSlideToggleModule,
   ],
   exports: [StatementProducerSummaryComponent]
 })

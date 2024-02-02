@@ -17,7 +17,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [ExpensesComponent],
@@ -37,7 +36,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatButtonModule,
     MatSnackBarModule,
     MatTooltipModule,
-    MatSlideToggleModule,
 
     // remove
     RouterModule.forChild([{ path: '', component: ExpensesComponent }])

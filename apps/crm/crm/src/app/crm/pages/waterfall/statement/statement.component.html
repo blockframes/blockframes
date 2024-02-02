@@ -27,19 +27,19 @@
       <ng-template colRef="id" label="Id" let-id sort>
         {{ id }}
       </ng-template>
-      <ng-template colRef="nature" label="Nature" let-nature sort>
+      <ng-template colRef="nature" label="Expenses name" let-nature sort>
         {{ nature }}
       </ng-template>
       <ng-template colRef="" label="Type" let-item sort>
         {{ item.typeId | expenseType : item.contractId : (waterfall$ | async) }}
       </ng-template>
       <ng-template colRef="capped" label="Capped" let-capped sort>
-        <mat-slide-toggle [checked]="capped" disabled color="primary"></mat-slide-toggle>
+        {{ capped ? 'Yes' : 'No' }}
       </ng-template>
       <ng-template colRef="status" label="Status" let-status sort>
         {{ status | toLabel: 'paymentStatus' }}
       </ng-template>
-      <ng-template colRef="" label="Price" let-item sort>
+      <ng-template colRef="" label="Amount" let-item sort>
         <ng-container *ngIf="toPricePerCurrency(item) as amount">
           <price-per-currency [price]="amount"></price-per-currency>
         </ng-container>
