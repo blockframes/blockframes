@@ -8,7 +8,7 @@
   <waterfall-rightholder-select
     [rightholders]="rightholders"
     [control]="rightholderControl">
-    <mat-label>Right Holder</mat-label>
+    <mat-label>{{ data.type | toLabel: 'statementParty'}}</mat-label>
   </waterfall-rightholder-select>
 
   <mat-form-field *ngIf="rightholderContracts.length" appearance="outline">

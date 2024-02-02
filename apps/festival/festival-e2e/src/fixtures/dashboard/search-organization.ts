@@ -12,14 +12,6 @@ import {
 const adminUid = '0-e2e-orgAdminUid';
 const orgId = '0-e2e-orgId';
 export const orgNamePrefix = fakeOrgName();
-const acceptedBuyerOrgid = '0-e2e-acceptedBuyerOrgid';
-const acceptedBuyerOrgName = orgNamePrefix + ' buyer accepted';
-const dashboardBuyerOrgid = '0-e2e-dashboardBuyerOrgid';
-const dashboardBuyerOrgName = orgNamePrefix + ' buyer dashboard';
-const pendingBuyerOrgid = '0-e2e-pendingBuyerOrgid';
-const pendingBuyerOrgName = orgNamePrefix + ' buyer pending';
-const catalogBuyerOrgid = '0-e2e-catalogBuyerOrgid';
-const catalogBuyerOrgName = orgNamePrefix + ' buyer catalog';
 const userData = fakeUserData();
 
 export const user = createUser({
@@ -45,8 +37,17 @@ export const org = createOrganization({
 });
 
 export const acceptedBuyerOrg = createOrganization({
-  id: acceptedBuyerOrgid,
-  name: acceptedBuyerOrgName,
+  id: '0-e2e-acceptedBuyerOrgid',
+  name: orgNamePrefix + ' buyer accepted',
+  activity: 'director',
+  status: 'accepted',
+  addresses: createAddressSet({ main: createLocation({ country: 'france' }) }),
+  appAccess: createOrgAppAccess({ festival: { marketplace: true, dashboard: false } }),
+});
+
+export const anotherAcceptedBuyerOrg = createOrganization({
+  id: '0-e2e-anotherAcceptedBuyerOrgid',
+  name: 'another buyer accepted',
   activity: 'director',
   status: 'accepted',
   addresses: createAddressSet({ main: createLocation({ country: 'france' }) }),
@@ -54,8 +55,8 @@ export const acceptedBuyerOrg = createOrganization({
 });
 
 export const dashboardBuyerOrg = createOrganization({
-  id: dashboardBuyerOrgid,
-  name: dashboardBuyerOrgName,
+  id: '0-e2e-dashboardBuyerOrgid',
+  name: orgNamePrefix + ' buyer dashboard',
   activity: 'buyersRep',
   status: 'accepted',
   addresses: createAddressSet({ main: createLocation({ country: 'france' }) }),
@@ -63,8 +64,8 @@ export const dashboardBuyerOrg = createOrganization({
 });
 
 export const pendingBuyerOrg = createOrganization({
-  id: pendingBuyerOrgid,
-  name: pendingBuyerOrgName,
+  id: '0-e2e-pendingBuyerOrgid',
+  name: orgNamePrefix + ' buyer pending',
   activity: 'inflight',
   status: 'pending',
   addresses: createAddressSet({ main: createLocation({ country: 'france' }) }),
@@ -72,8 +73,8 @@ export const pendingBuyerOrg = createOrganization({
 });
 
 export const catalogBuyerOrg = createOrganization({
-  id: catalogBuyerOrgid,
-  name: catalogBuyerOrgName,
+  id: '0-e2e-catalogBuyerOrgid',
+  name: orgNamePrefix + ' buyer catalog',
   activity: 'organization',
   status: 'accepted',
   addresses: createAddressSet({ main: createLocation({ country: 'france' }) }),

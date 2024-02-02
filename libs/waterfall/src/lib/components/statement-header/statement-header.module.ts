@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { StatementHeaderComponent } from './statement-header.component';
 
 // Blockframes
-import { ToLabelModule } from '@blockframes/utils/pipes';
 import { VersionSelectorModule } from '../version-selector/version-selector.module';
 import { StatementMainInfoModule } from '../statement-main-info/statement-main-info.module';
 
@@ -19,7 +18,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   imports: [
     CommonModule,
 
-    ToLabelModule,
     VersionSelectorModule,
     StatementMainInfoModule,
 

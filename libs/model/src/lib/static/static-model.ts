@@ -26,14 +26,14 @@ export const appName = {
   waterfall: 'Blockframes',
 };
 
-export const appDescription = {
+export const appDescription: Partial<Record<typeof app[number], string>> = {
   catalog:
     'Archipel Content is an ongoing digital marketplace for TV, VOD and ancillary rights. Let’s make content buying simple!',
   festival:
     'Archipel Market is an ongoing film market platform, one tool for your year-round promotion and acquisitions.',
   financiers:
     'Media Financiers enables private investors to co-produce exclusive films and TV series on the same conditions as top professional content financiers.',
-  blockframes:
+  waterfall:
     'Blockframes is a rights and revenues management tool designed for producers and financiers.',
 };
 
@@ -1916,7 +1916,7 @@ export const staticModel = {
   paymentType,
   paymentStatus,
   statementStatus,
-  statementType, 
+  statementType,
   statementParty,
   conditionOwnerLabels
 };
