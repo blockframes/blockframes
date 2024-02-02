@@ -335,7 +335,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     }
     const newSource = createWaterfallSource({
       id: this.waterfallService.createId(),
-      name: `Source ${this.sources.length + 1}`,
+      name: 'New source',
     });
 
     if (this.version?.standalone) {
@@ -352,7 +352,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       return;
     }
     const newRight = createRight({
-      name: `Right ${this.rights.length + 1}`,
+      name: 'New right',
       percent: 0,
     });
 
