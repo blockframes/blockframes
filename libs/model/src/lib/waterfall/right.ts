@@ -95,3 +95,9 @@ export function orderRights(rights: Right[]): Right[] {
 export function getRightCondition(right: Right) {
   return (right.conditions?.conditions?.filter(c => isCondition(c)).filter(c => !!c) || []) as Condition[];
 }
+
+export function skipGroups(rights: Right[]) {
+  // Groups are skipped here and revenue will be re-calculated from the childrens
+  const groupRightTypes: RightType[] = ['horizontal', 'vertical'];
+  return rights.filter(r => !groupRightTypes.includes(r.type));
+}
