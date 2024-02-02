@@ -29,6 +29,7 @@ import {
   isDefaultVersion,
   waterfallSources,
   isStandaloneVersion,
+  skipGroups,
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { filter, map, pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
@@ -164,11 +165,21 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     })
   );
 
-  public canInitWaterfall$ = combineLatest([this.hasMinimalRights$, this.contracts$]).pipe(
-    map(([hasMinimalRights, contracts]) => {
-      // TODO add more checks here
+  public canInitWaterfall$ = combineLatest([this.hasMinimalRights$, this.contracts$, this.rights$, this.waterfall$]).pipe(
+    map(([hasMinimalRights, contracts, rights, waterfall]) => {
       if (!hasMinimalRights) return false;
       if (!contracts.length) return false;
+
+      const rightsToCheck = skipGroups(rights);
+      const emptyRightHolders = rightsToCheck.some(r => !r.rightholderId);
+      if (emptyRightHolders) return false;
+
+      const producerIds = waterfall.rightholders.filter(r => r.roles.includes('producer')).map(r => r.id);
+      if (producerIds.length !== 1) return false;
+
+      const emptyContracts = rightsToCheck.some(r => !r.contractId && !producerIds.includes(r.rightholderId));
+      if (emptyContracts) return false;
+
       return true;
     })
   );
