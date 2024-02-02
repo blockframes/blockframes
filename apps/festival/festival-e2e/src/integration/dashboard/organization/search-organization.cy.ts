@@ -7,6 +7,7 @@ import {
   pendingBuyerOrg,
   catalogBuyerOrg,
   orgNamePrefix,
+  anotherAcceptedBuyerOrg,
 } from '../../../fixtures/dashboard/search-organization';
 import {
   // plugins
@@ -26,6 +27,7 @@ const injectedData = {
   [`users/${user.uid}`]: user,
   [`orgs/${org.id}`]: org,
   [`orgs/${acceptedBuyerOrg.id}`]: acceptedBuyerOrg,
+  [`orgs/${anotherAcceptedBuyerOrg.id}`]: anotherAcceptedBuyerOrg,
   [`orgs/${dashboardBuyerOrg.id}`]: dashboardBuyerOrg,
   [`orgs/${pendingBuyerOrg.id}`]: pendingBuyerOrg,
   [`orgs/${catalogBuyerOrg.id}`]: catalogBuyerOrg,
@@ -38,6 +40,7 @@ describe('Search buyer organizations in dashboard', () => {
     maintenance.start();
     firestore.clearTestData();
     algolia.deleteOrg({ app: 'festival', objectId: acceptedBuyerOrg.id });
+    algolia.deleteOrg({ app: 'festival', objectId: anotherAcceptedBuyerOrg.id });
     algolia.deleteOrg({ app: 'festival', objectId: dashboardBuyerOrg.id });
     algolia.deleteOrg({ app: 'festival', objectId: pendingBuyerOrg.id });
     algolia.deleteOrg({ app: 'festival', objectId: catalogBuyerOrg.id });
@@ -55,10 +58,11 @@ describe('Search buyer organizations in dashboard', () => {
 
   it('Only an accepted org, with access to festival marketplace and not dashboard should be visible', () => {
     algolia.storeOrganization(acceptedBuyerOrg);
+    algolia.storeOrganization(anotherAcceptedBuyerOrg);
     algolia.storeOrganization(dashboardBuyerOrg);
     algolia.storeOrganization(pendingBuyerOrg);
     algolia.storeOrganization(catalogBuyerOrg);
-    cy.wait(2000); // giving algolia some tome to catch up
+    cy.wait(6000); // giving algolia some tome to catch up
     get('organization').click();
     assertUrlIncludes('c/o/dashboard/organization');
     get('organizations-count').then($result => {
@@ -75,6 +79,8 @@ describe('Search buyer organizations in dashboard', () => {
 
   it('Filter works as expected', () => {
     algolia.storeOrganization(acceptedBuyerOrg);
+    algolia.storeOrganization(anotherAcceptedBuyerOrg);
+    cy.wait(6000); // giving algolia some tome to catch up
     get('organization').click();
     assertUrlIncludes('c/o/dashboard/organization');
     get('organizations-count').then($result => {
