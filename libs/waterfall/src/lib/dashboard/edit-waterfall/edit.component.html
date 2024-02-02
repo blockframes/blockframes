@@ -62,8 +62,9 @@
 
   <mat-step>
     <ng-template matStepLabel>Build Waterfall</ng-template>
-    <ng-container *ngIf="(manualCreation$ | async) || shell.waterfall.sources.length > 0 || shell.rights.length > 0; else noWaterfall">
-      <waterfall-graph></waterfall-graph>
+    <ng-container *ngIf="(manualCreation$ | async) || (shell.sources$ | async).length > 0 || (shell.rights$ | async).length > 0; else noWaterfall">
+      <waterfall-version-selector></waterfall-version-selector>
+      <waterfall-graph [editMode]="shell.canBypassRules$ | async"></waterfall-graph>
     </ng-container>
     <ng-template #noWaterfall>
       <article class="surface">

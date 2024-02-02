@@ -1,7 +1,7 @@
 <ng-container *ngIf="versions$ | async as versions">
   <ng-container *ngIf="!lockedVersionId && (canBypassRules$ | async)">
     <ng-container *ngIf="versions.length !== 0 else initMode">
-      <button mat-flat-button color="primary" [matMenuTriggerFor]="menu">Choose Waterfall Versions</button>
+      <button mat-flat-button color="primary" [matMenuTriggerFor]="menu">Choose Waterfall Version</button>
       <mat-menu class="bf-menu" #menu="matMenu">
         <div mat-menu-item *ngFor="let version of versions">
           <section>
@@ -29,11 +29,11 @@
     </ng-container>
     <ng-template #initMode>
       <button *ngIf="canInitWaterfall$ | async else missingData" mat-stroked-button color="primary" (click)="init();$event.stopPropagation()">
-        Initialize Waterfall
+        Publish Waterfall
       </button>
       <ng-template #missingData>
-        <button mat-stroked-button color="primary" disabled matTooltip="Missing data to initialize Waterfall. Make sure to have contracts and receipt shares">
-          Initialize Waterfall
+        <button mat-stroked-button color="primary" disabled matTooltip="Missing data to publish Waterfall. Make sure to have contracts and receipt shares">
+          Publish Waterfall
         </button>
       </ng-template>
     </ng-template>

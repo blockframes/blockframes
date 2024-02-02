@@ -11,16 +11,15 @@ import { MatStepperModule } from '@angular/material/stepper';
 // Blockframes
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
-
 import { WaterfallFormGuard } from '../../guards/waterfall-form-guard';
 import { WaterfallGraphModule } from '../../components/graph/graph.module';
 import { TitleFormModule } from '../../components/forms/title-form/form.module';
 import { ContractsFormModule } from '../../components/contracts-form/contracts-form.module';
 import { RightHolderFormModule } from '../../components/right-holder-form/right-holder-form.module';
+import { VersionSelectorModule } from '../../components/version-selector/version-selector.module';
 
 // Pages
 import { WaterfallEditFormComponent } from './edit.component';
-
 
 @NgModule({
   declarations: [WaterfallEditFormComponent],
@@ -33,6 +32,7 @@ import { WaterfallEditFormComponent } from './edit.component';
     ContractsFormModule,
     WaterfallGraphModule,
     RightHolderFormModule,
+    VersionSelectorModule,
 
     // Material
     MatIconModule,

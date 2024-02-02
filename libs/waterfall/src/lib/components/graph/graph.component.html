@@ -11,7 +11,7 @@
           matTooltip="You are editing the default version of this waterfall. Except already overwritten receipt share percentage and conditions, changes performed on this version will be applied to all not standalone versions."
         ></mat-icon>
       </h2>
-      <button mat-icon-button [matTooltip]="(showEdit ? 'Hide' : 'Show') + ' Edit Panel'" (click)="toggleEdit()">
+      <button *ngIf="editMode" mat-icon-button [matTooltip]="(showEdit ? 'Hide' : 'Show') + ' Edit Panel'" (click)="toggleEdit()">
         <mat-icon [svgIcon]="showEdit ? 'chevron_right' : 'chevron_left'"></mat-icon>
       </button>
     </div>

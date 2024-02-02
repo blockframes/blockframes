@@ -18,9 +18,14 @@
             <span>{{ currentVersionName }}</span>
           </article>
         </section>
-        <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" >
+        <aside *ngIf="!hideCta" fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" >
           <waterfall-cta fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="space-between end" fxFlex>
-            <a mat-button color="primary" [routerLink]="['init']" class="main-dashboard-cta">
+            <a mat-button color="primary" 
+              [routerLink]="(canBypassRules$ | async) ? 'init' : undefined" 
+              [disabled]="(canBypassRules$ | async) !== true"
+              [matTooltip]="(canBypassRules$ | async) ? 'Waterfall Management' : 'Not enough permissions to manage waterfall'"
+              class="main-dashboard-cta"
+            >
               <mat-icon svgIcon="water_drop"></mat-icon>
               <ng-container *ngIf="canInitWaterfall$ | async; else noWaterfall">
                 <span>Waterfall Management</span>
