@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ExpenseService } from '@blockframes/contract/expense/service';
 import { IncomeService } from '@blockframes/contract/income/service';
 import {
@@ -69,6 +69,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     private expenseService: ExpenseService,
     private incomeService: IncomeService,
     private snackBar: MatSnackBar,
+    private router: Router,
   ) {
     this.dynTitle.setPageTitle(this.shell.movie.title.international, 'View Statement');
     this.form = new StatementForm();
@@ -162,9 +163,10 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
       // Statement is reported, actual waterfalls are refreshed
       await this.shell.refreshAllWaterfalls();
       snackbarRef.dismiss();
-      this.snackBar.open('Statement reported !', 'close', { duration: 5000 });
+      this.snackBar.open('Statement reported', 'close', { duration: 5000 });
     } else {
-      this.snackBar.open('Statement updated !', 'close', { duration: 5000 });
+      this.snackBar.open('Statement updated', 'close', { duration: 5000 });
+      this.router.navigate(['/c/o/dashboard/title', this.shell.waterfall.id, 'statements']);
     }
 
     this.form.markAsPristine();

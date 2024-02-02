@@ -25,6 +25,7 @@ export class StatementHeaderComponent implements OnChanges {
   public contract: WaterfallContract;
   public versionId: string;
   private statements: Statement[] = [];
+  public rightholderName: string;
 
   constructor(
     public shell: DashboardWaterfallShellComponent,
@@ -36,6 +37,7 @@ export class StatementHeaderComponent implements OnChanges {
     if (!this.contract && !!this.statement.contractId) this.contract = (await this.shell.contracts([this.statement.contractId]))[0];
     const rightholderKey = this.statement.type === 'producer' ? 'receiverId' : 'senderId';
     const rightholder = this.shell.waterfall.rightholders.find(r => r.id === this.statement[rightholderKey]);
+    this.rightholderName = rightholder.name;
 
     // Set version to the one of the statement if any and unless a locked version is found for an outgoing statement
     this.versionId = this.statement.versionId;

@@ -5,7 +5,7 @@
   </mat-label>
   <mat-select [value]="value" [formControl]="control" [required]="required" [multiple]="multiple">
     <mat-option *ngFor="let rightholder of rightholders" [value]="rightholder.id">
-      {{ rightholder.name | titlecase }}
+      {{ rightholder.name }}
     </mat-option>
   </mat-select>
   <mat-hint>

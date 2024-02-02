@@ -64,7 +64,7 @@ export class StatementEditComponent implements OnInit, OnDestroy, StartementForm
     this.sub?.unsubscribe();
   }
 
-  public async save(statement: Statement, waterfall: Waterfall, redirect = false) {
+  public async save(statement: Statement, waterfall: Waterfall, goToNextStep = false) {
     if (this.form.invalid) {
       this.snackBar.open('Information not valid', 'close', { duration: 5000 });
       return;
@@ -148,8 +148,12 @@ export class StatementEditComponent implements OnInit, OnDestroy, StartementForm
 
     this.form.markAsPristine();
 
-    if (redirect) this.router.navigate(['..'], { relativeTo: this.route });
-    else this.snackBar.open('Statement updated !', 'close', { duration: 5000 });
+    if (goToNextStep) {
+      this.router.navigate(['..'], { relativeTo: this.route });
+    } else {
+      this.snackBar.open('Statement updated', 'close', { duration: 5000 });
+      this.router.navigate(['/c/o/dashboard/title', this.shell.waterfall.id, 'statements']);
+    }
   }
 
 

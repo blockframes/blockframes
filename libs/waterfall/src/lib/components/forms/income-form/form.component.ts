@@ -9,7 +9,7 @@ import { StatementForm } from '../../../form/statement.form';
 const incomeColumns = {
   medias: 'Medias',
   territories: 'Territories',
-  '': 'Price',
+  '': 'Amount',
 }
 
 @Component({
