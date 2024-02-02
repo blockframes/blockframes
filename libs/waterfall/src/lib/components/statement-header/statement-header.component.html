@@ -1,7 +1,7 @@
 <header>
   <section>
     <h1 *ngIf="statement">
-      <span>{{ statement.type | toLabel: 'statementType' }} Statement #{{ statementNumber }}</span>
+      <span>{{ rightholderName }} Statement #{{ statementNumber }}</span>
       <mat-icon *ngIf="statement.duplicatedFrom" svgIcon="warning" color="warn" matTooltip="You are viewing a duplicated statement."></mat-icon>
     </h1>
     

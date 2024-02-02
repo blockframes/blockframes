@@ -17,6 +17,7 @@ import { StatementEditComponent } from './edit.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [StatementEditComponent],
@@ -31,6 +32,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,
+    MatTooltipModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: StatementEditComponent, canDeactivate: [StatementFormGuard] }]),

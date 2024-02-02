@@ -1,7 +1,7 @@
 <global-modal>
   <h2>Declare the Payment</h2>
   
-  <waterfall-statement-main-info [movie]="data.movie" [statement]="data.statement" [waterfall]="data.waterfall"></waterfall-statement-main-info>
+  <waterfall-statement-main-info [movie]="data.movie" [statement]="data.statement" [waterfall]="data.waterfall" lite></waterfall-statement-main-info>
 
   <div *ngIf="data.statement.payments.rightholder as payment">
     <mat-icon color="primary" svgIcon="payment"></mat-icon> Amount Due : <price-per-currency [price]="payment.price | formatPair: payment.currency" default="€ 0"></price-per-currency>
