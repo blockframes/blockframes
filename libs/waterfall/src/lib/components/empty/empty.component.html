@@ -31,7 +31,7 @@
         </a>
         <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="(shell.hasMinimalRights$ | async) else noMinimalRights"></mat-icon>
         <ng-template #noMinimalRights>
-          <mat-icon svgIcon="cancel" class="icon-nok" matTooltip="All sources does not have an associated Right"></mat-icon>
+          <mat-icon svgIcon="cancel" class="icon-nok" matTooltip="Missing or misconfigured rights"></mat-icon>
         </ng-template>
       </li>
       <li>
@@ -39,6 +39,12 @@
           <mat-icon svgIcon="monetization"></mat-icon><span matLine>4 Statements</span>
         </a>
         <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="(shell.incomes$ | async)?.length else notImported"></mat-icon>
+      </li>
+      <li>
+        <a mat-button [routerLink]="['/c/o/dashboard/crm/waterfall', shell.waterfall.id, 'rightholders']">
+          <mat-icon svgIcon="group"></mat-icon><span matLine>5 Producer</span>
+        </a>
+        <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="(shell.hasProducer$ | async) else notImported"></mat-icon>
       </li>
     </ul>
 
