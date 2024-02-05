@@ -38,7 +38,7 @@
 
   <article *ngIf="rightholdersForm.controls.length === 0" class="no-rightholders">
     <p>This title has no Right Holders. Start by creating one.</p>
-    <button mat-button color="primary" (click)="add()">
+    <button mat-button color="primary" (click)="add('producer')">
       <span>Add Right Holder</span>
       <mat-icon svgIcon="add"></mat-icon>
     </button>

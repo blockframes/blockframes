@@ -20,6 +20,7 @@ import {
   getDefaultVersionId,
   WaterfallRightholder,
   createWaterfallSource,
+  toLabel,
 } from '@blockframes/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { GraphService } from '@blockframes/ui/graph/graph.service';
@@ -90,7 +91,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    if (!this.producer) this.snackBar.open(`Producer is not defined.`, 'close', { duration: 5000 });
+    if (!this.producer) this.snackBar.open(`${toLabel('producer', 'rightholderRoles')} is not defined.`, 'close', { duration: 5000 });
     this.subscription = combineLatest([
       this.shell.rights$,
       this.shell.waterfall$,

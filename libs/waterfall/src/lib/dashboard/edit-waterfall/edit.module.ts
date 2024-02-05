@@ -17,6 +17,7 @@ import { TitleFormModule } from '../../components/forms/title-form/form.module';
 import { ContractsFormModule } from '../../components/contracts-form/contracts-form.module';
 import { RightHolderFormModule } from '../../components/right-holder-form/right-holder-form.module';
 import { VersionSelectorModule } from '../../components/version-selector/version-selector.module';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Pages
 import { WaterfallEditFormComponent } from './edit.component';
@@ -33,6 +34,7 @@ import { WaterfallEditFormComponent } from './edit.component';
     WaterfallGraphModule,
     RightHolderFormModule,
     VersionSelectorModule,
+    ToLabelModule,
 
     // Material
     MatIconModule,
