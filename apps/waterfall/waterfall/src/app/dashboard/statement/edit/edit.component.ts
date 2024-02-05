@@ -55,7 +55,7 @@ export class StatementEditComponent implements OnInit, OnDestroy, StartementForm
   ngOnInit() {
     this.sub = this.form.get('duration').get('to').valueChanges.pipe(debounceTime(500)).subscribe(date => {
       const control = this.form.get('duration').get('to');
-      const inError = control.hasError('startOverEnd') || control.hasError('isBefore');
+      const inError = control.hasError('startOverEnd') || control.hasError('isBefore') || control.hasError('maxDate');
       if (!inError && this.shell.setDate(date)) this.shell.simulateWaterfall();
     });
   }
