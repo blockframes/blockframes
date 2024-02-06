@@ -19,15 +19,15 @@
           <logo-spinner></logo-spinner>
         </ng-container>
         <ng-template #editContracts>
-          <p *ngIf="invalidDocument$ | async" class="mat-hint">Add at least 1 contract to continue</p>
+          <p *ngIf="invalidDocument$ | async" class="mat-error">Add at least 1 contract to continue</p>
           <button mat-flat-button color="primary" [disabled]="invalidDocument$ | async" (click)="next()">
             <span>Continue</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </button>
-          <a mat-button class="save" routerLink="..">
+          <button mat-button class="save" (click)="exit()">
             <mat-icon svgIcon="save"></mat-icon>
             <span>Save & Come back later</span>
-          </a>
+          </button>
         </ng-template>
       </article>
     </ng-template>
@@ -41,28 +41,28 @@
         <logo-spinner></logo-spinner>
       </ng-container>
       <ng-template #editRightHolders>
-        <p *ngIf="invalidRightholders$ | async" class="mat-hint">Add at least 1 "Producer"</p>
+        <p *ngIf="noProducer$ | async" class="mat-error">Choose one Right Holder with "{{ 'producer' | toLabel: 'rightholderRoles' }}" role</p>
         <section>
-          <button mat-button color="primary"(click)="previous()">
+          <button mat-button color="primary" (click)="previous()">
             <mat-icon svgIcon="arrow_back"></mat-icon>
             <span>Back</span>
           </button>
-          <button mat-flat-button color="primary" (click)="updateRightHolders()" [disabled]="invalidRightholders$ | async">
+          <button mat-flat-button color="primary" (click)="next()" [disabled]="rightholdersForm.invalid || (noProducer$ | async)">
             <span>Continue</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </button>
         </section>
-        <a mat-button class="save" routerLink="..">
+        <button mat-button class="save" (click)="exit()" [disabled]="rightholdersForm.invalid">
           <mat-icon svgIcon="save"></mat-icon>
           <span>Save & Come back later</span>
-        </a>
+        </button>
       </ng-template>
     </article>
   </mat-step>
 
   <mat-step>
     <ng-template matStepLabel>Build Waterfall</ng-template>
-    <ng-container *ngIf="(manualCreation$ | async) || (shell.sources$ | async).length > 0 || (shell.rights$ | async).length > 0; else noWaterfall">
+    <ng-container *ngIf="(manualCreation$ | async) || (shell.sources$ | async)?.length > 0 || (shell.rights$ | async)?.length > 0; else noWaterfall">
       <waterfall-version-selector></waterfall-version-selector>
       <waterfall-graph [editMode]="shell.canBypassRules$ | async"></waterfall-graph>
     </ng-container>
@@ -102,10 +102,10 @@
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </button>
         </section>
-        <a mat-button class="save" routerLink="..">
+        <button mat-button class="save" (click)="exit()">
           <mat-icon svgIcon="save"></mat-icon>
           <span>Save & Come back later</span>
-        </a>
+        </button>
       </ng-template>
     </article>
   </mat-step>

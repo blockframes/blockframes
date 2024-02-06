@@ -20,6 +20,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatButtonModule,
     MatTooltipModule,
     MatFormFieldModule,
+    MatSnackBarModule,
   ],
   exports: [
     ContractsFormComponent

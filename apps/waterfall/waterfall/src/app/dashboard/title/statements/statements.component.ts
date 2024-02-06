@@ -26,7 +26,8 @@ import {
   isStandaloneVersion,
   sortStatements,
   statementType,
-  statementsRolesMapping
+  statementsRolesMapping,
+  toLabel
 } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
@@ -117,7 +118,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
      */
     this.statementSender = this.waterfall.rightholders.find(r => r.roles.includes('producer'));
     if (!this.statementSender) {
-      this.snackbar.open('Producer is not defined.', 'WATERFALL MANAGEMENT', { duration: 5000 })
+      this.snackbar.open(`${toLabel('producer', 'rightholderRoles')} is not defined.`, 'WATERFALL MANAGEMENT', { duration: 5000 })
         .onAction()
         .subscribe(() => {
           this.router.navigate(['c/o/dashboard/title', this.shell.waterfall.id, 'init'])
@@ -130,7 +131,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
       const version = this.waterfall.versions.find(v => v.id === versionId);
       if (version?.standalone) await this.initTypes(currentRightholder, true);
       if (!rights.find(r => r.rightholderId === this.statementSender.id)) {
-        this.snackbar.open('Producer should have at least one receipt share in the waterfall.', 'WATERFALL MANAGEMENT', { duration: 5000 })
+        this.snackbar.open(`${toLabel('producer', 'rightholderRoles')} should have at least one receipt share in the waterfall.`, 'WATERFALL MANAGEMENT', { duration: 5000 })
           .onAction()
           .subscribe(() => {
             this.router.navigate(['c/o/dashboard/title', this.shell.waterfall.id, 'init'])
