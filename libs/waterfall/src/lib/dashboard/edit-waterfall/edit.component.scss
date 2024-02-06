@@ -21,8 +21,8 @@ section {
   display: flex;
   justify-content: center;
 
-  a.surface,
-  div.surface {
+  a.surface {
+    cursor: pointer;
     margin-top: 42px;
     display: flex;
     flex-direction: column;
@@ -34,9 +34,6 @@ section {
       width: 100px;
       align-self: center;
     }
-  }
-  a.surface {
-    cursor: pointer;
   }
 }
 

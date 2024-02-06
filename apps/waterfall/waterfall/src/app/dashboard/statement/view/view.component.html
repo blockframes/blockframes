@@ -11,7 +11,7 @@
     </a>
     <button mat-flat-button 
       color="primary"
-      [disabled]="statement.status === 'reported'"
+      [disabled]="statement.status === 'reported' || form.invalid"
       (click)="report(statement)"
       [matTooltip]="statement.status === 'reported' ? 'Statement is already reported.' : 'Report Statement'"
     >
@@ -23,7 +23,7 @@
   <footer *ngIf="statement.status === 'draft'">
     <button mat-button 
       (click)="save(statement)"
-      [disabled]="statement.status === 'reported'"
+      [disabled]="statement.status === 'reported' || form.invalid"
       [matTooltip]="statement.status === 'reported' ? 'Reported statement cannot be edited.' : 'Save & Come back later'"
     >
       <mat-icon svgIcon="save"></mat-icon>
