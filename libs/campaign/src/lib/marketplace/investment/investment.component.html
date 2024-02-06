@@ -5,11 +5,11 @@
     <h3>Investment Proposal</h3>
     <article fxLayout *ngIf="campaign.cap">
       <h5>Total investment needed</h5>
-      <p>{{ campaign.cap | currency:'USD' }}</p>
+      <p>{{ campaign.cap | currency: campaign.currency }}</p>
     </article>
     <article fxLayout *ngIf="campaign.minPledge">
       <h5>Minimum investment amount</h5>
-      <p>{{ campaign.minPledge | currency:'USD' }}</p>
+      <p>{{ campaign.minPledge | currency: campaign.currency }}</p>
     </article>
     <mat-divider></mat-divider>
   </section>

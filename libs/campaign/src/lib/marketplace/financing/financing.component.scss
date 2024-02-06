@@ -20,7 +20,7 @@ header {
 article {
   display: flex;
   justify-content: space-between;
-  align-items: stretch;
+  align-items: flex-start;
   & > *:first-child {
     margin-right: 40px;
   }
