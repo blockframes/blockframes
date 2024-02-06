@@ -1,11 +1,11 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnChanges, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Statement, filterStatements, sortStatements } from '@blockframes/model';
+import { Statement, WaterfallContract, filterStatements, getContractAndAmendments, getCurrentContract, sortStatements } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 import { StatementForm } from '../../form/statement.form';
 import { add, differenceInMonths, endOfMonth, isFirstDayOfMonth, isLastDayOfMonth } from 'date-fns';
-import { Subscription, filter, map, pairwise } from 'rxjs';
+import { Subscription, filter, map, pairwise, startWith } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 
 function getMonthsDifference(from: Date, to: Date) {
@@ -37,6 +37,7 @@ export class StatementPeriodComponent implements OnInit, OnChanges, OnDestroy {
 
   public previousStatementId: string;
   public nextStatementId: string;
+  public contract: WaterfallContract;
 
   private statements: Statement[] = [];
   private subs: Subscription[] = [];
@@ -48,7 +49,7 @@ export class StatementPeriodComponent implements OnInit, OnChanges, OnDestroy {
     private router: Router
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     const periodicitySub = this.periodicity.valueChanges.subscribe(value => {
       if (this.form.get('duration').value.from && value !== '0') {
         const to = add(this.form.get('duration').value.from, { months: +value - 1 });
@@ -73,6 +74,20 @@ export class StatementPeriodComponent implements OnInit, OnChanges, OnDestroy {
       }
     });
     this.subs.push(durationSub);
+
+    if (this.statement.contractId) {
+      const contracts = await this.shell.contracts();
+      const contractAndAmendments = getContractAndAmendments(this.statement.contractId, contracts);
+      this.contract = getCurrentContract(contractAndAmendments);
+
+      const maxDateSub = this.form.get('duration').get('to').valueChanges.pipe(startWith(this.form.get('duration').get('to').value),).subscribe(to => {
+        if (to instanceof Date && this.contract && to > this.contract.duration.to) {
+          this.form.get('duration').get('to').setErrors({ maxDate: true });
+          this.form.get('duration').get('to').markAsTouched();
+        }
+      });
+      this.subs.push(maxDateSub);
+    }
 
     const versionSub = this.shell.versionId$.subscribe(_ => {
       this.statements = [];

@@ -5,14 +5,14 @@
 
   <ng-container *ngIf="waterfall$ | async as waterfall">
     <footer>
-      <button mat-flat-button color="primary" (click)="save(statement, waterfall, true)">
+      <button [disabled]="form.invalid" mat-flat-button color="primary" (click)="save(statement, waterfall, true)">
         <span>Calculate split</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
       </button>
     </footer>
   
     <footer>
-      <button mat-button (click)="save(statement, waterfall)" matTooltip="Save & Come back later">
+      <button [disabled]="form.invalid" mat-button (click)="save(statement, waterfall)" matTooltip="Save & Come back later">
         <mat-icon svgIcon="save"></mat-icon>
         <span>Save & Come back later</span>
       </button>
