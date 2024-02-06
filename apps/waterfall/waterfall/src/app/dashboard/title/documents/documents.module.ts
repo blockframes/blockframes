@@ -23,30 +23,19 @@ import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-u
 
 // Pages
 import { DocumentsComponent } from './documents.component';
+import { ContractsFormModule } from '@blockframes/waterfall/components/contracts-form/contracts-form.module';
 
 @NgModule({
   declarations: [DocumentsComponent],
   imports: [
-    IfModule,
-    ForModule,
     CommonModule,
     ReactiveFormsModule,
     
     // Blockframes
-    ImageModule,
-    FileNameModule,
-    CardModalModule,
-    GetOrgPipeModule,
-    LogoSpinnerModule,
-    FileUploaderModule,
+    ContractsFormModule,
 
     // Material
-    MatIconModule,
-    MatInputModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatDividerModule,
-    MatProgressSpinnerModule,
+    
 
     // Routing
     RouterModule.forChild([{ path: '', component: DocumentsComponent }]),
