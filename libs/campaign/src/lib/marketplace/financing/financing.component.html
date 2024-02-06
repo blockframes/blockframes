@@ -33,7 +33,7 @@
         </table>
 
         <apx-chart
-          [chart]="{ type: 'pie' }"
+          [chart]="{ type: 'pie', height: 300 }"
           [series]="options.series"
           [labels]="options.labels"
           [colors]="options.colors"
@@ -93,7 +93,7 @@
         </table>
 
         <apx-chart
-          [chart]="{ type: 'pie' }"
+          [chart]="{ type: 'pie', height: 300 }"
           [series]="options.series"
           [labels]="options.labels"
           [colors]="options.colors"
@@ -142,7 +142,7 @@
           </p>
         </aside>
 
-        <apx-chart [chart]="{ type: 'bar' }" [series]="options.series" [xaxis]="options.xAxis"
+        <apx-chart [chart]="{ type: 'bar', height: 300 }" [series]="options.series" [xaxis]="options.xAxis"
           [dataLabels]="formatter.percent" [tooltip]="{y: formatter.percent}"></apx-chart>
       </article>
       <mat-divider></mat-divider>
