@@ -25,6 +25,7 @@ import {
 } from '@blockframes/model';
 import { TermService } from '@blockframes/contract/term/service';
 import { OrganizationService } from '@blockframes/organization/service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: '[movieId] waterfall-contracts-form',
@@ -55,6 +56,7 @@ export class ContractsFormComponent implements OnInit {
     private documentService: WaterfallDocumentsService,
     private orgService: OrganizationService,
     private termsService: TermService,
+    private snackBar: MatSnackBar,
   ) { }
 
   ngOnInit() {
@@ -202,6 +204,8 @@ export class ContractsFormComponent implements OnInit {
       this.uploaderService.upload();
     }
     this.documentForm.markAsPristine();
+
+    this.snackBar.open('Contract saved', 'close', { duration: 3000 });
   }
 }
 
