@@ -46,7 +46,7 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
 
   private subs: Subscription[] = [];
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog) { }
 
   ngOnInit() {
     const groups: StaticGroup[] = staticGroups[this.scope];
@@ -134,10 +134,10 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
 
   getIndeterminate(controlValue: string[], selectableItems: Record<string, boolean>): Record<string, boolean> {
     const allVisibleItems = this.getAllVisibleItems(selectableItems);
-    const indeterminate = { all: controlValue.length > 0 && controlValue.length < allVisibleItems.length };
+    const indeterminate = { all: controlValue?.length > 0 && controlValue?.length < allVisibleItems.length };
     for (const { label, items } of this.groups) {
       const groupVisibleItems = items.filter(item => selectableItems[item]);
-      const groupVisibleSelectedItems = groupVisibleItems.filter(item => controlValue.includes(item));
+      const groupVisibleSelectedItems = groupVisibleItems.filter(item => controlValue?.includes(item));
       indeterminate[label] = groupVisibleSelectedItems.length > 0 && groupVisibleSelectedItems.length < groupVisibleItems.length;
     }
     return indeterminate;
@@ -145,11 +145,11 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
 
   getChecked(controlValue: string[], selectableItems?: Record<string, boolean>): Record<string, boolean> {
     const allVisibleItems = this.getAllVisibleItems(selectableItems);
-    const checked = { all: !!controlValue.length && controlValue.length === allVisibleItems.length };
+    const checked = { all: !!controlValue?.length && controlValue?.length === allVisibleItems.length };
 
     for (const { label, items } of this.groups) {
       const groupVisibleItems = items.filter(item => selectableItems[item]);
-      const groupVisibleSelectedItems = groupVisibleItems.filter(item => controlValue.includes(item));
+      const groupVisibleSelectedItems = groupVisibleItems.filter(item => controlValue?.includes(item));
       checked[label] = groupVisibleSelectedItems.length === groupVisibleItems.length;
     }
     return checked;
