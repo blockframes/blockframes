@@ -22,6 +22,7 @@ export class StaticSelectComponent implements OnInit {
   @Input() placeholder: string;
   @Input() @boolean required: boolean;
   @Input() withoutValues: string[];
+  @Input() disabledValues: string[];
   @Input() only: string[];
   @Input() prefixIcon: string;
 

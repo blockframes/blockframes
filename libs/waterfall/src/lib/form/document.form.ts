@@ -122,7 +122,7 @@ export class WaterfallDocumentForm extends FormEntity<WaterfallDocumentFormContr
       licenseeName: data.licenseeName || '',
       licenseeRole: data.licenseeRole || [],
       licensorName: data.licensorName || '',
-      licensorRole: data.licenseeRole || [],
+      licensorRole: data.licensorRole || [],
       signatureDate: data.signatureDate || new Date(),
       startDate: data.startDate || new Date(),
       endDate: data.endDate || new Date(),
