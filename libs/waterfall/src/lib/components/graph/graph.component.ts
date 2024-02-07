@@ -1,4 +1,5 @@
 
+import { Intercom } from 'ng-intercom';
 import { WriteBatch } from 'firebase/firestore';
 import { BehaviorSubject, Subscription, combineLatest, map, tap } from 'rxjs';
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Optional, ViewChild } from '@angular/core';
@@ -9,7 +10,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   Right,
   Version,
+  toLabel,
   Condition,
+  RightType,
+  rightTypes,
   createRight,
   WaterfallSource,
   isConditionGroup,
@@ -20,20 +24,19 @@ import {
   getDefaultVersionId,
   WaterfallRightholder,
   createWaterfallSource,
-  toLabel,
 } from '@blockframes/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { GraphService } from '@blockframes/ui/graph/graph.service';
 import { CardModalComponent } from '@blockframes/ui/card-modal/card-modal.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
+
 import { RightService } from '../../right.service';
 import { WaterfallService } from '../../waterfall.service';
 import { createRightForm, setRightFormValue } from '../forms/right-form/right-form';
 import { createSourceForm, setSourceFormValue } from '../forms/source-form/source-form';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 import { Arrow, Node, computeDiff, createChild, createSibling, createStep, deleteStep, fromGraph, toGraph, updateParents } from './layout';
-import { Intercom } from 'ng-intercom';
 
 @Component({
   selector: 'waterfall-graph',
@@ -132,10 +135,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
-  updateRightName(org?: string, type?: string) {
+  updateRightName(org?: string, type?: RightType) {
     const right = this.rightForm.value;
     const o = org ?? right.org;
-    const t = type ?? right.type;
+    const t = rightTypes[type ?? right.type];
     if (!t || !o) return;
     if (`${o} - ${t}` === right.name) return;
     if (!right.name || right.name === 'New right' || right.name.includes(' - ')) {
