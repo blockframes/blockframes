@@ -93,11 +93,20 @@ export async function formatDocument(
       const licensee = contract.buyerId;
       for (const [waterfallId, rightholders] of Object.entries(rightholderCache)) {
         rightholderCache[waterfallId] = rightholders.map(r => {
-          if (contract.type === 'author') {
-            if (r.id === licensor) r.roles = unique([...r.roles, 'author']);
-            if (r.id === licensee) r.roles = unique([...r.roles, 'producer']);
-          } else if (contract.type !== 'other') {
-            if (r.id === licensee) r.roles = unique([...r.roles, contract.type]);
+          switch (contract.type) {
+            case 'author':
+              if (r.id === licensor) r.roles = unique([...r.roles, 'author']);
+              if (r.id === licensee) r.roles = unique([...r.roles, 'producer']);
+              break;
+            case 'agent':
+              if (r.id === licensor) r.roles = unique([...r.roles, 'agent']);
+              if (r.id === licensee) r.roles = unique([...r.roles, 'producer']);
+              break;
+            case 'other':
+              break;
+            default:
+              if (r.id === licensee) r.roles = unique([...r.roles, contract.type]);
+              break;
           }
           return r;
         });

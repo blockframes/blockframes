@@ -881,6 +881,7 @@ export const rightholderGroups = {
   // Beneficiaries
   beneficiaries: {
     author: 'Author',
+    agent: 'Agent',
     coProducer: 'Co-Producer',
     financier: 'Financier',
     institution: 'Institution',
