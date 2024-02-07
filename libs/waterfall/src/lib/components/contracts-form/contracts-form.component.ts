@@ -121,7 +121,10 @@ export class ContractsFormComponent implements OnInit {
   }
 
   async save(waterfall: Waterfall) {
-    // TODO check form validity
+    if (!this.documentForm.valid) {
+      this.snackBar.open('Please fill all required fields.', 'close', { duration: 3000 });
+      return;
+    }
 
     const waterfallId = waterfall.id;
 
@@ -144,16 +147,16 @@ export class ContractsFormComponent implements OnInit {
     // Buyer create/update
     let buyerId: string;
     const existingBuyer = rightholders.find(r => r.name === this.documentForm.controls.licenseeName.value);
-    if (!existingBuyer) {
+    if (existingBuyer) {
+      buyerId = existingBuyer.id;
+      existingBuyer.roles = this.documentForm.controls.licenseeRole.value; // update roles
+    } else {
       buyerId = this.waterfallService.createId();
       rightholders.push(createWaterfallRightholder({
         id: buyerId,
         name: this.documentForm.controls.licenseeName.value,
-        roles: [this.selected],
+        roles: this.documentForm.controls.licenseeRole.value,
       }));
-    } else {
-      buyerId = existingBuyer.id;
-      // TODO add selected role if needed
     }
 
     const document = createWaterfallDocument<WaterfallContract>({

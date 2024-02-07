@@ -6,7 +6,7 @@
   <mat-select [formControl]="control" [placeholder]="placeholder" [required]="required" [multiple]="multiple">
     <mat-option [value]="null" *ngIf="showEmptyOption"></mat-option>
     <ng-container *ngFor="let value of staticValue">
-      <mat-option [value]="value" [attr.test-id]="'option_' + value">
+      <mat-option [value]="value" [attr.test-id]="'option_' + value" [disabled]="disabledValues?.includes(value)">
         {{ value | toLabel: scope }}
       </mat-option>
     </ng-container>
