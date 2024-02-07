@@ -269,7 +269,7 @@ function formToIncomeCondition(form: ConditionForm): Condition | undefined {
   }
 
   if (conditionName === 'terms') {
-    if (!form.controls.salesTerms.value.length) return undefined;
+    if (!form.controls.salesTerms.value?.length) return undefined;
 
     const payload: ConditionTerms = {
       operator: form.controls.salesTermsOperator.value as ArrayOperator,
