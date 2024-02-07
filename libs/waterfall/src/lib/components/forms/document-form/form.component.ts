@@ -45,8 +45,8 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
   private subscription: Subscription[] = [];
 
   public showExpenseTypes = false;
-  public disabledLicensorValues: RightholderRole[] = [];
-  public disabledLicenseeValues: RightholderRole[] = [];
+  public disabledValues: { licensors: RightholderRole[], licensees: RightholderRole[] } = { licensors: [], licensees: [] };
+  private previousIds: { licensor: string, licensee: string } = { licensor: '', licensee: '' };
 
   @Output() removeFile = new EventEmitter<boolean>(false);
 
@@ -57,17 +57,14 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
     this.licensee$.next(names);
     this.licensor$.next(names);
 
-    let previousLicensorId = '';
-    let previousLicenseeId = '';
-
     if (this.form.value.licensorName) {
       const licensor = this.waterfall.rightholders.find(r => r.name === this.form.value.licensorName);
-      if (licensor) previousLicensorId = licensor.id;
+      if (licensor) this.previousIds.licensor = licensor.id;
     }
 
     if (this.form.value.licenseeName) {
       const licensee = this.waterfall.rightholders.find(r => r.name === this.form.value.licenseeName);
-      if (licensee) previousLicenseeId = licensee.id;
+      if (licensee) this.previousIds.licensee = licensee.id;
     }
 
     this.subscription.push(
@@ -77,90 +74,7 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
         this.licensee$.next(filtered);
 
         // TODO #9577 factorize this code
-        if (this.type === 'author') {
-          if (value.licensorName) {
-            const licensor = this.waterfall.rightholders.find(r => r.name === value.licensorName);
-            const licensorRoles: RightholderRole[] = ['author'];
-            if (licensor) {
-              this.disabledLicensorValues = [...licensor.roles, 'author'];
-              if (previousLicensorId && previousLicensorId !== licensor.id) {
-                licensorRoles.push(...licensor.roles);
-                previousLicensorId = licensor.id;
-              } else if (value.licenseeRole?.length > 0) {
-                licensorRoles.push(...licensor.roles, ...value.licensorRole);
-                previousLicensorId = licensor.id;
-              }
-
-            } else {
-              licensorRoles.push(...value.licensorRole);
-              this.disabledLicensorValues = ['author'];
-              previousLicensorId = '';
-            }
-            this.form.controls.licensorRole.setValue(unique(licensorRoles), { emitEvent: false });
-          }
-
-          if (value.licenseeName) {
-            const licensee = this.waterfall.rightholders.find(r => r.name === value.licenseeName);
-            const licenseeRoles: RightholderRole[] = ['producer'];
-            if (licensee) {
-              this.disabledLicenseeValues = [...licensee.roles, 'producer'];
-              if (previousLicenseeId && (previousLicenseeId !== licensee.id)) {
-                licenseeRoles.push(...licensee.roles);
-                previousLicenseeId = licensee.id;
-              } else if (value.licenseeRole?.length > 0) {
-                licenseeRoles.push(...licensee.roles, ...value.licenseeRole);
-                previousLicenseeId = licensee.id;
-              }
-            } else {
-              licenseeRoles.push(...value.licenseeRole);
-              this.disabledLicenseeValues = ['producer'];
-              previousLicenseeId = '';
-            }
-            this.form.controls.licenseeRole.setValue(unique(licenseeRoles), { emitEvent: false });
-          }
-
-        } else {
-
-          if (value.licensorName) {
-            const licensor = this.waterfall.rightholders.find(r => r.name === value.licensorName);
-            const licensorRoles: RightholderRole[] = [];
-            if (licensor) {
-              this.disabledLicensorValues = licensor.roles;
-              if (previousLicensorId && previousLicensorId !== licensor.id) {
-                licensorRoles.push(...licensor.roles);
-                previousLicensorId = licensor.id;
-              } else if (value.licenseeRole?.length > 0) {
-                licensorRoles.push(...licensor.roles, ...value.licensorRole);
-                previousLicensorId = licensor.id;
-              }
-            } else {
-              licensorRoles.push(...value.licensorRole);
-              this.disabledLicensorValues = [];
-              previousLicensorId = '';
-            }
-            this.form.controls.licensorRole.setValue(unique(licensorRoles), { emitEvent: false });
-          }
-
-          if (value.licenseeName) {
-            const licensee = this.waterfall.rightholders.find(r => r.name === value.licenseeName);
-            const licenseeRoles: RightholderRole[] = [this.type];
-            if (licensee) {
-              this.disabledLicenseeValues = [...licensee.roles, this.type];
-              if (previousLicenseeId && (previousLicenseeId !== licensee.id)) {
-                licenseeRoles.push(...licensee.roles);
-                previousLicenseeId = licensee.id;
-              } else if (value.licenseeRole?.length > 0) {
-                licenseeRoles.push(...licensee.roles, ...value.licenseeRole);
-                previousLicenseeId = licensee.id;
-              }
-            } else {
-              licenseeRoles.push(...value.licenseeRole);
-              this.disabledLicenseeValues = [this.type];
-              previousLicenseeId = '';
-            }
-            this.form.controls.licenseeRole.setValue(unique(licenseeRoles), { emitEvent: false });
-          }
-        }
+        this.handleRoles('licensor', value);
       }),
       this.form.controls.endDate.valueChanges.subscribe(() => {
         this.durationControl.setValue(0);
@@ -191,24 +105,24 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
       const licensor = this.waterfall.rightholders.find(r => r.name === this.form.controls.licensorName.value);
       const licensorRole: RightholderRole[] = licensor ? [this.type, ...licensor.roles] : [this.type];
       this.form.controls.licensorRole.setValue(unique(licensorRole), { emitEvent: false });
-      this.disabledLicensorValues = licensor?.roles ? [...licensor.roles, this.type] : [this.type];
+      this.disabledValues.licensors = licensor?.roles ? [...licensor.roles, this.type] : [this.type];
 
       const licensee = this.waterfall.rightholders.find(r => r.name === this.form.controls.licenseeName.value);
       const licenseeRole: RightholderRole[] = licensee ? ['producer', ...licensee.roles] : ['producer'];
       this.form.controls.licenseeRole.setValue(unique(licenseeRole), { emitEvent: false });
-      this.disabledLicenseeValues = licensee?.roles ? [...licensee.roles, 'producer'] : ['producer'];
+      this.disabledValues.licensees = licensee?.roles ? [...licensee.roles, 'producer'] : ['producer'];
       const producer = this.waterfall.rightholders.find(r => r.roles.includes('producer'));
       if (producer) this.form.controls.licenseeName.setValue(producer.name, { emitEvent: false });
     } else {
       const licensor = this.waterfall.rightholders.find(r => r.name === this.form.controls.licensorName.value);
       const licensorRole: RightholderRole[] = licensor ? licensor.roles : [];
       this.form.controls.licensorRole.setValue(unique(licensorRole), { emitEvent: false });
-      this.disabledLicensorValues = licensor?.roles || [];
+      this.disabledValues.licensors = licensor?.roles || [];
 
       const licensee = this.waterfall.rightholders.find(r => r.name === this.form.controls.licenseeName.value);
       const licenseeRole: RightholderRole[] = licensee ? [this.type, ...licensee.roles] : [this.type];
       this.form.controls.licenseeRole.setValue(unique(licenseeRole), { emitEvent: false });
-      this.disabledLicenseeValues = licensee?.roles ? [...licensee.roles, this.type] : [this.type];
+      this.disabledValues.licensees = licensee?.roles ? [...licensee.roles, this.type] : [this.type];
     }
   }
 
@@ -236,5 +150,51 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
       this.removeFile.emit(false);
     }
     this.form.markAsDirty();
+  }
+
+  handleRoles(mode: 'licensor' | 'licensee', value: WaterfallDocumentFormValue) {
+
+    const defaultLicensorRoles: RightholderRole[] = this.type === 'author' ? ['author'] : [];
+    if (value.licensorName) {
+      const licensor = this.waterfall.rightholders.find(r => r.name === value.licensorName);
+      const licensorRoles = [...defaultLicensorRoles];
+      if (licensor) {
+        this.disabledValues.licensors = [...licensor.roles, ...defaultLicensorRoles];
+        if (this.previousIds.licensor && this.previousIds.licensor !== licensor.id) {
+          licensorRoles.push(...licensor.roles);
+          this.previousIds.licensor = licensor.id;
+        } else if (value.licenseeRole?.length > 0) {
+          licensorRoles.push(...licensor.roles, ...value.licensorRole);
+          this.previousIds.licensor = licensor.id;
+        }
+
+      } else {
+        licensorRoles.push(...value.licensorRole);
+        this.disabledValues.licensors = defaultLicensorRoles;
+        this.previousIds.licensor = '';
+      }
+      this.form.controls.licensorRole.setValue(unique(licensorRoles), { emitEvent: false });
+    }
+
+    const defaultLicenseeRoles: RightholderRole[] = this.type === 'author' ? ['producer'] : [this.type];
+    if (value.licenseeName) {
+      const licensee = this.waterfall.rightholders.find(r => r.name === value.licenseeName);
+      const licenseeRoles = [...defaultLicenseeRoles];
+      if (licensee) {
+        this.disabledValues.licensees = [...licensee.roles, ...defaultLicenseeRoles];
+        if (this.previousIds.licensee && (this.previousIds.licensee !== licensee.id)) {
+          licenseeRoles.push(...licensee.roles);
+          this.previousIds.licensee = licensee.id;
+        } else if (value.licenseeRole?.length > 0) {
+          licenseeRoles.push(...licensee.roles, ...value.licenseeRole);
+          this.previousIds.licensee = licensee.id;
+        }
+      } else {
+        licenseeRoles.push(...value.licenseeRole);
+        this.disabledValues.licensees = defaultLicenseeRoles;
+        this.previousIds.licensee = '';
+      }
+      this.form.controls.licenseeRole.setValue(unique(licenseeRoles), { emitEvent: false });
+    }
   }
 }

@@ -12,7 +12,7 @@
     placeholder="Company Name"
     [form]="form.get('licensorName')"
   ></bf-autocomplete>
-  <static-select [control]="form.get('licensorRole')" scope="rightholderRoles" mode="outline" multiple required [disabledValues]="disabledLicensorValues">
+  <static-select [control]="form.get('licensorRole')" scope="rightholderRoles" mode="outline" multiple required [disabledValues]="disabledValues.licensors">
     <mat-label>Licensor Waterfall Role</mat-label>
     <mat-error>This field is mandatory</mat-error>
   </static-select>
@@ -26,7 +26,7 @@
     placeholder="Company Name"
     [form]="form.get('licenseeName')"
   ></bf-autocomplete>
-  <static-select [control]="form.get('licenseeRole')" scope="rightholderRoles" mode="outline" multiple required [disabledValues]="disabledLicenseeValues">
+  <static-select [control]="form.get('licenseeRole')" scope="rightholderRoles" mode="outline" multiple required [disabledValues]="disabledValues.licensees">
     <mat-label>Licensee Waterfall Role</mat-label>
     <mat-error>This field is mandatory</mat-error>
   </static-select>
