@@ -73,8 +73,7 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
         this.licensor$.next(filtered);
         this.licensee$.next(filtered);
 
-        // TODO #9577 factorize this code
-        this.handleRoles('licensor', value);
+        this.handleRoles(value);
       }),
       this.form.controls.endDate.valueChanges.subscribe(() => {
         this.durationControl.setValue(0);
@@ -100,29 +99,21 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
       this.form.controls.expenseTypes.push(ExpenseTypeForm.factory({}, createExpenseTypeControl));
     };
 
-    // TODO #9577 factorize this code
-    if (this.type === 'author') {
-      const licensor = this.waterfall.rightholders.find(r => r.name === this.form.controls.licensorName.value);
-      const licensorRole: RightholderRole[] = licensor ? [this.type, ...licensor.roles] : [this.type];
-      this.form.controls.licensorRole.setValue(unique(licensorRole), { emitEvent: false });
-      this.disabledValues.licensors = licensor?.roles ? [...licensor.roles, this.type] : [this.type];
+    const defaultLicensorRoles: RightholderRole[] = this.type === 'author' ? ['author'] : [];
+    const licensor = this.waterfall.rightholders.find(r => r.name === this.form.controls.licensorName.value);
+    const licensorRole: RightholderRole[] = licensor?.roles ? [...defaultLicensorRoles, ...licensor.roles] : defaultLicensorRoles;
+    this.form.controls.licensorRole.setValue(unique(licensorRole), { emitEvent: false });
+    this.disabledValues.licensors = licensor?.roles ? [...licensor.roles, ...defaultLicensorRoles] : defaultLicensorRoles;
 
-      const licensee = this.waterfall.rightholders.find(r => r.name === this.form.controls.licenseeName.value);
-      const licenseeRole: RightholderRole[] = licensee ? ['producer', ...licensee.roles] : ['producer'];
-      this.form.controls.licenseeRole.setValue(unique(licenseeRole), { emitEvent: false });
-      this.disabledValues.licensees = licensee?.roles ? [...licensee.roles, 'producer'] : ['producer'];
+    const defaultLicenseeRoles: RightholderRole[] = this.type === 'author' ? ['producer'] : [this.type];
+    const licensee = this.waterfall.rightholders.find(r => r.name === this.form.controls.licenseeName.value);
+    const licenseeRole: RightholderRole[] = licensee ? [...defaultLicenseeRoles, ...licensee.roles] : defaultLicenseeRoles;
+    this.form.controls.licenseeRole.setValue(unique(licenseeRole), { emitEvent: false });
+    this.disabledValues.licensees = licensee?.roles ? [...licensee.roles, ...defaultLicenseeRoles] : defaultLicenseeRoles;
+
+    if (this.type === 'author') {
       const producer = this.waterfall.rightholders.find(r => r.roles.includes('producer'));
       if (producer) this.form.controls.licenseeName.setValue(producer.name, { emitEvent: false });
-    } else {
-      const licensor = this.waterfall.rightholders.find(r => r.name === this.form.controls.licensorName.value);
-      const licensorRole: RightholderRole[] = licensor ? licensor.roles : [];
-      this.form.controls.licensorRole.setValue(unique(licensorRole), { emitEvent: false });
-      this.disabledValues.licensors = licensor?.roles || [];
-
-      const licensee = this.waterfall.rightholders.find(r => r.name === this.form.controls.licenseeName.value);
-      const licenseeRole: RightholderRole[] = licensee ? [this.type, ...licensee.roles] : [this.type];
-      this.form.controls.licenseeRole.setValue(unique(licenseeRole), { emitEvent: false });
-      this.disabledValues.licensees = licensee?.roles ? [...licensee.roles, this.type] : [this.type];
     }
   }
 
@@ -152,7 +143,7 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
     this.form.markAsDirty();
   }
 
-  handleRoles(mode: 'licensor' | 'licensee', value: WaterfallDocumentFormValue) {
+  handleRoles(value: WaterfallDocumentFormValue) {
 
     const defaultLicensorRoles: RightholderRole[] = this.type === 'author' ? ['author'] : [];
     if (value.licensorName) {
