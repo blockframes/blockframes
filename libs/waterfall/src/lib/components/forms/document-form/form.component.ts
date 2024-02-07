@@ -105,7 +105,7 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
     this.form.controls.licensorRole.setValue(unique(licensorRole), { emitEvent: false });
     this.disabledValues.licensors = licensor?.roles ? [...licensor.roles, ...defaultLicensorRoles] : defaultLicensorRoles;
 
-    const defaultLicenseeRoles: RightholderRole[] = this.type === 'author' ? ['producer'] : [this.type];
+    const defaultLicenseeRoles = this.getDefaultLicensorRoles();
     const licensee = this.waterfall.rightholders.find(r => r.name === this.form.controls.licenseeName.value);
     const licenseeRole: RightholderRole[] = licensee ? [...defaultLicenseeRoles, ...licensee.roles] : defaultLicenseeRoles;
     this.form.controls.licenseeRole.setValue(unique(licenseeRole), { emitEvent: false });
@@ -143,7 +143,7 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
     this.form.markAsDirty();
   }
 
-  handleRoles(value: WaterfallDocumentFormValue) {
+  private handleRoles(value: WaterfallDocumentFormValue) {
 
     const defaultLicensorRoles: RightholderRole[] = this.type === 'author' ? ['author'] : [];
     if (value.licensorName) {
@@ -167,7 +167,7 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
       this.form.controls.licensorRole.setValue(unique(licensorRoles), { emitEvent: false });
     }
 
-    const defaultLicenseeRoles: RightholderRole[] = this.type === 'author' ? ['producer'] : [this.type];
+    const defaultLicenseeRoles = this.getDefaultLicensorRoles();
     if (value.licenseeName) {
       const licensee = this.waterfall.rightholders.find(r => r.name === value.licenseeName);
       const licenseeRoles = [...defaultLicenseeRoles];
@@ -187,5 +187,19 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
       }
       this.form.controls.licenseeRole.setValue(unique(licenseeRoles), { emitEvent: false });
     }
+  }
+
+  private getDefaultLicensorRoles() {
+    let defaultLicenseeRoles: RightholderRole[] = [this.type];
+    switch (this.type) {
+      case 'author':
+        defaultLicenseeRoles = ['producer'];
+        break;
+      case 'other':
+        defaultLicenseeRoles = [];
+        break;
+    }
+
+    return defaultLicenseeRoles;
   }
 }
