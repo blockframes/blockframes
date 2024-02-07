@@ -45,6 +45,7 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
   private subscription: Subscription[] = [];
 
   public showExpenseTypes = false;
+  public showRightToogle = false;
   public disabledValues: { licensors: RightholderRole[], licensees: RightholderRole[] } = { licensors: [], licensees: [] };
   private previousIds: { licensor: string, licensee: string } = { licensor: '', licensee: '' };
 
@@ -92,7 +93,8 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges() {
     const showTerms = rightholderGroups.withTerms.includes(this.type);
-    this.toggleTermsControl.setValue(showTerms);
+    this.showRightToogle = showTerms;
+    this.toggleTermsControl.setValue(this.form.get('terms').value.length > 0);
 
     this.showExpenseTypes = rightholderGroups.withStatements.includes(this.type);
     if (this.showExpenseTypes && this.form.controls.expenseTypes.length === 0) {
