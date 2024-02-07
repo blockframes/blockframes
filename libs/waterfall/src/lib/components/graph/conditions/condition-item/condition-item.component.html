@@ -1,5 +1,5 @@
 
-<p>{{ text }}</p>
+<p>{{ condition | conditionToString : shell.waterfall : (shell.contracts$ | async) : (shell.rights$ | async) }}</p>
 <div>
   <button mat-icon-button [disabled]="disabled" (click)="edit.emit()">
     <mat-icon svgIcon="edit"></mat-icon>

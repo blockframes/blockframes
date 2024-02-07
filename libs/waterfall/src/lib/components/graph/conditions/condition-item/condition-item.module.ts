@@ -5,17 +5,16 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
-import { WaterfallConditionItemComponent } from './condition-item.component';
-
+import { ConditionToStringPipe, WaterfallConditionItemComponent } from './condition-item.component';
 
 @NgModule({
-  declarations: [ WaterfallConditionItemComponent ],
+  declarations: [WaterfallConditionItemComponent, ConditionToStringPipe],
   imports: [
     CommonModule,
 
     MatIconModule,
     MatButtonModule,
   ],
-  exports: [ WaterfallConditionItemComponent ],
+  exports: [WaterfallConditionItemComponent],
 })
-export class WaterfallConditionItemModule {}
+export class WaterfallConditionItemModule { }
