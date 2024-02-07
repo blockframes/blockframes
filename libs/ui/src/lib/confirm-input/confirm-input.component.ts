@@ -59,4 +59,8 @@ export class ConfirmInputComponent implements OnInit {
   public close() {
     this.dialogRef.close(false);
   }
+
+  public handleKey(event: KeyboardEvent) {
+    if (event.code === 'Enter') this.confirm();
+  }
 }

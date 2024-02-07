@@ -78,7 +78,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   rightholderNames$ = new BehaviorSubject<string[]>([]);
   relevantContracts$ = new BehaviorSubject<WaterfallContract[]>([]);
 
-  subscription: Subscription;
+  subscriptions: Subscription[] = [];
 
   constructor(
     private dialog: MatDialog,
@@ -92,7 +92,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (!this.producer) this.snackBar.open(`${toLabel('producer', 'rightholderRoles')} is not defined.`, 'close', { duration: 5000 });
-    this.subscription = combineLatest([
+    this.subscriptions.push(combineLatest([
       this.shell.rights$,
       this.shell.waterfall$,
       this.shell.versionId$.pipe(tap(_ => this.unselect())),
@@ -123,11 +123,24 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
         this.canUpdateGraph = false;
       }
       this.layout();
-    });
+    }));
+    this.subscriptions.push(this.rightForm.controls.org.valueChanges.subscribe(org => this.updateRightName(org, undefined)));
+    this.subscriptions.push(this.rightForm.controls.type.valueChanges.subscribe(type => this.updateRightName(undefined, type)));
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
+  updateRightName(org?: string, type?: string) {
+    const right = this.rightForm.value;
+    const o = org ?? right.org;
+    const t = type ?? right.type;
+    if (!t || !o) return;
+    if (`${o} - ${t}` === right.name) return;
+    if (!right.name || right.name === 'New right' || right.name.includes(' - ')) {
+      this.rightForm.controls.name.setValue(`${o} - ${t}`);
+    }
   }
 
   openIntercom() {
