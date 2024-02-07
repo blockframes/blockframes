@@ -59,6 +59,17 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
 
     let previousLicensorId = '';
     let previousLicenseeId = '';
+
+    if (this.form.value.licensorName) {
+      const licensor = this.waterfall.rightholders.find(r => r.name === this.form.value.licensorName);
+      if (licensor) previousLicensorId = licensor.id;
+    }
+
+    if (this.form.value.licenseeName) {
+      const licensee = this.waterfall.rightholders.find(r => r.name === this.form.value.licenseeName);
+      if (licensee) previousLicenseeId = licensee.id;
+    }
+
     this.subscription.push(
       this.form.valueChanges.subscribe((value: WaterfallDocumentFormValue) => {
         const filtered = names.filter(n => n !== value.licenseeName && n !== value.licensorName);
@@ -72,7 +83,6 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
             const licensorRoles: RightholderRole[] = ['author'];
             if (licensor) {
               this.disabledLicensorValues = [...licensor.roles, 'author'];
-
               if (previousLicensorId && previousLicensorId !== licensor.id) {
                 licensorRoles.push(...licensor.roles);
                 previousLicensorId = licensor.id;
@@ -84,6 +94,7 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
             } else {
               licensorRoles.push(...value.licensorRole);
               this.disabledLicensorValues = ['author'];
+              previousLicensorId = '';
             }
             this.form.controls.licensorRole.setValue(unique(licensorRoles), { emitEvent: false });
           }
@@ -92,7 +103,6 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
             const licensee = this.waterfall.rightholders.find(r => r.name === value.licenseeName);
             const licenseeRoles: RightholderRole[] = ['producer'];
             if (licensee) {
-
               this.disabledLicenseeValues = [...licensee.roles, 'producer'];
               if (previousLicenseeId && (previousLicenseeId !== licensee.id)) {
                 licenseeRoles.push(...licensee.roles);
@@ -104,6 +114,7 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
             } else {
               licenseeRoles.push(...value.licenseeRole);
               this.disabledLicenseeValues = ['producer'];
+              previousLicenseeId = '';
             }
             this.form.controls.licenseeRole.setValue(unique(licenseeRoles), { emitEvent: false });
           }
@@ -125,6 +136,7 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
             } else {
               licensorRoles.push(...value.licensorRole);
               this.disabledLicensorValues = [];
+              previousLicensorId = '';
             }
             this.form.controls.licensorRole.setValue(unique(licensorRoles), { emitEvent: false });
           }
@@ -144,6 +156,7 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
             } else {
               licenseeRoles.push(...value.licenseeRole);
               this.disabledLicenseeValues = [this.type];
+              previousLicenseeId = '';
             }
             this.form.controls.licenseeRole.setValue(unique(licenseeRoles), { emitEvent: false });
           }
