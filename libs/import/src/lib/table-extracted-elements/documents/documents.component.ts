@@ -115,8 +115,6 @@ export class TableExtractedDocumentsComponent implements AfterViewInit {
       }
     };
 
-
-
     if (increment) this.processing++;
     this.cdr.markForCheck();
 

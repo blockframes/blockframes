@@ -10,13 +10,16 @@ import {
   WaterfallRightholder,
   WaterfallDocumentMeta,
   isContract,
-  rightholderGroups
+  rightholderGroups,
+  convertDocumentTo,
+  WaterfallContract
 } from '@blockframes/model';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getDocumentConfig } from './fieldConfigs';
 import { TermService } from '@blockframes/contract/term/service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
+import { unique } from '@blockframes/utils/helpers';
 
 function toTerm(rawTerm: FieldsConfig['term'][number], waterfallId: string, contractId: string, termId: string) {
 
@@ -83,6 +86,23 @@ export async function formatDocument(
   for (const result of results) {
     const { data, errors } = result;
     const document = createWaterfallDocument({ ...data.document, meta: data.meta as WaterfallDocumentMeta });
+
+    if (isContract(document)) {
+      const contract = convertDocumentTo<WaterfallContract>(document);
+      const licensor = contract.sellerId;
+      const licensee = contract.buyerId;
+      for (const [waterfallId, rightholders] of Object.entries(rightholderCache)) {
+        rightholderCache[waterfallId] = rightholders.map(r => {
+          if (contract.type === 'author') {
+            if (r.id === licensor) r.roles = unique([...r.roles, 'author']);
+            if (r.id === licensee) r.roles = unique([...r.roles, 'producer']);
+          } else if (contract.type !== 'other') {
+            if (r.id === licensee) r.roles = unique([...r.roles, contract.type]);
+          }
+          return r;
+        });
+      }
+    }
 
     documents.push({ document, terms: getTerms(document, data.term), errors, rightholders: rightholderCache });
   }
