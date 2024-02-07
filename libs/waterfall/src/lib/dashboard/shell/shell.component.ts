@@ -107,7 +107,8 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
 
   public contracts$ = this.documents$.pipe(
     map(documents => documents.filter(d => isContract(d))),
-    map(documents => sortContracts(documents.map(d => convertDocumentTo<WaterfallContract>(d))))
+    map(documents => sortContracts(documents.map(d => convertDocumentTo<WaterfallContract>(d)))),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   public terms$ = this.movie$.pipe(
