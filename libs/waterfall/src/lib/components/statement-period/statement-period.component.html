@@ -54,7 +54,7 @@
       </ng-template>
     </article>
     <div>
-      <p class="mat-body-1">You can change the date when the issue has been issued (useful for old films).</p>
+      <p class="mat-body-1">You can modify the issue date, which is particularly useful for older films.</p>
       <mat-form-field appearance="outline">
         <mat-label>Reported on</mat-label>
         <input [disabled]="statement.status === 'reported'" matInput [formControl]="form.get('reported')" [matDatepicker]="datePickerReported" required placeholder="MM/DD/YYYY">
