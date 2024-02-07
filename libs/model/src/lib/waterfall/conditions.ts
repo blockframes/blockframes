@@ -245,6 +245,7 @@ export const targetIn = [
   /**
    * @deprecated not used (condition form does not allow it). Might be removed in future.
    * If orgs.expense is re-enabled, check "getRightExpenseTypes" in libs/model/src/lib/waterfall/statement.ts
+   * If other targets are enabled, check  "targetToString" in libs/model/src/lib/waterfall/conditions.ts
   'orgs.revenu', 
   'orgs.turnover', 
   'orgs.expense', 

@@ -178,13 +178,16 @@
       scope="territories"
       displayAll="World"
       label="Territories"
+      filterPlaceholder="Specify territories"
       [control]="form.controls.salesTerms"
     ></group-multiselect>
 
     <group-multiselect
       *ngIf="form.controls.salesType.value === 'terms' && form.controls.salesTermsOperator.value && form.controls.salesTermsType.value === 'medias'"
       scope="medias"
+      displayAll="All Rights"
       label="Medias"
+      filterPlaceholder="Specify medias"
       [control]="form.controls.salesTerms"
     ></group-multiselect>
   </ng-container>
