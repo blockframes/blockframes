@@ -80,6 +80,7 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
         });
 
         const right = rights.find(r => r.id === this.rightId);
+        if (!right) return; // avoid error that can happen during a right deletion
         const isProducerRight = waterfall.rightholders.find(r => r.id === right.rightholderId)?.roles.includes('producer');
         this.contractId = isProducerRight ? 'directSales' : right.contractId;
         this.expenseTypes = waterfall.expenseTypes[this.contractId] || [];
