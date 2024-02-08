@@ -7,6 +7,7 @@ import { RightHolderFormComponent } from './right-holder-form.component';
 
 // Blockframes
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
+import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -23,6 +24,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     CommonModule,
     ReactiveFormsModule,
     StaticSelectModule,
+    ConfirmInputModule,
 
     // Material
     MatIconModule,

@@ -45,7 +45,7 @@
           <div *ngFor="let contract of (contracts$ | async)[selected]" class="contract-list">
             <p>{{ contract.name }} : {{ contract.buyerId | rightholderName: waterfall }} & {{ contract.sellerId | rightholderName: waterfall }}</p>
             
-            <!-- TODO -->
+            <!-- TODO #9436 -->
             <!-- <p class="amendment">1 amendment - 30/06/2023</p> -->
             
             <button mat-icon-button matTooltip="Edit contract" (click)="edit(contract, waterfall)">
@@ -58,9 +58,10 @@
             >
               <mat-icon svgIcon="cloud_download"></mat-icon>
             </a>
-            <button mat-icon-button class="circle" matTooltip="Create amendment">
+            <!-- TODO #9436 hidden for now -->
+            <!-- <button mat-icon-button class="circle" matTooltip="Create amendment">
               <mat-icon svgIcon="add"></mat-icon>
-            </button>
+            </button> -->
           </div>
           <div>
             <button mat-button color="primary" class="main-dashboard-cta" (click)="create()">
