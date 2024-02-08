@@ -21,7 +21,7 @@
             <mat-label>{{ selected | toLabel: 'statementParty'}}</mat-label>
           </waterfall-rightholder-select>
           <ng-container *ngIf="selected !== 'directSales'">
-            <a *ngIf="rightholderContracts.length === 1 && rightholderContracts[0].id" mat-icon-button [routerLink]="['..', 'documents', rightholderContracts[0].id]">
+            <a *ngIf="rightholderContracts.length === 1 && rightholderContracts[0].id" mat-icon-button target="_blank" [routerLink]="['..', 'document', rightholderContracts[0].id]">
               <mat-icon svgIcon="contract" matTooltip="See contract"></mat-icon>
             </a>
 
@@ -30,7 +30,7 @@
             </button>
             
             <mat-menu #contractsMenu="matMenu">
-              <a mat-menu-item *ngFor="let rightholderContract of rightholderContracts" [routerLink]="['..', 'documents', rightholderContract.id]">
+              <a mat-menu-item *ngFor="let rightholderContract of rightholderContracts" target="_blank" [routerLink]="['..', 'document', rightholderContract.id]">
                 {{ rightholderContract.name }}
               </a>
             </mat-menu>

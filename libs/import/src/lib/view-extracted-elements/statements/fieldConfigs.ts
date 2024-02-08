@@ -155,7 +155,7 @@ export function getStatementConfig(option: StatementConfig) {
         return getCurrency(value);
       },
         /* s */ 'expenses[].typeId': (value: string) => {
-        return valueToId(value);
+        return value;
       },
         /* t */ 'expenses[].nature': (value: string) => {
         return value.trim();

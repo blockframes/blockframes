@@ -1,0 +1,34 @@
+<ng-container *ngIf="contract$ | async as contract else loading">
+  <waterfall-contract-main-info [contract]="contract" [movie]="movie" [waterfall]="waterfall"></waterfall-contract-main-info>
+
+  <ng-container *ngIf="file$ | async as file else noFile">
+    <section>
+      <ng-container [ngSwitch]="file.storagePath | fileType">
+        <ng-container *ngSwitchCase="'pdf'">
+          <pdf-viewer [ref]="file" showControls></pdf-viewer>
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+          <p>Sorry, we don't know how to display this file.</p>
+          <p>Currently PDF files are supported.</p>
+        </ng-container>
+      </ng-container>  
+    </section>
+    <div>
+      <a mat-flat-button color="primary" *ngIf="contract.id | getFile: waterfall as file" [href]="file | getUrl | async"  target="_blank" matTooltip="Download Document">
+        <mat-icon svgIcon="cloud_download"></mat-icon>
+        <span>Download Document</span>
+      </a>
+    </div>
+  </ng-container>
+  <ng-template #noFile>
+    <div>
+      <img asset="empty-contracts.svg" alt="Image, you have no contracts yet">
+      <p class="mat-body-1">No file found for this contract</p>
+    </div>
+  </ng-template>
+</ng-container>
+<ng-template #loading>
+  <article class="spinner">
+    <logo-spinner></logo-spinner>
+  </article>
+</ng-template>

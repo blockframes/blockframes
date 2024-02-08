@@ -1,22 +1,5 @@
 <ng-container *ngIf="contract$ | async as contract">
-  <header>
-    <section>
-      <h3>Contract "{{ contract.name }}" from {{  contract.duration.from | date: 'MM/dd/yyyy' }} to {{  contract.duration.to | date: 'MM/dd/yyyy' }}</h3>
-      <h4 *ngIf="rootContract$ | async as rootContract">Amendment of <a [routerLink]="['../',rootContract.id]" target="_blank">{{ rootContract.name }}</a></h4>
-      <h4 *ngIf="(childContracts$ | async)?.length as length">{{ length }} amendment(s)</h4>
-    </section>
-    <waterfall-version-selector></waterfall-version-selector>
-  </header>
-
-  <section>
-    <ul>
-      <li><strong>Type:</strong> {{ contract.type | toLabel: 'rightholderRoles' }}</li>
-      <li><strong>Licensor :</strong> {{ contract.sellerId | rightholderName: waterfall }}</li>
-      <li><strong>Licensee :</strong> {{ contract.buyerId | rightholderName: waterfall }}</li>
-      <li><strong>Signature date :</strong> {{  contract.signatureDate | date: 'MM/dd/yyyy' }}</li>
-      <li><strong>Price:</strong><price-per-currency [price]="getDeclaredAmount(contract)"></price-per-currency> </li>
-    </ul>
-  </section>
+  <waterfall-contract-main-info [contract]="contract" [movie]="movie" [waterfall]="waterfall"></waterfall-contract-main-info>
 
   <ng-container *ngIf="childContracts$ | async as childContracts">
     <h3>Amendments</h3>
@@ -37,7 +20,7 @@
         {{ buyerId | rightholderName: waterfall }}
       </ng-template>
       <ng-template colRef="" label="Price" let-item sort>
-        <ng-container *ngIf="getDeclaredAmount(item) as amount">
+        <ng-container *ngIf="item | contractPrice as amount">
           <price-per-currency [price]="amount"></price-per-currency>
         </ng-container>
       </ng-template>

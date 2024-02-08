@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Term, WaterfallContract, getDeclaredAmount } from '@blockframes/model';
+import { WaterfallContract } from '@blockframes/model';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
@@ -25,10 +25,6 @@ export class ContractsComponent {
 
   public goTo(id: string) {
     this.router.navigate(['..', 'documents', id], { relativeTo: this.route });
-  }
-
-  public getDeclaredAmount(contract: WaterfallContract & { terms: Term[] }) {
-    return getDeclaredAmount(contract);
   }
 
   public async removeDocuments(documents: WaterfallContract[]) {

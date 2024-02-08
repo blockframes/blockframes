@@ -14,6 +14,8 @@ import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/righthol
 import { ExpenseTypesFormModule } from '@blockframes/waterfall/components/forms/expense-types-form/form.module';
 import { VersionSelectorModule } from '@blockframes/waterfall/components/version-selector/version-selector.module';
 import { InterestTableModule } from '@blockframes/waterfall/components/interests-table/interest-table.module';
+import { ContractMainInfoModule } from '@blockframes/waterfall/components/contract-main-info/contract-main-info.module';
+import { ContractPipeModule } from '@blockframes/contract/contract/pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -35,6 +37,8 @@ import { MatButtonModule } from '@angular/material/button';
     ExpenseTypesFormModule,
     VersionSelectorModule,
     InterestTableModule,
+    ContractMainInfoModule,
+    ContractPipeModule,
 
     MatIconModule,
     MatButtonModule,

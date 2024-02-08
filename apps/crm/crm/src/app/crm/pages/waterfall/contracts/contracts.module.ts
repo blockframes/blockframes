@@ -7,6 +7,7 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
+import { ContractPipeModule } from '@blockframes/contract/contract/pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -18,14 +19,18 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   declarations: [ContractsComponent],
   imports: [
     CommonModule,
+
     TableModule,
     PricePerCurrencyModule,
     ToLabelModule,
     RightHolderNamePipeModule,
+    ContractPipeModule,
+
     MatIconModule,
     MatButtonModule,
     MatSnackBarModule,
     MatTooltipModule,
+
     RouterModule.forChild([{ path: '', component: ContractsComponent }])
   ]
 })

@@ -4,16 +4,15 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
 // Components
-import { StatementComponent } from './statement.component';
+import { DocumentComponent } from './document.component';
 import { DashboardWaterfallShellModule } from '@blockframes/waterfall/dashboard/shell/shell.module';
 
 // Guards
-import { StatementActiveGuard } from '@blockframes/waterfall/guards/statement-active.guard';
-import { StatementFormGuard } from '@blockframes/waterfall/guards/statement-form.guard';
+import { DocumentActiveGuard } from '@blockframes/waterfall/guards/document-active.guard';
 
 const routes: Routes = [{
   path: '',
-  component: StatementComponent,
+  component: DocumentComponent,
   children: [
     {
       path: '',
@@ -21,16 +20,17 @@ const routes: Routes = [{
       pathMatch: 'full'
     },
     {
-      path: ':statementId',
-      canActivate: [StatementActiveGuard, StatementFormGuard],
+      path: ':documentId',
+      canActivate: [DocumentActiveGuard],
       children: [
         {
           path: '',
-          loadChildren: () => import('./view/view.module').then(m => m.StatementViewModule),
+          redirectTo: 'contract',
+          pathMatch: 'full'
         },
         {
-          path: 'edit',
-          loadChildren: () => import('./edit/edit.module').then(m => m.StatementEditModule),
+          path: 'contract',
+          loadChildren: () => import('./contract/view/view.module').then(m => m.ContractViewModule),
         },
       ],
       data: {
@@ -41,7 +41,7 @@ const routes: Routes = [{
 }];
 
 @NgModule({
-  declarations: [StatementComponent],
+  declarations: [DocumentComponent],
   imports: [
     CommonModule,
 
@@ -52,4 +52,4 @@ const routes: Routes = [{
     RouterModule.forChild(routes),
   ],
 })
-export class StatementModule { }
+export class DocumentModule { }

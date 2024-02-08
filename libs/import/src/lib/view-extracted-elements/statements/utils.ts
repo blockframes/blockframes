@@ -1,4 +1,4 @@
-import { StatementsImportState } from '../../utils';
+import { StatementsImportState, valueToId } from '../../utils';
 import {
   App,
   Movie,
@@ -136,17 +136,19 @@ export async function formatStatement(
       const expense = createExpense({ ...e });
       delete (expense as any).cap;
       if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) statement.expenseIds.push(expense.id);
+      const typeId = valueToId(e.typeId);
       expense.contractId = isDistributorStatement(statement) ? statement.contractId : undefined;
       expense.rightholderId = statement.senderId;
       expense.date = statement.duration.to;
       expense.titleId = statement.waterfallId;
+      expense.typeId = typeId;
 
       // Create expense types
       const contractId = isDirectSalesStatement(statement) ? 'directSales' : expense.contractId;
       if (!expenseTypes[contractId]) expenseTypes[contractId] = [];
-      if (!expenseTypes[contractId].find(t => t.id === e.typeId)) {
+      if (!expenseTypes[contractId].find(t => t.id === typeId)) {
         expenseTypes[contractId].push(createExpenseType({
-          id: e.typeId,
+          id: typeId,
           contractId,
           currency: e.currency,
           name: e.typeId,

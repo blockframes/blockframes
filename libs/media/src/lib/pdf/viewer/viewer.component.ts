@@ -5,6 +5,7 @@ import { MediaService } from '../../service';
 import { StorageFile, MeetingPdfControl } from '@blockframes/model';
 import { ImageParameters } from '../../image/directives/imgix-helpers';
 import { toggleFullScreen } from '../../file/viewers/utils';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
   selector: '[ref] pdf-viewer',
@@ -29,6 +30,7 @@ export class PdfViewerComponent implements OnInit {
     this.isPuppet$.next(!!value);
     this.generatePdfUrl();
   }
+  @Input() @boolean showControls = false;
 
   private _eventId: string;
   get eventId() { return this._eventId; }
