@@ -733,11 +733,12 @@ export function invitationToJoinWaterfallUpdated(
 }
 
 /** Generates a transactional email request to share a Waterfall statement by email. */
-export function shareStatement(toUser: UserEmailData, statement: StatementEmailData, waterfall: WaterfallEmailData,): EmailTemplateRequest {
+export function shareStatement(toUser: UserEmailData, statement: StatementEmailData, waterfall: WaterfallEmailData, org: OrgEmailData): EmailTemplateRequest {
   const data = {
     user: toUser,
     statement,
     waterfall,
+    org,
   };
   return { to: toUser.email, templateId: templateIds.statement.share, data };
 }

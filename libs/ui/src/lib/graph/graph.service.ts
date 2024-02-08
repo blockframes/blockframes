@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 export class GraphService {
 
   public bounds = new BehaviorSubject({ minX: 0, maxX: 1_000, minY: 0, maxY: 1_000 });
-  public offset = new BehaviorSubject({ x: 0, y: 0, z: 1 });
+  public offset = new BehaviorSubject({ x: 14, y: 6, z: 1 });
 
   /** Move a given amount from the current position */
   move(deltaX: number, deltaY: number) {

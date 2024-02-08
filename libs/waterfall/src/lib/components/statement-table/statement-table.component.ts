@@ -22,6 +22,7 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 import { DownloadStatementSettings, PdfService } from '@blockframes/utils/pdf.service';
 import { CallableFunctions } from 'ngfire';
 import { StatementShareComponent } from '../statement-share/statement-share.component';
+import { OrganizationService } from '@blockframes/organization/service';
 
 function statementFileName(statement: Statement & { number: number }) {
   return `${toLabel(statement.type, 'statementType')} Statement ${statement.number}`;
@@ -68,6 +69,7 @@ export class StatementTableComponent {
     private snackBar: MatSnackBar,
     private statementService: StatementService,
     private pdfService: PdfService,
+    private orgService: OrganizationService,
     private functions: CallableFunctions,
     private cdr: ChangeDetectorRef,
   ) { }
@@ -128,6 +130,7 @@ export class StatementTableComponent {
       waterfallId: this.waterfall.id,
       number: statement.number,
       versionId: statement.versionId,
+      org: this.orgService.org,
       fileName: statementFileName(statement)
     };
 

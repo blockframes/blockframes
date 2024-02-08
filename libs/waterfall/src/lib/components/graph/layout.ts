@@ -268,9 +268,9 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
   let maxY = 0;
 
   nodes.forEach(node => {
-    minX = Math.min(minX, node.x);
+    minX = Math.min(-SPACING, minX, node.x);
     maxX = Math.max(maxX, node.x + node.width);
-    minY = Math.min(minY, node.y);
+    minY = Math.min(-SPACING, minY, node.y);
     maxY = Math.max(maxY, node.y + node.height);
   });
 
@@ -391,9 +391,9 @@ async function autoLayout2(nodes: Node[]) {
       node.y = layoutNode.y;
     });
   } catch (error) {
-    console.warn('Auto layout fail');
-    console.log(graph);
-    console.error(error);
+    // do nothing
+    // when we are in between a graph update, the nodes can be inconsistent and the layout can fail
+    // this is not a problem as the layout will be recomputed at the end of the update
   }
 
   const arrows: Arrow[] = [];

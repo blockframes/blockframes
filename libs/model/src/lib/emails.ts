@@ -10,6 +10,7 @@ import { Bucket, BucketContract } from './bucket';
 import { AccessibilityTypes, App, EventTypesValue } from './static/types';
 import { EventMeta, Event, createIcsFromEvent, toIcsFile } from './event';
 import { differenceInDays, differenceInHours, differenceInMinutes, format, millisecondsInHour } from 'date-fns';
+import { Statement, Waterfall } from './waterfall';
 
 export interface OrgEmailData {
   name: string;
@@ -324,15 +325,25 @@ export function getEventEmailData({ event, orgName, attachment = true, email, in
 
 export interface StatementEmailData {
   pdf: AttachmentData;
+  senderRightholderName: string;
+  receiverRightholderName: string;
+  from: string;
+  to: string;
 }
 
-export function getStatementData(fileName = 'unknown', buffer: Buffer): StatementEmailData {
+export function getStatementData(statement: Statement, waterfall: Waterfall, fileName = 'unknown', buffer: Buffer): StatementEmailData {
+  const statementSender = waterfall.rightholders.find(r => r.id === statement.senderId);
+  const statementReceiver = waterfall.rightholders.find(r => r.id === statement.senderId);
   return {
     pdf: {
       filename: `${fileName}.pdf`,
       content: buffer.toString('base64'),
       disposition: 'attachment',
       type: 'application/pdf',
-    }
+    },
+    senderRightholderName: statementSender?.name || 'Unknown',
+    receiverRightholderName: statementReceiver?.name || 'Unknown',
+    from: format(statement.duration.from, 'MM/dd/yyyy'),
+    to: format(statement.duration.to, 'MM/dd/yyyy'),
   };
 }

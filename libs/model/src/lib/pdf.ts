@@ -1,3 +1,4 @@
+import { Organization } from './organisation';
 import { App } from './static';
 
 export const pdfExportLimit = 450;
@@ -28,6 +29,7 @@ export interface StatementPdfParams {
   number: number;
   versionId: string;
   fileName?: string;
+  org?: Organization;
 }
 
 export interface StatementPdfRequest {
