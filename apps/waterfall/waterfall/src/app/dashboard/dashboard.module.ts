@@ -79,6 +79,10 @@ const routes: Routes = [{
               path: 'statement',
               loadChildren: () => import('./statement/statement.module').then(m => m.StatementModule),
             },
+            {
+              path: 'document',
+              loadChildren: () => import('./document/document.module').then(m => m.DocumentModule),
+            },
           ],
         },
       ],

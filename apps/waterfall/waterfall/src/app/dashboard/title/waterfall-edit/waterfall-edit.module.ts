@@ -7,9 +7,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { WaterfallEditComponent } from './waterfall-edit.component';
 import { DashboardWaterfallShellModule } from '@blockframes/waterfall/dashboard/shell/shell.module';
 
-// Material
-
-
 const routes: Routes = [{
   path: '',
   component: WaterfallEditComponent,
@@ -28,8 +25,6 @@ const routes: Routes = [{
 
     // Blockframes
     DashboardWaterfallShellModule,
-
-    // Material
 
     // Routes
     RouterModule.forChild(routes),
