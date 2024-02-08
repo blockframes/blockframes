@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 // Components
 import { ContractsFormComponent, GetFilePipe } from './contracts-form.component';
@@ -45,6 +46,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatTooltipModule,
     MatFormFieldModule,
     MatSnackBarModule,
+
+    RouterModule,
   ],
   exports: [
     ContractsFormComponent
