@@ -25,7 +25,7 @@
       {{ buyerId | rightholderName: waterfall }}
     </ng-template>
     <ng-template colRef="" label="Price" let-item sort>
-      <price-per-currency *ngIf="getDeclaredAmount(item) as amount" [price]="amount"></price-per-currency>
+      <price-per-currency *ngIf="item | contractPrice as amount" [price]="amount"></price-per-currency>
     </ng-template>
     <ng-template colRef="type" label="Type" let-type sort>
       {{ type | toLabel: 'rightholderRoles' }}

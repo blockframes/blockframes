@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { ConditionInterest, Scope, Term, WaterfallContract, getDeclaredAmount, getRightCondition, interestDetail, rightholderGroups } from '@blockframes/model';
+import { ConditionInterest, Scope, Term, getRightCondition, interestDetail, rightholderGroups } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
 import { combineLatest, filter, map, switchMap } from 'rxjs';
@@ -17,14 +17,10 @@ export class DocumentComponent {
   private contractId = this.route.snapshot.paramMap.get('documentId');
 
   public waterfall = this.shell.waterfall;
+  public movie = this.shell.movie;
 
   public contract$ = this.shell.contractsAndTerms$.pipe(
     map(contracts => contracts.find(c => c.id === this.contractId)),
-  );
-
-  public rootContract$ = this.contract$.pipe(
-    filter(c => !!c?.rootId),
-    switchMap(c => this.shell.contractsAndTerms$.pipe(map(contracts => contracts.find(contract => contract.id === c.rootId)))),
   );
 
   public childContracts$ = this.contract$.pipe(
@@ -58,10 +54,6 @@ export class DocumentComponent {
 
   public openDetails(items: string[], scope: Scope) {
     this.dialog.open(DetailedGroupComponent, { data: createModalData({ items, scope }), autoFocus: false });
-  }
-
-  public getDeclaredAmount(contract: WaterfallContract & { terms: Term[] }) {
-    return getDeclaredAmount(contract);
   }
 
   public getTermAmount(term: Term) {
