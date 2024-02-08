@@ -6,6 +6,7 @@ import { RightholdersComponent } from './rightholders.component';
 
 // Blockframes
 import { RightholderTableModule } from '@blockframes/waterfall/components/rightholder-table/rightholder-table.module';
+import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -18,6 +19,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     CommonModule,
 
     RightholderTableModule,
+    ConfirmModule,
 
     MatIconModule,
     MatButtonModule,

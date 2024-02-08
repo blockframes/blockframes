@@ -891,7 +891,7 @@ export const rightholderGroups = {
   // Custom groups
   withStatements: ['salesAgent', 'mainDistributor', 'producer'] as string[], // Rightholders that can create a statement
   investors: ['salesAgent', 'mainDistributor', 'coProducer', 'financier', 'institution'] as string[], // Rightholders (contracts) that can invest in a movie
-  withTerms: ['salesAgent', 'mainDistributor', 'localDistributor', 'sale', 'other'] as string[] // Contract types that should have terms
+  withTerms: ['salesAgent', 'mainDistributor', 'coProducer', 'localDistributor', 'sale', 'other'] as string[] // Contract types that can have terms
 } as const
 
 export const rightholderRoles = {

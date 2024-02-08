@@ -93,7 +93,7 @@
   </button>
 </div>
 
-<div class="toggle">
+<div class="toggle" *ngIf="showRightToogle">
   <p class="mat-caption">Right Assigned</p>
   <mat-button-toggle-group [formControl]="toggleTermsControl">
     <mat-button-toggle [value]="true">Yes</mat-button-toggle>

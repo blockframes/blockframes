@@ -4,6 +4,9 @@ import { WaterfallRightholder, } from '@blockframes/model';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
+import { MatDialog } from '@angular/material/dialog';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 
 @Component({
   selector: 'crm-rightholders',
@@ -29,15 +32,27 @@ export class RightholdersComponent {
     private snackBar: MatSnackBar,
     private router: Router,
     private shell: DashboardWaterfallShellComponent,
+    private dialog: MatDialog,
   ) { }
 
   public goTo(id: string) {
     this.router.navigate([id], { relativeTo: this.route });
   }
 
-  public async removeRightholders(rightholders: WaterfallRightholder[]) {
-    await this.waterfallService.removeRightholders(this.shell.waterfall.id, rightholders.map(s => s.id));
-    this.snackBar.open(`Rightholder${rightholders.length > 1 ? 's' : ''} ${rightholders.length === 1 ? rightholders[0].id : ''} deleted from waterfall !`, 'close', { duration: 5000 });
+  public removeRightholders(rightholders: WaterfallRightholder[]) {
+    this.dialog.open(ConfirmComponent, {
+      data: createModalData({
+        title: 'Are you sure?',
+        question: 'If you remove a Right Holder, waterfall can break.',
+        confirm: `Yes, remove Right Holder${rightholders.length > 1 ? 's' : ''}.`,
+        cancel: `No, keep Right Holder${rightholders.length > 1 ? 's' : ''}.`,
+        onConfirm: async () => {
+          await this.waterfallService.removeRightholders(this.shell.waterfall.id, rightholders.map(s => s.id));
+          this.snackBar.open(`Rightholder${rightholders.length > 1 ? 's' : ''} ${rightholders.length === 1 ? rightholders[0].id : ''} deleted from waterfall !`, 'close', { duration: 5000 });
+        }
+      }, 'small'),
+      autoFocus: false
+    });
   }
 
 }

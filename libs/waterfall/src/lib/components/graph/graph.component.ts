@@ -54,34 +54,35 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   get editMode() { return this._editMode; }
   private _editMode = true;
 
-  showEdit = true;
+  public showEdit = true;
 
-  rights: Right[];
-  waterfall = this.shell.waterfall;
+  private rights: Right[];
+  public waterfall = this.shell.waterfall;
   private producer = this.waterfall.rightholders.find(r => r.roles.includes('producer'));
   private version: Version;
-  isDefaultVersion: boolean;
+  public isDefaultVersion: boolean;
   private defaultVersionId: string;
-  canUpdateGraph = true;
-  canUpdateConditions = true;
-  sources: WaterfallSource[];
-  rightholders: WaterfallRightholder[];
+  public canUpdateGraph = true;
+  public canUpdateConditions = true;
+  private sources: WaterfallSource[];
+  private rightholders: WaterfallRightholder[];
+  private contracts: WaterfallContract[];
 
   @ViewChild(CardModalComponent, { static: true }) cardModal: CardModalComponent;
 
-  selected$ = new BehaviorSubject<string>('');
-  isSourceSelected = false;
+  public selected$ = new BehaviorSubject<string>('');
+  public isSourceSelected = false;
 
-  nodes$ = new BehaviorSubject<Node[]>([]);
-  arrows$ = new BehaviorSubject<Arrow[]>([]);
+  public nodes$ = new BehaviorSubject<Node[]>([]);
+  public arrows$ = new BehaviorSubject<Arrow[]>([]);
 
-  rightForm = createRightForm();
-  sourceForm = createSourceForm();
+  public rightForm = createRightForm();
+  public sourceForm = createSourceForm();
 
-  rightholderNames$ = new BehaviorSubject<string[]>([]);
-  relevantContracts$ = new BehaviorSubject<WaterfallContract[]>([]);
+  public rightholderNames$ = new BehaviorSubject<string[]>([]);
+  public relevantContracts$ = new BehaviorSubject<WaterfallContract[]>([]);
 
-  subscriptions: Subscription[] = [];
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private dialog: MatDialog,
@@ -100,8 +101,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.shell.waterfall$,
       this.shell.versionId$.pipe(tap(_ => this.unselect())),
       this.shell.statements$.pipe(map(statements => statements.filter(s => s.status === 'reported'))),
-    ]).subscribe(([rights, waterfall, versionId, statements]) => {
+      this.shell.contracts$,
+    ]).subscribe(([rights, waterfall, versionId, statements, contracts]) => {
       this.rights = rights;
+      this.contracts = contracts;
       this.version = waterfall.versions.find(v => v.id === versionId);
       this.sources = waterfallSources(waterfall, this.version?.id);
       this.rightholders = waterfall.rightholders;
@@ -127,7 +130,16 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       }
       this.layout();
     }));
-    this.subscriptions.push(this.rightForm.controls.org.valueChanges.subscribe(org => this.updateRightName(org, undefined)));
+    this.subscriptions.push(this.rightForm.controls.org.valueChanges.subscribe(org => {
+      this.updateRightName(org, undefined);
+      const rightholder = this.rightholders.find(r => r.name === org);
+      const producer = this.rightholders.find(r => r.roles.includes('producer'));
+      if (rightholder && rightholder.id !== producer?.id) {
+        this.relevantContracts$.next(getContractsWith([rightholder.id, producer?.id], this.contracts));
+      } else {
+        this.relevantContracts$.next([]);
+      }
+    }));
     this.subscriptions.push(this.rightForm.controls.type.valueChanges.subscribe(type => this.updateRightName(undefined, type)));
   }
 
@@ -167,8 +179,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
       const producer = this.rightholders.find(r => r.roles.includes('producer'));
       if (right.rightholderId && right.rightholderId !== producer?.id) {
-        const contracts = await this.shell.contracts();
-        this.relevantContracts$.next(getContractsWith([right.rightholderId, producer?.id], contracts));
+        this.relevantContracts$.next(getContractsWith([right.rightholderId, producer?.id], this.contracts));
       } else {
         this.relevantContracts$.next([]);
       }
