@@ -137,13 +137,13 @@ export async function getRightholderId(
   cache: Record<string, WaterfallRightholder[]>
 ) {
 
-  const value = valueOrId.trim().toLowerCase();
+  const value = valueOrId.trim();
   if (!cache[waterfallId]) {
     const { rightholders } = await waterfallService.getValue(waterfallId);
-    cache[waterfallId] = rightholders.map(r => ({ ...r, name: r.name.trim().toLowerCase() }));
+    cache[waterfallId] = rightholders.map(r => ({ ...r, name: r.name.trim() }));
   }
 
-  const rightholder = cache[waterfallId].find(r => r.name === value || r.id === valueOrId);
+  const rightholder = cache[waterfallId].find(r => r.name.toLowerCase() === value.toLowerCase() || r.id === valueOrId);
   if (rightholder) return rightholder.id;
 
   cache[waterfallId].push(createWaterfallRightholder({ id: waterfallService.createId(), name: value, roles: [] }));
