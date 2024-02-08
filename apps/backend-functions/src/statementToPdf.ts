@@ -1,6 +1,7 @@
 import {
   Movie,
   MovieCurrency,
+  Organization,
   PricePerCurrency,
   PublicUser,
   Statement,
@@ -9,10 +10,10 @@ import {
   Waterfall,
   WaterfallContract,
   WaterfallDocument,
-  WaterfallRightholder,
   convertDocumentTo,
   convertStatementsTo,
   displayName,
+  getOrgEmailData,
   getStatementData,
   getUserEmailData,
   getWaterfallEmailData,
@@ -50,7 +51,9 @@ export const statementToPdf = async (req: StatementPdfRequest, res: Response) =>
     return;
   }
 
-  const buffer = await _statementToPdf(statementId, waterfallId, number, versionId);
+  const waterfall = await getDocument<Waterfall>(`waterfall/${waterfallId}`);
+  const movie = await getDocument<Movie>(`movies/${waterfall.id}`);
+  const buffer = await _statementToPdf(statementId, waterfall, movie, number, versionId);
 
   const gzip = gzipSync(buffer);
 
@@ -63,25 +66,26 @@ export const statementToPdf = async (req: StatementPdfRequest, res: Response) =>
 
 export const statementToEmail = async (data: { request: StatementPdfParams, emails: string[] }, context: CallableContext) => {
   if (!context?.auth) throw new Error('Permission denied: missing auth context.');
-  const { statementId, waterfallId, number, versionId } = data.request;
-  if (!statementId || !waterfallId || !versionId) throw new Error('Permission denied: missing data.');
+  const { statementId, waterfallId, number, versionId, org } = data.request;
+  if (!statementId || !waterfallId || !versionId || !org) throw new Error('Permission denied: missing data.');
 
-  const buffer = await _statementToPdf(statementId, waterfallId, number, versionId);
-  await Promise.all(data.emails.map(email => sendMailWithEnclosedStatement(waterfallId, { email }, data.request.fileName, buffer)));
+  const waterfall = await getDocument<Waterfall>(`waterfall/${waterfallId}`);
+  const statement = await getDocument<Statement>(`waterfall/${waterfall.id}/statements/${statementId}`);
+  const movie = await getDocument<Movie>(`movies/${waterfall.id}`);
+  const buffer = await _statementToPdf(statementId, waterfall, movie, number, versionId);
+  await Promise.all(data.emails.map(email => sendMailWithEnclosedStatement(statement, waterfall, org, movie, { email }, data.request.fileName, buffer)));
   return true;
 };
 
-async function _statementToPdf(statementId: string, waterfallId: string, number: number, versionId: string) {
-  const _statements = await getCollection<Statement>(`waterfall/${waterfallId}/statements`);
-  const waterfall = await getDocument<Waterfall>(`waterfall/${waterfallId}`);
-  const movie = await getDocument<Movie>(`movies/${waterfall.id}`);
+async function _statementToPdf(statementId: string, waterfall: Waterfall, movie: Movie, number: number, versionId: string) {
+  const _statements = await getCollection<Statement>(`waterfall/${waterfall.id}/statements`);
   const statements = convertStatementsTo(_statements, waterfall.versions.find(v => v.id === versionId));
   const statement = statements.find(s => s.id === statementId);
   const parentStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
     .filter(s => s.payments.right.some(r => r.incomeIds.some(id => statement.incomeIds.includes(id))));
   let contract: WaterfallContract;
   if (statement.contractId) {
-    const document = await getDocument<WaterfallDocument>(`waterfall/${waterfallId}/documents/${statement.contractId}`);
+    const document = await getDocument<WaterfallDocument>(`waterfall/${waterfall.id}/documents/${statement.contractId}`);
     contract = convertDocumentTo<WaterfallContract>(document);
   }
 
@@ -230,12 +234,12 @@ async function generate(
 }
 
 /** Share a statement by email */
-async function sendMailWithEnclosedStatement(waterfallId: string, recipient: Partial<PublicUser>, fileName: string, buffer: Buffer) {
-  const movie = await getDocument<Movie>(`movies/${waterfallId}`);
+async function sendMailWithEnclosedStatement(statement: Statement, waterfall: Waterfall, org: Organization, movie: Movie, recipient: Partial<PublicUser>, fileName: string, buffer: Buffer) {
   const template = shareStatement(
     getUserEmailData(recipient),
-    getStatementData(fileName, buffer),
-    getWaterfallEmailData(movie)
+    getStatementData(statement, waterfall, fileName, buffer),
+    getWaterfallEmailData(movie),
+    getOrgEmailData(org),
   );
   await sendMailFromTemplate(template, 'waterfall', groupIds.unsubscribeAll);
 }
