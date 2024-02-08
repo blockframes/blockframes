@@ -1,6 +1,6 @@
 
 import { Observable, map, startWith, tap } from 'rxjs';
-import { Component, ChangeDetectionStrategy, ViewChild, Input, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, Input, OnInit } from '@angular/core';
 
 import { WaterfallService } from '../../waterfall.service';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
@@ -17,7 +17,6 @@ import {
   rightholderRoles,
   createTerm,
   createWaterfallRightholder,
-  WaterfallFile,
   isContract,
   sortContracts,
   convertDocumentTo,
@@ -209,13 +208,5 @@ export class ContractsFormComponent implements OnInit {
     this.documentForm.markAsPristine();
 
     this.snackBar.open('Contract saved', 'close', { duration: 3000 });
-  }
-}
-
-@Pipe({ name: 'getFile' })
-export class GetFilePipe implements PipeTransform {
-  transform(contractId: string, waterfall: Waterfall): WaterfallFile {
-    const file = waterfall.documents.find(f => f.id === contractId);
-    return file;
   }
 }

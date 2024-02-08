@@ -1,0 +1,33 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+waterfall-contract-main-info {
+  padding-left: 32px;
+}
+
+section {
+  margin: 64px auto;
+  border: solid 2px var(--foreground-divider);
+  max-width: 1024px;
+}
+
+div {
+  text-align: center;
+  a {
+    margin: 16px 0;
+  }
+  img {
+    margin-top: 128px;
+    max-width: 512px;
+  }  
+}
+
+.spinner {
+  display: flex;
+  width: 100%;
+  logo-spinner {
+    margin: auto;
+  }
+}
