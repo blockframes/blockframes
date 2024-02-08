@@ -20,12 +20,13 @@ import {
 
 // Blockframes
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
-import { OrgState, mainCurrency, movieCurrencies, titleCase, History, sum } from '@blockframes/model';
+import { OrgState, mainCurrency, movieCurrencies, titleCase, History, sum, PricePerCurrency } from '@blockframes/model';
 import { sorts } from '@blockframes/ui/list/table/sorts';
 import { FormControl } from '@angular/forms';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 
 type ChartOptions = {
   series: ApexNonAxisChartSeries | ApexAxisChartSeries;
@@ -43,6 +44,15 @@ type ChartOptions = {
   legend: ApexLegend;
   fill: ApexFill;
 };
+
+interface RevenueSummary {
+  name: string;
+  investment: PricePerCurrency;
+  expense: PricePerCurrency;
+  turnover: PricePerCurrency;
+  revenue: PricePerCurrency;
+  gross: number;
+}
 
 @Component({
   selector: 'waterfall-title-dashboard',
@@ -278,7 +288,7 @@ export class DashboardComponent {
     })
   );
 
-  public rightholdersRevenueSummary$ = combineLatest([this.incomes$, this.rightholdersState$]).pipe(
+  public rightholdersRevenueSummary$: Observable<RevenueSummary[]> = combineLatest([this.incomes$, this.rightholdersState$]).pipe(
     map(([incomes, orgs]) => {
       return orgs.map(org => ({
         name: org.name,
@@ -307,6 +317,20 @@ export class DashboardComponent {
     const years = Array.from({ length: currentYear - firstYear + 1 }, (_, i) => firstYear + i);
     const historyPerYear = years.map(year => history.filter(h => new Date(h.date).getFullYear() === year));
     return historyPerYear.filter(h => h.length).map(h => h.pop());
+  }
+
+  public downloadCsv(rows: RevenueSummary[]) {
+    const exportedRows = rows.map(r => ({
+      'Right Holder Name': r.name,
+      'Investment': `${r.investment[mainCurrency]} ${movieCurrencies[mainCurrency]}`,
+      'Expenses': `${r.expense[mainCurrency]} ${movieCurrencies[mainCurrency]}`,
+      'Cash Flow': `${r.turnover[mainCurrency]} ${movieCurrencies[mainCurrency]}`,
+      'Net Revenue': `${r.revenue[mainCurrency]} ${movieCurrencies[mainCurrency]}`,
+      '% Gross': `${r.gross} %`
+    }));
+
+    const filename = `${this.shell.movie.title.international.split(' ').join('_')}_revenue_summary`;
+    downloadCsvFromJson(exportedRows, filename);
   }
 
 }
