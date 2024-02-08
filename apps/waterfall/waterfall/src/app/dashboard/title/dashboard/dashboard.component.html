@@ -126,11 +126,12 @@
             <ng-template colRef="gross" label="% Gross" let-gross sort>
               {{ gross }} %
             </ng-template>
-            <ng-template colRef="value" label="Action" let-rightholder sticky>
+            <!-- TODO #9657 desactived for now as none (for producer) or many contract can match a single rightholder-->
+            <!-- <ng-template colRef="value" label="Action" let-rightholder sticky>
               <a mat-icon-button [routerLink]="[]" matTooltip="See contract">
                 <mat-icon svgIcon="file"></mat-icon>
               </a>
-            </ng-template>
+            </ng-template> -->
           </bf-table>
         </article>
       </section>

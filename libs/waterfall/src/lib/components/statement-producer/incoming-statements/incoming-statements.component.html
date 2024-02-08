@@ -14,7 +14,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <a *ngIf="contractControl.value" mat-icon-button [routerLink]="['../..', 'documents', contractControl.value]">
+        <a *ngIf="contractControl.value" mat-icon-button target="_blank" [routerLink]="['../..', 'document', contractControl.value]">
           <mat-icon svgIcon="contract" matTooltip="See contract"></mat-icon>
         </a>
       </span>
