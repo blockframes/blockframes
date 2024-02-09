@@ -38,6 +38,8 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
 
   public movie = firstValueFrom(this.movie$);
 
+  public currentVersionName: string;
+
   @Input() routes: RouteDescription[];
   @Input() editRoute?: string | string[];
 
@@ -51,6 +53,7 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   ) { }
 
   async ngOnInit() {
+    if(this.app === 'waterfall')  this.currentVersionName = 'version_1 (default)';
     this.configs.movie.onInit();
     await this.configs.campaign?.onInit();
 

@@ -12,13 +12,14 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 })
 export class ChartsComponent {
 
-  path = '/assets/images/demo-cannes/Right Holders Involved_1.svg';
+  path = '/assets/images/demo-cannes/Right Holders Involved.svg';
 
   switch() {
-    if (this.path === '/assets/images/demo-cannes/Right Holders Involved_1.svg') {
+    return;
+    /*if (this.path === '/assets/images/demo-cannes/Right Holders Involved_1.svg') {
       this.path = '/assets/images/demo-cannes/Right Holders Involved_2.svg';
     } else {
       this.path = '/assets/images/demo-cannes/Right Holders Involved_1.svg';
-    }
+    }*/
   }
 }

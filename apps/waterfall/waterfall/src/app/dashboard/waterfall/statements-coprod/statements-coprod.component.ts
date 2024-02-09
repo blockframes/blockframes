@@ -15,10 +15,11 @@ export class StatementsCoprodComponent {
   path = '/assets/images/demo-cannes/outgoing-statements/Outgoing_1.svg';
 
   switch() {
-    if (this.path === '/assets/images/demo-cannes/outgoing-statements/Outgoing_1.svg') {
+    return; 
+   /* if (this.path === '/assets/images/demo-cannes/outgoing-statements/Outgoing_1.svg') {
       this.path = '/assets/images/demo-cannes/outgoing-statements/Outgoing_2.svg';
     } else {
       this.path = '/assets/images/demo-cannes/outgoing-statements/Outgoing_1.svg';
-    }
+    }*/
   }
 }

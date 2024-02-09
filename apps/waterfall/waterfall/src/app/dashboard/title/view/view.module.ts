@@ -45,15 +45,16 @@ const routes: Routes = [{
       data: { animation: 3 }
     },
     {
-      path: 'avails',
-      loadChildren: () => import('../avails/avails.module').then(m => m.AvailsModule),
+      path: 'charts',
+      loadChildren: () => import('../charts/charts.module').then(m => m.ChartsModule),
       data: { animation: 4 }
     },
     {
-      path: 'charts',
-      loadChildren: () => import('../charts/charts.module').then(m => m.ChartsModule),
+      path: 'avails',
+      loadChildren: () => import('../avails/avails.module').then(m => m.AvailsModule),
       data: { animation: 5 }
     },
+
   ]
 }];
 
