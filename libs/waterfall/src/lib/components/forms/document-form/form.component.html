@@ -50,7 +50,7 @@
   <mat-form-field appearance="outline">
     <mat-icon svgIcon="timer" matPrefix></mat-icon>
     <mat-label>Duration Number</mat-label>
-    <input matInput type="number" [formControl]="durationControl" />
+    <input matInput type="number" min="0" [formControl]="durationControl" />
   </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-icon svgIcon="timer" matPrefix></mat-icon>

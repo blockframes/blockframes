@@ -68,6 +68,16 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
       if (licensee) this.previousIds.licensee = licensee.id;
     }
 
+    if (this.form.controls.startDate.value?.getTime() === this.form.controls.signatureDate.value?.getTime()) {
+      this.hideStartDate$.next(true);
+    } else {
+      this.hideStartDate$.next(false);
+    }
+
+    if (this.hideStartDate$.value && this.form.controls.signatureDate.value) {
+      this.form.controls.startDate.setValue(this.form.controls.signatureDate.value, { emitEvent: false });
+    }
+
     this.subscription.push(
       this.form.valueChanges.subscribe((value: WaterfallDocumentFormValue) => {
         const filtered = names.filter(n => n !== value.licenseeName && n !== value.licensorName);
@@ -77,15 +87,36 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
         this.handleRoles(value);
       }),
       this.form.controls.endDate.valueChanges.subscribe(() => {
-        this.durationControl.setValue(0);
+        this.durationControl.setValue(0, { emitEvent: false });
         this.periodControl.setValue(undefined);
       }),
       combineLatest([
         this.durationControl.valueChanges,
         this.periodControl.valueChanges,
       ]).subscribe(([duration, period]) => {
-        const newEndDate = add(this.form.controls.endDate.value, { [period]: duration });
+        if (duration === undefined || !period) return;
+        const newEndDate = add(this.form.controls.startDate.value, { [period]: duration });
         this.form.controls.endDate.setValue(newEndDate, { emitEvent: false });
+      }),
+      this.form.controls.signatureDate.valueChanges.subscribe(date => {
+        if (this.hideStartDate$.value) {
+          this.form.controls.startDate.setValue(date, { emitEvent: false });
+          if (this.durationControl.value && this.periodControl.value) {
+            const newEndDate = add(this.form.controls.startDate.value, { [this.periodControl.value]: this.durationControl.value });
+            this.form.controls.endDate.setValue(newEndDate, { emitEvent: false });
+          }
+        }
+      }),
+      this.form.controls.startDate.valueChanges.subscribe(date => {
+        if (!this.hideStartDate$.value && this.durationControl.value && this.periodControl.value) {
+          const newEndDate = add(date, { [this.periodControl.value]: this.durationControl.value });
+          this.form.controls.endDate.setValue(newEndDate, { emitEvent: false });
+        }
+      }),
+      this.hideStartDate$.subscribe(hide => {
+        if (hide && this.form.controls.signatureDate.value) {
+          this.form.controls.startDate.setValue(this.form.controls.signatureDate.value, { emitEvent: false });
+        }
       }),
     );
 
