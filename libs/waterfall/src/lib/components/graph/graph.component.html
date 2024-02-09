@@ -99,8 +99,8 @@
               required
               label="Right Holder Name"
               [options]="rightholderNames$"
-              placeholder="Choose Company or put your own"
-              [form]="rightForm.get('org')"
+              placeholder="Choose Right Holder"
+              [form]="rightholderControl"
             ></bf-autocomplete>
 
             <mat-form-field *ngIf="(relevantContracts$ | async).length" appearance="outline">

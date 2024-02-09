@@ -13,4 +13,5 @@
       {{ state }}
     </mat-option>
   </mat-autocomplete>
+  <mat-error *ngIf="form.hasError('invalidValue')">Please provide a valid {{label}}</mat-error>
 </mat-form-field>

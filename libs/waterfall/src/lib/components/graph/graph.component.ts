@@ -37,6 +37,7 @@ import { createRightForm, setRightFormValue } from '../forms/right-form/right-fo
 import { createSourceForm, setSourceFormValue } from '../forms/source-form/source-form';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 import { Arrow, Node, computeDiff, createChild, createSibling, createStep, deleteStep, fromGraph, toGraph, updateParents } from './layout';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'waterfall-graph',
@@ -78,6 +79,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   public rightForm = createRightForm();
   public sourceForm = createSourceForm();
+  public rightholderControl = new FormControl<string>('');
 
   public rightholderNames$ = new BehaviorSubject<string[]>([]);
   public relevantContracts$ = new BehaviorSubject<WaterfallContract[]>([]);
@@ -133,6 +135,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.rightForm.controls.org.valueChanges.subscribe(org => {
       this.updateRightName(org, undefined);
       const rightholder = this.rightholders.find(r => r.name === org);
+      this.rightholderControl.setValue(rightholder?.name);
       const producer = this.rightholders.find(r => r.roles.includes('producer'));
       if (rightholder && rightholder.id !== producer?.id) {
         this.relevantContracts$.next(getContractsWith([rightholder.id, producer?.id], this.contracts));
@@ -141,6 +144,14 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       }
     }));
     this.subscriptions.push(this.rightForm.controls.type.valueChanges.subscribe(type => this.updateRightName(undefined, type)));
+    this.subscriptions.push(this.rightholderControl.valueChanges.subscribe(name => {
+      const rightholder = this.rightholders.find(r => r.name === name);
+      if (rightholder) {
+        if (this.rightForm.controls.org.value !== rightholder.name) this.rightForm.controls.org.setValue(rightholder.name);
+      } else if (name !== '') {
+        this.rightholderControl.setErrors({ invalidValue: true });
+      }
+    }));
   }
 
   ngOnDestroy() {
@@ -201,6 +212,21 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async updateRight() {
+    const rightholderName = this.rightForm.controls.org.value;
+    const rightholder = this.rightholders.find(r => r.name === rightholderName);
+    if (!rightholder) {
+      this.snackBar.open('Please provide a valid Right Holder name', 'close', { duration: 3000 });
+      return;
+    }
+
+    if (this.relevantContracts$.value.length === 0) this.rightForm.controls.contract.setValue('');
+
+    const producer = this.rightholders.find(r => r.roles.includes('producer'));
+    if (producer?.id !== rightholder.id && !this.rightForm.controls.contract.value) {
+      this.snackBar.open('Please provide the contract associated to this Receipt Share', 'close', { duration: 3000 });
+      return;
+    }
+
     const rightId = this.selected$.getValue();
 
     const graph = this.nodes$.getValue();
@@ -246,6 +272,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.updateSources(newGraph.sources, write),
     ]);
     await write.commit();
+
+    this.snackBar.open('Receipt Share saved', 'close', { duration: 3000 });
   }
 
   updateSource() {
