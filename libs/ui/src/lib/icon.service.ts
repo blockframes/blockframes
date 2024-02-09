@@ -158,6 +158,7 @@ export const icons = [
   { name: 'volume_up', url: 'assets/icons/volume_up.svg' },
   { name: 'warning', url: 'assets/icons/warning.svg' },
   { name: 'world', url: 'assets/icons/world.svg' },
+  { name: 'water_drop', url: 'assets/icons/water_drop.svg' },
 ] as const;
 
 export type IconSvg = typeof icons[number]['name'];
