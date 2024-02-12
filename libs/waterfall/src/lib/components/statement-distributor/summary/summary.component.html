@@ -60,6 +60,16 @@
             Still to be recouped:
             <price-per-currency [price]="item.stillToBeRecouped" default="€ 0"></price-per-currency>
           </div>
+          <div class="to-be-recouped" *ngIf="item.mgStatus">
+            <span>
+              Before recoupment:
+            <price-per-currency [price]="item.mgStatus.investments" default="€ 0"></price-per-currency>
+            </span>
+            <span>
+              Still to be recouped:
+              <price-per-currency [price]="item.mgStatus.stillToBeRecouped" default="€ 0"></price-per-currency>
+            </span>
+          </div>
         </mat-expansion-panel>
       </div>
     </ng-container>
@@ -118,6 +128,16 @@
           <div class="to-be-recouped" *ngIf="item.stillToBeRecouped">
             Still to be recouped:
             <price-per-currency [price]="item.stillToBeRecouped" default="€ 0"></price-per-currency>
+          </div>
+          <div class="to-be-recouped" *ngIf="item.mgStatus">
+            <span>
+              Before recoupment:
+            <price-per-currency [price]="item.mgStatus.investments" default="€ 0"></price-per-currency>
+            </span>
+            <span>
+              Still to be recouped:
+              <price-per-currency [price]="item.mgStatus.stillToBeRecouped" default="€ 0"></price-per-currency>
+            </span>
           </div>
         </mat-expansion-panel>
       </div>
