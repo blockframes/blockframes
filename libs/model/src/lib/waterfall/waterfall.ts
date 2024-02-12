@@ -217,10 +217,6 @@ export const isContract = (document: Partial<WaterfallDocument>): document is Wa
 const isBudget = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallBudget> => document?.type === 'budget';
 const isFinancingPlan = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallFinancingPlan> => document?.type === 'financingPlan';
 
-export function isWaterfallMandate(contract: Partial<WaterfallContract>): contract is WaterfallMandate {
-  return Object.keys(rightholderGroups.distributors).includes(contract.type);
-}
-
 export function isWaterfallSale(contract: Partial<WaterfallContract>): contract is WaterfallSale {
   return Object.keys(rightholderGroups.sales).includes(contract.type);
 }
@@ -276,10 +272,6 @@ export interface WaterfallContract extends BaseContract {
 
 export interface WaterfallSale extends WaterfallContract {
   type: keyof typeof rightholderGroups.sales;
-}
-
-export interface WaterfallMandate extends WaterfallContract {
-  type: keyof typeof rightholderGroups.distributors;
 }
 
 interface WaterfallFinancingPlan {

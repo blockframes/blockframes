@@ -13,11 +13,10 @@ import {
   getContractAndAmendments,
   WaterfallContract,
   getContractDurationStatus,
-  isWaterfallMandate,
-  isWaterfallSale,
   Waterfall,
   Term,
-  Income
+  Income,
+  WaterfallSale
 } from '@blockframes/model';
 import { differenceInDays, differenceInMonths, differenceInYears } from 'date-fns';
 import { unique } from '@blockframes/utils/helpers';
@@ -32,7 +31,7 @@ function getDateDifference(a: Date, b: Date) {
 }
 
 export interface SalesMapData {
-  contracts: WaterfallContract[];
+  sales: WaterfallSale[];
   waterfall: Waterfall;
   terms: Term[];
   incomes: Income[];
@@ -73,13 +72,11 @@ export class SalesMapComponent implements OnInit {
 
   ngOnInit() {
 
-    const mandates = this.data.contracts.filter(isWaterfallMandate);
-    const mandateTerms = this.getTerms(mandates);
-    const sales = this.data.contracts.filter(isWaterfallSale);
+    const sales = this.data.sales;
     const salesTerms = this.getTerms(sales);
 
-    const res = filterContractsByTitle(this.data.waterfall.id, mandates, mandateTerms, sales, salesTerms);
-    this.territoriesSold = territoriesSold([...res.mandates.filter(m => m.terms), ...res.sales.filter(s => s.terms)]);
+    const res = filterContractsByTitle(this.data.waterfall.id, [], [], sales, salesTerms);
+    this.territoriesSold = territoriesSold([...res.sales.filter(s => s.terms)]);
     this.cdr.markForCheck();
   }
 
@@ -142,7 +139,7 @@ export class SalesMapComponent implements OnInit {
         const contractAndAmendments = getContractAndAmendments(rootContract.id, territory.contracts);
         const contract = getLatestContract(contractAndAmendments);
         const childContracts = contractAndAmendments.filter(c => c.rootId);
-        const incomes = this.data.incomes.filter(i => contractAndAmendments.find(c => c.id === i.contractId));
+        const incomes = this.data.incomes.filter(i => i.status === 'received' && contractAndAmendments.find(c => c.id === i.contractId));
 
         const contractInfos = {
           buyerName: this.data.waterfall.rightholders.find(r => r.id === contract.buyerId).name,
