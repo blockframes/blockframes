@@ -163,6 +163,18 @@
                   {{pricePerCurrency stillToBeRecouped}}
                 </div>
               {{/if}}
+              {{#if mgStatus}}
+                <div class="to-be-recouped">
+                  <span>
+                    Before recoupment:
+                    {{pricePerCurrency mgStatus.investments}}
+                  </span>
+                  <span>
+                    Still to be recouped:
+                    {{pricePerCurrency mgStatus.stillToBeRecouped}}
+                  </span>
+                </div>
+              {{/if}}
             </div>
           </div>
         {{/data.statement.reportedData.groupsBreakdown}}
@@ -247,6 +259,18 @@
                 <div class="to-be-recouped">
                   Still to be recouped:
                   {{pricePerCurrency stillToBeRecouped}}
+                </div>
+              {{/if}}
+              {{#if mgStatus}}
+                <div class="to-be-recouped">
+                  <span>
+                    Before recoupment:
+                    {{pricePerCurrency mgStatus.investments}}
+                  </span>
+                  <span>
+                    Still to be recouped:
+                    {{pricePerCurrency mgStatus.stillToBeRecouped}}
+                  </span>
                 </div>
               {{/if}}
             </div>
@@ -495,6 +519,18 @@
                     <div class="to-be-recouped">
                       Still to be recouped:
                       {{pricePerCurrency stillToBeRecouped}}
+                    </div>
+                  {{/if}}
+                  {{#if mgStatus}}
+                    <div class="to-be-recouped">
+                      <span>
+                        Before recoupment:
+                        {{pricePerCurrency mgStatus.investments}}
+                      </span>
+                      <span>
+                        Still to be recouped:
+                        {{pricePerCurrency mgStatus.stillToBeRecouped}}
+                      </span>
                     </div>
                   {{/if}}
                 </div>
