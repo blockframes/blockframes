@@ -5,8 +5,8 @@ import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.co
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { sorts } from '@blockframes/ui/list/table/sorts';
 import { downloadCsvFromJson, unique } from '@blockframes/utils/helpers';
-import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
-import { rightholderName } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
+import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
+import { rightholderName } from '../../pipes/rightholder-name.pipe';
 import { BehaviorSubject } from 'rxjs';
 
 interface SalesData {
