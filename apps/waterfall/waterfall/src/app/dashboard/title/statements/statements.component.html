@@ -38,13 +38,13 @@
         </ng-container>
       </section>
       <div *ngIf="selected !== 'directSales' && rightholderContracts.length === 1 && isStatementSender">
-        <button mat-button (click)="createStatement(rightholderControl.value, rightholderContracts[0].id)">
+        <button mat-button color="primary" (click)="createStatement(rightholderControl.value, rightholderContracts[0].id)" class="main-dashboard-cta">
           <mat-icon svgIcon="add"></mat-icon>
           <span>Add Statement</span>
         </button>
       </div>
       <div *ngIf="selected === 'directSales' && haveStatements && isStatementSender">
-        <button mat-button (click)="createStatement(rightholderControl.value)">
+        <button mat-button color="primary" (click)="createStatement(rightholderControl.value)" class="main-dashboard-cta">
           <mat-icon svgIcon="add"></mat-icon>
           <span>Add Statement</span>
         </button>
@@ -58,7 +58,7 @@
         <mat-tab *ngIf="rightholderContract.statements.length > 0" [label]="rightholderContract.name">
           <ng-template matTabContent>
             <div *ngIf="isStatementSender">
-              <button mat-button (click)="createStatement(rightholderControl.value, rightholderContract.id)">
+              <button mat-button color="primary" (click)="createStatement(rightholderControl.value, rightholderContract.id)" class="main-dashboard-cta">
                 <mat-icon svgIcon="add"></mat-icon>
                 <span>Add statement ({{ rightholderContract.name }})</span>
               </button>
