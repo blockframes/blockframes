@@ -1,5 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 // Blockframes
 
@@ -12,6 +13,10 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 })
 export class StatementsDistribComponent {
   path = '/assets/images/demo-cannes/distrib-statements/Statement_1.svg';
+  movieId = this.route.snapshot.params.movieId;
+  constructor(private router: Router,private route: ActivatedRoute,) {
+
+  }
 
   switch() {
 
@@ -34,7 +39,7 @@ export class StatementsDistribComponent {
     } else if (this.path === '/assets/images/demo-cannes/distrib-statements/Statement_9.svg') {
       this.path = '/assets/images/demo-cannes/distrib-statements/Statement_10.svg';
     } else {
-      this.path = '/assets/images/demo-cannes/distrib-statements/Statement_1.svg';
+      this.router.navigate(['/c/o/dashboard/title',this.movieId, 'statements']);
     }
 
   }

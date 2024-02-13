@@ -45,14 +45,19 @@ const routes: Routes = [{
       data: { animation: 3 }
     },
     {
+      path: 'amortization',
+      loadChildren: () => import('../amortization/amortization.module').then(m => m.AmortizationModule),
+      data: { animation: 4 }
+    },
+    {
       path: 'charts',
       loadChildren: () => import('../charts/charts.module').then(m => m.ChartsModule),
-      data: { animation: 4 }
+      data: { animation: 5 }
     },
     {
       path: 'avails',
       loadChildren: () => import('../avails/avails.module').then(m => m.AvailsModule),
-      data: { animation: 5 }
+      data: { animation: 6 }
     },
 
   ]
