@@ -34,6 +34,7 @@ export const icons = [
   { name: 'call_end', url: 'assets/icons/call_end.svg' },
   { name: 'campaign', url: 'assets/icons/campaign.svg' },
   { name: 'cancel', url: 'assets/icons/cancel.svg' },
+  { name: 'certify', url: 'assets/icons/certify.svg' },
   { name: 'check', url: 'assets/icons/check.svg' },
   { name: 'check_circle', url: 'assets/icons/check_circle.svg' },
   { name: 'chevron_left', url: 'assets/icons/chevron_left.svg' },
