@@ -47,8 +47,9 @@ function createNotificationsControls(settings: Partial<NotificationSettings> = {
     myContractWasAccepted: new NotificationSettingsForm(settings.myContractWasAccepted, true),
     myOrgDeclinedAContract: new NotificationSettingsForm(settings.myOrgDeclinedAContract, true),
     myContractWasDeclined: new NotificationSettingsForm(settings.myContractWasDeclined, true),
-    invitationToJoinWaterfallCreated: new NotificationSettingsForm(settings.invitationToJoinWaterfallCreated, true),
-    invitationToJoinWaterfallUpdated: new NotificationSettingsForm(settings.invitationToJoinWaterfallUpdated),
+    invitationToJoinWaterfallCreated: new NotificationSettingsForm(settings.invitationToJoinWaterfallCreated, true), // TODO #9585
+    invitationToJoinWaterfallUpdated: new NotificationSettingsForm(settings.invitationToJoinWaterfallUpdated), // TODO #9585
+    userRequestedDocumentCertification: new NotificationSettingsForm(settings.userRequestedDocumentCertification),
     // #7946 this may be reactivated later
     // underSignature: new NotificationSettingsForm(settings.underSignature, true),
   }

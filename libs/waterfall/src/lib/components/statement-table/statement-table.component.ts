@@ -24,6 +24,7 @@ import { CallableFunctions } from 'ngfire';
 import { StatementShareComponent } from '../statement-share/statement-share.component';
 import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
+import { AuthService } from '@blockframes/auth/service';
 
 function statementFileName(statement: Statement & { number: number }) {
   return `${toLabel(statement.type, 'statementType')} Statement ${statement.number}`;
@@ -72,6 +73,7 @@ export class StatementTableComponent {
     private statementService: StatementService,
     private pdfService: PdfService,
     private orgService: OrganizationService,
+    private authService: AuthService,
     private functions: CallableFunctions,
     private cdr: ChangeDetectorRef,
   ) { }
@@ -158,7 +160,7 @@ export class StatementTableComponent {
   }
 
   async certify(statement: Statement & { number: number }) {
-
+    if (statement.hash?.requested) return;
     this.dialog.open(ConfirmComponent, {
       data: createModalData({
         title: 'Certify the document via Blockchain',
@@ -167,8 +169,12 @@ export class StatementTableComponent {
         intercom: 'Contact us',
         confirm: 'Certify document',
         cancel: 'Close window',
-        onConfirm: () => {
-          console.log('ici');
+        onConfirm: async () => {
+          statement.hash.requested = true;
+          statement.hash.requestDate = new Date();
+          statement.hash.requestedBy = this.authService.user.uid;
+          await this.statementService.update(statement, { params: { waterfallId: this.waterfall.id } });
+          this.snackBar.open('Your request to certify the document has been sent successfully.', 'close', { duration: 5000 });
         }
       }, 'small'),
       autoFocus: false

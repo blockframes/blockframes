@@ -43,8 +43,9 @@ const titleType: Partial<Record<NotificationTypes, NotificationSetting>> = {
   myContractWasAccepted: { text: 'Your offer gets accepted. (RECOMMENDED)', tooltip: true },
   myOrgDeclinedAContract: { text: 'You decline an offer. (RECOMMENDED)', tooltip: true },
   myContractWasDeclined: { text: 'Your offer gets declined. (RECOMMENDED)', tooltip: true },
-  invitationToJoinWaterfallCreated: { text: 'You are invited to join a Waterfall. (RECOMMENDED)', tooltip: true },
-  invitationToJoinWaterfallUpdated: { text: 'A user answers your invitation to join your Waterfall.', tooltip: false },
+  invitationToJoinWaterfallCreated: { text: 'You are invited to join a Waterfall. (RECOMMENDED)', tooltip: true }, // TODO #9585
+  invitationToJoinWaterfallUpdated: { text: 'A user answers your invitation to join your Waterfall.', tooltip: false }, // TODO #9585
+  userRequestedDocumentCertification: { text: 'A user requested a document certification.', tooltip: false },
   // #7946 this may be reactivated later
   // underSignature: { text: 'Your offer is now under signature or validated by all parties. (RECOMMENDED)', tooltip: true },
 };
@@ -125,8 +126,9 @@ const tables: { title: string, types: NotificationTypes[], appAuthorized: App[] 
   {
     title: 'Waterfall Management',
     types: [
-      'invitationToJoinWaterfallCreated',
-      'invitationToJoinWaterfallUpdated',
+      'invitationToJoinWaterfallCreated', // TODO #9585
+      'invitationToJoinWaterfallUpdated', // TODO #9585
+      'userRequestedDocumentCertification'
     ],
     appAuthorized: ['waterfall']
   }

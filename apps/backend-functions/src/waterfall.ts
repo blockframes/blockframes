@@ -2,14 +2,18 @@ import { CallableContext } from 'firebase-functions/lib/common/providers/https';
 import {
   Expense,
   Income,
-  PublicUser,
+  Movie,
   Right,
   Statement,
+  User,
   Waterfall,
   WaterfallContract,
   WaterfallDocument,
   WaterfallPermissions,
   convertDocumentTo,
+  createInternalDocumentMeta,
+  createNotification,
+  createPublicUser,
   getDefaultVersionId,
   isContract,
   isDirectSalesStatement,
@@ -23,6 +27,11 @@ import { cleanRelatedContractDocuments } from './contracts';
 import { db } from './internals/firebase';
 import { EventContext } from 'firebase-functions';
 import { cleanWaterfallMedias } from './media';
+import { userRequestedDocumentCertification } from './templates/mail';
+import { getMailSender } from '@blockframes/utils/apps';
+import { triggerNotifications } from './notification';
+import { groupIds } from '@blockframes/utils/emails/ids';
+import { sendMail } from './internals/email';
 
 export async function onWaterfallUpdate(change: BlockframesChange<Waterfall>) {
   const before = change.before.data();
@@ -162,6 +171,26 @@ export async function onWaterfallStatementUpdate(change: BlockframesChange<State
     }
   }
 
+  // Check if blockchain certification has be requested
+  if (after.status === 'reported' && !before.hash?.requested && after.hash?.requested === true) {
+    const userDocument = await getDocument<User>(`users/${after.hash.requestedBy}`);
+    const user = createPublicUser(userDocument);
+    const movie = await getDocument<Movie>(`movies/${after.waterfallId}`);
+    const mailRequest = userRequestedDocumentCertification(user, 'statement', after.id, movie);
+    const from = getMailSender('waterfall');
+
+    const notification = createNotification({
+      toUserId: user.uid,
+      docId: after.waterfallId,
+      statementId: after.id,
+      _meta: createInternalDocumentMeta({ createdFrom: 'waterfall' }),
+      type: 'userRequestedDocumentCertification'
+    });
+
+    await triggerNotifications([notification]);
+    await sendMail(mailRequest, from, groupIds.noUnsubscribeLink).catch(e => console.warn(e.message));
+  }
+
   return batch.commit();
 }
 
@@ -221,7 +250,7 @@ export async function onWaterfallRightDelete(docSnapshot: BlockframesSnapshot<Ri
 
 export const removeWaterfallFile = async (data: { waterfallId: string, documentId: string }, context: CallableContext) => {
   if (!context?.auth) throw new Error('Permission denied: missing auth context.');
-  const user = await getDocument<PublicUser>(`users/${context.auth.uid}`);
+  const user = await getDocument<User>(`users/${context.auth.uid}`);
   if (!user.orgId) throw new Error('Permission denied: missing org id.');
   const waterfallSnap = await getDocumentSnap(`waterfall/${data.waterfallId}`);
   if (!waterfallSnap.exists) throw new Error('Permission denied: waterfall not found.');

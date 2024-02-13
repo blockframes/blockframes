@@ -128,6 +128,12 @@ export interface Statement {
     details?: DetailsRow[];
     expenses?: (Expense & { cap?: PricePerCurrency })[];
     interests?: InterestDetail[];
+  },
+  hash: {
+    requested: boolean;
+    requestDate?: Date;
+    requestedBy?: string; // User uid
+    hash?: string;
   }
 }
 
@@ -184,6 +190,7 @@ function createStatementBase(params: Partial<Statement> = {}): Statement {
     },
     comment: params.comment || '',
     reportedData: {},
+    hash: { requested: false },
     ...params,
     duration: createDuration(params?.duration),
     rightOverrides: params.rightOverrides ? params.rightOverrides.map(createRightOverride) : []

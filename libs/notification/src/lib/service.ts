@@ -470,7 +470,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         };
       }
       case 'invitationToJoinWaterfallUpdated': {
-        const movie = await this.movieService.load(notification.docId);
+        const movie = await this.loadMovie(notification.docId);
         const subject = await this.notificationSubject(notification);
         const message = `${subject} has ${notification.invitation.status} your ${notification.invitation.mode} to join ${movie.title.international}'s Waterfall.`;
         return {
@@ -479,7 +479,23 @@ export class NotificationService extends BlockframesCollection<Notification> {
           message,
           imgRef: notification.user?.avatar || notification.organization?.logo,
           placeholderUrl: 'profil_user.svg',
-          url: `${applicationUrl['waterfall']}/c/o/${module}/title/${notification.docId}`,
+          url: `${applicationUrl[notification._meta.createdFrom]}/c/o/dashboard/title/${notification.docId}`,
+        };
+      }
+      case 'userRequestedDocumentCertification': {
+        const movie = await this.loadMovie(notification.docId);
+        const imgRef = this.getPoster(movie);
+        let message = `Your request to certify a document is being processed.`;
+        if (notification.statementId) {
+          message = `Your request to certify a <a href="/c/o/dashboard/title/${movie.id}/statement/${notification.statementId}" target="_blank">statement</a> for ${movie.title.international}'s Waterfall is being processed.`;
+        }
+        return {
+          ...notification,
+          _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
+          message,
+          imgRef,
+          placeholderUrl: 'empty_poster.svg',
+          url: `${applicationUrl[notification._meta.createdFrom]}/c/o/dashboard/title/${notification.docId}/statement/${notification.statementId}`,
         };
       }
       default:
