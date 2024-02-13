@@ -47,7 +47,7 @@ export const notifications = {
     // Notifications relative to invitations
     'requestFromUserToJoinOrgCreate', // Notification sent to org admins
     'requestFromUserToJoinOrgDeclined', // Notification is only disabled but not send anymore. See TODO #8026
-    'orgMemberUpdated', 
+    'orgMemberUpdated',
     'requestFromUserToJoinOrgPending', // Notification sent to the user that made the request
     // Other notifications
     'organizationAcceptedByArchipelContent',
@@ -58,8 +58,10 @@ export const notifications = {
   crm: [] as const,
   waterfall: [
     // User is invited to join Waterfall
-    'invitationToJoinWaterfallCreated',
-    'invitationToJoinWaterfallUpdated'
+    'invitationToJoinWaterfallCreated', // TODO #9585
+    'invitationToJoinWaterfallUpdated', // TODO #9585
+    // User requested a document certification
+    'userRequestedDocumentCertification'
   ] as const,
 }
 
@@ -98,6 +100,7 @@ export interface Notification {
   organization?: PublicOrganization;
   invitation?: PublicInvitation;
   bucket?: Bucket;
+  statementId?: string;
   appAccess?: App;
   data?: Record<string, string>;
   /** @dev Type of the notification */

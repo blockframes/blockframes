@@ -1,10 +1,12 @@
-import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject, Optional } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Intercom } from 'ng-intercom';
 
 interface ConfirmationData {
   title: string,
   question: string,
   advice?: string,
+  intercom?: string,
   confirm: string,
   cancel: string,
   onConfirm?: () => void,
@@ -23,6 +25,7 @@ export class ConfirmComponent {
     @Inject(MAT_DIALOG_DATA)
     public data: ConfirmationData,
     public dialogRef: MatDialogRef<ConfirmComponent>,
+    @Optional() private intercom: Intercom,
   ) { }
 
   public confirm() {
@@ -33,5 +36,9 @@ export class ConfirmComponent {
   public close(): void {
     if (this.data.onClose) this.data.onClose('button');
     this.dialogRef.close(false);
+  }
+
+  public openIntercom() {
+    return this.intercom.show();
   }
 }
