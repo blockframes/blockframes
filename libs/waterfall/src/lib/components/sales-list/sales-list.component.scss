@@ -1,0 +1,40 @@
+:host {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+bf-table {
+  padding: 0;
+  border: none;
+
+  .group-label {
+    cursor: pointer;
+  }
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+}
+
+article {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  padding: 24px 0;
+  justify-content: space-between;
+
+  aside {
+    display: block;
+    text-align: right;
+    padding: 0 24px 0 0;
+  }
+}
+
+div {
+  text-align: center;
+  img {
+    max-width: 512px;
+  }  
+}

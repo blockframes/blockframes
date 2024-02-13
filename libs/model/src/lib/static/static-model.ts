@@ -869,10 +869,11 @@ export const rightholderGroups = {
     salesAgent: 'Sales Agent',
     mainDistributor: 'Main Distributor',
   },
-  // Roles only used for the sale map (should not be present in waterfall and statements)
+  // Roles used for the "world sales" map
   sales: {
     localDistributor: 'Local Distributor',
     sale: 'Broadcaster',
+    mainDistributor: 'Main Distributor',
   },
   // Producer 
   producers: {
