@@ -63,7 +63,7 @@
   <mat-step>
     <ng-template matStepLabel>Build Waterfall</ng-template>
     <ng-container *ngIf="(manualCreation$ | async) || (shell.sources$ | async)?.length > 0 || (shell.rights$ | async)?.length > 0; else noWaterfall">
-      <waterfall-version-selector></waterfall-version-selector>
+      <waterfall-version-selector [ngClass]="(shell.versionId$ | async) ? '' : 'hide'"></waterfall-version-selector>
       <waterfall-graph [editMode]="shell.canBypassRules$ | async"></waterfall-graph>
     </ng-container>
     <ng-template #noWaterfall>
@@ -93,7 +93,12 @@
             <mat-icon svgIcon="arrow_back"></mat-icon>
             <span>Back</span>
           </button>
-          <button mat-flat-button color="primary" [disabled]="(shell.canInitWaterfall$ | async) === false" (click)="publishWaterfall()">
+          <button 
+            mat-flat-button 
+            color="primary"
+            [disabled]="(shell.canInitWaterfall$ | async) === false"
+            [matTooltip]="(shell.canInitWaterfall$ | async) === false  ? 'Missing data to publish Waterfall. Make sure to have contracts and receipt shares' : ''"
+            (click)="publishWaterfall()">
             <span>{{ createMode ? 'Publish' : 'Update' }} Waterfall</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </button>

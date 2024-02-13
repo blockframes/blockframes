@@ -7,7 +7,7 @@
     </ng-container>
 
     <a mat-button [routerLink]="['/c/o', module, 'contact']">Contact us</a>
-    <a mat-button [routerLink]="['/c/o', module, 'terms']">Legal Terms</a>
+    <a *ngIf="app !== 'waterfall'" mat-button [routerLink]="['/c/o', module, 'terms']">Legal Terms</a>
     <a mat-button [routerLink]="['/c/o', module, 'privacy']">Privacy Policy</a>
   </div>
   <span class="mat-body-2">
