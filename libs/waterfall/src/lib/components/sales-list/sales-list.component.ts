@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Media, PricePerCurrency, Scope, Term, Territory, WaterfallSale, getContractAndAmendments, getLatestContract, getTotalPerCurrency, toLabel } from '@blockframes/model';
+import { Media, PricePerCurrency, Scope, Term, Territory, WaterfallSale, getContractAndAmendments, getDeclaredAmount, getLatestContract, toLabel } from '@blockframes/model';
 import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { sorts } from '@blockframes/ui/list/table/sorts';
@@ -33,20 +33,17 @@ export class SalesListComponent implements OnInit {
     private dialog: MatDialog
   ) { }
 
-  async ngOnInit() {
-    const incomes = await this.shell.incomes();
+  ngOnInit() {
     const rootContracts = this.sales.filter(c => !c.rootId);
     const rows: SalesData[] = [];
     for (const rootContract of rootContracts) {
       const contractAndAmendments = getContractAndAmendments(rootContract.id, this.sales);
       const contract = getLatestContract(contractAndAmendments);
-      const contractIncomes = incomes.filter(i => i.status === 'received' && contractAndAmendments.find(c => c.id === i.contractId));
-      if (!contractIncomes.some(i => i.price > 0)) continue;
       const row: SalesData = {
         contract,
         territories: unique(contract.terms.map(t => t.territories).flat()),
         medias: unique(contract.terms.map(t => t.medias).flat()),
-        amount: getTotalPerCurrency(contractIncomes),
+        amount: getDeclaredAmount(contract),
       };
       rows.push(row);
     }
