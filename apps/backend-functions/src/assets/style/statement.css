@@ -238,11 +238,16 @@ div.total-net {
   color: #1f2a3b;
 }
 
-div.to-be-recouped{
+div.to-be-recouped {
   font-weight: 800;
   font-size: 16px;
   line-height: 20px;
   text-align: right;
   color: var(--foreground-third-text);
   padding-top: 24px;
+}
+
+div.to-be-recouped span {
+  margin-top: 8px;
+  display: block;
 }

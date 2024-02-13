@@ -4,7 +4,7 @@ import { FullMandate, FullSale, Holdback, Mandate, Sale } from './contract';
 import { mediaGroup, territories, territoriesISOA3 } from './static';
 import { Media, Territory, TerritoryISOA3, TerritoryISOA3Value, TerritoryValue } from './static/types';
 import { BucketTerm, Term, Duration } from './terms';
-import { WaterfallMandate, WaterfallSale } from './waterfall';
+import { WaterfallSale } from './waterfall';
 
 export interface BaseAvailsFilter {
   medias: Media[],
@@ -23,7 +23,7 @@ interface AvailResult<A extends BaseAvailsFilter> {
   sales: FullSale[];
 }
 
-export function filterContractsByTitle(titleId: string, mandates: (Mandate | WaterfallMandate)[], mandateTerms: Term[], sales: (Sale | WaterfallSale)[], saleTerms: Term[], bucket?: Bucket) {
+export function filterContractsByTitle(titleId: string, mandates: Mandate[], mandateTerms: Term[], sales: (Sale | WaterfallSale)[], saleTerms: Term[], bucket?: Bucket) {
 
   // Gather only mandates & mandate terms related to this title
   const termsByMandate: Record<string, Term[]> = {};

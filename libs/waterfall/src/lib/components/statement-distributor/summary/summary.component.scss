@@ -92,6 +92,11 @@ section {
         text-align: right;
         color: var(--foreground-third-text);
         padding-top: 32px;
+
+        span {
+          margin-top: 8px;
+          display: block;
+        }
       }
     }
 
