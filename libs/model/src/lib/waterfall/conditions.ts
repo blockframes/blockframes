@@ -312,7 +312,7 @@ function getExpensesValue(state: TitleState, expenses: ExpenseState[]) {
   return sum(values);
 }
 
-function getInvestmentValue(state: TitleState, contractId: string) {
+export function getInvestmentValue(state: TitleState, contractId: string) {
   const orgs = Object.values(state.orgs);
   const org = orgs.find(o => o.operations.some(op => op.contractId === contractId && op.type === 'investment'));
   const operations = org?.operations.filter(op => op.contractId === contractId && op.type === 'investment') ?? [];

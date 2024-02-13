@@ -1,7 +1,7 @@
 import { DocumentMeta } from '../meta';
 import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups } from '../static';
 import { Duration, createDuration } from '../terms';
-import { PricePerCurrency, getTotalPerCurrency, sortByDate, sum, toLabel } from '../utils';
+import { PricePerCurrency, convertCurrenciesTo, getTotalPerCurrency, sortByDate, sum, toLabel } from '../utils';
 import { TitleState, TransferState } from './state';
 import { Version, Waterfall, WaterfallContract, WaterfallSource, getIncomesSources } from './waterfall';
 import { Right, RightOverride, createRightOverride, getRightCondition, skipGroups } from './right';
@@ -9,8 +9,8 @@ import { getSources, isVerticalGroupChild, nodeExists, pathExists } from './node
 import { Income, createIncome } from '../income';
 import { getContractsWith } from '../contract';
 import { mainCurrency } from './action';
-import { ConditionWithTarget, isConditionWithTarget } from './conditions';
-import { Expense } from '../expense';
+import { ConditionWithTarget, getInvestmentValue, isConditionWithTarget } from './conditions';
+import { Expense, ExpenseType } from '../expense';
 import { InterestDetail } from './interest';
 
 export interface Payment {
@@ -633,6 +633,24 @@ function getRightExpenseTypes(right: Right, statement: Statement, waterfall: Wat
   return Array.from(expenseTargets);
 }
 
+/**
+ * Return contract id defined in conditions of a right with "contracts.investment" target
+ * @param right 
+ * @param statement
+ * @param waterfall
+ * @returns 
+ */
+function getRightInvestContractId(right: Right) {
+  const conditions = getRightCondition(right);
+  const conditionsWithTarget = conditions.filter(c => isConditionWithTarget(c)) as ConditionWithTarget[];
+
+  const contractTargets = conditionsWithTarget
+    .map(c => (typeof c.payload.target === 'object' && c.payload.target.in === 'contracts.investment') ? c.payload.target.id : undefined)
+    .filter(id => !!id);
+
+  return Array.from(contractTargets);
+}
+
 export function convertStatementsTo(_statements: Statement[], version: Version) {
   if (!version?.id) return _statements;
   if (version.standalone) return _statements.filter(s => s.versionId === version.id);
@@ -670,18 +688,25 @@ export interface ProducerBreakdownRow {
   maxPerIncome?: MaxPerIncome[];
 }
 
+interface MgStatus {
+  investments: PricePerCurrency,
+  stillToBeRecouped: PricePerCurrency
+}
+
 export interface SourcesBreakdown {
   name: string;
   rows: BreakdownRow[];
   net: PricePerCurrency;
-  stillToBeRecouped: PricePerCurrency;
+  stillToBeRecouped: PricePerCurrency; // For Expenses
+  mgStatus?: MgStatus
 }
 
 export interface RightsBreakdown {
   name: string;
   rows: BreakdownRow[];
   total: PricePerCurrency;
-  stillToBeRecouped: PricePerCurrency;
+  stillToBeRecouped: PricePerCurrency; // For Expenses
+  mgStatus?: MgStatus
 }
 
 export interface GroupsBreakdown {
@@ -764,7 +789,8 @@ export function getSourcesBreakdown(
     const previousSum: RightPayment[] = [];
     const currentSum: RightPayment[] = [];
     const cumulatedSum: RightPayment[] = [];
-    const stillToBeRecouped: { price: number, currency: MovieCurrency }[] = [];
+    const expensesToBeRecouped: { price: number, currency: MovieCurrency }[] = [];
+    const mgStatus: { investments: number, stillToBeRecouped: number } = { investments: 0, stillToBeRecouped: 0 };
     for (const right of rights) {
       const section = right.type ? `${right.name} (${toLabel(right.type, 'rightTypes')} - ${right.percent}%)` : `${right.name} (${right.percent}%)`;
       const previousRightPayment = previous.map(s => s.payments.right).flat().filter(p => p.to === right.id);
@@ -774,37 +800,12 @@ export function getSourcesBreakdown(
       const cumulatedRightPayment = history.map(s => s.payments.right).flat().filter(p => p.to === right.id);
       cumulatedSum.push(...cumulatedRightPayment.map(r => ({ ...r, price: -r.price })));
 
-      const rightExpenseTypes = getRightExpenseTypes(right, current, waterfall);
-      for (const expenseTypeId of rightExpenseTypes) {
-        const expenseType = expenseTypes?.find(e => e.id === expenseTypeId);
+      const recoupments = getExpensesRecoupment(rows, _expenses, expenseTypes, right, cumulatedRightPayment, current, previous, history, waterfall);
+      expensesToBeRecouped.push(...recoupments);
 
-        if (!expenseType) {
-          if (isDirectSalesStatement(current)) {
-            throw new Error(`Expense type id "${expenseTypeId}" used in conditions of "${right.name}" is not defined.`);
-          } else {
-            throw new Error(`Expense type id "${expenseTypeId}" used in conditions of "${right.name}" is not defined in contract "${current.contractId}".`);
-          }
-        }
-
-        const currentExpenses = _expenses.filter(e => e.typeId === expenseTypeId && current.expenseIds.includes(e.id));
-        const previousExpenses = _expenses.filter(e => e.typeId === expenseTypeId && previous.map(s => s.expenseIds).flat().includes(e.id));
-        const cumulatedExpenses = _expenses.filter(e => e.typeId === expenseTypeId && history.map(s => s.expenseIds).flat().includes(e.id));
-
-        const cap = current.versionId && expenseType.cap.version[current.versionId] ? expenseType.cap.version[current.versionId] : expenseType.cap.default;
-
-        rows.push({
-          section: expenseType.name,
-          cap: cap > 0 ? { [expenseType.currency]: cap } : undefined,
-          type: 'expense',
-          previous: getTotalPerCurrency(previousExpenses),
-          current: getTotalPerCurrency(currentExpenses),
-          cumulated: getTotalPerCurrency(cumulatedExpenses)
-        });
-
-        stillToBeRecouped.push(...cumulatedExpenses);
-      }
-
-      if (rightExpenseTypes.length > 0) stillToBeRecouped.push(...cumulatedRightPayment.map(r => ({ currency: r.currency, price: -r.price })));
+      const mgRecoupment = getMgRecoupment(right, cumulatedRightPayment, state);
+      mgStatus.investments += mgRecoupment.investments;
+      mgStatus.stillToBeRecouped += mgRecoupment.stillToBeRecouped;
 
       const maxPerIncome = Array.from(new Set(currentRightPayment.map(r => r.incomeIds).flat())).map(incomeId => ({
         income: incomes.find(i => i.id === incomeId),
@@ -838,7 +839,8 @@ export function getSourcesBreakdown(
       name: source.name,
       rows,
       net: currentNet,
-      stillToBeRecouped: stillToBeRecouped.length ? getTotalPerCurrency(stillToBeRecouped) : undefined
+      stillToBeRecouped: expensesToBeRecouped.length ? getTotalPerCurrency(expensesToBeRecouped) : undefined,
+      mgStatus: mgStatus.investments ? { investments: { [mainCurrency]: mgStatus.investments }, stillToBeRecouped: { [mainCurrency]: mgStatus.stillToBeRecouped } } : undefined
     };
   }).filter(r => r);
 }
@@ -877,7 +879,8 @@ export function getRightsBreakdown(
   return rightTypes.map(type => {
     const rows: BreakdownRow[] = [];
 
-    const stillToBeRecouped: { price: number, currency: MovieCurrency }[] = [];
+    const expensesToBeRecouped: { price: number, currency: MovieCurrency }[] = [];
+    const mgStatus: { investments: number, stillToBeRecouped: number } = { investments: 0, stillToBeRecouped: 0 };
     for (const right of rightsWithManySources) {
       if (right.type !== type) continue;
 
@@ -886,37 +889,12 @@ export function getRightsBreakdown(
       const currentRightPayment = current.payments.right.filter(p => p.to === right.id);
       const cumulatedRightPayment = history.map(s => s.payments.right).flat().filter(p => p.to === right.id);
 
-      const rightExpenseTypes = getRightExpenseTypes(right, current, waterfall);
-      for (const expenseTypeId of rightExpenseTypes) {
-        const expenseType = expenseTypes?.find(e => e.id === expenseTypeId);
+      const recoupments = getExpensesRecoupment(rows, _expenses, expenseTypes, right, cumulatedRightPayment, current, previous, history, waterfall);
+      expensesToBeRecouped.push(...recoupments);
 
-        if (!expenseType) {
-          if (isDirectSalesStatement(current)) {
-            throw new Error(`Expense type id "${expenseTypeId}" used in conditions of "${right.name}" is not defined.`);
-          } else {
-            throw new Error(`Expense type id "${expenseTypeId}" used in conditions of "${right.name}" is not defined in contract "${current.contractId}".`);
-          }
-        }
-
-        const currentExpenses = _expenses.filter(e => e.typeId === expenseTypeId && current.expenseIds.includes(e.id));
-        const previousExpenses = _expenses.filter(e => e.typeId === expenseTypeId && previous.map(s => s.expenseIds).flat().includes(e.id));
-        const cumulatedExpenses = _expenses.filter(e => e.typeId === expenseTypeId && history.map(s => s.expenseIds).flat().includes(e.id));
-
-        const cap = current.versionId && expenseType.cap.version[current.versionId] ? expenseType.cap.version[current.versionId] : expenseType.cap.default;
-
-        rows.push({
-          section: expenseType.name,
-          cap: cap > 0 ? { [expenseType.currency]: cap } : undefined,
-          type: 'expense',
-          previous: getTotalPerCurrency(previousExpenses),
-          current: getTotalPerCurrency(currentExpenses),
-          cumulated: getTotalPerCurrency(cumulatedExpenses)
-        });
-
-        stillToBeRecouped.push(...cumulatedExpenses);
-      }
-
-      if (rightExpenseTypes.length > 0) stillToBeRecouped.push(...cumulatedRightPayment.map(r => ({ currency: r.currency, price: -r.price })));
+      const mgRecoupment = getMgRecoupment(right, cumulatedRightPayment, state);
+      mgStatus.investments += mgRecoupment.investments;
+      mgStatus.stillToBeRecouped += mgRecoupment.stillToBeRecouped;
 
       const maxPerIncome = Array.from(new Set(currentRightPayment.map(r => r.incomeIds).flat()))
         .map(incomeId => incomes.find(i => i.id === incomeId))
@@ -949,8 +927,67 @@ export function getRightsBreakdown(
       name: toLabel(type, 'rightTypes'),
       rows,
       total,
-      stillToBeRecouped: stillToBeRecouped.length ? getTotalPerCurrency(stillToBeRecouped) : undefined
+      stillToBeRecouped: expensesToBeRecouped.length ? getTotalPerCurrency(expensesToBeRecouped) : undefined,
+      mgStatus: mgStatus.investments ? { investments: { [mainCurrency]: mgStatus.investments }, stillToBeRecouped: { [mainCurrency]: mgStatus.stillToBeRecouped } } : undefined
     };
   });
 }
 
+function getExpensesRecoupment(
+  rows: BreakdownRow[],
+  expenses: Expense[],
+  expenseTypes: ExpenseType[],
+  right: Right,
+  cumulatedRightPayment: RightPayment[],
+  current: Statement,
+  previous: Statement[],
+  history: Statement[],
+  waterfall: Waterfall
+) {
+  const recoupment: { price: number, currency: MovieCurrency }[] = []
+  const rightExpenseTypes = getRightExpenseTypes(right, current, waterfall);
+  for (const expenseTypeId of rightExpenseTypes) {
+    const expenseType = expenseTypes?.find(e => e.id === expenseTypeId);
+
+    if (!expenseType) {
+      if (isDirectSalesStatement(current)) {
+        throw new Error(`Expense type id "${expenseTypeId}" used in conditions of "${right.name}" is not defined.`);
+      } else {
+        throw new Error(`Expense type id "${expenseTypeId}" used in conditions of "${right.name}" is not defined in contract "${current.contractId}".`);
+      }
+    }
+
+    const currentExpenses = expenses.filter(e => e.typeId === expenseTypeId && current.expenseIds.includes(e.id));
+    const previousExpenses = expenses.filter(e => e.typeId === expenseTypeId && previous.map(s => s.expenseIds).flat().includes(e.id));
+    const cumulatedExpenses = expenses.filter(e => e.typeId === expenseTypeId && history.map(s => s.expenseIds).flat().includes(e.id));
+
+    const cap = current.versionId && expenseType.cap.version[current.versionId] ? expenseType.cap.version[current.versionId] : expenseType.cap.default;
+
+    rows.push({
+      section: expenseType.name,
+      cap: cap > 0 ? { [expenseType.currency]: cap } : undefined,
+      type: 'expense',
+      previous: getTotalPerCurrency(previousExpenses),
+      current: getTotalPerCurrency(currentExpenses),
+      cumulated: getTotalPerCurrency(cumulatedExpenses)
+    });
+
+    recoupment.push(...cumulatedExpenses);
+  }
+
+  if (rightExpenseTypes.length > 0) recoupment.push(...cumulatedRightPayment.map(r => ({ currency: r.currency, price: -r.price })));
+  return recoupment;
+}
+
+function getMgRecoupment(right: Right, cumulatedRightPayment: RightPayment[], state: TitleState): { investments: number, stillToBeRecouped: number } {
+  const contractIds = getRightInvestContractId(right);
+
+  let investments = 0;
+  let payments = 0;
+  for (const contractId of contractIds) {
+    investments += getInvestmentValue(state, contractId);
+    payments += convertCurrenciesTo(getTotalPerCurrency(cumulatedRightPayment))[mainCurrency];
+  }
+
+  return { investments, stillToBeRecouped: investments - payments };
+}
