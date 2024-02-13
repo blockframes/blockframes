@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Blockframes
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
@@ -40,6 +41,7 @@ import { WaterfallEditFormComponent } from './edit.component';
     MatIconModule,
     MatButtonModule,
     MatStepperModule,
+    MatTooltipModule,
 
     // Routing
     RouterModule.forChild([{
