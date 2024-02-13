@@ -27,7 +27,7 @@
         </p>
       </li>
     </ul>
-    <bf-card-modal>
+    <bf-card-modal [ngClass]="cardModal?.isOpened ? 'modal' : 'standard'">
 
       <ng-container *ngIf="selected; else notSelected">
         <header>
