@@ -71,6 +71,9 @@
       <button *ngIf="actions.share" mat-icon-button>
         <mat-icon svgIcon="share" matTooltip="Share Statement" (click)="share(statement)"></mat-icon>
       </button>
+      <button *ngIf="actions.certify" mat-icon-button>
+        <mat-icon color="primary" svgIcon="certify" matTooltip="Certify Document" (click)="certify(statement)"></mat-icon>
+      </button>
       <ng-container *ngIf="!!statement.payments.rightholder && statement.payments.rightholder.status !== 'received'">
         <button *ngIf="actions.payment" mat-icon-button [disabled]="(canBypassRules$ | async) !== true" (click)="payment(statement)">
           <mat-icon color="primary" svgIcon="payment" matTooltip="Pending Payment"></mat-icon>

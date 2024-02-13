@@ -23,6 +23,7 @@ import { DownloadStatementSettings, PdfService } from '@blockframes/utils/pdf.se
 import { CallableFunctions } from 'ngfire';
 import { StatementShareComponent } from '../statement-share/statement-share.component';
 import { OrganizationService } from '@blockframes/organization/service';
+import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 
 function statementFileName(statement: Statement & { number: number }) {
   return `${toLabel(statement.type, 'statementType')} Statement ${statement.number}`;
@@ -53,6 +54,7 @@ export class StatementTableComponent {
     view: true,
     payment: true,
     deleteDraft: true,
+    certify: true,
   };
   @Output() delete = new EventEmitter<Statement>();
   @Input() @boolean defaultSort = false;
@@ -152,6 +154,24 @@ export class StatementTableComponent {
           }
         }
       })
+    });
+  }
+
+  async certify(statement: Statement & { number: number }) {
+
+    this.dialog.open(ConfirmComponent, {
+      data: createModalData({
+        title: 'Certify the document via Blockchain',
+        question: 'Objective of Blockchain timestamping is to have proof of reissue made, certify a digital document.',
+        advice: 'For any question, please',
+        intercom: 'Contact us',
+        confirm: 'Certify document',
+        cancel: 'Close window',
+        onConfirm: () => {
+          console.log('ici');
+        }
+      }, 'small'),
+      autoFocus: false
     });
   }
 }
