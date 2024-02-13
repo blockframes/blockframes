@@ -1,0 +1,46 @@
+<section class="surface" *ngIf="rows$ | async as rows; else loading">
+  <article>
+    <h2>World Sales Summary</h2>
+    <aside>
+      <button [disabled]="!rows.length" mat-button color="primary" (click)="downloadCsv(rows)">
+        <span>Export in .CSV</span>
+      </button>
+    </aside>
+  </article>
+  <bf-table *ngIf="rows.length else noFile" [source]="rows" pagination="50">
+    <ng-template colRef="contract.sellerId" label="Licensor" let-sellerId>
+      {{ sellerId | rightholderName: waterfall }}
+    </ng-template>
+    <ng-template colRef="contract.buyerId" label="Licensee" let-buyerId>
+      {{ buyerId | rightholderName: waterfall }}
+    </ng-template>
+    <ng-template colRef="territories" label="Territories" let-territories>
+      <span class="group-label" (click)="openDetails(territories, 'territories')">
+        <p class="ellipsis">
+          {{ territories | toGroupLabel:'territories':'World' | join }}
+        </p>
+      </span>
+    </ng-template>
+    <ng-template colRef="medias" label="Rights" let-medias>
+      <span class="group-label" (click)="openDetails(medias, 'medias')">
+        {{ medias | toGroupLabel:'medias':'All'| join }}
+      </span>
+    </ng-template>
+    <ng-template colRef="amount" label="Amount" let-amount sort [sort]="sorts.byPriceCurrency">
+      <price-per-currency [price]="amount"></price-per-currency>
+    </ng-template>
+  </bf-table>
+</section>
+
+<ng-template #loading>
+  <article class="spinner">
+    <logo-spinner></logo-spinner>
+  </article>
+</ng-template>
+
+<ng-template #noFile>
+  <div>
+    <img asset="empty-contracts.svg" alt="Image, you have no contracts yet">
+    <p class="mat-body-1">No incomes yet</p>
+  </div>
+</ng-template>
