@@ -529,13 +529,14 @@ const organizationRequestAccessToAppTemplate = (org: PublicOrganization, app: Ap
 
 /**
  * @param user 
+ * @param org
  * @param docType 
  * @param docId 
  * @param movie 
  */
-const userRequestedDocumentCertificationTemplate = (user: PublicUser, docType: 'statement', docId: string, movie: Movie) =>
+const userRequestedDocumentCertificationTemplate = (user: PublicUser, org: PublicOrganization, docType: 'statement', docId: string, movie: Movie) =>
   `
-  ${user.firstName} ${user.lastName} (${user.email}) requested a Blockchain certification for a document.
+  ${user.firstName} ${user.lastName} (${user.email} - ${org.name}) requested a Blockchain certification for a document.
 
   Document type : ${docType}
   Document id : ${docId}
@@ -761,10 +762,10 @@ export function shareStatement(toUser: UserEmailData, statement: StatementEmailD
  * Generates a transactional email request to let cascade8 admin know that an user requested a certification for a document.
  * It sends an email to admin to handle request
  */
-export function userRequestedDocumentCertification(user: PublicUser, docType: 'statement', docId: string, movie: Movie): EmailRequest {
+export function userRequestedDocumentCertification(user: PublicUser, org: PublicOrganization, docType: 'statement', docId: string, movie: Movie): EmailRequest {
   return {
     to: getSupportEmail('waterfall'),
-    subject: 'A user requested a Blockchain certification for a document',
-    text: userRequestedDocumentCertificationTemplate(user, docType, docId, movie)
+    subject: 'New blockchain certification request',
+    text: userRequestedDocumentCertificationTemplate(user, org, docType, docId, movie)
   };
 }

@@ -174,7 +174,7 @@ export class StatementTableComponent {
           statement.hash.requestDate = new Date();
           statement.hash.requestedBy = this.authService.user.uid;
           await this.statementService.update(statement, { params: { waterfallId: this.waterfall.id } });
-          this.snackBar.open('Your request to certify the document has been sent successfully.', 'close', { duration: 5000 });
+          this.snackBar.open('Request sent, we\'ll get back to you shortly.', 'close', { duration: 5000 });
         }
       }, 'small'),
       autoFocus: false

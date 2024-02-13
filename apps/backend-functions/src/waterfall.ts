@@ -3,6 +3,7 @@ import {
   Expense,
   Income,
   Movie,
+  Organization,
   Right,
   Statement,
   User,
@@ -176,7 +177,8 @@ export async function onWaterfallStatementUpdate(change: BlockframesChange<State
     const userDocument = await getDocument<User>(`users/${after.hash.requestedBy}`);
     const user = createPublicUser(userDocument);
     const movie = await getDocument<Movie>(`movies/${after.waterfallId}`);
-    const mailRequest = userRequestedDocumentCertification(user, 'statement', after.id, movie);
+    const organization = await getDocument<Organization>(`orgs/${user.orgId}`);
+    const mailRequest = userRequestedDocumentCertification(user, organization, 'statement', after.id, movie);
     const from = getMailSender('waterfall');
 
     const notification = createNotification({
