@@ -1,5 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 // Blockframes
 
@@ -14,12 +15,16 @@ export class StatementsCoprodComponent {
 
   path = '/assets/images/demo-cannes/outgoing-statements/Outgoing_1.svg';
 
+  movieId = this.route.snapshot.params.movieId;
+  constructor(private router: Router,private route: ActivatedRoute,) {
+
+  }
+
   switch() {
-    return; 
-   /* if (this.path === '/assets/images/demo-cannes/outgoing-statements/Outgoing_1.svg') {
+    if (this.path === '/assets/images/demo-cannes/outgoing-statements/Outgoing_1.svg') {
       this.path = '/assets/images/demo-cannes/outgoing-statements/Outgoing_2.svg';
     } else {
-      this.path = '/assets/images/demo-cannes/outgoing-statements/Outgoing_1.svg';
-    }*/
+      this.router.navigate(['/c/o/dashboard/title',this.movieId, 'statements']);
+    }
   }
 }

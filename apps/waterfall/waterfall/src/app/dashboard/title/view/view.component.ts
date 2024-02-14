@@ -36,6 +36,10 @@ export class TitleViewComponent {
       label: 'Waterfall',
     },
     {
+      path: 'amortization',
+      label: 'Film Amortization',
+    },
+    {
       path: 'charts',
       label: 'Right Holders',
     },

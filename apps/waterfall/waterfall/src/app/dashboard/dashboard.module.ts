@@ -97,6 +97,10 @@ const routes: Routes = [{
               path: 'statement-coprod',
               loadChildren: () => import('./waterfall/statements-coprod/statements-coprod.module').then(m => m.StatementsCoprodModule),
             },
+            {
+              path: 'amortization-view',
+              loadChildren: () => import('./waterfall/amortization-view/amortization-view.module').then(m => m.AmortizationViewModule),
+            },
           ],
         },
       ],
