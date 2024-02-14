@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 export class GraphService {
 
   public bounds = new BehaviorSubject({ minX: 0, maxX: 1_000, minY: 0, maxY: 1_000 });
-  public offset = new BehaviorSubject({ x: 14, y: 6, z: 1 });
+  public offset = new BehaviorSubject({ x: 14, y: 6, z: 1, ox: 0, oy: 0});
 
   /** Move a given amount from the current position */
   move(deltaX: number, deltaY: number) {
@@ -32,25 +32,18 @@ export class GraphService {
     this.zoom(0.1);
   }
 
-  zoom(value: number) {
-    // TODO compute offset so that the zoom is centered on the mouse
-    // const startOffset = this.container.nativeElement.getBoundingClientRect();
+  zoom(value: number, ox?: number, oy?: number) {
     const newOffset = this.offset.getValue();
-    newOffset.z += value;
+    newOffset.z -= value / 600;
     newOffset.z = Math.max(0.1, newOffset.z); // z can't be less than 0.01
     newOffset.z = Math.min(2.5, newOffset.z); // z can't be more than 2.5
-    // newOffset.x += newOffset.z;
-    // newOffset.y += newOffset.z;
-    this.offset.next(newOffset);
-    // const endOffset = this.container.nativeElement.getBoundingClientRect();
-    // const deltaX = startOffset.x - endOffset.x;
-    // const deltaY = startOffset.y - endOffset.y;
-    // console.log({ startOffset, endOffset, delta: { x: deltaX, y: deltaY } });
 
-    // newOffset = this.offset.getValue();
-    // newOffset.x += deltaX;
-    // newOffset.y += deltaY;
-    // this.offset.next(newOffset);
+    if (ox !== undefined && oy !== undefined) {
+      newOffset.ox = ox;
+      newOffset.oy = oy;
+    }
+
+    this.offset.next(newOffset);
   }
 
   updateBounds(bounds: { minX: number, maxX: number, minY: number, maxY: number }) {
