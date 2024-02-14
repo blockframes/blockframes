@@ -27,4 +27,8 @@ export class StatementsCoprodComponent {
       this.router.navigate(['/c/o/dashboard/title',this.movieId, 'statements']);
     }
   }
+
+  goTo() {
+    this.router.navigate(['/c/o/dashboard/title',this.movieId, 'statements']);
+  }
 }

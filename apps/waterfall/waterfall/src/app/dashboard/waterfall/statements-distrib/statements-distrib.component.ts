@@ -43,4 +43,8 @@ export class StatementsDistribComponent {
     }
 
   }
+
+  goTo() {
+    this.router.navigate(['/c/o/dashboard/title',this.movieId, 'statements']);
+  }
 }
