@@ -14,7 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class AmortizationViewComponent {
   path = '/assets/images/demo-cannes/amortization-view/Film Amortization_1.svg';
   movieId = this.route.snapshot.params.movieId;
-  constructor(private router: Router,private route: ActivatedRoute,) {
+  constructor(private router: Router, private route: ActivatedRoute,) {
 
   }
 
@@ -30,9 +30,13 @@ export class AmortizationViewComponent {
       this.path = '/assets/images/demo-cannes/amortization-view/Film Amortization_5.svg';
     } else if (this.path === '/assets/images/demo-cannes/amortization-view/Film Amortization_5.svg') {
       this.path = '/assets/images/demo-cannes/amortization-view/Film Amortization_6.svg';
-    } else  {
-      this.router.navigate(['/c/o/dashboard/title',this.movieId, 'amortization']);
-    } 
+    } else {
+      this.router.navigate(['/c/o/dashboard/title', this.movieId, 'amortization']);
+    }
 
+  }
+
+  goTo() {
+    this.router.navigate(['/c/o/dashboard/title', this.movieId, 'amortization']);
   }
 }

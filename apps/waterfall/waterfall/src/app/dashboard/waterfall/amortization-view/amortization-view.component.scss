@@ -1,7 +1,13 @@
-:host {
+section {
   display: flex;
   justify-content: center;
 }
+
+img.hidden_back {
+  width: 100%;
+  height: 50px;
+}
+
 
 img {
   width: 70%;
