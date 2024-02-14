@@ -30,8 +30,8 @@ export class AmortizationViewComponent {
       this.path = '/assets/images/demo-cannes/amortization-view/Film Amortization_5.svg';
     } else if (this.path === '/assets/images/demo-cannes/amortization-view/Film Amortization_5.svg') {
       this.path = '/assets/images/demo-cannes/amortization-view/Film Amortization_6.svg';
-    } else if (this.path === '/assets/images/demo-cannes/amortization-view/Film Amortization_6.svg') {
-      this.path = '/assets/images/demo-cannes/amortization-view/Film Amortization_1.svg';
+    } else  {
+      this.router.navigate(['/c/o/dashboard/title',this.movieId, 'amortization']);
     } 
 
   }
