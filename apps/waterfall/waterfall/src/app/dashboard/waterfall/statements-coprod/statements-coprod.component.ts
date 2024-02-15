@@ -23,7 +23,11 @@ export class StatementsCoprodComponent {
   switch() {
     if (this.path === '/assets/images/demo-cannes/outgoing-statements/Outgoing_1.svg') {
       this.path = '/assets/images/demo-cannes/outgoing-statements/Outgoing_2.svg';
-    } else {
+    } else if (this.path === '/assets/images/demo-cannes/outgoing-statements/Outgoing_2.svg') {
+      this.path = '/assets/images/demo-cannes/outgoing-statements/Outgoing_3.svg';
+    } else if (this.path === '/assets/images/demo-cannes/outgoing-statements/Outgoing_3.svg') {
+      this.path = '/assets/images/demo-cannes/outgoing-statements/Outgoing_4.svg';
+    }else {
       this.router.navigate(['/c/o/dashboard/title',this.movieId, 'statements']);
     }
   }

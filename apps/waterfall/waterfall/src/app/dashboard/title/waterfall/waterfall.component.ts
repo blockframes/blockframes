@@ -17,7 +17,7 @@ export class WaterfallComponent  {
 
   switch() {
     if (this.path === '/assets/images/demo-cannes/Waterfall.svg') {
-      this.path = '/assets/images/demo-cannes/Waterfall_2.svg';
+      this.path = '/assets/images/demo-cannes/Waterfall_2v1.svg';
     } else {
       this.path = '/assets/images/demo-cannes/Waterfall.svg';
     }
