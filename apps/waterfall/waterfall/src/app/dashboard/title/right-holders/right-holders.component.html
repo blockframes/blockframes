@@ -1,9 +1,14 @@
+<ng-container *ngIf="shell.canBypassRules$ | async">
+  <waterfall-organization-invite *ngIf="shell.waterfall$ | async as waterfall" [waterfall]="waterfall" [invitations]="invitations$ | async"></waterfall-organization-invite>
+  <waterfall-pending-invitations [invitations]="pendingInvitations$ | async"></waterfall-pending-invitations>
+</ng-container>
+
 <section class="surface">
   <header>
-    <h1>Involved Right Holders</h1>
-    <a *ngIf="shell.canBypassRules$" mat-button [routerLink]="['../right-holders-management']" >
-      <mat-icon svgIcon="edit"></mat-icon>
-      <span>Manage Right Holders</span>
+    <h1>Involved Companies</h1>
+    <a *ngIf="shell.canBypassRules$ | async" mat-button [routerLink]="['../right-holders-management']" >
+      <mat-icon svgIcon="business"></mat-icon>
+      <span>Manage Companies</span>
     </a>
   </header>
   <waterfall-rightholder-table *ngIf="shell.waterfall$ | async as waterfall" [waterfall]="waterfall"></waterfall-rightholder-table>

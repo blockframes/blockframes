@@ -8,6 +8,8 @@ import { RightHoldersComponent } from './right-holders.component';
 
 // Blockframes
 import { RightholderTableModule } from '@blockframes/waterfall/components/rightholder-table/rightholder-table.module';
+import { OrganizationInviteModule } from '@blockframes/waterfall/components/organization-invite/organization-invite.module';
+import { PendingInvitationsModule } from '@blockframes/waterfall/components/pending-invitations/pending-invitations.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -20,7 +22,9 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     CommonModule,
     RightholderTableModule,
-    
+    OrganizationInviteModule,
+    PendingInvitationsModule,
+
     // Material
     MatIconModule,
     MatButtonModule,
