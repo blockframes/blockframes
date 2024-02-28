@@ -1,4 +1,4 @@
-<a matRipple [routerLink]="[baseUrl, org?.id]">
+<a matRipple [routerLink]="baseUrl ? [baseUrl, org?.id] : undefined">
   <img height="40" width="40" [ref]="org?.logo" asset="empty_organization.svg" type="logo" alt="Organization Logo">
   <span class="mat-body-1"><b>{{ org.name }}</b></span>
 </a>
