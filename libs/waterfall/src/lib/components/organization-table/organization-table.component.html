@@ -15,7 +15,7 @@
       {{ isAdmin ? 'Editor' : 'Viewer' }}
     </ng-template>
     <ng-template *ngIf="columns.lockedVersionId" colRef="rightholder" [label]="columns.lockedVersionId" let-rightholder sort>
-      {{ rightholder.lockedVersionId ? (rightholder.lockedVersionId | versionName: waterfall) : defaultVersion.name + ' (default)'}} 
+      {{ rightholder.lockedVersionId | versionName: waterfall }} 
     </ng-template>
     <ng-template *ngIf="columns.actions" [label]="columns.actions" colRef="" let-item sticky>
       <button mat-icon-button [matMenuTriggerFor]="menu">
@@ -25,7 +25,7 @@
         <button mat-menu-item [matMenuTriggerFor]="accessMenu">
           Change Access
         </button>
-        <button mat-menu-item [matMenuTriggerFor]="versionMenu">
+        <button *ngIf="versions.length" mat-menu-item [matMenuTriggerFor]="versionMenu">
           Choose Waterfall Version
         </button>
         <button mat-menu-item (click)="changeRightholder(item.id, item.rightholder.id);$event.stopPropagation()">

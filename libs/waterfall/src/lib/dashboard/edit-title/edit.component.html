@@ -20,7 +20,7 @@
         <logo-spinner></logo-spinner>
       </ng-container>
       <ng-template #editInfo>
-        <button mat-flat-button color="primary" (click)="update()" [disabled]="invalidMovie$ | async">
+        <button mat-flat-button color="primary" (click)="update()" [disabled]="(invalidMovie$ | async) || movieForm.disabled">
           <span>{{ createMode ? 'Create' : 'Edit' }} Movie</span>
           <mat-icon svgIcon="arrow_forward"></mat-icon>
         </button>

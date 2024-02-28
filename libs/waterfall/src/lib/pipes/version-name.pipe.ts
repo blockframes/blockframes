@@ -4,7 +4,7 @@ import { Waterfall, getDefaultVersion } from '@blockframes/model';
 @Pipe({ name: 'versionName' })
 export class VersionNamePipe implements PipeTransform {
   transform(versionId: string, waterfall: Waterfall) {
-    if (!versionId) return getDefaultVersion(waterfall)?.name || '--';
+    if (!versionId) return getDefaultVersion(waterfall)?.name || '(Default Version)';
     return waterfall.versions.find(v => v.id === versionId)?.name || '--';
   }
 }

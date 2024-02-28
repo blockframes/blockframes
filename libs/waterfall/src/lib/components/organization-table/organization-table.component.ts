@@ -26,7 +26,6 @@ export class OrganizationTableComponent {
     }))
   );
   public versions = this.shell.waterfall.versions;
-  public defaultVersion = this.shell.waterfall.versions.find(v => v.default);
 
   @Input() baseUrl: string;
   @Input() columns: Record<string, string> = {
