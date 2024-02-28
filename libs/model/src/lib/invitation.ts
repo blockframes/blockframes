@@ -40,9 +40,12 @@ export interface Invitation extends PublicInvitation {
   watchInfos?: WatchInfos;
 
   /** Extra data */
-  data?: {
-    roles?: RightholderRole[]
-  }
+  data?: InvitationAdditionalData
+}
+
+export interface InvitationAdditionalData {
+  rightholderIds?: string[]; // Waterfall specific
+  isAdmin?: boolean; // Waterfall specific
 }
 
 /** Public interface of an invitation (for notifications). */

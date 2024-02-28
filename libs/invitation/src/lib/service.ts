@@ -15,8 +15,8 @@ import {
   App,
   getOrgAppAccess,
   filterInvitation,
-  RightholderRole,
-  InvitationType
+  InvitationType,
+  InvitationAdditionalData
 } from '@blockframes/model';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
@@ -160,7 +160,7 @@ export class InvitationService extends BlockframesCollection<Invitation> {
    */
   invite(idOrEmails: string | string[], fromOrg: Organization = this.orgService.org) {
     return {
-      to: (type: InvitationType, objectId?: string, additionalData?: { roles?: RightholderRole[] }) => {
+      to: (type: InvitationType, objectId?: string, additionalData?: InvitationAdditionalData) => {
         const invitation = { mode: 'invitation', type } as Partial<Invitation>;
         if (type === 'attendEvent') invitation.eventId = objectId;
         if (type === 'joinWaterfall') {

@@ -3,7 +3,6 @@ import { wasCreated, wasAccepted, wasDeclined, hasUserAnOrgOrIsAlreadyInvited } 
 import {
   Invitation,
   Notification,
-  RightholderRole,
   User,
   Waterfall,
   WaterfallPermissions,
@@ -47,7 +46,7 @@ export async function onInvitationToWaterfallUpdate(
   } else if (wasAccepted(before, after) || wasDeclined(before, after)) {
     const { waterfallId, data, toUser } = invitation;
 
-    if (wasAccepted(before, after)) await addOrgToWaterfall(toUser.uid, waterfallId, data.roles);
+    if (wasAccepted(before, after)) await addOrgToWaterfall(toUser.uid, waterfallId, data.rightholderIds, data.isAdmin);
 
     // Send email to admins of org that created invitation
     const ids = await getAdminIds(invitation.fromOrg.id);
@@ -73,10 +72,11 @@ export async function onInvitationToWaterfallUpdate(
  * Adds user's org to waterfall document and create permissions with roles
  * @param userId 
  * @param waterfallId 
- * @param roles 
+ * @param rightholderIds 
+ * @param isAdmin
  * @returns 
  */
-async function addOrgToWaterfall(userId: string, waterfallId: string, roles: RightholderRole[]) {
+async function addOrgToWaterfall(userId: string, waterfallId: string, rightholderIds: string[], isAdmin = false) {
   const db = getDb();
   if (!waterfallId || !userId) {
     throw new Error(`missing data: userId=${userId}, waterfallId=${waterfallId}`);
@@ -104,9 +104,20 @@ async function addOrgToWaterfall(userId: string, waterfallId: string, roles: Rig
       throw new Error(`invalid data: userId=${userId}, does not have any org`);
     }
 
+    if (waterfallData.orgIds.includes(userData.orgId)) {
+      console.debug('org:', userData.orgId, 'is already part of waterfall:', waterfallId);
+      return;
+    }
+
+    // Accept all pending invitations to the same org
+    const otherInvitations = await db.collection('invitations').where('waterfallId', '==', waterfallId).where('toUser.orgId', '==', userData.orgId).get();
+    for (const inv of otherInvitations.docs.filter(inv => inv.data().status === 'pending')) {
+      tx.set(inv.ref, { ...inv, status: 'accepted' });
+    }
+
     const permission = await getDocumentSnap(`waterfall/${waterfallId}/permissions/${userData.orgId}`, db, tx);
 
-    console.debug('add org :', userData.orgId, 'to waterfall:', waterfallId);
+    console.debug('add org:', userData.orgId, 'to waterfall:', waterfallId);
 
     const permissionData = permission.exists ? permission.data() as WaterfallPermissions : createWaterfallPermissions({ id: userData.orgId });
 
@@ -119,8 +130,8 @@ async function addOrgToWaterfall(userId: string, waterfallId: string, roles: Rig
       // Update Permissions
       tx.set(permission.ref, {
         ...permissionData,
-        // TODO #9538 should be isAdmin & rightholderIds
-        // roles: Array.from(new Set([...permissionData.roles, ...roles])) 
+        rightholderIds: [rightholderIds[0]], // For now, only one rightholder can be managed by an org
+        isAdmin: isAdmin || permissionData.isAdmin
       })
     ]);
   });
