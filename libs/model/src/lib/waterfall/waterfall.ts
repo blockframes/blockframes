@@ -8,7 +8,7 @@ import { ExpenseType } from '../expense';
 export interface WaterfallPermissions {
   _meta?: DocumentMeta;
   id: string; // orgId
-  // Define the rightholderIds (fake orgs) that this current org can impersonate
+  // Define the rightholderIds (fake orgs) that this current org can impersonate. Only one rightholderId per org for now
   rightholderIds: string[];
   // Is the current org admin of the waterfall
   isAdmin: boolean;

@@ -13,3 +13,10 @@
   </header>
   <waterfall-rightholder-table *ngIf="shell.waterfall$ | async as waterfall" [waterfall]="waterfall"></waterfall-rightholder-table>
 </section>
+
+<section class="surface" *ngIf="shell.canBypassRules$ | async">
+  <header>
+    <h1>Accepted Right Holders</h1>
+  </header>
+  <waterfall-organization-table ></waterfall-organization-table>
+</section>
