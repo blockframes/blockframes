@@ -1,0 +1,29 @@
+<section class="surface" *ngIf="invitations?.length">
+  <h1>Pending Right Holders ({{ invitations.length }})</h1>
+  <bf-table *ngIf="invitations.length" [source]="invitations" pagination="10" useFilter>
+    <ng-template colRef="toUser" label="NAME" let-user sort  [filter]="filters.displayName">
+      <span *ngIf="user.firstName && user.lastName else notRegistered">{{ user | displayName }}</span>
+    </ng-template>
+    <ng-template colRef="guestOrg" label="ORGANIZATION NAME" let-guestOrg sort [filter]="filters.orgName">
+      <span *ngIf="guestOrg else notRegistered" >{{ guestOrg.name }}</span>
+    </ng-template>
+    <ng-template colRef="toUser.email" label="EMAIL" let-email sort>
+      <span>{{ email }}</span>
+    </ng-template>
+    <ng-template colRef="id" label="ACTIONS" let-id let-invitation="item" sticky>
+      <div>
+        <button *ngIf="invitation.status !== 'accepted'" mat-icon-button matTooltip="Resend Invitation" (click)="resendInvitation(invitation)">
+          <mat-icon svgIcon="refresh"></mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="Cancel Invitation" (click)="removeRightHolder(invitation)">
+          <mat-icon svgIcon="person_off"></mat-icon>
+        </button>
+      </div>
+    </ng-template>
+  </bf-table>
+
+  <ng-template #notRegistered>
+    Not Registered yet
+  </ng-template>
+</section>
+
