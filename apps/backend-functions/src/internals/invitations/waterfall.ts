@@ -109,13 +109,13 @@ async function addOrgToWaterfall(userId: string, waterfallId: string, rightholde
       return;
     }
 
+    const permission = await getDocumentSnap(`waterfall/${waterfallId}/permissions/${userData.orgId}`, db, tx);
+
     // Accept all pending invitations to the same org
     const otherInvitations = await db.collection('invitations').where('waterfallId', '==', waterfallId).where('toUser.orgId', '==', userData.orgId).get();
     for (const inv of otherInvitations.docs.filter(inv => inv.data().status === 'pending')) {
-      tx.set(inv.ref, { ...inv, status: 'accepted' });
+      tx.set(inv.ref, { ...inv.data(), status: 'accepted' });
     }
-
-    const permission = await getDocumentSnap(`waterfall/${waterfallId}/permissions/${userData.orgId}`, db, tx);
 
     console.debug('add org:', userData.orgId, 'to waterfall:', waterfallId);
 
