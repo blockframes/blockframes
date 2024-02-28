@@ -24,6 +24,15 @@ export class PermissionsComponent {
     rightholderIds: new FormControl<string[]>([], [Validators.required]),
   });
 
+  public columns: Record<string, string> = {
+    id: 'Id',
+    rightholder: 'Organization',
+    org: 'Right holder',
+    isAdmin: 'Access',
+    lockedVersionId: 'Waterfall Version',
+    actions: 'Actions'
+  };
+
   constructor(
     private shell: DashboardWaterfallShellComponent,
     private waterfallPermissionsService: WaterfallPermissionsService,
