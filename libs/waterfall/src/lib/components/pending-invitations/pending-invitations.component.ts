@@ -3,7 +3,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService } from '@blockframes/invitation/service';
 import { Invitation, InvitationDetailed } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
-import { WaterfallService } from '../../waterfall.service';
 import { filters } from '@blockframes/ui/list/table/filters';
 
 @Component({
@@ -20,7 +19,6 @@ export class PendingInvitationsComponent {
   constructor(
     private invitationService: InvitationService,
     private organizationService: OrganizationService,
-    private waterfallService: WaterfallService,
     private snackBar: MatSnackBar,
   ) {
 
@@ -36,9 +34,6 @@ export class PendingInvitationsComponent {
 
   async removeRightHolder(invitation: InvitationDetailed) {
     await this.invitationService.remove(invitation.id);
-    if (invitation.status === 'accepted' && invitation.guestOrg?.id) { // TODO #9585 remove from here
-      await this.waterfallService.removeOrg(invitation.waterfallId, invitation.guestOrg.id);
-    }
   }
 }
 
