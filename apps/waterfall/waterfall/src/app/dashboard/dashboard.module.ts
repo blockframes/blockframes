@@ -12,6 +12,7 @@ import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboard.module';
 import { SidenavAuthModule } from '@blockframes/auth/components/sidenav-auth/sidenav-auth.module';
 import { SidenavWidgetModule } from '@blockframes/auth/components/sidenav-widget/sidenav-widget.module';
+import { WaterfallAdminGuard } from '@blockframes/waterfall/guards/waterfall-admin.guard';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -63,7 +64,8 @@ const routes: Routes = [{
             },
             {
               path: 'init',
-              data: { createMode: true },
+              data: { createMode: true, redirect: '/c/o/dashboard/home' },
+              canActivate: [WaterfallAdminGuard],
               loadChildren: () => import('./title/waterfall-edit/waterfall-edit.module').then(m => m.WaterfallEditModule),
             },
             {
