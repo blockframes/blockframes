@@ -146,7 +146,7 @@ interface TermEmailData {
   exclusive: string;
 }
 
-export interface WaterfallEmailData { // TODO #9585
+export interface WaterfallEmailData {
   titleId: string;
   title: string;
 }

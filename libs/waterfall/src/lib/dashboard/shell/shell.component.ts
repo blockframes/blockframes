@@ -6,6 +6,8 @@ import {
   OnDestroy,
   Directive,
   Inject,
+  Pipe,
+  PipeTransform,
 } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet, Event, ActivatedRoute } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
@@ -463,5 +465,16 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
 
   animationOutlet(outlet: RouterOutlet) {
     return outlet?.activatedRouteData?.animation;
+  }
+}
+
+@Pipe({ name: 'canAccess' })
+export class CanAccesPipe implements PipeTransform {
+  transform(link: RouteDescription, isAdmin: boolean, waterfallReady: boolean) {
+    if(!link.requireKeys) return true;
+    return link.requireKeys.every(key => {
+      if (key === 'admin') return isAdmin;
+      if (key === 'waterfall-ready') return waterfallReady;
+    });
   }
 }

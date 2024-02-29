@@ -47,11 +47,18 @@ export async function onWaterfallUpdate(change: BlockframesChange<Waterfall>) {
 
   const promises = [];
 
-  // If org is removed from waterfall document, we also remove permissions
+  // If org is removed from waterfall document
   if (before.orgIds.length > after.orgIds.length) {
     const orgRemovedIds = difference(before.orgIds, after.orgIds);
     for (const orgRemovedId of orgRemovedIds) {
+      // remove permissions
       promises.push(getDocumentSnap(`waterfall/${after.id}/permissions/${orgRemovedId}`).then(p => p.ref.delete()));
+
+      // remove invitations
+      promises.push(db.collection('invitations')
+        .where('waterfallId', '==', after.id)
+        .where('toUser.orgId', '==', orgRemovedId).get()
+        .then(d => d.docs.forEach(doc => doc.ref.delete())));
     }
   }
 
@@ -96,6 +103,10 @@ export async function onWaterfallDelete(snap: BlockframesSnapshot<Waterfall>, co
   ]);
   incomes.forEach(doc => batch.delete(doc.ref));
   expenses.forEach(doc => batch.delete(doc.ref));
+
+  // remove invitations
+  const invitations = await db.collection('invitations').where('waterfallId', '==', waterfallID).get();
+  invitations.forEach(doc => batch.delete(doc.ref));
 
   return batch.commit();
 }

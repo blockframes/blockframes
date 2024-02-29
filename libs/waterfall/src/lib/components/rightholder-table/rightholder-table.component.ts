@@ -1,7 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output } from '@angular/core';
-
 import { Waterfall, WaterfallRightholder } from '@blockframes/model';
-import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
   selector: '[waterfall]waterfall-rightholder-table',
@@ -21,7 +19,5 @@ export class RightholderTableComponent {
   };
   @Output() delete = new EventEmitter<WaterfallRightholder>();
   @Output() rowClick = new EventEmitter<string>();
-  @Input() @boolean defaultSort = false;
-
 }
 

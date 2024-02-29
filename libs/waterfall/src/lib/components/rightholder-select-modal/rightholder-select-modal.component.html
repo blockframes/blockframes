@@ -1,0 +1,27 @@
+<global-modal>
+  <h2>
+    <span>Change Organization</span>
+  </h2>
+  <header>
+    <p class="mat-body-1">Select the Organization for this Right Holder.</p>
+  </header>
+
+  <waterfall-rightholder-select
+    [rightholders]="data.waterfall.rightholders"
+    [control]="rightholderId"
+    [value]="rightholder"
+    required>
+    <mat-label>Company name</mat-label>
+    <mat-hint>Select Company Name</mat-hint>
+  </waterfall-rightholder-select>
+
+  <mat-dialog-actions>
+    <button mat-flat-button color="primary" (click)="confirm()">
+      <span>Update</span>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
+    </button>
+    <button mat-button (click)="close()">
+      Close window
+    </button>
+  </mat-dialog-actions>
+</global-modal>
