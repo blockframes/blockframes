@@ -2,37 +2,39 @@
   <waterfall-contract-main-info [contract]="contract" [movie]="movie" [waterfall]="waterfall"></waterfall-contract-main-info>
 
   <ng-container *ngIf="childContracts$ | async as childContracts">
-    <h3>Amendments</h3>
-    <bf-table [source]="childContracts" useFilter pagination="50">
-      <ng-template colRef="id" label="Id" let-id sort>
-        {{ id }}
-      </ng-template>
-      <ng-template colRef="name" label="Name" let-name sort>
-        {{ name }}
-      </ng-template>
-      <ng-template colRef="signatureDate" label="Signature Date" let-signatureDate sort defaultSort>
-        {{ signatureDate | date: 'MM/dd/yyyy' }}
-      </ng-template>
-      <ng-template colRef="sellerId" label="Licensor" let-sellerId sort>
-        {{ sellerId | rightholderName: waterfall }}
-      </ng-template>
-      <ng-template colRef="buyerId" label="Licensee" let-buyerId sort>
-        {{ buyerId | rightholderName: waterfall }}
-      </ng-template>
-      <ng-template colRef="" label="Price" let-item sort>
-        <ng-container *ngIf="item | contractPrice as amount">
-          <price-per-currency [price]="amount"></price-per-currency>
-        </ng-container>
-      </ng-template>
-      <ng-template colRef="type" label="Type" let-type sort>
-        {{ type }}
-      </ng-template>
-      <ng-template colRef="" label="Action" let-contract sticky>
-        <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', contract.titleId, 'documents', contract.id]" (click)="$event.stopPropagation()">
-          <mat-icon svgIcon="launch"></mat-icon>
-        </a>
-      </ng-template>
-    </bf-table>
+    <ng-container *ngIf="childContracts.length">
+      <h3>Amendments</h3>
+      <bf-table [source]="childContracts" useFilter pagination="50">
+        <ng-template colRef="id" label="Id" let-id sort>
+          {{ id }}
+        </ng-template>
+        <ng-template colRef="name" label="Name" let-name sort>
+          {{ name }}
+        </ng-template>
+        <ng-template colRef="signatureDate" label="Signature Date" let-signatureDate sort defaultSort>
+          {{ signatureDate | date: 'MM/dd/yyyy' }}
+        </ng-template>
+        <ng-template colRef="sellerId" label="Licensor" let-sellerId sort>
+          {{ sellerId | rightholderName: waterfall }}
+        </ng-template>
+        <ng-template colRef="buyerId" label="Licensee" let-buyerId sort>
+          {{ buyerId | rightholderName: waterfall }}
+        </ng-template>
+        <ng-template colRef="" label="Price" let-item sort>
+          <ng-container *ngIf="item | contractPrice as amount">
+            <price-per-currency [price]="amount"></price-per-currency>
+          </ng-container>
+        </ng-template>
+        <ng-template colRef="type" label="Type" let-type sort>
+          {{ type }}
+        </ng-template>
+        <ng-template colRef="" label="Action" let-contract sticky>
+          <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', contract.titleId, 'documents', contract.id]" (click)="$event.stopPropagation()">
+            <mat-icon svgIcon="launch"></mat-icon>
+          </a>
+        </ng-template>
+      </bf-table>
+    </ng-container>
   </ng-container>
 
   <ng-container *ngIf="contract.terms as terms">
@@ -55,14 +57,10 @@
           </span>
         </ng-template>
         <ng-template colRef="duration.from" label="Terms Start Date" let-from>
-          <ng-container *ngIf="from else noDuration">
-            {{ from | date:'MM/dd/yyyy' }}
-          </ng-container>
+          {{ from | date:'MM/dd/yyyy' }}
         </ng-template>
         <ng-template colRef="duration.to" label="Terms End Date" let-to>
-          <ng-container *ngIf="to else noDuration">
-            {{ to | date:'MM/dd/yyyy' }}
-          </ng-container>
+          {{ to | date:'MM/dd/yyyy' }}
         </ng-template>
         <ng-template colRef="" label="Price" let-item sort>
           <ng-container *ngIf="item.price else noPrice">
@@ -71,34 +69,33 @@
           <ng-template #noPrice>--</ng-template>
         </ng-template>
       </bf-table>
-      <ng-template #noDuration>
-        Same as contract
-      </ng-template>
     </ng-container>
   </ng-container>
 
   <ng-container *ngIf="rights$ | async as rights">
-    <h3>Rights</h3>
-    <bf-table [source]="rights" clickable useFilter pagination="50">
-      <ng-template colRef="id" label="Id" let-id sort>
-        {{ id }}
-        <button mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
-          <mat-icon svgIcon="file_copy"></mat-icon>
-        </button>
-      </ng-template>
-      <ng-template colRef="name" label="Name" let-name sort>
-        {{ name }}
-      </ng-template>
-      <ng-template colRef="rightholderId" label="Rightholder" let-rightholderId sort>
-        {{ rightholderId | rightholderName: waterfall }}
-      </ng-template>
-      <ng-template colRef="type" label="Type" let-type sort>
-        {{ type | toLabel: 'rightTypes' }}
-      </ng-template>
-      <ng-template colRef="percent" label="%" let-percent>
-        {{ percent ? percent  : '--' }}
-      </ng-template>
-    </bf-table>
+    <ng-container *ngIf="rights.length">
+      <h3>Rights</h3>
+      <bf-table [source]="rights" clickable useFilter pagination="50">
+        <ng-template colRef="id" label="Id" let-id sort>
+          {{ id }}
+          <button mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
+            <mat-icon svgIcon="file_copy"></mat-icon>
+          </button>
+        </ng-template>
+        <ng-template colRef="name" label="Name" let-name sort>
+          {{ name }}
+        </ng-template>
+        <ng-template colRef="rightholderId" label="Rightholder" let-rightholderId sort>
+          {{ rightholderId | rightholderName: waterfall }}
+        </ng-template>
+        <ng-template colRef="type" label="Type" let-type sort>
+          {{ type | toLabel: 'rightTypes' }}
+        </ng-template>
+        <ng-template colRef="percent" label="%" let-percent>
+          {{ percent ? percent  : '--' }}
+        </ng-template>
+      </bf-table>
+    </ng-container>
   </ng-container>
 
   <article *ngIf="showExpenseTypes$ | async">
