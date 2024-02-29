@@ -30,10 +30,10 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
   @Input() waterfall: Waterfall;
   @Input() form: WaterfallDocumentForm;
   @Input() type: RightholderRole;
+  @Input() toggleTermsControl : FormControl<boolean>;
 
   public hideStartDate$ = new BehaviorSubject(true);
 
-  public toggleTermsControl = new FormControl(true);
   public durationControl = new FormControl<number | undefined>(undefined);
 
   public periods: (keyof Duration)[] = ['days', 'weeks', 'months', 'years'];

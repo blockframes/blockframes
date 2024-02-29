@@ -12,7 +12,9 @@ import {
   isContract,
   rightholderGroups,
   convertDocumentTo,
-  WaterfallContract
+  WaterfallContract,
+  Duration,
+  createDuration
 } from '@blockframes/model';
 import { extract, SheetTab } from '@blockframes/utils/spreadsheet';
 import { FieldsConfig, getDocumentConfig } from './fieldConfigs';
@@ -21,7 +23,7 @@ import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.serv
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { unique } from '@blockframes/utils/helpers';
 
-function toTerm(rawTerm: FieldsConfig['term'][number], waterfallId: string, contractId: string, termId: string) {
+function toTerm(rawTerm: FieldsConfig['term'][number], waterfallId: string, contractId: string, termId: string, duration?: Duration) {
 
   const {
     medias,
@@ -42,11 +44,11 @@ function toTerm(rawTerm: FieldsConfig['term'][number], waterfallId: string, cont
     medias,
     territories,
     criteria: [],
-    price,
+    price: (!price || isNaN(price)) ? 0 : price,
     currency
   });
 
-  term.duration = { from: null, to: null };
+  term.duration = createDuration(duration);
 
   return term;
 }
@@ -120,7 +122,7 @@ export async function formatDocument(
 
 function getTerms(document: WaterfallDocument, terms: FieldsConfig['term'][number][] = []) {
   if (isContract(document) && rightholderGroups.withTerms.includes(document.meta.type)) {
-    return terms.map(term => toTerm(term, document.waterfallId, document.id, term.id));
+    return terms.map(term => toTerm(term, document.waterfallId, document.id, term.id, document.meta.duration));
   } else {
     return [];
   }

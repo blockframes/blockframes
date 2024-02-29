@@ -20,11 +20,13 @@ import {
   isContract,
   sortContracts,
   convertDocumentTo,
-  createExpenseType
+  createExpenseType,
+  Term
 } from '@blockframes/model';
 import { TermService } from '@blockframes/contract/term/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: '[movieId] waterfall-contracts-form',
@@ -44,10 +46,11 @@ export class ContractsFormComponent implements OnInit {
   contracts$: Observable<Partial<Record<RightholderRole, WaterfallContract[]>>>;
   private contracts: Partial<Record<RightholderRole, WaterfallContract[]>>;
   private removeFileOnSave = false;
+  private terms: Term[] = [];
 
   @Input() movieId: string;
   @Input() documentForm: WaterfallDocumentForm;
-
+  public toggleTermsControl = new FormControl(true);
 
   constructor(
     private waterfallService: WaterfallService,
@@ -81,17 +84,19 @@ export class ContractsFormComponent implements OnInit {
     this.selected = role;
     this.creating = this.contracts[role].length === 0; // if we select an empty role we automatically switch to create mode
     if (this.creating) {
+      this.terms = [];
       this.documentForm.reset({ id: this.documentService.createId() });
     }
   }
 
   create() {
     this.creating = true;
+    this.terms = [];
     this.documentForm.reset({ id: this.documentService.createId() });
   }
 
   async edit(contract: WaterfallContract, waterfall: Waterfall) {
-    const terms = await this.termsService.getValue(contract.termIds);
+    this.terms = await this.termsService.getValue(contract.termIds);
     const licensee = waterfall.rightholders.find(r => r.id === contract.buyerId);
     const licensor = waterfall.rightholders.find(r => r.id === contract.sellerId);
     const file = waterfall.documents.find(f => f.id === contract.id);
@@ -108,7 +113,7 @@ export class ContractsFormComponent implements OnInit {
       endDate: contract.duration?.to,
       price: contract.price,
       currency: contract.currency,
-      terms,
+      terms: this.terms.map(t => createTerm(t)),
       file: file,
       expenseTypes,
     });
@@ -120,6 +125,11 @@ export class ContractsFormComponent implements OnInit {
   }
 
   async save(waterfall: Waterfall) {
+    if (!this.toggleTermsControl.value && this.terms.length) {
+      await this.termsService.remove(this.terms.map(t => t.id));
+      this.documentForm.controls.terms.patchAllValue([]);
+    }
+
     if (!this.documentForm.valid) {
       this.snackBar.open('Please fill all required fields.', 'close', { duration: 3000 });
       return;
@@ -183,7 +193,8 @@ export class ContractsFormComponent implements OnInit {
       ...term,
       id: term.id || this.termsService.createId(),
       contractId: document.id,
-      titleId: waterfallId
+      titleId: waterfallId,
+      duration: (!term.duration.from || !term.duration.to) ? document.meta.duration : term.duration,
     }));
     document.meta.termIds = terms.map(t => t.id);
 

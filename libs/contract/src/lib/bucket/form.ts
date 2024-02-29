@@ -30,10 +30,11 @@ import { HoldbackForm } from '../contract/holdback/form';
 //////////
 // TERM //
 //////////
-export function createBucketTermControl(params: Partial<BucketTerm> = {}) {
-  const fromValidators = [compareDates('from', 'to', 'from'), Validators.required];
-  const toValidators = [compareDates('from', 'to', 'to'), isDateInFuture, Validators.required];
-
+export function createBucketTermControl(
+  params: Partial<BucketTerm> = {},
+  fromValidators = [compareDates('from', 'to', 'from'), Validators.required],
+  toValidators = [compareDates('from', 'to', 'to'), isDateInFuture, Validators.required]
+) {
   const term = createBucketTerm(params);
   return {
     territories: new FormStaticValueArray<'territories'>(term.territories, 'territories'),
