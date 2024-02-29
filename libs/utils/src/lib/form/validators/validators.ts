@@ -169,7 +169,7 @@ export function isKeyArrayValidator(scope: Scope): ValidatorFn {
  * @param toKey name of key of to date
  * @returns
  */
-export function compareDates(fromKey: string, toKey: string, keyOnControl?: string): ValidatorFn {
+export function compareDates(fromKey: string, toKey: string, keyOnControl?: string, errorName = 'startOverEnd'): ValidatorFn {
   return (control: UntypedFormControl): ValidationErrors => {
     const parentForm = control?.parent as UntypedFormGroup;
 
@@ -196,17 +196,17 @@ export function compareDates(fromKey: string, toKey: string, keyOnControl?: stri
        * with respect to the values of both fields.
        */
       if (to < from) {
-        otherControl.setErrors({ ...otherErrors, startOverEnd: true });
+        otherControl.setErrors({ ...otherErrors, [errorName]: true });
       } else {
-        if ('startOverEnd' in otherErrors) {
-          delete otherErrors.startOverEnd;
+        if (errorName in otherErrors) {
+          delete otherErrors[errorName];
           !Object.keys(otherErrors).length
             ? otherControl.setErrors(null)
             : otherControl.setErrors(otherErrors);
         }
       }
     }
-    if (to < from) { return { startOverEnd: true }; }
+    if (to < from) { return { [errorName]: true }; }
     else { return null; }
   }
 }

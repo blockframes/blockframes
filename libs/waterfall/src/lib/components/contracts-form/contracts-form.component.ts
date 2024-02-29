@@ -84,12 +84,14 @@ export class ContractsFormComponent implements OnInit {
     this.selected = role;
     this.creating = this.contracts[role].length === 0; // if we select an empty role we automatically switch to create mode
     if (this.creating) {
+      this.terms = [];
       this.documentForm.reset({ id: this.documentService.createId() });
     }
   }
 
   create() {
     this.creating = true;
+    this.terms = [];
     this.documentForm.reset({ id: this.documentService.createId() });
   }
 
@@ -111,7 +113,7 @@ export class ContractsFormComponent implements OnInit {
       endDate: contract.duration?.to,
       price: contract.price,
       currency: contract.currency,
-      terms: this.terms,
+      terms: this.terms.map(t => createTerm(t)),
       file: file,
       expenseTypes,
     });
@@ -123,7 +125,7 @@ export class ContractsFormComponent implements OnInit {
   }
 
   async save(waterfall: Waterfall) {
-    if(!this.toggleTermsControl.value && this.terms.length) {
+    if (!this.toggleTermsControl.value && this.terms.length) {
       await this.termsService.remove(this.terms.map(t => t.id));
       this.documentForm.controls.terms.patchAllValue([]);
     }
@@ -191,7 +193,8 @@ export class ContractsFormComponent implements OnInit {
       ...term,
       id: term.id || this.termsService.createId(),
       contractId: document.id,
-      titleId: waterfallId
+      titleId: waterfallId,
+      duration: (!term.duration.from || !term.duration.to) ? document.meta.duration : term.duration,
     }));
     document.meta.termIds = terms.map(t => t.id);
 

@@ -57,10 +57,14 @@
           </span>
         </ng-template>
         <ng-template colRef="duration.from" label="Terms Start Date" let-from>
-          {{ from | date:'MM/dd/yyyy' }}
+          <ng-container *ngIf="from else noDuration">
+            {{ from | date:'MM/dd/yyyy' }}
+          </ng-container>
         </ng-template>
         <ng-template colRef="duration.to" label="Terms End Date" let-to>
-          {{ to | date:'MM/dd/yyyy' }}
+          <ng-container *ngIf="to else noDuration">
+            {{ to | date:'MM/dd/yyyy' }}
+          </ng-container>
         </ng-template>
         <ng-template colRef="" label="Price" let-item sort>
           <ng-container *ngIf="item.price else noPrice">
@@ -69,6 +73,9 @@
           <ng-template #noPrice>--</ng-template>
         </ng-template>
       </bf-table>
+      <ng-template #noDuration>
+        Same as contract
+      </ng-template>
     </ng-container>
   </ng-container>
 

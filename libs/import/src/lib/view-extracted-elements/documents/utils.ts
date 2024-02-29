@@ -44,7 +44,7 @@ function toTerm(rawTerm: FieldsConfig['term'][number], waterfallId: string, cont
     medias,
     territories,
     criteria: [],
-    price,
+    price: (!price || isNaN(price)) ? 0 : price,
     currency
   });
 
