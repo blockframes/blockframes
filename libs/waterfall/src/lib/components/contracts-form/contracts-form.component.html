@@ -1,4 +1,4 @@
-<section class="surface">
+<section class="surface" *ngIf="shell.documents$ | async as documents else loading">
 
   <article class="header">
     <h2>Contracts</h2>
@@ -6,7 +6,7 @@
 
   <p>Please provide us with all the contracts, so that we can create a waterfall.</p>
 
-  <article *ngIf="waterfall$ | async as waterfall">
+  <article *ngIf="shell.waterfall$ | async as waterfall">
     <ul>
       <li *ngFor="let item of contracts$ | async | keyvalue" (click)="select(item.key)" [ngClass]="{'selected': item.key === selected}">
         <p class="role">{{item.key | toLabel: 'rightholderRoles'}}</p>
@@ -48,7 +48,7 @@
             <!-- TODO #9436 -->
             <!-- <p class="amendment">1 amendment - 30/06/2023</p> -->
             
-            <button mat-icon-button matTooltip="Edit contract" (click)="edit(contract, waterfall)">
+            <button mat-icon-button *ngIf="contract | canEdit : currentOrgId : documents : (shell.canBypassRules$ | async)" matTooltip="Edit contract" (click)="edit(contract, waterfall)">
               <mat-icon svgIcon="edit"></mat-icon>
             </button>
             <a mat-icon-button *ngIf="contract.id | getFile: waterfall as file" 
@@ -91,3 +91,8 @@
   </article>
 
 </section>
+<ng-template #loading>
+  <article class="spinner">
+    <logo-spinner></logo-spinner>
+  </article>
+</ng-template>

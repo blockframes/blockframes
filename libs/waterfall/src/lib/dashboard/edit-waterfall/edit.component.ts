@@ -10,9 +10,7 @@ import { Component, ChangeDetectionStrategy, ViewChild, Optional, OnInit, OnDest
 
 // Blockframes
 import { FormList } from '@blockframes/utils/form';
-import { MovieService } from '@blockframes/movie/service';
 import { WaterfallRightholder, createWaterfallRightholder, hasDefaultVersion } from '@blockframes/model';
-
 import { WaterfallService } from '../../waterfall.service';
 import { WaterfallDocumentForm } from '../../form/document.form';
 import { DashboardWaterfallShellComponent } from '../shell/shell.component';
@@ -33,8 +31,6 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
   public documentForm = new WaterfallDocumentForm({ id: '' });
   public rightholdersForm = FormList.factory<WaterfallRightholderFormValue, WaterfallRightholderForm>([], rightholder => new WaterfallRightholderForm(rightholder));
   public updating$ = new BehaviorSubject(false);
-  public movieId: string = this.route.snapshot.params.movieId;
-  public movie$ = this.movieService.valueChanges(this.movieId);
   public invalidDocument$ = this.shell.contracts$.pipe(
     map(docs => docs.length === 0),
     startWith(true),
@@ -52,7 +48,6 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
     private router: Router,
     private snackBar: MatSnackBar,
     private route: ActivatedRoute,
-    private movieService: MovieService,
     @Optional() private intercom: Intercom,
     private waterfallService: WaterfallService,
     public shell: DashboardWaterfallShellComponent
@@ -100,7 +95,7 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
       }));
 
     // ! `id` needs to be in the update object, because of a bug in ng-fire
-    await this.waterfallService.update({ id: this.movieId, rightholders });
+    await this.waterfallService.update({ id: this.shell.waterfall.id, rightholders });
 
     this.rightholdersForm.markAsPristine();
 
