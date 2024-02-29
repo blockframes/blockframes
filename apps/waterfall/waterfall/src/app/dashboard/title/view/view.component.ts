@@ -14,11 +14,12 @@ export class TitleViewComponent {
     {
       path: 'dashboard',
       label: 'Dashboard',
+      requireKeys: ['admin']
     },
     {
       path: 'statements',
       label: 'Statements',
-      shouldHide: true,
+      requireKeys: ['waterfall-ready']
     },
     {
       path: 'documents',
@@ -27,7 +28,7 @@ export class TitleViewComponent {
     {
       path: 'waterfall',
       label: 'Waterfall',
-      shouldHide: true,
+      requireKeys: ['waterfall-ready']
     },
     {
       path: 'right-holders',
@@ -36,7 +37,7 @@ export class TitleViewComponent {
     {
       path: 'sales',
       label: 'World Sales',
-      shouldHide: true,
+      requireKeys: ['waterfall-ready', 'admin']
     },
   ];
 

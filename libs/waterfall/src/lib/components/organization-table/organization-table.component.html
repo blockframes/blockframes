@@ -1,0 +1,55 @@
+<ng-container *ngIf="permissions$ | async as permissions">
+  <bf-table [source]="permissions" clickable useFilter pagination="50">
+    <ng-template *ngIf="columns.id" [label]="columns.id" colRef="id" let-id sort>
+      {{ id }}
+    </ng-template>
+    <ng-template *ngIf="columns.rightholder" [label]="columns.rightholder" colRef="rightholder" let-rightholder>
+      {{ rightholder.id | rightholderName: waterfall }}
+    </ng-template>
+    <ng-template *ngIf="columns.org" [label]="columns.org" colRef="id" let-id sort>
+      <ng-container *ngIf="id | getOrg | async as org">
+        <org-chip @fade [org]="org" [baseUrl]="baseUrl"></org-chip>
+      </ng-container>
+    </ng-template>
+    <ng-template *ngIf="columns.isAdmin" [label]="columns.isAdmin" colRef="isAdmin" let-isAdmin sort>
+      {{ isAdmin ? 'Editor' : 'Viewer' }}
+    </ng-template>
+    <ng-template *ngIf="columns.lockedVersionId" colRef="rightholder" [label]="columns.lockedVersionId" let-rightholder sort>
+      {{ rightholder.lockedVersionId | versionName: waterfall }} 
+    </ng-template>
+    <ng-template *ngIf="columns.actions" [label]="columns.actions" colRef="" let-item sticky>
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon svgIcon="more_vert"></mat-icon>
+      </button>
+      <mat-menu #menu>
+        <button mat-menu-item [matMenuTriggerFor]="accessMenu">
+          Change Access
+        </button>
+        <button *ngIf="versions.length" mat-menu-item [matMenuTriggerFor]="versionMenu">
+          Choose Waterfall Version
+        </button>
+        <button mat-menu-item (click)="changeRightholder(item.id, item.rightholder.id);$event.stopPropagation()">
+          <mat-icon color="warn" svgIcon="business"></mat-icon>
+          <span>Change organization</span>
+        </button>
+        <button mat-menu-item (click)="removeOrg(item.id);$event.stopPropagation()">
+          <mat-icon color="warn" svgIcon="delete"></mat-icon>
+          <span>Remove Right Holder</span>
+        </button>
+      </mat-menu>
+      <mat-menu #accessMenu>
+        <button mat-menu-item (click)="changeAccess(item.id, 'editor')">
+          Editor
+        </button>
+        <button mat-menu-item (click)="changeAccess(item.id, 'viewer')">
+          Viewer
+        </button>
+      </mat-menu>
+      <mat-menu #versionMenu>
+        <button mat-menu-item *ngFor="let version of versions" (click)="changeVersion(item.rightholder.id, version.id)">
+          {{ version.name }} {{ version.default ? '(default)' : '' }}
+        </button>
+      </mat-menu>
+    </ng-template>
+  </bf-table>
+</ng-container>

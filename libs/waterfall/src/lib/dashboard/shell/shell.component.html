@@ -42,7 +42,7 @@
 
   <nav mat-tab-nav-bar *ngIf="!lite">
     <ng-container *ngFor="let link of routes">
-      <a mat-tab-link *ngIf="!link.shouldHide || (canInitWaterfall$ | async)" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
+      <a mat-tab-link *ngIf="link | canAccess : (canBypassRules$ | async) : (canInitWaterfall$ | async)" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
         [active]="rla.isActive">
         {{link.label}}
       </a>

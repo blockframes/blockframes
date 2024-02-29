@@ -58,8 +58,10 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   @Input() form: FormList<unknown>;
 
-  /** Set your own labe */
+  /** Set your own label */
   @Input() label = 'Search...'
+
+  @Input() hint: string;
 
   /** Set your own placeholder */
   @Input() placeholder = 'Search...'

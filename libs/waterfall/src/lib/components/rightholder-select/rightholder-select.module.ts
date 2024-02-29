@@ -5,7 +5,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 // Components
 import { RightholderSelectComponent } from './rightholder-select.component';
 
-
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';

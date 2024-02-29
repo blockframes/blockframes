@@ -58,8 +58,8 @@ export const notifications = {
   crm: [] as const,
   waterfall: [
     // User is invited to join Waterfall
-    'invitationToJoinWaterfallCreated', // TODO #9585
-    'invitationToJoinWaterfallUpdated', // TODO #9585
+    'invitationToJoinWaterfallCreated',
+    'invitationToJoinWaterfallUpdated',
     // User requested a document certification
     'userRequestedDocumentCertification'
   ] as const,

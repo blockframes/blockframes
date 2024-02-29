@@ -9,7 +9,7 @@
     {{ roles | toLabel: 'rightholderRoles' }}
   </ng-template>
   <ng-template *ngIf="columns.lockedVersionId" colRef="lockedVersionId" [label]="columns.lockedVersionId" let-lockedVersionId sort>
-    {{ lockedVersionId ? (lockedVersionId | versionName: waterfall) : '--' }}
+    {{ lockedVersionId | versionName: waterfall }}
   </ng-template>
   <ng-template *ngIf="columns.actions" colRef="" label="Actions" let-rightholder sticky>
     <a *ngIf="actions.crm" mat-icon-button [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'rightholders', rightholder.id]" (click)="$event.stopPropagation()">

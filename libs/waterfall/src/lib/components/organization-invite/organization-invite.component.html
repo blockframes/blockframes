@@ -1,0 +1,75 @@
+<section class="surface">
+  <h1>Invite Right Holders</h1>
+  <p class="mat-body-1">
+    Invite Right Holders to <strong>join your Waterfall</strong> so they can use the application in real time. <br/>
+     They will have <strong>different access depending on their role</strong>. <br/>
+     Each Right Holder will <strong>see only the concerned part of the Waterfall</strong>.
+  </p>
+
+  <article>
+    <mat-icon svgIcon="info"></mat-icon> 
+    <p class="mat-body-1">
+      <strong>Main Distributors & Sales Agents</strong> will be able to add and edit their statements. <br/>
+      <strong>Financiers, Authors & Coproducers</strong> will be able to access the outgoing statements.
+    </p>
+  </article>
+  
+  <article>
+    <waterfall-rightholder-select
+      [rightholders]="waterfall.rightholders"
+      [control]="form.get('rightholderId')"
+      required>
+      <mat-label>Company name</mat-label>
+      <mat-hint>Select Company Name</mat-hint>
+    </waterfall-rightholder-select>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Access</mat-label>
+      <mat-select required [formControl]="form.get('isAdmin')">
+        <mat-option [value]="true">Editor</mat-option>
+        <mat-option [value]="false">Viewer</mat-option>
+      </mat-select>
+      <mat-hint>Choose Access</mat-hint>
+    </mat-form-field>
+
+    <algolia-chips-autocomplete
+      index="user"
+      displayWithPath="email"
+      [form]="form.get('users')"
+      label="Email Address"
+      hint="Enter emails separated by a comma"
+      [separators]="separators"
+      placeholder="Enter guest email"
+      [filters]="invitations | deepKey:'toUser.email || fromUser.email'"
+      unique
+      addOnBlur
+      customInput
+      (input)="onInputFilling($event)"
+    >
+      <ng-template let-user>
+        <div class="profile-item">
+          <img [ref]="user.avatar | storageFile: 'users':'avatar':user.uid" asset="profil_user.svg" alt="Profile">
+          <span *ngIf="user.firstName">{{ user | displayUser | async }}</span>
+          <span *ngIf="user.orgName">({{ user.orgName }})</span>
+          <span *ngIf="!user.firstName">{{ user.email }}</span>
+        </div>
+      </ng-template>
+    </algolia-chips-autocomplete>
+
+    <div>
+      <ng-container *ngIf="(isSending$ | async) === false; else sendingInvitations">
+        <button mat-flat-button color="primary" [disabled]="form.invalid || (isSending$ | async)" (click)="invite()">
+          <mat-icon svgIcon="send"></mat-icon>
+          <span>Invite</span>
+        </button>
+      </ng-container>
+
+      <ng-template #sendingInvitations>
+        <button @slideUp mat-flat-button disabled>
+          <span i18n>Sending the invitation{ form.get('users').value.length, plural, =1 {} other {s} }, please wait a few seconds</span>
+        </button>
+      </ng-template>
+    </div>
+
+  </article>
+</section>

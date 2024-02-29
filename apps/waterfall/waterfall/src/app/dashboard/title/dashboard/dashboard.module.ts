@@ -17,6 +17,7 @@ import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 import { EmptyWaterfallModule } from '@blockframes/waterfall/components/empty/empty.module';
 import { VersionSelectorModule } from '@blockframes/waterfall/components/version-selector/version-selector.module';
+import { WaterfallAdminGuard } from '@blockframes/waterfall/guards/waterfall-admin.guard';
 
 // Material
 import { MatDividerModule } from '@angular/material/divider';
@@ -51,7 +52,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTooltipModule,
 
     // Routing
-    RouterModule.forChild([{ path: '', component: DashboardComponent }]),
+    RouterModule.forChild([{
+      path: '',
+      canActivate: [WaterfallAdminGuard],
+      component: DashboardComponent,
+      data: { redirect: 'statements', relative: true }
+    }]),
   ],
 })
 export class DashboardModule { }

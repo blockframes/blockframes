@@ -15,7 +15,6 @@ import { RightholderTableComponent } from './rightholder-table.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [RightholderTableComponent],
@@ -30,7 +29,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatIconModule,
     MatTooltipModule,
     MatButtonModule,
-    MatSnackBarModule,
 
     // Routing
     RouterModule,

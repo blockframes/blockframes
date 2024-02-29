@@ -22,7 +22,7 @@ export class RightholdersComponent {
     id: 'Id',
     name: 'Organization Name',
     roles: 'Waterfall Roles',
-    lockedVersionId: 'Locked Version',
+    lockedVersionId: 'Waterfall Version',
     actions: 'Actions',
   };
 
