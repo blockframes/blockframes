@@ -1,13 +1,13 @@
 
-import { FormControl, FormGroup, FormRecord } from '@angular/forms';
+import { FormControl, FormGroup, FormRecord, UntypedFormControl, Validators } from '@angular/forms';
 
 import { WaterfallFileForm } from './file.form';
 
 import { FormList } from '@blockframes/utils/form/forms/list.form';
-import { BucketTermForm } from '@blockframes/contract/bucket/form';
-import { creatTermControl } from '@blockframes/contract/negotiation';
+import { BucketTermForm, createBucketTermControl } from '@blockframes/contract/bucket/form';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import {
+  BucketTerm,
   ExpenseType,
   MovieCurrency,
   RightholderRole,
@@ -16,6 +16,7 @@ import {
   WaterfallInvestment,
   mainCurrency
 } from '@blockframes/model';
+import { compareDates } from '@blockframes/utils/form';
 
 export function createExpenseTypeControl(config?: Partial<ExpenseType>, versionIds: string[] = []) {
 
@@ -81,7 +82,30 @@ export interface WaterfallDocumentFormValue {
   expenseTypes: ExpenseType[];
 }
 
+export const creatWaterfallTermControl = (term: Partial<BucketTerm | Term> = {}) => {
+  const fromValidators = [compareDates('from', 'to', 'from'), Validators.required];
+  const toValidators = [compareDates('from', 'to', 'to'), Validators.required];
+  return ('id' in term)
+    ? { ...createBucketTermControl(term, fromValidators, toValidators), id: new UntypedFormControl(term.id) }
+    : createBucketTermControl(term, fromValidators, toValidators);
+}
+
 function createWaterfallDocumentFormControl(contract: (Partial<WaterfallDocumentFormValue> & { id: string })) {
+  const signatureDateValidators = [
+    compareDates('signatureDate', 'endDate', 'signatureDate', 'signatureOverEnd'),
+    compareDates('signatureDate', 'startDate', 'signatureDate', 'signatureOverStart'),
+    Validators.required
+  ];
+  const startDateValidators = [
+    compareDates('signatureDate', 'startDate', 'startDate', 'signatureOverStart'),
+    compareDates('startDate', 'endDate', 'startDate'),
+    Validators.required
+  ];
+  const endDateValidators = [
+    compareDates('signatureDate', 'endDate', 'endDate', 'signatureOverEnd'),
+    compareDates('startDate', 'endDate', 'endDate'),
+    Validators.required
+  ];
   return {
     id: new FormControl(contract.id),
     name: new FormControl(contract.name ?? ''),
@@ -91,14 +115,14 @@ function createWaterfallDocumentFormControl(contract: (Partial<WaterfallDocument
     licensorName: new FormControl(contract.licensorName ?? ''),
     licensorRole: new FormControl<RightholderRole[]>(contract.licensorRole ?? []),
 
-    signatureDate: new FormControl(contract.signatureDate ?? new Date()),
-    startDate: new FormControl(contract.startDate ?? new Date()),
-    endDate: new FormControl(contract.endDate ?? new Date()),
+    signatureDate: new FormControl(contract.signatureDate ?? new Date(), signatureDateValidators),
+    startDate: new FormControl(contract.startDate ?? new Date(), startDateValidators),
+    endDate: new FormControl(contract.endDate ?? new Date(), endDateValidators),
 
     currency: new FormControl<MovieCurrency>(contract.currency ?? mainCurrency),
     price: FormList.factory(contract?.price, c => WaterfallInvestmentForm.factory(c, createWaterfallInvestmentControl)),
 
-    terms: FormList.factory(contract.terms, term => BucketTermForm.factory(term, creatTermControl)),
+    terms: FormList.factory(contract.terms, term => BucketTermForm.factory(term, creatWaterfallTermControl)),
 
     file: new WaterfallFileForm({ ...contract.file, id: contract.id }),
 
