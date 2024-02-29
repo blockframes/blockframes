@@ -113,7 +113,7 @@ export class ContractsFormComponent {
     this.removeFileOnSave = bool;
   }
 
-  async save(waterfall: Waterfall) {
+  async save(waterfall: Waterfall, documents: WaterfallDocument[]) {
     if (!this.toggleTermsControl.value && this.terms.length) {
       await this.termsService.remove(this.terms.map(t => t.id));
       this.documentForm.controls.terms.patchAllValue([]);
@@ -157,13 +157,14 @@ export class ContractsFormComponent {
       }));
     }
 
+    const existingDoc = documents.find(d => d.id === this.documentForm.controls.id.value);
     const document = createWaterfallDocument<WaterfallContract>({
       id: this.documentForm.controls.id.value,
       name: this.documentForm.controls.name.value,
       type: 'contract',
       waterfallId,
       signatureDate: this.documentForm.controls.signatureDate.value,
-      ownerId: this.orgService.org.id,
+      ownerId: existingDoc?.ownerId || this.orgService.org.id,
       meta: createWaterfallContract({
         type: this.selected,
         status: 'accepted',

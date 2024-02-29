@@ -36,7 +36,7 @@
           <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'">
             <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
           </button>
-          <button mat-icon-button matTooltip="Save changes" (click)="save(waterfall)">
+          <button mat-icon-button matTooltip="Save changes" (click)="save(waterfall, documents)">
             <mat-icon svgIcon="save"></mat-icon>
           </button>
         </header>
