@@ -1,4 +1,4 @@
-<ng-container *ngIf="shell.canBypassRules$ | async">
+<ng-container *ngIf="shell.canBypassRules$ | async"> <!-- TODO #9689 remove all shell.canBypassRules$ | async & use shell.canBypassRules ? (on all components, also on .ts files when it make sense)-->
   <waterfall-organization-invite *ngIf="shell.waterfall$ | async as waterfall" [waterfall]="waterfall" [invitations]="invitations$ | async"></waterfall-organization-invite>
   <waterfall-pending-invitations [invitations]="pendingInvitations$ | async"></waterfall-pending-invitations>
 </ng-container>

@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, combineLatest, map, tap } from 'rxjs';
 
 // Blockframes
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
+import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 import { StatementType, getContractsWith, statementsRolesMapping } from '@blockframes/model';
 
 @Component({

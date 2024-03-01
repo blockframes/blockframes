@@ -139,7 +139,7 @@ async function generate(
   });
 
   // Data
-  const rightholderKey = statement.type === 'producer' ? 'receiverId' : 'senderId';
+  const rightholderKey = statement.type === 'producer' ? 'receiverId' : 'senderId'; // TODO #9689 create fn
   const rightholder = rightholders.find(r => r.id === statement[rightholderKey]);
   const totalNetReceipt = statement.reportedData.sourcesBreakdown?.map(s => s.net).reduce((acc, curr) => {
     for (const currency of Object.keys(curr)) {

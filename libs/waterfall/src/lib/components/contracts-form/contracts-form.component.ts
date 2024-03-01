@@ -215,6 +215,8 @@ export class ContractsFormComponent {
 @Pipe({ name: 'canEdit' })
 export class CanEditPipe implements PipeTransform {
   transform(contract: WaterfallContract, orgId: string, documents: WaterfallDocument[], canBypassRules: boolean) {
+    // TODO #9585 only canBypassRules, other cannot create contract
+    // TODO #9585 change back to admin/member instead of Editor and Viewer ?
     if (canBypassRules) return true;
     const doc = documents.find(d => d.id === contract.id);
     if (doc.ownerId === orgId) return true;

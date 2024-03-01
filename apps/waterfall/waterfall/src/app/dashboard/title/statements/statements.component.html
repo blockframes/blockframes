@@ -87,7 +87,7 @@
     <waterfall-empty-statement-card [type]="selected" (selected)="addStatement(selected)"></waterfall-empty-statement-card>
   </section>
 
-  <section *ngIf="haveStatements && selected !== 'directSales' && isStatementSender" class="flex-center">
+  <section *ngIf="haveStatements && selected !== 'directSales' && canByPassRules" class="flex-center">
     <button mat-button (click)="addStatement(selected)">
       <mat-icon svgIcon="add"></mat-icon>
       <span>Add Statement for another {{ selected | toLabel: 'statementParty' }}</span>

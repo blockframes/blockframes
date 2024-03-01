@@ -1,9 +1,9 @@
 import { DocumentMeta } from '../meta';
-import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups } from '../static';
+import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups, statementsRolesMapping } from '../static';
 import { Duration, createDuration } from '../terms';
 import { PricePerCurrency, convertCurrenciesTo, getTotalPerCurrency, sortByDate, sum, toLabel } from '../utils';
 import { TitleState, TransferState } from './state';
-import { Version, Waterfall, WaterfallContract, WaterfallSource, getIncomesSources } from './waterfall';
+import { Version, Waterfall, WaterfallContract, WaterfallRightholder, WaterfallSource, getIncomesSources } from './waterfall';
 import { Right, RightOverride, createRightOverride, getRightCondition, skipGroups } from './right';
 import { getSources, isVerticalGroupChild, nodeExists, pathExists } from './node';
 import { Income, createIncome } from '../income';
@@ -108,6 +108,7 @@ export interface Statement {
   waterfallId: string;
   senderId: string, // rightholderId of statement creator
   receiverId: string, // rightholderId of statement receiver
+  // TODO #9689 add createdBy (user uid or orgId) (check when duplicating & importing via excel)
   duration: Duration;
   reported?: Date;
   incomeIds: string[];
@@ -268,17 +269,23 @@ export function filterStatements(type: StatementType, parties: string[], contrac
 }
 
 /**
- * Filter reported statements that are related to the rightholder (sender or receiver) 
- * and also the parent reported statements used to generate the rightholder statements (if any).
+ * Filter statements that are related to the rightholder (sender or receiver) 
+ * and also the parent statements used to generate the rightholder statements (if any).
  * @param statements 
  * @param rightholderId 
  * @returns 
  */
-export function filterRightholderStatements(statements: Statement[], rightholderId: string) {
-  const rightholderStatements = statements.filter(s => [s.senderId, s.receiverId].includes(rightholderId) && s.status === 'reported');
+export function filterRightholderStatements(_statements: Statement[], rightholder: WaterfallRightholder) {
+  const isDistributor = rightholder.roles.some(role => statementsRolesMapping.mainDistributor.includes(role));
+  const isSalesAgent = rightholder.roles.some(role => statementsRolesMapping.salesAgent.includes(role));
+  const isDirectSales = rightholder.roles.some(role => statementsRolesMapping.directSales.includes(role));
+
+  const statements = (isDistributor || isSalesAgent || isDirectSales) ? _statements : _statements.filter(s => s.status === 'reported');
+
+  const rightholderStatements = statements.filter(s => [s.senderId, s.receiverId].includes(rightholder.id));
   const rightholderStatementsIds = rightholderStatements.map(s => s.id);
   const incomeIds = rightholderStatements.map(s => s.incomeIds).flat();
-  const parentStatements = statements.filter(s => !rightholderStatementsIds.includes(s.id) && !isProducerStatement(s) && s.status === 'reported' && s.incomeIds.some(id => incomeIds.includes(id)));
+  const parentStatements = statements.filter(s => !rightholderStatementsIds.includes(s.id) && !isProducerStatement(s) && s.incomeIds.some(id => incomeIds.includes(id)));
   return [...rightholderStatements, ...parentStatements];
 }
 

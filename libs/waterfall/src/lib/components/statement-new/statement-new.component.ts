@@ -16,7 +16,7 @@ import {
 import { Intercom } from 'ng-intercom';
 import { Subscription } from 'rxjs';
 
-interface StatementNewData {
+export interface StatementNewData {
   type: StatementType;
   currentRightholder: WaterfallRightholder;
   canBypassRules: boolean;

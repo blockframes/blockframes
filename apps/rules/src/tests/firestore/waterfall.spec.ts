@@ -2,6 +2,8 @@
 import { assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
 import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
 
+// TODO #9689 add unit test for canUpdateWaterfallDocument rules update
+
 describe('Movie Owner', () => {
   const projectId = `waterfall-rules-spec-${Date.now()}`;
   let db: Firestore;
