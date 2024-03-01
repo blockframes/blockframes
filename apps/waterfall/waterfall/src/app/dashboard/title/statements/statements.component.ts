@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Blockframes
 import {
+  Right,
   RightholderRole,
   Statement,
   StatementType,
@@ -67,6 +68,41 @@ const statementsRolesConfig: Record<StatementType, StatementRolesConfig> = {
   producer: { roles: statementsRolesMapping.producer, divider: true, visible: true },
 }
 
+interface RightholderStatementsConfig {
+  type: StatementType;
+  rightholderId: string;
+  producerId: string;
+  date: Date;
+  contracts: WaterfallContract[];
+  statements: Statement[];
+  rights: Right[];
+}
+
+type ContractAndStatements = (Partial<WaterfallContract> & { statements: (Statement & { number: number })[] });
+
+/**
+ * Returns statements by contracts for the given rightholder id
+ * @param config 
+ * @returns 
+ */
+function getRightholderStatements(config: RightholderStatementsConfig): ContractAndStatements[] {
+  if (!config.type) return [];
+
+  if (config.type === 'directSales') {
+    const stms = filterStatements(config.type, [config.producerId, config.producerId], undefined, config.statements);
+    return [{ id: '', statements: sortStatements(stms) }];
+  }
+
+  return getContractsWith([config.producerId, config.rightholderId], config.contracts, config.date)
+    .filter(c => statementsRolesMapping[config.type].includes(c.type))
+    .filter(c => config.rights.some(r => r.contractId === c.id))
+    .map(c => {
+      const stms = filterStatements(config.type, [config.producerId, config.rightholderId], c.id, config.statements);
+      return { ...c, statements: sortStatements(stms) };
+    })
+    .filter(c => c.statements.length > 0);
+}
+
 @Component({
   selector: 'waterfall-title-statements',
   templateUrl: './statements.component.html',
@@ -75,7 +111,7 @@ const statementsRolesConfig: Record<StatementType, StatementRolesConfig> = {
 })
 export class StatementsComponent implements OnInit, OnDestroy {
   public displayNoStatementPage$ = this.shell.statements$.pipe(map(statements => !statements.length));
-  public rightholderContracts: (Partial<WaterfallContract> & { statements: (Statement & { number: number })[] })[] = [];
+  public rightholderContracts: ContractAndStatements[] = [];
   public haveStatements: boolean;
   public rightholders: WaterfallRightholder[] = [];
   public rightholderControl = new FormControl<string>('');
@@ -155,22 +191,16 @@ export class StatementsComponent implements OnInit, OnDestroy {
       this.rightholderControl.valueChanges.pipe(startWith(this.rightholderControl.value)),
       this.shell.rightholderStatements$,
       this.shell.rights$
-    ]).subscribe(([value, statements, rights]) => {
-      if (!this.selected) {
-        this.rightholderContracts = [];
-      } else if (this.selected !== 'directSales') {
-        this.rightholderContracts = getContractsWith([this.statementSender.id, value], this.contracts, this.currentDate)
-          .filter(c => statementsRolesMapping[this.selected].includes(c.type))
-          .filter(c => rights.some(r => r.contractId === c.id))
-          .map(c => {
-            const stms = filterStatements(this.selected, [this.statementSender.id, value], c.id, statements);
-            return { ...c, statements: sortStatements(stms) };
-          })
-          .filter(c => c.statements.length > 0);
-      } else {
-        const stms = filterStatements(this.selected, [this.statementSender.id, value], undefined, statements);
-        this.rightholderContracts = [{ id: '', statements: sortStatements(stms) }];
-      }
+    ]).subscribe(([rightholderId, statements, rights]) => {
+      this.rightholderContracts = getRightholderStatements({
+        type: this.selected,
+        rightholderId,
+        producerId: this.producer.id,
+        date: this.currentDate,
+        contracts: this.contracts,
+        statements,
+        rights
+      });
 
       this.haveStatements = this.rightholderContracts.some(c => c.statements.length > 0);
       this.cdr.markForCheck();
