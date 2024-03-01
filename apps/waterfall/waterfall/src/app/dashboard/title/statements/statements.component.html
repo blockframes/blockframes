@@ -44,7 +44,7 @@
         </button>
       </div>
       <div *ngIf="selected === 'directSales' && haveStatements && isStatementSender">
-        <button mat-button color="primary" (click)="createStatement(rightholderControl.value)" class="main-dashboard-cta">
+        <button mat-button color="primary" (click)="createStatement()" class="main-dashboard-cta">
           <mat-icon svgIcon="add"></mat-icon>
           <span>Add Statement</span>
         </button>

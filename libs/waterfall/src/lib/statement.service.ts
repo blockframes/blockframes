@@ -16,9 +16,9 @@ import { BlockframesSubCollection } from '@blockframes/utils/abstract-service';
 import { map } from 'rxjs';
 
 export interface CreateStatementConfig {
-  rightholderId: string; // Sender or Receiver depending on the statement type
-  producerId: string
-  waterfall: Waterfall,
+  producerId: string;
+  rightholderId?: string; // Sender or Receiver depending on the statement type (distrib/outgoing)
+  waterfall: Waterfall;
   versionId?: string;
   type: StatementType;
   duration: Duration;

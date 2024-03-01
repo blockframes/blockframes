@@ -204,7 +204,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
 
   public addStatement(type: StatementType) {
     if (!this.isStatementSender) return;
-    if (type === 'directSales') return this.createStatement(this.statementSender.id);
+    if (type === 'directSales') return this.createStatement();
     this.dialog.open(StatementNewComponent, {
       data: createModalData({
         type,
@@ -214,14 +214,14 @@ export class StatementsComponent implements OnInit, OnDestroy {
         statements: this.statements,
         date: this.currentStateDate,
         rights: this.rights,
-        onConfirm: async (statementId: string, contractId: string) => {
-          await this.createStatement(statementId, contractId, type);
+        onConfirm: async (rightholderId: string, contractId: string) => {
+          await this.createStatement(rightholderId, contractId, type);
         }
       })
     });
   }
 
-  public async createStatement(rightholderId: string, contractId?: string, type = this.selected) {
+  public async createStatement(rightholderId?: string, contractId?: string, type = this.selected) {
 
     /** @dev there should be only one producer */
     const producer = this.waterfall.rightholders.find(r => r.roles.includes('producer'));
@@ -234,8 +234,8 @@ export class StatementsComponent implements OnInit, OnDestroy {
       undefined;
 
     const config: CreateStatementConfig = {
-      rightholderId,
       producerId: producer.id,
+      rightholderId,
       waterfall: this.waterfall,
       versionId: this.shell.versionId$.value,
       type,
