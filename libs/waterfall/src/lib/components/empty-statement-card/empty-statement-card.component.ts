@@ -5,7 +5,7 @@ import { Observable, combineLatest, map, tap } from 'rxjs';
 // Blockframes
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
-import { StatementType, statementsRolesMapping } from '@blockframes/model';
+import { StatementType, getContractsWith, statementsRolesMapping } from '@blockframes/model';
 
 @Component({
   selector: 'waterfall-empty-statement-card',
@@ -32,13 +32,16 @@ export class EmptyStatementCardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.isDisabled$ = combineLatest([this.shell.currentRightholder$, this.shell.canBypassRules$]).pipe(
-      map(([rightholder, canBypassRules]) => {
+    const producer = this.shell.waterfall.rightholders.find(r => r.roles.includes('producer'));
+    this.isDisabled$ = combineLatest([this.shell.currentRightholder$, this.shell.canBypassRules$, this.shell.contracts$]).pipe(
+      map(([rightholder, canBypassRules, contracts]) => {
         if (!this.type) return true;
         if (canBypassRules) return false;
         // Only the producer can create direct sales and producer statements, and producer is always an admin
         if (['directSales', 'producer'].includes(this.type)) return true;
-        return !rightholder.roles.some(role => statementsRolesMapping[this.type].includes(role));
+        if (!rightholder.roles.some(role => statementsRolesMapping[this.type].includes(role))) return true;
+        return getContractsWith([producer.id, rightholder.id], contracts)
+          .filter(c => statementsRolesMapping[this.type].includes(c.type)).length === 0;
       }),
       tap(disabled => this._disabled = disabled)
     );
