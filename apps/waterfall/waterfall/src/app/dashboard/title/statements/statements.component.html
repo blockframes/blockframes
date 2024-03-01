@@ -76,11 +76,11 @@
   </section>
 
   <section *ngIf="!haveStatements">
-    <waterfall-empty-statement-card [type]="selected" (click)="addNew(selected)"></waterfall-empty-statement-card>
+    <waterfall-empty-statement-card [type]="selected" (click)="addStatement(selected)"></waterfall-empty-statement-card>
   </section>
 
   <section *ngIf="haveStatements && selected !== 'directSales' && isStatementSender" class="flex-center">
-    <button mat-button (click)="addNew(selected)">
+    <button mat-button (click)="addStatement(selected)">
       <mat-icon svgIcon="add"></mat-icon>
       <span>Add Statement for another {{ selected | toLabel: 'statementParty' }}</span>
     </button>
@@ -89,8 +89,8 @@
 
 <ng-template #noStatements>
   <section class="flex-center">
-    <waterfall-empty-statement-card type="mainDistributor" (click)="addNew('mainDistributor')" [disabled]="!isStatementSender"></waterfall-empty-statement-card>
-    <waterfall-empty-statement-card type="salesAgent" (click)="addNew('salesAgent')" [disabled]="!isStatementSender"></waterfall-empty-statement-card>
+    <waterfall-empty-statement-card type="mainDistributor" (click)="addStatement('mainDistributor')" [disabled]="!isStatementSender"></waterfall-empty-statement-card>
+    <waterfall-empty-statement-card type="salesAgent" (click)="addStatement('salesAgent')" [disabled]="!isStatementSender"></waterfall-empty-statement-card>
     <waterfall-empty-statement-card type="producer" disabled></waterfall-empty-statement-card>
   </section>
 </ng-template>

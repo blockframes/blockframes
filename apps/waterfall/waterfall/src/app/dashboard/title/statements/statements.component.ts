@@ -202,6 +202,25 @@ export class StatementsComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
+  public addStatement(type: StatementType) {
+    if (!this.isStatementSender) return;
+    if (type === 'directSales') return this.createStatement(this.statementSender.id);
+    this.dialog.open(StatementNewComponent, {
+      data: createModalData({
+        type,
+        waterfall: this.shell.waterfall,
+        producer: this.statementSender,
+        contracts: this.contracts,
+        statements: this.statements,
+        date: this.currentStateDate,
+        rights: this.rights,
+        onConfirm: async (statementId: string, contractId: string) => {
+          await this.createStatement(statementId, contractId, type);
+        }
+      })
+    });
+  }
+
   public async createStatement(rightholderId: string, contractId?: string, type = this.selected) {
 
     /** @dev there should be only one producer */
@@ -230,25 +249,6 @@ export class StatementsComponent implements OnInit, OnDestroy {
     const route = ['/c/o/dashboard/title/', this.waterfall.id, 'statement', statementId];
     if (type !== 'producer') route.push('edit');
     return this.router.navigate(route);
-  }
-
-  public addNew(type: StatementType) {
-    if (!this.isStatementSender) return;
-    if (type === 'directSales') return this.createStatement(this.statementSender.id);
-    this.dialog.open(StatementNewComponent, {
-      data: createModalData({
-        type,
-        waterfall: this.shell.waterfall,
-        producer: this.statementSender,
-        contracts: this.contracts,
-        statements: this.statements,
-        date: this.currentStateDate,
-        rights: this.rights,
-        onConfirm: async (statementId: string, contractId: string) => {
-          await this.createStatement(statementId, contractId, type);
-        }
-      })
-    });
   }
 
   public async removeStatement(statement: Statement) {
