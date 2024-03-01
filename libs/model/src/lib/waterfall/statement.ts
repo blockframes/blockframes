@@ -267,6 +267,21 @@ export function filterStatements(type: StatementType, parties: string[], contrac
   return filteredStatements;
 }
 
+/**
+ * Filter reported statements that are related to the rightholder (sender or receiver) 
+ * and also the parent reported statements used to generate the rightholder statements (if any).
+ * @param statements 
+ * @param rightholderId 
+ * @returns 
+ */
+export function filterRightholderStatements(statements: Statement[], rightholderId: string) {
+  const rightholderStatements = statements.filter(s => [s.senderId, s.receiverId].includes(rightholderId) && s.status === 'reported');
+  const rightholderStatementsIds = rightholderStatements.map(s => s.id);
+  const incomeIds = rightholderStatements.map(s => s.incomeIds).flat();
+  const parentStatements = statements.filter(s => !rightholderStatementsIds.includes(s.id) && !isProducerStatement(s) && s.status === 'reported' && s.incomeIds.some(id => incomeIds.includes(id)));
+  return [...rightholderStatements, ...parentStatements];
+}
+
 export function sortStatements(statements: Statement[], reverse = true): (Statement & { number: number })[] {
   const sortedStatements = sortByDate(statements, 'duration.to').map((s, i) => ({ ...s, number: i + 1 }));
   return reverse ? sortedStatements.reverse() : sortedStatements;

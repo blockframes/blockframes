@@ -21,9 +21,22 @@ interface StatementNewData {
   waterfall: Waterfall,
   contracts: WaterfallContract[],
   date: Date,
-  statements: Statement[],
+  statements: Statement[], // All statements
   rights: Right[],
   onConfirm: (rightholderId: string, contractId: string) => void
+}
+
+/**
+ * Returnt true if there already are statements for the given type, rightholder and contract
+ * @param type 
+ * @param rightholderId 
+ * @param contractId 
+ * @param statements 
+ * @returns 
+ */
+function statementsExists(type: StatementType, rightholderId: string, contractId: string, statements: Statement[]) {
+  const rightholderKey = type === 'producer' ? 'receiverId' : 'senderId';
+  return statements.some(stm => stm[rightholderKey] === rightholderId && stm.contractId === contractId);
 }
 
 @Component({
@@ -50,7 +63,6 @@ export class StatementNewComponent implements OnInit, OnDestroy {
   ) { }
 
   public ngOnInit() {
-    const rightholderKey = this.data.type === 'producer' ? 'receiverId' : 'senderId';
     this.rightholders = this.data.waterfall.rightholders
       .filter(r => r.id !== this.data.producer.id)
       .filter(r => r.roles.some(role => statementsRolesMapping[this.data.type].includes(role)))
@@ -59,13 +71,13 @@ export class StatementNewComponent implements OnInit, OnDestroy {
           .filter(c => statementsRolesMapping[this.data.type].includes(c.type));
         if (!contracts.length) return false;
         // If there is at least one contract that does not have statement, we display rightholder
-        return contracts.some(c => !this.data.statements.some(stm => stm[rightholderKey] === r.id && c.id === stm.contractId))
+        return contracts.some(c => !statementsExists(this.data.type, r.id, c.id, this.data.statements))
       });
 
-    this.sub = this.rightholderControl.valueChanges.subscribe(value => {
-      this.rightholderContracts = getContractsWith([this.data.producer.id, value], this.data.contracts, this.data.date)
+    this.sub = this.rightholderControl.valueChanges.subscribe(rightholderId => {
+      this.rightholderContracts = getContractsWith([this.data.producer.id, rightholderId], this.data.contracts, this.data.date)
         .filter(c => statementsRolesMapping[this.data.type].includes(c.type))
-        .filter(c => !this.data.statements.some(stm => stm[rightholderKey] === value && c.id === stm.contractId))
+        .filter(c => !statementsExists(this.data.type, rightholderId, c.id, this.data.statements))
         .filter(c => this.data.rights.some(r => r.contractId === c.id));
 
       if (!this.rightholderContracts.length) {

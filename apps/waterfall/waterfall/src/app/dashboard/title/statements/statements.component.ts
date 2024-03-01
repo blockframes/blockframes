@@ -54,14 +54,6 @@ const statementsRolesConfig: Record<StatementType, StatementRolesConfig> = {
   producer: { roles: statementsRolesMapping.producer, divider: true, visible: true },
 }
 
-function filterRightholderStatements(statements: Statement[], rightholderId: string) {
-  const rightholderStatements = statements.filter(s => [s.senderId, s.receiverId].includes(rightholderId) && s.status === 'reported');
-  const rightholderStatementsIds = rightholderStatements.map(s => s.id);
-  const incomeIds = rightholderStatements.map(s => s.incomeIds).flat();
-  const parentStatements = statements.filter(s => !rightholderStatementsIds.includes(s.id) && !isProducerStatement(s) && s.status === 'reported' && s.incomeIds.some(id => incomeIds.includes(id)));
-  return [...rightholderStatements, ...parentStatements];
-}
-
 @Component({
   selector: 'waterfall-title-statements',
   templateUrl: './statements.component.html',
@@ -136,9 +128,8 @@ export class StatementsComponent implements OnInit, OnDestroy {
 
     const sub = combineLatest([
       this.rightholderControl.valueChanges.pipe(startWith(this.rightholderControl.value)),
-      this.shell.statements$
-    ]).subscribe(([value, _statements]) => {
-      const statements = !this.isStatementSender ? filterRightholderStatements(_statements, currentRightholder.id) : _statements;
+      this.shell.rightholderStatements$
+    ]).subscribe(([value, statements]) => {
       if (!this.selected) {
         this.rightholderContracts = [];
       } else if (this.selected !== 'directSales') {
@@ -169,9 +160,8 @@ export class StatementsComponent implements OnInit, OnDestroy {
 
   private async initTypes(currentRightholder: WaterfallRightholder, isStandalone = false) {
     this.rights = await this.shell.rights();
-    const statements = await this.shell.statements();
     this.isStatementSender = currentRightholder.id === this.statementSender.id;
-    this.statements = !this.isStatementSender ? filterRightholderStatements(statements, currentRightholder.id) : statements;
+    this.statements = await this.shell.rightholderStatements();
     this.contracts = await this.shell.contracts();
     this.statementTypes = Object.entries(statementsRolesConfig).map(([key, value]: [StatementType, StatementRolesConfig]) => (
       {
@@ -202,16 +192,17 @@ export class StatementsComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
-  public addStatement(type: StatementType) {
+  public async addStatement(type: StatementType) {
     if (!this.isStatementSender) return;
     if (type === 'directSales') return this.createStatement();
+    const statements = await this.shell.statements();
     this.dialog.open(StatementNewComponent, {
       data: createModalData({
         type,
         waterfall: this.shell.waterfall,
         producer: this.statementSender,
         contracts: this.contracts,
-        statements: this.statements,
+        statements,
         date: this.currentStateDate,
         rights: this.rights,
         onConfirm: async (rightholderId: string, contractId: string) => {

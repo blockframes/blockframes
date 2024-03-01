@@ -33,6 +33,7 @@ import {
   isStandaloneVersion,
   skipGroups,
   getOutgoingStatementPrerequists,
+  filterRightholderStatements,
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { filter, map, pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
@@ -253,6 +254,16 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
       return name ? `${name} ${isDefault}` : '--';
     })
   );
+
+  /**
+   * Observable of the statements that current rightholder is allowed to see
+   */
+  public rightholderStatements$ = combineLatest([this.canBypassRules$, this.currentRightholder$, this.statements$]).pipe(
+    map(([canBypassRules, rightholder, statements]) => {
+      if (canBypassRules) return statements;
+      return filterRightholderStatements(statements, rightholder.id);
+    })
+  );
   public lockedVersionId: string; // VersionId that is locked for the current rightholder
 
   private _simulation$ = new BehaviorSubject<WaterfallState>(undefined);
@@ -336,6 +347,17 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
 
   statements(versionId = this.versionId$.value) {
     return this.statementService.statements(this.waterfall, versionId);
+  }
+
+  /**
+   * Return the statements that current rightholder is allowed to see
+   */
+  async rightholderStatements(versionId = this.versionId$.value) {
+    const statements = await this.statements(versionId);
+    const canBypassRules = await firstValueFrom(this.canBypassRules$);
+    if (canBypassRules) return statements;
+    const rightholder = await firstValueFrom(this.currentRightholder$);
+    return filterRightholderStatements(statements, rightholder.id);
   }
 
   async expenses(ids?: string[], versionId = this.versionId$.value) {
