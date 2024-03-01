@@ -83,7 +83,7 @@
     </ng-template>
   </section>
 
-  <section *ngIf="!haveStatements">
+  <section *ngIf="!haveStatements && selected">
     <waterfall-empty-statement-card [type]="selected" (selected)="addStatement(selected)"></waterfall-empty-statement-card>
   </section>
 

@@ -238,9 +238,13 @@ export class StatementsComponent implements OnInit, OnDestroy {
     if (type === 'directSales') return this.createStatement();
     const statements = await this.shell.statements();
     const rights = await this.shell.rights();
+    const currentRightholder = await firstValueFrom(this.shell.currentRightholder$);
+    const canBypassRules = await firstValueFrom(this.shell.canBypassRules$);
     this.dialog.open(StatementNewComponent, {
       data: createModalData({
         type,
+        currentRightholder,
+        canBypassRules,
         waterfall: this.shell.waterfall,
         producer: this.statementSender,
         contracts: this.contracts,
@@ -280,7 +284,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
     return this.router.navigate(route);
   }
 
-  public async removeStatement(statement: Statement) {
+  public removeStatement(statement: Statement) {
     if (statement.status !== 'draft') return;
 
     this.dialog.open(ConfirmComponent, {

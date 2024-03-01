@@ -5,9 +5,7 @@
     <p class="mat-body-1">Please verify the information below</p>
   </header>
 
-  <waterfall-rightholder-select
-    [rightholders]="rightholders"
-    [control]="rightholderControl">
+  <waterfall-rightholder-select [rightholders]="rightholders" [control]="rightholderControl">
     <mat-label>{{ data.type | toLabel: 'statementParty'}}</mat-label>
   </waterfall-rightholder-select>
 
@@ -21,8 +19,12 @@
   </mat-form-field>
 
   <section>
-    <p class="mat-body-1">Can’t find right holder on the list ?</p>
-    <p class="mat-body-1"><a [routerLink]="['/c/o/dashboard/title', data.waterfall.id, 'init']" target="_blank" (click)="close()">Please add a new contract</a> before adding a Statement.</p>  
+    <p class="mat-body-1">Can’t find right holder or contract on the list ?</p>
+    <p class="mat-body-1" *ngIf="data.canBypassRules"><a [routerLink]="['/c/o/dashboard/title', data.waterfall.id, 'init']" target="_blank" (click)="close()">Please add a new contract</a> before adding a Statement.</p>
+    <button mat-button *ngIf="!data.canBypassRules" (click)="openIntercom()">
+      <mat-icon svgIcon="help"></mat-icon>
+      <span>Ask for Help</span>
+    </button>
   </section>
 
   <mat-dialog-actions>

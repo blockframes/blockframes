@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Inject, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject, OnInit, OnDestroy, ChangeDetectorRef, Optional } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -13,10 +13,13 @@ import {
   getContractsWith,
   statementsRolesMapping
 } from '@blockframes/model';
+import { Intercom } from 'ng-intercom';
 import { Subscription } from 'rxjs';
 
 interface StatementNewData {
   type: StatementType;
+  currentRightholder: WaterfallRightholder;
+  canBypassRules: boolean;
   producer: WaterfallRightholder;
   waterfall: Waterfall,
   contracts: WaterfallContract[],
@@ -59,7 +62,8 @@ export class StatementNewComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef<StatementNewComponent>,
     private cdr: ChangeDetectorRef,
     private snackbar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    @Optional() private intercom: Intercom,
   ) { }
 
   public ngOnInit() {
@@ -72,7 +76,8 @@ export class StatementNewComponent implements OnInit, OnDestroy {
         if (!contracts.length) return false;
         // If there is at least one contract that does not have statement, we display rightholder
         return contracts.some(c => !statementsExists(this.data.type, r.id, c.id, this.data.statements))
-      });
+      })
+      .filter(r => this.data.canBypassRules || r.id === this.data.currentRightholder.id);
 
     this.sub = this.rightholderControl.valueChanges.subscribe(rightholderId => {
       this.rightholderContracts = getContractsWith([this.data.producer.id, rightholderId], this.data.contracts, this.data.date)
@@ -89,9 +94,13 @@ export class StatementNewComponent implements OnInit, OnDestroy {
           });
       }
 
-      this.contractControl.setValue('');
+      this.contractControl.setValue(this.rightholderContracts[0]?.id);
       this.cdr.markForCheck();
     });
+
+    const defaultRightholder = this.rightholders.find(r => r.id === this.data.currentRightholder.id) || this.rightholders[0];
+    this.rightholderControl.setValue(defaultRightholder.id);
+    if (!this.data.canBypassRules && this.rightholders.length === 1) this.rightholderControl.disable();
   }
 
   ngOnDestroy() {
@@ -105,5 +114,9 @@ export class StatementNewComponent implements OnInit, OnDestroy {
 
   public close() {
     this.dialogRef.close(false);
+  }
+
+  public openIntercom() {
+    return this.intercom.show('I cannot find my contract when creating a new statement');
   }
 }
