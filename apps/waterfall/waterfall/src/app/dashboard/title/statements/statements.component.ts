@@ -1,12 +1,13 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Subscription, combineLatest, firstValueFrom, startWith } from 'rxjs';
+import { Subscription, combineLatest, firstValueFrom, map, startWith } from 'rxjs';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Blockframes
 import {
-  Right,
   RightholderRole,
   Statement,
   StatementType,
@@ -26,11 +27,9 @@ import {
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { CreateStatementConfig, StatementService } from '@blockframes/waterfall/statement.service';
-import { MatDialog } from '@angular/material/dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { StatementNewComponent } from '@blockframes/waterfall/components/statement-new/statement-new.component';
 import { OrganizationService } from '@blockframes/organization/service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 
 interface StatementRolesConfig {
@@ -47,6 +46,20 @@ interface StatementChipConfig {
   value: StatementTypeValue;
 }
 
+function initStatementChips(statements: Statement[]): StatementChipConfig[] {
+  const hasDistribOrDirectSalesReportedStatements = statements.some(s => !isProducerStatement(s) && s.status === 'reported');
+  return Object.entries(statementsRolesConfig).map(([key, value]: [StatementType, StatementRolesConfig]) => (
+    {
+      selected: false,
+      key,
+      value: statementType[key],
+      ...value,
+      // producer statements are visible only if there are reported statements from distributors or direct sales
+      visible: key === 'producer' ? hasDistribOrDirectSalesReportedStatements : value.visible
+    }
+  ));
+}
+
 const statementsRolesConfig: Record<StatementType, StatementRolesConfig> = {
   mainDistributor: { roles: statementsRolesMapping.mainDistributor, divider: false, visible: true },
   salesAgent: { roles: statementsRolesMapping.salesAgent, divider: false, visible: true },
@@ -61,22 +74,24 @@ const statementsRolesConfig: Record<StatementType, StatementRolesConfig> = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatementsComponent implements OnInit, OnDestroy {
-  public statements: Statement[] = [];
+  public displayNoStatementPage$ = this.shell.statements$.pipe(map(statements => !statements.length));
   public rightholderContracts: (Partial<WaterfallContract> & { statements: (Statement & { number: number })[] })[] = [];
   public haveStatements: boolean;
   public rightholders: WaterfallRightholder[] = [];
   public rightholderControl = new FormControl<string>('');
   public contracts: WaterfallContract[] = [];
-  public rights: Right[] = [];
-  public statementTypes: StatementChipConfig[] = [];
+  public statementChips: StatementChipConfig[] = [];
   public selected: StatementType;
   public isStatementSender: boolean;
   public isRefreshing$ = this.shell.isRefreshing$;
 
-  private currentStateDate = new Date();
+  private statements: Statement[] = [];
+  private currentDate = new Date();
   private waterfall = this.shell.waterfall;
   private subs: Subscription[] = [];
   private statementSender: WaterfallRightholder;
+  /** @dev there should be only one producer */
+  private producer = this.waterfall.rightholders.find(r => r.roles.includes('producer'));
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
@@ -88,22 +103,25 @@ export class StatementsComponent implements OnInit, OnDestroy {
     private orgService: OrganizationService,
     private snackbar: MatSnackBar,
   ) {
-    this.shell.setDate(this.currentStateDate);
+    this.shell.setDate(this.currentDate);
     this.dynTitle.setPageTitle(this.shell.movie.title.international, 'Statements');
   }
 
   async ngOnInit() {
-    const currentRightholder = await firstValueFrom(this.shell.currentRightholder$);
-    if (!currentRightholder) {
-      this.snackbar.open(`Organization "${this.orgService.org.name}" is not associated to any rightholders.`, 'close', { duration: 5000 });
-      return;
-    }
     /**
      * @dev statementSender should be current rightholder when we will 
      * allow rightholders other than producer (distributors) to create statements
      */
     this.statementSender = this.waterfall.rightholders.find(r => r.roles.includes('producer'));
-    if (!this.statementSender) {
+
+    const currentRightholder = await firstValueFrom(this.shell.currentRightholder$);
+    if (!currentRightholder) {
+      this.snackbar.open(`Organization "${this.orgService.org.name}" is not associated to any rightholders.`, 'close', { duration: 5000 });
+      // TODO #9553: redirect to the rightholder page 
+      return;
+    }
+
+    if (!this.producer) {
       this.snackbar.open(`${toLabel('producer', 'rightholderRoles')} is not defined.`, 'WATERFALL MANAGEMENT', { duration: 5000 })
         .onAction()
         .subscribe(() => {
@@ -112,10 +130,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    await this.initTypes(currentRightholder);
-    const versionSub = combineLatest([this.shell.versionId$, this.shell.rights$]).subscribe(async ([versionId, rights]) => {
-      const version = this.waterfall.versions.find(v => v.id === versionId);
-      if (version?.standalone) await this.initTypes(currentRightholder, true);
+    const rightsSub = this.shell.rights$.subscribe(async rights => {
       if (!rights.find(r => r.rightholderId === this.statementSender.id)) {
         this.snackbar.open(`${toLabel('producer', 'rightholderRoles')} should have at least one receipt share in the waterfall.`, 'WATERFALL MANAGEMENT', { duration: 5000 })
           .onAction()
@@ -124,18 +139,29 @@ export class StatementsComponent implements OnInit, OnDestroy {
           });
       }
     });
+    this.subs.push(rightsSub);
+
+    this.contracts = await this.shell.contracts();
+
+    const versionSub = combineLatest([this.shell.rightholderStatements$, this.shell.versionId$]).subscribe(([statements]) => {
+      this.isStatementSender = currentRightholder.id === this.statementSender.id;
+      this.statements = statements;
+      this.statementChips = initStatementChips(this.statements);
+      this.changeType();
+    });
     this.subs.push(versionSub);
 
     const sub = combineLatest([
       this.rightholderControl.valueChanges.pipe(startWith(this.rightholderControl.value)),
-      this.shell.rightholderStatements$
-    ]).subscribe(([value, statements]) => {
+      this.shell.rightholderStatements$,
+      this.shell.rights$
+    ]).subscribe(([value, statements, rights]) => {
       if (!this.selected) {
         this.rightholderContracts = [];
       } else if (this.selected !== 'directSales') {
-        this.rightholderContracts = getContractsWith([this.statementSender.id, value], this.contracts, this.currentStateDate)
+        this.rightholderContracts = getContractsWith([this.statementSender.id, value], this.contracts, this.currentDate)
           .filter(c => statementsRolesMapping[this.selected].includes(c.type))
-          .filter(c => this.rights.some(r => r.contractId === c.id))
+          .filter(c => rights.some(r => r.contractId === c.id))
           .map(c => {
             const stms = filterStatements(this.selected, [this.statementSender.id, value], c.id, statements);
             return { ...c, statements: sortStatements(stms) };
@@ -147,7 +173,6 @@ export class StatementsComponent implements OnInit, OnDestroy {
       }
 
       this.haveStatements = this.rightholderContracts.some(c => c.statements.length > 0);
-
       this.cdr.markForCheck();
     });
 
@@ -158,37 +183,24 @@ export class StatementsComponent implements OnInit, OnDestroy {
     this.subs.forEach(sub => sub.unsubscribe());
   }
 
-  private async initTypes(currentRightholder: WaterfallRightholder, isStandalone = false) {
-    this.rights = await this.shell.rights();
-    this.isStatementSender = currentRightholder.id === this.statementSender.id;
-    this.statements = await this.shell.rightholderStatements();
-    this.contracts = await this.shell.contracts();
-    this.statementTypes = Object.entries(statementsRolesConfig).map(([key, value]: [StatementType, StatementRolesConfig]) => (
-      {
-        selected: false,
-        key,
-        value: statementType[key],
-        ...value,
-        visible: key === 'producer' ? this.statements.some(s => !isProducerStatement(s) && s.status === 'reported') : value.visible
-      }
-    ));
-    this.changeType('mainDistributor', isStandalone);
-  }
+  public changeType(key: StatementType = 'mainDistributor') {
+    // Highlight the selected chip
+    this.statementChips = this.statementChips.map(type => type.key === key ? { ...type, selected: true } : { ...type, selected: false });
 
-  public changeType(key: StatementType, reload = false) {
-    if (!reload && this.selected === key) return;
-    this.statementTypes = this.statementTypes.map(type => type.key === key ? { ...type, selected: !type.selected } : { ...type, selected: false });
-    const selected = this.statementTypes.find(type => type.selected);
+    // Set the current selected type
+    const selected = this.statementChips.find(type => type.selected);
     this.selected = selected.key;
-    if (!selected) this.rightholders = [];
+
+    // Update the rightholders select and set default value for rightholderControl
     const rightholderKey = this.selected === 'producer' ? 'receiverId' : 'senderId';
     this.rightholders = this.waterfall.rightholders
       .filter(r => r.id !== this.statementSender.id) // Rightholder is not the statement sender (current rightholder)
-      .filter(r => hasContractWith([this.statementSender.id, r.id], this.contracts, this.currentStateDate)) // Rightholder have at least one contract with the statement sender (current rightholder)
+      .filter(r => hasContractWith([this.statementSender.id, r.id], this.contracts, this.currentDate)) // Rightholder have at least one contract with the statement sender (current rightholder)
       .filter(r => r.roles.some(role => selected.roles.includes(role))) // Rightholder have the selected role
       .filter(r => this.statements.some(stm => stm[rightholderKey] === r.id && stm.type === selected.key)); // Rightholder have statements of the selected type (meaning he already have rights in the waterfall)
 
-    if (this.selected !== 'directSales') this.rightholderControl.setValue(this.rightholders[0]?.id);
+    const defaultRightholder = this.selected !== 'directSales' ? this.rightholders[0]?.id : this.producer.id;
+    this.rightholderControl.setValue(defaultRightholder);
     this.cdr.markForCheck();
   }
 
@@ -196,6 +208,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
     if (!this.isStatementSender) return;
     if (type === 'directSales') return this.createStatement();
     const statements = await this.shell.statements();
+    const rights = await this.shell.rights();
     this.dialog.open(StatementNewComponent, {
       data: createModalData({
         type,
@@ -203,8 +216,8 @@ export class StatementsComponent implements OnInit, OnDestroy {
         producer: this.statementSender,
         contracts: this.contracts,
         statements,
-        date: this.currentStateDate,
-        rights: this.rights,
+        date: this.currentDate,
+        rights,
         onConfirm: async (rightholderId: string, contractId: string) => {
           await this.createStatement(rightholderId, contractId, type);
         }
@@ -213,19 +226,15 @@ export class StatementsComponent implements OnInit, OnDestroy {
   }
 
   public async createStatement(rightholderId?: string, contractId?: string, type = this.selected) {
-
-    /** @dev there should be only one producer */
-    const producer = this.waterfall.rightholders.find(r => r.roles.includes('producer'));
-
     const previousStatement = this.rightholderContracts.find(c => c.id === contractId)?.statements[0];
-    const duration = initStatementDuration(this.currentStateDate, previousStatement?.duration);
+    const duration = initStatementDuration(this.currentDate, previousStatement?.duration);
 
     const incomeIds = type === 'producer' ?
       (await this.shell.getIncomeIds(this.statementSender.id, rightholderId, contractId, duration.to)) :
       undefined;
 
     const config: CreateStatementConfig = {
-      producerId: producer.id,
+      producerId: this.producer.id,
       rightholderId,
       waterfall: this.waterfall,
       versionId: this.shell.versionId$.value,

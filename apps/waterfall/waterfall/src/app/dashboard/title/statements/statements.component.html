@@ -1,13 +1,21 @@
-<ng-container *ngIf="statements.length else noStatements">
+<ng-container *ngIf="displayNoStatementPage$ | async; else statementPage">
+    <section class="flex-center">
+      <waterfall-empty-statement-card type="mainDistributor" (click)="addStatement('mainDistributor')" [disabled]="!isStatementSender"></waterfall-empty-statement-card>
+      <waterfall-empty-statement-card type="salesAgent" (click)="addStatement('salesAgent')" [disabled]="!isStatementSender"></waterfall-empty-statement-card>
+      <waterfall-empty-statement-card type="producer" disabled></waterfall-empty-statement-card>
+    </section>
+</ng-container>
+
+<ng-template #statementPage>
   <header>
     <article>
       <mat-chip-list aria-label="Statement type">
-        <ng-container *ngFor="let type of statementTypes">
-          <mat-divider *ngIf="type.divider && type.visible" [vertical]="true"></mat-divider>
+        <ng-container *ngFor="let chip of statementChips">
+          <mat-divider *ngIf="chip.divider && chip.visible" [vertical]="true"></mat-divider>
           <mat-chip
-          *ngIf="type.visible"
-          [selected]="type.selected"
-          (click)="changeType(type.key)">{{ type.value }}</mat-chip>
+          *ngIf="chip.visible"
+          [selected]="chip.selected"
+          (click)="changeType(chip.key)">{{ chip.value }}</mat-chip>
         </ng-container>
       </mat-chip-list>
       <waterfall-version-selector></waterfall-version-selector>
@@ -84,14 +92,6 @@
       <mat-icon svgIcon="add"></mat-icon>
       <span>Add Statement for another {{ selected | toLabel: 'statementParty' }}</span>
     </button>
-  </section>
-</ng-container>
-
-<ng-template #noStatements>
-  <section class="flex-center">
-    <waterfall-empty-statement-card type="mainDistributor" (click)="addStatement('mainDistributor')" [disabled]="!isStatementSender"></waterfall-empty-statement-card>
-    <waterfall-empty-statement-card type="salesAgent" (click)="addStatement('salesAgent')" [disabled]="!isStatementSender"></waterfall-empty-statement-card>
-    <waterfall-empty-statement-card type="producer" disabled></waterfall-empty-statement-card>
   </section>
 </ng-template>
 

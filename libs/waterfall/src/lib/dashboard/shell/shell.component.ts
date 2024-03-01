@@ -349,17 +349,6 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     return this.statementService.statements(this.waterfall, versionId);
   }
 
-  /**
-   * Return the statements that current rightholder is allowed to see
-   */
-  async rightholderStatements(versionId = this.versionId$.value) {
-    const statements = await this.statements(versionId);
-    const canBypassRules = await firstValueFrom(this.canBypassRules$);
-    if (canBypassRules) return statements;
-    const rightholder = await firstValueFrom(this.currentRightholder$);
-    return filterRightholderStatements(statements, rightholder.id);
-  }
-
   async expenses(ids?: string[], versionId = this.versionId$.value) {
     const statements = await this.statements(versionId);
     return this.expenseService.expenses(this.waterfall.id, statements, ids, versionId);
