@@ -126,7 +126,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
   private waterfall = this.shell.waterfall;
   private subs: Subscription[] = [];
   private statementSender: WaterfallRightholder;
-  /** @dev there should be only one producer */
+  /** @dev there should always be only one producer */ // TODO #9553
   private producer = this.waterfall.rightholders.find(r => r.roles.includes('producer'));
 
   constructor(
@@ -235,7 +235,6 @@ export class StatementsComponent implements OnInit, OnDestroy {
   }
 
   public async addStatement(type: StatementType) {
-    if (!this.isStatementSender) return;
     if (type === 'directSales') return this.createStatement();
     const statements = await this.shell.statements();
     const rights = await this.shell.rights();

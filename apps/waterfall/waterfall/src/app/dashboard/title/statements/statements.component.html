@@ -1,7 +1,7 @@
 <ng-container *ngIf="displayNoStatementPage$ | async; else statementPage">
     <section class="flex-center">
-      <waterfall-empty-statement-card type="mainDistributor" (click)="addStatement('mainDistributor')" [disabled]="!isStatementSender"></waterfall-empty-statement-card>
-      <waterfall-empty-statement-card type="salesAgent" (click)="addStatement('salesAgent')" [disabled]="!isStatementSender"></waterfall-empty-statement-card>
+      <waterfall-empty-statement-card type="mainDistributor" (selected)="addStatement('mainDistributor')"></waterfall-empty-statement-card>
+      <waterfall-empty-statement-card type="salesAgent" (selected)="addStatement('salesAgent')"></waterfall-empty-statement-card>
       <waterfall-empty-statement-card type="producer" disabled></waterfall-empty-statement-card>
     </section>
 </ng-container>
@@ -84,7 +84,7 @@
   </section>
 
   <section *ngIf="!haveStatements">
-    <waterfall-empty-statement-card [type]="selected" (click)="addStatement(selected)"></waterfall-empty-statement-card>
+    <waterfall-empty-statement-card [type]="selected" (selected)="addStatement(selected)"></waterfall-empty-statement-card>
   </section>
 
   <section *ngIf="haveStatements && selected !== 'directSales' && isStatementSender" class="flex-center">
