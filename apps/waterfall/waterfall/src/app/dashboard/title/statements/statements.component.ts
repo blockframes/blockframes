@@ -2,7 +2,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription, combineLatest, firstValueFrom, startWith } from 'rxjs';
-import { add, differenceInMonths, isLastDayOfMonth, lastDayOfMonth } from 'date-fns';
 import { Router } from '@angular/router';
 
 // Blockframes
@@ -14,15 +13,11 @@ import {
   StatementTypeValue,
   WaterfallContract,
   WaterfallRightholder,
-  createDirectSalesStatement,
-  createDistributorStatement,
-  createDuration,
-  createProducerStatement,
   filterStatements,
   getContractsWith,
   hasContractWith,
+  initStatementDuration,
   isProducerStatement,
-  isStandaloneVersion,
   sortStatements,
   statementType,
   statementsRolesMapping,
@@ -30,7 +25,7 @@ import {
 } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
-import { StatementService } from '@blockframes/waterfall/statement.service';
+import { CreateStatementConfig, StatementService } from '@blockframes/waterfall/statement.service';
 import { MatDialog } from '@angular/material/dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { StatementNewComponent } from '@blockframes/waterfall/components/statement-new/statement-new.component';
@@ -208,78 +203,33 @@ export class StatementsComponent implements OnInit, OnDestroy {
   }
 
   public async createStatement(rightholderId: string, contractId?: string, type = this.selected) {
-    const duration = createDuration({
-      from: add(this.currentStateDate, { days: 1 }),
-      to: add(this.currentStateDate, { days: 1, months: 6 }),
-    });
 
-    // Set duration from previous statement date & periodicity
+    /** @dev there should be only one producer */
+    const producer = this.waterfall.rightholders.find(r => r.roles.includes('producer'));
+
     const previousStatement = this.rightholderContracts.find(c => c.id === contractId)?.statements[0];
-    if (previousStatement) {
-      const difference = differenceInMonths(previousStatement.duration.to, previousStatement.duration.from);
-      duration.from = add(previousStatement.duration.to, { days: 1 });
-      duration.to = add(duration.from, { months: difference });
+    const duration = initStatementDuration(this.currentStateDate, previousStatement?.duration);
 
-      if (isLastDayOfMonth(previousStatement.duration.to)) {
-        duration.to = lastDayOfMonth(duration.to);
-      }
+    const incomeIds = type === 'producer' ?
+      (await this.shell.getIncomeIds(this.statementSender.id, rightholderId, contractId, duration.to)) :
+      undefined;
+
+    const config: CreateStatementConfig = {
+      rightholderId,
+      producerId: producer.id,
+      waterfall: this.waterfall,
+      versionId: this.shell.versionId$.value,
+      type,
+      duration,
+      contractId,
+      incomeIds
     }
 
-    const standalone = isStandaloneVersion(this.waterfall, this.shell.versionId$.value);
+    const statementId = await this.statementService.initStatement(config);
 
-    switch (type) {
-      case 'mainDistributor':
-      case 'salesAgent': {
-        const statement = createDistributorStatement({
-          id: this.statementService.createId(),
-          contractId,
-          senderId: rightholderId,
-          receiverId: this.statementSender.id, // Statement sender is the producer
-          waterfallId: this.waterfall.id,
-          duration,
-          type,
-          standalone
-        });
-
-        if (statement.standalone) statement.versionId = this.shell.versionId$.value;
-
-        const id = await this.statementService.add(statement, { params: { waterfallId: this.waterfall.id } });
-        return this.router.navigate(['/c/o/dashboard/title/', this.waterfall.id, 'statement', id, 'edit']);
-      }
-      case 'directSales': {
-        const statement = createDirectSalesStatement({
-          id: this.statementService.createId(),
-          senderId: this.statementSender.id,
-          receiverId: rightholderId,
-          waterfallId: this.waterfall.id,
-          duration,
-          standalone
-        });
-
-        if (statement.standalone) statement.versionId = this.shell.versionId$.value;
-
-        const id = await this.statementService.add(statement, { params: { waterfallId: this.waterfall.id } });
-        return this.router.navigate(['/c/o/dashboard/title/', this.waterfall.id, 'statement', id, 'edit']);
-      }
-      case 'producer': {
-        const incomeIds = await this.shell.getIncomeIds(this.statementSender.id, rightholderId, contractId, duration.to);
-        const statement = createProducerStatement({
-          id: this.statementService.createId(),
-          contractId,
-          senderId: this.statementSender.id,
-          receiverId: rightholderId,
-          waterfallId: this.waterfall.id,
-          incomeIds,
-          duration,
-          standalone
-        });
-
-        if (statement.standalone) statement.versionId = this.shell.versionId$.value;
-
-        const id = await this.statementService.add(statement, { params: { waterfallId: this.waterfall.id } });
-        return this.router.navigate(['/c/o/dashboard/title/', this.waterfall.id, 'statement', id]);
-      }
-    }
+    const route = ['/c/o/dashboard/title/', this.waterfall.id, 'statement', statementId];
+    if (type !== 'producer') route.push('edit');
+    return this.router.navigate(route);
   }
 
   public addNew(type: StatementType) {

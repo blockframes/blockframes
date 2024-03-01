@@ -458,12 +458,12 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   /**
    * Iterates over state to fetch Income Ids that can 
    * be used to generate producer (outgoing) statements 
-   * @param senderId
+   * @param producerId
    * @param receiverId 
    * @param contractId 
    * @param date 
    */
-  public async getIncomeIds(senderId: string, receiverId: string, contractId: string, date: Date) {
+  public async getIncomeIds(producerId: string, receiverId: string, contractId: string, date: Date) {
     const incomes = await this.incomes();
     const state = await firstValueFrom(this.state$);
     const statements = await this.statements();
@@ -472,7 +472,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
 
     // Outgoing statement prerequists config
     const config = {
-      senderId,
+      senderId: producerId,
       receiverId,
       statements,
       contracts,

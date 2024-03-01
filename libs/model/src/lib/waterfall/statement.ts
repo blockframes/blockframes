@@ -12,6 +12,7 @@ import { mainCurrency } from './action';
 import { ConditionWithTarget, getInvestmentValue, isConditionWithTarget } from './conditions';
 import { Expense, ExpenseType } from '../expense';
 import { InterestDetail } from './interest';
+import { add, differenceInMonths, isLastDayOfMonth, lastDayOfMonth } from 'date-fns';
 
 export interface Payment {
   id: string;
@@ -997,4 +998,24 @@ function getMgRecoupment(right: Right, cumulatedRightPayment: RightPayment[], st
   }
 
   return { investments, stillToBeRecouped: investments - payments };
+}
+
+export function initStatementDuration(date: Date, previousDuration?: Duration): Duration {
+  const duration = createDuration({
+    from: add(date, { days: 1 }),
+    to: add(date, { days: 1, months: 6 }),
+  });
+
+  // Set duration from previous statement date & periodicity
+  if (previousDuration) {
+    const difference = differenceInMonths(previousDuration.to, previousDuration.from);
+    duration.from = add(previousDuration.to, { days: 1 });
+    duration.to = add(duration.from, { months: difference });
+
+    if (isLastDayOfMonth(previousDuration.to)) {
+      duration.to = lastDayOfMonth(duration.to);
+    }
+  }
+
+  return duration;
 }
