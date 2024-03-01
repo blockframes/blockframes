@@ -32,6 +32,7 @@ import {
   waterfallSources,
   isStandaloneVersion,
   skipGroups,
+  getOutgoingStatementPrerequists,
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { filter, map, pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
@@ -454,6 +455,42 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     return waterfall;
   }
 
+  /**
+   * Iterates over state to fetch Income Ids that can 
+   * be used to generate producer (outgoing) statements 
+   * @param senderId
+   * @param receiverId 
+   * @param contractId 
+   * @param date 
+   */
+  public async getIncomeIds(senderId: string, receiverId: string, contractId: string, date: Date) {
+    const incomes = await this.incomes();
+    const state = await firstValueFrom(this.state$);
+    const statements = await this.statements();
+    const rights = await this.rights();
+    const contracts = await this.contracts();
+
+    // Outgoing statement prerequists config
+    const config = {
+      senderId,
+      receiverId,
+      statements,
+      contracts,
+      rights,
+      titleState: state.waterfall.state,
+      incomes,
+      sources: this.waterfall.sources,
+      date
+    };
+
+    const prerequists = getOutgoingStatementPrerequists(config);
+
+    if (!Object.keys(prerequists).length) return [];
+    if (!prerequists[contractId]) return [];
+    const prerequist = prerequists[contractId];
+    return prerequist.incomeIds;
+  }
+
   ngOnDestroy() {
     this.sub?.unsubscribe();
   }
@@ -471,7 +508,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
 @Pipe({ name: 'canAccess' })
 export class CanAccesPipe implements PipeTransform {
   transform(link: RouteDescription, isAdmin: boolean, waterfallReady: boolean) {
-    if(!link.requireKeys) return true;
+    if (!link.requireKeys) return true;
     return link.requireKeys.every(key => {
       if (key === 'admin') return isAdmin;
       if (key === 'waterfall-ready') return waterfallReady;

@@ -20,7 +20,6 @@ import {
   createProducerStatement,
   filterStatements,
   getContractsWith,
-  getOutgoingStatementPrerequists,
   hasContractWith,
   isProducerStatement,
   isStandaloneVersion,
@@ -263,8 +262,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
         return this.router.navigate(['/c/o/dashboard/title/', this.waterfall.id, 'statement', id, 'edit']);
       }
       case 'producer': {
-        const incomeIds = await this.getIncomeIds(rightholderId, contractId, duration.to);
-
+        const incomeIds = await this.shell.getIncomeIds(this.statementSender.id, rightholderId, contractId, duration.to);
         const statement = createProducerStatement({
           id: this.statementService.createId(),
           contractId,
@@ -282,31 +280,6 @@ export class StatementsComponent implements OnInit, OnDestroy {
         return this.router.navigate(['/c/o/dashboard/title/', this.waterfall.id, 'statement', id]);
       }
     }
-  }
-
-  private async getIncomeIds(receiverId: string, contractId: string, date: Date) {
-    const incomes = await this.shell.incomes();
-    const state = await firstValueFrom(this.shell.state$);
-    this.statements = await this.shell.statements();
-    // should create an outgoing statement.
-    const config = {
-      senderId: this.statementSender.id,
-      receiverId,
-      statements: this.statements,
-      contracts: this.contracts,
-      rights: this.rights,
-      titleState: state.waterfall.state,
-      incomes,
-      sources: this.waterfall.sources,
-      date
-    };
-
-    const prerequists = getOutgoingStatementPrerequists(config);
-
-    if (!Object.keys(prerequists).length) return [];
-    if (!prerequists[contractId]) return [];
-    const prerequist = prerequists[contractId];
-    return prerequist.incomeIds;
   }
 
   public addNew(type: StatementType) {
