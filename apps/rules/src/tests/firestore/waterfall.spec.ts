@@ -2,8 +2,6 @@
 import { assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
 import { Firestore, initFirestoreApp, rulesFixtures as testFixture } from '@blockframes/testing/unit-tests';
 
-// TODO #9689 add unit test for canUpdateWaterfallDocument rules update
-
 describe('Movie Owner', () => {
   const projectId = `waterfall-rules-spec-${Date.now()}`;
   let db: Firestore;
@@ -238,7 +236,7 @@ describe('User that is not owner of movie', () => {
       await assertFails(ref.get());
     });
   });
-  
+
   describe('Statements', () => {
     test('Should not be able to create statements', async () => {
       const ref = db.doc('waterfall/M001/statements/S003');
@@ -399,6 +397,46 @@ describe('User that is linked to waterfall but not admin', () => {
     test('Should be able to update document if owner', async () => {
       const ref = db.doc('waterfall/MI-0d7/documents/D002');
       await assertSucceeds(ref.update({ id: 'D002', ownerId: 'O002', meta: { foo: 'bar' } }));
+    });
+
+    test('Should be able to update document if buyerId', async () => {
+      const ref = db.doc('waterfall/MI-0d7/documents/D004');
+
+      // Create doc
+      await assertSucceeds(ref.set({ id: 'D004', meta: { buyerId: 'RH002' } }));
+
+      // Check update
+      await assertSucceeds(ref.update({ id: 'D004', meta: { buyerId: 'RH002', foo: 'bar' } }));
+    });
+
+    test('Should not be able to update document if not buyerId', async () => {
+      const ref = db.doc('waterfall/MI-0d7/documents/D005');
+
+      // Create doc
+      await assertSucceeds(ref.set({ id: 'D005', meta: { foo: 'bar' } }));
+
+      // Check update
+      await assertFails(ref.update({ id: 'D005', meta: { buyerId: 'RH002', foo: 'bar' } }));
+    });
+
+    test('Should be able to update document if sellerId', async () => {
+      const ref = db.doc('waterfall/MI-0d7/documents/D006');
+
+      // Create doc
+      await assertSucceeds(ref.set({ id: 'D006', meta: { sellerId: 'RH002' } }));
+
+      // Check update
+      await assertSucceeds(ref.update({ id: 'D006', meta: { sellerId: 'RH002', foo: 'bar' } }));
+    });
+
+    test('Should not be able to update document if not sellerId', async () => {
+      const ref = db.doc('waterfall/MI-0d7/documents/D007');
+
+      // Create doc
+      await assertSucceeds(ref.set({ id: 'D007', meta: { foo: 'bar' } }));
+
+      // Check update
+      await assertFails(ref.update({ id: 'D007', meta: { sellerId: 'RH002', foo: 'bar' } }));
     });
 
     test('Should not be able to update document if not owner', async () => {
