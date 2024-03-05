@@ -37,7 +37,8 @@ import {
   isSource,
   isStandaloneVersion,
   isVerticalGroup,
-  interestDetail
+  interestDetail,
+  canOnlyReadStatements
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { StatementForm } from '../../../form/statement.form';
@@ -127,6 +128,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
   public incomeIds$ = new BehaviorSubject<string[]>([]);
   private incomes: Income[] = [];
   private statementDuplicates: Statement[] = [];
+  private readonly = canOnlyReadStatements(this.shell.currentRightholder, this.shell.canBypassRules);
 
   public sources$ = combineLatest([this.incomeIds$, this.shell.incomes$, this.shell.rights$, this.shell.simulation$]).pipe(
     map(([incomeIds, incomes, rights, simulation]) => getStatementSources({ ...this.statement, incomeIds }, this.waterfall.sources, incomes, rights, simulation.waterfall.state)),
@@ -224,6 +226,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
       return Object.values(groups).filter(g => g.rows.filter(r => r.type === 'source').length) as GroupsBreakdown[];
     }),
     tap(async groupsBreakdown => {
+      if (this.readonly) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.groupsBreakdown) {
         this.statement.reportedData.groupsBreakdown = groupsBreakdown;
@@ -270,6 +273,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
       return items;
     }),
     tap(async details => {
+      if (this.readonly) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.details) {
         this.statement.reportedData.details = details;
@@ -299,6 +303,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
       }).filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true);
     }),
     tap(async expenses => {
+      if (this.readonly) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.expenses) {
         this.statement.reportedData.expenses = expenses;
@@ -320,6 +325,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
       return interestDetail(this.statement.contractId, payload, state.waterfall.state);
     }),
     tap(async interests => {
+      if (this.readonly) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.interests) {
         this.statement.reportedData.interests = interests;

@@ -45,13 +45,13 @@
           </ng-container>
         </ng-container>
       </section>
-      <div *ngIf="selected !== 'directSales' && rightholderContracts.length === 1 && isStatementSender">
+      <div *ngIf="selected !== 'directSales' && rightholderContracts.length === 1 && canCreateStatement(selected, rightholderContracts, rightholderControl.value)">
         <button mat-button color="primary" (click)="createStatement(rightholderControl.value, rightholderContracts[0].id)" class="main-dashboard-cta">
           <mat-icon svgIcon="add"></mat-icon>
           <span>Add Statement</span>
         </button>
       </div>
-      <div *ngIf="selected === 'directSales' && haveStatements && isStatementSender">
+      <div *ngIf="selected === 'directSales' && haveStatements && canCreateStatement(selected)">
         <button mat-button color="primary" (click)="createStatement()" class="main-dashboard-cta">
           <mat-icon svgIcon="add"></mat-icon>
           <span>Add Statement</span>
@@ -65,7 +65,7 @@
       <ng-container *ngFor="let rightholderContract of rightholderContracts">
         <mat-tab *ngIf="rightholderContract.statements.length > 0" [label]="rightholderContract.name">
           <ng-template matTabContent>
-            <div *ngIf="isStatementSender">
+            <div *ngIf="canCreateStatement(selected, rightholderContracts, rightholderControl.value)">
               <button mat-button color="primary" (click)="createStatement(rightholderControl.value, rightholderContract.id)" class="main-dashboard-cta">
                 <mat-icon svgIcon="add"></mat-icon>
                 <span>Add statement ({{ rightholderContract.name }})</span>
@@ -87,7 +87,7 @@
     <waterfall-empty-statement-card [type]="selected" (selected)="addStatement(selected)"></waterfall-empty-statement-card>
   </section>
 
-  <section *ngIf="haveStatements && selected !== 'directSales' && canByPassRules" class="flex-center">
+  <section *ngIf="haveStatements && selected !== 'directSales' && canAddStatement(selected)" class="flex-center">
     <button mat-button (click)="addStatement(selected)">
       <mat-icon svgIcon="add"></mat-icon>
       <span>Add Statement for another {{ selected | toLabel: 'statementParty' }}</span>

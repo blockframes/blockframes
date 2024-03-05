@@ -34,6 +34,7 @@ import {
   skipGroups,
   getOutgoingStatementPrerequists,
   filterRightholderStatements,
+  WaterfallRightholder,
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { filter, map, pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
@@ -207,8 +208,11 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   public currentRightholder$ = combineLatest([this.waterfall$, this.permission$]).pipe(
     map(([waterfall, permission]) => permission ? permission.rightholderIds.map(r => waterfall.rightholders.find(rh => rh.id === r)) : []),
     map(rightholders => rightholders.pop()),
+    tap(currentRightholder => this.currentRightholder = currentRightholder),
     shareReplay({ bufferSize: 1, refCount: true })
   );
+
+  public currentRightholder: WaterfallRightholder;
 
   // Blocks used for the current version of the state
   public versionBlocks$ = combineLatest([this.versionId$, this.waterfall$, this.blocks$]).pipe(
@@ -304,6 +308,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
       .subscribe(() => this.countRouteEvents++);
     this.subs.push(routerSub);
     this.subs.push(this.canBypassRules$.subscribe());
+    this.subs.push(this.currentRightholder$.subscribe());
   }
 
   private async loadData() {

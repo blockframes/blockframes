@@ -79,13 +79,14 @@ export class StatementNewComponent implements OnInit, OnDestroy {
       })
       .filter(r => this.data.canBypassRules || r.id === this.data.currentRightholder.id);
 
+    let defaultRightholder = this.rightholders.find(r => r.id === this.data.currentRightholder.id) || this.rightholders[0];
     this.sub = this.rightholderControl.valueChanges.subscribe(rightholderId => {
       this.rightholderContracts = getContractsWith([this.data.producer.id, rightholderId], this.data.contracts, this.data.date)
         .filter(c => statementsRolesMapping[this.data.type].includes(c.type))
         .filter(c => !statementsExists(this.data.type, rightholderId, c.id, this.data.statements))
         .filter(c => this.data.rights.some(r => r.contractId === c.id));
 
-      if (!this.rightholderContracts.length) {
+      if (!this.rightholderContracts.length && rightholderId !== defaultRightholder?.id) {
         this.snackbar.open('Could not find any contract with associated rights.', 'WATERFALL MANAGEMENT', { duration: 5000 })
           .onAction()
           .subscribe(() => {
@@ -94,12 +95,13 @@ export class StatementNewComponent implements OnInit, OnDestroy {
           });
       }
 
+      if (defaultRightholder?.id === rightholderId) defaultRightholder = undefined;
+
       this.contractControl.setValue(this.rightholderContracts[0]?.id);
       this.cdr.markForCheck();
     });
 
-    const defaultRightholder = this.rightholders.find(r => r.id === this.data.currentRightholder.id) || this.rightholders[0];
-    this.rightholderControl.setValue(defaultRightholder.id);
+    if (defaultRightholder?.id) this.rightholderControl.setValue(defaultRightholder.id);
     if (!this.data.canBypassRules && this.rightholders.length === 1) this.rightholderControl.disable();
   }
 

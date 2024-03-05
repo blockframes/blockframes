@@ -3,6 +3,7 @@ import {
   BreakdownRow,
   RightOverride,
   Statement,
+  canOnlyReadStatements,
   filterStatements,
   generatePayments,
   getAssociatedRights,
@@ -32,7 +33,8 @@ export class StatementDistributorSummaryComponent {
 
   @Input() form: StatementForm;
   @Input() public statement: Statement;
-
+  private readonly = canOnlyReadStatements(this.shell.currentRightholder, this.shell.canBypassRules);
+  
   public sources$ = combineLatest([this.shell.incomes$, this.shell.rights$, this.shell.simulation$]).pipe(
     map(([incomes, rights, simulation]) => getStatementSources(this.statement, this.waterfall.sources, incomes, rights, simulation.waterfall.state)),
     shareReplay({ bufferSize: 1, refCount: true })
@@ -116,6 +118,7 @@ export class StatementDistributorSummaryComponent {
       }
     }),
     tap(async sourcesBreakdown => {
+      if(this.readonly) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.sourcesBreakdown) {
         this.statement.reportedData.sourcesBreakdown = sourcesBreakdown;
@@ -158,6 +161,7 @@ export class StatementDistributorSummaryComponent {
       }
     }),
     tap(async rightsBreakdown => {
+      if(this.readonly) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.rightsBreakdown) {
         this.statement.reportedData.rightsBreakdown = rightsBreakdown;
@@ -174,6 +178,7 @@ export class StatementDistributorSummaryComponent {
         .filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true)
     ),
     tap(async expenses => {
+      if(this.readonly) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.expenses) {
         this.statement.reportedData.expenses = expenses;
