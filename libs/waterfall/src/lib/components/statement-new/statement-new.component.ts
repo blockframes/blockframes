@@ -11,6 +11,7 @@ import {
   WaterfallContract,
   WaterfallRightholder,
   getContractsWith,
+  rightholderKey,
   statementsRolesMapping
 } from '@blockframes/model';
 import { Intercom } from 'ng-intercom';
@@ -38,8 +39,7 @@ export interface StatementNewData {
  * @returns 
  */
 function statementsExists(type: StatementType, rightholderId: string, contractId: string, statements: Statement[]) {
-  const rightholderKey = type === 'producer' ? 'receiverId' : 'senderId';
-  return statements.some(stm => stm[rightholderKey] === rightholderId && stm.contractId === contractId);
+  return statements.some(stm => stm[rightholderKey(type)] === rightholderId && stm.contractId === contractId);
 }
 
 @Component({

@@ -23,6 +23,7 @@ import {
   hasContractWith,
   initStatementDuration,
   isProducerStatement,
+  rightholderKey,
   sortStatements,
   statementType,
   statementsRolesMapping,
@@ -243,13 +244,12 @@ export class StatementsComponent implements OnInit, OnDestroy {
     this.selected = selected.key;
 
     // Update the rightholders select and set default value for rightholderControl
-    const rightholderKey = this.selected === 'producer' ? 'receiverId' : 'senderId';
     this.rightholders = this.shell.waterfall.rightholders
       .filter(r => r.id !== this.producer.id) // Rightholder is not the producer
       .filter(r => (this.shell.canBypassRules || this.readonly) || r.id === this.shell.currentRightholder.id)
       .filter(r => hasContractWith([this.producer.id, r.id], this.contracts, this.currentDate)) // Rightholder have at least one contract with the producer
       .filter(r => r.roles.some(role => selected.roles.includes(role))) // Rightholder have the selected role
-      .filter(r => this.statements.some(stm => stm[rightholderKey] === r.id && stm.type === selected.key)); // Rightholder have statements of the selected type (meaning he already have rights in the waterfall)
+      .filter(r => this.statements.some(stm => stm[rightholderKey(this.selected)] === r.id && stm.type === selected.key)); // Rightholder have statements of the selected type (meaning he already have rights in the waterfall)
 
     const defaultRightholder = this.selected !== 'directSales' ? this.rightholders[0]?.id : this.producer.id;
     this.rightholderControl.setValue(defaultRightholder);

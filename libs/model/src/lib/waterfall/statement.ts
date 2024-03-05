@@ -217,6 +217,15 @@ export function isDirectSalesStatement(statement: Partial<Statement>): statement
   return statement.type === 'directSales';
 }
 
+/**
+ * Return the key used to identify the rightholder in the statement that is not the producer
+ * @param type 
+ * @returns 
+ */
+export function rightholderKey(type: StatementType) {
+  return type === 'producer' ? 'receiverId' : 'senderId';
+}
+
 export function createDistributorStatement(params: Partial<DistributorStatement> = {}): DistributorStatement {
   const statement = createStatementBase(params);
   return {
