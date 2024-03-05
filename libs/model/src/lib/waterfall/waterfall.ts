@@ -289,5 +289,5 @@ export function canCreateStatement(type: StatementType, rightholder: WaterfallRi
 }
 
 export function canOnlyReadStatements(rightholder: WaterfallRightholder, canBypassRules = false) {
-  return !canBypassRules && !rightholder.roles.some(r => rightholderGroups.withStatements.includes(r));
+  return !canBypassRules && !rightholder?.roles.some(r => rightholderGroups.withStatements.includes(r));
 }

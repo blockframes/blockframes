@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, OnDestroy, Optional } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription, combineLatest, map, startWith } from 'rxjs';
 import { Router } from '@angular/router';
@@ -35,6 +35,7 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 import { StatementNewComponent, StatementNewData } from '@blockframes/waterfall/components/statement-new/statement-new.component';
 import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
+import { Intercom } from 'ng-intercom';
 
 interface StatementRolesConfig {
   roles: RightholderRole[],
@@ -126,7 +127,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
   private statements: Statement[] = [];
   private currentDate = new Date();
   private subs: Subscription[] = [];
-  /** @dev there should always be only one producer */ // TODO #9689 implement this in app to avoid issues with multiple producers
+  // TODO #9692 implement this in app to avoid issues with multiple producers
   private producer = this.shell.waterfall.rightholders.find(r => r.roles.includes('producer'));
   private readonly = canOnlyReadStatements(this.shell.currentRightholder, this.shell.canBypassRules);
 
@@ -139,6 +140,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private orgService: OrganizationService,
     private snackbar: MatSnackBar,
+    @Optional() private intercom: Intercom,
   ) {
     this.shell.setDate(this.currentDate);
     this.dynTitle.setPageTitle(this.shell.movie.title.international, 'Statements');
@@ -147,26 +149,51 @@ export class StatementsComponent implements OnInit, OnDestroy {
   async ngOnInit() {
 
     if (!this.shell.currentRightholder) {
-      this.snackbar.open(`Organization "${this.orgService.org.name}" is not associated to any rightholders.`, 'close', { duration: 5000 });
-      // TODO #9689: redirect to the rightholder page 
+      this.snackbar.open(`Organization "${this.orgService.org.name}" is not associated to any rightholders.`, this.shell.canBypassRules ? 'EDIT RIGHT HOLDERS' : 'ASK FOR HELP', { duration: 5000 })
+        .onAction()
+        .subscribe(() => {
+          if (this.shell.canBypassRules) {
+            this.router.navigate(['c/o/dashboard/title', this.shell.waterfall.id, 'right-holders']);
+          } else {
+            this.intercom.show(`My organization "${this.orgService.org.name}" is not associated to any rightholders in the waterfall "${this.shell.movie.title.international}"`);
+          }
+        });
       return;
     }
 
     if (!this.producer) {
-      this.snackbar.open(`${toLabel('producer', 'rightholderRoles')} is not defined.`, 'WATERFALL MANAGEMENT', { duration: 5000 })
+      this.snackbar.open(`${toLabel('producer', 'rightholderRoles')} is not defined.`, this.shell.canBypassRules ? 'WATERFALL MANAGEMENT' : 'ASK FOR HELP', { duration: 5000 })
         .onAction()
         .subscribe(() => {
-          this.router.navigate(['c/o/dashboard/title', this.shell.waterfall.id, 'init'])
+          if (this.shell.canBypassRules) {
+            this.router.navigate(['c/o/dashboard/title', this.shell.waterfall.id, 'init']);
+          } else {
+            this.intercom.show(`${toLabel('producer', 'rightholderRoles')} is not defined in the waterfall "${this.shell.movie.title.international}"`);
+          }
         });
       return;
     }
 
     const rightsSub = this.shell.rights$.subscribe(async rights => {
-      if (!rights.find(r => r.rightholderId === this.producer.id)) { // TODO #9689 same with current rightholder & use function created in libs/waterfall/src/lib/components/empty-statement-card/empty-statement-card.component.ts
-        this.snackbar.open(`${toLabel('producer', 'rightholderRoles')} should have at least one receipt share in the waterfall.`, 'WATERFALL MANAGEMENT', { duration: 5000 })
+      if (!rights.find(r => r.rightholderId === this.producer.id)) {
+        this.snackbar.open(`${toLabel('producer', 'rightholderRoles')} should have at least one receipt share in the waterfall.`, this.shell.canBypassRules ? 'WATERFALL MANAGEMENT' : 'ASK FOR HELP', { duration: 5000 })
           .onAction()
           .subscribe(() => {
-            this.router.navigate(['c/o/dashboard/title', this.shell.waterfall.id, 'init'])
+            if (this.shell.canBypassRules) {
+              this.router.navigate(['c/o/dashboard/title', this.shell.waterfall.id, 'init']);
+            } else {
+              this.intercom.show(`${toLabel('producer', 'rightholderRoles')} is not defined in the waterfall "${this.shell.movie.title.international}"`);
+            }
+          });
+      } else if (!canOnlyReadStatements(this.shell.currentRightholder, this.shell.canBypassRules) && !rights.find(r => r.rightholderId === this.shell.currentRightholder.id)) {
+        this.snackbar.open('Current rightholder should have at least one receipt share in the waterfall.', this.shell.canBypassRules ? 'WATERFALL MANAGEMENT' : 'ASK FOR HELP', { duration: 5000 })
+          .onAction()
+          .subscribe(() => {
+            if (this.shell.canBypassRules) {
+              this.router.navigate(['c/o/dashboard/title', this.shell.waterfall.id, 'init']);
+            } else {
+              this.intercom.show(`${toLabel('producer', 'rightholderRoles')} is not defined in the waterfall "${this.shell.movie.title.international}"`);
+            }
           });
       }
     });

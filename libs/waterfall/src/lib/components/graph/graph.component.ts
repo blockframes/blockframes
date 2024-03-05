@@ -38,6 +38,7 @@ import { createSourceForm, setSourceFormValue } from '../forms/source-form/sourc
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 import { Arrow, Node, computeDiff, createChild, createSibling, createStep, deleteStep, fromGraph, toGraph, updateParents } from './layout';
 import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'waterfall-graph',
@@ -94,10 +95,21 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     private waterfallService: WaterfallService,
     private shell: DashboardWaterfallShellComponent,
     @Optional() private intercom: Intercom,
+    private router: Router,
   ) { }
 
   ngOnInit() {
-    if (!this.producer) this.snackBar.open(`${toLabel('producer', 'rightholderRoles')} is not defined.`, 'close', { duration: 5000 });
+    if (!this.producer) {
+      this.snackBar.open(`${toLabel('producer', 'rightholderRoles')} is not defined.`, this.shell.canBypassRules ? 'WATERFALL MANAGEMENT' : 'ASK FOR HELP', { duration: 5000 })
+        .onAction()
+        .subscribe(() => {
+          if (this.shell.canBypassRules) {
+            this.router.navigate(['c/o/dashboard/title', this.shell.waterfall.id, 'init']);
+          } else {
+            this.intercom.show(`${toLabel('producer', 'rightholderRoles')} is not defined in the waterfall "${this.shell.movie.title.international}"`);
+          }
+        });
+    }
     this.subscriptions.push(combineLatest([
       this.shell.rights$,
       this.shell.waterfall$,

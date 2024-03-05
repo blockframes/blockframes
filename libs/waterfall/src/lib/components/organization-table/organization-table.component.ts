@@ -61,7 +61,7 @@ export class OrganizationTableComponent {
       this.snackBar.open('You cannot change your own access.', 'close', { duration: 5000 });
       return;
     }
-    // TODO #9689 if rightholder have producer role => always admin/editor
+    // TODO #9692 if rightholder have producer role => always admin/editor
     const permission = await this.permissionService.getValue(id, { waterfallId: this.waterfall.id });
     permission.isAdmin = role === 'editor';
     await this.permissionService.update(permission, { params: { waterfallId: this.waterfall.id } });
@@ -69,7 +69,7 @@ export class OrganizationTableComponent {
   }
 
   public async changeVersion(rightholderId: string, versionId: string) {
-    // TODO #9689 distributor/directsales should always be on default version
+    // TODO #9692 distributor/directsales should always be on default version
     const rightholder = this.waterfall.rightholders.find(r => r.id === rightholderId);
     const version = this.versions.find(v => v.id === versionId);
     if (version.default) rightholder.lockedVersionId = '';
@@ -90,8 +90,8 @@ export class OrganizationTableComponent {
 
           const permission = await this.permissionService.getValue(orgId, { waterfallId: this.waterfall.id });
           permission.rightholderIds = [id];
-          // TODO #9689 if rightholder have producer role => always admin/editor
-          // TODO #9689 distributor/directsales should always be on default version
+          // TODO #9692 if rightholder have producer role => always admin/editor
+          // TODO #9692 distributor/directsales should always be on default version
           await this.permissionService.update(permission, { params: { waterfallId: this.waterfall.id } });
           this.snackBar.open('Right holder updated.', 'close', { duration: 5000 });
         }

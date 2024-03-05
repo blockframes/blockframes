@@ -1,6 +1,7 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -31,6 +32,7 @@ import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.
   imports: [
     ReactiveFormsModule,
     CommonModule,
+    RouterModule,
 
     CardModalModule,
     AutocompleteModule,
