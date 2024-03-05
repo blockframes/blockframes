@@ -125,8 +125,11 @@ export async function onWaterfallDocumentDelete(docSnapshot: BlockframesSnapshot
   }
 
   // If document is a contract, clean income, terms etc..
-  if (isContract(waterfallDocument)) await cleanRelatedContractDocuments(convertDocumentTo<WaterfallContract>(waterfallDocument), { filterByTitleId: true });
-  // TODO #9689 should also remove statements
+  if (isContract(waterfallDocument)) {
+    await cleanRelatedContractDocuments(convertDocumentTo<WaterfallContract>(waterfallDocument), { filterByTitleId: true });
+    const statements = await waterfallSnap.ref.collection('statements').where('contractId', '==', waterfallDocument.id).get();
+    await Promise.all(statements.docs.map(d => d.ref.delete()));
+  }
 
   // Check for amendments and remove them if any
   if (!waterfallDocument.rootId) {
@@ -224,7 +227,13 @@ export async function onWaterfallStatementDelete(docSnapshot: BlockframesSnapsho
       const incomes = await Promise.all(statement.incomeIds.map(id => getDocumentSnap(`incomes/${id}`, db)));
       const expenses = await Promise.all(statement.expenseIds.map(id => getDocumentSnap(`expenses/${id}`, db)));
 
-      // TODO #9689 should also remove statements referencing thoses incomes
+      // Remove related (producer/outgoing) statements
+      const statements = await waterfallSnap.ref.collection('statements').get();
+      const statementsToDelete = statements.docs.filter(s => {
+        const stm = s.data() as Statement;
+        return stm.incomeIds.some(id => statement.incomeIds.includes(id))
+      });
+      await Promise.all(statementsToDelete.map(d => d.ref.delete()));
 
       const defaultVersionId = getDefaultVersionId(waterfall);
       const isStandalone = isStandaloneVersion(waterfall, statement.versionId);
