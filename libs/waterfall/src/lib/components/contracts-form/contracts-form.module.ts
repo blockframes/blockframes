@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 // Components
-import { CanEditPipe, ContractsFormComponent } from './contracts-form.component';
+import { ContractsFormComponent } from './contracts-form.component';
 
 // Blockframes
 import { ToLabelModule } from '@blockframes/utils/pipes';
@@ -25,7 +25,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
-  declarations: [ContractsFormComponent, CanEditPipe],
+  declarations: [ContractsFormComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
