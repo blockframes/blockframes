@@ -1,5 +1,5 @@
 
-import { map, startWith } from 'rxjs';
+import { combineLatest, map, startWith } from 'rxjs';
 import { ChangeDetectionStrategy, Component, EventEmitter, HostBinding, HostListener, Input, OnChanges, Output } from '@angular/core';
 
 import { boolean } from '@blockframes/utils/decorators/decorators';
@@ -28,8 +28,8 @@ export class WaterfallGraphRightComponent implements OnChanges {
   @HostBinding('class.nodrag') nodrag = true;
   @HostBinding('class.selected') selectedClass = false;
 
-  amount$ = this.shell.state$.pipe(
-    map(state => state.waterfall.state.rights[this.right.id]?.revenu.calculated ?? 0),
+  amount$ = combineLatest([this.shell.state$, this.shell.isCalculatedRevenue$]).pipe(
+    map(([state, isCalculatedRevenue]) => state.waterfall.state.rights[this.right.id]?.revenu[isCalculatedRevenue ? 'calculated' : 'actual'] ?? 0),
     startWith(0),
   );
 

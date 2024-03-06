@@ -1,6 +1,6 @@
 
 <section class="surface" [ngStyle]="{ width: showEdit ? '50%' : '100%' }" (dblclick)="select('')">
-  <header>
+  <header *ngIf="editMode">
     <div>
       <h2>
         <span>Waterfall Scheme</span>
