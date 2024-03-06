@@ -1,6 +1,6 @@
 
 import { map, startWith, tap } from 'rxjs';
-import { Component, ChangeDetectionStrategy, ViewChild, Input, Pipe, PipeTransform } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, Input } from '@angular/core';
 
 import { WaterfallService } from '../../waterfall.service';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
@@ -212,12 +212,3 @@ export class ContractsFormComponent {
   }
 }
 
-@Pipe({ name: 'canEdit' })
-export class CanEditPipe implements PipeTransform {
-  transform(contract: WaterfallContract, orgId: string, documents: WaterfallDocument[], canBypassRules: boolean) {
-    if (canBypassRules) return true;
-    const doc = documents.find(d => d.id === contract.id);
-    if (doc.ownerId === orgId) return true;
-    return false;
-  }
-}
