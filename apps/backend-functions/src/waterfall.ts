@@ -19,16 +19,17 @@ import {
   isContract,
   isDirectSalesStatement,
   isDistributorStatement,
-  isStandaloneVersion
+  isStandaloneVersion,
+  Notification
 } from '@blockframes/model';
-import { getDocument, getCollection, getDocumentSnap } from '@blockframes/firebase-utils/firebase-utils';
+import { getDocument, getCollection, getDocumentSnap, queryDocuments } from '@blockframes/firebase-utils/firebase-utils';
 import { BlockframesChange, BlockframesSnapshot, removeAllSubcollections } from '@blockframes/firebase-utils';
 import { difference } from 'lodash';
 import { cleanRelatedContractDocuments } from './contracts';
 import { db } from './internals/firebase';
 import { EventContext } from 'firebase-functions';
 import { cleanWaterfallMedias } from './media';
-import { userRequestedDocumentCertification } from './templates/mail';
+import { userRequestedDocumentCertification, userRequestedStatementReview } from './templates/mail';
 import { getMailSender } from '@blockframes/utils/apps';
 import { triggerNotifications } from './notification';
 import { groupIds } from '@blockframes/utils/emails/ids';
@@ -208,6 +209,33 @@ export async function onWaterfallStatementUpdate(change: BlockframesChange<State
     await sendMail(mailRequest, from, groupIds.noUnsubscribeLink).catch(e => console.warn(e.message));
   }
 
+  // Send notifications when a statement was reviewed and is accepted or declined
+  if (before.reviewStatus === 'pending' && ['accepted', 'declined'].includes(after.reviewStatus) && after._meta?.createdBy) {
+    const userDocument = await getDocument<User>(`users/${after._meta.createdBy}`);
+    if (userDocument) {
+      const user = createPublicUser(userDocument);
+      if (after.reviewStatus === 'accepted') {
+        const notification = createNotification({
+          toUserId: user.uid,
+          docId: after.waterfallId,
+          statementId: after.id,
+          _meta: createInternalDocumentMeta({ createdFrom: 'waterfall' }),
+          type: 'requestForStatementReviewApproved'
+        });
+        await triggerNotifications([notification]);
+      } else if (after.reviewStatus === 'declined') {
+        const notification = createNotification({
+          toUserId: user.uid,
+          docId: after.waterfallId,
+          statementId: after.id,
+          _meta: createInternalDocumentMeta({ createdFrom: 'waterfall' }),
+          type: 'requestForStatementReviewDeclined'
+        });
+        await triggerNotifications([notification]);
+      }
+    }
+  }
+
   return batch.commit();
 }
 
@@ -292,4 +320,60 @@ export const removeWaterfallFile = async (data: { waterfallId: string, documentI
   const documents = waterfall.documents.filter(d => d.id !== data.documentId);
   // This will trigger onWaterfallUpdate => cleanWaterfallMedias
   return waterfallSnap.ref.update({ documents });
+};
+
+interface StatementReviewRequest {
+  waterfallId: string;
+  statementId: string;
+}
+
+export const requestStatementReview = async (data: StatementReviewRequest, context: CallableContext) => {
+  if (!context?.auth) throw new Error('Permission denied: missing auth context.');
+  const { statementId, waterfallId } = data;
+  if (!statementId || !waterfallId) throw new Error('Permission denied: missing data.');
+
+  const waterfall = await getDocument<Waterfall>(`waterfall/${waterfallId}`);
+  const producer = waterfall.rightholders.find(r => r.roles.includes('producer'));
+  if (!producer) throw new Error(`Producer not found for waterfall ${waterfallId}`);
+
+  const permissions = await getCollection<WaterfallPermissions>(`waterfall/${waterfallId}/permissions`);
+  const producerOrgIds = permissions.filter(p => p.rightholderIds.includes(producer.id)).map(p => p.id);
+  if (!producerOrgIds.length) throw new Error(`Producer org not found for waterfall ${waterfallId}`);
+  const producerUsers = await queryDocuments<User>(db.collection('users').where('orgId', 'in', producerOrgIds));
+
+  const statement = await getDocument<Statement>(`waterfall/${waterfall.id}/statements/${statementId}`);
+  if (!statement) throw new Error(`Statement not found : waterfall/${waterfall.id}/statements/${statementId}`);
+
+  const userDocument = await getDocument<User>(`users/${context.auth.uid}`);
+  const user = createPublicUser(userDocument);
+  const movie = await getDocument<Movie>(`movies/${waterfallId}`);
+  const organization = await getDocument<Organization>(`orgs/${user.orgId}`);
+
+  const mailRequest = userRequestedStatementReview(user, organization, statementId, movie);
+  const from = getMailSender('waterfall');
+
+  const notificationToUser = createNotification({
+    toUserId: user.uid,
+    docId: waterfallId,
+    statementId,
+    _meta: createInternalDocumentMeta({ createdFrom: 'waterfall' }),
+    type: 'requestForStatementReviewCreated'
+  });
+
+  const notifications: Notification[] = [notificationToUser];
+
+  for (const prodUser of producerUsers) {
+    notifications.push(createNotification({
+      toUserId: prodUser.uid,
+      docId: waterfallId,
+      user,
+      statementId,
+      _meta: createInternalDocumentMeta({ createdFrom: 'waterfall' }),
+      type: 'userRequestedStatementReview'
+    }));
+  }
+
+  await triggerNotifications(notifications);
+  await sendMail(mailRequest, from, groupIds.noUnsubscribeLink).catch(e => console.warn(e.message));
+  return true;
 };

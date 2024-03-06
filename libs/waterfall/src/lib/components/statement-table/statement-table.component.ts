@@ -56,6 +56,7 @@ export class StatementTableComponent {
     payment: true,
     deleteDraft: true,
     certify: true,
+    review: true,
   };
   @Output() delete = new EventEmitter<Statement>();
   @Input() @boolean defaultSort = false;

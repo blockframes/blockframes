@@ -46,6 +46,10 @@ const titleType: Partial<Record<NotificationTypes, NotificationSetting>> = {
   invitationToJoinWaterfallCreated: { text: 'You are invited to join a Waterfall. (RECOMMENDED)', tooltip: true },
   invitationToJoinWaterfallUpdated: { text: 'A user answers your invitation to join your Waterfall.', tooltip: false },
   userRequestedDocumentCertification: { text: 'A user requested a document certification.', tooltip: false },
+  requestForStatementReviewCreated: { text: 'Your request to review a statement is being processed.', tooltip: false },
+  requestForStatementReviewApproved: { text: 'Your statement has been approved.', tooltip: false },
+  requestForStatementReviewDeclined: { text: 'Your statement has been declined.', tooltip: false },
+  userRequestedStatementReview: { text: 'A user requested a statement review.', tooltip: false },
   // #7946 this may be reactivated later
   // underSignature: { text: 'Your offer is now under signature or validated by all parties. (RECOMMENDED)', tooltip: true },
 };
@@ -128,7 +132,11 @@ const tables: { title: string, types: NotificationTypes[], appAuthorized: App[] 
     types: [
       'invitationToJoinWaterfallCreated',
       'invitationToJoinWaterfallUpdated',
-      'userRequestedDocumentCertification'
+      'userRequestedDocumentCertification',
+      'requestForStatementReviewCreated',
+      'requestForStatementReviewApproved',
+      'requestForStatementReviewDeclined',
+      'userRequestedStatementReview'
     ],
     appAuthorized: ['waterfall']
   }

@@ -1,5 +1,5 @@
 import { DocumentMeta } from '../meta';
-import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups, statementsRolesMapping } from '../static';
+import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups, statementsRolesMapping, NegotiationStatus } from '../static';
 import { Duration, createDuration } from '../terms';
 import { PricePerCurrency, convertCurrenciesTo, getTotalPerCurrency, sortByDate, sum, toLabel } from '../utils';
 import { TitleState, TransferState } from './state';
@@ -104,6 +104,7 @@ export interface Statement {
   type: StatementType;
   contractId?: string;
   status: StatementStatus;
+  reviewStatus?: NegotiationStatus;
   id: string;
   waterfallId: string;
   senderId: string, // rightholderId of statement creator

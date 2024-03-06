@@ -61,7 +61,12 @@ export const notifications = {
     'invitationToJoinWaterfallCreated',
     'invitationToJoinWaterfallUpdated',
     // User requested a document certification
-    'userRequestedDocumentCertification'
+    'userRequestedDocumentCertification',
+    // User requested a statement review
+    'requestForStatementReviewCreated', // Sent to user
+    'requestForStatementReviewApproved', // Sent to user if approved
+    'requestForStatementReviewDeclined', // Sent to user if declined
+    'userRequestedStatementReview', // Sent to producer
   ] as const,
 }
 

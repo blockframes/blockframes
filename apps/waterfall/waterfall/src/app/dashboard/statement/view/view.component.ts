@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ExpenseService } from '@blockframes/contract/expense/service';
 import { IncomeService } from '@blockframes/contract/income/service';
 import {
+  NegotiationStatus,
   Statement,
   createDocumentMeta,
   createIncomePayment,
@@ -22,7 +23,8 @@ import {
   isDistributorStatement,
   isProducerStatement,
   isStandaloneVersion,
-  sortStatements
+  sortStatements,
+  toLabel
 } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { unique } from '@blockframes/utils/helpers';
@@ -30,6 +32,7 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
 import { StatementForm } from '@blockframes/waterfall/form/statement.form';
 import { StartementFormGuardedComponent } from '@blockframes/waterfall/guards/statement-form.guard';
 import { StatementService } from '@blockframes/waterfall/statement.service';
+import { CallableFunctions } from 'ngfire';
 import { Subscription, debounceTime, filter, firstValueFrom, pluck, switchMap, tap } from 'rxjs';
 
 @Component({
@@ -60,6 +63,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
   private waterfall = this.shell.waterfall;
 
   public form: StatementForm;
+  public canBypassRules = this.shell.canBypassRules;
   private sub: Subscription;
 
   constructor(
@@ -71,6 +75,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     private incomeService: IncomeService,
     private snackBar: MatSnackBar,
     private router: Router,
+    private functions: CallableFunctions,
   ) {
     this.dynTitle.setPageTitle(this.shell.movie.title.international, 'View Statement');
     this.form = new StatementForm();
@@ -90,6 +95,22 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
 
   public report(statement: Statement) {
     return this.save(statement, true);
+  }
+
+  public async reviewStatement(statement: Statement, reviewStatus: NegotiationStatus) {
+    if (!this.canBypassRules) return;
+    statement.reviewStatus = reviewStatus;
+    if (reviewStatus === 'accepted') {
+      const snackbarRef = this.snackBar.open('Please wait, statement is being accepted...');
+      await this.statementService.update(statement, { params: { waterfallId: this.waterfall.id } });
+      await this.shell.refreshAllWaterfalls();
+      snackbarRef.dismiss();
+    } else {
+      statement.status = 'draft';
+      await this.statementService.update(statement, { params: { waterfallId: this.waterfall.id } });
+    }
+
+    this.snackBar.open(`Statement ${reviewStatus}`, 'close', { duration: 5000 });
   }
 
   public async save(statement: Statement, reported = false) {
@@ -145,6 +166,8 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
       }
     };
 
+    if (!this.shell.canBypassRules) statement.reviewStatus = 'pending';
+
     await this.statementService.update(statement, { params: { waterfallId: this.waterfall.id } });
 
     // Update the simulation
@@ -162,9 +185,21 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
       }
 
       // Statement is reported, actual waterfalls are refreshed
-      await this.shell.refreshAllWaterfalls();
-      snackbarRef.dismiss();
-      this.snackBar.open('Statement reported', 'close', { duration: 5000 });
+      if (this.shell.canBypassRules) {
+        await this.shell.refreshAllWaterfalls();
+        snackbarRef.dismiss();
+        this.snackBar.open('Statement reported', 'close', { duration: 5000 });
+      } else {
+        // If user is not admin, create a notification to producer to review and refresh the waterfall to commit the statement
+        const output = await this.functions.call<{ waterfallId: string, statementId: string }, boolean>('requestStatementReview', { waterfallId: this.waterfall.id, statementId: statement.id });
+        snackbarRef.dismiss();
+        if (!output) {
+          this.snackBar.open('An error occurred, please try again.', 'close', { duration: 5000 });
+        } else {
+          this.snackBar.open(`Statement reported. A request to review the Statement has been sent to the ${toLabel('producer', 'rightholderRoles')}.`, 'close', { duration: 5000 });
+        }
+      }
+
     } else {
       this.snackBar.open('Statement updated', 'close', { duration: 5000 });
       this.router.navigate(['/c/o/dashboard/title', this.shell.waterfall.id, 'statements']);

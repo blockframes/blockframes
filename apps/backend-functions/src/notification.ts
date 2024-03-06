@@ -25,7 +25,10 @@ import {
   EventEmailData,
   getEventEmailData,
   Sale,
-  getWaterfallEmailData
+  getWaterfallEmailData,
+  Statement,
+  getStatementData,
+  Waterfall
 } from '@blockframes/model';
 import { sendMail, sendMailFromTemplate } from './internals/email';
 import {
@@ -60,6 +63,7 @@ import {
   screenerRequestFromUserSent,
   invitationToJoinWaterfall,
   invitationToJoinWaterfallUpdated,
+  requestForStatementReview,
   // #7946 this may be reactivated later
   // offerUnderSignature,
   // offerAcceptedOrDeclined,
@@ -346,6 +350,16 @@ export async function onNotificationCreate(snap: BlockframesSnapshot<Notificatio
         break;
       case 'userRequestedDocumentCertification':
         // No email is sent to user that requested a document certification, only a notification
+        break;
+      case 'requestForStatementReviewCreated':
+        // No email is sent to user that requested a statement review, only a notification
+        break;
+      case 'requestForStatementReviewApproved':
+      case 'requestForStatementReviewDeclined':
+      case 'userRequestedStatementReview':
+        await sendRequestForStatementReviewEmail(recipient, notification)
+          .then(() => notification.email.isSent = true)
+          .catch(e => notification.email.error = e.message);
         break;
       default:
         notification.email.error = emailErrorCodes.noTemplate.code;
@@ -925,7 +939,7 @@ async function sendInvitationToJoinWaterfallCreatedEmail(recipient: User, notifi
   const toUser = getUserEmailData(recipient);
   const waterfallEmailData = getWaterfallEmailData(movie);
   const urlToUse = applicationUrl[waterfallAppKey];
-  const link = `c/o/dashboard/invitations`;
+  const link = 'c/o/dashboard/invitations';
   logger.log(`Sending invitation email for waterfall (${notification.docId}) from ${orgData.name} to : ${toUser.email}`);
   const templateInvitation = invitationToJoinWaterfall(toUser, orgData, waterfallEmailData, link, urlToUse);
   return sendMailFromTemplate(templateInvitation, waterfallAppKey, groupIds.unsubscribeAll).catch(e => logger.warn(e.message));
@@ -954,4 +968,28 @@ async function sendInvitationToJoinWaterfallUpdatedEmail(recipient: User, notifi
   } else {
     throw new Error('Invitation with mode === "invitation" can only have "fromOrg" attribute');
   }
+}
+
+async function sendRequestForStatementReviewEmail(recipient: User, notification: Notification) {
+  const movie = await getDocument<Movie>(`movies/${notification.docId}`);
+  const org = await getDocument<Organization>(`orgs/${recipient.orgId}`);
+  const orgData = getOrgEmailData(org);
+  const toUser = getUserEmailData(recipient);
+  const waterfallEmailData = getWaterfallEmailData(movie);
+  const waterfall = await getDocument<Waterfall>(`waterfall/${movie.id}`);
+  const statement = await getDocument<Statement>(`waterfall/${movie.id}/statements/${notification.statementId}`);
+  const statementData = getStatementData(statement, waterfall);
+  const urlToUse = applicationUrl[waterfallAppKey];
+  const link = `c/o/dashboard/title/${movie.id}/statement/${notification.statementId}`;
+  let templateId = templateIds.statement.review.requested;
+  switch (notification.type) {
+    case 'requestForStatementReviewApproved':
+      templateId = templateIds.statement.review.approved;
+      break;
+    case 'requestForStatementReviewDeclined':
+      templateId = templateIds.statement.review.declined;
+      break;
+  }
+  const templateInvitation = requestForStatementReview(toUser, orgData, waterfallEmailData, statementData, link, urlToUse, templateId);
+  return sendMailFromTemplate(templateInvitation, waterfallAppKey, groupIds.unsubscribeAll).catch(e => logger.warn(e.message));
 }
