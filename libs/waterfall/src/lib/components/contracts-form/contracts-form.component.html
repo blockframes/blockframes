@@ -1,4 +1,4 @@
-<section class="surface">
+<section class="surface" *ngIf="shell.documents$ | async as documents else loading">
 
   <article class="header">
     <h2>Contracts</h2>
@@ -6,26 +6,38 @@
 
   <p>Please provide us with all the contracts, so that we can create a waterfall.</p>
 
-  <article *ngIf="waterfall$ | async as waterfall">
+  <article *ngIf="shell.waterfall$ | async as waterfall">
     <ul>
-      <li *ngFor="let item of contracts$ | async | keyvalue" (click)="select(item.key)" [ngClass]="{'selected': item.key === selected}">
-        <p class="role">{{item.key | toLabel: 'rightholderRoles'}}</p>
-        <p class="action">
-          <ng-container *ngIf="item.key === selected && creating; else notCreating">
-            <span>Adding contract...</span>
-          </ng-container>
-
-          <ng-template #notCreating>
-            <ng-container *ngIf="item.value.length > 0; else noContracts">
-              <span>{{item.value.length}} contract{{item.value.length > 1 ? 's' : ''}}</span>
+      <ng-container *ngIf="shell.canBypassRules else readonly">
+        <li *ngFor="let item of contracts$ | async | keyvalue" (click)="select(item.key)" [ngClass]="{'selected': item.key === selected}">
+          <p class="role">{{item.key | toLabel: 'rightholderRoles'}}</p>
+          <p class="action">
+            <ng-container *ngIf="item.key === selected && creating; else notCreating">
+              <span>Adding contract...</span>
             </ng-container>
-            <ng-template #noContracts>
-              <mat-icon svgIcon="add"></mat-icon>
-              <span>Add Contract</span>
+
+            <ng-template #notCreating>
+              <ng-container *ngIf="item.value.length > 0; else noContracts">
+                <span>{{item.value.length}} contract{{item.value.length > 1 ? 's' : ''}}</span>
+              </ng-container>
+              <ng-template #noContracts>
+                <mat-icon svgIcon="add"></mat-icon>
+                <span>Add Contract</span>
+              </ng-template>
             </ng-template>
-          </ng-template>
-        </p>
-      </li>
+          </p>
+        </li>
+      </ng-container>
+      <ng-template #readonly>
+        <ng-container *ngFor="let item of contracts$ | async | keyvalue">
+          <ng-container *ngIf="item.value.length > 0">
+            <li (click)="select(item.key)" [ngClass]="{'selected': item.key === selected}">
+              <p class="role">{{item.key | toLabel: 'rightholderRoles'}}</p>
+              <span>{{item.value.length}} contract{{item.value.length > 1 ? 's' : ''}}</span>
+            </li>
+          </ng-container>
+        </ng-container>
+      </ng-template>
     </ul>
     <bf-card-modal [ngClass]="cardModal?.isOpened ? 'modal' : 'standard'">
 
@@ -36,7 +48,7 @@
           <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'">
             <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
           </button>
-          <button mat-icon-button matTooltip="Save changes" (click)="save(waterfall)">
+          <button *ngIf="shell.canBypassRules" mat-icon-button matTooltip="Save changes" (click)="save(waterfall, documents)">
             <mat-icon svgIcon="save"></mat-icon>
           </button>
         </header>
@@ -48,7 +60,7 @@
             <!-- TODO #9436 -->
             <!-- <p class="amendment">1 amendment - 30/06/2023</p> -->
             
-            <button mat-icon-button matTooltip="Edit contract" (click)="edit(contract, waterfall)">
+            <button mat-icon-button *ngIf="shell.canBypassRules" matTooltip="Edit contract" (click)="edit(contract, waterfall)">
               <mat-icon svgIcon="edit"></mat-icon>
             </button>
             <a mat-icon-button *ngIf="contract.id | getFile: waterfall as file" 
@@ -67,7 +79,7 @@
             </button> -->
           </div>
           <div>
-            <button mat-button color="primary" class="main-dashboard-cta" (click)="create()">
+            <button *ngIf="shell.canBypassRules" mat-button color="primary" class="main-dashboard-cta" (click)="create()">
               <mat-icon svgIcon="add"></mat-icon>
               <span>Add Contract</span>
             </button>
@@ -91,3 +103,8 @@
   </article>
 
 </section>
+<ng-template #loading>
+  <article class="spinner">
+    <logo-spinner></logo-spinner>
+  </article>
+</ng-template>

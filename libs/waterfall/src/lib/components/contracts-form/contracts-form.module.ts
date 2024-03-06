@@ -14,6 +14,7 @@ import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/s
 import { DocumentFormModule } from '../forms/document-form/form.module';
 import { DownloadPipeModule } from '@blockframes/media/file/pipes/download.pipe';
 import { RightHolderNamePipeModule } from '../../pipes/rightholder-name.pipe';
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -35,6 +36,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     ImageModule,
     DownloadPipeModule,
     RightHolderNamePipeModule,
+    LogoSpinnerModule,
 
     // Material
     MatIconModule,

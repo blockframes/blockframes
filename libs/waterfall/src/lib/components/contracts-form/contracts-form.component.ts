@@ -1,6 +1,6 @@
 
-import { Observable, map, startWith, tap } from 'rxjs';
-import { Component, ChangeDetectionStrategy, ViewChild, Input, OnInit } from '@angular/core';
+import { map, startWith, tap } from 'rxjs';
+import { Component, ChangeDetectionStrategy, ViewChild, Input } from '@angular/core';
 
 import { WaterfallService } from '../../waterfall.service';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
@@ -17,9 +17,6 @@ import {
   rightholderRoles,
   createTerm,
   createWaterfallRightholder,
-  isContract,
-  sortContracts,
-  convertDocumentTo,
   createExpenseType,
   Term
 } from '@blockframes/model';
@@ -27,30 +24,40 @@ import { TermService } from '@blockframes/contract/term/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
+import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 
 @Component({
-  selector: '[movieId] waterfall-contracts-form',
+  selector: 'waterfall-contracts-form',
   templateUrl: './contracts-form.component.html',
   styleUrls: ['./contracts-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContractsFormComponent implements OnInit {
+export class ContractsFormComponent {
 
   @ViewChild(CardModalComponent) cardModal: CardModalComponent;
 
-  selected?: RightholderRole;
+  public selected?: RightholderRole;
+  public creating = false;
+  public contracts$ = this.shell.contracts$.pipe(
+    startWith([]),
+    map(rawContracts => {
+      const contracts: Partial<Record<RightholderRole, WaterfallContract[]>> = {};
+      Object.keys(rightholderRoles)
+        .filter(r => r !== 'producer')
+        // Fetch all root contracts for each role
+        .forEach((r: RightholderRole) => contracts[r] = rawContracts.filter(c => c.type === r && !c.rootId));
+      return contracts;
+    }),
+    tap(rawContracts => this.contracts = rawContracts)
+  );
 
-  creating = false;
-
-  waterfall$: Observable<Waterfall>;
-  contracts$: Observable<Partial<Record<RightholderRole, WaterfallContract[]>>>;
   private contracts: Partial<Record<RightholderRole, WaterfallContract[]>>;
   private removeFileOnSave = false;
   private terms: Term[] = [];
 
-  @Input() movieId: string;
   @Input() documentForm: WaterfallDocumentForm;
   public toggleTermsControl = new FormControl(true);
+  public currentOrgId = this.orgService.org.id;
 
   constructor(
     private waterfallService: WaterfallService,
@@ -59,26 +66,8 @@ export class ContractsFormComponent implements OnInit {
     private orgService: OrganizationService,
     private termsService: TermService,
     private snackBar: MatSnackBar,
+    public shell: DashboardWaterfallShellComponent,
   ) { }
-
-  ngOnInit() {
-    this.contracts$ = this.documentService.valueChanges({ waterfallId: this.movieId }).pipe(
-      startWith([]),
-      map(documents => documents.filter(d => isContract(d))),
-      map(documents => sortContracts(documents.map(d => convertDocumentTo<WaterfallContract>(d)))),
-      map(rawContracts => {
-        const contracts: Partial<Record<RightholderRole, WaterfallContract[]>> = {};
-        Object.keys(rightholderRoles)
-          .filter(r => r !== 'producer')
-          // Fetch all root contracts for each role
-          .forEach((r: RightholderRole) => contracts[r] = rawContracts.filter(c => c.type === r && !c.rootId));
-        return contracts;
-      }),
-      tap(rawContracts => this.contracts = rawContracts)
-    )
-
-    this.waterfall$ = this.waterfallService.valueChanges(this.movieId);
-  }
 
   select(role: RightholderRole) {
     this.selected = role;
@@ -124,7 +113,7 @@ export class ContractsFormComponent implements OnInit {
     this.removeFileOnSave = bool;
   }
 
-  async save(waterfall: Waterfall) {
+  async save(waterfall: Waterfall, documents: WaterfallDocument[]) {
     if (!this.toggleTermsControl.value && this.terms.length) {
       await this.termsService.remove(this.terms.map(t => t.id));
       this.documentForm.controls.terms.patchAllValue([]);
@@ -168,13 +157,14 @@ export class ContractsFormComponent implements OnInit {
       }));
     }
 
+    const existingDoc = documents.find(d => d.id === this.documentForm.controls.id.value);
     const document = createWaterfallDocument<WaterfallContract>({
       id: this.documentForm.controls.id.value,
       name: this.documentForm.controls.name.value,
       type: 'contract',
       waterfallId,
       signatureDate: this.documentForm.controls.signatureDate.value,
-      ownerId: this.orgService.org.id,
+      ownerId: existingDoc?.ownerId || this.orgService.org.id,
       meta: createWaterfallContract({
         type: this.selected,
         status: 'accepted',
@@ -221,3 +211,4 @@ export class ContractsFormComponent implements OnInit {
     this.snackBar.open('Contract saved', 'close', { duration: 3000 });
   }
 }
+

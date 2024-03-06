@@ -97,8 +97,11 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
    * This is used when creating or refreshing waterfall.
    */
   public canBypassRules$ = combineLatest([this.isWaterfallAdmin$, this.authService.isBlockframesAdmin$]).pipe(
-    map(([isWaterfallAdmin, isBlockframesAdmin]) => isWaterfallAdmin || isBlockframesAdmin)
+    map(([isWaterfallAdmin, isBlockframesAdmin]) => isWaterfallAdmin || isBlockframesAdmin),
+    tap(canBypassRules => this.canBypassRules = canBypassRules),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
+  public canBypassRules = false;
 
   // ---------
   // Contracts, Terms and Documents
