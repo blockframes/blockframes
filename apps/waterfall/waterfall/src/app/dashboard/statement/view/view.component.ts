@@ -5,6 +5,7 @@ import { ExpenseService } from '@blockframes/contract/expense/service';
 import { IncomeService } from '@blockframes/contract/income/service';
 import {
   Statement,
+  createDocumentMeta,
   createIncomePayment,
   createRightPayment,
   createRightholderPayment,
@@ -334,6 +335,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
 
     const statementsToDuplicate = statementsToUpdate.map(s => (createStatement({
       ...s,
+      _meta: createDocumentMeta(),
       id: this.statementService.createId(),
       versionId: this.shell.versionId$.value,
       duplicatedFrom: s.id,

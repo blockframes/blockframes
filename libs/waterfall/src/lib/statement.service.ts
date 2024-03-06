@@ -44,12 +44,14 @@ export class StatementService extends BlockframesSubCollection<Statement> {
   }
 
   onCreate(statement: Statement, { write }: WriteOptions) {
+    if (!statement.waterfallId) return;
     const ref = this.getRef(statement.id, { waterfallId: statement.waterfallId });
     write.update(ref, '_meta.createdBy', this.authService.uid);
     write.update(ref, '_meta.createdAt', new Date());
   }
 
   onUpdate(statement: Statement, { write }: WriteOptions) {
+    if (!statement.waterfallId) return;
     const statementRef = doc(this.db, `waterfall/${statement.waterfallId}/statements/${statement.id}`);
     write.update(statementRef,
       '_meta.updatedBy', this.authService.uid,
