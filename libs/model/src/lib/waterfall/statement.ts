@@ -108,7 +108,6 @@ export interface Statement {
   waterfallId: string;
   senderId: string, // rightholderId of statement creator
   receiverId: string, // rightholderId of statement receiver
-  // TODO #9689 add createdBy (user uid or orgId) (check when duplicating & importing via excel)
   duration: Duration;
   reported?: Date;
   incomeIds: string[];

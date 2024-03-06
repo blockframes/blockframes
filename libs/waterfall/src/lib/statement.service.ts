@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DocumentSnapshot } from '@firebase/firestore';
+import { DocumentSnapshot, doc } from '@firebase/firestore';
 import {
   Statement,
   convertStatementsTo,
@@ -14,6 +14,8 @@ import {
 } from '@blockframes/model';
 import { BlockframesSubCollection } from '@blockframes/utils/abstract-service';
 import { map } from 'rxjs';
+import { WriteOptions } from 'ngfire';
+import { AuthService } from '@blockframes/auth/service';
 
 export interface CreateStatementConfig {
   producerId: string;
@@ -30,10 +32,29 @@ export interface CreateStatementConfig {
 export class StatementService extends BlockframesSubCollection<Statement> {
   readonly path = 'waterfall/:waterfallId/statements';
 
+  constructor(private authService: AuthService) {
+    super();
+  }
+
+
   protected override fromFirestore(snapshot: DocumentSnapshot<Statement>) {
     if (!snapshot.exists()) return undefined;
     const statement = super.fromFirestore(snapshot);
     return createStatement(statement);
+  }
+
+  onCreate(statement: Statement, { write }: WriteOptions) {
+    const ref = this.getRef(statement.id, { waterfallId: statement.waterfallId });
+    write.update(ref, '_meta.createdBy', this.authService.uid);
+    write.update(ref, '_meta.createdAt', new Date());
+  }
+
+  onUpdate(statement: Statement, { write }: WriteOptions) {
+    const statementRef = doc(this.db, `waterfall/${statement.waterfallId}/statements/${statement.id}`);
+    write.update(statementRef,
+      '_meta.updatedBy', this.authService.uid,
+      '_meta.updatedAt', new Date(),
+    );
   }
 
   public statementsChanges(waterfall: Waterfall, versionId: string) {
