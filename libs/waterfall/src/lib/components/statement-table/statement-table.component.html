@@ -75,7 +75,7 @@
         <mat-icon svgIcon="certify" [matTooltip]="statement.hash.requested ? 'Certification already asked' : 'Certify Document'" (click)="certify(statement)"></mat-icon>
       </button>
       <ng-container *ngIf="!!statement.payments.rightholder && statement.payments.rightholder.status !== 'received'">
-        <button *ngIf="actions.payment" mat-icon-button [disabled]="(canBypassRules$ | async) !== true" (click)="payment(statement)">
+        <button *ngIf="actions.payment" mat-icon-button [disabled]="!canBypassRules" (click)="payment(statement)">
           <mat-icon color="primary" svgIcon="payment" matTooltip="Pending Payment"></mat-icon>
         </button>
       </ng-container>
