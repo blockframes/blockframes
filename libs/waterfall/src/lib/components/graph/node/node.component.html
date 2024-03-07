@@ -2,7 +2,7 @@
 <ng-container *ngIf="node.type === 'source'">
   <waterfall-graph-source
     [source]="node" 
-    [selected]="selected === node.id"
+    [selected]="(isHighlightedSource$ | async)"
     [editMode]="editMode"
     (handleSelect)="handleSelect.emit($event)"
     (addSibling)="addSibling.emit($event)"
@@ -13,7 +13,7 @@
 <ng-container *ngIf="node.type === 'right'">
   <waterfall-graph-right
     [right]="node"
-    [selected]="selected === node.id"
+    [selected]="(isHighlightedRight$ | async)"
     [editMode]="editMode"
     (handleSelect)="handleSelect.emit($event)"
     (addSibling)="addSibling.emit($event)"

@@ -1,0 +1,63 @@
+
+<h2>Waterfall</h2>
+
+<div >
+  <mat-label>Amount Display</mat-label>
+  <mat-button-toggle-group [formControl]="totalToDate">
+    <mat-button-toggle [value]="false">Statement Amount</mat-button-toggle>
+    <mat-button-toggle [value]="true">Total to Date</mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+
+<mat-accordion>
+  <mat-expansion-panel *ngFor="let year of statementYears$ | async">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ year }}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-radio-group [formControl]="selectedStatement">
+      <mat-radio-button *ngFor="let statement of (groupedStatements$ | async)[year]" [value]="statement" [checked]="statement.id === selectedStatement.value?.id">
+        <div>
+          <p>Statement {{statement.duration.to | date: 'MM/dd/yyyy'}}</p>
+          <mat-icon svgIcon="document"></mat-icon>
+        </div>
+      </mat-radio-button>
+      <span class="vertical"></span>
+    </mat-radio-group>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<mat-form-field appearance="outline" >
+  <mat-label>Highlight Right Holder</mat-label>
+  <mat-select [formControl]="highlightedRightHolder" placeholder="Choose Right Holders" multiple>
+    <mat-option *ngFor="let rightHolder of shell.waterfall.rightholders" [value]="rightHolder.id">{{ rightHolder.name }}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<mat-form-field appearance="outline" >
+  <mat-label>Hide Right Holder</mat-label>
+  <mat-select [formControl]="hiddenRightHolder" placeholder="Choose Right Holders" multiple>
+    <mat-option *ngFor="let rightHolder of shell.waterfall.rightholders" [value]="rightHolder.id">{{ rightHolder.name }}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<mat-form-field appearance="outline">
+  <mat-label>Highlight Revenue Source</mat-label>
+  <mat-select [formControl]="highlightedSource" placeholder="Choose Sources" multiple>
+    <mat-option *ngFor="let source of shell.waterfall.sources" [value]="source.id">{{ source.name }}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<h5>Breakdown by Right Holder</h5>
+<mat-form-field appearance="outline">
+  <mat-label>Filter Right Holders by Activity</mat-label>
+  <mat-select [formControl]="rightHolderFilter" multiple>
+    <mat-option *ngFor="let role of roles" [value]="role">{{ role | toLabel: 'rightholderRoles' }}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<div class="rightholder" *ngFor="let rightHolder of (filteredRightHolders$ | async)">
+  <h6>{{rightHolder.name}}</h6>
+  <span class="mat-label">{{rightHolder.revenue | currency: 'EUR'}}</span>
+</div>

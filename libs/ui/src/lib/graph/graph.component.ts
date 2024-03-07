@@ -76,15 +76,19 @@ export class GraphContainerComponent implements AfterViewInit, OnDestroy {
       const y = event.clientY - rect.top;
       this.service.zoom(event.deltaY, x, y);
     } else {
-      this.service.move(event.deltaX, -(event.deltaY));
+      if ((event as any).webkitDirectionInvertedFromDevice) { // Safari user who has "natural" scrolling enabled
+        this.service.move(-event.deltaX, event.deltaY);
+      } else {
+        this.service.move(event.deltaX, -(event.deltaY));
+      }
     }
   }
 
   zoomOut() {
-    this.service.zoom(-0.1);
+    this.service.zoom(100);
   }
 
   zoomIn() {
-    this.service.zoom(0.1);
+    this.service.zoom(-100);
   }
 }
