@@ -12,7 +12,7 @@ import { Component, ChangeDetectionStrategy, ViewChild, Optional, OnInit, OnDest
 import { FormList } from '@blockframes/utils/form';
 import { WaterfallRightholder, createWaterfallRightholder, hasDefaultVersion } from '@blockframes/model';
 import { WaterfallService } from '../../waterfall.service';
-import { WaterfallDocumentForm } from '../../form/document.form';
+import { WaterfallContractForm } from '../../form/contract.form';
 import { DashboardWaterfallShellComponent } from '../shell/shell.component';
 import { WaterfallFormGuardedComponent } from '../../guards/waterfall-form-guard';
 import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '../../form/right-holder.form';
@@ -28,7 +28,7 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
 
   @ViewChild('stepper') stepper?: MatStepper;
 
-  public documentForm = new WaterfallDocumentForm({ id: '' });
+  public contractForm = new WaterfallContractForm({ id: '' });
   public rightholdersForm = FormList.factory<WaterfallRightholderFormValue, WaterfallRightholderForm>([], rightholder => new WaterfallRightholderForm(rightholder));
   public updating$ = new BehaviorSubject(false);
   public invalidDocument$ = this.shell.contracts$.pipe(

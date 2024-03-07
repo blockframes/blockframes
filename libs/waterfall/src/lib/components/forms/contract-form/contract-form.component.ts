@@ -13,22 +13,22 @@ import {
   createExpenseTypeControl,
   createWaterfallInvestmentControl,
   ExpenseTypeForm,
-  WaterfallDocumentForm,
-  WaterfallDocumentFormValue,
+  WaterfallContractForm,
+  WaterfallContractFormValue,
   WaterfallInvestmentForm
-} from '../../../form/document.form';
+} from '../../../form/contract.form';
 import { unique } from '@blockframes/utils/helpers';
 
 @Component({
-  selector: '[waterfall][form] waterfall-document-form',
-  templateUrl: './form.component.html',
-  styleUrls: ['./form.component.scss'],
+  selector: '[waterfall][form] waterfall-contract-form',
+  templateUrl: './contract-form.component.html',
+  styleUrls: ['./contract-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
+export class WaterfallContractFormComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() waterfall: Waterfall;
-  @Input() form: WaterfallDocumentForm;
+  @Input() form: WaterfallContractForm;
   @Input() type: RightholderRole;
   @Input() toggleTermsControl : FormControl<boolean>;
 
@@ -79,7 +79,7 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this.subscription.push(
-      this.form.valueChanges.subscribe((value: WaterfallDocumentFormValue) => {
+      this.form.valueChanges.subscribe((value: WaterfallContractFormValue) => {
         const filtered = names.filter(n => n !== value.licenseeName && n !== value.licensorName);
         this.licensor$.next(filtered);
         this.licensee$.next(filtered);
@@ -176,7 +176,7 @@ export class DocumentFormComponent implements OnInit, OnChanges, OnDestroy {
     this.form.markAsDirty();
   }
 
-  private handleRoles(value: WaterfallDocumentFormValue) {
+  private handleRoles(value: WaterfallContractFormValue) {
 
     const defaultLicensorRoles = this.getDefaultLicenseeRoles();
     if (value.licensorName) {

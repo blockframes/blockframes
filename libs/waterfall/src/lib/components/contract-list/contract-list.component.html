@@ -86,7 +86,7 @@
           </div>
         </ng-container>
         <ng-template #creatingContracts>
-          <waterfall-document-form [toggleTermsControl]="toggleTermsControl" [type]="selected" [waterfall]="waterfall" [form]="documentForm" (removeFile)="removeFile($event)"></waterfall-document-form>
+          <waterfall-contract-form [toggleTermsControl]="toggleTermsControl" [type]="selected" [waterfall]="waterfall" [form]="contractForm" (removeFile)="removeFile($event)"></waterfall-contract-form>
         </ng-template>
       </ng-container>
       <ng-template #notSelected>

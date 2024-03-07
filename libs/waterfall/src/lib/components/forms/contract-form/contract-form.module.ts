@@ -23,11 +23,11 @@ import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/s
 import { ExpenseTypesModule } from '../../expense-types/expense-types.module';
 
 // Pages
-import { DocumentFormComponent } from './form.component';
+import { WaterfallContractFormComponent } from './contract-form.component';
 
 @NgModule({
-  declarations: [DocumentFormComponent],
-  exports: [DocumentFormComponent],
+  declarations: [WaterfallContractFormComponent],
+  exports: [WaterfallContractFormComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -49,4 +49,4 @@ import { DocumentFormComponent } from './form.component';
     MatButtonToggleModule,
   ],
 })
-export class DocumentFormModule { }
+export class WaterfallContractFormModule { }

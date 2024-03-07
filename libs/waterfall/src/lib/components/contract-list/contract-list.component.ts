@@ -4,7 +4,7 @@ import { Component, ChangeDetectionStrategy, ViewChild, Input } from '@angular/c
 
 import { WaterfallService } from '../../waterfall.service';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
-import { WaterfallDocumentForm } from '../../form/document.form';
+import { WaterfallContractForm } from '../../form/contract.form';
 import { CardModalComponent } from '@blockframes/ui/card-modal/card-modal.component';
 import { WaterfallDocumentsService } from '../../documents.service';
 import {
@@ -27,12 +27,12 @@ import { FormControl } from '@angular/forms';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 
 @Component({
-  selector: 'waterfall-contracts-form',
-  templateUrl: './contracts-form.component.html',
-  styleUrls: ['./contracts-form.component.scss'],
+  selector: 'waterfall-contract-list',
+  templateUrl: './contract-list.component.html',
+  styleUrls: ['./contract-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContractsFormComponent {
+export class ContractListComponent {
 
   @ViewChild(CardModalComponent) cardModal: CardModalComponent;
 
@@ -55,7 +55,7 @@ export class ContractsFormComponent {
   private removeFileOnSave = false;
   private terms: Term[] = [];
 
-  @Input() documentForm: WaterfallDocumentForm;
+  @Input() contractForm: WaterfallContractForm; e
   public toggleTermsControl = new FormControl(true);
   public currentOrgId = this.orgService.org.id;
 
@@ -74,14 +74,14 @@ export class ContractsFormComponent {
     this.creating = this.contracts[role].length === 0; // if we select an empty role we automatically switch to create mode
     if (this.creating) {
       this.terms = [];
-      this.documentForm.reset({ id: this.documentService.createId() });
+      this.contractForm.reset({ id: this.documentService.createId() });
     }
   }
 
   create() {
     this.creating = true;
     this.terms = [];
-    this.documentForm.reset({ id: this.documentService.createId() });
+    this.contractForm.reset({ id: this.documentService.createId() });
   }
 
   async edit(contract: WaterfallContract, waterfall: Waterfall) {
@@ -90,7 +90,7 @@ export class ContractsFormComponent {
     const licensor = waterfall.rightholders.find(r => r.id === contract.sellerId);
     const file = waterfall.documents.find(f => f.id === contract.id);
     const expenseTypes = waterfall.expenseTypes[contract.id] ?? [];
-    this.documentForm.reset({
+    this.contractForm.reset({
       id: contract.id,
       name: contract.name,
       licenseeName: licensee?.name,
@@ -116,10 +116,10 @@ export class ContractsFormComponent {
   async save(waterfall: Waterfall, documents: WaterfallDocument[]) {
     if (!this.toggleTermsControl.value && this.terms.length) {
       await this.termsService.remove(this.terms.map(t => t.id));
-      this.documentForm.controls.terms.patchAllValue([]);
+      this.contractForm.controls.terms.patchAllValue([]);
     }
 
-    if (!this.documentForm.valid) {
+    if (!this.contractForm.valid) {
       this.snackBar.open('Please fill all required fields.', 'close', { duration: 3000 });
       return;
     }
@@ -129,41 +129,41 @@ export class ContractsFormComponent {
     // Seller create/update
     let sellerId: string;
     const { rightholders, expenseTypes } = waterfall;
-    const existingSeller = rightholders.find(r => r.name === this.documentForm.controls.licensorName.value);
+    const existingSeller = rightholders.find(r => r.name === this.contractForm.controls.licensorName.value);
     if (existingSeller) {
       sellerId = existingSeller.id;
-      existingSeller.roles = this.documentForm.controls.licensorRole.value; // update roles
+      existingSeller.roles = this.contractForm.controls.licensorRole.value; // update roles
     } else {
       sellerId = this.waterfallService.createId();
       rightholders.push(createWaterfallRightholder({
         id: sellerId,
-        name: this.documentForm.controls.licensorName.value,
-        roles: this.documentForm.controls.licensorRole.value,
+        name: this.contractForm.controls.licensorName.value,
+        roles: this.contractForm.controls.licensorRole.value,
       }));
     }
 
     // Buyer create/update
     let buyerId: string;
-    const existingBuyer = rightholders.find(r => r.name === this.documentForm.controls.licenseeName.value);
+    const existingBuyer = rightholders.find(r => r.name === this.contractForm.controls.licenseeName.value);
     if (existingBuyer) {
       buyerId = existingBuyer.id;
-      existingBuyer.roles = this.documentForm.controls.licenseeRole.value; // update roles
+      existingBuyer.roles = this.contractForm.controls.licenseeRole.value; // update roles
     } else {
       buyerId = this.waterfallService.createId();
       rightholders.push(createWaterfallRightholder({
         id: buyerId,
-        name: this.documentForm.controls.licenseeName.value,
-        roles: this.documentForm.controls.licenseeRole.value,
+        name: this.contractForm.controls.licenseeName.value,
+        roles: this.contractForm.controls.licenseeRole.value,
       }));
     }
 
-    const existingDoc = documents.find(d => d.id === this.documentForm.controls.id.value);
+    const existingDoc = documents.find(d => d.id === this.contractForm.controls.id.value);
     const document = createWaterfallDocument<WaterfallContract>({
-      id: this.documentForm.controls.id.value,
-      name: this.documentForm.controls.name.value,
+      id: this.contractForm.controls.id.value,
+      name: this.contractForm.controls.name.value,
       type: 'contract',
       waterfallId,
-      signatureDate: this.documentForm.controls.signatureDate.value,
+      signatureDate: this.contractForm.controls.signatureDate.value,
       ownerId: existingDoc?.ownerId || this.orgService.org.id,
       meta: createWaterfallContract({
         type: this.selected,
@@ -171,15 +171,15 @@ export class ContractsFormComponent {
         buyerId, // licensee
         sellerId, // licensor
         duration: {
-          from: this.documentForm.controls.startDate.value,
-          to: this.documentForm.controls.endDate.value,
+          from: this.contractForm.controls.startDate.value,
+          to: this.contractForm.controls.endDate.value,
         },
-        price: this.documentForm.controls.price.value.filter(p => p.value > 0),
-        currency: this.documentForm.controls.currency.value,
+        price: this.contractForm.controls.price.value.filter(p => p.value > 0),
+        currency: this.contractForm.controls.currency.value,
       }),
     });
 
-    const terms = (this.documentForm.controls.terms.value ?? []).map(term => createTerm({
+    const terms = (this.contractForm.controls.terms.value ?? []).map(term => createTerm({
       ...term,
       id: term.id || this.termsService.createId(),
       contractId: document.id,
@@ -188,7 +188,7 @@ export class ContractsFormComponent {
     }));
     document.meta.termIds = terms.map(t => t.id);
 
-    const expenseType = this.documentForm.controls.expenseTypes.value.filter(c => !!c.name).map(c => createExpenseType({
+    const expenseType = this.contractForm.controls.expenseTypes.value.filter(c => !!c.name).map(c => createExpenseType({
       ...c,
       contractId: document.id,
       id: c.id || this.waterfallService.createId(),
@@ -206,7 +206,7 @@ export class ContractsFormComponent {
     } else {
       this.uploaderService.upload();
     }
-    this.documentForm.markAsPristine();
+    this.contractForm.markAsPristine();
 
     this.snackBar.open('Contract saved', 'close', { duration: 3000 });
   }
