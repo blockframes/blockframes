@@ -3,8 +3,8 @@ import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, Change
 
 import { FormList } from '@blockframes/utils/form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { WaterfallService } from '../../waterfall.service';
-import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '../../form/right-holder.form';
+import { WaterfallService } from '../../../waterfall.service';
+import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '../../../form/right-holder.form';
 import { RightholderRole, Waterfall, createWaterfallRightholder } from '@blockframes/model';
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,9 +12,9 @@ import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-inp
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
-  selector: '[rightholdersForm]waterfall-right-holder-form',
-  templateUrl: './right-holder-form.component.html',
-  styleUrls: ['./right-holder-form.component.scss'],
+  selector: '[rightholdersForm]waterfall-rightholder-form',
+  templateUrl: './rightholder-form.component.html',
+  styleUrls: ['./rightholder-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RightHolderFormComponent implements OnInit, OnDestroy {

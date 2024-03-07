@@ -35,7 +35,7 @@
 
   <mat-step>
     <ng-template matStepLabel>Add Right Holders</ng-template>
-    <waterfall-right-holder-form [rightholdersForm]="rightholdersForm" [waterfall]="shell.waterfall"></waterfall-right-holder-form>
+    <waterfall-rightholder-form [rightholdersForm]="rightholdersForm" [waterfall]="shell.waterfall"></waterfall-rightholder-form>
     <article>
       <ng-container *ngIf="updating$ | async; else editRightHolders">
         <logo-spinner></logo-spinner>

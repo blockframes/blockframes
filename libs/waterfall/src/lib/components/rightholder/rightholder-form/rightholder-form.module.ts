@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Components
-import { RightHolderFormComponent } from './right-holder-form.component';
+import { RightHolderFormComponent } from './rightholder-form.component';
 
 // Blockframes
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';

@@ -7,7 +7,7 @@ import { StatementNewComponent } from './statement-new.component';
 
 // Blockframes
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
-import { RightholderSelectModule } from '../rightholder-select/rightholder-select.module';
+import { RightholderSelectModule } from '../rightholder/rightholder-select/rightholder-select.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material

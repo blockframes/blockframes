@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 import { RightHoldersManagementComponent } from './right-holders-management.component';
 
 // Blockframes
-import { RightHolderFormModule } from '@blockframes/waterfall/components/right-holder-form/right-holder-form.module';
+import { RightHolderFormModule } from '@blockframes/waterfall/components/rightholder/rightholder-form/rightholder-form.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';

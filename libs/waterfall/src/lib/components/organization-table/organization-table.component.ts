@@ -7,7 +7,7 @@ import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.co
 import { WaterfallPermissionsService } from '../../permissions.service';
 import { WaterfallService } from '../../waterfall.service';
 import { map } from 'rxjs';
-import { RightholderSelectModalComponent } from '../rightholder-select-modal/rightholder-select-modal.component';
+import { RightholderSelectModalComponent } from '../rightholder/rightholder-select-modal/rightholder-select-modal.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({

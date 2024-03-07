@@ -9,7 +9,7 @@ import { PermissionsComponent } from './permissions.component';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { RightholderSelectModule } from '@blockframes/waterfall/components/rightholder-select/rightholder-select.module';
+import { RightholderSelectModule } from '@blockframes/waterfall/components/rightholder/rightholder-select/rightholder-select.module';
 import { OrganizationTableModule } from '@blockframes/waterfall/components/organization-table/organization-table.module';
 
 // Material

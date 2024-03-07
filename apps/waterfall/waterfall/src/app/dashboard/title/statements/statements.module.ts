@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 // Blockframes
-import { RightholderSelectModule } from '@blockframes/waterfall/components/rightholder-select/rightholder-select.module';
+import { RightholderSelectModule } from '@blockframes/waterfall/components/rightholder/rightholder-select/rightholder-select.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { EmptyStatementCardModule } from '@blockframes/waterfall/components/empty-statement-card/empty-statement-card.module';
 import { StatementTableModule } from '@blockframes/waterfall/components/statement-table/statement-table.module';
