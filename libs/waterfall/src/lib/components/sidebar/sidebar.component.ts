@@ -24,7 +24,7 @@ export class WaterfallSidebarComponent implements OnInit, OnDestroy {
   hiddenRightHolder = new FormControl<string[]>([]);
   highlightedSource = new FormControl<string[]>([]);
   
-  roles = rightholderRoles;
+  roles = Object.keys(rightholderRoles);
   rightHolderFilter = new FormControl<RightholderRole[]>([]);
   filteredRightHolders$ = new BehaviorSubject<(OrgState & { role: RightholderRole[], name: string })[]>([]);
 
