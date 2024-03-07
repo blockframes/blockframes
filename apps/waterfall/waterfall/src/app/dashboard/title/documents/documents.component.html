@@ -1,1 +1,44 @@
-<waterfall-contract-list [contractForm]="contractForm"></waterfall-contract-list>
+<section class="surface">
+  <header *ngIf="crumbs$ | async as crumbs">
+    <div>
+      <ng-container *ngIf="crumbs.length === 1">
+        <p>{{ crumbs[0] }}</p>
+      </ng-container>
+      <ng-container *ngIf="crumbs.length === 2">
+        <button mat-button color="primary" (click)="navigate(['Documents'])">{{ crumbs[0] }}</button>
+        <span>></span>
+        <p>{{ crumbs[1] }}</p>
+      </ng-container>
+    </div>
+  </header>
+  <mat-divider></mat-divider>
+  <ng-container *ngIf="currentPath$ | async as currentPath">
+    <ng-container [ngSwitch]="currentPath">
+      <ng-container *ngSwitchCase="'Documents'">
+        <mat-action-list>
+          <button mat-list-item (click)="navigate(['Documents', 'Financing Plan'])">
+            <mat-icon mat-list-icon svgIcon="folder_open"></mat-icon>
+            <span mat-line>Financing Plan</span>
+          </button>
+          <button mat-list-item (click)="navigate(['Documents', 'Budget'])">
+            <mat-icon mat-list-icon svgIcon="folder_open"></mat-icon>
+            <span mat-line>Budget</span>
+          </button>
+          <button mat-list-item (click)="navigate(['Documents', 'Contracts'])">
+            <mat-icon mat-list-icon svgIcon="folder_open"></mat-icon>
+            <span mat-line>Contracts</span>
+          </button>
+        </mat-action-list>
+      </ng-container>
+      <ng-container *ngSwitchCase="'Financing Plan'">
+        Financing Plan
+      </ng-container>
+      <ng-container *ngSwitchCase="'Budget'">
+        Budget
+      </ng-container>
+      <article *ngSwitchCase="'Contracts'">
+        <waterfall-contract-list [contractForm]="contractForm"></waterfall-contract-list>
+      </article>
+    </ng-container>
+  </ng-container>
+</section>
