@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 // Blockframes
-import { ExpenseTypesModule } from '../../expense-types/expense-types.module';
+import { ExpenseTypesModule } from '../../expense/expense-types/expense-types.module';
 
 // Pages
 import { ExpenseTypesFormComponent } from './form.component';
