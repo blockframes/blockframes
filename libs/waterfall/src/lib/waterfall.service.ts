@@ -159,11 +159,12 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
    * @param blocks 
    * @param versionId
    * @param date 
+   * @param currentStatementId
    * @returns 
    */
-  public simulateWaterfall(data: WaterfallData, versionId?: string, date?: Date) {
+  public simulateWaterfall(data: WaterfallData, versionId?: string, date?: Date, currentStatementId?: string) {
     const version = createVersion({ id: 'simulation', name: 'Simulation', default: false });
-    const blocks = buildBlocks(data, this.authService.uid, versionId, { simulation: true });
+    const blocks = buildBlocks(data, this.authService.uid, versionId, { simulation: true, currentStatementId });
     const simulation = buildWaterfall('simulated-waterfall', version, blocks);
     return waterfallToDate(simulation, date);
   }
@@ -284,12 +285,15 @@ function waterfallToDate(build: WaterfallState, date?: Date) {
   return build;
 }
 
-function groupActions(data: WaterfallData, versionId: string, isSimulation = false) {
+function groupActions(data: WaterfallData, versionId: string, isSimulation = false, currentStatementId?: string) {
   const sources = waterfallSources(data.waterfall, versionId);
 
   // @dev "sourcesToAction" may be activated for real waterfall also (generate bad display for graph generated with G6 but not with new one)
   const sourceActions = isSimulation ? sourcesToAction(sources) : [];
-  const incomesAndExpensesStatements = isSimulation ? data.statements : data.statements.filter(s => s.status === 'reported' && (!s.reviewStatus || s.reviewStatus === 'accepted'));
+  const incomesAndExpensesStatements = data.statements.filter(s =>
+    (s.status === 'reported' && (!s.reviewStatus || s.reviewStatus === 'accepted')) || // Include previous reported statements
+    (isSimulation && s.id === currentStatementId) // Include current, possibly not reported, statement in simulation
+  );
   // Skip hidden incomes for this version
   const incomes = isSimulation ? Object.values(data.incomes) : Object.values(data.incomes).filter(i => !i.version[versionId] || !i.version[versionId].hidden);
 
@@ -317,8 +321,8 @@ function groupActions(data: WaterfallData, versionId: string, isSimulation = fal
   return groupedActions;
 }
 
-function buildBlocks(data: WaterfallData, createdBy: string, versionId: string, options?: { simulation: boolean }) {
-  const groupedActions = groupActions(data, versionId, options?.simulation);
+function buildBlocks(data: WaterfallData, createdBy: string, versionId: string, options?: { simulation: boolean, currentStatementId: string }) {
+  const groupedActions = groupActions(data, versionId, options?.simulation, options?.currentStatementId);
 
   return groupedActions.map(group => {
     const blockName = getBlockName(group.date, group.actions);
