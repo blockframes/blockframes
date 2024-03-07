@@ -277,6 +277,8 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   private _simulation$ = new BehaviorSubject<WaterfallState>(undefined);
   public simulation$ = this._simulation$.asObservable().pipe(filter(state => !!state));
   private simulationData: WaterfallData;
+  // Used to put current statement in the simulation even if it is not reported yet.
+  public currentStatementId$ = new BehaviorSubject<string>(undefined);
 
   // ---------
   // Graph Hide & Highlight
@@ -452,7 +454,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   async simulateWaterfall() {
     this.isRefreshing$.next(true);
     this.simulationData = await this.loadData();
-    const waterfall = await this.waterfallService.simulateWaterfall(this.simulationData, this.versionId$.value, this.date$.value);
+    const waterfall = await this.waterfallService.simulateWaterfall(this.simulationData, this.versionId$.value, this.date$.value, this.currentStatementId$.value);
     this._simulation$.next(waterfall);
     this.isRefreshing$.next(false);
     return waterfall;
@@ -475,7 +477,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
       this.simulationData.expenses[expense.id] = expense;
     }
 
-    const waterfall = await this.waterfallService.simulateWaterfall(this.simulationData, this.versionId$.value, this.date$.value);
+    const waterfall = await this.waterfallService.simulateWaterfall(this.simulationData, this.versionId$.value, this.date$.value, this.currentStatementId$.value);
     this._simulation$.next(waterfall);
     this.isRefreshing$.next(false);
     return waterfall;
