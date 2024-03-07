@@ -8,7 +8,7 @@ import { ContractMainInfoComponent } from './contract-main-info.component';
 // Blockframes
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
-import { RightHolderNamePipeModule } from '../../pipes/rightholder-name.pipe';
+import { RightHolderNamePipeModule } from '../../../pipes/rightholder-name.pipe';
 import { ContractPipeModule } from '@blockframes/contract/contract/pipe';
 
 // Material
