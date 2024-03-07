@@ -17,7 +17,7 @@ import { WaterfallGraphModule } from '../../components/graph/graph.module';
 import { TitleFormModule } from '../../components/forms/title-form/form.module';
 import { ContractsFormModule } from '../../components/contract/contracts-form/contracts-form.module';
 import { RightHolderFormModule } from '../../components/rightholder/rightholder-form/rightholder-form.module';
-import { VersionSelectorModule } from '../../components/version-selector/version-selector.module';
+import { VersionSelectorModule } from '../../components/version/version-selector/version-selector.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Pages

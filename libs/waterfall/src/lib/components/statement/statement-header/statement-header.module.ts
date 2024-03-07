@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { StatementHeaderComponent } from './statement-header.component';
 
 // Blockframes
-import { VersionSelectorModule } from '../../version-selector/version-selector.module';
+import { VersionSelectorModule } from '../../version/version-selector/version-selector.module';
 import { StatementMainInfoModule } from '../statement-main-info/statement-main-info.module';
 
 // Material

@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Version, WaterfallRightholder } from '@blockframes/model';
-import { VersionForm } from '../../form/version.form';
+import { VersionForm } from '../../../form/version.form';
 
 interface VersionData {
   mode: 'edit' | 'create' | 'init';

@@ -4,10 +4,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 
 import { createVersion, getDefaultVersionId, isDefaultVersion, Version } from '@blockframes/model';
-import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
+import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { VersionEditorComponent } from '../version-editor/version-editor.component';
-import { WaterfallService } from '../../waterfall.service';
+import { WaterfallService } from '../../../waterfall.service';
 import { firstValueFrom, map } from 'rxjs';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 

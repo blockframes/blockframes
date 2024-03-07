@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 // Blockframes
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
-import { VersionEditorComponent } from '../version-editor/version-editor.component';
+import { VersionEditorComponent } from '../version/version-editor/version-editor.component';
 import { WaterfallService } from '../../waterfall.service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { createVersion, Version } from '@blockframes/model';

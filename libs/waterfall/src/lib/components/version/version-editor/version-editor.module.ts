@@ -7,7 +7,7 @@ import { VersionEditorComponent } from './version-editor.component';
 
 // Blockframes
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
-import { RightholderSelectModule } from '../rightholder/rightholder-select/rightholder-select.module';
+import { RightholderSelectModule } from '../../rightholder/rightholder-select/rightholder-select.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';

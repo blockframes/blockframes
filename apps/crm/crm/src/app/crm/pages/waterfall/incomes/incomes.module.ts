@@ -7,7 +7,7 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { ContractPipeModule } from '@blockframes/contract/contract/pipe';
-import { VersionSelectorModule } from '@blockframes/waterfall/components/version-selector/version-selector.module';
+import { VersionSelectorModule } from '@blockframes/waterfall/components/version/version-selector/version-selector.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
