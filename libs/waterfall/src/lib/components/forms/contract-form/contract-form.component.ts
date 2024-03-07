@@ -30,7 +30,7 @@ export class WaterfallContractFormComponent implements OnInit, OnChanges, OnDest
   @Input() waterfall: Waterfall;
   @Input() form: WaterfallContractForm;
   @Input() type: RightholderRole;
-  @Input() toggleTermsControl : FormControl<boolean>;
+  @Input() toggleTermsControl: FormControl<boolean>;
 
   public hideStartDate$ = new BehaviorSubject(true);
 
