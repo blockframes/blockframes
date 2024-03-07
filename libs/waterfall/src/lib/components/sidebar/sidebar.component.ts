@@ -4,7 +4,8 @@ import { BehaviorSubject, Subscription, combineLatest, startWith } from 'rxjs';
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { OrgState, RightholderRole, Statement, rightholderRoles } from '@blockframes/model';
-import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
+
+import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 
 
 @Component({
@@ -23,7 +24,7 @@ export class WaterfallSidebarComponent implements OnInit, OnDestroy {
   hiddenRightHolder = new FormControl<string[]>([]);
   highlightedSource = new FormControl<string[]>([]);
   
-  roles = Object.entries(rightholderRoles);
+  roles = rightholderRoles;
   rightHolderFilter = new FormControl<RightholderRole[]>([]);
   filteredRightHolders$ = new BehaviorSubject<(OrgState & { role: RightholderRole[], name: string })[]>([]);
 
@@ -37,15 +38,15 @@ export class WaterfallSidebarComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.subs.push(this.totalToDate.valueChanges.subscribe(totalToDate => {
+    this.subs.push(this.totalToDate.valueChanges.pipe(startWith(false)).subscribe(totalToDate => {
       this.shell.isCalculatedRevenue$.next(totalToDate);
     }));
     this.subs.push(this.shell.statements$.subscribe(statements => {
-      const sorted = statements.sort((a, b) =>  b.duration.from.getTime() - a.duration.from.getTime());
+      const sorted = statements.sort((a, b) =>  b.duration.to.getTime() - a.duration.to.getTime());
       const years = new Set<number>();
       const grouped: Record<number, Statement[]> = {};
       sorted.forEach(statement => {
-        const year = statement.duration.from.getFullYear();
+        const year = statement.duration.to.getFullYear();
         years.add(year);
         grouped[year] ||= [];
         grouped[year].push(statement);

@@ -1,9 +1,9 @@
 
+import { Subscription, combineLatest } from 'rxjs';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 import { HorizontalNode } from '../layout';
-import { Subscription, combineLatest } from 'rxjs';
-import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
+import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 
 
 @Component({

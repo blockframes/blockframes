@@ -2,9 +2,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, HostBinding, HostListener, Input, OnChanges, Output } from '@angular/core';
 
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 
 import { RightNode } from '../layout';
+import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 
 
 @Component({

@@ -11,6 +11,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
+import { ToLabelModule } from '@blockframes/utils/pipes';
+
 import { WaterfallSidebarComponent } from './sidebar.component';
 
 
@@ -19,6 +21,8 @@ import { WaterfallSidebarComponent } from './sidebar.component';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+
+    ToLabelModule,
 
     MatIconModule,
     MatInputModule,

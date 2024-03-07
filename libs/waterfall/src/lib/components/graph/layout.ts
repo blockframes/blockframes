@@ -66,7 +66,7 @@ export interface RightNode extends NodeBase {
   rightType: RightType;
 }
 
-function createRightNode(params: Partial<RightNode> = {}, isHidden: boolean): RightNode {
+function createRightNode(params: Partial<RightNode> = {}, isHidden = false): RightNode {
   const node = createNodeBase(params);
   return {
     ...node,
@@ -633,7 +633,7 @@ export function createSibling(olderSiblingId: string, graph: Node[], producerId:
     const right = createRightNode({
       id: createNodeId('z-right'),
       name: 'New right',
-    }, false);
+    });
     olderSibling.members.push(right);
     return;
 
@@ -651,7 +651,7 @@ export function createSibling(olderSiblingId: string, graph: Node[], producerId:
     const right = createRightNode({
       id: createNodeId('z-right'),
       name: 'New right',
-    }, false);
+    });
 
     if (parents.length === 0) { // simply create a right
       graph.push(right);
@@ -683,7 +683,7 @@ export function createChild(parentId: string, graph: Node[], producerId: string)
     const right = createRightNode({
       id: createNodeId('z-right'),
       name: 'New right',
-    }, false);
+    });
     parent.children.push(right.id);
     graph.push(right);
     return;
@@ -702,7 +702,7 @@ export function createChild(parentId: string, graph: Node[], producerId: string)
     const right = createRightNode({
       id: createNodeId('z-right'),
       name: 'New right',
-    }, false);
+    });
 
     // create a new group with the new right and its siblings as members
     // the children of this new group is the whole children of the siblings
@@ -743,7 +743,7 @@ export function createStep(nodeId: string, graph: Node[]) {
       name: `Step 2`,
       rightHolderId: node.rightHolderId ?? '',
       version: node.version,
-    }, false);
+    });
 
     // create a new vertical group
     const members = [node, right1];
@@ -771,7 +771,7 @@ export function createStep(nodeId: string, graph: Node[]) {
       name: `Step ${node.members.length + 1}`,
       rightHolderId: node.members[0].rightHolderId ?? '',
       version: node.version,
-    }, false);
+    });
     node.members.push(right);
     node.height = RIGHT_HEIGHT + (LEVEL_HEIGHT * (node.members.length - 1)) + (SPACING * (node.members.length + 1));
   } else {
