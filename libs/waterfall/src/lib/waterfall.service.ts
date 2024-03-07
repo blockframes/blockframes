@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core';
 import { WriteOptions } from 'ngfire';
+import { Injectable } from '@angular/core';
+import type firestore from 'firebase/firestore';
 import { where, DocumentSnapshot } from '@firebase/firestore';
+
 import {
   Version,
   Waterfall,
@@ -39,7 +41,6 @@ import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 import { waterfall as _waterfall } from './main';
 import { BlockService } from './block.service';
 import { WaterfallPermissionsService } from './permissions.service';
-import type firestore from 'firebase/firestore';
 
 export const fromOrg = (orgId: string) => [where('orgIds', 'array-contains', orgId)];
 

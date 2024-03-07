@@ -1,0 +1,56 @@
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+
+  h5 {
+    color: var(--primary);
+  }
+
+  mat-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-left: 22px;
+    position: relative;
+
+    mat-radio-button {
+      z-index: 1;
+      background-color: var(--background-card);
+      div {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+
+        p {
+          margin: 0 0 0 8px;
+        }
+      }
+    }
+
+    span.vertical {
+      z-index: 0;
+      position: absolute;
+      height: 100%;
+      border: solid 1px var(--foreground-divider);
+      top: 0;
+      left: 9px;
+    }
+  }
+
+  div.rightholder {
+    border-bottom: solid var(--foreground-divider);
+
+    h6 {
+      margin: 0;
+      text-transform: uppercase;
+    }
+
+    span {
+      font-size: small;
+    }
+  }
+}

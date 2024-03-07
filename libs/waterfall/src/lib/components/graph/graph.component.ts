@@ -116,11 +116,12 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.shell.versionId$.pipe(tap(_ => this.unselect())),
       this.shell.statements$.pipe(map(statements => statements.filter(s => s.status === 'reported'))),
       this.shell.contracts$,
-    ]).subscribe(([rights, waterfall, versionId, statements, contracts]) => {
-      this.rights = rights;
+      this.shell.hiddenRightHolderIds$,
+    ]).subscribe(([rights, waterfall, versionId, statements, contracts, hiddenRightHolderIds]) => {
+      this.rights = rights; // TODO filtered rights if needed
       this.contracts = contracts;
       this.version = waterfall.versions.find(v => v.id === versionId);
-      this.sources = waterfallSources(waterfall, this.version?.id);
+      this.sources = waterfallSources(waterfall, this.version?.id); // TODO filtered sources if needed
       this.rightholders = waterfall.rightholders;
       this.rightholderNames$.next(this.rightholders.map(r => r.name));
       this.isDefaultVersion = isDefaultVersion(waterfall, versionId);
@@ -142,7 +143,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
         this.sourceForm.disable();
         this.canUpdateGraph = false;
       }
-      this.layout();
+      this.layout(hiddenRightHolderIds);
     }));
     this.subscriptions.push(this.rightForm.controls.org.valueChanges.subscribe(org => {
       this.updateRightName(org, undefined);
@@ -300,8 +301,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     return this.waterfallService.updateSource(this.waterfall.id, source);
   }
 
-  async layout() {
-    const { nodes, arrows, bounds } = await toGraph(this.rights, this.sources);
+  async layout(hiddenRightHolderIds: string[]) {
+    const { nodes, arrows, bounds } = await toGraph(this.rights, this.sources, hiddenRightHolderIds);
     this.service.updateBounds(bounds);
     this.nodes$.next(nodes);
     this.arrows$.next(arrows);

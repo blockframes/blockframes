@@ -66,13 +66,13 @@ export interface RightNode extends NodeBase {
   rightType: RightType;
 }
 
-function createRightNode(params: Partial<RightNode> = {}): RightNode {
+function createRightNode(params: Partial<RightNode> = {}, isHidden = false): RightNode {
   const node = createNodeBase(params);
   return {
     ...node,
     type: 'right',
-    width: RIGHT_WIDTH,
-    height: RIGHT_HEIGHT,
+    width: isHidden ? 0 : RIGHT_WIDTH,
+    height: isHidden ? 0 : RIGHT_HEIGHT,
     color: '#000',
     rightHolderId: '',
     percent: 0,
@@ -138,7 +138,7 @@ const SOURCE_HEIGHT = 70;
 const SPACING = 32;
 
 
-export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
+export async function toGraph(rights: Right[], sources: WaterfallSource[], hiddenRightHolderIds: string[]) {
 
   const dedupeOrgs = new Set<string>();
   rights.forEach(right => dedupeOrgs.add(right.rightholderId));
@@ -160,7 +160,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
           percent: vMember.percent,
           rightType: vMember.type,
           version: vMember.version,
-        });
+        }, hiddenRightHolderIds.includes(vMember.rightholderId));
         return rightNode;
       });
 
@@ -174,6 +174,10 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
         version: right.version,
         percent: right.percent,
       });
+      if (members.every(member => member.width === 0 && member.height === 0)) {
+        verticalNode.width = 0;
+        verticalNode.height = 0;
+      }
       return verticalNode;
     } else if (right.type === 'horizontal') {
       const members = rights.filter(r => r.groupId === right.id).map(member => {
@@ -189,7 +193,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
               percent: vMember.percent,
               rightType: vMember.type,
               version: vMember.version,
-            });
+            }, hiddenRightHolderIds.includes(vMember.rightholderId));
             return rightNode;
           });
           const verticalNode = createVerticalNode({
@@ -200,6 +204,10 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
             version: member.version,
             percent: member.percent,
           });
+          if (vMembers.every(member => member.width === 0 && member.height === 0)) {
+            verticalNode.width = 0;
+            verticalNode.height = 0;
+          }
           return verticalNode;
         } else {
           const orgIndex = orgIds.findIndex(id => id === member.rightholderId);
@@ -212,22 +220,27 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
             percent: member.percent,
             rightType: member.type,
             version: member.version,
-          });
+          }, hiddenRightHolderIds.includes(member.rightholderId));
           return rightNode;
         }
       });
       const maxMemberHeight = Math.max(...members.map(member => member.height));
+      const nonHiddenMemberCount = members.filter(member => member.width !== 0 && member.height !== 0).length;
       const horizontalNode = createHorizontalNode({
         id: right.id,
         members: members,
         name: right.name,
         children: [...children],
         height: maxMemberHeight + (SPACING * 2),
-        width: (RIGHT_WIDTH * members.length) + (SPACING * (members.length + 1)),
+        width: (RIGHT_WIDTH * nonHiddenMemberCount) + (SPACING * (nonHiddenMemberCount + 1)),
         version: right.version,
         percent: right.percent,
         blameId: right.blameId,
       });
+      if (members.every(member => member.width === 0 && member.height === 0)) {
+        horizontalNode.width = 0;
+        horizontalNode.height = 0;
+      }
       return horizontalNode;
     } else {
       const orgIndex = orgIds.findIndex(id => id === right.rightholderId);
@@ -241,7 +254,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[]) {
         percent: right.percent,
         rightType: right.type,
         version: right.version,
-      });
+      }, hiddenRightHolderIds.includes(right.rightholderId));
       return rightNode;
     }
   });

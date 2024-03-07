@@ -280,6 +280,15 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   // Used to put current statement in the simulation even if it is not reported yet.
   public currentStatementId$ = new BehaviorSubject<string>(undefined);
 
+  // ---------
+  // Graph Hide & Highlight
+  // ---------
+
+  public highlightedRightHolderIds$ = new BehaviorSubject<string[]>([]);
+  public highlightedSourceIds$ = new BehaviorSubject<string[]>([]);
+  public hiddenRightHolderIds$ = new BehaviorSubject<string[]>([]);
+  public isCalculatedRevenue$ = new BehaviorSubject(true);
+
   @Input() routes: RouteDescription[];
   @Input() editRoute?: string | string[];
   @Input() @boolean lite = false;
