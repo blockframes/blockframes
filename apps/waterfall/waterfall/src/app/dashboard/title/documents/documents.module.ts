@@ -6,22 +6,22 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Blockframes
+import { ContractListModule } from '@blockframes/waterfall/components/contract-list/contract-list.module';
 
 // Pages
 import { DocumentsComponent } from './documents.component';
-import { ContractsFormModule } from '@blockframes/waterfall/components/contracts-form/contracts-form.module';
 
 @NgModule({
   declarations: [DocumentsComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    
+
     // Blockframes
-    ContractsFormModule,
+    ContractListModule,
 
     // Material
-    
+
 
     // Routing
     RouterModule.forChild([{ path: '', component: DocumentsComponent }]),

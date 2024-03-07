@@ -1,7 +1,7 @@
 
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
-import { WaterfallDocumentForm } from '@blockframes/waterfall/form/document.form';
+import { WaterfallContractForm } from '@blockframes/waterfall/form/contract.form';
 
 @Component({
   selector: 'waterfall-title-documents',
@@ -11,6 +11,6 @@ import { WaterfallDocumentForm } from '@blockframes/waterfall/form/document.form
 })
 export class DocumentsComponent {
 
-  documentForm = new WaterfallDocumentForm({ id: '' });
+  contractForm = new WaterfallContractForm({ id: '' });
 
 }
