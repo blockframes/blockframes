@@ -11,7 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 
 import { TitleFormModule } from '../../components/forms/title-form/form.module';
-import { RightHolderFormModule } from '../../components/right-holder-form/right-holder-form.module';
+import { RightHolderFormModule } from '../../components/rightholder/rightholder-form/rightholder-form.module';
 
 // Pages
 import { WaterfallEditTitleComponent } from './edit.component';

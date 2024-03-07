@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { RightholdersComponent } from './rightholders.component';
 
 // Blockframes
-import { RightholderTableModule } from '@blockframes/waterfall/components/rightholder-table/rightholder-table.module';
+import { RightholderTableModule } from '@blockframes/waterfall/components/rightholder/rightholder-table/rightholder-table.module';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 
 // Material

@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 // Blockframes
 import { ContractListModule } from '@blockframes/waterfall/components/contract-list/contract-list.module';
+import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 
 // Pages
 import { DocumentsComponent } from './documents.component';
@@ -19,6 +20,7 @@ import { DocumentsComponent } from './documents.component';
 
     // Blockframes
     ContractListModule,
+    LogoSpinnerModule,
 
     // Material
 

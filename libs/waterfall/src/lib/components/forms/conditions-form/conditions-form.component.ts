@@ -21,7 +21,7 @@ import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell
 import { ConditionForm } from './condition.form';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ExpenseTypesModalComponent } from '../../expense-types-modal/expense-types-modal.component';
+import { ExpenseTypesModalComponent } from '../../expense/expense-types-modal/expense-types-modal.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormList } from '@blockframes/utils/form';
