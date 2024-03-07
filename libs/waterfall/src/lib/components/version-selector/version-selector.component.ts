@@ -22,7 +22,7 @@ export class VersionSelectorComponent implements OnInit {
   public versions$ = this.shell.waterfall$.pipe(
     map(waterfall => this.hideStandalone ? waterfall.versions.filter(v => !v.standalone) : waterfall.versions)
   );
-  public canBypassRules$ = this.shell.canBypassRules$;
+  public canBypassRules = this.shell.canBypassRules;
   public canInitWaterfall$ = this.shell.canInitWaterfall$;
   public versionId: string;
   public lockedVersionId = this.shell.lockedVersionId;

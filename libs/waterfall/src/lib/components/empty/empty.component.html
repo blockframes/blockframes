@@ -7,7 +7,7 @@
 <ng-template #notInitalized>
   <h1>Waterfall not initialized.</h1>
 
-  <ng-container *ngIf="shell.canBypassRules$ | async else notAdmin">
+  <ng-container *ngIf="shell.canBypassRules else notAdmin">
     <p class="mat-body-1">
       Please initialize a first version that you're going to work with.
     </p>

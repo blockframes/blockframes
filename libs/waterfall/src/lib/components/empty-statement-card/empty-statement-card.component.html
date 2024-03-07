@@ -1,11 +1,11 @@
-<a class="surface" *ngIf="!disabled else isDisabled" matTooltip="Add {{ type | toLabel: 'statementType' }} Statement">
+<a class="surface" *ngIf="((isDisabled$ | async) === false && !disabled) else isDisabled" matTooltip="Add {{ type$.value | toLabel: 'statementType' }} Statement">
   <img asset="add_statement.svg" alt="Add Statement image">
-  <button mat-button color="primary">Add {{ type | toLabel: 'statementType' }} Statement</button>
+  <button mat-button color="primary">Add {{ type$.value | toLabel: 'statementType' }} Statement</button>
 </a>
 
 <ng-template #isDisabled>
-  <div class="surface" matTooltip="Add {{ type | toLabel: 'statementType' }} Statement">
+  <div class="surface" matTooltip="Add {{ type$.value | toLabel: 'statementType' }} Statement">
     <img asset="add_statement.svg" alt="Add Statement image">
-    <button mat-button color="primary">Add {{ type | toLabel: 'statementType' }} Statement</button>
+    <button mat-button color="primary">Add {{ type$.value | toLabel: 'statementType' }} Statement</button>
   </div>
 </ng-template>

@@ -485,7 +485,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
       case 'userRequestedDocumentCertification': {
         const movie = await this.loadMovie(notification.docId);
         const imgRef = this.getPoster(movie);
-        let message = `Your request to certify a document is being processed.`;
+        let message = 'Your request to certify a document is being processed.';
         if (notification.statementId) {
           message = `Your request to certify a <a href="/c/o/dashboard/title/${movie.id}/statement/${notification.statementId}" target="_blank">statement</a> for ${movie.title.international}'s Waterfall is being processed.`;
         }
@@ -495,6 +495,70 @@ export class NotificationService extends BlockframesCollection<Notification> {
           message,
           imgRef,
           placeholderUrl: 'empty_poster.svg',
+          url: `${applicationUrl[notification._meta.createdFrom]}/c/o/dashboard/title/${notification.docId}/statement/${notification.statementId}`,
+        };
+      }
+      case 'requestForStatementReviewCreated': {
+        const movie = await this.loadMovie(notification.docId);
+        const imgRef = this.getPoster(movie);
+        let message = `Your request to review a statement is being processed by the ${toLabel('producer', 'rightholderRoles')}.`;
+        if (notification.statementId) {
+          message = `Your request to review a <a href="/c/o/dashboard/title/${movie.id}/statement/${notification.statementId}" target="_blank">statement</a> for ${movie.title.international}'s Waterfall is being processed.`;
+        }
+        return {
+          ...notification,
+          _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
+          message,
+          imgRef,
+          placeholderUrl: 'empty_poster.svg',
+          url: `${applicationUrl[notification._meta.createdFrom]}/c/o/dashboard/title/${notification.docId}/statement/${notification.statementId}`,
+        };
+      }
+      case 'requestForStatementReviewApproved': {
+        const movie = await this.loadMovie(notification.docId);
+        const imgRef = this.getPoster(movie);
+        let message = `Your statement has been approved by the ${toLabel('producer', 'rightholderRoles')}.`;
+        if (notification.statementId) {
+          message = `Your <a href="/c/o/dashboard/title/${movie.id}/statement/${notification.statementId}" target="_blank">statement</a> for ${movie.title.international}'s Waterfall has been approved.`;
+        }
+        return {
+          ...notification,
+          _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
+          message,
+          imgRef,
+          placeholderUrl: 'empty_poster.svg',
+          url: `${applicationUrl[notification._meta.createdFrom]}/c/o/dashboard/title/${notification.docId}/statement/${notification.statementId}`,
+        };
+      }
+      case 'requestForStatementReviewDeclined': {
+        const movie = await this.loadMovie(notification.docId);
+        const imgRef = this.getPoster(movie);
+        let message = `Your statement has been declined by the ${toLabel('producer', 'rightholderRoles')}.`;
+        if (notification.statementId) {
+          message = `Your <a href="/c/o/dashboard/title/${movie.id}/statement/${notification.statementId}" target="_blank">statement</a> for ${movie.title.international}'s Waterfall has been declined.`;
+        }
+        return {
+          ...notification,
+          _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
+          message,
+          imgRef,
+          placeholderUrl: 'empty_poster.svg',
+          url: `${applicationUrl[notification._meta.createdFrom]}/c/o/dashboard/title/${notification.docId}/statement/${notification.statementId}`,
+        };
+      }
+      case 'userRequestedStatementReview': {
+        const movie = await this.loadMovie(notification.docId);
+        const subject = await this.notificationSubject(notification);
+        let message = `${subject} has requested a review for a statement.`;
+        if (notification.statementId) {
+          message = `New request to review a <a href="/c/o/dashboard/title/${movie.id}/statement/${notification.statementId}" target="_blank">statement</a> for ${movie.title.international}'s Waterfall.`;
+        }
+        return {
+          ...notification,
+          _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
+          message,
+          imgRef: notification.user?.avatar || notification.organization?.logo,
+          placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl[notification._meta.createdFrom]}/c/o/dashboard/title/${notification.docId}/statement/${notification.statementId}`,
         };
       }

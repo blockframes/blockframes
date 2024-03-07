@@ -32,6 +32,9 @@ import {
   waterfallSources,
   isStandaloneVersion,
   skipGroups,
+  getOutgoingStatementPrerequists,
+  filterRightholderStatements,
+  WaterfallRightholder,
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { filter, map, pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
@@ -63,7 +66,7 @@ export class WaterfallCtaDirective { }
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
-  private sub: Subscription;
+  private subs: Subscription[] = [];
   private countRouteEvents = 1;
   public versionId$ = new BehaviorSubject<string>(undefined);
   private date$ = new BehaviorSubject<Date>(undefined);
@@ -205,8 +208,11 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   public currentRightholder$ = combineLatest([this.waterfall$, this.permission$]).pipe(
     map(([waterfall, permission]) => permission ? permission.rightholderIds.map(r => waterfall.rightholders.find(rh => rh.id === r)) : []),
     map(rightholders => rightholders.pop()),
+    tap(currentRightholder => this.currentRightholder = currentRightholder),
     shareReplay({ bufferSize: 1, refCount: true })
   );
+
+  public currentRightholder: WaterfallRightholder;
 
   // Blocks used for the current version of the state
   public versionBlocks$ = combineLatest([this.versionId$, this.waterfall$, this.blocks$]).pipe(
@@ -255,6 +261,17 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
       return name ? `${name} ${isDefault}` : '--';
     })
   );
+
+  /**
+   * Observable of the statements that current rightholder is allowed to see
+   */
+  public rightholderStatements$ = combineLatest([this.canBypassRules$, this.currentRightholder$, this.statements$]).pipe(
+    map(([canBypassRules, rightholder, statements]) => {
+      if (canBypassRules) return statements;
+      return filterRightholderStatements(statements, rightholder);
+    }),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
   public lockedVersionId: string; // VersionId that is locked for the current rightholder
 
   private _simulation$ = new BehaviorSubject<WaterfallState>(undefined);
@@ -286,9 +303,12 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.sub = this.router.events
+    const routerSub = this.router.events
       .pipe(filter((event: Event) => event instanceof NavigationEnd))
       .subscribe(() => this.countRouteEvents++);
+    this.subs.push(routerSub);
+    this.subs.push(this.canBypassRules$.subscribe());
+    this.subs.push(this.currentRightholder$.subscribe());
   }
 
   private async loadData() {
@@ -364,8 +384,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   }
 
   async initWaterfall(version: Partial<Version> = { id: `version_${this.waterfall.versions.length + 1}`, description: `Version ${this.waterfall.versions.length + 1}` }) {
-    const canBypassRules = await firstValueFrom(this.canBypassRules$);
-    if (!canBypassRules) throw new Error('You are not allowed to create waterfall');
+    if (!this.canBypassRules) throw new Error('You are not allowed to create waterfall');
     this.snackBar.open(`Creating version "${version.id}"... Please wait`, 'close');
     this.isRefreshing$.next(true);
     this.setVersionId(version.id);
@@ -377,15 +396,13 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   }
 
   async removeVersion(versionId: string) {
-    const canBypassRules = await firstValueFrom(this.canBypassRules$);
-    if (!canBypassRules) throw new Error('You are not allowed to remove waterfall');
+    if (!this.canBypassRules) throw new Error('You are not allowed to remove waterfall');
     const data = await this.loadData();
     return this.waterfallService.removeVersion(data, versionId);
   }
 
   async duplicateVersion(versionIdToDuplicate: string, version?: Partial<Version>) {
-    const canBypassRules = await firstValueFrom(this.canBypassRules$);
-    if (!canBypassRules) throw new Error('You are not allowed to duplicate waterfall');
+    if (!this.canBypassRules) throw new Error('You are not allowed to duplicate waterfall');
     const waterfall = await firstValueFrom(this.waterfall$);
     const blocks = await firstValueFrom(this.blocks$);
     // TODO #9520 version{} of rights, incomes, expenses should be duplicated into new version to keep overrides
@@ -398,8 +415,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
    * @returns 
    */
   async refreshAllWaterfalls() {
-    const canBypassRules = await firstValueFrom(this.canBypassRules$);
-    if (!canBypassRules) throw new Error('You are not allowed to refresh waterfalls');
+    if (!this.canBypassRules) throw new Error('You are not allowed to refresh waterfalls');
     const currentVersion = this.versionId$.value;
     if (!currentVersion || isStandaloneVersion(this.waterfall, currentVersion)) return this.refreshWaterfall();
     this.isRefreshing$.next(true);
@@ -413,8 +429,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   }
 
   async refreshWaterfall(markAsRefreshing = true) {
-    const canBypassRules = await firstValueFrom(this.canBypassRules$);
-    if (!canBypassRules) throw new Error('You are not allowed to refresh waterfall');
+    if (!this.canBypassRules) throw new Error('You are not allowed to refresh waterfall');
     if (markAsRefreshing) this.isRefreshing$.next(true);
     const data = this.versionId$.value ? await this.loadData() : undefined;
     const waterfall = this.versionId$.value ? await this.waterfallService.refreshWaterfall(data, this.versionId$.value) : await this.initWaterfall();
@@ -457,8 +472,44 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     return waterfall;
   }
 
+  /**
+   * Iterates over state to fetch Income Ids that can 
+   * be used to generate producer (outgoing) statements 
+   * @param producerId
+   * @param receiverId 
+   * @param contractId 
+   * @param date 
+   */
+  public async getIncomeIds(producerId: string, receiverId: string, contractId: string, date: Date) {
+    const incomes = await this.incomes();
+    const state = await firstValueFrom(this.state$);
+    const statements = await this.statements();
+    const rights = await this.rights();
+    const contracts = await this.contracts();
+
+    // Outgoing statement prerequists config
+    const config = {
+      senderId: producerId,
+      receiverId,
+      statements,
+      contracts,
+      rights,
+      titleState: state.waterfall.state,
+      incomes,
+      sources: this.waterfall.sources,
+      date
+    };
+
+    const prerequists = getOutgoingStatementPrerequists(config);
+
+    if (!Object.keys(prerequists).length) return [];
+    if (!prerequists[contractId]) return [];
+    const prerequist = prerequists[contractId];
+    return prerequist.incomeIds;
+  }
+
   ngOnDestroy() {
-    this.sub?.unsubscribe();
+    this.subs.forEach(s => s?.unsubscribe());
   }
 
   goBack() {
@@ -474,7 +525,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
 @Pipe({ name: 'canAccess' })
 export class CanAccesPipe implements PipeTransform {
   transform(link: RouteDescription, isAdmin: boolean, waterfallReady: boolean) {
-    if(!link.requireKeys) return true;
+    if (!link.requireKeys) return true;
     return link.requireKeys.every(key => {
       if (key === 'admin') return isAdmin;
       if (key === 'waterfall-ready') return waterfallReady;

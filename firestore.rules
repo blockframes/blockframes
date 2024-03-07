@@ -722,7 +722,8 @@ service cloud.firestore {
     }
 
     function canUpdateWaterfallDocument(waterfallId, documentId) {
-      return getWaterfallDocument(waterfallId, documentId).ownerId == userOrgId() || isWaterfallAdmin(waterfallId);
+      let document = getWaterfallDocument(waterfallId, documentId);
+      return document.ownerId == userOrgId() || isWaterfallAdmin(waterfallId) || canManage(waterfallId, document.meta.buyerId) || canManage(waterfallId, document.meta.sellerId);
     }
 
     function getWaterfallDocument(waterfallId, documentId) {

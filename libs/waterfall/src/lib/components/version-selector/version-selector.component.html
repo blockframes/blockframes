@@ -1,5 +1,5 @@
 <ng-container *ngIf="versions$ | async as versions">
-  <ng-container *ngIf="!lockedVersionId && (canBypassRules$ | async)">
+  <ng-container *ngIf="!lockedVersionId && canBypassRules">
     <ng-container *ngIf="versions.length !== 0 else initMode">
       <button mat-flat-button color="primary" [matMenuTriggerFor]="menu">Choose Waterfall Version</button>
       <mat-menu class="bf-menu" #menu="matMenu">

@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { Observable, combineLatest, filter, map, startWith, switchMap, tap } from 'rxjs';
 import {
   ApexAxisChartSeries,
@@ -27,6 +27,8 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { OrganizationService } from '@blockframes/organization/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
+import { Intercom } from 'ng-intercom';
+import { Router } from '@angular/router';
 
 type ChartOptions = {
   series: ApexNonAxisChartSeries | ApexAxisChartSeries;
@@ -67,7 +69,16 @@ export class DashboardComponent {
   public currentRightholder$ = this.shell.currentRightholder$.pipe(
     tap(rightholder => {
       if (!rightholder && this.waterfall.versions.length > 0) {
-        this.snackbar.open(`Organization "${this.orgService.org.name}" is not associated to any rightholders.`, 'close', { duration: 5000 });
+        this.snackbar.open(`Organization "${this.orgService.org.name}" is not associated to any rightholders.`, this.shell.canBypassRules ? 'EDIT RIGHT HOLDERS' : 'ASK FOR HELP', { duration: 5000 })
+          .onAction()
+          .subscribe(() => {
+            if (this.shell.canBypassRules) {
+              this.router.navigate(['c/o/dashboard/title', this.shell.waterfall.id, 'right-holders']);
+            } else {
+              this.intercom.show(`My organization "${this.orgService.org.name}" is not associated to any rightholders in the waterfall "${this.shell.movie.title.international}"`);
+            }
+          });
+        return;
       } else {
         this.rightholderControl.setValue(rightholder?.id);
       }
@@ -306,6 +317,8 @@ export class DashboardComponent {
     private orgService: OrganizationService,
     private dynTitle: DynamicTitleService,
     private snackbar: MatSnackBar,
+    private router: Router,
+    @Optional() private intercom: Intercom,
   ) {
     this.shell.setDate(undefined);
     this.dynTitle.setPageTitle(this.shell.movie.title.international, 'Waterfall Dashboard');

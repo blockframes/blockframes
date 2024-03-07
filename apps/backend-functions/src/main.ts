@@ -49,7 +49,8 @@ import {
   onWaterfallRightDelete,
   onWaterfallUpdate,
   removeWaterfallFile,
-  onWaterfallStatementUpdate
+  onWaterfallStatementUpdate,
+  requestStatementReview as _requestStatementReview
 } from './waterfall';
 import { projectId, storageBucket } from './environments/environment';
 
@@ -342,6 +343,11 @@ export const statementToPdf = functions(heavyConfig).https.onRequest(_statementT
  * Triggered to generate a PDF statement and send it by email
  */
 export const statementToEmail = functions(heavyConfig).https.onCall(_statementToEmail);
+
+/**
+ * Triggered by a non admin to ask producer to review and commit a statement on waterfall
+ */
+export const requestStatementReview = functions(heavyConfig).https.onCall(_requestStatementReview);
 
 /**
  * When user wants to remove a file without removing waterfallDocument

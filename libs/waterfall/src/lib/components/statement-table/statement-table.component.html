@@ -53,6 +53,9 @@
     <button *ngIf="actions.delete" mat-icon-button (click)="delete.emit(statement)">
       <mat-icon svgIcon="delete" matTooltip="Delete statement"></mat-icon>
     </button>
+    <a *ngIf="actions.crm && statement.reviewStatus === 'pending'" mat-icon-button [routerLink]="['/c/o/dashboard/crm/waterfall', statement.waterfallId, 'statements', statement.id]" (click)="$event.stopPropagation()">
+      <mat-icon color="warn" svgIcon="update" matTooltip="A review is required"></mat-icon>
+    </a>
     <ng-container *ngIf="statement.status === 'draft'">
       <a *ngIf="actions.edit" mat-icon-button [routerLink]="['..', 'statement', statement.id, 'edit']">
         <mat-icon svgIcon="edit" matTooltip="Edit Statement"></mat-icon>
@@ -74,10 +77,15 @@
       <button *ngIf="actions.certify" mat-icon-button [disabled]="statement.hash.requested">
         <mat-icon svgIcon="certify" [matTooltip]="statement.hash.requested ? 'Certification already asked' : 'Certify Document'" (click)="certify(statement)"></mat-icon>
       </button>
-      <ng-container *ngIf="!!statement.payments.rightholder && statement.payments.rightholder.status !== 'received'">
-        <button *ngIf="actions.payment" mat-icon-button [disabled]="(canBypassRules$ | async) !== true" (click)="payment(statement)">
+      <ng-container *ngIf="!!statement.payments.rightholder && statement.payments.rightholder.status !== 'received' && (!statement.reviewStatus || statement.reviewStatus === 'accepted')">
+        <button *ngIf="actions.payment" mat-icon-button [disabled]="!canBypassRules" (click)="payment(statement)">
           <mat-icon color="primary" svgIcon="payment" matTooltip="Pending Payment"></mat-icon>
         </button>
+      </ng-container>
+      <ng-container *ngIf="statement.reviewStatus === 'pending'">
+        <a *ngIf="actions.review" mat-icon-button [routerLink]="['..', 'statement', statement.id]">
+          <mat-icon color="warn" svgIcon="update" [matTooltip]="canBypassRules ? 'A review is required' : 'A review is pending'"></mat-icon>
+        </a>
       </ng-container>
     </ng-container>
   </ng-template>
