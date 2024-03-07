@@ -1,9 +1,9 @@
 import { DocumentMeta } from '../meta';
-import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups } from '../static';
+import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups, statementsRolesMapping, NegotiationStatus } from '../static';
 import { Duration, createDuration } from '../terms';
 import { PricePerCurrency, convertCurrenciesTo, getTotalPerCurrency, sortByDate, sum, toLabel } from '../utils';
 import { TitleState, TransferState } from './state';
-import { Version, Waterfall, WaterfallContract, WaterfallSource, getIncomesSources } from './waterfall';
+import { Version, Waterfall, WaterfallContract, WaterfallRightholder, WaterfallSource, getIncomesSources } from './waterfall';
 import { Right, RightOverride, createRightOverride, getRightCondition, skipGroups } from './right';
 import { getSources, isVerticalGroupChild, nodeExists, pathExists } from './node';
 import { Income, createIncome } from '../income';
@@ -12,6 +12,7 @@ import { mainCurrency } from './action';
 import { ConditionWithTarget, getInvestmentValue, isConditionWithTarget } from './conditions';
 import { Expense, ExpenseType } from '../expense';
 import { InterestDetail } from './interest';
+import { add, differenceInMonths, isLastDayOfMonth, lastDayOfMonth } from 'date-fns';
 
 export interface Payment {
   id: string;
@@ -103,6 +104,7 @@ export interface Statement {
   type: StatementType;
   contractId?: string;
   status: StatementStatus;
+  reviewStatus?: NegotiationStatus;
   id: string;
   waterfallId: string;
   senderId: string, // rightholderId of statement creator
@@ -215,6 +217,15 @@ export function isDirectSalesStatement(statement: Partial<Statement>): statement
   return statement.type === 'directSales';
 }
 
+/**
+ * Return the key used to identify the rightholder in the statement that is not the producer
+ * @param type 
+ * @returns 
+ */
+export function rightholderKey(type: StatementType) {
+  return type === 'producer' ? 'receiverId' : 'senderId';
+}
+
 export function createDistributorStatement(params: Partial<DistributorStatement> = {}): DistributorStatement {
   const statement = createStatementBase(params);
   return {
@@ -264,6 +275,27 @@ export function filterStatements(type: StatementType, parties: string[], contrac
   const filteredStatements = statements.filter(s => s.type === type && (isSender(s)) || isReceiver(s));
   if (type !== 'directSales') return filteredStatements.filter(s => s.contractId === contractId);
   return filteredStatements;
+}
+
+/**
+ * Filter statements that are related to the rightholder (sender or receiver) 
+ * and also the parent statements used to generate the rightholder statements (if any).
+ * @param statements 
+ * @param rightholderId 
+ * @returns 
+ */
+export function filterRightholderStatements(_statements: Statement[], rightholder: WaterfallRightholder) {
+  const isDistributor = rightholder.roles.some(role => statementsRolesMapping.mainDistributor.includes(role));
+  const isSalesAgent = rightholder.roles.some(role => statementsRolesMapping.salesAgent.includes(role));
+  const isDirectSales = rightholder.roles.some(role => statementsRolesMapping.directSales.includes(role));
+
+  const statements = (isDistributor || isSalesAgent || isDirectSales) ? _statements : _statements.filter(s => s.status === 'reported');
+
+  const rightholderStatements = statements.filter(s => [s.senderId, s.receiverId].includes(rightholder.id));
+  const rightholderStatementsIds = rightholderStatements.map(s => s.id);
+  const incomeIds = rightholderStatements.map(s => s.incomeIds).flat();
+  const parentStatements = statements.filter(s => !rightholderStatementsIds.includes(s.id) && !isProducerStatement(s) && s.incomeIds.some(id => incomeIds.includes(id)));
+  return [...rightholderStatements, ...parentStatements];
 }
 
 export function sortStatements(statements: Statement[], reverse = true): (Statement & { number: number })[] {
@@ -997,4 +1029,24 @@ function getMgRecoupment(right: Right, cumulatedRightPayment: RightPayment[], st
   }
 
   return { investments, stillToBeRecouped: investments - payments };
+}
+
+export function initStatementDuration(date: Date, previousDuration?: Duration): Duration {
+  const duration = createDuration({
+    from: add(date, { days: 1 }),
+    to: add(date, { days: 1, months: 6 }),
+  });
+
+  // Set duration from previous statement date & periodicity
+  if (previousDuration) {
+    const difference = differenceInMonths(previousDuration.to, previousDuration.from);
+    duration.from = add(previousDuration.to, { days: 1 });
+    duration.to = add(duration.from, { months: difference });
+
+    if (isLastDayOfMonth(previousDuration.to)) {
+      duration.to = lastDayOfMonth(duration.to);
+    }
+  }
+
+  return duration;
 }

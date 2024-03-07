@@ -544,6 +544,20 @@ const userRequestedDocumentCertificationTemplate = (user: PublicUser, org: Publi
   `;
 
 /**
+ * @param user 
+ * @param org
+ * @param statementId 
+ * @param movie 
+ */
+const userRequestedStatementReviewTemplate = (user: PublicUser, org: PublicOrganization, statementId: string, movie: Movie) =>
+  `
+  ${user.firstName} ${user.lastName} (${user.email} - ${org.name}) requested a statement review.
+
+  Statement id : ${statementId}
+  Movie : ${movie.title.international}
+  `;
+
+/**
  * @param user
  */
 const userFirstConnexionTemplate = (user: PublicUser) =>
@@ -728,6 +742,25 @@ export function invitationToJoinWaterfall(
   return { to: toUser.email, templateId: templateIds.invitation.joinWaterfall.created, data };
 }
 
+export function requestForStatementReview(
+  toUser: UserEmailData,
+  org: OrgEmailData,
+  waterfall: WaterfallEmailData,
+  statement: StatementEmailData,
+  link: string,
+  url: string = appUrl.waterfall,
+  templateId: string
+): EmailTemplateRequest {
+  const data = {
+    user: toUser,
+    org,
+    waterfall,
+    statement,
+    pageUrl: `${url}/${link}`,
+  };
+  return { to: toUser.email, templateId, data };
+}
+
 /** Generate an email for org's admin when an user accepted/declined their invitation to join a waterfall */
 export function invitationToJoinWaterfallUpdated(
   toAdmin: UserEmailData,
@@ -767,5 +800,17 @@ export function userRequestedDocumentCertification(user: PublicUser, org: Public
     to: getSupportEmail('waterfall'),
     subject: 'New blockchain certification request',
     text: userRequestedDocumentCertificationTemplate(user, org, docType, docId, movie)
+  };
+}
+
+/**
+ * Generates a transactional email request to let cascade8 admin know that an user requested a statement review.
+ * It sends an email to admin to handle request
+ */
+export function userRequestedStatementReview(user: PublicUser, org: PublicOrganization, statementId: string, movie: Movie): EmailRequest {
+  return {
+    to: getSupportEmail('waterfall'),
+    subject: 'New statement review request',
+    text: userRequestedStatementReviewTemplate(user, org, statementId, movie)
   };
 }

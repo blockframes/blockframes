@@ -520,7 +520,7 @@ function rightEnabled(ctx: ConditionContext) {
   const { income, right, state } = ctx;
   const contractId = right.contractId;
   const contract = state.contracts[contractId];
-  if (!contract) throw new Error(`Contract "${contractId} specified in "${right.id}" does not exists in state`);
+  if (!contract) throw new Error(`Contract "${contractId} specified in "${right.id}" does not exists in state. Review contract dates.`);
   const date = income.date;
   if (!date) throw new Error(`Income "${income.id}" do not have a date.`);
   if (!contract.start || !contract.end) throw new Error(`Contract "${contractId}" does not specify valid start and end dates`);

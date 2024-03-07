@@ -11,9 +11,9 @@
     </a>
     <button mat-flat-button 
       color="primary"
-      [disabled]="statement.status === 'reported' || form.invalid"
+      [disabled]="form.invalid"
       (click)="report(statement)"
-      [matTooltip]="statement.status === 'reported' ? 'Statement is already reported.' : 'Report Statement'"
+      matTooltip="Report Statement"
     >
       <span>Report Statement</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
@@ -23,11 +23,30 @@
   <footer *ngIf="statement.status === 'draft'">
     <button mat-button 
       (click)="save(statement)"
-      [disabled]="statement.status === 'reported' || form.invalid"
-      [matTooltip]="statement.status === 'reported' ? 'Reported statement cannot be edited.' : 'Save & Come back later'"
+      [disabled]="form.invalid"
+      matTooltip="Save & Come back later"
     >
       <mat-icon svgIcon="save"></mat-icon>
       <span>Save & Come back later</span>
+    </button>
+  </footer>
+
+  <footer *ngIf="canBypassRules && statement.status === 'reported' && statement.reviewStatus === 'pending'">
+    <button mat-flat-button 
+      color="warn"
+      (click)="reviewStatement(statement, 'declined')"
+      matTooltip="Mark Statement as reviewed"
+    >
+      <span>Reject Statement</span>
+      <mat-icon svgIcon="refuse"></mat-icon>
+    </button>
+    <button mat-flat-button 
+      color="primary"
+      (click)="reviewStatement(statement, 'accepted')"
+      matTooltip="Mark Statement as reviewed"
+    >
+      <span>Approve Statement</span>
+      <mat-icon svgIcon="update"></mat-icon>
     </button>
   </footer>
 </ng-container>

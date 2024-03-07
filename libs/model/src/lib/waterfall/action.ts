@@ -392,7 +392,7 @@ export function expensesToActions(expenses: Expense[], statements: Statement[]) 
 export function statementsToActions(statements: Statement[], incomes: Income[]) {
   const payments: PaymentAction[] = [];
 
-  for (const statement of statements.filter(s => s.status === 'reported')) {
+  for (const statement of statements.filter(s => s.status === 'reported' && (!s.reviewStatus || s.reviewStatus === 'accepted'))) {
 
     // Income to Org payments
     if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {

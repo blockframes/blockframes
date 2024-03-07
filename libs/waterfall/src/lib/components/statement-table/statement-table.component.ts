@@ -56,6 +56,7 @@ export class StatementTableComponent {
     payment: true,
     deleteDraft: true,
     certify: true,
+    review: true,
   };
   @Output() delete = new EventEmitter<Statement>();
   @Input() @boolean defaultSort = false;
@@ -64,7 +65,7 @@ export class StatementTableComponent {
   public contracts$ = this.shell.contracts$;
   public incomes$ = this.shell.incomes$;
   public sorts = sorts;
-  public canBypassRules$ = this.shell.canBypassRules$;
+  public canBypassRules = this.shell.canBypassRules;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,

@@ -97,7 +97,12 @@ export const templateIds = {
     myContractWasDeclined: 'd-b928481ce938423dabb34e50c264d320',// send to org whose contract was declined
   },
   statement: {
-    share: 'd-7a07c39d8c104674ad278669c9ce787a'
+    share: 'd-7a07c39d8c104674ad278669c9ce787a',
+    review: {
+      requested: 'd-ea179c323afd4c23bf268bc075895840',
+      approved: 'd-ccb2291df83248a68a3ef4ff1b5e3aad',
+      declined: 'd-7645e94c275741b4989eb5f71df1ce07'
+    }
   }
 }
 

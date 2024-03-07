@@ -1,8 +1,8 @@
-import { BaseContract } from '../contract';
+import { BaseContract, getContractsWith } from '../contract';
 import { Income } from '../income';
 import { StorageFile } from '../media';
 import { DocumentMeta, createDocumentMeta } from '../meta';
-import { Media, RightholderRole, Territory, rightholderGroups } from '../static';
+import { Media, RightholderRole, StatementType, Territory, rightholderGroups, statementsRolesMapping } from '../static';
 import { ExpenseType } from '../expense';
 
 export interface WaterfallPermissions {
@@ -277,4 +277,17 @@ export interface WaterfallSale extends WaterfallContract {
 interface WaterfallFinancingPlan {
   // Not implemented yet
   value?: string;
+}
+
+export function canCreateStatement(type: StatementType, rightholder: WaterfallRightholder, producer: WaterfallRightholder, contracts: WaterfallContract[], canBypassRules = false): boolean {
+  if (!type) return false;
+  if (canBypassRules) return true;
+  // Only the producer can create direct sales and producer statements, and producer is always an admin
+  if (['directSales', 'producer'].includes(type)) return false;
+  if (!rightholder.roles.some(role => statementsRolesMapping[type].includes(role))) return false;
+  return getContractsWith([producer.id, rightholder.id], contracts).filter(c => statementsRolesMapping[type].includes(c.type)).length !== 0;
+}
+
+export function canOnlyReadStatements(rightholder: WaterfallRightholder, canBypassRules = false) {
+  return !canBypassRules && !rightholder?.roles.some(r => rightholderGroups.withStatements.includes(r));
 }

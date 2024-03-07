@@ -111,10 +111,7 @@ export class TableExtractedStatementsComponent implements AfterViewInit {
     if (increment) this.processing++;
     this.cdr.markForCheck();
 
-    const statement = createStatement({
-      ...importState.statement,
-      _meta: createDocumentMeta({ createdAt: new Date() })
-    });
+    const statement = createStatement(importState.statement);
 
     if (isDistributorStatement(statement)) await this.statementService.add<DistributorStatement>(statement, { params: { waterfallId: statement.waterfallId } });
     if (isDirectSalesStatement(statement)) await this.statementService.add<DirectSalesStatement>(statement, { params: { waterfallId: statement.waterfallId } });

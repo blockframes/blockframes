@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Inject, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject, OnInit, OnDestroy, ChangeDetectorRef, Optional } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,19 +11,35 @@ import {
   WaterfallContract,
   WaterfallRightholder,
   getContractsWith,
+  rightholderKey,
   statementsRolesMapping
 } from '@blockframes/model';
+import { Intercom } from 'ng-intercom';
 import { Subscription } from 'rxjs';
 
-interface StatementNewData {
+export interface StatementNewData {
   type: StatementType;
+  currentRightholder: WaterfallRightholder;
+  canBypassRules: boolean;
   producer: WaterfallRightholder;
   waterfall: Waterfall,
   contracts: WaterfallContract[],
   date: Date,
-  statements: Statement[],
+  statements: Statement[], // All statements
   rights: Right[],
   onConfirm: (rightholderId: string, contractId: string) => void
+}
+
+/**
+ * Returnt true if there already are statements for the given type, rightholder and contract
+ * @param type 
+ * @param rightholderId 
+ * @param contractId 
+ * @param statements 
+ * @returns 
+ */
+function statementsExists(type: StatementType, rightholderId: string, contractId: string, statements: Statement[]) {
+  return statements.some(stm => stm[rightholderKey(type)] === rightholderId && stm.contractId === contractId);
 }
 
 @Component({
@@ -46,11 +62,11 @@ export class StatementNewComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef<StatementNewComponent>,
     private cdr: ChangeDetectorRef,
     private snackbar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    @Optional() private intercom: Intercom,
   ) { }
 
   public ngOnInit() {
-    const rightholderKey = this.data.type === 'producer' ? 'receiverId' : 'senderId';
     this.rightholders = this.data.waterfall.rightholders
       .filter(r => r.id !== this.data.producer.id)
       .filter(r => r.roles.some(role => statementsRolesMapping[this.data.type].includes(role)))
@@ -59,16 +75,18 @@ export class StatementNewComponent implements OnInit, OnDestroy {
           .filter(c => statementsRolesMapping[this.data.type].includes(c.type));
         if (!contracts.length) return false;
         // If there is at least one contract that does not have statement, we display rightholder
-        return contracts.some(c => !this.data.statements.some(stm => stm[rightholderKey] === r.id && c.id === stm.contractId))
-      });
+        return contracts.some(c => !statementsExists(this.data.type, r.id, c.id, this.data.statements))
+      })
+      .filter(r => this.data.canBypassRules || r.id === this.data.currentRightholder.id);
 
-    this.sub = this.rightholderControl.valueChanges.subscribe(value => {
-      this.rightholderContracts = getContractsWith([this.data.producer.id, value], this.data.contracts, this.data.date)
+    let defaultRightholder = this.rightholders.find(r => r.id === this.data.currentRightholder.id) || this.rightholders[0];
+    this.sub = this.rightholderControl.valueChanges.subscribe(rightholderId => {
+      this.rightholderContracts = getContractsWith([this.data.producer.id, rightholderId], this.data.contracts, this.data.date)
         .filter(c => statementsRolesMapping[this.data.type].includes(c.type))
-        .filter(c => !this.data.statements.some(stm => stm[rightholderKey] === value && c.id === stm.contractId))
+        .filter(c => !statementsExists(this.data.type, rightholderId, c.id, this.data.statements))
         .filter(c => this.data.rights.some(r => r.contractId === c.id));
 
-      if (!this.rightholderContracts.length) {
+      if (!this.rightholderContracts.length && rightholderId !== defaultRightholder?.id) {
         this.snackbar.open('Could not find any contract with associated rights.', 'WATERFALL MANAGEMENT', { duration: 5000 })
           .onAction()
           .subscribe(() => {
@@ -77,9 +95,14 @@ export class StatementNewComponent implements OnInit, OnDestroy {
           });
       }
 
-      this.contractControl.setValue('');
+      if (defaultRightholder?.id === rightholderId) defaultRightholder = undefined;
+
+      this.contractControl.setValue(this.rightholderContracts[0]?.id);
       this.cdr.markForCheck();
     });
+
+    if (defaultRightholder?.id) this.rightholderControl.setValue(defaultRightholder.id);
+    if (!this.data.canBypassRules && this.rightholders.length === 1) this.rightholderControl.disable();
   }
 
   ngOnDestroy() {
@@ -93,5 +116,9 @@ export class StatementNewComponent implements OnInit, OnDestroy {
 
   public close() {
     this.dialogRef.close(false);
+  }
+
+  public openIntercom() {
+    return this.intercom.show('I cannot find my contract when creating a new statement');
   }
 }

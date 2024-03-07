@@ -21,6 +21,7 @@ import {
   isDistributorStatement,
   isProducerStatement,
   mainCurrency,
+  rightholderKey,
   smartJoin
 } from '@blockframes/model';
 import { Response } from 'firebase-functions';
@@ -139,8 +140,7 @@ async function generate(
   });
 
   // Data
-  const rightholderKey = statement.type === 'producer' ? 'receiverId' : 'senderId';
-  const rightholder = rightholders.find(r => r.id === statement[rightholderKey]);
+  const rightholder = rightholders.find(r => r.id === statement[rightholderKey(statement.type)]);
   const totalNetReceipt = statement.reportedData.sourcesBreakdown?.map(s => s.net).reduce((acc, curr) => {
     for (const currency of Object.keys(curr)) {
       acc[currency] = (acc[currency] || 0) + curr[currency];

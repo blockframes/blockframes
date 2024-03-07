@@ -50,6 +50,10 @@ function createNotificationsControls(settings: Partial<NotificationSettings> = {
     invitationToJoinWaterfallCreated: new NotificationSettingsForm(settings.invitationToJoinWaterfallCreated, true),
     invitationToJoinWaterfallUpdated: new NotificationSettingsForm(settings.invitationToJoinWaterfallUpdated),
     userRequestedDocumentCertification: new NotificationSettingsForm(settings.userRequestedDocumentCertification),
+    requestForStatementReviewCreated: new NotificationSettingsForm(settings.requestForStatementReviewCreated),
+    requestForStatementReviewApproved: new NotificationSettingsForm(settings.requestForStatementReviewApproved),
+    requestForStatementReviewDeclined: new NotificationSettingsForm(settings.requestForStatementReviewDeclined),
+    userRequestedStatementReview: new NotificationSettingsForm(settings.userRequestedStatementReview),
     // #7946 this may be reactivated later
     // underSignature: new NotificationSettingsForm(settings.underSignature, true),
   }
