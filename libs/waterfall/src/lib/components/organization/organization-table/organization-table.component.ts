@@ -3,11 +3,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationService } from '@blockframes/organization/service';
 import { fade } from '@blockframes/utils/animations/fade';
-import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
-import { WaterfallPermissionsService } from '../../permissions.service';
-import { WaterfallService } from '../../waterfall.service';
+import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
+import { WaterfallPermissionsService } from '../../../permissions.service';
+import { WaterfallService } from '../../../waterfall.service';
 import { map } from 'rxjs';
-import { RightholderSelectModalComponent } from '../rightholder/rightholder-select-modal/rightholder-select-modal.component';
+import { RightholderSelectModalComponent } from '../../rightholder/rightholder-select-modal/rightholder-select-modal.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({

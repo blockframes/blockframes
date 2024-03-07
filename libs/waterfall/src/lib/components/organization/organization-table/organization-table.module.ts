@@ -7,9 +7,9 @@ import { CommonModule } from '@angular/common';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
-import { RightHolderNamePipeModule } from '../../pipes/rightholder-name.pipe';
-import { VersionNamePipeModule } from '../../pipes/version-name.pipe';
-import { RightholderSelectModalModule } from '../rightholder/rightholder-select-modal/rightholder-select-modal.module';
+import { RightHolderNamePipeModule } from '../../../pipes/rightholder-name.pipe';
+import { VersionNamePipeModule } from '../../../pipes/version-name.pipe';
+import { RightholderSelectModalModule } from '../../rightholder/rightholder-select-modal/rightholder-select-modal.module';
 
 // Component
 import { OrganizationTableComponent } from './organization-table.component';

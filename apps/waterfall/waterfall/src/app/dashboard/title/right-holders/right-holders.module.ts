@@ -8,9 +8,9 @@ import { RightHoldersComponent } from './right-holders.component';
 
 // Blockframes
 import { RightholderTableModule } from '@blockframes/waterfall/components/rightholder/rightholder-table/rightholder-table.module';
-import { OrganizationInviteModule } from '@blockframes/waterfall/components/organization-invite/organization-invite.module';
+import { OrganizationInviteModule } from '@blockframes/waterfall/components/organization/organization-invite/organization-invite.module';
 import { PendingInvitationsModule } from '@blockframes/waterfall/components/pending-invitations/pending-invitations.module';
-import { OrganizationTableModule } from '@blockframes/waterfall/components/organization-table/organization-table.module';
+import { OrganizationTableModule } from '@blockframes/waterfall/components/organization/organization-table/organization-table.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
