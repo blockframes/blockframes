@@ -214,7 +214,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
   /**
    * Used to apply or revert arbitrary changes made to an outgoing statement.
    * This method will re-write right payments of impacted (parents) statements.
-   * @see libs/waterfall/src/lib/components/statement-arbitrary-change/statement-arbitrary-change.component.ts
+   * @see libs/waterfall/src/lib/components/statement/statement-arbitrary-change/statement-arbitrary-change.component.ts
    * @param statement 
    * @returns 
    */

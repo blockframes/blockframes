@@ -17,7 +17,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
 import { ToLabelModule } from '@blockframes/utils/pipes';
-import { ExpenseTypesModalModule } from '../../expense-types-modal/expense-types-modal.module';
+import { ExpenseTypesModalModule } from '../../expense/expense-types-modal/expense-types-modal.module';
 
 import { WaterfallConditionsFormComponent } from './conditions-form.component';
 

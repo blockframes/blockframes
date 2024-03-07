@@ -33,7 +33,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { CreateStatementConfig, StatementService } from '@blockframes/waterfall/statement.service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { StatementNewComponent, StatementNewData } from '@blockframes/waterfall/components/statement-new/statement-new.component';
+import { StatementNewComponent, StatementNewData } from '@blockframes/waterfall/components/statement/statement-new/statement-new.component';
 import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { Intercom } from 'ng-intercom';

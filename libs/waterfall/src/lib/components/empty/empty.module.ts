@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 // Modules
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
-import { VersionEditorModule } from '../version-editor/version-editor.module';
+import { VersionEditorModule } from '../version/version-editor/version-editor.module';
 
 // Pages
 import { EmptyWaterfallComponent } from './empty.component';

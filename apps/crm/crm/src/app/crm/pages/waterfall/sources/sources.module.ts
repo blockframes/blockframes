@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { RightExistsPipe, SourcesComponent } from './sources.component';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { JoinPipeModule, MaxLengthModule, ToGroupLabelPipeModule } from '@blockframes/utils/pipes';
-import { VersionSelectorModule } from '@blockframes/waterfall/components/version-selector/version-selector.module';
+import { VersionSelectorModule } from '@blockframes/waterfall/components/version/version-selector/version-selector.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';

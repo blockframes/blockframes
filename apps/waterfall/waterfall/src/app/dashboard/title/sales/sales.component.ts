@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Term, WaterfallSale, isWaterfallSale } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { SalesMapData } from '@blockframes/waterfall/components/sales-map/sales-map.component';
+import { SalesMapData } from '@blockframes/waterfall/components/sales/sales-map/sales-map.component';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { Observable, combineLatest, map } from 'rxjs';
 

@@ -9,7 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 // Pages
 import { DocumentsComponent } from './documents.component';
-import { ContractsFormModule } from '@blockframes/waterfall/components/contracts-form/contracts-form.module';
+import { ContractsFormModule } from '@blockframes/waterfall/components/contract/contracts-form/contracts-form.module';
 
 @NgModule({
   declarations: [DocumentsComponent],

@@ -20,7 +20,7 @@ import { TimePickerModule } from '@blockframes/ui/form/time-picker/time-picker.m
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
-import { ExpenseTypesModule } from '../../expense-types/expense-types.module';
+import { ExpenseTypesModule } from '../../expense/expense-types/expense-types.module';
 
 // Pages
 import { DocumentFormComponent } from './form.component';
