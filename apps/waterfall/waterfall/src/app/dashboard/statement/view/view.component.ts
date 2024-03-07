@@ -45,7 +45,10 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
 
   private statementId = this.route.params.pipe(
     pluck('statementId'),
-    tap(_ => this.form.reset()) // Statement Id has changed, reset form
+    tap((statementId: string) => {
+      this.shell.currentStatementId$.next(statementId);
+      this.form.reset(); // Statement Id has changed, reset form
+    })
   );
 
   public statement$ = this.statementId.pipe(
