@@ -8,14 +8,14 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Pages
-import { EmptyStatementCardComponent } from './empty-statement-card.component';
+import { StatementEmptyCardComponent } from './statement-empty-card.component';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
-  declarations: [EmptyStatementCardComponent],
+  declarations: [StatementEmptyCardComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -27,6 +27,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatButtonModule,
     MatTooltipModule,
   ],
-  exports: [EmptyStatementCardComponent]
+  exports: [StatementEmptyCardComponent]
 })
-export class EmptyStatementCardModule { }
+export class StatementEmptyCardModule { }

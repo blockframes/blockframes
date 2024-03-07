@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 // Blockframes
 import { RightholderSelectModule } from '@blockframes/waterfall/components/rightholder/rightholder-select/rightholder-select.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
-import { EmptyStatementCardModule } from '@blockframes/waterfall/components/empty-statement-card/empty-statement-card.module';
+import { StatementEmptyCardModule } from '@blockframes/waterfall/components/statement/statement-empty-card/statement-empty-card.module';
 import { StatementTableModule } from '@blockframes/waterfall/components/statement-table/statement-table.module';
 import { StatementNewModule } from '@blockframes/waterfall/components/statement-new/statement-new.module';
 import { VersionSelectorModule } from '@blockframes/waterfall/components/version-selector/version-selector.module';
@@ -35,7 +35,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
     RightholderSelectModule,
     ToLabelModule,
-    EmptyStatementCardModule,
+    StatementEmptyCardModule,
     StatementTableModule,
     StatementNewModule,
     VersionSelectorModule,

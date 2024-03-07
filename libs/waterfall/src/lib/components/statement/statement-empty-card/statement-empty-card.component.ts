@@ -4,16 +4,16 @@ import { BehaviorSubject, Observable, combineLatest, map, tap } from 'rxjs';
 
 // Blockframes
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
+import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { StatementType, canCreateStatement } from '@blockframes/model';
 
 @Component({
-  selector: 'waterfall-empty-statement-card',
-  templateUrl: './empty-statement-card.component.html',
-  styleUrls: ['./empty-statement-card.component.scss'],
+  selector: 'waterfall-statement-empty-card',
+  templateUrl: './statement-empty-card.component.html',
+  styleUrls: ['./statement-empty-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmptyStatementCardComponent implements OnInit {
+export class StatementEmptyCardComponent implements OnInit {
 
   @Input() set type(type: StatementType) {
     this.type$.next(type);
