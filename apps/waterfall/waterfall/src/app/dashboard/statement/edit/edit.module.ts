@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 // Blockframes
-import { StatementDistributorEditModule } from '@blockframes/waterfall/components/statement-distributor/edit/edit.module';
-import { StatementDirectSalesEditModule } from '@blockframes/waterfall/components/statement-direct-sales/edit/edit.module';
+import { StatementDistributorEditModule } from '@blockframes/waterfall/components/statement/statement-distributor/edit/edit.module';
+import { StatementDirectSalesEditModule } from '@blockframes/waterfall/components/statement/statement-direct-sales/edit/edit.module';
 
 // Guards
 import { StatementFormGuard } from '@blockframes/waterfall/guards/statement-form.guard';

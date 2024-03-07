@@ -4,9 +4,9 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 // Blockframes
-import { StatementDistributorSummaryModule } from '@blockframes/waterfall/components/statement-distributor/summary/summary.module';
-import { StatementProducerSummaryModule } from '@blockframes/waterfall/components/statement-producer/summary/summary.module';
-import { StatementDirectSalesSummaryModule } from '@blockframes/waterfall/components/statement-direct-sales/summary/summary.module';
+import { StatementDistributorSummaryModule } from '@blockframes/waterfall/components/statement/statement-distributor/summary/summary.module';
+import { StatementProducerSummaryModule } from '@blockframes/waterfall/components/statement/statement-producer/summary/summary.module';
+import { StatementDirectSalesSummaryModule } from '@blockframes/waterfall/components/statement/statement-direct-sales/summary/summary.module';
 
 // Guards
 import { StatementFormGuard } from '@blockframes/waterfall/guards/statement-form.guard';
