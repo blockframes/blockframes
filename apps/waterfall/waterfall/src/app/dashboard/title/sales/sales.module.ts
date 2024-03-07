@@ -7,8 +7,8 @@ import { CommonModule } from '@angular/common';
 import { SalesComponent } from './sales.component';
 
 // Blockframes
-import { SalesMapModule } from '@blockframes/waterfall/components/sales-map/sales-map.module';
-import { SalesListModule } from '@blockframes/waterfall/components/sales-list/sales-list.module';
+import { SalesMapModule } from '@blockframes/waterfall/components/sales/sales-map/sales-map.module';
+import { SalesListModule } from '@blockframes/waterfall/components/sales/sales-list/sales-list.module';
 import { WaterfallAdminGuard } from '@blockframes/waterfall/guards/waterfall-admin.guard';
 
 @NgModule({
