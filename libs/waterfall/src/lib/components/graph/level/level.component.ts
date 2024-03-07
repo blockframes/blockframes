@@ -4,6 +4,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, HostBinding, HostList
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 import { RightNode } from '../layout';
+import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 
 
 @Component({
@@ -22,6 +23,10 @@ export class WaterfallGraphLevelComponent implements OnChanges {
 
   @HostBinding('class.nodrag') nodrag = true;
   @HostBinding('class.selected') selectedClass = false;
+
+  constructor(
+    public shell: DashboardWaterfallShellComponent,
+  ) { }
 
   ngOnChanges() {
     this.selectedClass = this.selected;

@@ -278,6 +278,15 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   public simulation$ = this._simulation$.asObservable().pipe(filter(state => !!state));
   private simulationData: WaterfallData;
 
+  // ---------
+  // Graph Hide & Highlight
+  // ---------
+
+  public highlightedRightHolderIds$ = new BehaviorSubject<string[]>([]);
+  public highlightedSourceIds$ = new BehaviorSubject<string[]>([]);
+  public hiddenRightHolderIds$ = new BehaviorSubject<string[]>([]);
+  public isCalculatedRevenue$ = new BehaviorSubject(true);
+
   @Input() routes: RouteDescription[];
   @Input() editRoute?: string | string[];
   @Input() @boolean lite = false;

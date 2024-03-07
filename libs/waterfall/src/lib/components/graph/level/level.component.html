@@ -1,10 +1,12 @@
 
-<div
-  class="nodrag right"
-  [ngStyle]="{ border: 'solid 1px ' + right.color, boxShadow: '0px 0px 12px 0px ' + right.color, backgroundColor: selected ? 'color-mix(in srgb, ' + right.color +' 30%, transparent)' : '#F3F6FF' }"
->
-  <div class="nodrag label" [ngStyle]="{'--color': right.color}" >
-    <p class="nodrag percent">{{ (right.percent ?? 0).toLocaleString(undefined, {maximumFractionDigits: 2}) }}%</p>
-    <p class="nodrag name" [matTooltip]="right.name || 'Right Name'">{{right.name || 'Right Name'}}</p>
+<ng-container *ngIf="!(shell.hiddenRightHolderIds$ | async).includes(right.rightHolderId)">
+  <div
+    class="nodrag right"
+    [ngStyle]="{ border: 'solid 1px ' + right.color, boxShadow: '0px 0px 12px 0px ' + right.color, backgroundColor: selected ? 'color-mix(in srgb, ' + right.color +' 30%, transparent)' : '#F3F6FF' }"
+  >
+    <div class="nodrag label" [ngStyle]="{'--color': right.color}" >
+      <p class="nodrag percent">{{ right.percent | percent: '1.0-2' }}%</p>
+      <p class="nodrag name" [matTooltip]="right.name || 'Right Name'">{{right.name || 'Right Name'}}</p>
+    </div>
   </div>
-</div>
+</ng-container>

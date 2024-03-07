@@ -1,6 +1,6 @@
 
-import { map, startWith } from 'rxjs';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { combineLatest, map, startWith } from 'rxjs';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 
@@ -13,7 +13,7 @@ import { VerticalNode } from '../layout';
   styleUrls: ['./vertical.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WaterfallGraphVerticalComponent {
+export class WaterfallGraphVerticalComponent implements OnInit {
 
   @Input() vertical: VerticalNode;
   @Input() selected: '' | '*' | string;
@@ -23,14 +23,20 @@ export class WaterfallGraphVerticalComponent {
   @Output() addSibling = new EventEmitter<string>();
   @Output() handleSelect = new EventEmitter<string>();
 
-  amount$ = this.shell.state$.pipe(
-    map(state => state.waterfall.state.rights[this.vertical.id]?.revenu.calculated ?? 0),
+  amount$ = combineLatest([this.shell.state$, this.shell.isCalculatedRevenue$]).pipe(
+    map(([state, isCalculatedRevenue]) => state.waterfall.state.rights[this.vertical.id]?.revenu[isCalculatedRevenue ? 'calculated' : 'actual'] ?? 0),
     startWith(0),
   );
+
+  isVisible = false;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
   ) { }
+
+  ngOnInit() {
+    this.isVisible = this.vertical.members.some(member => member.width !== 0);
+  }
 
   handleAddSibling(event: MouseEvent) {
     this.addSibling.emit(this.vertical.id);
