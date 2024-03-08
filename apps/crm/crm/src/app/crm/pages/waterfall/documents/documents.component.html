@@ -22,7 +22,7 @@
       {{ type }}
     </ng-template>
     <ng-template colRef="" label="Action" let-document sticky>
-      <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', documents.waterfallId, 'documents', document.id]" (click)="$event.stopPropagation()">
+      <a mat-icon-button target="_blank" [routerLink]="['/c/o/dashboard/crm/waterfall', document.waterfallId, 'documents', document.id]" (click)="$event.stopPropagation()">
         <mat-icon svgIcon="launch"></mat-icon>
       </a>
       <button mat-icon-button (click)="removeDocuments([document]); $event.stopPropagation()">

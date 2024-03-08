@@ -122,3 +122,17 @@
   </ng-container>
   
 </ng-container>
+
+<ng-container *ngIf="financingPlan$ | async as financingPlan">
+  <article>
+    <mat-icon svgIcon="document"></mat-icon>
+    <h2>Financing plan {{ financingPlan.id }}</h2>
+  </article>
+</ng-container>
+
+<ng-container *ngIf="budget$ | async as budget">
+  <article>
+    <mat-icon svgIcon="document"></mat-icon>
+    <h2>Budget {{ budget.id }}</h2>
+  </article>
+</ng-container>

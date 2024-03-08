@@ -14,13 +14,21 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentComponent {
-  private contractId = this.route.snapshot.paramMap.get('documentId');
+  private documentId = this.route.snapshot.paramMap.get('documentId');
 
   public waterfall = this.shell.waterfall;
   public movie = this.shell.movie;
 
   public contract$ = this.shell.contractsAndTerms$.pipe(
-    map(contracts => contracts.find(c => c.id === this.contractId)),
+    map(contracts => contracts.find(c => c.id === this.documentId)),
+  );
+
+  public financingPlan$ = this.shell.financingPlans$.pipe(
+    map(plans => plans.find(plan => plan.id === this.documentId))
+  );
+
+  public budget$ = this.shell.budgets$.pipe(
+    map(plans => plans.find(plan => plan.id === this.documentId))
   );
 
   public childContracts$ = this.contract$.pipe(
@@ -29,7 +37,7 @@ export class DocumentComponent {
   );
 
   public rights$ = this.shell.rights$.pipe(
-    map(rights => rights.filter(r => r.contractId === this.contractId))
+    map(rights => rights.filter(r => r.contractId === this.documentId))
   );
 
   public showExpenseTypes$ = this.contract$.pipe(

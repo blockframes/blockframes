@@ -7,3 +7,14 @@
 h3 {
   margin-top: 40px;
 }
+
+article {
+  gap: 15px;
+  display: flex;
+  align-items: center;
+
+  h2 {
+    flex-grow: 1;
+    margin: 0;
+  }
+}
