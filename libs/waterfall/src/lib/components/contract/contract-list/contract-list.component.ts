@@ -55,7 +55,7 @@ export class ContractListComponent {
   private removeFileOnSave = false;
   private terms: Term[] = [];
 
-  @Input() contractForm: WaterfallContractForm; e
+  @Input() contractForm: WaterfallContractForm;
   public toggleTermsControl = new FormControl(true);
   public currentOrgId = this.orgService.org.id;
 

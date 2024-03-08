@@ -35,6 +35,10 @@ import {
   getOutgoingStatementPrerequists,
   filterRightholderStatements,
   WaterfallRightholder,
+  isBudget,
+  WaterfallBudget,
+  isFinancingPlan,
+  WaterfallFinancingPlan,
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { filter, map, pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
@@ -128,6 +132,18 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
       ...contract,
       terms: terms.filter(term => term.contractId === contract.id)
     })))
+  );
+
+  public budgets$ = this.documents$.pipe(
+    map(documents => documents.filter(d => isBudget(d))),
+    map(documents => documents.map(d => convertDocumentTo<WaterfallBudget>(d))),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  public financingPlans$ = this.documents$.pipe(
+    map(documents => documents.filter(d => isFinancingPlan(d))),
+    map(documents => documents.map(d => convertDocumentTo<WaterfallFinancingPlan>(d))),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   // ---------

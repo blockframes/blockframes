@@ -7,6 +7,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 // Blockframes
 import { ContractListModule } from '@blockframes/waterfall/components/contract/contract-list/contract-list.module';
+import { BudgetListModule } from '@blockframes/waterfall/components/document/budget-list/budget-list.module';
+import { FinancingPlanListModule } from '@blockframes/waterfall/components/document/financing-plan-list/financing-plan-list.module';
 
 // Pages
 import { DocumentsComponent } from './documents.component';
@@ -25,6 +27,8 @@ import { MatIconModule } from '@angular/material/icon';
 
     // Blockframes
     ContractListModule,
+    BudgetListModule,
+    FinancingPlanListModule,
 
     // Material
     MatDividerModule,

@@ -1,0 +1,52 @@
+:host {
+  width: 100%;
+}
+
+p {
+  margin: 16px 0px 32px 0;
+}
+
+.header {
+  align-items: center;
+  justify-content: space-between;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+mat-divider {
+  margin-bottom: 24px;
+}
+
+div {
+  display: flex;
+  gap: 24px;
+  flex-direction: column;
+  section {
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: end;
+    .mat-stroked-button {
+      margin-right: 24px;
+    }
+  }
+}
+
+div.empty {
+  text-align: center;
+  display: block;
+  img {
+    margin-top: 128px;
+    max-width: 512px;
+  }
+  p {
+    text-align: center;
+    margin: 32px 12px;
+  }
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+}

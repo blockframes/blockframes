@@ -30,12 +30,12 @@
           </button>
         </mat-action-list>
       </ng-container>
-      <ng-container *ngSwitchCase="'Financing Plan'">
-        Financing Plan
-      </ng-container>
-      <ng-container *ngSwitchCase="'Budget'">
-        Budget
-      </ng-container>
+      <article *ngSwitchCase="'Financing Plan'">
+        <waterfall-financing-plan-list [form]="financingPlanForm"></waterfall-financing-plan-list>
+      </article>
+      <article *ngSwitchCase="'Budget'">
+        <waterfall-budget-list [form]="budgetForm"></waterfall-budget-list>
+      </article>
       <article *ngSwitchCase="'Contracts'">
         <waterfall-contract-list [contractForm]="contractForm"></waterfall-contract-list>
       </article>

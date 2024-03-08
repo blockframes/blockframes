@@ -1,0 +1,55 @@
+<ng-container *ngIf="shell.documents$ | async as documents else loading">
+
+  <article class="header">
+    <h2>Financing plan documents</h2>
+  </article>
+
+  <ng-container *ngIf="shell.waterfall$ | async as waterfall">
+    <ng-container *ngIf="shell.canBypassRules">
+      <p>Please provide us with all the required documents.</p>
+      <div>
+        <waterfall-financing-plan-form *ngIf="(loading$ | async) === false else loading" [waterfall]="waterfall" [form]="form" (addedFile)="addedFile($event)"></waterfall-financing-plan-form>
+        <section>
+          <button mat-stroked-button (click)="save(documents)" [disabled]="disabled">
+            <mat-icon matPrefix svgIcon="save"></mat-icon>
+            <span>Save Document</span>
+          </button>
+        </section>
+      </div>
+      <mat-divider></mat-divider>
+    </ng-container>
+    <ng-container *ngIf="shell.financingPlans$ | async as financingPlans">
+      <ng-container *ngIf="financingPlans.length else empty">
+        <mat-list>
+          <ng-container *ngFor="let financingPlan of financingPlans; let index = index">
+            <mat-list-item *ngIf="financingPlan.id | getFile: waterfall as file">
+              <mat-icon mat-list-icon [svgIcon]="file.storagePath | fileTypeImage: 'icon'"></mat-icon>
+              <span mat-line [matTooltip]="file.storagePath | fileName">
+                {{file.storagePath | fileName}}
+              </span>
+              <bf-preview-modal [ref]="file"></bf-preview-modal>
+              <a mat-icon-button color="primary" [href]="file | getUrl | async" target="_blank" matTooltip="Download Document">
+                <mat-icon svgIcon="cloud_download"></mat-icon>
+              </a>
+              <button mat-icon-button *ngIf="shell.canBypassRules" color="primary" matTooltip="Delete file" (click)="delete(file.id)">
+                <mat-icon svgIcon="delete"></mat-icon>
+              </button>
+            </mat-list-item>
+          </ng-container>
+        </mat-list>
+      </ng-container>
+      <ng-template #empty>
+        <div class="empty">
+          <img asset="empty-contracts.svg" alt="Image, you have no contracts yet">
+          <p *ngIf="shell.canBypassRules">There is no file here yet. Use the upload box above to add new files.</p>
+          <p *ngIf="!shell.canBypassRules">There is no file here yet.</p>
+        </div>
+      </ng-template>
+    </ng-container>
+  </ng-container>
+</ng-container>
+<ng-template #loading>
+  <article class="spinner">
+    <logo-spinner></logo-spinner>
+  </article>
+</ng-template>

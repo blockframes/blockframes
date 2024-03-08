@@ -167,8 +167,8 @@ export function createWaterfallDocument<Meta extends WaterfallDocumentMeta>(para
 
   const toObject = () => {
     if (isContract(params)) return createWaterfallContract({ ...params.meta, status: 'accepted' }) as Meta;
-    if (isBudget(params)) return params.meta as Meta;
-    if (isFinancingPlan(params)) return params.meta as Meta;
+    if (isBudget(params)) return createWaterfallBudget(params.meta) as Meta;
+    if (isFinancingPlan(params)) return createWaterfallFinancingPlan(params.meta) as Meta;
   };
 
   const meta = toObject();
@@ -213,9 +213,25 @@ export function createWaterfallContract(params: Partial<WaterfallContract>): Wat
   }
 }
 
+export function createWaterfallBudget(params: Partial<WaterfallBudget>): WaterfallBudget {
+  return {
+    _meta: createDocumentMeta({}),
+    id: '',
+    ...params
+  }
+}
+
+export function createWaterfallFinancingPlan(params: Partial<WaterfallFinancingPlan>): WaterfallFinancingPlan {
+  return {
+    _meta: createDocumentMeta({}),
+    id: '',
+    ...params
+  }
+}
+
 export const isContract = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallContract> => document?.type === 'contract';
-const isBudget = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallBudget> => document?.type === 'budget';
-const isFinancingPlan = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallFinancingPlan> => document?.type === 'financingPlan';
+export const isBudget = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallBudget> => document?.type === 'budget';
+export const isFinancingPlan = (document: Partial<WaterfallDocument>): document is WaterfallDocument<WaterfallFinancingPlan> => document?.type === 'financingPlan';
 
 export function isWaterfallSale(contract: Partial<WaterfallContract>): contract is WaterfallSale {
   return Object.keys(rightholderGroups.sales).includes(contract.type);
@@ -233,6 +249,18 @@ export function convertDocumentTo<T>(document: WaterfallDocument): T {
         ...document.meta as T,
         _meta: document._meta
       };
+    case 'budget':
+      return {
+        id: document.id,
+        ...document.meta as T,
+        _meta: document._meta
+      };
+    case 'financingPlan':
+      return {
+        id: document.id,
+        ...document.meta as T,
+        _meta: document._meta
+      };
     default:
       break;
   }
@@ -240,7 +268,7 @@ export function convertDocumentTo<T>(document: WaterfallDocument): T {
 
 export type WaterfallDocumentMeta = WaterfallBudget | WaterfallContract | WaterfallFinancingPlan;
 
-export interface WaterfallDocument<Meta extends WaterfallDocumentMeta = unknown> {
+export interface WaterfallDocument<Meta extends (WaterfallDocumentMeta | unknown) = unknown> {
   _meta?: DocumentMeta;
   id: string; // Same as the WaterfallFile id
   /** If document is an amendment, provide root document Id */
@@ -254,9 +282,9 @@ export interface WaterfallDocument<Meta extends WaterfallDocumentMeta = unknown>
   meta: Meta;
 }
 
-interface WaterfallBudget {
-  // Not implemented yet
-  value?: string;
+export interface WaterfallBudget {
+  _meta?: DocumentMeta;
+  id: string; // Same as the WaterfallFile id
 }
 
 export interface WaterfallInvestment {
@@ -274,9 +302,9 @@ export interface WaterfallSale extends WaterfallContract {
   type: keyof typeof rightholderGroups.sales;
 }
 
-interface WaterfallFinancingPlan {
-  // Not implemented yet
-  value?: string;
+export interface WaterfallFinancingPlan {
+  _meta?: DocumentMeta;
+  id: string; // Same as the WaterfallFile id
 }
 
 export function canCreateStatement(type: StatementType, rightholder: WaterfallRightholder, producer: WaterfallRightholder, contracts: WaterfallContract[], canBypassRules = false): boolean {
