@@ -1,4 +1,4 @@
-<section class="surface" *ngIf="shell.documents$ | async as documents else loading">
+<ng-container *ngIf="shell.documents$ | async as documents else loading">
 
   <article class="header">
     <h2>Contracts</h2>
@@ -86,7 +86,7 @@
           </div>
         </ng-container>
         <ng-template #creatingContracts>
-          <waterfall-document-form [toggleTermsControl]="toggleTermsControl" [type]="selected" [waterfall]="waterfall" [form]="documentForm" (removeFile)="removeFile($event)"></waterfall-document-form>
+          <waterfall-contract-form [toggleTermsControl]="toggleTermsControl" [type]="selected" [waterfall]="waterfall" [form]="contractForm" (removeFile)="removeFile($event)"></waterfall-contract-form>
         </ng-template>
       </ng-container>
       <ng-template #notSelected>
@@ -102,7 +102,7 @@
     </bf-card-modal>
   </article>
 
-</section>
+</ng-container>
 <ng-template #loading>
   <article class="spinner">
     <logo-spinner></logo-spinner>

@@ -13,7 +13,9 @@
   <mat-step>
     <ng-template matStepLabel>Add Contracts</ng-template>
     <ng-template matStepContent>
-      <waterfall-contracts-form [documentForm]="documentForm"></waterfall-contracts-form>
+      <div class="surface">
+        <waterfall-contract-list [contractForm]="contractForm"></waterfall-contract-list>
+      </div>
       <article>
         <ng-container *ngIf="updating$ | async; else editContracts">
           <logo-spinner></logo-spinner>

@@ -6,22 +6,35 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Blockframes
+import { ContractListModule } from '@blockframes/waterfall/components/document/contract/contract-list/contract-list.module';
+import { BudgetListModule } from '@blockframes/waterfall/components/document/budget-list/budget-list.module';
+import { FinancingPlanListModule } from '@blockframes/waterfall/components/document/financing-plan-list/financing-plan-list.module';
 
 // Pages
 import { DocumentsComponent } from './documents.component';
-import { ContractsFormModule } from '@blockframes/waterfall/components/contract/contracts-form/contracts-form.module';
+
+// Material
+import { MatDividerModule } from '@angular/material/divider';
+import { MatButtonModule } from '@angular/material/button';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [DocumentsComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    
+
     // Blockframes
-    ContractsFormModule,
+    ContractListModule,
+    BudgetListModule,
+    FinancingPlanListModule,
 
     // Material
-    
+    MatDividerModule,
+    MatButtonModule,
+    MatListModule,
+    MatIconModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: DocumentsComponent }]),

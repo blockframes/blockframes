@@ -5,7 +5,7 @@ import { map } from 'rxjs';
 
 // Blockframes
 import { createExpenseType, ExpenseType, getDefaultVersionId, isDefaultVersion, Waterfall } from '@blockframes/model';
-import { ExpenseTypeForm } from '../../../form/document.form';
+import { ExpenseTypeForm } from '../../../form/contract.form';
 import { FormList } from '@blockframes/utils/form';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { WaterfallService } from '../../../waterfall.service';

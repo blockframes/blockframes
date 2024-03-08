@@ -6,13 +6,13 @@ import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
 // Blockframes
 import { RightholderRole } from '@blockframes/model';
-import { WaterfallDocumentForm } from './../form/document.form';
+import { WaterfallContractForm } from './../form/contract.form';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 
 export interface WaterfallFormGuardedComponent {
-  documentForm: WaterfallDocumentForm;
+  contractForm: WaterfallContractForm;
   rightholdersForm: FormArray<FormGroup<{ id: FormControl<string>, name: FormControl<string>, roles: FormControl<RightholderRole[]> }>>
 };
 
@@ -26,7 +26,7 @@ export class WaterfallFormGuard<T extends WaterfallFormGuardedComponent> impleme
   canDeactivate(component: T) {
     if (
       component.rightholdersForm.pristine &&
-      component.documentForm.pristine
+      component.contractForm.pristine
     ) return true;
     const dialogRef = this.dialog.open(ConfirmComponent, {
       data: createModalData({

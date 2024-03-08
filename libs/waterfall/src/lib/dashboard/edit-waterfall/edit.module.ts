@@ -15,7 +15,7 @@ import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.mod
 import { WaterfallFormGuard } from '../../guards/waterfall-form-guard';
 import { WaterfallGraphModule } from '../../components/graph/graph.module';
 import { TitleFormModule } from '../../components/forms/title-form/form.module';
-import { ContractsFormModule } from '../../components/contract/contracts-form/contracts-form.module';
+import { ContractListModule } from '../../components/document/contract/contract-list/contract-list.module';
 import { RightHolderFormModule } from '../../components/rightholder/rightholder-form/rightholder-form.module';
 import { VersionSelectorModule } from '../../components/version/version-selector/version-selector.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
@@ -31,7 +31,7 @@ import { WaterfallEditFormComponent } from './edit.component';
     ImageModule,
     TitleFormModule,
     LogoSpinnerModule,
-    ContractsFormModule,
+    ContractListModule,
     WaterfallGraphModule,
     RightHolderFormModule,
     VersionSelectorModule,

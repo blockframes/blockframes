@@ -152,8 +152,8 @@ export async function linkFile(data: storage.ObjectMetadata) {
               const document = subDocumentSnap.data() as WaterfallDocument;
               await assertFile(user.orgId === document.ownerId || permissionsDoc.isAdmin, notAllowedError);
             } else {
-              // TODO #9389 init WaterfallDocument with ownerId = user.orgId
-              // Not implemented yet: should be used when we uploading a document without filling the document form
+              // Not implemented: should be used when uploading a document without filling the document form.
+              // This case should not happen
             }
 
             break;

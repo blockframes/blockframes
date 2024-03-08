@@ -25,7 +25,7 @@ import { ExpenseTypesModalComponent } from '../../expense/expense-types-modal/ex
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormList } from '@blockframes/utils/form';
-import { ExpenseTypeForm } from '../../../form/document.form';
+import { ExpenseTypeForm } from '../../../form/contract.form';
 import { WaterfallService } from '../../../waterfall.service';
 
 @Component({

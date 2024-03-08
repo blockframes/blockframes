@@ -1,7 +1,11 @@
 
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { WaterfallBudgetForm } from '@blockframes/waterfall/form/budget.form';
+import { WaterfallFinancingPlanForm } from '@blockframes/waterfall/form/financing-plan.form';
+import { WaterfallContractForm } from '@blockframes/waterfall/form/contract.form';
+import { BehaviorSubject } from 'rxjs';
 
-import { WaterfallDocumentForm } from '@blockframes/waterfall/form/document.form';
+type Path = 'Documents' | 'Contracts' | 'Financing Plan' | 'Budget';
 
 @Component({
   selector: 'waterfall-title-documents',
@@ -11,6 +15,14 @@ import { WaterfallDocumentForm } from '@blockframes/waterfall/form/document.form
 })
 export class DocumentsComponent {
 
-  documentForm = new WaterfallDocumentForm({ id: '' });
+  public contractForm = new WaterfallContractForm({ id: '' });
+  public budgetForm = new WaterfallBudgetForm({ id: '' });
+  public financingPlanForm = new WaterfallFinancingPlanForm({ id: '' });
+  public crumbs$ = new BehaviorSubject<Path[]>(['Documents']);
+  public currentPath$ = new BehaviorSubject<Path>('Documents');
 
+  public navigate(path: Path[]) {
+    this.crumbs$.next(path);
+    this.currentPath$.next(path[path.length - 1]);
+  }
 }

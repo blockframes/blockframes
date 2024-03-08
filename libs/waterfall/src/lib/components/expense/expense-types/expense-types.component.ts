@@ -4,7 +4,7 @@ import { Component, ChangeDetectionStrategy, Input, OnChanges } from '@angular/c
 import { ExpenseType, createExpenseType } from '@blockframes/model';
 import { FormList } from '@blockframes/utils/form';
 import { WaterfallDocumentsService } from '../../../documents.service';
-import { ExpenseTypeForm } from '../../../form/document.form';
+import { ExpenseTypeForm } from '../../../form/contract.form';
 
 @Component({
   selector: '[form]waterfall-expense-types',

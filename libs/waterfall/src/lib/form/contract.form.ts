@@ -59,7 +59,7 @@ export class WaterfallInvestmentForm extends FormEntity<WaterfallInvestmentContr
   }
 }
 
-export interface WaterfallDocumentFormValue {
+export interface WaterfallContractFormValue {
   id: string;
   name: string;
   licenseeName: string;
@@ -90,7 +90,7 @@ export const creatWaterfallTermControl = (term: Partial<BucketTerm | Term> = {})
     : createBucketTermControl(term, fromValidators, toValidators);
 }
 
-function createWaterfallDocumentFormControl(contract: (Partial<WaterfallDocumentFormValue> & { id: string })) {
+function createWaterfallContractFormControl(contract: (Partial<WaterfallContractFormValue> & { id: string })) {
   const signatureDateValidators = [
     compareDates('signatureDate', 'endDate', 'signatureDate', 'signatureOverEnd'),
     compareDates('signatureDate', 'startDate', 'signatureDate', 'signatureOverStart'),
@@ -130,15 +130,15 @@ function createWaterfallDocumentFormControl(contract: (Partial<WaterfallDocument
   };
 }
 
-type WaterfallDocumentFormControl = ReturnType<typeof createWaterfallDocumentFormControl>;
+type WaterfallContractFormControl = ReturnType<typeof createWaterfallContractFormControl>;
 
-export class WaterfallDocumentForm extends FormEntity<WaterfallDocumentFormControl> {
-  constructor(contract: (Partial<WaterfallDocumentFormValue> & { id: string })) {
-    const control = createWaterfallDocumentFormControl(contract);
+export class WaterfallContractForm extends FormEntity<WaterfallContractFormControl> {
+  constructor(contract: (Partial<WaterfallContractFormValue> & { id: string })) {
+    const control = createWaterfallContractFormControl(contract);
     super(control);
   }
 
-  reset(data: Partial<WaterfallDocumentFormValue>) {
+  reset(data: Partial<WaterfallContractFormValue>) {
     super.reset();
     this.patchValue({
       id: data.id,
