@@ -2,11 +2,11 @@
 import { map, startWith, tap } from 'rxjs';
 import { Component, ChangeDetectionStrategy, ViewChild, Input } from '@angular/core';
 
-import { WaterfallService } from '../../../waterfall.service';
+import { WaterfallService } from '../../../../waterfall.service';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
-import { WaterfallContractForm } from '../../../form/contract.form';
+import { WaterfallContractForm } from '../../../../form/contract.form';
 import { CardModalComponent } from '@blockframes/ui/card-modal/card-modal.component';
-import { WaterfallDocumentsService } from '../../../documents.service';
+import { WaterfallDocumentsService } from '../../../../documents.service';
 import {
   RightholderRole,
   Waterfall,
@@ -24,7 +24,7 @@ import { TermService } from '@blockframes/contract/term/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
-import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
+import { DashboardWaterfallShellComponent } from '../../../../dashboard/shell/shell.component';
 
 @Component({
   selector: 'waterfall-contract-list',

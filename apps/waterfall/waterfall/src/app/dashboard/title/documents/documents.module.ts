@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Blockframes
-import { ContractListModule } from '@blockframes/waterfall/components/contract/contract-list/contract-list.module';
+import { ContractListModule } from '@blockframes/waterfall/components/document/contract/contract-list/contract-list.module';
 import { BudgetListModule } from '@blockframes/waterfall/components/document/budget-list/budget-list.module';
 import { FinancingPlanListModule } from '@blockframes/waterfall/components/document/financing-plan-list/financing-plan-list.module';
 

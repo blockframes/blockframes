@@ -11,9 +11,9 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { CardModalModule } from '@blockframes/ui/card-modal/card-modal.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
-import { WaterfallContractFormModule } from '../../forms/contract-form/contract-form.module';
+import { WaterfallContractFormModule } from '../../../forms/contract-form/contract-form.module';
 import { DownloadPipeModule } from '@blockframes/media/file/pipes/download.pipe';
-import { RightHolderNamePipeModule } from '../../../pipes/rightholder-name.pipe';
+import { RightHolderNamePipeModule } from '../../../../pipes/rightholder-name.pipe';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 
 // Material

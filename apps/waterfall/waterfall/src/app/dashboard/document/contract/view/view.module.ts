@@ -9,7 +9,7 @@ import { ContractViewComponent } from './view.component';
 // Blockframes
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 import { FileNameModule } from '@blockframes/utils/pipes';
-import { ContractMainInfoModule } from '@blockframes/waterfall/components/contract/contract-main-info/contract-main-info.module';
+import { ContractMainInfoModule } from '@blockframes/waterfall/components/document/contract/contract-main-info/contract-main-info.module';
 import { PdfViewerModule } from '@blockframes/media/pdf/viewer/viewer.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { DownloadPipeModule } from '@blockframes/media/file/pipes/download.pipe';
