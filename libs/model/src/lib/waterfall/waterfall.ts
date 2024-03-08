@@ -185,7 +185,6 @@ export function createWaterfallDocument<Meta extends WaterfallDocumentMeta>(para
     id: (params.meta as any).id ?? '',
     type: 'contract',
     name: (params.meta as any).name ?? '',
-    folder: '',
     waterfallId: '',
     ownerId: '',
     rootId: (params.meta as any).rootId ?? '',
@@ -276,7 +275,6 @@ export interface WaterfallDocument<Meta extends (WaterfallDocumentMeta | unknown
   name: string;
   signatureDate?: Date;
   type: 'financingPlan' | 'budget' | 'contract';
-  folder: string; // TODO #9389 we might want to drop that for a sub-type, TO BE CONFIRMED WITH THE TEAM
   waterfallId: string; // Parent document Id
   ownerId: string; // Uploader orgId
   meta: Meta;
