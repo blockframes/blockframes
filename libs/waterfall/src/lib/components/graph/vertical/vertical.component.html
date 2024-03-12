@@ -26,7 +26,7 @@
 
   <price-per-currency class="amount" [price]="amount$ | async | formatPair" default="0€"></price-per-currency>
 
-  <ng-container *ngIf="selected && editMode">
+  <ng-container *ngIf="selected === '*' && editMode">
     <button mat-mini-fab color="primary" class="right" (click)="handleAddSibling($event)">
       <mat-icon svgIcon="add"></mat-icon>
     </button>

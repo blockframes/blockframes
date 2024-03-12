@@ -1,10 +1,8 @@
 
 import { Subscription, combineLatest } from 'rxjs';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-
 import { HorizontalNode } from '../layout';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
-
 
 @Component({
   selector: 'waterfall-graph-horizontal',
@@ -22,11 +20,10 @@ export class WaterfallGraphHorizontalComponent implements OnInit, OnDestroy {
   @Output() addSibling = new EventEmitter<string>();
   @Output() handleSelect = new EventEmitter<string>();
 
+  public isVisible = false;
 
-  isVisible = false;
-
-  highlighted: string[] = [];
-  sub: Subscription;
+  private highlighted: string[] = [];
+  private sub: Subscription;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -64,5 +61,9 @@ export class WaterfallGraphHorizontalComponent implements OnInit, OnDestroy {
     if (this.selected === memberId) return '*';
     if (this.highlighted.includes(memberId)) return '*';
     return this.selected;
+  }
+
+  horizontalSelection(memberId: string) {
+    return this.highlighted.includes(memberId) || (this.selected === memberId);
   }
 }

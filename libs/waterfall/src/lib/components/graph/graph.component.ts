@@ -130,7 +130,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       // Enable or disable possible updates
       this.rightForm.enable();
       this.sourceForm.enable();
-      this.canUpdateGraph = true;
+      this.canUpdateGraph = this.editMode;
       this.canUpdateConditions = true;
       if ((this.version?.id && !this.isDefaultVersion && !this.version.standalone) || statements.length > 0) {
         this.rightForm.disable();

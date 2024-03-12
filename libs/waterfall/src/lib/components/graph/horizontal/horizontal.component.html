@@ -14,7 +14,7 @@
     <ng-template #rightmember>
       <waterfall-graph-right
         [right]="member"
-        [selected]="highlighted.includes(member.id)"
+        [selected]="horizontalSelection(member.id)"
         [editMode]="editMode"
         (addChild)="addChild.emit(member.id)"
         (addSibling)="addSibling.emit(member.id)"
