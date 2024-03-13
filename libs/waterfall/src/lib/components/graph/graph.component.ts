@@ -102,11 +102,11 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.shell.statements$.pipe(map(statements => statements.filter(s => s.status === 'reported'))),
       this.shell.contracts$,
       this.shell.hiddenRightHolderIds$,
-    ]).subscribe(([rights, waterfall, versionId, statements, contracts, hiddenRightHolderIds]) => {
-      this.rights = rights; // TODO filtered rights if needed
+    ]).subscribe(([rights, waterfall, versionId, reportedStatements, contracts, hiddenRightHolderIds]) => {
+      this.rights = rights; // TODO #9706 filtered rights if needed
       this.contracts = contracts;
       this.version = waterfall.versions.find(v => v.id === versionId);
-      this.sources = waterfallSources(waterfall, this.version?.id); // TODO filtered sources if needed
+      this.sources = waterfallSources(waterfall, this.version?.id); // TODO #9706 filtered sources if needed
       this.rightholders = waterfall.rightholders;
       this.rightholderNames$.next(this.rightholders.map(r => r.name));
       this.isDefaultVersion = isDefaultVersion(waterfall, versionId);
@@ -115,12 +115,13 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       // Enable or disable possible updates
       this.rightForm.enable();
       this.sourceForm.enable();
+      this.canUpdateGraph = !this.readonly;
       this.canUpdateConditions = true;
-      if ((this.version?.id && !this.isDefaultVersion && !this.version.standalone) || statements.length > 0) {
+      if ((this.version?.id && !this.isDefaultVersion && !this.version.standalone) || reportedStatements.length > 0) {
         this.rightForm.disable();
-        this.rightholderControl.disable();
+        this.rightholderControl.disable(); // TODO #9675 set value on other field in conditions
         this.canUpdateConditions = false;
-        if (statements.length === 0) {
+        if (reportedStatements.length === 0) {
           this.rightForm.controls.percent.enable();
           this.rightForm.controls.steps.enable();
           this.canUpdateConditions = true;
