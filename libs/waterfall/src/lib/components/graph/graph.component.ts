@@ -120,7 +120,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.canUpdateConditions = true;
       if ((this.version?.id && !this.isDefaultVersion && !this.version.standalone) || reportedStatements.length > 0) {
         this.rightForm.disable();
-        this.rightholderControl.disable(); // TODO #9675 set value on other field in conditions
+        this.rightholderControl.disable();
         this.canUpdateConditions = false;
         if (reportedStatements.length === 0) {
           this.rightForm.controls.percent.enable();
