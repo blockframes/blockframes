@@ -1,6 +1,6 @@
 
-<section class="surface" [ngStyle]="{ width: showEdit ? '50%' : '100%' }" (dblclick)="select('')">
-  <header *ngIf="editMode">
+<section class="surface" [ngStyle]="{ width: showEditPanel ? '50%' : '100%' }" (dblclick)="select('')">
+  <header *ngIf="!readonly">
     <div>
       <h2>
         <span>Waterfall Scheme</span>
@@ -11,8 +11,8 @@
           matTooltip="You are editing the default version of this waterfall. Except already overwritten receipt share percentage and conditions, changes performed on this version will be applied to all not standalone versions."
         ></mat-icon>
       </h2>
-      <button mat-icon-button [matTooltip]="(showEdit ? 'Hide' : 'Show') + ' Edit Panel'" (click)="toggleEdit()">
-        <mat-icon [svgIcon]="showEdit ? 'chevron_right' : 'chevron_left'"></mat-icon>
+      <button mat-icon-button [matTooltip]="(showEditPanel ? 'Hide' : 'Show') + ' Edit Panel'" (click)="toggleEditPanel()">
+        <mat-icon [svgIcon]="showEditPanel ? 'chevron_right' : 'chevron_left'"></mat-icon>
       </button>
     </div>
     <p>Please provide the condition details to establish the accurate waterfall</p>
@@ -24,6 +24,7 @@
       *ngFor="let node of (nodes$ | async)"
       [node]="node"
       [editMode]="canUpdateGraph"
+      [readonly]="readonly"
       (addChild)="addChild($event)"
       (handleSelect)="select($event)"
       (addSibling)="addSibling($event)"
@@ -37,7 +38,7 @@
   </bf-graph-container>
 </section>
 
-<bf-card-modal [ngStyle]="{ display: editMode && showEdit ? 'block' : 'none' }">
+<bf-card-modal [ngStyle]="{ display: showEditPanel ? 'block' : 'none' }">
   <ng-container *ngIf="selected$ | async as selected; else noSelection">
     <ng-container *ngIf="isSourceSelected; else notSource">
       <header>

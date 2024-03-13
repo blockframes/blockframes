@@ -3,7 +3,7 @@
 <article>
   <waterfall-sidebar></waterfall-sidebar>
 
-  <waterfall-graph [editMode]="false" *ngIf="(rights$ | async) as rights; else loading"></waterfall-graph>
+  <waterfall-graph readonly *ngIf="(rights$ | async) as rights; else loading"></waterfall-graph>
 </article>
 
 <ng-template #loading>

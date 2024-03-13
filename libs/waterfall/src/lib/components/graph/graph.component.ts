@@ -1,12 +1,11 @@
-
+import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Intercom } from 'ng-intercom';
 import { WriteBatch } from 'firebase/firestore';
-import { BehaviorSubject, Subscription, combineLatest, map, tap } from 'rxjs';
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Optional, ViewChild } from '@angular/core';
-
+import { BehaviorSubject, Subscription, combineLatest, map, tap } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 import {
   Right,
   Version,
@@ -30,15 +29,12 @@ import { GraphService } from '@blockframes/ui/graph/graph.service';
 import { CardModalComponent } from '@blockframes/ui/card-modal/card-modal.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
-
 import { RightService } from '../../right.service';
 import { WaterfallService } from '../../waterfall.service';
 import { createRightForm, setRightFormValue } from '../forms/right-form/right-form';
 import { createSourceForm, setSourceFormValue } from '../forms/source-form/source-form';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 import { Arrow, Node, computeDiff, createChild, createSibling, createStep, deleteStep, fromGraph, toGraph, updateParents } from './layout';
-import { FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'waterfall-graph',
@@ -48,44 +44,32 @@ import { Router } from '@angular/router';
 })
 export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
-  @Input() @boolean set editMode(value: boolean) {
-    if (value === null) return;
-    this._editMode = value;
-    this.showEdit = value;
-  }
-  get editMode() { return this._editMode; }
-  private _editMode = true;
-
-  public showEdit = true;
-
-  private rights: Right[];
+  @Input() @boolean public readonly = false;
+  public showEditPanel = this.shell.canBypassRules;
   public waterfall = this.shell.waterfall;
-  private producer = this.waterfall.rightholders.find(r => r.roles.includes('producer'));
-  private version: Version;
   public isDefaultVersion: boolean;
-  private defaultVersionId: string;
   public canUpdateGraph = true;
   public canUpdateConditions = true;
+  public selected$ = new BehaviorSubject<string>('');
+  public isSourceSelected = false;
+  public nodes$ = new BehaviorSubject<Node[]>([]);
+  public arrows$ = new BehaviorSubject<Arrow[]>([]);
+  public rightForm = createRightForm();
+  public sourceForm = createSourceForm();
+  public rightholderControl = new FormControl<string>('');
+  public rightholderNames$ = new BehaviorSubject<string[]>([]);
+  public relevantContracts$ = new BehaviorSubject<WaterfallContract[]>([]);
+
+  private rights: Right[];
   private sources: WaterfallSource[];
+  private defaultVersionId: string;
+  private producer = this.waterfall.rightholders.find(r => r.roles.includes('producer'));
+  private version: Version;
+  private subscriptions: Subscription[] = [];
   private rightholders: WaterfallRightholder[];
   private contracts: WaterfallContract[];
 
   @ViewChild(CardModalComponent, { static: true }) cardModal: CardModalComponent;
-
-  public selected$ = new BehaviorSubject<string>('');
-  public isSourceSelected = false;
-
-  public nodes$ = new BehaviorSubject<Node[]>([]);
-  public arrows$ = new BehaviorSubject<Arrow[]>([]);
-
-  public rightForm = createRightForm();
-  public sourceForm = createSourceForm();
-  public rightholderControl = new FormControl<string>('');
-
-  public rightholderNames$ = new BehaviorSubject<string[]>([]);
-  public relevantContracts$ = new BehaviorSubject<WaterfallContract[]>([]);
-
-  private subscriptions: Subscription[] = [];
 
   constructor(
     private dialog: MatDialog,
@@ -99,6 +83,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    if (this.readonly) this.showEditPanel = false;
     if (!this.producer) {
       this.snackBar.open(`${toLabel('producer', 'rightholderRoles')} is not defined.`, this.shell.canBypassRules ? 'WATERFALL MANAGEMENT' : 'ASK FOR HELP', { duration: 5000 })
         .onAction()
@@ -130,10 +115,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       // Enable or disable possible updates
       this.rightForm.enable();
       this.sourceForm.enable();
-      this.canUpdateGraph = this.editMode;
       this.canUpdateConditions = true;
       if ((this.version?.id && !this.isDefaultVersion && !this.version.standalone) || statements.length > 0) {
         this.rightForm.disable();
+        this.rightholderControl.disable();
         this.canUpdateConditions = false;
         if (statements.length === 0) {
           this.rightForm.controls.percent.enable();
@@ -308,8 +293,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     this.arrows$.next(arrows);
   }
 
-  toggleEdit() {
-    this.showEdit = !this.showEdit;
+  toggleEditPanel() {
+    this.showEditPanel = !this.showEditPanel;
   }
 
   async addSibling(id: string) {
