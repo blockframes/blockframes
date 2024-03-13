@@ -60,10 +60,11 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   public rightholderNames$ = new BehaviorSubject<string[]>([]);
   public relevantContracts$ = new BehaviorSubject<WaterfallContract[]>([]);
 
+  private waterfallId = this.shell.waterfall.id;
   private rights: Right[];
   private sources: WaterfallSource[];
   private defaultVersionId: string;
-  private producer = this.waterfall.rightholders.find(r => r.roles.includes('producer'));
+  private producer = this.shell.waterfall.rightholders.find(r => r.roles.includes('producer'));
   private version: Version;
   private subscriptions: Subscription[] = [];
   private rightholders: WaterfallRightholder[];
@@ -89,7 +90,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
         .onAction()
         .subscribe(() => {
           if (this.shell.canBypassRules) {
-            this.router.navigate(['c/o/dashboard/title', this.shell.waterfall.id, 'init']);
+            this.router.navigate(['c/o/dashboard/title', this.waterfallId, 'init']);
           } else {
             this.intercom.show(`${toLabel('producer', 'rightholderRoles')} is not defined in the waterfall "${this.shell.movie.title.international}"`);
           }
@@ -266,9 +267,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
     const write = this.waterfallService.batch();
     await Promise.all([
-      this.rightService.add(changes.created.rights, { params: { waterfallId: this.waterfall.id }, write }),
-      this.rightService.update(changes.updated.rights, { params: { waterfallId: this.waterfall.id }, write }),
-      this.rightService.remove(changes.deleted.rights.map(r => r.id), { params: { waterfallId: this.waterfall.id }, write }),
+      this.rightService.add(changes.created.rights, { params: { waterfallId: this.waterfallId }, write }),
+      this.rightService.update(changes.updated.rights, { params: { waterfallId: this.waterfallId }, write }),
+      this.rightService.remove(changes.deleted.rights.map(r => r.id), { params: { waterfallId: this.waterfallId }, write }),
       this.updateSources(newGraph.sources, write),
     ]);
     await write.commit();
@@ -285,7 +286,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     source.medias = this.sourceForm.controls.medias.value;
     source.territories = this.sourceForm.controls.territories.value;
 
-    return this.waterfallService.updateSource(this.waterfall.id, source);
+    return this.waterfallService.updateSource(this.waterfallId, source);
   }
 
   async layout(hiddenRightHolderIds: string[]) {
@@ -311,9 +312,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
     const write = this.waterfallService.batch();
     await Promise.all([
-      this.rightService.add(changes.created.rights, { params: { waterfallId: this.waterfall.id }, write }),
-      this.rightService.update(changes.updated.rights, { params: { waterfallId: this.waterfall.id }, write }),
-      this.rightService.remove(changes.deleted.rights.map(r => r.id), { params: { waterfallId: this.waterfall.id }, write }),
+      this.rightService.add(changes.created.rights, { params: { waterfallId: this.waterfallId }, write }),
+      this.rightService.update(changes.updated.rights, { params: { waterfallId: this.waterfallId }, write }),
+      this.rightService.remove(changes.deleted.rights.map(r => r.id), { params: { waterfallId: this.waterfallId }, write }),
       this.updateSources(newGraph.sources, write),
     ]);
     return write.commit();
@@ -331,9 +332,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
     const write = this.waterfallService.batch();
     await Promise.all([
-      this.rightService.add(changes.created.rights, { params: { waterfallId: this.waterfall.id }, write }),
-      this.rightService.update(changes.updated.rights, { params: { waterfallId: this.waterfall.id }, write }),
-      this.rightService.remove(changes.deleted.rights.map(r => r.id), { params: { waterfallId: this.waterfall.id }, write }),
+      this.rightService.add(changes.created.rights, { params: { waterfallId: this.waterfallId }, write }),
+      this.rightService.update(changes.updated.rights, { params: { waterfallId: this.waterfallId }, write }),
+      this.rightService.remove(changes.deleted.rights.map(r => r.id), { params: { waterfallId: this.waterfallId }, write }),
       this.updateSources(newGraph.sources, write),
     ]);
     return write.commit();
@@ -352,9 +353,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
     const write = this.waterfallService.batch();
     await Promise.all([
-      this.rightService.add(changes.created.rights, { params: { waterfallId: this.waterfall.id }, write }),
-      this.rightService.update(changes.updated.rights, { params: { waterfallId: this.waterfall.id }, write }),
-      this.rightService.remove(changes.deleted.rights.map(r => r.id), { params: { waterfallId: this.waterfall.id }, write }),
+      this.rightService.add(changes.created.rights, { params: { waterfallId: this.waterfallId }, write }),
+      this.rightService.update(changes.updated.rights, { params: { waterfallId: this.waterfallId }, write }),
+      this.rightService.remove(changes.deleted.rights.map(r => r.id), { params: { waterfallId: this.waterfallId }, write }),
       this.updateSources(newGraph.sources, write),
     ]);
     return write.commit();
@@ -373,9 +374,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
     const write = this.waterfallService.batch();
     await Promise.all([
-      this.rightService.add(changes.created.rights, { params: { waterfallId: this.waterfall.id }, write }),
-      this.rightService.update(changes.updated.rights, { params: { waterfallId: this.waterfall.id }, write }),
-      this.rightService.remove(changes.deleted.rights.map(r => r.id), { params: { waterfallId: this.waterfall.id }, write }),
+      this.rightService.add(changes.created.rights, { params: { waterfallId: this.waterfallId }, write }),
+      this.rightService.update(changes.updated.rights, { params: { waterfallId: this.waterfallId }, write }),
+      this.rightService.remove(changes.deleted.rights.map(r => r.id), { params: { waterfallId: this.waterfallId }, write }),
       this.updateSources(newGraph.sources, write),
     ]);
     return write.commit();
@@ -395,7 +396,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       newSource.version[this.version.id] = { standalone: true };
     }
 
-    await this.waterfallService.addSource(this.waterfall, newSource);
+    await this.waterfallService.addSource(this.shell.waterfall, newSource);
     this.select(newSource.id);
   }
 
@@ -413,7 +414,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       newRight.version[this.version.id] = { standalone: true };
     }
 
-    const id = await this.rightService.add(newRight, { params: { waterfallId: this.waterfall.id } });
+    const id = await this.rightService.add(newRight, { params: { waterfallId: this.waterfallId } });
     this.select(id);
   }
 
@@ -460,7 +461,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
           const parentSource = this.sources.find(s => s.destinationId === group.id);
           if (parentSource) {
             parentSource.destinationId = members[0].id;
-            await this.waterfallService.updateSource(this.waterfall.id, parentSource, { write });
+            await this.waterfallService.updateSource(this.waterfallId, parentSource, { write });
           };
 
           members[0].groupId = '';
@@ -477,8 +478,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
           };
 
           await Promise.all([
-            this.rightService.update(rightsToUpdate, { params: { waterfallId: this.waterfall.id }, write }),
-            this.rightService.remove([id, group.id], { params: { waterfallId: this.waterfall.id }, write }),
+            this.rightService.update(rightsToUpdate, { params: { waterfallId: this.waterfallId }, write }),
+            this.rightService.remove([id, group.id], { params: { waterfallId: this.waterfallId }, write }),
           ]);
           await write.commit();
           return;
@@ -496,8 +497,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
           const write = this.waterfallService.batch();
           const promises: Promise<unknown>[] = [];
-          vMembers.forEach(r => promises.push(this.rightService.update(r.id, r, { params: { waterfallId: this.waterfall.id }, write })));
-          promises.push(this.rightService.remove(id, { params: { waterfallId: this.waterfall.id }, write }));
+          vMembers.forEach(r => promises.push(this.rightService.update(r.id, r, { params: { waterfallId: this.waterfallId }, write })));
+          promises.push(this.rightService.remove(id, { params: { waterfallId: this.waterfallId }, write }));
           await Promise.all(promises);
           await write.commit();
           return;
@@ -511,7 +512,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       for (const r of this.rights) {
         if (r.nextIds.includes(id)) {
           const nextIds = r.nextIds.filter(nextId => nextId !== id);
-          promises.push(this.rightService.update(r.id, { ...r, nextIds }, { params: { waterfallId: this.waterfall.id }, write }));
+          promises.push(this.rightService.update(r.id, { ...r, nextIds }, { params: { waterfallId: this.waterfallId }, write }));
         }
       }
 
@@ -519,12 +520,12 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       for (const s of this.sources) {
         if (s.destinationId === id) {
           s.destinationId = '';
-          promises.push(this.waterfallService.updateSource(this.waterfall.id, s, { write }));
+          promises.push(this.waterfallService.updateSource(this.waterfallId, s, { write }));
         }
       }
 
       // then delete this right
-      promises.push(this.rightService.remove(id, { params: { waterfallId: this.waterfall.id }, write }));
+      promises.push(this.rightService.remove(id, { params: { waterfallId: this.waterfallId }, write }));
       await Promise.all(promises);
       await write.commit();
 
@@ -533,10 +534,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
         const rightChild = this.rights.find(right => right.id === source.destinationId);
         if (rightChild) {
           rightChild.nextIds = rightChild.nextIds.filter(id => id !== source.id);
-          await this.rightService.update(rightChild.id, rightChild, { params: { waterfallId: this.waterfall.id } });
+          await this.rightService.update(rightChild.id, rightChild, { params: { waterfallId: this.waterfallId } });
         }
       }
-      await this.waterfallService.removeSources(this.waterfall.id, [id]);
+      await this.waterfallService.removeSources(this.waterfallId, [id]);
     }
 
     this.select('');
@@ -545,10 +546,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   private async updateSources(sources: WaterfallSource[], write?: WriteBatch) {
     if (!this.version || !this.version.standalone) {
       const standaloneSources = this.shell.waterfall.sources.filter(s => s.version && Object.values(s.version).some(v => v.standalone));
-      return this.waterfallService.update(this.waterfall.id, { id: this.waterfall.id, sources: [...sources, ...standaloneSources] }, { write });
+      return this.waterfallService.update(this.waterfallId, { id: this.waterfallId, sources: [...sources, ...standaloneSources] }, { write });
     } else {
       const waterfallSources = this.version?.id ? this.shell.waterfall.sources.filter(s => !s.version || !s.version[this.version.id]) : [];
-      return this.waterfallService.update(this.waterfall.id, { id: this.waterfall.id, sources: [...sources, ...waterfallSources] }, { write });
+      return this.waterfallService.update(this.waterfallId, { id: this.waterfallId, sources: [...sources, ...waterfallSources] }, { write });
     }
   }
 }
