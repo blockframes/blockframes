@@ -1,18 +1,13 @@
-
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-
 import { MatDialog } from '@angular/material/dialog';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-
 import { Right } from '@blockframes/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-
 import { RightService } from '../../../right.service';
 import { WaterfallPoolModalComponent } from '../pool-modal/pool-modal.component';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
-
 
 @Component({
   selector: 'waterfall-right-list',
@@ -22,22 +17,21 @@ import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell
 })
 export class WaterfallRightListComponent implements OnInit, OnDestroy {
 
-  @Input() @boolean editMode = true;
+  @Input() @boolean public canUpdate = true;
 
   @Output() selectRight = new EventEmitter<string>();
   @Output() deleteRight = new EventEmitter<string>();
 
-  rights: Right[] = [];
-  rootRights: Right[] = [];
-  vMembers: Record<string, Right[]> = {};
-  hMembers: Record<string, Right[]> = {};
-  searchControl = new FormControl('');
-  existingPools = new Set<string>();
-  selected = new Set<string>();
+  public rights: Right[] = [];
+  public rootRights: Right[] = [];
+  public vMembers: Record<string, Right[]> = {};
+  public hMembers: Record<string, Right[]> = {};
+  public searchControl = new FormControl('');
+  public existingPools = new Set<string>();
+  public selected = new Set<string>();
+  public poolsFilter = new Set<string>();
 
-  poolsFilter = new Set<string>();
-
-  subs: Subscription[] = [];
+  private subs: Subscription[] = [];
 
   constructor(
     private dialog: MatDialog,
@@ -128,17 +122,17 @@ export class WaterfallRightListComponent implements OnInit, OnDestroy {
   }
 
   remove(id: string) {
-    if (!this.editMode) return;
+    if (!this.canUpdate) return;
     this.deleteRight.emit(id);
   }
 
   edit(id: string) {
-    if (!this.editMode) return;
+    if (!this.canUpdate) return;
     this.selectRight.emit(id);
   }
 
   poolModal() {
-    if (!this.editMode) return;
+    if (!this.canUpdate) return;
     this.dialog.open(
       WaterfallPoolModalComponent,
       {

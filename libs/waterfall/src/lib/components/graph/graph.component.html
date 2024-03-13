@@ -23,7 +23,7 @@
     <waterfall-graph-node
       *ngFor="let node of (nodes$ | async)"
       [node]="node"
-      [editMode]="canUpdateGraph"
+      [canUpdate]="canUpdateGraph"
       (addChild)="addChild($event)"
       (handleSelect)="select($event)"
       (addSibling)="addSibling($event)"
@@ -146,7 +146,7 @@
         </mat-tab>
         <mat-tab label="Conditions">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-conditions [disabled]="!canUpdateConditions" [rightForm]="rightForm" [rightId]="selected" (createStep)="createNewStep()" (deleteStep)="deleteStep($event)"></waterfall-conditions>
+            <waterfall-conditions [canUpdate]="canUpdateConditions" [rightForm]="rightForm" [rightId]="selected" (createStep)="createNewStep()" (deleteStep)="deleteStep($event)"></waterfall-conditions>
           </section>
         </mat-tab>
       </mat-tab-group>
@@ -164,12 +164,12 @@
       <mat-tab-group>
         <mat-tab label="Receipts Shares">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-right-list (deleteRight)="delete($event)" (selectRight)="select($event)" [editMode]="canUpdateGraph"></waterfall-right-list>
+            <waterfall-right-list (deleteRight)="delete($event)" (selectRight)="select($event)" [canUpdate]="canUpdateGraph"></waterfall-right-list>
           </section>
         </mat-tab>
         <mat-tab label="Pools Only">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-pool-list [editMode]="canUpdateGraph"></waterfall-pool-list>
+            <waterfall-pool-list [canUpdate]="canUpdateGraph"></waterfall-pool-list>
           </section>
         </mat-tab>
       </mat-tab-group>

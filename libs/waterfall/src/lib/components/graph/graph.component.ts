@@ -115,6 +115,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       // Enable or disable possible updates
       this.rightForm.enable();
       this.sourceForm.enable();
+      this.rightholderControl.enable();
       this.canUpdateGraph = !this.readonly;
       this.canUpdateConditions = true;
       if ((this.version?.id && !this.isDefaultVersion && !this.version.standalone) || reportedStatements.length > 0) {
@@ -367,11 +368,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     const graph = this.nodes$.getValue();
     const rightId = this.selected$.getValue();
     deleteStep(rightId, index, graph);
-    console.log(graph);
     const newGraph = fromGraph(graph, this.version);
-    console.log(newGraph);
     const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
-    console.log(changes);
 
     const write = this.waterfallService.batch();
     await Promise.all([

@@ -1,8 +1,6 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-
 import { Condition } from '@blockframes/model';
-
 import { RightForm } from '../../forms/right-form/right-form';
 import { createConditionForm, formToCondition, setConditionForm } from '../../forms/conditions-form/condition.form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
@@ -14,22 +12,20 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 })
 export class WaterfallConditionsComponent implements OnInit {
 
-  @Input() rightForm: RightForm;
-  @Input() rightId: string;
-  @Input() @boolean disabled = false;
+  @Input() public rightForm: RightForm;
+  @Input() public rightId: string;
+  @Input() @boolean public canUpdate = true;
 
   @Output() createStep = new EventEmitter();
   @Output() deleteStep = new EventEmitter();
 
-  selectedStep = 0;
-
-  newCondition: Condition | undefined = undefined;
-
-  conditionForm = createConditionForm();
+  public selectedStep = 0;
+  public newCondition: Condition | undefined = undefined;
+  public conditionForm = createConditionForm();
 
   ngOnInit() {
     this.conditionForm.enable();
-    if(this.disabled) this.conditionForm.disable();
+    if(!this.canUpdate) this.conditionForm.disable();
     this.conditionForm.valueChanges.subscribe(() => {
       const condition = formToCondition(this.conditionForm);
       if (condition) this.newCondition = condition;
