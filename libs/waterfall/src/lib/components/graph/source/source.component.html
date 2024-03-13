@@ -5,7 +5,7 @@
   {{source.name || 'Receipt Source (Media & Territory)'}}
 </p>
 
-<ng-container *ngIf="selected && editMode">
+<ng-container *ngIf="selected && canUpdate">
   <button mat-mini-fab color="primary" class="right" (click)="handleAddSibling($event)">
     <mat-icon svgIcon="add"></mat-icon>
   </button>

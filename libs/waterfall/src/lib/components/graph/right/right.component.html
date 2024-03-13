@@ -14,7 +14,7 @@
     <price-per-currency *ngIf="!hideAmount" class="nodrag amount" [price]="amount$ | async | formatPair" default="0€"></price-per-currency>
   </div>
 
-  <ng-container *ngIf="selected && editMode">
+  <ng-container *ngIf="selected && canUpdate">
     <button mat-mini-fab color="primary" class="right" (click)="handleAddSibling($event)">
       <mat-icon svgIcon="add"></mat-icon>
     </button>

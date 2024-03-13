@@ -12,9 +12,9 @@ import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell
 })
 export class WaterfallGraphHorizontalComponent implements OnInit, OnDestroy {
 
-  @Input() horizontal: HorizontalNode;
-  @Input() selected: string;
-  @Input() editMode = false;
+  @Input() public horizontal: HorizontalNode;
+  @Input() private selected: string;
+  @Input() public canUpdate = false;
 
   @Output() addChild = new EventEmitter<string>();
   @Output() addSibling = new EventEmitter<string>();
@@ -38,10 +38,10 @@ export class WaterfallGraphHorizontalComponent implements OnInit, OnDestroy {
     this.sub = combineLatest([
       this.shell.state$,
       this.shell.highlightedRightHolderIds$,
-    ]).subscribe(([ state, rightHolderIds ]) => {
+    ]).subscribe(([state, rightHolderIds]) => {
       const highlighted = Object.values(state.waterfall.state.rights).filter(right => rightHolderIds.includes(right.orgId));
 
-      this.highlighted = this.horizontal.members.filter(member => 
+      this.highlighted = this.horizontal.members.filter(member =>
         highlighted.some(right => {
           return (
             (member.type === 'right' && right.id === member.id) ||
@@ -54,7 +54,7 @@ export class WaterfallGraphHorizontalComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();  
+    this.sub.unsubscribe();
   }
 
   verticalSelection(memberId: string) {

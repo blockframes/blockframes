@@ -1,12 +1,9 @@
 
-import { combineLatest, map, startWith } from 'rxjs';
 import { ChangeDetectionStrategy, Component, EventEmitter, HostBinding, HostListener, Input, OnChanges, Output } from '@angular/core';
-
+import { combineLatest, map, startWith } from 'rxjs';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
-
 import { RightNode } from '../layout';
-
 
 @Component({
   selector: 'waterfall-graph-right',
@@ -16,10 +13,10 @@ import { RightNode } from '../layout';
 })
 export class WaterfallGraphRightComponent implements OnChanges {
 
-  @Input() right: RightNode;
-  @Input() selected: boolean;
-  @Input() editMode = false;
-  @Input() @boolean hideAmount: boolean;
+  @Input() public right: RightNode;
+  @Input() public selected: boolean;
+  @Input() public canUpdate = false;
+  @Input() @boolean public hideAmount: boolean;
 
   @Output() addChild = new EventEmitter<string>();
   @Output() addSibling = new EventEmitter<string>();
@@ -28,7 +25,7 @@ export class WaterfallGraphRightComponent implements OnChanges {
   @HostBinding('class.nodrag') nodrag = true;
   @HostBinding('class.selected') selectedClass = false;
 
-  amount$ = combineLatest([this.shell.state$, this.shell.isCalculatedRevenue$]).pipe(
+  public amount$ = combineLatest([this.shell.state$, this.shell.isCalculatedRevenue$]).pipe(
     map(([state, isCalculatedRevenue]) => state.waterfall.state.rights[this.right.id]?.revenu[isCalculatedRevenue ? 'calculated' : 'actual'] ?? 0),
     startWith(0),
   );
