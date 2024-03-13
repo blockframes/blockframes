@@ -19,8 +19,8 @@ export class WaterfallGraphVerticalComponent implements OnInit {
   @Output() addSibling = new EventEmitter<string>();
   @Output() handleSelect = new EventEmitter<string>();
 
-  public amount$ = combineLatest([this.shell.state$, this.shell.isCalculatedRevenue$]).pipe(
-    map(([state, isCalculatedRevenue]) => state.waterfall.state.rights[this.vertical.id]?.revenu[isCalculatedRevenue ? 'calculated' : 'actual'] ?? 0),
+  public amount$ = combineLatest([this.shell.state$, this.shell.revenueMode$]).pipe(
+    map(([state, revenueMode]) => state.waterfall.state.rights[this.vertical.id]?.revenu[revenueMode] ?? 0),
     startWith(0),
   );
 

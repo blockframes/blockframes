@@ -1,6 +1,5 @@
-
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Subscription, combineLatest, } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Node } from '../layout';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { boolean } from '@blockframes/utils/decorators/decorators';
@@ -31,14 +30,10 @@ export class WaterfallGraphNodeComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.subs.push(combineLatest([
-      this.shell.state$,
-      this.shell.highlightedRightHolderIds$,
-    ]).subscribe(([state, rightHolderIds]) => {
-      const highlighted = Object.values(state.waterfall.state.rights).filter(right => rightHolderIds.includes(right.orgId));
+    this.subs.push(this.shell.highlightedRightIds$.subscribe(highlightedRightIds => {
       let isHighlighted = false;
-      if (this.node.type === 'right') isHighlighted = highlighted.some(right => right.id === this.node.id);
-      if (this.node.type === 'vertical') isHighlighted = this.node.members.every(member => rightHolderIds.includes(member.rightHolderId))
+      if (this.node.type === 'right') isHighlighted = highlightedRightIds.some(rightId => rightId === this.node.id);
+      if (this.node.type === 'vertical') isHighlighted = this.node.members.every(member => highlightedRightIds.includes(member.id))
       this.isHighlightedRight = isHighlighted;
       this.cdr.markForCheck();
     }));

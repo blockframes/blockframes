@@ -25,8 +25,8 @@ export class WaterfallGraphRightComponent implements OnChanges {
   @HostBinding('class.nodrag') nodrag = true;
   @HostBinding('class.selected') selectedClass = false;
 
-  public amount$ = combineLatest([this.shell.state$, this.shell.isCalculatedRevenue$]).pipe(
-    map(([state, isCalculatedRevenue]) => state.waterfall.state.rights[this.right.id]?.revenu[isCalculatedRevenue ? 'calculated' : 'actual'] ?? 0),
+  public amount$ = combineLatest([this.shell.state$, this.shell.revenueMode$]).pipe(
+    map(([state, revenueMode]) => state.waterfall.state.rights[this.right.id]?.revenu[revenueMode] ?? 0),
     startWith(0),
   );
 

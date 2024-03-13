@@ -297,13 +297,12 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   public currentStatementId$ = new BehaviorSubject<string>(undefined);
 
   // ---------
-  // Graph Hide & Highlight
+  // Graph sidebar options
   // ---------
-
-  public highlightedRightHolderIds$ = new BehaviorSubject<string[]>([]);
+  public highlightedRightIds$ = new BehaviorSubject<string[]>([]);
   public highlightedSourceIds$ = new BehaviorSubject<string[]>([]);
   public hiddenRightHolderIds$ = new BehaviorSubject<string[]>([]);
-  public isCalculatedRevenue$ = new BehaviorSubject(true);
+  public revenueMode$: BehaviorSubject<'calculated' | 'actual'> = new BehaviorSubject('calculated'); // keyof AmountState
 
   @Input() routes: RouteDescription[];
   @Input() editRoute?: string | string[];

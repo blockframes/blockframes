@@ -1,5 +1,4 @@
-
-import { Subscription, combineLatest } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { HorizontalNode } from '../layout';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
@@ -35,17 +34,12 @@ export class WaterfallGraphHorizontalComponent implements OnInit, OnDestroy {
       (member.type === 'right' && member.width !== 0) ||
       (member.type === 'vertical' && member.members.some(vMember => vMember.width !== 0))
     );
-    this.sub = combineLatest([
-      this.shell.state$,
-      this.shell.highlightedRightHolderIds$,
-    ]).subscribe(([state, rightHolderIds]) => {
-      const highlighted = Object.values(state.waterfall.state.rights).filter(right => rightHolderIds.includes(right.orgId));
-
+    this.sub = this.shell.highlightedRightIds$.subscribe(highlightedRightIds => {
       this.highlighted = this.horizontal.members.filter(member =>
-        highlighted.some(right => {
+        highlightedRightIds.some(rightId => {
           return (
-            (member.type === 'right' && right.id === member.id) ||
-            (member.type === 'vertical' && member.members.every(vMember => highlighted.some(vRight => vRight.id === vMember.id)))
+            (member.type === 'right' && rightId === member.id) ||
+            (member.type === 'vertical' && member.members.every(vMember => highlightedRightIds.some(vRightId => vRightId === vMember.id)))
           );
         })
       ).map(member => member.id)
