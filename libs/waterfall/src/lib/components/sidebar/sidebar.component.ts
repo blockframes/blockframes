@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { BehaviorSubject, Subscription, combineLatest, startWith } from 'rxjs';
-import { OrgState, RightholderRole, Statement, getChilds, rightholderRoles } from '@blockframes/model';
+import { BehaviorSubject, Subscription, combineLatest, map, startWith } from 'rxjs';
+import { OrgState, RightholderRole, Statement, getChilds } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 import { unique } from '@blockframes/utils/helpers';
 
@@ -19,8 +19,7 @@ export class WaterfallSidebarComponent implements OnInit, OnDestroy {
   public hiddenRightHolderControl = new FormControl<string[]>([]);
   public highlightedSourceControl = new FormControl<string[]>([]);
   public rightHolderFilterControl = new FormControl<RightholderRole[]>([]);
-
-  public roles = Object.keys(rightholderRoles);
+  public roles$ = this.shell.rightholders$.pipe(map(rightholders => unique(rightholders.map(r => r.roles).flat())));
   public filteredRightHolders$ = new BehaviorSubject<(OrgState & { role: RightholderRole[], name: string })[]>([]);
   public statementYears$ = new BehaviorSubject<number[]>([]);
   public groupedStatements$ = new BehaviorSubject<Record<number, Statement[]>>({});
@@ -69,11 +68,15 @@ export class WaterfallSidebarComponent implements OnInit, OnDestroy {
       this.shell.state$,
       this.rightHolderFilterControl.valueChanges.pipe(startWith([])),
       this.shell.revenueMode$,
-    ]).subscribe(([state, rightHolderFilter, revenueMode]) => {
-      const filtered = Object.values(state.waterfall.state.orgs).map(org => {
-        const rightHolder = this.shell.waterfall.rightholders.find(r => r.id === org.id);
-        return { ...org, name: rightHolder.name, role: rightHolder.roles, revenue: org.revenu[revenueMode] };
-      }).filter(org => rightHolderFilter.length === 0 || rightHolderFilter.some(r => org.role.includes(r)));
+      this.shell.rightholders$
+    ]).subscribe(([state, rightHolderFilter, revenueMode, rightholders]) => {
+      const filtered = Object.values(state.waterfall.state.orgs)
+        .filter(org => rightholders.some(r => r.id === org.id))
+        .map(org => {
+          const rightHolder = rightholders.find(r => r.id === org.id);
+          return { ...org, name: rightHolder.name, role: rightHolder.roles, revenue: org.revenu[revenueMode] };
+        })
+        .filter(org => rightHolderFilter.length === 0 || rightHolderFilter.some(r => org.role.includes(r)));
       this.filteredRightHolders$.next(filtered);
     }));
   }

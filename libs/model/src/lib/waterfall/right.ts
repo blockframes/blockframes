@@ -108,7 +108,9 @@ export function skipGroups(rights: Right[]) {
  * @param rights 
  */
 export function getChilds(rightId: string, rights: Right[]): Right[] {
-  const _childs = [..._getChilds(rightId, rights), rights.find(r => r.id === rightId)];
+  const right = rights.find(r => r.id === rightId);
+  if (!right) return [];
+  const _childs = [..._getChilds(rightId, rights), right];
   const childs: Right[] = [];
   for (const child of _childs) {
     if (isGroup(child)) {
@@ -129,11 +131,13 @@ export function getChilds(rightId: string, rights: Right[]): Right[] {
   return uniqueChilds.filter(c => !!c)
 }
 
-function isGroup(right: Right): boolean {
+function isGroup(right?: Right): boolean {
+  if (!right) return false;
   return ['horizontal', 'vertical'].includes(right.type);
 }
 
 function _getChilds(rightId: string, rights: Right[]): Right[] {
+  if (!rightId) return [];
   const childs = rights.filter(r => r.nextIds.includes(rightId));
   if (!childs.length) return [];
   return childs.concat(childs.map(c => getChilds(c.id, rights)).flat());

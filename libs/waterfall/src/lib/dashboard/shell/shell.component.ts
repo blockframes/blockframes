@@ -147,7 +147,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   );
 
   // ---------
-  // Waterfall, Blocks, Rights, Statements, Incomes, Expenses and State
+  // Waterfall, Sources, Righholders, Blocks, Rights, Statements, Incomes, Expenses and State
   // ---------
   public waterfall$ = this.movie$.pipe(
     switchMap(movie => this.waterfallService.valueChanges(movie.id)),
@@ -275,6 +275,16 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
       const name = this.waterfall.versions.find(v => v.id === versionId)?.name;
       const isDefault = isDefaultVersion(this.waterfall, versionId) ? '(default)' : '';
       return name ? `${name} ${isDefault}` : '--';
+    })
+  );
+
+  /**
+   * Observable of the rightholders that have rights on the current state
+   */
+  public rightholders$ = combineLatest([this.waterfall$, this.state$]).pipe(
+    map(([waterfall, state]) => {
+      const rightholderIds = Array.from(new Set(Object.values(state.waterfall.state.rights).map(r => r.orgId)));
+      return waterfall.rightholders.filter(r => rightholderIds.includes(r.id));
     })
   );
 
