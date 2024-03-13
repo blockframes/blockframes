@@ -21,8 +21,8 @@ export class WaterfallGraphNodeComponent implements OnInit, OnDestroy {
   @Output() addSibling = new EventEmitter<string>();
   @Output() handleSelect = new EventEmitter<string>();
 
-  private isHighlightedSource = false
-  private isHighlightedRight = false
+  private isHighlightedSource = false;
+  private isHighlightedRight = false;
   private subs: Subscription[] = [];
 
   constructor(
