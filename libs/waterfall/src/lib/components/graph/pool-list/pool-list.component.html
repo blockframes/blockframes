@@ -1,13 +1,12 @@
-
 <section *ngFor="let pool of (existingPools$ | async)">
   <p>{{pool}}</p>
-  <button mat-icon-button (click)="editPool(pool)" [disabled]="!editMode">
+  <button mat-icon-button (click)="editPool(pool)" [disabled]="!canUpdate">
     <mat-icon svgIcon="edit"></mat-icon>
   </button>
-  <button mat-icon-button (click)="removePool(pool)" [disabled]="!editMode">
+  <button mat-icon-button (click)="removePool(pool)" [disabled]="!canUpdate">
     <mat-icon svgIcon="delete"></mat-icon>
   </button>
 </section>
 <section *ngIf="(existingPools$ | async).size === 0">
-  <p>Nothing to show</p>
+  <p>No pool yet</p>
 </section>

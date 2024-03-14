@@ -1,11 +1,7 @@
-
-import { combineLatest, map, startWith } from 'rxjs';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-
+import { combineLatest, map, startWith } from 'rxjs';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
-
 import { VerticalNode } from '../layout';
-
 
 @Component({
   selector: 'waterfall-graph-vertical',
@@ -15,20 +11,20 @@ import { VerticalNode } from '../layout';
 })
 export class WaterfallGraphVerticalComponent implements OnInit {
 
-  @Input() vertical: VerticalNode;
-  @Input() selected: '' | '*' | string;
-  @Input() editMode = false;
+  @Input() public vertical: VerticalNode;
+  @Input() public selected: '' | '*' | string;
+  @Input() public canUpdate = false;
 
   @Output() addChild = new EventEmitter<string>();
   @Output() addSibling = new EventEmitter<string>();
   @Output() handleSelect = new EventEmitter<string>();
 
-  amount$ = combineLatest([this.shell.state$, this.shell.isCalculatedRevenue$]).pipe(
-    map(([state, isCalculatedRevenue]) => state.waterfall.state.rights[this.vertical.id]?.revenu[isCalculatedRevenue ? 'calculated' : 'actual'] ?? 0),
+  public amount$ = combineLatest([this.shell.state$, this.shell.revenueMode$]).pipe(
+    map(([state, revenueMode]) => state.waterfall.state.rights[this.vertical.id]?.revenu[revenueMode] ?? 0),
     startWith(0),
   );
 
-  isVisible = false;
+  public isVisible = false;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,

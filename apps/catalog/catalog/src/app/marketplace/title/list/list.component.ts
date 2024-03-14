@@ -44,6 +44,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import algoliasearch from 'algoliasearch';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { getSearchKey } from '@blockframes/utils/algolia/helper.utils';
+import { SentryService } from '@blockframes/utils/sentry.service';
 
 const mandatesQuery = [
   where('type', '==', 'mandate'),
@@ -105,6 +106,7 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
     private router: Router,
     private pdfService: PdfService,
     private analyticsService: AnalyticsService,
+    private sentryService: SentryService,
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -131,6 +133,13 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
       }),
       switchMap(async hitsViewed => [await this.searchForm.recursiveSearch(), hitsViewed]),
     ).subscribe(([movies, hitsViewed]: [SearchResponse<AlgoliaMovie>, number]) => {
+      if (movies.hits.length !== movies.nbHits) {
+        this.sentryService.triggerError({
+          message: `Count missmatch between movies.hits (${movies.hits.length}) and movies.nbHits (${movies.nbHits})`,
+          location: 'movie-search',
+          bugType: 'algolia-error'
+        });
+      }
       // if availsForm is invalid, put all the movies from algolia
       if (this.availsForm.invalid) {
         this.nbHits = movies.hits.length;
@@ -258,6 +267,13 @@ export class ListComponent implements OnDestroy, OnInit, AfterViewInit {
 
     const search = { facetFilters: [[`storeStatus:${this.storeStatus}`]] };
     this.cachedAlgoliaResults = await recursiveSearch<AlgoliaMovie>(movieIndex, search);
+    if (this.cachedAlgoliaResults.hits.length !== this.cachedAlgoliaResults.nbHits) {
+      this.sentryService.triggerError({
+        message: `Count missmatch between movies.hits (${this.cachedAlgoliaResults.hits.length}) and movies.nbHits (${this.cachedAlgoliaResults.nbHits})`,
+        location: 'movie-search',
+        bugType: 'algolia-error'
+      });
+    }
   }
 
   private async cacheDatabaseData() {

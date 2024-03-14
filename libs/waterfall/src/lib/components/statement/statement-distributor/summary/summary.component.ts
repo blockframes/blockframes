@@ -218,6 +218,7 @@ export class StatementDistributorSummaryComponent {
 
           // Refresh simulation
           await this.shell.simulateWaterfall();
+          this.snackbar.open('changes applied', 'close', { duration: 5000 });
         }
       })
     });

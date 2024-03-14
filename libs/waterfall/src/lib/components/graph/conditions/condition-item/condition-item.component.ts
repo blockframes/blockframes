@@ -1,8 +1,6 @@
 
 import { Component, EventEmitter, Input, Output, Pipe, PipeTransform } from '@angular/core';
-
 import { Condition, Right, Waterfall, WaterfallContract } from '@blockframes/model';
-
 import { conditionToString } from './condition';
 import { DashboardWaterfallShellComponent } from '../../../../dashboard/shell/shell.component';
 import { boolean } from '@blockframes/utils/decorators/decorators';
@@ -14,8 +12,8 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 })
 export class WaterfallConditionItemComponent  {
 
-  @Input() condition: Condition;
-  @Input() @boolean disabled = false;
+  @Input() public condition: Condition;
+  @Input() @boolean public canUpdate = true;
   @Output() edit = new EventEmitter();
   @Output() delete = new EventEmitter();
 

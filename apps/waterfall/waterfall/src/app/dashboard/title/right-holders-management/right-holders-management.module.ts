@@ -11,6 +11,7 @@ import { RightHolderFormModule } from '@blockframes/waterfall/components/rightho
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { MatButtonModule } from '@angular/material/button';
     // Material
     MatIconModule,
     MatButtonModule,
+    MatSnackBarModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: RightHoldersManagementComponent }]),

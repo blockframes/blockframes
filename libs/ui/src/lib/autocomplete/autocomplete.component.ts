@@ -20,6 +20,7 @@ export class AutocompleteComponent implements OnInit {
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
 
   @Input() label: string;
+  @Input() error: string;
   @Input() placeholder: string;
   @Input() @boolean required: boolean;
   @Input() options: Observable<string[]>;

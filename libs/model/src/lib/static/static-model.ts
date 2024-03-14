@@ -923,10 +923,10 @@ export const rightTypes = {
 } as const
 
 export const conditionOwnerLabels = {
-  org: 'Right Holder',
-  right: 'Revenue Share',
-  group: 'Group',
-  pool: 'Pool',
+  org: 'Right Holder Name',
+  right: 'Revenue Share Name',
+  group: 'Group Name',
+  pool: 'Pool Name',
 };
 
 export const movieNoteRoles = {

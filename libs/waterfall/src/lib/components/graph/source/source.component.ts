@@ -1,8 +1,5 @@
-
 import { ChangeDetectionStrategy, Component, EventEmitter, HostBinding, HostListener, Input, Output } from '@angular/core';
-
 import { SourceNode } from '../layout';
-
 
 @Component({
   selector: 'waterfall-graph-source',
@@ -12,14 +9,13 @@ import { SourceNode } from '../layout';
 })
 export class WaterfallGraphSourceComponent {
 
-  @Input() source: SourceNode;
-  @Input() selected: boolean;
-  @Input() editMode = false;
+  @Input() public source: SourceNode;
+  @Input() public selected: boolean;
+  @Input() public canUpdate = false;
 
   @Output() addChild = new EventEmitter<string>();
   @Output() addSibling = new EventEmitter<string>();
   @Output() handleSelect = new EventEmitter<string>();
-
 
   @HostBinding('class.nodrag') nodrag = true;
 

@@ -5,7 +5,7 @@
       <waterfall-graph-vertical
         [vertical]="member"
         [selected]="verticalSelection(member.id)"
-        [editMode]="editMode"
+        [canUpdate]="canUpdate"
         (addChild)="addChild.emit(member.id)"
         (addSibling)="addSibling.emit(member.id)"
         (handleSelect)="handleSelect.emit(member.id)"
@@ -14,8 +14,8 @@
     <ng-template #rightmember>
       <waterfall-graph-right
         [right]="member"
-        [selected]="highlighted.includes(member.id)"
-        [editMode]="editMode"
+        [selected]="horizontalSelection(member.id)"
+        [canUpdate]="canUpdate"
         (addChild)="addChild.emit(member.id)"
         (addSibling)="addSibling.emit(member.id)"
         (handleSelect)="handleSelect.emit(member.id)"

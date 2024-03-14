@@ -1,6 +1,6 @@
 
-<section class="surface" [ngStyle]="{ width: showEdit ? '50%' : '100%' }" (dblclick)="select('')">
-  <header *ngIf="editMode">
+<section class="surface" [ngStyle]="{ width: showEditPanel ? '50%' : '100%' }" (dblclick)="select('')">
+  <header *ngIf="!readonly">
     <div>
       <h2>
         <span>Waterfall Scheme</span>
@@ -11,8 +11,8 @@
           matTooltip="You are editing the default version of this waterfall. Except already overwritten receipt share percentage and conditions, changes performed on this version will be applied to all not standalone versions."
         ></mat-icon>
       </h2>
-      <button mat-icon-button [matTooltip]="(showEdit ? 'Hide' : 'Show') + ' Edit Panel'" (click)="toggleEdit()">
-        <mat-icon [svgIcon]="showEdit ? 'chevron_right' : 'chevron_left'"></mat-icon>
+      <button mat-icon-button [matTooltip]="(showEditPanel ? 'Hide' : 'Show') + ' Edit Panel'" (click)="toggleEditPanel()">
+        <mat-icon [svgIcon]="showEditPanel ? 'chevron_right' : 'chevron_left'"></mat-icon>
       </button>
     </div>
     <p>Please provide the condition details to establish the accurate waterfall</p>
@@ -23,7 +23,7 @@
     <waterfall-graph-node
       *ngFor="let node of (nodes$ | async)"
       [node]="node"
-      [editMode]="canUpdateGraph"
+      [canUpdate]="canUpdateGraph"
       (addChild)="addChild($event)"
       (handleSelect)="select($event)"
       (addSibling)="addSibling($event)"
@@ -37,7 +37,7 @@
   </bf-graph-container>
 </section>
 
-<bf-card-modal [ngStyle]="{ display: editMode && showEdit ? 'block' : 'none' }">
+<bf-card-modal [ngStyle]="{ display: showEditPanel ? 'block' : 'none' }">
   <ng-container *ngIf="selected$ | async as selected; else noSelection">
     <ng-container *ngIf="isSourceSelected; else notSource">
       <header>
@@ -98,6 +98,7 @@
             <bf-autocomplete
               required
               label="Right Holder Name"
+              error="To select a Right Holder, first add a contract with them."
               [options]="rightholderNames$"
               placeholder="Choose Right Holder"
               [form]="rightholderControl"
@@ -121,13 +122,13 @@
               <input matInput type="number" min="0" max="100" [formControl]="rightForm.get('percent')" />
             </mat-form-field>
     
-            <p>Receipt Sources</p>
+            <p>Parent Revenue Element(s)</p>
             <mat-form-field appearance="outline">
-              <mat-label>Source Name</mat-label>
+              <mat-label>Parent Name(s)</mat-label>
               <mat-select multiple [formControl]="rightForm.get('parents')">
                 <mat-option *ngFor="let node of (nodes$ | async)" [value]="node.id">{{node.name}}</mat-option>
               </mat-select>
-              <mat-hint>You can add as many sources as you want.</mat-hint>
+              <mat-hint>Choose parent revenue elements from which this Receipt Share draw funds. You can add as many parents as you want.</mat-hint>
             </mat-form-field>
     
             <div class="info">
@@ -146,7 +147,7 @@
         </mat-tab>
         <mat-tab label="Conditions">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-conditions [disabled]="!canUpdateConditions" [rightForm]="rightForm" [rightId]="selected" (createStep)="createNewStep()" (deleteStep)="deleteStep($event)"></waterfall-conditions>
+            <waterfall-conditions [canUpdate]="canUpdateConditions" [rightForm]="rightForm" [rightId]="selected" (createStep)="createNewStep()" (deleteStep)="deleteStep($event)"></waterfall-conditions>
           </section>
         </mat-tab>
       </mat-tab-group>
@@ -164,23 +165,23 @@
       <mat-tab-group>
         <mat-tab label="Receipts Shares">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-right-list (deleteRight)="delete($event)" (selectRight)="select($event)" [editMode]="canUpdateGraph"></waterfall-right-list>
+            <waterfall-right-list (deleteRight)="delete($event)" (selectRight)="select($event)" [canUpdate]="canUpdateGraph"></waterfall-right-list>
           </section>
         </mat-tab>
         <mat-tab label="Pools Only">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-pool-list [editMode]="canUpdateGraph"></waterfall-pool-list>
+            <waterfall-pool-list [canUpdate]="canUpdateGraph"></waterfall-pool-list>
           </section>
         </mat-tab>
       </mat-tab-group>
       <section class="add">
         <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="!canUpdateGraph" >
           <mat-icon svgIcon="add"></mat-icon>
-          <span>Create new Receipt Sources</span>
+          <span>New Receipt Source</span>
         </button>
         <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="!canUpdateGraph" >
           <mat-icon svgIcon="add"></mat-icon>
-          <span>Create new Receipt Rights</span>
+          <span>New Receipt Share</span>
         </button>
       </section>
     </ng-container>
@@ -214,11 +215,11 @@
         <section class="add">
           <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="!canUpdateGraph" >
             <mat-icon svgIcon="add"></mat-icon>
-            <span>Create new Receipt Sources</span>
+            <span>New Receipt Source</span>
           </button>
           <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="!canUpdateGraph" >
             <mat-icon svgIcon="add"></mat-icon>
-            <span>Create new Receipt Rights</span>
+            <span>New Receipt Share</span>
           </button>
         </section>
       </section>
