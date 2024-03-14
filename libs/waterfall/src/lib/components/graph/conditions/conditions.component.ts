@@ -1,39 +1,47 @@
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Condition } from '@blockframes/model';
-
 import { RightForm } from '../../forms/right-form/right-form';
 import { createConditionForm, formToCondition, setConditionForm } from '../../forms/conditions-form/condition.form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'waterfall-conditions',
   templateUrl: './conditions.component.html',
   styleUrls: ['./conditions.component.scss'],
 })
-export class WaterfallConditionsComponent implements OnInit {
+export class WaterfallConditionsComponent implements OnInit, OnDestroy {
 
-  @Input() rightForm: RightForm;
-  @Input() rightId: string;
-  @Input() @boolean disabled = false;
+  @Input() public rightForm: RightForm;
+  @Input() public rightId: string;
+  @Input() @boolean public canUpdate = true;
 
   @Output() createStep = new EventEmitter();
   @Output() deleteStep = new EventEmitter();
 
-  selectedStep = 0;
+  public selectedStep = 0;
+  public newCondition: Condition | undefined = undefined;
+  public conditionForm = createConditionForm();
 
-  newCondition: Condition | undefined = undefined;
-
-  conditionForm = createConditionForm();
-
+  private subs: Subscription[] = [];
   ngOnInit() {
     this.conditionForm.enable();
-    if(this.disabled) this.conditionForm.disable();
-    this.conditionForm.valueChanges.subscribe(() => {
+    if (!this.canUpdate) this.conditionForm.disable();
+    const formSub = this.conditionForm.valueChanges.subscribe(() => {
       const condition = formToCondition(this.conditionForm);
       if (condition) this.newCondition = condition;
     });
+
+    const nameSub = this.rightForm.get('name').valueChanges.subscribe(name => {
+      this.rightForm.get('name').setValue(name, { emitEvent: false });
+    });
+
+    this.subs.push(formSub, nameSub);
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(sub => sub?.unsubscribe());
   }
 
   createCondition() {

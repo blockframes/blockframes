@@ -1,17 +1,12 @@
-
-import { map, tap } from 'rxjs';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-
+import { map, tap } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-
 import { Right } from '@blockframes/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-
 import { RightService } from '../../../right.service';
 import { WaterfallPoolModalComponent } from '../pool-modal/pool-modal.component';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
-
 
 @Component({
   selector: 'waterfall-pool-list',
@@ -21,10 +16,10 @@ import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell
 })
 export class WaterfallPoolListComponent {
 
-  @Input() @boolean editMode = true;
+  @Input() @boolean public canUpdate = true;
 
-  rights: Right[] = [];
-  existingPools$ = this.shell.rights$.pipe(
+  private rights: Right[] = [];
+  public existingPools$ = this.shell.rights$.pipe(
     tap(rights => this.rights = rights),
     map(rights => new Set(rights.map(r => r.pools).flat()))
   );
@@ -36,13 +31,13 @@ export class WaterfallPoolListComponent {
   ) { }
 
   removePool(pool: string) {
-    if (!this.editMode) return;
+    if (!this.canUpdate) return;
     const rights = this.rights.map(r => ({ ...r, pools: r.pools.filter(p => p !== pool) }));
     this.rightService.update(rights, { params: { waterfallId: this.shell.waterfall.id } });
   }
 
   editPool(oldName: string) {
-    if (!this.editMode) return;
+    if (!this.canUpdate) return;
     const selected = new Set(this.rights.filter(r => r.pools.includes(oldName)).map(r => r.id));
     this.dialog.open(
       WaterfallPoolModalComponent,
