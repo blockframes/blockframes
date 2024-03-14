@@ -316,7 +316,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
         cancel: 'No, keep statement.',
         onConfirm: async () => {
           await this.statementService.remove(statement.id, { params: { waterfallId: statement.waterfallId } })
-          this.snackbar.open('Statement deleted from waterfall !', 'close', { duration: 5000 });
+          this.snackbar.open('Statement deleted', 'close', { duration: 5000 });
         }
       }, 'small'),
       autoFocus: false

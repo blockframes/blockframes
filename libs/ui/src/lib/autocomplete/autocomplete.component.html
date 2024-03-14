@@ -1,5 +1,5 @@
 <mat-form-field [appearance]="mode">
-  <mat-label>{{label}}</mat-label>
+  <mat-label>{{ label }}</mat-label>
   <input
     matInput
     type="text"
@@ -13,5 +13,8 @@
       {{ state }}
     </mat-option>
   </mat-autocomplete>
-  <mat-error *ngIf="form.hasError('invalidValue')">Please provide a valid {{label}}</mat-error>
+  <mat-error *ngIf="form.hasError('invalidValue')">
+    <ng-container *ngIf="error">{{ error }}</ng-container>
+    <ng-container *ngIf="!error">Please provide a valid {{ label }}</ng-container>
+  </mat-error>
 </mat-form-field>

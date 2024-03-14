@@ -19,7 +19,7 @@
   </mat-form-field>
 
   <section>
-    <p class="mat-body-1">Can’t find right holder or contract on the list ?</p>
+    <p class="mat-body-1">Can’t find right holder or contract on the list?</p>
     <p class="mat-body-1" *ngIf="data.canBypassRules"><a [routerLink]="['/c/o/dashboard/title', data.waterfall.id, 'init']" target="_blank" (click)="close()">Please add a new contract</a> before adding a Statement.</p>
     <button mat-button *ngIf="!data.canBypassRules" (click)="openIntercom()">
       <mat-icon svgIcon="help"></mat-icon>

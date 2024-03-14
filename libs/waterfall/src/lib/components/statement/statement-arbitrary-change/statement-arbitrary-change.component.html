@@ -99,7 +99,7 @@
             <mat-label>Gross Receipts</mat-label>
             <mat-icon [svgIcon]="mainCurrency" matPrefix></mat-icon>
             <input matInput type="number" min="0" [max]="config.max" [formControl]="override.get('amount')" required />
-            <mat-error>Please fill in a value between 0 and {{ config.max }}.</mat-error>
+            <mat-error>Please fill in a value between 0 and {{ config.max }}. Note that the receipt share cannot exceed the income received.</mat-error>
           </mat-form-field>
     
           <button mat-icon-button (click)="restore(i)" matTooltip="Restore to initial value">

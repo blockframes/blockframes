@@ -2,13 +2,13 @@
 import { Subscription, debounceTime } from 'rxjs';
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
 import { Waterfall, createWaterfallRightholder } from '@blockframes/model';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '@blockframes/waterfall/form/right-holder.form';
 import { FormList } from '@blockframes/utils/form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieService } from '@blockframes/movie/service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'waterfall-right-holders-management',
@@ -29,6 +29,7 @@ export class RightHoldersManagementComponent implements OnInit, OnDestroy {
     private movieService: MovieService,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
+    private snackbar: MatSnackBar,
   ) {
     this.dynTitle.setPageTitle('Manage Right Holders');
   }
@@ -53,6 +54,7 @@ export class RightHoldersManagementComponent implements OnInit, OnDestroy {
 
       // ! `id` needs to be in the update object, because of a bug in ng-fire
       await this.waterfallService.update({ id: this.waterfall.id, rightholders: newRightholders });
+      this.snackbar.open('Role(s) updated', 'close', { duration: 5000 });
     });
   }
 
