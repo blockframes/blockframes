@@ -59,9 +59,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   public rightholderControl = new FormControl<string>('');
   public rightholderNames$ = new BehaviorSubject<string[]>([]);
   public relevantContracts$ = new BehaviorSubject<WaterfallContract[]>([]);
+  public rights: Right[];
 
   private waterfallId = this.shell.waterfall.id;
-  private rights: Right[];
   private sources: WaterfallSource[];
   private defaultVersionId: string;
   private producer = this.shell.waterfall.rightholders.find(r => r.roles.includes('producer'));
@@ -159,7 +159,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
-  updateRightName(org?: string, type?: RightType) {
+  private updateRightName(org?: string, type?: RightType) {
     const right = this.rightForm.value;
     const o = org ?? right.org;
     const t = rightTypes[type ?? right.type];
@@ -196,16 +196,26 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
         this.relevantContracts$.next([]);
       }
 
+      let rightholderId = '';
+
+      let type = right.type;
+
       if (right.type === 'vertical') {
         const members = this.rights.filter(r => r.groupId === right.id).sort((a, b) => a.order - b.order);
         steps = members.map(member => member.conditions?.conditions.filter(c => !isConditionGroup(c)) as Condition[] ?? []);
+        rightholderId = members[0].rightholderId;
+        type = members[0].type;
+        right.contractId = members[0].contractId;
+      } else if (right.type === 'horizontal') {
+        rightholderId = right.blameId;
       } else {
         steps[0] = right.conditions?.conditions.filter(c => !isConditionGroup(c)) as Condition[] ?? [];
+        rightholderId = right.rightholderId;
       }
-      const rightholderId = (right.type === 'horizontal' ? right.blameId : right.rightholderId);
+
       const rightholderName = this.rightholders.find(r => r.id === rightholderId)?.name ?? '';
       const parents = this.nodes$.getValue().filter(node => node.children.includes(right.groupId || id)); // do not use ?? instead of ||, it will break since '' can be considered truthy
-      setRightFormValue(this.rightForm, { ...right, rightholderId: rightholderName, nextIds: parents.map(parent => parent.id) }, steps);
+      setRightFormValue(this.rightForm, { ...right, type, rightholderId: rightholderName, nextIds: parents.map(parent => parent.id) }, steps);
     }
   }
 
@@ -236,7 +246,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     const newGraph = fromGraph(graph, this.version);
     const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
     const right = changes.updated.rights.find(right => right.id === rightId);
-    right.type = this.rightForm.controls.type.value;
+    const existingRight = this.rights.find(r => r.id === rightId);
+    right.type = existingRight.type === 'vertical' ? 'vertical' : this.rightForm.controls.type.value;
     right.name = this.rightForm.controls.name.value;
     right.percent = this.rightForm.controls.percent.value;
     right.contractId = this.rightForm.controls.contract.value;
@@ -250,13 +261,16 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     if (right.type === 'vertical') {
       const steps = changes.updated.rights.filter(r => r.groupId === right.id);
       steps.forEach(step => {
+        step.type = this.rightForm.controls.type.value;
         step.rightholderId = right.rightholderId;
         step.contractId = right.contractId;
       });
+      delete right.rightholderId;
+      delete right.contractId;
       this.rightForm.controls.steps.value.forEach((conditions, index) => {
         steps[index].conditions = { operator: 'AND', conditions: conditions };
       });
-    } else {
+    } else if (right.type !== 'horizontal') {
       right.conditions = { operator: 'AND', conditions: this.rightForm.controls.steps.value[0] };
     }
 
@@ -571,9 +585,10 @@ export class IsHorizontalPipe implements PipeTransform {
   }
 }
 
-@Pipe({ name: 'isRight' })
-export class IsRightPipe implements PipeTransform {
-  transform(type: RightType) {
-    return !['horizontal', 'vertical'].includes(type);
+@Pipe({ name: 'isStep' })
+export class IsStepPipe implements PipeTransform {
+  transform(id: string, rights: Right[]) {
+    const groupId = rights.find(r => r.id === id)?.groupId;
+    return rights.find(r => r.id === groupId)?.type === 'vertical';
   }
 }

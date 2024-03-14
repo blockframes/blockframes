@@ -19,7 +19,7 @@ import { AutocompleteModule } from '@blockframes/ui/autocomplete/autocomplete.mo
 import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
-import { IsHorizontalPipe, IsRightPipe, WaterfallGraphComponent } from './graph.component';
+import { IsHorizontalPipe, IsStepPipe, WaterfallGraphComponent } from './graph.component';
 import { WaterfallGraphNodeModule } from './node/node.module';
 import { WaterfallGraphLabelModule } from './label/label.module';
 import { WaterfallPoolListModule } from './pool-list/pool-list.module';
@@ -28,7 +28,7 @@ import { WaterfallConditionsModule } from './conditions/conditions.module';
 import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.module';
 
 @NgModule({
-  declarations: [WaterfallGraphComponent, IsHorizontalPipe, IsRightPipe],
+  declarations: [WaterfallGraphComponent, IsHorizontalPipe, IsStepPipe],
   imports: [
     ReactiveFormsModule,
     CommonModule,

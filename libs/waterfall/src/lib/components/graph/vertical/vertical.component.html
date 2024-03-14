@@ -1,5 +1,5 @@
 <div *ngIf="isVisible">
-  <p class="name">{{vertical.name}}</p>
+  <button class="name" mat-button (click)="handleSelect.emit(vertical.id)">{{vertical.name}}</button>
 
   <ng-container *ngFor="let member of vertical.members; let isFirst = first; let isLast = last; let index = index">
     <ng-container *ngIf="isFirst; else level">

@@ -37,7 +37,11 @@ export class WaterfallConditionsComponent implements OnInit, OnDestroy {
       this.rightForm.get('name').setValue(name, { emitEvent: false });
     });
 
-    this.subs.push(formSub, nameSub);
+    const typeSub = this.rightForm.get('type').valueChanges.subscribe(type => {
+      this.rightForm.get('type').setValue(type, { emitEvent: false });
+    });
+
+    this.subs.push(formSub, nameSub, typeSub);
   }
 
   ngOnDestroy() {

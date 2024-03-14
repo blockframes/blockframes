@@ -1,9 +1,6 @@
 
 import { FormControl, FormGroup } from '@angular/forms';
-
 import { Condition, Right, RightType } from '@blockframes/model';
-
-
 
 export type RightForm = FormGroup<{
   type: FormControl<RightType>;
