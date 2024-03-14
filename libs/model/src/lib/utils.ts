@@ -25,8 +25,8 @@ export interface RouteDescription {
 
 export interface SentryError {
   message: string;
-  location: 'file-uploader-service' | 'global' | 'notification-service';
-  bugType: 'invalid-metadata' | 'network' | 'front-version' | 'jwplayer-api' | 'firebase-error'
+  location: 'file-uploader-service' | 'global' | 'notification-service' | 'movie-search';
+  bugType: 'invalid-metadata' | 'network' | 'front-version' | 'jwplayer-api' | 'firebase-error' | 'algolia-error';
 }
 
 export interface RequestAskingPriceData {

@@ -195,7 +195,6 @@ export interface AlgoliaUser extends AlgoliaDefaultProperty {
   orgName: string;
 }
 
-
 export async function recursiveSearch<T>(index: SearchIndex, _search: AlgoliaSearchQuery): Promise<AlgoliaResult<T>> {
   const search = { ..._search, hitsPerPage: 1000, page: 0 };
   const results = await index.search<T>(search.query, search);
@@ -206,10 +205,11 @@ export async function recursiveSearch<T>(index: SearchIndex, _search: AlgoliaSea
     loops++;
     search.page++;
     const m = await index.search<T>(search.query, search);
-    results.hits = results.hits.concat(m.hits);
+    for (const h of m.hits) {
+      if (!results.hits.find(r => r.objectID === h.objectID)) results.hits.push(h);
+    }
     hitsRetrieved = results.hits.length;
     if (loops >= maxLoop) break;
   }
-
   return { hits: results.hits, nbHits: results.nbHits };
 }
