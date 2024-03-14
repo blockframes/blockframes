@@ -24,6 +24,7 @@ export class TitleViewComponent {
     {
       path: 'documents',
       label: 'Documents',
+      requireKeys: ['admin'] // Temp #9703 - remove once we allow non-admin to view documents
     },
     {
       path: 'waterfall',
