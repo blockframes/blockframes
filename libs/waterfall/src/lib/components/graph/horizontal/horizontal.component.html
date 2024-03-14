@@ -1,5 +1,5 @@
 <div *ngIf="isVisible">
-  <p>{{horizontal.name}}</p>
+  <button mat-button (click)="handleSelect.emit(horizontal.id)">{{horizontal.name}}</button>
   <ng-container *ngFor="let member of horizontal.members">
     <ng-container *ngIf="member.type === 'vertical'; else rightmember">
       <waterfall-graph-vertical

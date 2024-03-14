@@ -29,7 +29,7 @@ export function createRightForm(right?: Partial<Right>, steps?: Condition[][]): 
 
 export function setRightFormValue(form: RightForm, right: Partial<Right>, steps: Condition[][]) {
   form.controls.type.setValue(right.type ?? 'unknown');
-  form.controls.org.setValue(right.rightholderId ?? '');
+  form.controls.org.setValue(right.rightholderId ?? ''); // @dev At this point, rightholderId is the rightholder name
   form.controls.contract.setValue(right.contractId ?? '');
   form.controls.name.setValue(right.name ?? '');
   form.controls.percent.setValue(right.percent ?? 0);

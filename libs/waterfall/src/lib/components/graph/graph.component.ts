@@ -2,7 +2,7 @@ import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Intercom } from 'ng-intercom';
 import { WriteBatch } from 'firebase/firestore';
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Optional, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Optional, Pipe, PipeTransform, ViewChild } from '@angular/core';
 import { BehaviorSubject, Subscription, combineLatest, map, tap } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -202,9 +202,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       } else {
         steps[0] = right.conditions?.conditions.filter(c => !isConditionGroup(c)) as Condition[] ?? [];
       }
-      const org = this.rightholders.find(r => r.id === right.rightholderId)?.name ?? '';
+      const rightholderId = (right.type === 'horizontal' ? right.blameId : right.rightholderId);
+      const rightholderName = this.rightholders.find(r => r.id === rightholderId)?.name ?? '';
       const parents = this.nodes$.getValue().filter(node => node.children.includes(right.groupId || id)); // do not use ?? instead of ||, it will break since '' can be considered truthy
-      setRightFormValue(this.rightForm, { ...right, rightholderId: org, nextIds: parents.map(parent => parent.id) }, steps);
+      setRightFormValue(this.rightForm, { ...right, rightholderId: rightholderName, nextIds: parents.map(parent => parent.id) }, steps);
     }
   }
 
@@ -223,7 +224,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     if (this.relevantContracts$.value.length === 0) this.rightForm.controls.contract.setValue('');
 
     const producer = this.rightholders.find(r => r.roles.includes('producer'));
-    if (producer?.id !== rightholder.id && !this.rightForm.controls.contract.value) {
+    if (producer?.id !== rightholder.id && this.rightForm.controls.type.value !== 'horizontal' && !this.rightForm.controls.contract.value) {
       this.snackBar.open('Please provide the contract associated to this Receipt Share', 'close', { duration: 3000 });
       return;
     }
@@ -239,7 +240,12 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     right.name = this.rightForm.controls.name.value;
     right.percent = this.rightForm.controls.percent.value;
     right.contractId = this.rightForm.controls.contract.value;
-    right.rightholderId = this.rightholders.find(r => r.name === this.rightForm.controls.org.value)?.id ?? '';
+
+    if (right.type !== 'horizontal') {
+      right.rightholderId = this.rightholders.find(r => r.name === this.rightForm.controls.org.value)?.id ?? '';
+    } else {
+      right.blameId = this.rightholders.find(r => r.name === this.rightForm.controls.org.value)?.id ?? '';
+    }
 
     if (right.type === 'vertical') {
       const steps = changes.updated.rights.filter(r => r.groupId === right.id);
@@ -274,7 +280,11 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     ]);
     await write.commit();
 
-    this.snackBar.open('Receipt Share saved', 'close', { duration: 3000 });
+    if (right.type === 'horizontal') {
+      this.snackBar.open('Group Details saved', 'close', { duration: 3000 });
+    } else {
+      this.snackBar.open('Receipt Share saved', 'close', { duration: 3000 });
+    }
   }
 
   updateSource() {
@@ -551,5 +561,19 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       const waterfallSources = this.version?.id ? this.shell.waterfall.sources.filter(s => !s.version || !s.version[this.version.id]) : [];
       return this.waterfallService.update(this.waterfallId, { id: this.waterfallId, sources: [...sources, ...waterfallSources] }, { write });
     }
+  }
+}
+
+@Pipe({ name: 'isHorizontal' })
+export class IsHorizontalPipe implements PipeTransform {
+  transform(type: RightType) {
+    return type === 'horizontal';
+  }
+}
+
+@Pipe({ name: 'isRight' })
+export class IsRightPipe implements PipeTransform {
+  transform(type: RightType) {
+    return !['horizontal', 'vertical'].includes(type);
   }
 }
