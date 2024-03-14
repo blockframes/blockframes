@@ -1,6 +1,4 @@
-
 import { AfterViewInit, Component, ElementRef, HostBinding, ViewChild } from '@angular/core';
-
 
 @Component({
   selector: 'bf-card-modal',
@@ -10,11 +8,14 @@ import { AfterViewInit, Component, ElementRef, HostBinding, ViewChild } from '@a
 })
 export class CardModalComponent implements AfterViewInit {
 
-  isOpened = false;
-  @HostBinding('style.height') height = 'auto';
+  public isOpened = false;
+  private initialHeight: number;
+
+  @HostBinding('style.height') height;
   @ViewChild('container') container: ElementRef<HTMLElement>;
 
   ngAfterViewInit() {
+    this.initialHeight = this.container.nativeElement.offsetHeight;
     if (this.container.nativeElement.offsetHeight >= 512) {
       this.height = `${this.container.nativeElement.offsetHeight}px`;
     }
@@ -24,14 +25,14 @@ export class CardModalComponent implements AfterViewInit {
     if (this.isOpened) this.close();
     else this.open();
   }
-  
+
   open() {
     this.height = `${this.container.nativeElement.offsetHeight}px`;
     this.isOpened = true;
   }
-  
+
   close() {
-    this.height = 'auto';
+    this.height = this.initialHeight > 0 ? `${this.initialHeight}px` : undefined;
     this.isOpened = false;
   }
 }

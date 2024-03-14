@@ -70,7 +70,10 @@ article {
       display: flex;
       align-items: center;
       border-bottom: solid 2px var(--foreground-divider);
-
+      position: sticky;
+      top: 0;
+      background-color: #FFF;
+      z-index: 2;
       h2 {
         flex-grow: 1;
         margin: 0;
@@ -117,7 +120,7 @@ article {
     }
   }
 
-  bf-card-modal.modal button.main-dashboard-cta {
+  bf-card-modal button.main-dashboard-cta {
     margin-bottom: 48px;
   }
 }

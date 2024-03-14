@@ -18,7 +18,7 @@ import { WaterfallFormGuardedComponent } from '../../guards/waterfall-form-guard
 import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '../../form/right-holder.form';
 
 @Component({
-  selector: 'waterfall-title-edit-form',
+  selector: 'waterfall-edit-form',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
