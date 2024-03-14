@@ -8,7 +8,7 @@
         [canUpdate]="canUpdate"
         (addChild)="addChild.emit(member.id)"
         (addSibling)="addSibling.emit(member.id)"
-        (handleSelect)="handleSelect.emit(member.id)"
+        (handleSelect)="handleSelect.emit($event)"
       ></waterfall-graph-vertical>
     </ng-container>
     <ng-template #rightmember>
