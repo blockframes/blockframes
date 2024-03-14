@@ -1,7 +1,8 @@
+@import '@angular/flex-layout/mq';
 
 :host {
   display: block;
-  padding: 0 24px 48px 24px;
+  padding: 0 24px 0px 24px;
 }
 
 div {
@@ -52,4 +53,16 @@ waterfall-version-selector {
 
 waterfall-version-selector.hide {
   display: none;
+}
+
+@include layout-bp(lt-xl) {
+  waterfall-graph {
+    height: 33vh;
+  }
+}
+
+@include layout-bp(xl) {
+  waterfall-graph {
+    height: 48vh;
+  }
 }

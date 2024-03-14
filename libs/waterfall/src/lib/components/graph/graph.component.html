@@ -98,6 +98,7 @@
             <bf-autocomplete
               required
               label="Right Holder Name"
+              error="To select a Right Holder, first add a contract with them."
               [options]="rightholderNames$"
               placeholder="Choose Right Holder"
               [form]="rightholderControl"
@@ -176,11 +177,11 @@
       <section class="add">
         <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="!canUpdateGraph" >
           <mat-icon svgIcon="add"></mat-icon>
-          <span>Create new Receipt Sources</span>
+          <span>New Receipt Source</span>
         </button>
         <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="!canUpdateGraph" >
           <mat-icon svgIcon="add"></mat-icon>
-          <span>Create new Receipt Rights</span>
+          <span>New Receipt Share</span>
         </button>
       </section>
     </ng-container>
@@ -214,11 +215,11 @@
         <section class="add">
           <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="!canUpdateGraph" >
             <mat-icon svgIcon="add"></mat-icon>
-            <span>Create new Receipt Sources</span>
+            <span>New Receipt Source</span>
           </button>
           <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="!canUpdateGraph" >
             <mat-icon svgIcon="add"></mat-icon>
-            <span>Create new Receipt Rights</span>
+            <span>New Receipt Share</span>
           </button>
         </section>
       </section>

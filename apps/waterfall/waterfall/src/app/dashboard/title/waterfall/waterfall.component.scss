@@ -1,3 +1,5 @@
+@import '@angular/flex-layout/mq';
+
 article {
   display: flex;
   justify-content: center;
@@ -5,6 +7,8 @@ article {
 
 waterfall-sidebar {
   margin: 24px 0 24px 24px;
+  overflow: scroll;
+  padding-right: 16px;
 }
 
 waterfall-graph {
@@ -13,4 +17,16 @@ waterfall-graph {
 
 waterfall-version-selector {
   padding-left: 24px;
+}
+
+@include layout-bp(lt-xl) {
+  waterfall-sidebar {
+    height: 41vh;
+  }
+}
+
+@include layout-bp(xl) {
+  waterfall-sidebar {
+    height: 54vh;
+  }
 }

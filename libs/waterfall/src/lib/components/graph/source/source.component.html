@@ -6,10 +6,10 @@
 </p>
 
 <ng-container *ngIf="selected && canUpdate">
-  <button mat-mini-fab color="primary" class="right" (click)="handleAddSibling($event)">
+  <button mat-mini-fab color="primary" class="right" matTooltip="Add the new source" (click)="handleAddSibling($event)">
     <mat-icon svgIcon="add"></mat-icon>
   </button>
-  <button *ngIf="source.children.length === 0" mat-mini-fab color="primary" class="bottom" (click)="handleAddChild($event)">
+  <button *ngIf="source.children.length === 0" mat-mini-fab color="primary" matTooltip="Add new Receipt Share" class="bottom" (click)="handleAddChild($event)">
     <mat-icon svgIcon="add"></mat-icon>
   </button>
 </ng-container>

@@ -2,16 +2,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-
-import { NumberPipeModule } from '@blockframes/utils/pipes';
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
-
-import { WaterfallGraphLevelModule } from '../level/level.module';
-import { WaterfallGraphRightModule } from '../right/right.module';
+// Component
 import { WaterfallGraphVerticalComponent } from './vertical.component';
 
+// Blockframes
+import { NumberPipeModule } from '@blockframes/utils/pipes';
+import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
+import { WaterfallGraphLevelModule } from '../level/level.module';
+import { WaterfallGraphRightModule } from '../right/right.module';
+
+// Material
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [ WaterfallGraphVerticalComponent ],
@@ -25,6 +28,7 @@ import { WaterfallGraphVerticalComponent } from './vertical.component';
 
     MatIconModule,
     MatButtonModule,
+    MatTooltipModule,
   ],
   exports: [ WaterfallGraphVerticalComponent ],
 })

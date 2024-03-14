@@ -105,7 +105,7 @@ export class StatementTableComponent {
 
           this.statements = this.statements.map(s => s.id === statement.id ? statement : s);
 
-          this.snackBar.open('Statement marked as paid !', 'close', { duration: 5000 });
+          this.snackBar.open('Declared payment confirmed.', 'close', { duration: 5000 });
           this.cdr.markForCheck();
         }
       })
