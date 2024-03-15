@@ -10,9 +10,7 @@
       [required]="required"
       test-id="filter-select"
     >
-      <mat-select-trigger>{{
-        control.value.length === items.length ? displayAll : (control.value | toGroupLabel: scope | join)
-      }}</mat-select-trigger>
+      <mat-select-trigger>{{ control.value.length === items.length ? displayAll : (control.value | toGroupLabel: scope | join) }}</mat-select-trigger>
       <header>
         <mat-checkbox
           color="primary"
