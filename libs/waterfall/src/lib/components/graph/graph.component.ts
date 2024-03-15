@@ -251,6 +251,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     right.name = this.rightForm.controls.name.value;
     right.percent = this.rightForm.controls.percent.value;
     right.contractId = this.rightForm.controls.contract.value;
+    right.pools = existingRight.pools;
 
     if (right.type !== 'horizontal') {
       right.rightholderId = this.rightholders.find(r => r.name === this.rightForm.controls.org.value)?.id ?? '';
