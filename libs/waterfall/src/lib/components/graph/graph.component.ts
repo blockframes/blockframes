@@ -568,6 +568,13 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     this.select('');
   }
 
+  public addCondition(data: { rightId: string, condition: Condition, step: number, index: number }) {
+    if (this.selected$.value != data.rightId) return;
+    const steps = this.rightForm.controls.steps.value;
+    steps[data.step][data.index] = data.condition;
+    this.rightForm.controls.steps.setValue(steps);
+  }
+
   private async updateSources(sources: WaterfallSource[], write?: WriteBatch) {
     if (!this.version || !this.version.standalone) {
       const standaloneSources = this.shell.waterfall.sources.filter(s => s.version && Object.values(s.version).some(v => v.standalone));
