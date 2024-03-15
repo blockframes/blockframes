@@ -31,8 +31,8 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { RightService } from '../../right.service';
 import { WaterfallService } from '../../waterfall.service';
-import { createRightForm, setRightFormValue } from '../forms/right-form/right-form';
-import { createSourceForm, setSourceFormValue } from '../forms/source-form/source-form';
+import { createRightForm, setRightFormValue } from '../../form/right.form';
+import { createSourceForm, setSourceFormValue } from '../../form/source.form';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 import { Arrow, Node, computeDiff, createChild, createSibling, createStep, deleteStep, fromGraph, toGraph, updateParents } from './layout';
 

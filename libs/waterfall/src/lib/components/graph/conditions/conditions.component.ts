@@ -1,7 +1,7 @@
 
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Condition } from '@blockframes/model';
-import { RightForm } from '../../forms/right-form/right-form';
+import { RightForm } from '../../../form/right.form';
 import { ConditionForm, formToCondition, setConditionForm } from '../../../form/condition.form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { BehaviorSubject, Subscription } from 'rxjs';
