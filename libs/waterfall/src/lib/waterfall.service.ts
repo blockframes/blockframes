@@ -190,9 +190,8 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     return data.waterfall;
   }
 
-  public async duplicateVersion(waterfall: Waterfall, blocks: Block[], versionIdToDuplicate: string, version?: Partial<Version>) {
-    const versionToDuplicate = waterfall.versions.find(v => v.id === versionIdToDuplicate);
-    const blockIds = waterfall.versions.find(v => v.id === versionIdToDuplicate).blockIds;
+  public async duplicateVersion(waterfall: Waterfall, blocks: Block[], versionToDuplicate: Version, version?: Partial<Version>) {
+    const blockIds = versionToDuplicate.blockIds;
     const versionBlocks = blockIds.map(id => blocks.find(b => b.id === id));
 
     const newVersion = createVersion({

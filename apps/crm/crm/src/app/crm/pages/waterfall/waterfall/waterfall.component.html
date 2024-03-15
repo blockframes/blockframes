@@ -31,8 +31,8 @@
         <button mat-icon-button (click)="removeVersion(version.id)">
           <mat-icon svgIcon="delete" matTooltip="Delete version"></mat-icon>
         </button>
-        <button mat-icon-button [disabled]="version.standalone" (click)="duplicateVersion(version.id)">
-          <mat-icon svgIcon="file_copy" [matTooltip]="version.standalone ? 'Cannot duplicate standalone version' : 'Duplicate version'"></mat-icon>
+        <button mat-icon-button *ngIf="version.default"  (click)="duplicateVersion(version.id)">
+          <mat-icon svgIcon="file_copy" matTooltip="Duplicate version"></mat-icon>
         </button>
         <button mat-icon-button (click)="refreshWaterfall(version.id)">
           <mat-icon svgIcon="refresh" matTooltip="Refresh waterfall"></mat-icon>
