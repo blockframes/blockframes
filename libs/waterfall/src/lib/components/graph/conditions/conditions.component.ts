@@ -45,6 +45,8 @@ export class WaterfallConditionsComponent implements OnInit, OnDestroy {
       if (condition) { // ie: condition is valid
         this.newCondition = condition;
         this.validCondition.emit({ rightId: this.rightId, condition, step: this.selectedStep$.value, index: this.index });
+      } else {
+        this.newCondition = undefined;
       }
     });
 

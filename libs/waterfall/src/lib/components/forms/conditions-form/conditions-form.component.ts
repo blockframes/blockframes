@@ -97,6 +97,11 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
       this.toggleRateControl.valueChanges.subscribe(value => {
         if (!value && this.form.controls.interestRate.value !== 0) this.form.controls.interestRate.setValue(0);
       }),
+
+      this.form.controls.salesTerms.valueChanges.subscribe(() => {
+        // Hack to force the valueChanges in parent component
+        this.form.controls.salesTermsOperator.setValue(this.form.controls.salesTermsOperator.value);
+      }),
     );
   }
 
