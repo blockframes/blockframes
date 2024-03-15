@@ -68,8 +68,8 @@
           [control]="sourceForm.get('territories')"
         ></group-multiselect>
         <mat-form-field appearance="outline">
-          <mat-label>Name</mat-label>
-          <input matInput type="text" placeholder="Receipt Share Name" [formControl]="sourceForm.get('name')" />
+          <mat-label>Receipt Source Name</mat-label>
+          <input matInput type="text" placeholder="Receipt Source Name" [formControl]="sourceForm.get('name')" />
         </mat-form-field>
       </section>
     </ng-container>
@@ -87,33 +87,40 @@
         </button>
       </header>
       <mat-tab-group>
-        <mat-tab label="Receipts Shares">
+        <mat-tab [label]="(rightForm.get('type').value | isHorizontal) ? 'Group Details' : 'Receipts Shares'">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <p>Fill the following fields to define the Receipt Share.</p>
-    
-            <static-select [control]="rightForm.get('type')" scope="rightTypes" [withoutValues]="['horizontal','vertical']">
-              <mat-label>Type</mat-label>
-            </static-select>
-    
-            <bf-autocomplete
-              required
-              label="Right Holder Name"
-              error="To select a Right Holder, first add a contract with them."
-              [options]="rightholderNames$"
-              placeholder="Choose Right Holder"
-              [form]="rightholderControl"
-            ></bf-autocomplete>
+            <p *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)">Fill the following fields to define the Receipt Share.</p>
+            <p *ngIf="(rightForm.get('type').value | isHorizontal)">Fill the following fields to define the Group Details.</p>
+            <p *ngIf="(selected$.value | isStep : rights)">Fill the following fields to define the Step Details.</p>
 
-            <mat-form-field *ngIf="(relevantContracts$ | async).length" appearance="outline">
-              <mat-label>Contract</mat-label>
-              <mat-select [formControl]="rightForm.get('contract')">
-                <mat-option *ngFor="let contract of (relevantContracts$ | async)" [value]="contract.id">{{contract.name}}</mat-option>
-              </mat-select>
-            </mat-form-field>
+            <ng-container *ngIf="!(selected$.value | isStep : rights)">
+              <static-select *ngIf="!(rightForm.get('type').value | isHorizontal)" [control]="rightForm.get('type')" scope="rightTypes" [withoutValues]="['horizontal','vertical']">
+                <mat-label>Type</mat-label>
+              </static-select>
+
+              <bf-autocomplete
+                required
+                [label]="(rightForm.get('type').value | isHorizontal) ? 'Responsible of the Group' : 'Right Holder Name'"
+                [error]="(rightForm.get('type').value | isHorizontal) ? 'Please select a Right Holder. Most likely the Producer.' : 'To select a Right Holder, first add a contract with them.'"
+                [hint]="(rightForm.get('type').value | isHorizontal) ? 'Responsible of the Group is most likely the Producer.' : ''"
+                [options]="rightholderNames$"
+                placeholder="Choose Right Holder"
+                [form]="rightholderControl"
+              ></bf-autocomplete>
+
+              <mat-form-field *ngIf="!(rightForm.get('type').value | isHorizontal) && (relevantContracts$ | async).length" appearance="outline">
+                <mat-label>Contract</mat-label>
+                <mat-select [formControl]="rightForm.get('contract')">
+                  <mat-option *ngFor="let contract of (relevantContracts$ | async)" [value]="contract.id">{{contract.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </ng-container>
     
             <mat-form-field appearance="outline">
-              <mat-label>Name</mat-label>
-              <input matInput type="text" placeholder="Receipt Share Name" [formControl]="rightForm.get('name')" />
+              <mat-label *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)">Receipt Share Name</mat-label>
+              <mat-label *ngIf="(rightForm.get('type').value | isHorizontal)">Group Name</mat-label>
+              <mat-label *ngIf="(selected$.value | isStep : rights)">Step Name</mat-label>
+              <input matInput type="text" [placeholder]="(rightForm.get('type').value | isHorizontal) ? 'Group Name' : 'Receipt Share Name'" [formControl]="rightForm.get('name')" />
             </mat-form-field>
     
             <mat-form-field appearance="outline">
@@ -122,21 +129,23 @@
               <input matInput type="number" min="0" max="100" [formControl]="rightForm.get('percent')" />
             </mat-form-field>
     
-            <p>Parent Revenue Element(s)</p>
-            <mat-form-field appearance="outline">
-              <mat-label>Parent Name(s)</mat-label>
-              <mat-select multiple [formControl]="rightForm.get('parents')">
-                <mat-option *ngFor="let node of (nodes$ | async)" [value]="node.id">{{node.name}}</mat-option>
-              </mat-select>
-              <mat-hint>Choose parent revenue elements from which this Receipt Share draw funds. You can add as many parents as you want.</mat-hint>
-            </mat-form-field>
+            <ng-container *ngIf="!(selected$.value | isStep : rights)">
+              <p>Parent Revenue Element(s)</p>
+              <mat-form-field appearance="outline">
+                <mat-label>Parent Name(s)</mat-label>
+                <mat-select multiple [formControl]="rightForm.get('parents')">
+                  <mat-option *ngFor="let node of (nodes$ | async)" [value]="node.id">{{node.name}}</mat-option>
+                </mat-select>
+                <mat-hint>Choose parent revenue elements from which this Receipt Share draw funds. You can add as many parents as you want.</mat-hint>
+              </mat-form-field>
+            </ng-container>
     
-            <div class="info">
+            <div class="info" *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)">
               <mat-icon svgIcon="info"></mat-icon>
               <p>If you have multiple steps, you can set them up later inside conditions.</p>
             </div>
     
-            <div class="add-next">
+            <div class="add-next" *ngIf="!(selected$.value | isStep : rights)">
               <hr/>
               <p class="mat-caption">Add Next Receipt Share</p>
               <button mat-mini-fab color="primary" (click)="addChild(selected)"[disabled]="!canUpdateGraph" >
@@ -145,7 +154,7 @@
             </div>
           </section>
         </mat-tab>
-        <mat-tab label="Conditions">
+        <mat-tab label="Conditions" *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
             <waterfall-conditions [canUpdate]="canUpdateConditions" [rightForm]="rightForm" [rightId]="selected" (createStep)="createNewStep()" (deleteStep)="deleteStep($event)"></waterfall-conditions>
           </section>

@@ -17,4 +17,5 @@
     <ng-container *ngIf="error">{{ error }}</ng-container>
     <ng-container *ngIf="!error">Please provide a valid {{ label }}</ng-container>
   </mat-error>
+  <mat-hint *ngIf="hint">{{ hint }}</mat-hint>
 </mat-form-field>

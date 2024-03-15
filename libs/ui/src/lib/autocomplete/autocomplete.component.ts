@@ -9,7 +9,6 @@ import { startWith, map } from 'rxjs/operators';
 // Blockframes
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
-
 @Component({
   selector: '[options][form] bf-autocomplete',
   templateUrl: './autocomplete.component.html',
@@ -21,6 +20,7 @@ export class AutocompleteComponent implements OnInit {
 
   @Input() label: string;
   @Input() error: string;
+  @Input() hint: string;
   @Input() placeholder: string;
   @Input() @boolean required: boolean;
   @Input() options: Observable<string[]>;
