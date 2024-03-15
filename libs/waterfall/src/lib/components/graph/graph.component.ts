@@ -23,6 +23,11 @@ import {
   getDefaultVersionId,
   WaterfallRightholder,
   createWaterfallSource,
+  Media,
+  Territory,
+  toGroupLabel,
+  smartJoin,
+  trimString,
 } from '@blockframes/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { GraphService } from '@blockframes/ui/graph/graph.service';
@@ -96,6 +101,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
           }
         });
     }
+
     this.subscriptions.push(combineLatest([
       this.shell.rights$,
       this.shell.waterfall$,
@@ -133,6 +139,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       }
       this.layout(hiddenRightHolderIds);
     }));
+
     this.subscriptions.push(this.rightForm.controls.org.valueChanges.subscribe(org => {
       this.updateRightName(org, undefined);
       const rightholder = this.rightholders.find(r => r.name === org);
@@ -144,7 +151,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
         this.relevantContracts$.next([]);
       }
     }));
+
     this.subscriptions.push(this.rightForm.controls.type.valueChanges.subscribe(type => this.updateRightName(undefined, type)));
+
     this.subscriptions.push(this.rightholderControl.valueChanges.subscribe(name => {
       const rightholder = this.rightholders.find(r => r.name === name);
       if (rightholder) {
@@ -153,6 +162,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
         this.rightholderControl.setErrors({ invalidValue: true });
       }
     }));
+
+    this.subscriptions.push(this.sourceForm.controls.medias.valueChanges.subscribe(medias => this.updateSourceName(medias, undefined)));
+    this.subscriptions.push(this.sourceForm.controls.territories.valueChanges.subscribe(territories => this.updateSourceName(undefined, territories)));
   }
 
   ngOnDestroy() {
@@ -167,6 +179,20 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     if (`${o} - ${t}` === right.name) return;
     if (!right.name || right.name === 'New right' || right.name.includes(' - ')) {
       this.rightForm.controls.name.setValue(`${o} - ${t}`);
+    }
+  }
+
+  private updateSourceName(_medias: Media[], _territories: Territory[]) {
+    const maxLength = 20;
+    const source = this.sourceForm.value;
+    const groupedMedias = toGroupLabel(_medias || source.medias, 'medias', 'All Medias');
+    const medias = trimString(smartJoin(groupedMedias, ', ', ' and '), maxLength, true);
+    const groupedTerritories = toGroupLabel(_territories || source.territories, 'territories', 'World');
+    const territories = trimString(smartJoin(groupedTerritories, ', ', ' and '), maxLength, true);
+    if (!medias || !territories) return;
+    if (`${medias} - ${territories}` === source.name) return;
+    if (!source.name || source.name === 'New source' || source.name.includes(' - ')) {
+      this.sourceForm.controls.name.setValue(`${medias} - ${territories}`);
     }
   }
 
