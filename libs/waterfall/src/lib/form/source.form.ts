@@ -3,8 +3,7 @@ import { WaterfallSource } from '@blockframes/model';
 import { FormControl, FormGroup } from '@angular/forms';
 import { FormStaticValueArray } from '@blockframes/utils/form';
 
-
-export type SourceForm = FormGroup<{
+type SourceForm = FormGroup<{
   medias: FormStaticValueArray<'medias'>;
   territories: FormStaticValueArray<'territories'>;
   name: FormControl<string>;

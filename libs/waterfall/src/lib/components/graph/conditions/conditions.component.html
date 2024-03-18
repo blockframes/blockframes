@@ -15,24 +15,30 @@
 
 <hr />
 
-<ng-container *ngFor="let step of rightForm.controls.steps.value; let index = index">
-  <ng-container *ngIf="selectedStep === index; else item">
-    <p class="step">Step {{index + 1}}</p>
+<ng-container *ngFor="let step of rightForm.controls.steps.value; let stepIndex = index">
+  <ng-container *ngIf="selectedStep$.value === stepIndex; else item">
+    <p class="step">Step {{stepIndex + 1}}</p>
   
-    <waterfall-condition-item [canUpdate]="canUpdate" *ngFor="let condition of step; let index = index" [condition]="condition" (edit)="editCondition(index)" (delete)="deleteCondition(index)"></waterfall-condition-item>
+    <waterfall-condition-item
+      *ngFor="let condition of step; let conditionIndex = index"
+      [canUpdate]="canUpdate" 
+      [condition]="condition" 
+      (edit)="editCondition(conditionIndex)" 
+      (delete)="deleteCondition(conditionIndex)"
+    ></waterfall-condition-item>
 
     <waterfall-conditions-form [form]="conditionForm" [rightId]="rightId"></waterfall-conditions-form>
 
     <div class="add-next">
       <hr />
       <p class="mat-caption">Add Next Condition</p>
-      <button mat-mini-fab color="primary" [disabled]="!newCondition || !canUpdate" (click)="createCondition()">
+      <button mat-mini-fab color="primary" [disabled]="!newCondition || !canUpdate" (click)="addNewCondition(step.length)">
         <mat-icon svgIcon="add"></mat-icon>
       </button>
     </div>
   </ng-container>
   <ng-template #item>
-    <waterfall-step-item class="surface" [index]="index" [conditionCount]="step.length" (editStep)="selectStep(index)" (deleteStep)="removeStep(index)"></waterfall-step-item>
+    <waterfall-step-item class="surface" [index]="stepIndex" [conditionCount]="step.length" (editStep)="selectStep(stepIndex)" (deleteStep)="removeStep(stepIndex)"></waterfall-step-item>
   </ng-template>
 </ng-container>
 

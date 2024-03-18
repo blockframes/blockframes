@@ -2,7 +2,7 @@ import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Intercom } from 'ng-intercom';
 import { WriteBatch } from 'firebase/firestore';
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Optional, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Optional, Pipe, PipeTransform, ViewChild } from '@angular/core';
 import { BehaviorSubject, Subscription, combineLatest, map, tap } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -23,6 +23,11 @@ import {
   getDefaultVersionId,
   WaterfallRightholder,
   createWaterfallSource,
+  Media,
+  Territory,
+  toGroupLabel,
+  smartJoin,
+  trimString,
 } from '@blockframes/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { GraphService } from '@blockframes/ui/graph/graph.service';
@@ -31,8 +36,8 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { RightService } from '../../right.service';
 import { WaterfallService } from '../../waterfall.service';
-import { createRightForm, setRightFormValue } from '../forms/right-form/right-form';
-import { createSourceForm, setSourceFormValue } from '../forms/source-form/source-form';
+import { createRightForm, setRightFormValue } from '../../form/right.form';
+import { createSourceForm, setSourceFormValue } from '../../form/source.form';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 import { Arrow, Node, computeDiff, createChild, createSibling, createStep, deleteStep, fromGraph, toGraph, updateParents } from './layout';
 
@@ -59,9 +64,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   public rightholderControl = new FormControl<string>('');
   public rightholderNames$ = new BehaviorSubject<string[]>([]);
   public relevantContracts$ = new BehaviorSubject<WaterfallContract[]>([]);
+  public rights: Right[];
 
   private waterfallId = this.shell.waterfall.id;
-  private rights: Right[];
   private sources: WaterfallSource[];
   private defaultVersionId: string;
   private producer = this.shell.waterfall.rightholders.find(r => r.roles.includes('producer'));
@@ -96,6 +101,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
           }
         });
     }
+
     this.subscriptions.push(combineLatest([
       this.shell.rights$,
       this.shell.waterfall$,
@@ -133,6 +139,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       }
       this.layout(hiddenRightHolderIds);
     }));
+
     this.subscriptions.push(this.rightForm.controls.org.valueChanges.subscribe(org => {
       this.updateRightName(org, undefined);
       const rightholder = this.rightholders.find(r => r.name === org);
@@ -144,7 +151,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
         this.relevantContracts$.next([]);
       }
     }));
+
     this.subscriptions.push(this.rightForm.controls.type.valueChanges.subscribe(type => this.updateRightName(undefined, type)));
+
     this.subscriptions.push(this.rightholderControl.valueChanges.subscribe(name => {
       const rightholder = this.rightholders.find(r => r.name === name);
       if (rightholder) {
@@ -153,13 +162,16 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
         this.rightholderControl.setErrors({ invalidValue: true });
       }
     }));
+
+    this.subscriptions.push(this.sourceForm.controls.medias.valueChanges.subscribe(medias => this.updateSourceName(medias, undefined)));
+    this.subscriptions.push(this.sourceForm.controls.territories.valueChanges.subscribe(territories => this.updateSourceName(undefined, territories)));
   }
 
   ngOnDestroy() {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
-  updateRightName(org?: string, type?: RightType) {
+  private updateRightName(org?: string, type?: RightType) {
     const right = this.rightForm.value;
     const o = org ?? right.org;
     const t = rightTypes[type ?? right.type];
@@ -167,6 +179,20 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     if (`${o} - ${t}` === right.name) return;
     if (!right.name || right.name === 'New right' || right.name.includes(' - ')) {
       this.rightForm.controls.name.setValue(`${o} - ${t}`);
+    }
+  }
+
+  private updateSourceName(_medias: Media[], _territories: Territory[]) {
+    const maxLength = 20;
+    const source = this.sourceForm.value;
+    const groupedMedias = toGroupLabel(_medias || source.medias, 'medias', 'All Medias');
+    const medias = trimString(smartJoin(groupedMedias, ', ', ' and '), maxLength, true);
+    const groupedTerritories = toGroupLabel(_territories || source.territories, 'territories', 'World');
+    const territories = trimString(smartJoin(groupedTerritories, ', ', ' and '), maxLength, true);
+    if (!medias || !territories) return;
+    if (`${medias} - ${territories}` === source.name) return;
+    if (!source.name || source.name === 'New source' || source.name.includes(' - ')) {
+      this.sourceForm.controls.name.setValue(`${medias} - ${territories}`);
     }
   }
 
@@ -196,15 +222,26 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
         this.relevantContracts$.next([]);
       }
 
+      let rightholderId = '';
+
+      let type = right.type;
+
       if (right.type === 'vertical') {
         const members = this.rights.filter(r => r.groupId === right.id).sort((a, b) => a.order - b.order);
         steps = members.map(member => member.conditions?.conditions.filter(c => !isConditionGroup(c)) as Condition[] ?? []);
+        rightholderId = members[0].rightholderId;
+        type = members[0].type;
+        right.contractId = members[0].contractId;
+      } else if (right.type === 'horizontal') {
+        rightholderId = right.blameId;
       } else {
         steps[0] = right.conditions?.conditions.filter(c => !isConditionGroup(c)) as Condition[] ?? [];
+        rightholderId = right.rightholderId;
       }
-      const org = this.rightholders.find(r => r.id === right.rightholderId)?.name ?? '';
+
+      const rightholderName = this.rightholders.find(r => r.id === rightholderId)?.name ?? '';
       const parents = this.nodes$.getValue().filter(node => node.children.includes(right.groupId || id)); // do not use ?? instead of ||, it will break since '' can be considered truthy
-      setRightFormValue(this.rightForm, { ...right, rightholderId: org, nextIds: parents.map(parent => parent.id) }, steps);
+      setRightFormValue(this.rightForm, { ...right, type, rightholderId: rightholderName, nextIds: parents.map(parent => parent.id) }, steps);
     }
   }
 
@@ -223,7 +260,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     if (this.relevantContracts$.value.length === 0) this.rightForm.controls.contract.setValue('');
 
     const producer = this.rightholders.find(r => r.roles.includes('producer'));
-    if (producer?.id !== rightholder.id && !this.rightForm.controls.contract.value) {
+    if (producer?.id !== rightholder.id && this.rightForm.controls.type.value !== 'horizontal' && !this.rightForm.controls.contract.value) {
       this.snackBar.open('Please provide the contract associated to this Receipt Share', 'close', { duration: 3000 });
       return;
     }
@@ -235,22 +272,32 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     const newGraph = fromGraph(graph, this.version);
     const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
     const right = changes.updated.rights.find(right => right.id === rightId);
-    right.type = this.rightForm.controls.type.value;
+    const existingRight = this.rights.find(r => r.id === rightId);
+    right.type = existingRight.type === 'vertical' ? 'vertical' : this.rightForm.controls.type.value;
     right.name = this.rightForm.controls.name.value;
     right.percent = this.rightForm.controls.percent.value;
     right.contractId = this.rightForm.controls.contract.value;
-    right.rightholderId = this.rightholders.find(r => r.name === this.rightForm.controls.org.value)?.id ?? '';
+    right.pools = existingRight.pools;
+
+    if (right.type !== 'horizontal') {
+      right.rightholderId = this.rightholders.find(r => r.name === this.rightForm.controls.org.value)?.id ?? '';
+    } else {
+      right.blameId = this.rightholders.find(r => r.name === this.rightForm.controls.org.value)?.id ?? '';
+    }
 
     if (right.type === 'vertical') {
       const steps = changes.updated.rights.filter(r => r.groupId === right.id);
       steps.forEach(step => {
+        step.type = this.rightForm.controls.type.value;
         step.rightholderId = right.rightholderId;
         step.contractId = right.contractId;
       });
+      delete right.rightholderId;
+      delete right.contractId;
       this.rightForm.controls.steps.value.forEach((conditions, index) => {
         steps[index].conditions = { operator: 'AND', conditions: conditions };
       });
-    } else {
+    } else if (right.type !== 'horizontal') {
       right.conditions = { operator: 'AND', conditions: this.rightForm.controls.steps.value[0] };
     }
 
@@ -274,7 +321,11 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     ]);
     await write.commit();
 
-    this.snackBar.open('Receipt Share saved', 'close', { duration: 3000 });
+    if (right.type === 'horizontal') {
+      this.snackBar.open('Group Details saved', 'close', { duration: 3000 });
+    } else {
+      this.snackBar.open('Receipt Share saved', 'close', { duration: 3000 });
+    }
   }
 
   updateSource() {
@@ -543,6 +594,13 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     this.select('');
   }
 
+  public addCondition(data: { rightId: string, condition: Condition, step: number, index: number }) {
+    if (this.selected$.value != data.rightId) return;
+    const steps = this.rightForm.controls.steps.value;
+    steps[data.step][data.index] = data.condition;
+    this.rightForm.controls.steps.setValue(steps);
+  }
+
   private async updateSources(sources: WaterfallSource[], write?: WriteBatch) {
     if (!this.version || !this.version.standalone) {
       const standaloneSources = this.shell.waterfall.sources.filter(s => s.version && Object.values(s.version).some(v => v.standalone));
@@ -551,5 +609,20 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       const waterfallSources = this.version?.id ? this.shell.waterfall.sources.filter(s => !s.version || !s.version[this.version.id]) : [];
       return this.waterfallService.update(this.waterfallId, { id: this.waterfallId, sources: [...sources, ...waterfallSources] }, { write });
     }
+  }
+}
+
+@Pipe({ name: 'isHorizontal' })
+export class IsHorizontalPipe implements PipeTransform {
+  transform(type: RightType) {
+    return type === 'horizontal';
+  }
+}
+
+@Pipe({ name: 'isStep' })
+export class IsStepPipe implements PipeTransform {
+  transform(id: string, rights: Right[]) {
+    const groupId = rights.find(r => r.id === id)?.groupId;
+    return rights.find(r => r.id === groupId)?.type === 'vertical';
   }
 }

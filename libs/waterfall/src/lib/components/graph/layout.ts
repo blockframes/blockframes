@@ -23,6 +23,7 @@ interface NodeBase {
   type: 'source' | 'right' | 'vertical' | 'horizontal';
   children: string[];
   version: Record<string, object>;
+  pools: string[];
 }
 
 function createNodeBase(params: Partial<NodeBase> = {}): NodeBase {
@@ -35,6 +36,7 @@ function createNodeBase(params: Partial<NodeBase> = {}): NodeBase {
     type: 'right',
     children: [],
     version: {},
+    pools: [],
     ...params
   }
 }
@@ -160,6 +162,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[], hidde
           percent: vMember.percent,
           rightType: vMember.type,
           version: vMember.version,
+          pools: vMember.pools,
         }, hiddenRightHolderIds.includes(vMember.rightholderId));
         return rightNode;
       });
@@ -173,6 +176,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[], hidde
         width: RIGHT_WIDTH + (SPACING * 2),
         version: right.version,
         percent: right.percent,
+        pools: right.pools,
       });
       if (members.every(member => member.width === 0 && member.height === 0)) {
         verticalNode.width = 0;
@@ -193,6 +197,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[], hidde
               percent: vMember.percent,
               rightType: vMember.type,
               version: vMember.version,
+              pools: vMember.pools,
             }, hiddenRightHolderIds.includes(vMember.rightholderId));
             return rightNode;
           });
@@ -203,6 +208,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[], hidde
             members: vMembers,
             version: member.version,
             percent: member.percent,
+            pools: member.pools,
           });
           if (vMembers.every(member => member.width === 0 && member.height === 0)) {
             verticalNode.width = 0;
@@ -220,6 +226,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[], hidde
             percent: member.percent,
             rightType: member.type,
             version: member.version,
+            pools: member.pools,
           }, hiddenRightHolderIds.includes(member.rightholderId));
           return rightNode;
         }
@@ -236,6 +243,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[], hidde
         version: right.version,
         percent: right.percent,
         blameId: right.blameId,
+        pools: right.pools,
       });
       if (members.every(member => member.width === 0 && member.height === 0)) {
         horizontalNode.width = 0;
@@ -254,6 +262,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[], hidde
         percent: right.percent,
         rightType: right.type,
         version: right.version,
+        pools: right.pools,
       }, hiddenRightHolderIds.includes(right.rightholderId));
       return rightNode;
     }
@@ -829,7 +838,7 @@ function createHorizontal(node: HorizontalNode, version?: Version, parents?: str
     type: 'horizontal',
     actionName: 'prependHorizontal',
     percent: node.percent,
-    pools: [], // TODO
+    pools: node.pools,
     version: node.version,
     blameId: node.blameId,
   });
@@ -851,7 +860,7 @@ function createVertical(node: VerticalNode, version?: Version, parents?: string[
     type: 'vertical',
     actionName: 'prependVertical',
     percent: node.percent,
-    pools: [], // TODO
+    pools: node.pools,
     version: node.version,
   });
 
@@ -871,7 +880,7 @@ function createRight(node: RightNode, version?: Version, parents?: string[], gro
     nextIds: parents ?? [],
     rightholderId: node.rightHolderId,
     percent: node.percent,
-    pools: [], // TODO
+    pools: node.pools,
     order,
     type: node.rightType,
     version: node.version,
