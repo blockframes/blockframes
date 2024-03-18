@@ -1,5 +1,5 @@
 
-import { BehaviorSubject, Subscription, combineLatest } from 'rxjs';
+import { BehaviorSubject, Subscription, combineLatest, startWith } from 'rxjs';
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import {
@@ -18,7 +18,7 @@ import {
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 
-import { ConditionForm } from './condition.form';
+import { ConditionForm } from '../../../form/condition.form';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ExpenseTypesModalComponent } from '../../expense/expense-types-modal/expense-types-modal.component';
@@ -86,7 +86,7 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
         this.expenseTypes = waterfall.expenseTypes[this.contractId] || [];
       }),
 
-      this.form.controls.revenueOwnerType.valueChanges.subscribe(value => {
+      this.form.controls.revenueOwnerType.valueChanges.pipe(startWith(this.form.controls.revenueOwnerType.value)).subscribe(value => {
         if (value) this.selectRevenueOwnerType(value);
       }),
 
@@ -96,6 +96,11 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
 
       this.toggleRateControl.valueChanges.subscribe(value => {
         if (!value && this.form.controls.interestRate.value !== 0) this.form.controls.interestRate.setValue(0);
+      }),
+
+      this.form.controls.salesTerms.valueChanges.subscribe(() => {
+        // Hack to force the valueChanges in parent component
+        this.form.controls.salesTermsOperator.setValue(this.form.controls.salesTermsOperator.value);
       }),
     );
   }
