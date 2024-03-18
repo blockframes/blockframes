@@ -3,23 +3,26 @@
     <ng-container *ngIf="state$ | async else loading">
       <waterfall-version-selector></waterfall-version-selector>
       <header>
-        <waterfall-dashboard-card 
+        <waterfall-dashboard-card
           *ngIf="incomes$ | async as income"
           mode="primary"
           title="Total Film Revenue"
-          [price]="income">
+          [price]="income"
+          matTooltip="The overall income a movie earns from all sources.">
         </waterfall-dashboard-card>
       
         <waterfall-dashboard-card 
           *ngIf="turnover$ | async as turnover"
           title="My Total Cash Flow"
-          [price]="turnover">
+          [price]="turnover"
+          matTooltip="Refers to the sum of all incoming and outgoing money, reflecting your overall financial movement.">
         </waterfall-dashboard-card>
       
         <waterfall-dashboard-card 
           *ngIf="revenue$ | async as revenue"
           title="My Total Revenue"
-          [price]="revenue">
+          [price]="revenue"
+          matTooltip="The overall income earned from all sources.">
         </waterfall-dashboard-card>
       </header>
       

@@ -441,8 +441,9 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     if (!this.canBypassRules) throw new Error('You are not allowed to duplicate waterfall');
     const waterfall = await firstValueFrom(this.waterfall$);
     const blocks = await firstValueFrom(this.blocks$);
-    // TODO #9520 version{} of rights, incomes, expenses should be duplicated into new version to keep overrides
-    return this.waterfallService.duplicateVersion(waterfall, blocks, versionIdToDuplicate, version);
+    const versionToDuplicate = waterfall.versions.find(v => v.id === versionIdToDuplicate);
+    if (!versionIdToDuplicate) throw new Error(`Version ${versionIdToDuplicate} to duplicate not found in waterfall`);
+    return this.waterfallService.duplicateVersion(waterfall, blocks, versionToDuplicate, version);
   }
 
   /**
