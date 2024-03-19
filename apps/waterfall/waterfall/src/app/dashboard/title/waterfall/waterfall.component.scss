@@ -22,6 +22,7 @@ waterfall-version-selector {
 @include layout-bp(lt-xl) {
   waterfall-sidebar {
     height: 41vh;
+    min-height: 650px;
   }
 }
 
