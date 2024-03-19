@@ -21,7 +21,7 @@
     {{ receiverId | rightholderName: waterfall }}
   </ng-template>
   <ng-template *ngIf="columns.duration" colRef="duration" [label]="columns.duration" let-duration [sort]="sorts.byDuration" [defaultSort]="defaultSort">
-    {{ duration.from | date: 'dd/MM/yyyy' }} -  {{ duration.to | date: 'dd/MM/yyyy' }}
+    {{ duration.from | date }} -  {{ duration.to | date }}
   </ng-template>
   <ng-template *ngIf="columns.due" colRef="payments" [label]="columns.due" let-payments>
     <price-per-currency 
@@ -37,7 +37,7 @@
   </ng-template>
   <ng-template *ngIf="columns.date" colRef="payments" [label]="columns.date" let-payments>
     <ng-container *ngIf="payments.rightholder?.status === 'received'">
-      {{ payments.rightholder.date | date: 'dd/MM/yyyy' }}
+      {{ payments.rightholder.date | date }}
     </ng-container>
   </ng-template>
   <ng-template *ngIf="columns.status" colRef="status" [label]="columns.status" let-status sort>

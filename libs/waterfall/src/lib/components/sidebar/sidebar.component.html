@@ -19,7 +19,7 @@
     <mat-radio-group [formControl]="selectedStatementControl">
       <mat-radio-button *ngFor="let statement of (groupedStatements$ | async)[year]" [value]="statement" [checked]="statement.id === selectedStatementControl.value?.id">
         <div>
-          <p>Statement {{statement.duration.to | date: 'MM/dd/yyyy'}}</p>
+          <p>Statement {{ statement.duration.to | date }}</p>
           <mat-icon svgIcon="document"></mat-icon>
         </div>
       </mat-radio-button>

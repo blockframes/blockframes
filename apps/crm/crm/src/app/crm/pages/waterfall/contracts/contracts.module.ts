@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
+// Component
 import { ContractsComponent } from './contracts.component';
+
+// Blockframes
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
-import { ToLabelModule } from '@blockframes/utils/pipes';
 import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 import { ContractPipeModule } from '@blockframes/contract/contract/pipe';
+import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -18,11 +20,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 @NgModule({
   declarations: [ContractsComponent],
   imports: [
-    CommonModule,
+    BfCommonModule,
 
     TableModule,
     PricePerCurrencyModule,
-    ToLabelModule,
     RightHolderNamePipeModule,
     ContractPipeModule,
 

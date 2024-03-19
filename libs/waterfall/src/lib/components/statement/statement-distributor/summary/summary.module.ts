@@ -1,6 +1,5 @@
 // Angular
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Blockframes
@@ -10,6 +9,7 @@ import { StatementHeaderModule } from '../../statement-header/statement-header.m
 import { StatementParticipationModule } from '../../statement-participation/statement-participation.module';
 import { StatementArbitraryChangeModule } from '../../statement-arbitrary-change/statement-arbitrary-change.module';
 import { ExpenseTypePipeModule } from '../../../../pipes/expense-type.pipe';
+import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 
 // Components
 import { StatementDistributorSummaryComponent } from './summary.component';
@@ -28,7 +28,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 @NgModule({
   declarations: [StatementDistributorSummaryComponent],
   imports: [
-    CommonModule,
+    BfCommonModule,
     ReactiveFormsModule,
 
     // Blockframes

@@ -1,5 +1,4 @@
 // Angular
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -21,8 +20,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Libraries
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { ToLabelModule } from '@blockframes/utils/pipes';
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
+import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 
 // Pipes
 import { ErrorCountPipeModule } from '../pipes/error-count.pipe';
@@ -51,7 +50,7 @@ import { ViewImportErrorsComponent } from './view-import-errors/view-import-erro
     ViewImportErrorsComponent,
   ],
   imports: [
-    CommonModule,
+    BfCommonModule,
     FlexLayoutModule,
     FormsModule,
     ReactiveFormsModule,
@@ -74,7 +73,6 @@ import { ViewImportErrorsComponent } from './view-import-errors/view-import-erro
 
     // Librairies
     ImageModule,
-    ToLabelModule,
     ErrorCountPipeModule,
     IsDisabledPipeModule,
     GetTitlePipeModule

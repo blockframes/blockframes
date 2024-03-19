@@ -5,13 +5,13 @@
         <mat-icon svgIcon="movie"></mat-icon><span matLine><strong>Title: </strong>{{ movie.title.international }}</span>
       </span>
       <span *ngIf="showLink">
-        Statement Reported: {{ statement.reported | date: 'MM/dd/yyyy' }}
+        Statement Reported: {{ statement.reported | date }}
       </span>
     </section>
   
     <section>
       <span>
-        <mat-icon svgIcon="calendar_today"></mat-icon><span matLine><strong>Covered Period: </strong>{{ statement.duration.from | date: 'MM/dd/yyyy' }} -  {{ statement.duration.to | date: 'MM/dd/yyyy' }}</span>
+        <mat-icon svgIcon="calendar_today"></mat-icon><span matLine><strong>Covered Period: </strong>{{ statement.duration.from | date }} -  {{ statement.duration.to | date }}</span>
       </span>
       <span *ngIf="showLink">
         <a mat-button [routerLink]="['/c/o/dashboard/title', statement.waterfallId, 'statement', statement.id]" target="_blank">
@@ -20,7 +20,7 @@
         </a>
       </span>
       <span *ngIf="!showLink">
-        Statement Reported: {{ statement.reported | date: 'MM/dd/yyyy' }}
+        Statement Reported: {{ statement.reported | date }}
       </span>
     </section>
   </article>
@@ -32,7 +32,7 @@
     </span>
   
     <span>
-      <mat-icon svgIcon="calendar_today"></mat-icon><span matLine><strong>Covered Period: </strong>{{ statement.duration.from | date: 'MM/dd/yyyy' }} -  {{ statement.duration.to | date: 'MM/dd/yyyy' }}</span>
+      <mat-icon svgIcon="calendar_today"></mat-icon><span matLine><strong>Covered Period: </strong>{{ statement.duration.from | date }} -  {{ statement.duration.to | date }}</span>
     </span>
   
     <section *ngIf="contract">
@@ -40,7 +40,7 @@
         <mat-icon svgIcon="document"></mat-icon><span matLine><strong>Contract: </strong>{{ contract.name }} <ng-container *ngIf="sources">({{ sources.length ? (sources | join:'name') : 'Receipt sources not specified' }})</ng-container></span>
       </span>
       <span *ngIf="statement.status === 'reported' && !!statement.reported">
-        Statement Reported: {{ statement.reported | date: 'MM/dd/yyyy' }}
+        Statement Reported: {{ statement.reported | date }}
       </span>
     </section>
   
@@ -49,7 +49,7 @@
         <mat-icon svgIcon="document"></mat-icon><span matLine><strong>Sources: </strong> {{ sources.length ? (sources | join:'name') : 'Receipt sources not specified' }}</span>
       </span>
       <span *ngIf="statement.status === 'reported' && !!statement.reported">
-        Statement Reported: {{ statement.reported | date: 'MM/dd/yyyy' }}
+        Statement Reported: {{ statement.reported | date }}
       </span>
     </section>
   </article>

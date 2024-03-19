@@ -1,7 +1,7 @@
 <global-modal>
   <h2>Save Expense Changes</h2>
 
-  <h3>{{ data.expense.rightholderId | rightholderName: data.waterfall }} - {{ data.expense.date | date: 'dd/MM/yyyy' }}</h3>
+  <h3>{{ data.expense.rightholderId | rightholderName: data.waterfall }} - {{ data.expense.date | date }}</h3>
   <p class="mat-body-1">{{ data.expense.nature }} - {{ data.expense.typeId | expenseType : data.expense.contractId : data.waterfall }}</p>
 
   <section>

@@ -13,7 +13,7 @@
       {{ name }}
     </ng-template>
     <ng-template colRef="signatureDate" label="Signature Date" let-signatureDate sort defaultSort>
-      {{ signatureDate | date: 'dd/MM/yyyy' }}
+      {{ signatureDate | date }}
     </ng-template>
     <ng-template colRef="rootId" label="Parent" let-rootId sort>
       {{ rootId ? rootId : '--' }}

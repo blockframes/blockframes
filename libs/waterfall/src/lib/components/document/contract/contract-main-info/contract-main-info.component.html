@@ -19,7 +19,7 @@
 
     <span>
       <mat-icon svgIcon="calendar_today"></mat-icon>
-      <span matLine><strong>Covered Period: </strong>{{ contract.duration.from | date: 'MM/dd/yyyy' }} -  {{ contract.duration.to | date: 'MM/dd/yyyy' }}</span>
+      <span matLine><strong>Covered Period: </strong>{{ contract.duration.from | date }} -  {{ contract.duration.to | date }}</span>
     </span>
   </section>
   <section>
@@ -31,7 +31,7 @@
     </span>
     <span>
       <mat-icon svgIcon="contract"></mat-icon>
-      <span matLine><strong>Signature date: </strong>{{ contract.signatureDate | date: 'MM/dd/yyyy' }}</span>
+      <span matLine><strong>Signature date: </strong>{{ contract.signatureDate | date }}</span>
     </span>
   </section>
 </div>

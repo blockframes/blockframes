@@ -1,8 +1,10 @@
 // Angular
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+
+// Blockframes
+import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 
 // Pages
 import { StatementPeriodComponent } from './statement-period.component';
@@ -20,7 +22,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 @NgModule({
   declarations: [StatementPeriodComponent],
   imports: [
-    CommonModule,
+    BfCommonModule,
     ReactiveFormsModule,
 
     MatInputModule,

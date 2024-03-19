@@ -132,7 +132,7 @@
           </mat-expansion-panel-header>
           <bf-table [source]="expenses" pagination="50">
             <ng-template colRef="date" label="Date" let-date sort defaultSort>
-              {{ date | date: 'dd/MM/yyyy' }}
+              {{ date | date }}
             </ng-template>
             <ng-template colRef="nature" label="Expenses name" let-nature sort>
               {{ nature }}
