@@ -41,7 +41,7 @@
           <mat-datepicker #datePickerTo></mat-datepicker>
           <mat-error *ngIf="form.get('duration').get('to').hasError('startOverEnd') ">End date must not be earlier than start date</mat-error>
           <mat-error *ngIf="form.get('duration').get('to').hasError('isBefore')">Date must before waterfall initialization date</mat-error>
-          <mat-error *ngIf="form.get('duration').get('to').hasError('maxDate')">Date must be earlier than contract termination date : {{ contract.duration.to | date: 'MM/dd/yyyy' }}</mat-error>
+          <mat-error *ngIf="form.get('duration').get('to').hasError('maxDate')">Date must be earlier than contract termination date : {{ contract.duration.to | date }}</mat-error>
         </mat-form-field>
       </section>
       <button *ngIf="nextStatementId else noNext" mat-icon-button matTooltip="Go to next statement" (click)="goTo(nextStatementId)">

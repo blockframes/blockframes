@@ -1,6 +1,5 @@
 // Angular
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Blockframes
@@ -9,6 +8,7 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { StatementHeaderModule } from '../../statement-header/statement-header.module';
 import { StatementArbitraryChangeModule } from '../../statement-arbitrary-change/statement-arbitrary-change.module';
 import { ExpenseTypePipeModule } from '../../../../pipes/expense-type.pipe';
+import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 
 // Components
 import { StatementDirectSalesSummaryComponent } from './summary.component';
@@ -27,7 +27,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 @NgModule({
   declarations: [StatementDirectSalesSummaryComponent],
   imports: [
-    CommonModule,
+    BfCommonModule,
     ReactiveFormsModule,
 
     // Blockframes

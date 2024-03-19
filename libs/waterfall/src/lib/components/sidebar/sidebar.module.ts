@@ -1,6 +1,5 @@
 
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { MatIconModule } from '@angular/material/icon';
@@ -11,7 +10,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
-import { ToLabelModule } from '@blockframes/utils/pipes';
+import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 
 import { WaterfallSidebarComponent } from './sidebar.component';
 
@@ -19,10 +18,9 @@ import { WaterfallSidebarComponent } from './sidebar.component';
 @NgModule({
   declarations: [ WaterfallSidebarComponent ],
   imports: [
-    CommonModule,
+    BfCommonModule,
     ReactiveFormsModule,
 
-    ToLabelModule,
 
     MatIconModule,
     MatInputModule,

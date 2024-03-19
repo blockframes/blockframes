@@ -1,17 +1,16 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
 
 // Blockframes
 import { TableModule } from '@blockframes/ui/list/table/table.module';
-import { JoinPipeModule, MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { StatementPaymentModule } from '../statement-payment/statement-payment.module';
 import { RightHolderNamePipeModule } from '../../../pipes/rightholder-name.pipe';
 import { ContractPipeModule } from '@blockframes/contract/contract/pipe';
 import { VersionNamePipeModule } from '../../../pipes/version-name.pipe';
 import { StatementShareModule } from '../statement-share/statement-share.module';
+import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 
 // Component
 import { IncomesSourcesPipe, StatementTableComponent } from './statement-table.component';
@@ -26,16 +25,13 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 @NgModule({
   declarations: [StatementTableComponent, IncomesSourcesPipe],
   imports: [
-    CommonModule,
+    BfCommonModule,
 
     TableModule,
-    ToLabelModule,
     PricePerCurrencyModule,
     StatementPaymentModule,
     RightHolderNamePipeModule,
     ContractPipeModule,
-    JoinPipeModule,
-    MaxLengthModule,
     VersionNamePipeModule,
     StatementShareModule,
 

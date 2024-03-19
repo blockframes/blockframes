@@ -1,7 +1,6 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
 // Pages
@@ -17,6 +16,7 @@ import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/righthol
 import { EmptyWaterfallModule } from '@blockframes/waterfall/components/empty/empty.module';
 import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.module';
 import { VersionSelectorModule } from '@blockframes/waterfall/components/version/version-selector/version-selector.module';
+import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 
 // Material
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -29,7 +29,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 @NgModule({
   declarations: [WaterfallComponent],
   imports: [
-    CommonModule,
+    BfCommonModule,
 
     TableModule,
     ImageModule,

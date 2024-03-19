@@ -59,7 +59,7 @@
           {{ actionId }}
         </ng-template>
         <ng-template colRef="payload.date" label="Date" let-date sort defaultSort>
-          {{ date | date: 'dd/MM/yyyy' }}
+          {{ date | date }}
         </ng-template>
         <ng-template colRef="block" label="Block" let-block sort>
           {{ block.name }}

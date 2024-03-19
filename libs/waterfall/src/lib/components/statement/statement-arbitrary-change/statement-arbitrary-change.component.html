@@ -65,7 +65,7 @@
             <ul>
               <li *ngFor="let stm of warning.directSales">
                 <span>
-                  <h3>{{ stm.senderId | rightholderName: data.waterfall }} {{ stm.duration.from | date: 'dd/MM/yyyy' }} -  {{ stm.duration.to | date: 'dd/MM/yyyy' }}</h3>
+                  <h3>{{ stm.senderId | rightholderName: data.waterfall }} {{ stm.duration.from | date }} -  {{ stm.duration.to | date }}</h3>
                   <a mat-icon-button [routerLink]="['/c/o/dashboard/title', stm.waterfallId, 'statement', stm.id]" target="_blank">
                     <mat-icon svgIcon="document" matTooltip="View statement"></mat-icon>
                   </a>
@@ -84,7 +84,7 @@
             <ul>
               <li *ngFor="let stm of warning.outgoing">
                 <span>
-                  <h3>{{ stm.senderId | rightholderName: data.waterfall }} {{ stm.duration.from | date: 'dd/MM/yyyy' }} -  {{ stm.duration.to | date: 'dd/MM/yyyy' }}</h3>
+                  <h3>{{ stm.senderId | rightholderName: data.waterfall }} {{ stm.duration.from | date }} -  {{ stm.duration.to | date }}</h3>
                   <a mat-icon-button [routerLink]="['/c/o/dashboard/title', stm.waterfallId, 'statement', stm.id]" target="_blank">
                     <mat-icon svgIcon="document" matTooltip="View statement"></mat-icon>
                   </a>

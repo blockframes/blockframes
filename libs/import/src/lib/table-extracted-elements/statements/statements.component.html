@@ -48,12 +48,12 @@
 
   <ng-container matColumnDef="statement.duration.from">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> From </th>
-    <td mat-cell *matCellDef="let element"> {{ element.statement.duration.from | date: 'dd/MM/yyyy' }} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.statement.duration.from | date }} </td>
   </ng-container>
 
   <ng-container matColumnDef="statement.duration.to">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>To </th>
-    <td mat-cell *matCellDef="let element"> {{ element.statement.duration.to | date: 'dd/MM/yyyy' }} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.statement.duration.to | date }} </td>
   </ng-container>
 
   <ng-container matColumnDef="statement.waterfallId">

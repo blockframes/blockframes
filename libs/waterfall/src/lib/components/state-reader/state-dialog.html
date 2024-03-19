@@ -24,7 +24,7 @@
             </ng-container>
           </ng-container>
           <ng-container *ngSwitchCase="'date'">
-            <strong>{{ item.key }}:</strong> {{ item.value | date: 'MM/dd/yyyy' }}
+            <strong>{{ item.key }}:</strong> {{ item.value | date }}
           </ng-container>
           <ng-container *ngSwitchCase="'percent'">
             <strong>{{ item.key }}:</strong> {{ item.value*100 }}%
