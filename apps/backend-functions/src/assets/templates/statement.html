@@ -37,11 +37,14 @@
         <div>
           <span>From</span>
           <h2>{{data.statement.sender}}</h2>
-          <div class="party-desc">
-            123 Producer’s Address Street <br/>
-            69001 Lyon <br/>
-            France
-          </div>
+          {{#if data.statement.senderAddress}}
+            <div class="party-desc">
+              {{#if data.statement.senderAddress.street}}{{data.statement.senderAddress.street}}<br/>{{/if}}
+              {{#if data.statement.senderAddress.zipCode}}{{data.statement.senderAddress.zipCode}} {{/if}} 
+              {{#if data.statement.senderAddress.city}} {{data.statement.senderAddress.city}}<br/>{{/if}}
+              {{toLabel data.statement.senderAddress.country 'territories'}}
+            </div>
+          {{/if}}
           <div class="separator"></div>
         </div>
         <div>
@@ -391,11 +394,14 @@
           <div>
             <span>From</span>
             <h2>{{sender}}</h2>
-            <div class="party-desc">
-              123 Producer’s Address Street <br/>
-              69001 Lyon <br/>
-              France
-            </div>
+            {{#if senderAddress}}
+              <div class="party-desc">
+                {{#if senderAddress.street}}{{senderAddress.street}}<br/>{{/if}}
+                {{#if senderAddress.zipCode}}{{senderAddress.zipCode}} {{/if}} 
+                {{#if senderAddress.city}} {{senderAddress.city}}<br/>{{/if}}
+                {{toLabel senderAddress.country 'territories'}}
+              </div>
+            {{/if}}
             <div class="separator"></div>
           </div>
           <div>
