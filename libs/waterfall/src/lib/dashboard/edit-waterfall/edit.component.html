@@ -43,7 +43,7 @@
         <logo-spinner></logo-spinner>
       </ng-container>
       <ng-template #editRightHolders>
-        <p *ngIf="noProducer$ | async" class="mat-error">Choose one Right Holder with "{{ 'producer' | toLabel: 'rightholderRoles' }}" role</p>
+        <p *ngIf="noProducer$ | async" class="mat-error">There might be only one {{ 'producer' | toLabel: 'rightholderRoles' }} per film</p>
         <section>
           <button mat-button color="primary" (click)="previous()">
             <mat-icon svgIcon="arrow_back"></mat-icon>
@@ -99,7 +99,7 @@
             mat-flat-button 
             color="primary"
             [disabled]="(shell.canInitWaterfall$ | async) === false"
-            [matTooltip]="(shell.canInitWaterfall$ | async) === false  ? 'Missing data to publish Waterfall. Make sure to have contracts and receipt shares' : ''"
+            [matTooltip]="(shell.canInitWaterfall$ | async) === false  ? 'Missing data to publish Waterfall. Make sure to have Contracts and Receipt Shares' : ''"
             (click)="publishWaterfall()">
             <span>{{ createMode ? 'Publish' : 'Update' }} Waterfall</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>

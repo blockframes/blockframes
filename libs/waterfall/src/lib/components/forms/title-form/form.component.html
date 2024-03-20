@@ -2,7 +2,7 @@
 <section class="surface">
   <h2>
     <span>Main Information</span>
-    <mat-icon class="icon-tooltip" *ngIf="(canEditMovie$ | async) === false" svgIcon="info" matTooltip="Only admins can edit the movie informations"></mat-icon>
+    <mat-icon class="icon-tooltip" *ngIf="(canEditMovie$ | async) === false" svgIcon="info" matTooltip="Only Admins can edit the Movie informations"></mat-icon>
   </h2>
   <mat-form-field appearance="outline" class="title">
     <mat-label>Title</mat-label>
@@ -25,12 +25,12 @@
 
     <ng-container *ngIf="canEditMovie$ | async">
       <ng-container *ngIf="last else notLast">
-        <button mat-mini-fab color="primary" (click)="addDirector()" matTooltip="Add a new director">
+        <button mat-mini-fab color="primary" (click)="addDirector()" matTooltip="Add a new Director">
           <mat-icon svgIcon="add"></mat-icon>
         </button>
       </ng-container>
       <ng-template #notLast>
-        <button mat-icon-button color="danger" (click)="removeDirector(index)" matTooltip="Delete director">
+        <button mat-icon-button color="danger" (click)="removeDirector(index)" matTooltip="Delete Director">
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </ng-template>

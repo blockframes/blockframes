@@ -31,7 +31,7 @@
               <a mat-icon-button color="primary" [href]="file | getUrl | async" target="_blank" matTooltip="Download Document">
                 <mat-icon svgIcon="cloud_download"></mat-icon>
               </a>
-              <button mat-icon-button *ngIf="shell.canBypassRules" color="primary" matTooltip="Delete file" (click)="delete(file.id)">
+              <button mat-icon-button *ngIf="shell.canBypassRules" color="primary" matTooltip="Delete File" (click)="delete(file.id)">
                 <mat-icon svgIcon="delete"></mat-icon>
               </button>
             </mat-list-item>

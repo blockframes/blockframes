@@ -4,11 +4,11 @@
 
   <form [formGroup]="form">
     <article>
-      <button *ngIf="previousStatementId else noPrevious" mat-icon-button matTooltip="Go to previous statement" (click)="goTo(previousStatementId)">
+      <button *ngIf="previousStatementId else noPrevious" mat-icon-button matTooltip="Go to previous Statement" (click)="goTo(previousStatementId)">
         <mat-icon svgIcon="arrow_back"></mat-icon>
       </button>
       <ng-template #noPrevious>
-        <button mat-icon-button disabled matTooltip="There is no previous statement">
+        <button mat-icon-button disabled matTooltip="There is no previous Statement">
           <mat-icon svgIcon="arrow_back"></mat-icon>
         </button>
       </ng-template>
@@ -44,11 +44,11 @@
           <mat-error *ngIf="form.get('duration').get('to').hasError('maxDate')">Date must be earlier than contract termination date : {{ contract.duration.to | date }}</mat-error>
         </mat-form-field>
       </section>
-      <button *ngIf="nextStatementId else noNext" mat-icon-button matTooltip="Go to next statement" (click)="goTo(nextStatementId)">
+      <button *ngIf="nextStatementId else noNext" mat-icon-button matTooltip="Go to next Statement" (click)="goTo(nextStatementId)">
         <mat-icon svgIcon="arrow_forward"></mat-icon>
       </button>
       <ng-template #noNext>
-        <button mat-icon-button disabled matTooltip="There is no next statement">
+        <button mat-icon-button disabled matTooltip="There is no next Statement">
           <mat-icon svgIcon="arrow_forward"></mat-icon>
         </button>
       </ng-template>
