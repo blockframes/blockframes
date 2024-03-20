@@ -255,15 +255,19 @@ function formToIncomeCondition(form: ConditionForm): Condition | undefined {
     const from = form.controls.salesDateFrom.value;
     const to = form.controls.salesDateTo.value;
 
+    const payload: ConditionDuration = {};
     if (operator === 'between') {
       if (!from || !to) return undefined;
+      payload.from = from;
+      payload.to = to;
     } else if (operator === 'after') {
       if (!from) return undefined;
+      payload.from = from;
     } else if (operator === 'before') {
       if (!to) return undefined;
+      payload.to = to;
     }
 
-    const payload: ConditionDuration = { from, to };
     return { name: conditionName, payload };
   }
 

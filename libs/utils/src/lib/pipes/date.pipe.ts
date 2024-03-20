@@ -15,7 +15,7 @@ export class BfDatePipe extends DatePipe implements PipeTransform {
   }
 }
 
-function getUserDefaultDateFormat() {
+export function getUserDefaultDateFormat() {
   switch (getUserLocaleId()) {
     case 'en-US':
       return 'MM/dd/yyyy';
