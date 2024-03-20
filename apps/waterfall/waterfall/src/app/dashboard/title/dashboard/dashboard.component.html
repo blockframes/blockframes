@@ -30,13 +30,21 @@
         <article class="surface">
           <h3>Right Holders Revenue Split</h3>
           <mat-divider></mat-divider>
-          <apx-chart *ngIf="rightholdersRevenueChart$ | async as chartOptions"
-            [series]="chartOptions.series"
-            [chart]="chartOptions.chart"
-            [labels]="chartOptions.labels"
-            [responsive]="chartOptions.responsive"
-            [tooltip]="chartOptions.tooltip"
-          ></apx-chart>
+          <ng-container *ngIf="rightholdersRevenueChart$ | async as chartOptions">
+            <apx-chart *ngIf="chartOptions.series.length; else empty"
+              [series]="chartOptions.series"
+              [chart]="chartOptions.chart"
+              [labels]="chartOptions.labels"
+              [responsive]="chartOptions.responsive"
+              [tooltip]="chartOptions.tooltip"
+            ></apx-chart>
+            <ng-template #empty>
+              <div class="empty-chart">
+                <img asset="empty_state_analytics_pie_chart.svg" alt="Empty Pie chart">
+                <p>There is no statistics available here yet.</p>
+              </div>
+            </ng-template>
+          </ng-container>
         </article>
         <article class="surface">
           <h3>Quick Access</h3>
@@ -50,7 +58,7 @@
               <img asset="statements_icon.svg" alt="Check Statements image">
               <button mat-button color="primary" class="main-dashboard-cta">Check Statements</button>
             </a>
-            <a [routerLink]="['..', 'documents']" class="surface">
+            <a [routerLink]="['..', 'statements']" class="surface">
               <img asset="certify_documents_icon.svg" alt="Certify Documents image">
               <button mat-button color="primary" class="main-dashboard-cta">Certify Documents</button>
             </a>
@@ -66,15 +74,23 @@
         <article class="surface">
           <h3>Right Holders ROI</h3>
           <mat-divider></mat-divider>
-          <apx-chart *ngIf="rightholdersROIChart$ | async as chartOptions"
-            [series]="chartOptions.series"
-            [chart]="chartOptions.chart"
-            [dataLabels]="chartOptions.dataLabels"
-            [plotOptions]="chartOptions.plotOptions"
-            [xaxis]="chartOptions.xaxis"
-            [stroke]="chartOptions.stroke"
-            [tooltip]="chartOptions.tooltip"
-          ></apx-chart>
+          <ng-container *ngIf="rightholdersROIChart$ | async as chartOptions">
+            <apx-chart *ngIf="chartOptions.series.length; else empty"
+              [series]="chartOptions.series"
+              [chart]="chartOptions.chart"
+              [dataLabels]="chartOptions.dataLabels"
+              [plotOptions]="chartOptions.plotOptions"
+              [xaxis]="chartOptions.xaxis"
+              [stroke]="chartOptions.stroke"
+              [tooltip]="chartOptions.tooltip"
+            ></apx-chart>
+            <ng-template #empty>
+              <div class="empty-chart">
+                <img asset="empty_horizontal_bar_chart.svg" alt="Empty Bar chart">
+                <p>There is no statistics available here yet.</p>
+              </div>
+            </ng-template>
+          </ng-container>
         </article>
         <article class="surface">
           <h3>Net Revenue Over Time</h3>
@@ -85,19 +101,28 @@
             [control]="rightholderControl">
             <mat-label>Highlight Right Holder</mat-label>
           </waterfall-rightholder-select>
-          <apx-chart *ngIf="netRevenueChart$ | async as chartOptions"
-            [series]="chartOptions.series"
-            [chart]="chartOptions.chart"
-            [xaxis]="chartOptions.xaxis"
-            [markers]="chartOptions.markers"
-            [stroke]="chartOptions.stroke"
-            [yaxis]="chartOptions.yaxis"
-            [dataLabels]="chartOptions.dataLabels"
-            [title]="chartOptions.title"
-            [fill]="chartOptions.fill"
-            [tooltip]="chartOptions.tooltip"
-            [legend]="chartOptions.legend"
-          ></apx-chart>
+          <ng-container *ngIf="netRevenueChart$ | async as chartOptions">
+            <apx-chart *ngIf="chartOptions.series.length; else empty"
+              [series]="chartOptions.series"
+              [chart]="chartOptions.chart"
+              [xaxis]="chartOptions.xaxis"
+              [markers]="chartOptions.markers"
+              [stroke]="chartOptions.stroke"
+              [yaxis]="chartOptions.yaxis"
+              [dataLabels]="chartOptions.dataLabels"
+              [title]="chartOptions.title"
+              [fill]="chartOptions.fill"
+              [tooltip]="chartOptions.tooltip"
+              [legend]="chartOptions.legend"
+            ></apx-chart>
+            <ng-template #empty>
+              <div class="empty-chart">
+                <img asset="empty_line_chart.svg" alt="Empty Line chart">
+                <p>There is no statistics available here yet.</p>
+              </div>
+            </ng-template>
+          </ng-container>
+
         </article>
       </section>
       

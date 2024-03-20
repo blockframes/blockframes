@@ -11,6 +11,7 @@ import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.mod
 import { MapModule } from '@blockframes/ui/map';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { BfCommonModule } from '@blockframes/utils/bf-common.module';
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -27,6 +28,7 @@ import { MatDividerModule } from '@angular/material/divider';
     FlexLayoutModule,
     MapModule,
     PricePerCurrencyModule,
+    ImageModule,
 
     // Material
     MatButtonModule,

@@ -84,7 +84,7 @@
               <ng-container *ngIf="index === 0">
                 <button mat-icon-button 
                   [disabled]="!canEditIncome(item.fromId, statement)"
-                  [matTooltip]="!canEditIncome(item.fromId, statement) ? 'This cannot be edited.' : 'Change income value'"
+                  [matTooltip]="!canEditIncome(item.fromId, statement) ? 'This cannot be edited.' : 'Change Income value'"
                   (click)="editIncome(item.fromId)"
                 >
                 <mat-icon svgIcon="statement_warning"></mat-icon>
@@ -134,7 +134,7 @@
               <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
               <button mat-icon-button 
                 [disabled]="!canEditExpense(item.id, statement)"
-                [matTooltip]="!canEditExpense(item.id, statement) ? 'This cannot be edited.' : 'Change expense value'"
+                [matTooltip]="!canEditExpense(item.id, statement) ? 'This cannot be edited.' : 'Change Expense value'"
                 (click)="editExpense(item.id)"
                 >
                 <mat-icon svgIcon="statement_warning"></mat-icon>

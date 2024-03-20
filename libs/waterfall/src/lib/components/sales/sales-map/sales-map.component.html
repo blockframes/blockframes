@@ -1,5 +1,5 @@
 <section class="surface" *ngIf="territoriesSold; else loading">
-  <world-map>
+  <world-map *ngIf="!empty else emptyMap">
     <!-- MAP LAYERS -->
     <ng-container *ngFor="let tag of territoriesSold.all">
       <map-feature [tag]="tag.isoA3" color="#67DF9C" (mouseover)="displayTerritoryTooltip(tag)"
@@ -127,6 +127,12 @@
       </mat-list>
     </article>
   </world-map>
+  <ng-template #emptyMap>
+    <div class="empty-map">
+      <img asset="empty_map.svg" alt="Empty Map">
+      <p class="mat-body-1">There are no sales available to show yet.</p>
+    </div>
+  </ng-template>
 </section>
 <ng-template #loading>
   <article class="spinner">

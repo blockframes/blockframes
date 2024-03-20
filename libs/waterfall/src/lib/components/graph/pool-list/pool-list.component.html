@@ -8,5 +8,8 @@
   </button>
 </section>
 <section *ngIf="(existingPools$ | async).size === 0">
-  <p>No pool yet</p>
+  <div class="no-pool">
+    <img asset="empty_contract.svg" alt="Empty Waterfall">
+    <p class="mat-body-1">No pool yet</p>
+  </div>
 </section>

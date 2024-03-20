@@ -43,6 +43,17 @@ section {
       width: 80%;
       padding: 24px 0 0 24px;
     }
+
+    div.empty-chart {
+      flex-direction: column;
+      text-align: center;
+      font-weight: bold;
+      height: 100%;
+      img {
+        width: 100%;
+        max-height: 450px;
+      }
+    }
   }
 
   aside {

@@ -60,7 +60,7 @@
             <!-- TODO #9436 -->
             <!-- <p class="amendment">1 amendment - 30/06/2023</p> -->
             
-            <button mat-icon-button *ngIf="shell.canBypassRules" matTooltip="Edit contract" (click)="edit(contract, waterfall)">
+            <button mat-icon-button *ngIf="shell.canBypassRules" matTooltip="Edit Contract" (click)="edit(contract, waterfall)">
               <mat-icon svgIcon="edit"></mat-icon>
             </button>
             <a mat-icon-button *ngIf="contract.id | getFile: waterfall as file" 
@@ -74,7 +74,7 @@
               <mat-icon svgIcon="visibility"></mat-icon>
             </a>
             <!-- TODO #9436 hidden for now -->
-            <!-- <button mat-icon-button class="circle" matTooltip="Create amendment">
+            <!-- <button mat-icon-button class="circle" matTooltip="Create Amendment">
               <mat-icon svgIcon="add"></mat-icon>
             </button> -->
           </div>

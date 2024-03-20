@@ -129,6 +129,7 @@ export class DashboardComponent {
     map(rightholders => {
       const series = rightholders.map(r => r.revenue);
       const labels = rightholders.map(r => r.name);
+      if (!series.some(s => s !== 0)) return { series: [] };
       return {
         series,
         labels,
@@ -156,21 +157,23 @@ export class DashboardComponent {
       return rightholders.filter(r => r.investment > 0 || r.expense > 0 || r.revenu.actual > 0)
     }),
     map(rightholders => {
+      const series = [
+        {
+          name: 'Expenses',
+          data: rightholders.map(r => Math.round(r.expense))
+        },
+        {
+          name: 'Investment',
+          data: rightholders.map(r => Math.round(r.investment))
+        },
+        {
+          name: 'Net receipts',
+          data: rightholders.map(r => Math.round(r.revenu.actual))
+        }
+      ];
+      if (!series.some(s => s.data.some(d => d !== 0))) return { series: [] };
       return {
-        series: [
-          {
-            name: 'Expenses',
-            data: rightholders.map(r => Math.round(r.expense))
-          },
-          {
-            name: 'Investment',
-            data: rightholders.map(r => Math.round(r.investment))
-          },
-          {
-            name: 'Net receipts',
-            data: rightholders.map(r => Math.round(r.revenu.actual))
-          }
-        ],
+        series,
         chart: {
           type: 'bar',
           toolbar: { show: false }
@@ -234,24 +237,27 @@ export class DashboardComponent {
         previousCashflow = turnover;
         return Math.round(cashflow);
       });
+
+      const series = [
+        {
+          name: 'Yearly Net Revenue',
+          type: 'column',
+          data: incomes
+        },
+        {
+          name: 'Cashflow',
+          type: 'column',
+          data: cashflow
+        },
+        {
+          name: 'Total Net Revenue',
+          type: 'line',
+          data: revenue
+        }
+      ];
+      if (!series.some(s => s.data.some(d => d !== 0))) return { series: [] };
       return {
-        series: [
-          {
-            name: 'Yearly Net Revenue',
-            type: 'column',
-            data: incomes
-          },
-          {
-            name: 'Cashflow',
-            type: 'column',
-            data: cashflow
-          },
-          {
-            name: 'Total Net Revenue',
-            type: 'line',
-            data: revenue
-          }
-        ],
+        series,
         chart: {
           type: 'line',
           stacked: false,
