@@ -1,9 +1,19 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { BehaviorSubject, Subscription, combineLatest, map, startWith } from 'rxjs';
-import { OrgState, RightholderRole, Statement, getChilds } from '@blockframes/model';
+import {
+  OrgState,
+  RightholderRole,
+  Statement,
+  filterStatements,
+  getChilds,
+  getStatementNumber,
+  rightholderKey
+} from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 import { unique } from '@blockframes/utils/helpers';
+
+type StatementEnhanced = Record<number, (Statement & { rightholderName: string, number: number })[]>;
 
 @Component({
   selector: 'waterfall-sidebar',
@@ -22,7 +32,7 @@ export class WaterfallSidebarComponent implements OnInit, OnDestroy {
   public roles$ = this.shell.rightholders$.pipe(map(rightholders => unique(rightholders.map(r => r.roles).flat())));
   public filteredRightHolders$ = new BehaviorSubject<(OrgState & { role: RightholderRole[], name: string })[]>([]);
   public statementYears$ = new BehaviorSubject<number[]>([]);
-  public groupedStatements$ = new BehaviorSubject<Record<number, Statement[]>>({});
+  public groupedStatements$ = new BehaviorSubject<StatementEnhanced>({});
 
   private subs: Subscription[] = [];
 
@@ -37,12 +47,19 @@ export class WaterfallSidebarComponent implements OnInit, OnDestroy {
     this.subs.push(this.shell.statements$.subscribe(statements => {
       const sorted = statements.sort((a, b) => b.duration.to.getTime() - a.duration.to.getTime());
       const years = new Set<number>();
-      const grouped: Record<number, Statement[]> = {};
+      const grouped: StatementEnhanced = {};
       sorted.forEach(statement => {
         const year = statement.duration.to.getFullYear();
+        const rightholder = this.shell.waterfall.rightholders.find(r => r.id === statement[rightholderKey(statement.type)]);
+        const filteredStatements = filterStatements(statement.type, [statement.senderId, statement.receiverId], statement.contractId, statements);
+        const number = getStatementNumber(statement, filteredStatements);
         years.add(year);
         grouped[year] ||= [];
-        grouped[year].push(statement);
+        grouped[year].push({
+          ...statement,
+          rightholderName: rightholder.name,
+          number
+        });
       });
       this.groupedStatements$.next(grouped);
       this.statementYears$.next([...years].sort((a, b) => b - a));

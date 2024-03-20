@@ -119,7 +119,7 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
         list = this.rights.filter(right => !right.groupId).map(right => ({ id: right.id, name: right.name }));
         break;
       case 'group':
-        list = this.groups.filter(right => right.groupId).map(right => ({ id: right.id, name: right.name }));
+        list = this.groups.map(right => ({ id: right.id, name: right.name }));
         break;
       case 'pool':
         list = this.pools.map(pool => ({ id: pool, name: pool }));

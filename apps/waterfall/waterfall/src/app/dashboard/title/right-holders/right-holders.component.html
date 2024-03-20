@@ -1,6 +1,8 @@
 <ng-container *ngIf="shell.canBypassRules">
-  <waterfall-organization-invite *ngIf="shell.waterfall$ | async as waterfall" [waterfall]="waterfall" [invitations]="invitations$ | async"></waterfall-organization-invite>
-  <waterfall-pending-invitations [invitations]="pendingInvitations$ | async"></waterfall-pending-invitations>
+  <ng-container *ngIf="shell.waterfall$ | async as waterfall">
+    <waterfall-organization-invite [waterfall]="waterfall" [invitations]="invitations$ | async"></waterfall-organization-invite>
+    <waterfall-pending-invitations [invitations]="pendingInvitations$ | async" [waterfall]="waterfall"></waterfall-pending-invitations>
+  </ng-container>
 </ng-container>
 
 <section class="surface">
