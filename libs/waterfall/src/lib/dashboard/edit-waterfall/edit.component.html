@@ -1,7 +1,7 @@
 
 <h1>{{ createMode ? 'Create' : 'Edit' }} Waterfall for {{ shell.movie.title.international }}</h1>
 
-<mat-stepper #stepper>
+<mat-stepper #stepper (click)="onStepClicked($event)" linear>
   <!-- override default stepper icons for the "edit" & "done" steps -->
   <ng-template matStepperIcon="edit" let-index="index">
     {{index + 1}}
@@ -10,7 +10,7 @@
     {{index + 1}}
   </ng-template>
 
-  <mat-step>
+  <mat-step [completed]="contractForm.pristine">
     <ng-template matStepLabel>Add Contracts</ng-template>
     <ng-template matStepContent>
       <div class="surface">
