@@ -73,7 +73,7 @@ export class OrganizationInviteComponent {
         if (emails.length) {
           await this.invitationService.invite(emails, fromOrg).to('joinWaterfall', this.waterfall.id, { rightholderIds, isAdmin });
         } else {
-          this.snackBar.open('All selected emails are already on the Waterfall or invited to it.', 'close', { duration: 5000 });
+          this.snackBar.open('This organization has already been invited to the waterfall.', 'close', { duration: 5000 });
         }
 
         this._isSending.next(false);
