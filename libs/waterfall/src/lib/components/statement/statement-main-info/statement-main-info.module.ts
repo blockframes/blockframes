@@ -1,13 +1,12 @@
 // Angular
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 // Pages
 import { StatementMainInfoComponent } from './statement-main-info.component';
 
 // Blockframes
-import { JoinPipeModule } from '@blockframes/utils/pipes/join.pipe';
+import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -17,9 +16,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 @NgModule({
   declarations: [StatementMainInfoComponent],
   imports: [
-    CommonModule,
-
-    JoinPipeModule,
+    BfCommonModule,
 
     // Material
     MatIconModule,

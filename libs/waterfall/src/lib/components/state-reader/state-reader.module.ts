@@ -1,11 +1,11 @@
 // Angular
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ForModule } from '@rx-angular/template/for';
 import { IfModule } from '@rx-angular/template/if';
 
 // Blockframes
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
+import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 
 // Material
 import { MatMenuModule } from '@angular/material/menu';
@@ -19,7 +19,7 @@ import { StateReaderComponent, StateDialogComponent } from './state-reader.compo
 @NgModule({
   declarations: [StateReaderComponent, StateDialogComponent],
   imports: [
-    CommonModule,
+    BfCommonModule,
     ForModule,
     IfModule,
 

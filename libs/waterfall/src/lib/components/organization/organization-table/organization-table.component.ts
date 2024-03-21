@@ -29,8 +29,8 @@ export class OrganizationTableComponent {
 
   @Input() baseUrl: string;
   @Input() columns: Record<string, string> = {
-    rightholder: 'Organization',
-    org: 'Right holder',
+    rightholder: 'Waterfall Organization',
+    org: 'Representative Organization',
     isAdmin: 'Access',
     lockedVersionId: 'Waterfall Version',
     actions: 'Actions'

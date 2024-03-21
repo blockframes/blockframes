@@ -15,7 +15,7 @@
           </mat-select>
         </mat-form-field>
         <a *ngIf="contractControl.value" mat-icon-button target="_blank" [routerLink]="['../..', 'document', contractControl.value]">
-          <mat-icon svgIcon="contract" matTooltip="See contract"></mat-icon>
+          <mat-icon svgIcon="contract" matTooltip="See Contract"></mat-icon>
         </a>
       </span>
       <form [formGroup]="formArray" *ngIf="reportableStatements?.length">
@@ -30,12 +30,12 @@
                     </div>
                     <div class="statement-info">
                       <span>
-                        <h3>{{ stm.duration.from | date: 'dd/MM/yyyy' }} -  {{ stm.duration.to | date: 'dd/MM/yyyy' }}</h3>
+                        <h3>{{ stm.duration.from | date }} -  {{ stm.duration.to | date }}</h3>
                         <a mat-icon-button [routerLink]="['..', stm.id]" target="_blank">
-                          <mat-icon svgIcon="document" matTooltip="View statement"></mat-icon>
+                          <mat-icon svgIcon="document" matTooltip="View Statement"></mat-icon>
                         </a>
                       </span>
-                      <p class="mat-body-1">Payment Date:  {{ stm.payments.rightholder.date | date: 'dd/MM/yyyy' }}
+                      <p class="mat-body-1">Payment Date:  {{ stm.payments.rightholder.date | date }}
                       </p>
                     </div>
                     <div class="statement-price">
@@ -57,15 +57,15 @@
                     </div> 
                     <div class="statement-info">
                       <span>
-                        <h3>{{ stm.duration.from | date: 'dd/MM/yyyy' }} -  {{ stm.duration.to | date: 'dd/MM/yyyy' }}</h3>
+                        <h3>{{ stm.duration.from | date }} -  {{ stm.duration.to | date }}</h3>
                         <a mat-icon-button [routerLink]="['..', stm.id]" target="_blank">
-                          <mat-icon svgIcon="document" matTooltip="View statement"></mat-icon>
+                          <mat-icon svgIcon="document" matTooltip="View Statement"></mat-icon>
                         </a>
                       </span>
                       <p class="mat-body-1">
                         Payment Date: 
                         <ng-container *ngIf="stm.payments.right[0] as payment">
-                          {{ payment.date | date: 'dd/MM/yyyy' }}
+                          {{ payment.date | date }}
                         </ng-container>
                       </p>
                     </div>

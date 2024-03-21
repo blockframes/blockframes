@@ -46,6 +46,7 @@ interface StatementRolesConfig {
 
 interface StatementChipConfig {
   roles: RightholderRole[];
+  color?: 'primary' | 'warn';
   divider: boolean;
   selected: boolean;
   key: StatementType;
@@ -61,7 +62,8 @@ function initStatementChips(statements: Statement[]): StatementChipConfig[] {
       value: statementType[key],
       ...value,
       // producer statements are visible only if there are reported statements from distributors or direct sales
-      visible: key === 'producer' ? hasDistribOrDirectSalesReportedStatements : value.visible
+      visible: key === 'producer' ? hasDistribOrDirectSalesReportedStatements : value.visible,
+      color: key === 'producer' ? 'warn' : 'primary'
     }
   ));
 }

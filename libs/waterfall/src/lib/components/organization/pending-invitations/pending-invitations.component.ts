@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService } from '@blockframes/invitation/service';
-import { Invitation, InvitationDetailed } from '@blockframes/model';
+import { InvitationDetailed, Waterfall } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { filters } from '@blockframes/ui/list/table/filters';
 
@@ -14,7 +14,8 @@ import { filters } from '@blockframes/ui/list/table/filters';
 export class PendingInvitationsComponent {
 
   public filters = filters;
-  @Input() invitations: Invitation[] = [];
+  @Input() invitations: InvitationDetailed[] = [];
+  @Input() waterfall: Waterfall;
 
   constructor(
     private invitationService: InvitationService,

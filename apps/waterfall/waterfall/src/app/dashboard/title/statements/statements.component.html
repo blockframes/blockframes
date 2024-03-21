@@ -14,7 +14,9 @@
           <mat-divider *ngIf="chip.divider && chip.visible" [vertical]="true"></mat-divider>
           <mat-chip
           *ngIf="chip.visible"
+          [color]="chip.color"
           [selected]="chip.selected"
+          [class]="chip.key"
           (click)="changeType(chip.key)">{{ chip.value }}</mat-chip>
         </ng-container>
       </mat-chip-list>
@@ -30,11 +32,11 @@
           </waterfall-rightholder-select>
           <ng-container *ngIf="selected !== 'directSales'">
             <a *ngIf="rightholderContracts.length === 1 && rightholderContracts[0].id" mat-icon-button target="_blank" [routerLink]="['..', 'document', rightholderContracts[0].id]">
-              <mat-icon svgIcon="contract" matTooltip="See contract"></mat-icon>
+              <mat-icon svgIcon="contract" matTooltip="See Contract"></mat-icon>
             </a>
 
             <button *ngIf="rightholderContracts.length > 1" mat-icon-button [matMenuTriggerFor]="contractsMenu">
-              <mat-icon svgIcon="contract" matTooltip="See contracts"></mat-icon>
+              <mat-icon svgIcon="contract" matTooltip="See Contracts"></mat-icon>
             </button>
             
             <mat-menu #contractsMenu="matMenu">

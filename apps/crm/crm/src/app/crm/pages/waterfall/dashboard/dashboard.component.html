@@ -16,7 +16,7 @@
         </mat-form-field>
   
         <h3 *ngIf="currentState">
-          Total film revenue : <price-per-currency [price]="getTotalIncomes(currentState.incomes)"></price-per-currency>
+          Total Gross Receipts : <price-per-currency [price]="getTotalIncomes(currentState.incomes)"></price-per-currency>
         </h3>
       </article>
       <apx-chart *ngIf="options.series.length"

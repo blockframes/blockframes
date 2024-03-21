@@ -1,5 +1,5 @@
 <mat-toolbar *rxIf="state">
-  <button mat-button color="primary">{{ state.name }} - {{ state.date | date: 'dd/MM/yyyy' }}</button>
+  <button mat-button color="primary">{{ state.name }} - {{ state.date | date }}</button>
 
   <button mat-button color="primary" *ngIf="state.actions.length" [matMenuTriggerFor]="actions">Actions</button>
   <mat-menu #actions="matMenu">

@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -7,9 +6,9 @@ import { StatementArbitraryChangeComponent } from './statement-arbitrary-change.
 
 // Blockframes
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
-import { JoinPipeModule, MaxLengthModule, ToGroupLabelPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { RightHolderNamePipeModule } from '../../../pipes/rightholder-name.pipe';
+import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -23,14 +22,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 @NgModule({
   declarations: [StatementArbitraryChangeComponent],
   imports: [
-    CommonModule,
+    BfCommonModule,
     ReactiveFormsModule,
 
     GlobalModalModule,
-    ToLabelModule,
-    ToGroupLabelPipeModule,
-    MaxLengthModule,
-    JoinPipeModule,
     PricePerCurrencyModule,
     RightHolderNamePipeModule,
 

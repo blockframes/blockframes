@@ -31,7 +31,7 @@
         </a>
         <mat-icon svgIcon="check_circle" class="icon-ok" *ngIf="(shell.hasMinimalRights$ | async) else noMinimalRights"></mat-icon>
         <ng-template #noMinimalRights>
-          <mat-icon svgIcon="cancel" class="icon-nok" matTooltip="Missing or misconfigured rights"></mat-icon>
+          <mat-icon svgIcon="cancel" class="icon-nok" matTooltip="Missing or misconfigured Rights"></mat-icon>
         </ng-template>
       </li>
       <li>
@@ -55,7 +55,7 @@
     <ng-template #canNotInit>
       <a class="surface" [routerLink]="showImportLinks === false ? '../init' : undefined">
         <img asset="add_draft.svg" alt="Add waterfall image">
-        <button mat-button [disabled]="showImportLinks === true" color="primary" [matTooltip]="showImportLinks === false ? 'Create Waterfall' : 'Not enough data to initialize waterfall'">Initialize Waterfall</button>
+        <button mat-button [disabled]="showImportLinks === true" color="primary" [matTooltip]="showImportLinks === false ? 'Create Waterfall' : 'Not enough data to initialize Waterfall'">Initialize Waterfall</button>
       </a>
     </ng-template>
   </ng-container>
@@ -71,6 +71,6 @@
   </p>
   <a class="surface">
     <img asset="add_draft.svg" alt="Add waterfall image">
-    <button mat-button disabled color="primary" matTooltip="Not authorized to initialize waterfall">Initialize Waterfall</button>
+    <button mat-button disabled color="primary" matTooltip="Not authorized to initialize Waterfall">Initialize Waterfall</button>
   </a>
 </ng-template>

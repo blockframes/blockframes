@@ -58,6 +58,7 @@ waterfall-version-selector.hide {
 @include layout-bp(lt-xl) {
   waterfall-graph {
     height: 33vh;
+    min-height: 650px;
   }
 }
 

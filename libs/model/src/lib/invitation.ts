@@ -1,4 +1,4 @@
-import type { App, InvitationStatus, InvitationType, RightholderRole } from './static';
+import type { App, InvitationStatus, InvitationType } from './static';
 import { Organization, PublicOrganization } from './organisation';
 import { PublicUser } from './user';
 import { Movie } from './movie';

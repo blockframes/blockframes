@@ -138,7 +138,6 @@ export class StatementEditComponent implements OnInit, OnDestroy, StartementForm
       statement.payments.income = [];
       statement.payments.right = [];
       delete statement.payments.rightholder;
-      delete statement.reported;
     }
 
     await this.statementService.update(statement, { params: { waterfallId: waterfall.id } });

@@ -4,12 +4,14 @@ import {
   Organization,
   PricePerCurrency,
   PublicUser,
+  Scope,
   Statement,
   StatementPdfParams,
   StatementPdfRequest,
   Waterfall,
   WaterfallContract,
   WaterfallDocument,
+  WaterfallPermissions,
   convertDocumentTo,
   convertStatementsTo,
   displayName,
@@ -82,6 +84,14 @@ async function _statementToPdf(statementId: string, waterfall: Waterfall, movie:
   const _statements = await getCollection<Statement>(`waterfall/${waterfall.id}/statements`);
   const statements = convertStatementsTo(_statements, waterfall.versions.find(v => v.id === versionId));
   const statement = statements.find(s => s.id === statementId);
+  const permissions = await getCollection<WaterfallPermissions>(`waterfall/${waterfall.id}/permissions`);
+  const orgs = await Promise.all(permissions.map(p => getDocument<Organization>(`orgs/${p.id}`)));
+
+  const rightholderOrgs = waterfall.rightholders.map(r => {
+    const orgId = permissions.find(p => p.rightholderIds.includes(r.id))?.id;
+    if (!orgId) return { rightholderId: r.id, org: null };
+    return { rightholderId: r.id, org: orgs.find(o => o.id === orgId) };
+  });
   const parentStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
     .filter(s => s.payments.right.some(r => r.incomeIds.some(id => statement.incomeIds.includes(id))));
   let contract: WaterfallContract;
@@ -96,7 +106,8 @@ async function _statementToPdf(statementId: string, waterfall: Waterfall, movie:
     { ...statement, number },
     waterfall,
     isProducerStatement(statement) ? parentStatements : [],
-    contract
+    contract,
+    rightholderOrgs
   );
 }
 
@@ -111,6 +122,7 @@ async function generate(
   waterfall: Waterfall,
   _parentStatements: Statement[] = [],
   contract: WaterfallContract,
+  rightholderOrgs: { rightholderId: string, org: Organization | null }[]
 ) {
   const rightholders = waterfall.rightholders;
   const [fs, hb, path, { default: puppeteer }] = await Promise.all([
@@ -138,6 +150,9 @@ async function generate(
   hb.registerHelper('rightholderName', (rightholderId: string) => {
     return rightholders.find(r => r.id === rightholderId)?.name || '--';
   });
+  hb.registerHelper('toLabel', (value: string, scope: Scope) => {
+    return toLabel(value, scope);
+  });
 
   // Data
   const rightholder = rightholders.find(r => r.id === statement[rightholderKey(statement.type)]);
@@ -147,17 +162,21 @@ async function generate(
     }
     return acc;
   }, {});
-  const parentStatements = _parentStatements.map(stm => ({
-    ...stm,
-    sender: rightholders.find(r => r.id === stm.senderId).name,
-    receiver: rightholders.find(r => r.id === stm.receiverId).name,
-    totalNetReceipt: stm.reportedData.sourcesBreakdown.map(s => s.net).reduce((acc, curr) => {
-      for (const currency of Object.keys(curr)) {
-        acc[currency] = (acc[currency] || 0) + curr[currency];
-      }
-      return acc;
-    }, {})
-  }));
+  const parentStatements = _parentStatements.map(stm => {
+    const senderAddress = rightholderOrgs.find(r => r.rightholderId === stm.senderId)?.org?.addresses?.main;
+    return {
+      ...stm,
+      sender: rightholders.find(r => r.id === stm.senderId).name,
+      senderAddress: senderAddress?.country ? senderAddress : null,
+      receiver: rightholders.find(r => r.id === stm.receiverId).name,
+      totalNetReceipt: stm.reportedData.sourcesBreakdown.map(s => s.net).reduce((acc, curr) => {
+        for (const currency of Object.keys(curr)) {
+          acc[currency] = (acc[currency] || 0) + curr[currency];
+        }
+        return acc;
+      }, {})
+    };
+  });
 
   // CSS
   const css = fs.readFileSync(path.resolve(`assets/style/${templateName}.css`), 'utf8');
@@ -168,6 +187,7 @@ async function generate(
   const rightCorner = fs.readFileSync(path.resolve(`assets/images/corner-right.svg`), 'utf8');
   const leftCorner = fs.readFileSync(path.resolve(`assets/images/corner-left.svg`), 'utf8');
 
+  const senderAddress = rightholderOrgs.find(r => r.rightholderId === statement.senderId)?.org?.addresses.main;
   const data = {
     css,
     pageTitle,
@@ -184,6 +204,7 @@ async function generate(
       statement: {
         ...statement,
         sender: rightholders.find(r => r.id === statement.senderId).name,
+        senderAddress: senderAddress?.country ? senderAddress : null,
         receiver: rightholders.find(r => r.id === statement.receiverId).name,
         totalNetReceipt,
       },

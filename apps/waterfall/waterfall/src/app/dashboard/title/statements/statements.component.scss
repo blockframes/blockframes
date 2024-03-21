@@ -12,6 +12,11 @@ header {
     mat-chip {
       cursor: pointer;
     }
+
+    mat-chip.producer {
+      background-color: #ffb7b0;
+      color: #FFF;
+    }
   }
 
   article {
