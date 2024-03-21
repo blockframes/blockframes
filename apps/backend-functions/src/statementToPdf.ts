@@ -30,7 +30,7 @@ import { Response } from 'firebase-functions';
 import { gzipSync } from 'node:zlib';
 import { getCollection, getDocument } from '@blockframes/firebase-utils';
 import { toLabel } from '@blockframes/model';
-import { format } from 'date-fns';
+import { addHours, format } from 'date-fns';
 import { shareStatement } from './templates/mail';
 import { groupIds } from '@blockframes/utils/emails/ids';
 import { sendMailFromTemplate } from './internals/email';
@@ -49,7 +49,7 @@ export const statementToPdf = async (req: StatementPdfRequest, res: Response) =>
   }
 
   const { statementId, waterfallId, number, versionId } = req.body;
-  if (!statementId || !waterfallId || !versionId) {
+  if (!statementId || !waterfallId) {
     res.status(500).send();
     return;
   }
@@ -70,7 +70,7 @@ export const statementToPdf = async (req: StatementPdfRequest, res: Response) =>
 export const statementToEmail = async (data: { request: StatementPdfParams, emails: string[] }, context: CallableContext) => {
   if (!context?.auth) throw new Error('Permission denied: missing auth context.');
   const { statementId, waterfallId, number, versionId, org } = data.request;
-  if (!statementId || !waterfallId || !versionId || !org) throw new Error('Permission denied: missing data.');
+  if (!statementId || !waterfallId || !org) throw new Error('Permission denied: missing data.');
 
   const waterfall = await getDocument<Waterfall>(`waterfall/${waterfallId}`);
   const statement = await getDocument<Statement>(`waterfall/${waterfall.id}/statements/${statementId}`);
@@ -142,7 +142,7 @@ async function generate(
     return `${toLabel(currency, 'movieCurrenciesSymbols')} ${(Math.round(price * 100) / 100).toFixed(2)}`;
   });
   hb.registerHelper('date', (date: Date) => {
-    return format(date, 'dd/MM/yyyy');
+    return format(addHours(date, 2), 'dd/MM/yyyy'); // Add 2 hours to UTC date to get the right date
   });
   hb.registerHelper('expenseType', (typeId: string, contractId: string) => {
     return waterfall.expenseTypes[contractId || 'directSales']?.find(type => type.id === typeId)?.name || '--';
