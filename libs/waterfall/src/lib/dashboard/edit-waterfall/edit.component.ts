@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, Subscription, map, startWith } from 'rxjs';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { Component, ChangeDetectionStrategy, ViewChild, Optional, OnInit, OnDestroy } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
 // Blockframes
 import { FormList } from '@blockframes/utils/form';
@@ -16,6 +17,8 @@ import { WaterfallContractForm } from '../../form/contract.form';
 import { DashboardWaterfallShellComponent } from '../shell/shell.component';
 import { WaterfallFormGuardedComponent } from '../../guards/waterfall-form-guard';
 import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '../../form/right-holder.form';
+import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'waterfall-edit-form',
@@ -50,7 +53,8 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
     private route: ActivatedRoute,
     @Optional() private intercom: Intercom,
     private waterfallService: WaterfallService,
-    public shell: DashboardWaterfallShellComponent
+    public shell: DashboardWaterfallShellComponent,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit() {
@@ -64,6 +68,12 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
     this.sub.unsubscribe();
   }
 
+  onStepClicked($event: MouseEvent) {
+    const id = ($event.target as HTMLElement)?.id || ($event.target as HTMLElement)?.offsetParent?.id;
+    const nextId = parseFloat(id?.indexOf('cdk-step-label-') === 0 ? id[id.length-1] : undefined);
+    if (nextId) this.canLeaveStep(nextId - 1);
+  }
+
   previous() {
     const start = this.stepper.selectedIndex === 0;
     if (start) this.router.navigate(['..'], { relativeTo: this.route });
@@ -74,13 +84,44 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
     if (this.stepper.selectedIndex === 1) await this.updateRightHolders();
     const end = this.stepper.selectedIndex === this.stepper.steps.length - 1;
     if (end) this.router.navigate(['..'], { relativeTo: this.route });
-    else this.stepper?.next();
+    else if (this.canLeaveStep(this.stepper.selectedIndex)) this.stepper?.next();
   }
 
   async exit() {
-    await this.updateRightHolders();
-    this.snackBar.open('Waterfall saved', 'close', { duration: 3000 });
-    this.router.navigate(['..'], { relativeTo: this.route });
+    if (this.canLeaveStep(-1)) {
+      await this.updateRightHolders();
+      this.snackBar.open('Waterfall saved', 'close', { duration: 3000 });
+      this.router.navigate(['..'], { relativeTo: this.route });
+    }
+  }
+
+  private canLeaveStep(nextStep: number) {
+    if (!this.contractForm.pristine && this.stepper.selectedIndex === 0) {
+      const dialogRef = this.dialog.open(ConfirmComponent, {
+        data: createModalData({
+          title: 'You are about to leave the form',
+          question: 'Some changes have not been saved. If you leave now, you might lose these changes',
+          cancel: 'Cancel',
+          confirm: 'Leave anyway'
+        }, 'small'),
+        autoFocus: false
+      });
+      dialogRef.afterClosed().subscribe((leave: boolean) => {
+        if (leave) {
+          this.contractForm.markAsPristine();
+          this.stepper.selected.completed = true;
+          if (nextStep === -1) {
+            this.router.navigate(['..'], { relativeTo: this.route });
+          } else {
+            this.stepper.selectedIndex = nextStep;
+            this.stepper.next();
+          }
+        }
+      });
+      return false;
+    } else {
+      return true;
+    }
   }
 
   private async updateRightHolders() {
