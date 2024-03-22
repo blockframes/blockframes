@@ -192,6 +192,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
         await this.shell.refreshAllWaterfalls();
         snackbarRef.dismiss();
         this.snackBar.open('Statement reported', 'close', { duration: 5000 });
+        this.router.navigate(['/c/o/dashboard/title', this.shell.waterfall.id, 'statements']);
       } else {
         // If user is not admin, create a notification to producer to review and refresh the waterfall to commit the statement
         const output = await this.functions.call<{ waterfallId: string, statementId: string }, boolean>('requestStatementReview', { waterfallId: this.waterfall.id, statementId: statement.id });
@@ -200,6 +201,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
           this.snackBar.open('An error occurred, please try again.', 'close', { duration: 5000 });
         } else {
           this.snackBar.open(`Statement reported. A request to review the Statement has been sent to the ${toLabel('producer', 'rightholderRoles')}.`, 'close', { duration: 5000 });
+          this.router.navigate(['/c/o/dashboard/title', this.shell.waterfall.id, 'statements']);
         }
       }
 

@@ -334,11 +334,15 @@ export interface StatementEmailData {
 export function getStatementData(statement: Statement, waterfall: Waterfall, fileName = 'unknown', buffer?: Buffer): StatementEmailData {
   const statementSender = waterfall.rightholders.find(r => r.id === statement.senderId);
   const statementReceiver = waterfall.rightholders.find(r => r.id === statement.senderId);
+
+  const timeZone = 'Europe/Paris';
+  const from = new Date(statement.duration.from.toLocaleString('en-us', { timeZone }));
+  const to = new Date(statement.duration.to.toLocaleString('en-us', { timeZone }));
   const data: StatementEmailData = {
     senderRightholderName: statementSender?.name || 'Unknown',
     receiverRightholderName: statementReceiver?.name || 'Unknown',
-    from: format(statement.duration.from, 'MM/dd/yyyy'),
-    to: format(statement.duration.to, 'MM/dd/yyyy'),
+    from: format(from, 'dd/MM/yyyy'),
+    to: format(to, 'dd/MM/yyyy'),
   };
 
   if (buffer) {

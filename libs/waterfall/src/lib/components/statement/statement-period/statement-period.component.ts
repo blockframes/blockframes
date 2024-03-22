@@ -7,6 +7,7 @@ import { StatementForm } from '../../../form/statement.form';
 import { add, differenceInMonths, endOfMonth, isFirstDayOfMonth, isLastDayOfMonth } from 'date-fns';
 import { Subscription, filter, map, pairwise, startWith } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { dateInputFormat } from '@blockframes/utils/date-adapter';
 
 function getMonthsDifference(from: Date, to: Date) {
   if (from && to) {
@@ -38,6 +39,7 @@ export class StatementPeriodComponent implements OnInit, OnChanges, OnDestroy {
   public previousStatementId: string;
   public nextStatementId: string;
   public contract: WaterfallContract;
+  public dateInputFormat = dateInputFormat;
 
   private statements: Statement[] = [];
   private subs: Subscription[] = [];
