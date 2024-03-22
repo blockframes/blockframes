@@ -23,7 +23,7 @@
         
         <mat-form-field appearance="outline">
           <mat-label>From</mat-label>
-          <input matInput [disabled]="statement.status === 'reported'" [formControl]="form.get('duration').get('from')" [matDatepicker]="datePickerFrom" required placeholder="MM/DD/YYYY">
+          <input matInput [disabled]="statement.status === 'reported'" [formControl]="form.get('duration').get('from')" [matDatepicker]="datePickerFrom" required [placeholder]="dateInputFormat">
           <mat-datepicker-toggle matPrefix [for]="datePickerFrom">
             <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
           </mat-datepicker-toggle>
@@ -34,7 +34,7 @@
       
         <mat-form-field appearance="outline">
           <mat-label>To</mat-label>
-          <input matInput [disabled]="statement.status === 'reported'" [formControl]="form.get('duration').get('to')" [matDatepicker]="datePickerTo" required placeholder="MM/DD/YYYY">
+          <input matInput [disabled]="statement.status === 'reported'" [formControl]="form.get('duration').get('to')" [matDatepicker]="datePickerTo" required [placeholder]="dateInputFormat">
           <mat-datepicker-toggle matPrefix [for]="datePickerTo">
             <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
           </mat-datepicker-toggle>
@@ -57,7 +57,7 @@
       <p class="mat-body-1">You can modify the issue date, which is particularly useful for older films.</p>
       <mat-form-field appearance="outline">
         <mat-label>Reported on</mat-label>
-        <input [disabled]="statement.status === 'reported'" matInput [formControl]="form.get('reported')" [matDatepicker]="datePickerReported" required placeholder="MM/DD/YYYY">
+        <input [disabled]="statement.status === 'reported'" matInput [formControl]="form.get('reported')" [matDatepicker]="datePickerReported" required [placeholder]="dateInputFormat">
         <mat-datepicker-toggle matPrefix [for]="datePickerReported">
           <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
         </mat-datepicker-toggle>

@@ -30,7 +30,7 @@ import { Response } from 'firebase-functions';
 import { gzipSync } from 'node:zlib';
 import { getCollection, getDocument } from '@blockframes/firebase-utils';
 import { toLabel } from '@blockframes/model';
-import { addHours, format } from 'date-fns';
+import { format } from 'date-fns';
 import { shareStatement } from './templates/mail';
 import { groupIds } from '@blockframes/utils/emails/ids';
 import { sendMailFromTemplate } from './internals/email';
@@ -142,7 +142,9 @@ async function generate(
     return `${toLabel(currency, 'movieCurrenciesSymbols')} ${(Math.round(price * 100) / 100).toFixed(2)}`;
   });
   hb.registerHelper('date', (date: Date) => {
-    return format(addHours(date, 2), 'dd/MM/yyyy'); // Add 2 hours to UTC date to get the right date
+    // @dev similar to toTimezone() function
+    const tzDate = new Date(date.toLocaleString('en-us', { timeZone: 'Europe/Paris' }));
+    return format(tzDate, 'dd/MM/yyyy');
   });
   hb.registerHelper('expenseType', (typeId: string, contractId: string) => {
     return waterfall.expenseTypes[contractId || 'directSales']?.find(type => type.id === typeId)?.name || '--';

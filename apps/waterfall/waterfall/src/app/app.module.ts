@@ -18,7 +18,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { AppComponent } from './app.component';
 
 // Material
-import { DateAdapter, MatNativeDateModule } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 
 // Blockframes
 import { SentryModule } from '@blockframes/utils/sentry.module';
@@ -36,7 +36,7 @@ import { AuthService } from '@blockframes/auth/service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { EMULATORS_CONFIG, setupEmulators } from '@blockframes/utils/emulator-front-setup';
 import { VersionModule } from '@blockframes/utils/version/version.module';
-import { getUserLocaleId } from '@blockframes/utils/pipes';
+import { BlockframesDateAdapter, getUserLocaleId } from '@blockframes/utils/date-adapter';
 
 @NgModule({
   declarations: [AppComponent],
@@ -70,7 +70,9 @@ import { getUserLocaleId } from '@blockframes/utils/pipes';
       }
     },
     { provide: FIRESTORE_SETTINGS, useValue: { ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true } },
-    { provide: REGION_OR_DOMAIN, useValue: firebaseRegion }
+    { provide: REGION_OR_DOMAIN, useValue: firebaseRegion },
+    { provide: MAT_DATE_LOCALE, useValue: getUserLocaleId() },
+    { provide: DateAdapter, useClass: BlockframesDateAdapter, deps: [MAT_DATE_LOCALE] }
   ],
   bootstrap: [AppComponent],
 })
@@ -82,12 +84,9 @@ export class AppModule {
     // yandexService: YandexMetricaService, #7936 this may be reactivated later
     hotjarService: HotjarService,
     gdprService: GDPRService,
-    authService: AuthService,
-    dateAdapter: DateAdapter<any>
+    authService: AuthService
   ) {
     const { intercom, yandex, hotjar } = gdprService.cookieConsent;
-
-    dateAdapter.setLocale(getUserLocaleId()); // Set the locale for date picker
 
     // if (yandex) yandexService.insertMetrika('waterfall'); #7936 this may be reactivated later
     if (hotjar) hotjarService.insertHotjar('waterfall');

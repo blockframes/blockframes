@@ -9,8 +9,8 @@ import { DOCUMENT } from '@angular/common';
 
 function createDate({ day, time }: { day: Date, time: string }): Date {
   const [h, m] = time.split(':');
-  day.setHours(h ? parseInt(h, 10) : 0);
-  day.setMinutes(m ? parseInt(m, 10) : 0);
+  day?.setHours(h ? parseInt(h, 10) : 0);
+  day?.setMinutes(m ? parseInt(m, 10) : 0);
   return day;
 }
 
