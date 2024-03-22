@@ -44,7 +44,10 @@ export class WaterfallSidebarComponent implements OnInit, OnDestroy {
     this.subs.push(this.revenueModeControl.valueChanges.pipe(startWith(this.revenueModeControl.value)).subscribe(mode => {
       this.shell.revenueMode$.next(mode);
     }));
-    this.subs.push(this.shell.statements$.subscribe(statements => {
+    const statements$ = this.shell.statements$.pipe(
+      map(statements => statements.filter(s => s.status === 'reported' && (!s.reviewStatus || s.reviewStatus === 'accepted')))
+    );
+    this.subs.push(statements$.subscribe(statements => {
       const sorted = statements.sort((a, b) => b.duration.to.getTime() - a.duration.to.getTime());
       const years = new Set<number>();
       const grouped: StatementEnhanced = {};
