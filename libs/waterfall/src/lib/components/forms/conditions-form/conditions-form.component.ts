@@ -27,6 +27,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormList } from '@blockframes/utils/form';
 import { ExpenseTypeForm } from '../../../form/contract.form';
 import { WaterfallService } from '../../../waterfall.service';
+import { dateInputFormat } from '@blockframes/utils/date-adapter';
 
 @Component({
   selector: 'waterfall-conditions-form',
@@ -46,6 +47,7 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
   public toggleRateControl = new FormControl(false);
   public expenseTypes: ExpenseType[] = [];
   public waterfall$ = this.shell.waterfall$;
+  public dateInputFormat = dateInputFormat;
 
   private rights: Right[] = [];
   private groups: Right[] = [];

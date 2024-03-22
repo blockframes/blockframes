@@ -11,7 +11,7 @@
 
   <section>
     <mat-form-field appearance="fill">
-      <input required matInput [formControl]="dateControl" [matDatepicker]="datePickerPayment" placeholder="MM/DD/YYYY">
+      <input required matInput [formControl]="dateControl" [matDatepicker]="datePickerPayment" [placeholder]="dateInputFormat">
       <mat-datepicker-toggle matSuffix [for]="datePickerPayment">
         <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
       </mat-datepicker-toggle>

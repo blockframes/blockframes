@@ -131,7 +131,7 @@
     </mat-form-field>
     <mat-form-field appearance="outline" *ngIf="(form.controls.salesType.value === 'incomeDate' || form.controls.salesType.value === 'contractDate') && (form.controls.salesDateOperator.value === 'after' || form.controls.salesDateOperator.value === 'between')">
       <mat-label>From</mat-label>
-      <input matInput [formControl]="form.controls.salesDateFrom" [matDatepicker]="datePicker" placeholder="MM/DD/YYYY">
+      <input matInput [formControl]="form.controls.salesDateFrom" [matDatepicker]="datePicker" [placeholder]="dateInputFormat"> 
       <mat-datepicker-toggle matSuffix [for]="datePicker">
         <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
       </mat-datepicker-toggle>
@@ -139,7 +139,7 @@
     </mat-form-field>
     <mat-form-field appearance="outline" *ngIf="(form.controls.salesType.value === 'incomeDate' || form.controls.salesType.value === 'contractDate') && (form.controls.salesDateOperator.value === 'before' || form.controls.salesDateOperator.value === 'between')">
       <mat-label>To</mat-label>
-      <input matInput [formControl]="form.controls.salesDateTo" [matDatepicker]="datePicker" placeholder="MM/DD/YYYY">
+      <input matInput [formControl]="form.controls.salesDateTo" [matDatepicker]="datePicker" [placeholder]="dateInputFormat"> 
       <mat-datepicker-toggle matSuffix [for]="datePicker">
         <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
       </mat-datepicker-toggle>

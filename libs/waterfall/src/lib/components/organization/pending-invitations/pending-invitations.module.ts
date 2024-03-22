@@ -6,7 +6,7 @@ import { PendingInvitationsComponent } from './pending-invitations.component';
 // Blockframes
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { DisplayNameModule, ToLabelModule } from '@blockframes/utils/pipes';
-import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
+import { RightHolderNamePipeModule } from '../../../pipes/rightholder-name.pipe';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';

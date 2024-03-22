@@ -14,7 +14,7 @@ import {
 } from '@blockframes/model';
 import { rightholderName } from '../../../../pipes/rightholder-name.pipe';
 import { format } from 'date-fns';
-import { getUserDefaultDateFormat } from '@blockframes/utils/pipes';
+import { getUserDefaultDateFormat } from '@blockframes/utils/date-adapter';
 
 function targetToString(target: TargetValue, waterfall?: Waterfall, contracts?: WaterfallContract[]) {
   if (typeof target === 'number') return `${target}€`;
