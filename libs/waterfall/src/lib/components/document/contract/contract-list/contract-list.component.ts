@@ -1,6 +1,6 @@
 
 import { map, startWith, tap } from 'rxjs';
-import { Component, ChangeDetectionStrategy, ViewChild, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, Input, ChangeDetectorRef } from '@angular/core';
 
 import { WaterfallService } from '../../../../waterfall.service';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
@@ -25,6 +25,9 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
 import { DashboardWaterfallShellComponent } from '../../../../dashboard/shell/shell.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'waterfall-contract-list',
@@ -67,15 +70,39 @@ export class ContractListComponent {
     private termsService: TermService,
     private snackBar: MatSnackBar,
     public shell: DashboardWaterfallShellComponent,
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) { }
 
   select(role: RightholderRole) {
+    if (this.contractForm.pristine) return this._select(role);
+
+    const dialogRef = this.dialog.open(ConfirmComponent, {
+      data: createModalData({
+        title: 'You are about to leave the form',
+        question: 'Some changes have not been saved. If you leave now, you might lose these changes',
+        cancel: 'Cancel',
+        confirm: 'Leave anyway'
+      }, 'small'),
+      autoFocus: false
+    });
+    dialogRef.afterClosed().subscribe((leave: boolean) => {
+      if (leave) {
+        this.contractForm.markAsPristine();
+        this._select(role);
+      }
+    });
+  }
+
+  private _select(role: RightholderRole) {
     this.selected = role;
     this.creating = this.contracts[role].length === 0; // if we select an empty role we automatically switch to create mode
     if (this.creating) {
       this.terms = [];
       this.contractForm.reset({ id: this.documentService.createId() });
     }
+
+    this.cdr.markForCheck();
   }
 
   create() {
