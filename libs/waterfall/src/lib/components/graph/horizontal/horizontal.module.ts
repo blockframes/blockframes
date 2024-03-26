@@ -2,11 +2,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-
-import { WaterfallGraphRightModule } from '../right/right.module';
-import { WaterfallGraphVerticalModule } from '../vertical/vertical.module';
+// Component
 import { WaterfallGraphHorizontalComponent } from './horizontal.component';
 
+// Blockframes
+import { WaterfallGraphRightModule } from '../right/right.module';
+import { WaterfallGraphVerticalModule } from '../vertical/vertical.module';
+
+// Material
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [ WaterfallGraphHorizontalComponent ],
@@ -15,6 +19,8 @@ import { WaterfallGraphHorizontalComponent } from './horizontal.component';
 
     WaterfallGraphRightModule,
     WaterfallGraphVerticalModule,
+
+    MatButtonModule,
   ],
   exports: [ WaterfallGraphHorizontalComponent ],
 })

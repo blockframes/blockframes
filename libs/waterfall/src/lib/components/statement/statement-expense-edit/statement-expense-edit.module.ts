@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { StatementExpenseEditComponent } from './statement-expense-edit.component';
@@ -8,6 +7,7 @@ import { StatementExpenseEditComponent } from './statement-expense-edit.componen
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 import { RightHolderNamePipeModule } from '../../../pipes/rightholder-name.pipe';
 import { ExpenseTypePipeModule } from '../../../pipes/expense-type.pipe';
+import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -20,7 +20,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 @NgModule({
   declarations: [StatementExpenseEditComponent],
   imports: [
-    CommonModule,
+    BfCommonModule,
     ReactiveFormsModule,
 
     GlobalModalModule,

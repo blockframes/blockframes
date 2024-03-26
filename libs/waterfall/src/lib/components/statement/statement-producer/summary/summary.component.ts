@@ -52,6 +52,7 @@ import { StatementIncomeEditComponent } from '../../statement-income-edit/statem
 import { IncomeService } from '@blockframes/contract/income/service';
 import { StatementExpenseEditComponent } from '../../statement-expense-edit/statement-expense-edit.component';
 import { ExpenseService } from '@blockframes/contract/expense/service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 function getRightTurnover(incomeIds: string[], state: TitleState, right: Right, sources: WaterfallSource[], statementIncomes: Income[], statementStatus: StatementStatus, versionId: string): BreakdownRow[] {
   const sourceIds = getSources(state, right.id).map(i => i.id);
@@ -344,6 +345,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     private statementService: StatementService,
     private incomeService: IncomeService,
     private expenseService: ExpenseService,
+    private snackbar: MatSnackBar,
   ) { }
 
   async ngOnInit() {
@@ -419,6 +421,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
 
           // Refresh simulation
           await this.shell.simulateWaterfall();
+          this.snackbar.open('changes applied', 'close', { duration: 5000 });
         }
       })
     });
@@ -436,6 +439,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
 
           // Refresh simulation
           await this.shell.simulateWaterfall();
+          this.snackbar.open('changes applied', 'close', { duration: 5000 });
         }
       })
     });
@@ -453,6 +457,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
 
           // Refresh simulation
           await this.shell.simulateWaterfall();
+          this.snackbar.open('changes applied', 'close', { duration: 5000 });
         }
       })
     });

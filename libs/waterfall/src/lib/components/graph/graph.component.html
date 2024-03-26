@@ -1,6 +1,6 @@
 
-<section class="surface" [ngStyle]="{ width: showEdit ? '50%' : '100%' }" (dblclick)="select('')">
-  <header *ngIf="editMode">
+<section class="surface" [ngStyle]="{ width: showEditPanel ? '50%' : '100%' }" (dblclick)="select('')">
+  <header *ngIf="!readonly">
     <div>
       <h2>
         <span>Waterfall Scheme</span>
@@ -8,36 +8,44 @@
           *ngIf="isDefaultVersion && waterfall.versions.length > 1"
           color="warn"
           svgIcon="warning"
-          matTooltip="You are editing the default version of this waterfall. Except already overwritten receipt share percentage and conditions, changes performed on this version will be applied to all not standalone versions."
+          matTooltip="You are editing the default version of this Waterfall. Except already overwritten receipt share percentage and conditions, changes performed on this version will be applied to all not standalone versions."
         ></mat-icon>
       </h2>
-      <button mat-icon-button [matTooltip]="(showEdit ? 'Hide' : 'Show') + ' Edit Panel'" (click)="toggleEdit()">
-        <mat-icon [svgIcon]="showEdit ? 'chevron_right' : 'chevron_left'"></mat-icon>
+      <button mat-icon-button [matTooltip]="(showEditPanel ? 'Hide' : 'Show') + ' Edit Panel'" (click)="toggleEditPanel()">
+        <mat-icon [svgIcon]="showEditPanel ? 'chevron_right' : 'chevron_left'"></mat-icon>
       </button>
     </div>
     <p>Please provide the condition details to establish the accurate waterfall</p>
   </header>
 
-  <bf-graph-container>
+  <ng-container *ngIf="(nodes$ | async) as nodes">
+    <bf-graph-container *ngIf="nodes.length else emptyGraph">
 
-    <waterfall-graph-node
-      *ngFor="let node of (nodes$ | async)"
-      [node]="node"
-      [editMode]="canUpdateGraph"
-      (addChild)="addChild($event)"
-      (handleSelect)="select($event)"
-      (addSibling)="addSibling($event)"
-      [selected]="(selected$ | async)"
-      [ngStyle]="{ left: node.x + 'px', top: node.y + 'px' }"
-    ></waterfall-graph-node>
+      <waterfall-graph-node
+        *ngFor="let node of nodes"
+        [node]="node"
+        [canUpdate]="canUpdateGraph"
+        (addChild)="addChild($event)"
+        (handleSelect)="select($event)"
+        (addSibling)="addSibling($event)"
+        [selected]="(selected$ | async)"
+        [ngStyle]="{ left: node.x + 'px', top: node.y + 'px' }"
+      ></waterfall-graph-node>
+  
+      <svg:path *ngFor="let arrow of (arrows$ | async)" edge [attr.d]="arrow.path" stroke-width="2" stroke="#9392A7" fill="none"></svg:path>
+      <waterfall-graph-label *ngFor="let arrow of (arrows$ | async)" node [ngStyle]="{ left: arrow.labelPosition.x + 'px', top: arrow.labelPosition.y + 'px' }" [arrow]="arrow"></waterfall-graph-label>
+  
+    </bf-graph-container>
+  </ng-container>
 
-    <svg:path *ngFor="let arrow of (arrows$ | async)" edge [attr.d]="arrow.path" stroke-width="2" stroke="#9392A7" fill="none"></svg:path>
-    <waterfall-graph-label *ngFor="let arrow of (arrows$ | async)" node [ngStyle]="{ left: arrow.labelPosition.x + 'px', top: arrow.labelPosition.y + 'px' }" [arrow]="arrow"></waterfall-graph-label>
-
-  </bf-graph-container>
+  <ng-template #emptyGraph>
+    <div class="empty-waterfall">
+      <img asset="empty_waterfall_graph.svg" alt="Empty Waterfall">
+    </div>
+  </ng-template>
 </section>
 
-<bf-card-modal [ngStyle]="{ display: editMode && showEdit ? 'block' : 'none' }">
+<bf-card-modal [ngStyle]="{ display: showEditPanel ? 'block' : 'none' }">
   <ng-container *ngIf="selected$ | async as selected; else noSelection">
     <ng-container *ngIf="isSourceSelected; else notSource">
       <header>
@@ -68,8 +76,8 @@
           [control]="sourceForm.get('territories')"
         ></group-multiselect>
         <mat-form-field appearance="outline">
-          <mat-label>Name</mat-label>
-          <input matInput type="text" placeholder="Receipt Share Name" [formControl]="sourceForm.get('name')" />
+          <mat-label>Receipt Source Name</mat-label>
+          <input matInput type="text" placeholder="Receipt Source Name" [formControl]="sourceForm.get('name')" />
         </mat-form-field>
       </section>
     </ng-container>
@@ -87,32 +95,40 @@
         </button>
       </header>
       <mat-tab-group>
-        <mat-tab label="Receipts Shares">
+        <mat-tab [label]="(rightForm.get('type').value | isHorizontal) ? 'Group Details' : 'Receipts Shares'">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <p>Fill the following fields to define the Receipt Share.</p>
-    
-            <static-select [control]="rightForm.get('type')" scope="rightTypes" [withoutValues]="['horizontal','vertical']">
-              <mat-label>Type</mat-label>
-            </static-select>
-    
-            <bf-autocomplete
-              required
-              label="Right Holder Name"
-              [options]="rightholderNames$"
-              placeholder="Choose Right Holder"
-              [form]="rightholderControl"
-            ></bf-autocomplete>
+            <p *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)">Fill the following fields to define the Receipt Share.</p>
+            <p *ngIf="(rightForm.get('type').value | isHorizontal)">Fill the following fields to define the Group Details.</p>
+            <p *ngIf="(selected$.value | isStep : rights)">Fill the following fields to define the Step Details.</p>
 
-            <mat-form-field *ngIf="(relevantContracts$ | async).length" appearance="outline">
-              <mat-label>Contract</mat-label>
-              <mat-select [formControl]="rightForm.get('contract')">
-                <mat-option *ngFor="let contract of (relevantContracts$ | async)" [value]="contract.id">{{contract.name}}</mat-option>
-              </mat-select>
-            </mat-form-field>
+            <ng-container *ngIf="!(selected$.value | isStep : rights)">
+              <static-select *ngIf="!(rightForm.get('type').value | isHorizontal)" [control]="rightForm.get('type')" scope="rightTypes" [withoutValues]="['horizontal','vertical']">
+                <mat-label>Type</mat-label>
+              </static-select>
+
+              <bf-autocomplete
+                required
+                [label]="(rightForm.get('type').value | isHorizontal) ? 'Responsible of the Group' : 'Right Holder Name'"
+                [error]="(rightForm.get('type').value | isHorizontal) ? 'Please select a Right Holder. Most likely the Producer.' : 'To select a Right Holder, first add a contract with them.'"
+                [hint]="(rightForm.get('type').value | isHorizontal) ? 'Responsible of the Group is most likely the Producer.' : ''"
+                [options]="rightholderNames$"
+                placeholder="Choose Right Holder"
+                [form]="rightholderControl"
+              ></bf-autocomplete>
+
+              <mat-form-field *ngIf="!(rightForm.get('type').value | isHorizontal) && (relevantContracts$ | async).length" appearance="outline">
+                <mat-label>Contract</mat-label>
+                <mat-select [formControl]="rightForm.get('contract')">
+                  <mat-option *ngFor="let contract of (relevantContracts$ | async)" [value]="contract.id">{{contract.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </ng-container>
     
             <mat-form-field appearance="outline">
-              <mat-label>Name</mat-label>
-              <input matInput type="text" placeholder="Receipt Share Name" [formControl]="rightForm.get('name')" />
+              <mat-label *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)">Receipt Share Name</mat-label>
+              <mat-label *ngIf="(rightForm.get('type').value | isHorizontal)">Group Name</mat-label>
+              <mat-label *ngIf="(selected$.value | isStep : rights)">Step Name</mat-label>
+              <input matInput type="text" [placeholder]="(rightForm.get('type').value | isHorizontal) ? 'Group Name' : 'Receipt Share Name'" [formControl]="rightForm.get('name')" />
             </mat-form-field>
     
             <mat-form-field appearance="outline">
@@ -121,21 +137,23 @@
               <input matInput type="number" min="0" max="100" [formControl]="rightForm.get('percent')" />
             </mat-form-field>
     
-            <p>Receipt Sources</p>
-            <mat-form-field appearance="outline">
-              <mat-label>Source Name</mat-label>
-              <mat-select multiple [formControl]="rightForm.get('parents')">
-                <mat-option *ngFor="let node of (nodes$ | async)" [value]="node.id">{{node.name}}</mat-option>
-              </mat-select>
-              <mat-hint>You can add as many sources as you want.</mat-hint>
-            </mat-form-field>
+            <ng-container *ngIf="!(selected$.value | isStep : rights)">
+              <p>Parent Revenue Element(s)</p>
+              <mat-form-field appearance="outline">
+                <mat-label>Parent Name(s)</mat-label>
+                <mat-select multiple [formControl]="rightForm.get('parents')">
+                  <mat-option *ngFor="let node of (nodes$ | async)" [value]="node.id">{{node.name}}</mat-option>
+                </mat-select>
+                <mat-hint>Choose parent revenue elements from which this Receipt Share draw funds. You can add as many parents as you want.</mat-hint>
+              </mat-form-field>
+            </ng-container>
     
-            <div class="info">
+            <div class="info" *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)">
               <mat-icon svgIcon="info"></mat-icon>
               <p>If you have multiple steps, you can set them up later inside conditions.</p>
             </div>
     
-            <div class="add-next">
+            <div class="add-next" *ngIf="!(selected$.value | isStep : rights)">
               <hr/>
               <p class="mat-caption">Add Next Receipt Share</p>
               <button mat-mini-fab color="primary" (click)="addChild(selected)"[disabled]="!canUpdateGraph" >
@@ -144,9 +162,9 @@
             </div>
           </section>
         </mat-tab>
-        <mat-tab label="Conditions">
+        <mat-tab label="Conditions" *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-conditions [disabled]="!canUpdateConditions" [rightForm]="rightForm" [rightId]="selected" (createStep)="createNewStep()" (deleteStep)="deleteStep($event)"></waterfall-conditions>
+            <waterfall-conditions [canUpdate]="canUpdateConditions" [rightForm]="rightForm" [rightId]="selected" (createStep)="createNewStep()" (deleteStep)="deleteStep($event)" (validCondition)="addCondition($event)"></waterfall-conditions>
           </section>
         </mat-tab>
       </mat-tab-group>
@@ -164,23 +182,23 @@
       <mat-tab-group>
         <mat-tab label="Receipts Shares">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-right-list (deleteRight)="delete($event)" (selectRight)="select($event)" [editMode]="canUpdateGraph"></waterfall-right-list>
+            <waterfall-right-list (deleteRight)="delete($event)" (selectRight)="select($event)" [canUpdate]="canUpdateGraph"></waterfall-right-list>
           </section>
         </mat-tab>
         <mat-tab label="Pools Only">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-pool-list [editMode]="canUpdateGraph"></waterfall-pool-list>
+            <waterfall-pool-list [canUpdate]="canUpdateGraph"></waterfall-pool-list>
           </section>
         </mat-tab>
       </mat-tab-group>
       <section class="add">
         <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="!canUpdateGraph" >
           <mat-icon svgIcon="add"></mat-icon>
-          <span>Create new Receipt Sources</span>
+          <span>New Receipt Source</span>
         </button>
         <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="!canUpdateGraph" >
           <mat-icon svgIcon="add"></mat-icon>
-          <span>Create new Receipt Rights</span>
+          <span>New Receipt Share</span>
         </button>
       </section>
     </ng-container>
@@ -214,11 +232,11 @@
         <section class="add">
           <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="!canUpdateGraph" >
             <mat-icon svgIcon="add"></mat-icon>
-            <span>Create new Receipt Sources</span>
+            <span>New Receipt Source</span>
           </button>
           <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="!canUpdateGraph" >
             <mat-icon svgIcon="add"></mat-icon>
-            <span>Create new Receipt Rights</span>
+            <span>New Receipt Share</span>
           </button>
         </section>
       </section>

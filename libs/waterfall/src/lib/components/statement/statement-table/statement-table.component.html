@@ -21,7 +21,7 @@
     {{ receiverId | rightholderName: waterfall }}
   </ng-template>
   <ng-template *ngIf="columns.duration" colRef="duration" [label]="columns.duration" let-duration [sort]="sorts.byDuration" [defaultSort]="defaultSort">
-    {{ duration.from | date: 'dd/MM/yyyy' }} -  {{ duration.to | date: 'dd/MM/yyyy' }}
+    {{ duration.from | date }} -  {{ duration.to | date }}
   </ng-template>
   <ng-template *ngIf="columns.due" colRef="payments" [label]="columns.due" let-payments>
     <price-per-currency 
@@ -37,7 +37,7 @@
   </ng-template>
   <ng-template *ngIf="columns.date" colRef="payments" [label]="columns.date" let-payments>
     <ng-container *ngIf="payments.rightholder?.status === 'received'">
-      {{ payments.rightholder.date | date: 'dd/MM/yyyy' }}
+      {{ payments.rightholder.date | date }}
     </ng-container>
   </ng-template>
   <ng-template *ngIf="columns.status" colRef="status" [label]="columns.status" let-status sort>
@@ -51,7 +51,7 @@
       <mat-icon svgIcon="visibility" matTooltip="View Statement"></mat-icon>
     </a>
     <button *ngIf="actions.delete" mat-icon-button (click)="delete.emit(statement)">
-      <mat-icon svgIcon="delete" matTooltip="Delete statement"></mat-icon>
+      <mat-icon svgIcon="delete" matTooltip="Delete Statement"></mat-icon>
     </button>
     <a *ngIf="actions.crm && statement.reviewStatus === 'pending'" mat-icon-button [routerLink]="['/c/o/dashboard/crm/waterfall', statement.waterfallId, 'statements', statement.id]" (click)="$event.stopPropagation()">
       <mat-icon color="warn" svgIcon="update" matTooltip="A review is required"></mat-icon>
@@ -62,7 +62,7 @@
       </a>
     </ng-container>
         <button *ngIf="actions.deleteDraft && statement.status === 'draft'" mat-icon-button (click)="delete.emit(statement)">
-      <mat-icon svgIcon="delete" matTooltip="Delete statement"></mat-icon>
+      <mat-icon svgIcon="delete" matTooltip="Delete Statement"></mat-icon>
     </button>
     <ng-container *ngIf="statement.status === 'reported'">
       <button *ngIf="actions.download" mat-icon-button>
@@ -79,7 +79,7 @@
       </button>
       <ng-container *ngIf="!!statement.payments.rightholder && statement.payments.rightholder.status !== 'received' && (!statement.reviewStatus || statement.reviewStatus === 'accepted')">
         <button *ngIf="actions.payment" mat-icon-button [disabled]="!canBypassRules" (click)="payment(statement)">
-          <mat-icon color="primary" svgIcon="payment" matTooltip="Pending Payment"></mat-icon>
+          <mat-icon color="primary" svgIcon="payment" [matTooltip]="canBypassRules ? 'Declare Payment' : 'Pending Payment'"></mat-icon>
         </button>
       </ng-container>
       <ng-container *ngIf="statement.reviewStatus === 'pending'">

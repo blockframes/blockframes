@@ -2,16 +2,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-
+// Component
 import { WaterfallPoolListComponent } from './pool-list.component';
 
+// Blockframes
+import { ImageModule } from '@blockframes/media/image/directives/image.module';
+
+// Material
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [ WaterfallPoolListComponent ],
   imports: [
     CommonModule,
+
+    ImageModule,
 
     MatIconModule,
     MatButtonModule,

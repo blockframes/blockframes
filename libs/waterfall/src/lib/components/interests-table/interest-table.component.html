@@ -9,13 +9,13 @@
     <price-per-currency [price]="revenues | formatPair"></price-per-currency>
   </ng-template>
   <ng-template colRef="date" label="Event date" let-date>
-    {{ date | date: 'MM/dd/yyyy' }}
+    {{ date | date }}
   </ng-template>
   <ng-template colRef="amountOwed" label="Amount Owed" let-amountOwed>
     <price-per-currency [price]="amountOwed | formatPair"></price-per-currency>
   </ng-template>
   <ng-template colRef="periodDays" label="Period Days" let-periodDays>
-    <span matTooltip="Since previous event">{{ periodDays }}</span>
+    <span matTooltip="Since previous Event">{{ periodDays }}</span>
   </ng-template>
   <ng-template colRef="periodInterests" label="Period interests" let-periodInterests>
     <price-per-currency [price]="periodInterests | formatPair"></price-per-currency>

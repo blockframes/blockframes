@@ -27,7 +27,7 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" *ngIf="form.controls.revenueOwner.value">
-      <mat-label>Revenue Type</mat-label>
+      <mat-label>Has</mat-label>
       <mat-select [formControl]="form.controls.revenueType">
         <mat-option value="Turnover">(turnover)</mat-option>
         <mat-option value="Revenu">(profit)</mat-option>
@@ -36,7 +36,7 @@
     </mat-form-field>
     
     <mat-form-field appearance="outline" *ngIf="form.controls.revenueType.value">
-      <mat-label>Operator</mat-label>
+      <mat-label>Is</mat-label>
       <mat-select [formControl]="form.controls.revenueOperator">
         <mat-option *ngFor="let op of numberOperator" [value]="op">{{op}}</mat-option>
       </mat-select>
@@ -131,7 +131,7 @@
     </mat-form-field>
     <mat-form-field appearance="outline" *ngIf="(form.controls.salesType.value === 'incomeDate' || form.controls.salesType.value === 'contractDate') && (form.controls.salesDateOperator.value === 'after' || form.controls.salesDateOperator.value === 'between')">
       <mat-label>From</mat-label>
-      <input matInput [formControl]="form.controls.salesDateFrom" [matDatepicker]="datePicker" placeholder="MM/DD/YYYY">
+      <input matInput [formControl]="form.controls.salesDateFrom" [matDatepicker]="datePicker" [placeholder]="dateInputFormat"> 
       <mat-datepicker-toggle matSuffix [for]="datePicker">
         <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
       </mat-datepicker-toggle>
@@ -139,7 +139,7 @@
     </mat-form-field>
     <mat-form-field appearance="outline" *ngIf="(form.controls.salesType.value === 'incomeDate' || form.controls.salesType.value === 'contractDate') && (form.controls.salesDateOperator.value === 'before' || form.controls.salesDateOperator.value === 'between')">
       <mat-label>To</mat-label>
-      <input matInput [formControl]="form.controls.salesDateTo" [matDatepicker]="datePicker" placeholder="MM/DD/YYYY">
+      <input matInput [formControl]="form.controls.salesDateTo" [matDatepicker]="datePicker" [placeholder]="dateInputFormat"> 
       <mat-datepicker-toggle matSuffix [for]="datePicker">
         <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
       </mat-datepicker-toggle>

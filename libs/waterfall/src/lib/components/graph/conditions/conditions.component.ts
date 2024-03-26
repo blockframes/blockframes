@@ -1,68 +1,106 @@
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Condition } from '@blockframes/model';
-
-import { RightForm } from '../../forms/right-form/right-form';
-import { createConditionForm, formToCondition, setConditionForm } from '../../forms/conditions-form/condition.form';
+import { RightForm } from '../../../form/right.form';
+import { ConditionForm, formToCondition, setConditionForm } from '../../../form/condition.form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'waterfall-conditions',
   templateUrl: './conditions.component.html',
   styleUrls: ['./conditions.component.scss'],
 })
-export class WaterfallConditionsComponent implements OnInit {
+export class WaterfallConditionsComponent implements OnInit, OnDestroy {
 
-  @Input() rightForm: RightForm;
-  @Input() rightId: string;
-  @Input() @boolean disabled = false;
+  @Input() public rightForm: RightForm;
+  @Input() @boolean public canUpdate = true;
+  @Input() public set rightId(id: string) {
+    this.conditionForm.reset();
+    this.newCondition = undefined;
+    this.selectedStep$.next(0);
+    const steps = this.rightForm.get('steps').value;
+    this.index = steps[0]?.length || 0;
+    this._rightId = id;
+  }
+
+  public get rightId() { return this._rightId; }
+  public selectedStep$ = new BehaviorSubject<number>(0);
+  public newCondition: Condition | undefined = undefined;
+  public conditionForm = new ConditionForm();
 
   @Output() createStep = new EventEmitter();
   @Output() deleteStep = new EventEmitter();
+  @Output() validCondition = new EventEmitter<{ rightId: string, condition: Condition, step: number, index: number }>();
 
-  selectedStep = 0;
-
-  newCondition: Condition | undefined = undefined;
-
-  conditionForm = createConditionForm();
+  private _rightId: string;
+  private index = 0;
+  private subs: Subscription[] = [];
 
   ngOnInit() {
     this.conditionForm.enable();
-    if(this.disabled) this.conditionForm.disable();
-    this.conditionForm.valueChanges.subscribe(() => {
+    if (!this.canUpdate) this.conditionForm.disable();
+    const formSub = this.conditionForm.valueChanges.subscribe(() => {
       const condition = formToCondition(this.conditionForm);
-      if (condition) this.newCondition = condition;
+      if (condition) { // ie: condition is valid
+        this.newCondition = condition;
+        this.validCondition.emit({ rightId: this.rightId, condition, step: this.selectedStep$.value, index: this.index });
+      } else {
+        this.newCondition = undefined;
+      }
     });
+
+    const nameSub = this.rightForm.get('name').valueChanges.subscribe(name => {
+      this.rightForm.get('name').setValue(name, { emitEvent: false });
+    });
+
+    const typeSub = this.rightForm.get('type').valueChanges.subscribe(type => {
+      this.rightForm.get('type').setValue(type, { emitEvent: false });
+    });
+
+    const stepSub = this.selectedStep$.subscribe(stepIndex => {
+      this.conditionForm.reset();
+      this.newCondition = undefined;
+      const steps = this.rightForm.get('steps').value;
+      this.index = steps[stepIndex]?.length || 0;
+    });
+
+    this.subs.push(formSub, nameSub, typeSub, stepSub);
   }
 
-  createCondition() {
-    if (!this.newCondition) return;
+  ngOnDestroy() {
+    this.subs.forEach(sub => sub?.unsubscribe());
+  }
 
-    const steps = this.rightForm.controls.steps.value;
-    steps[this.selectedStep].push(this.newCondition);
-    this.rightForm.controls.steps.setValue(steps);
+  addNewCondition(index: number) {
+    if (!this.newCondition) return;
+    this.index = index;
     this.conditionForm.reset();
   }
 
   editCondition(index: number) {
+    this.index = index;
     const steps = this.rightForm.controls.steps.value;
-    const [condition] = steps[this.selectedStep].splice(index, 1);
+    const condition = steps[this.selectedStep$.value][index];
     this.rightForm.controls.steps.setValue(steps);
     setConditionForm(this.conditionForm, condition);
   }
 
   deleteCondition(index: number) {
     const steps = this.rightForm.controls.steps.value;
-    steps[this.selectedStep].splice(index, 1);
+    steps[this.selectedStep$.value].splice(index, 1);
     this.rightForm.controls.steps.setValue(steps);
+
+    this.conditionForm.reset();
+    this.newCondition = undefined;
+    this.index = steps.length;
   }
 
-  selectStep(index: number) {
-    this.selectedStep = index;
+  selectStep(step: number) {
+    this.selectedStep$.next(step);
   }
 
-  removeStep(index: number) {
-    this.deleteStep.emit(index);
+  removeStep(step: number) {
+    this.deleteStep.emit(step);
   }
 }

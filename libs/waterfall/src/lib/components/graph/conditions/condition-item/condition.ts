@@ -13,6 +13,8 @@ import {
   toLabel
 } from '@blockframes/model';
 import { rightholderName } from '../../../../pipes/rightholder-name.pipe';
+import { format } from 'date-fns';
+import { getUserDefaultDateFormat } from '@blockframes/utils/date-adapter';
 
 function targetToString(target: TargetValue, waterfall?: Waterfall, contracts?: WaterfallContract[]) {
   if (typeof target === 'number') return `${target}€`;
@@ -69,17 +71,19 @@ export function conditionToString(condition?: Condition, waterfall?: Waterfall, 
   }
 
   if (condition.name === 'incomeDate') {
+    const defaultFormat = getUserDefaultDateFormat();
     const { from, to } = condition.payload;
-    if (from && to) return `Income date is between ${from} and ${to}`;
-    if (from) return `Income date is after ${from}`;
-    if (to) return `Income date is before ${to}`;
+    if (from && to) return `Income date is between ${format(from, defaultFormat)} and ${format(to, defaultFormat)}`;
+    if (from) return `Income date is after ${format(from, defaultFormat)}`;
+    if (to) return `Income date is before ${format(to, defaultFormat)}`;
   }
 
   if (condition.name === 'contractDate') {
+    const defaultFormat = getUserDefaultDateFormat();
     const { from, to } = condition.payload;
-    if (from && to) return `Contract date is between ${from} and ${to}`;
-    if (from) return `Contract date is after ${from}`;
-    if (to) return `Contract date is before ${to}`;
+    if (from && to) return `Contract date is between ${format(from, defaultFormat)} and ${format(to, defaultFormat)}`;
+    if (from) return `Contract date is after ${format(from, defaultFormat)}`;
+    if (to) return `Contract date is before ${format(to, defaultFormat)}`;
   }
 
   if (condition.name === 'amount') {

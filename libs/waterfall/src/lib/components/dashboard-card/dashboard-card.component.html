@@ -2,5 +2,8 @@
   <article>
     <mat-icon svgIcon="monetization"></mat-icon><span>{{ title }}</span>
   </article>
-  <price-per-currency [price]="price"></price-per-currency>
+  <price-per-currency *ngIf="price[mainCurrency] > 0 else default" [price]="price"></price-per-currency>
+  <ng-template #default>
+    <span class="default">No revenue declared yet</span>
+  </ng-template>
 </section>

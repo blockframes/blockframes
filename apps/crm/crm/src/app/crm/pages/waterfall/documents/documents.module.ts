@@ -1,9 +1,12 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
+// Component
 import { DocumentsComponent } from './documents.component';
+
+// Blockframes
 import { TableModule } from '@blockframes/ui/list/table/table.module';
+import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -14,7 +17,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 @NgModule({
   declarations: [DocumentsComponent],
   imports: [
-    CommonModule,
+    BfCommonModule,
     TableModule,
     MatIconModule,
     MatButtonModule,

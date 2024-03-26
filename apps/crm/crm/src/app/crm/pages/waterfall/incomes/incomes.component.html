@@ -15,7 +15,7 @@
       {{ item.contractId | getCurrentContract: (contracts$ | async) : item.date }}
     </ng-template>
     <ng-template colRef="date" label="Date" let-date sort defaultSort>
-      {{ date | date: 'dd/MM/yyyy' }}
+      {{ date | date }}
     </ng-template>
     <ng-template colRef="" label="Source" let-item sort>
       {{ getAssociatedSource(item) }}

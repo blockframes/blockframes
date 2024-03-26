@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, Inject, OnInit } from '@angular/cor
 import { FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Movie, Statement, Waterfall } from '@blockframes/model';
+import { dateInputFormat } from '@blockframes/utils/date-adapter';
 
 interface StatementPaymentData {
   statement: Statement;
@@ -19,6 +20,7 @@ interface StatementPaymentData {
 export class StatementPaymentComponent implements OnInit {
 
   public dateControl = new FormControl<Date>(new Date());
+  public dateInputFormat = dateInputFormat;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)

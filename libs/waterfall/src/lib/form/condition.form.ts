@@ -1,33 +1,32 @@
-import { FormControl, FormGroup } from '@angular/forms';
 
+import { FormControl } from '@angular/forms';
+import { FormEntity, FormList } from '@blockframes/utils/form';
 import {
-  Media,
-  Condition,
-  Territory,
   ArrayOperator,
-  PoolCondition,
-  ConditionTerms,
-  GroupCondition,
-  EventCondition,
-  RightCondition,
-  NumberOperator,
-  numberOperator,
-  ConditionDuration,
-  OrgRevenuCondition,
+  Condition,
   ConditionContractAmount,
-  TargetValue,
-  TargetIn,
-  GroupScope,
-  ConditionName,
+  ConditionDuration,
   ConditionInterest,
+  ConditionName,
   ConditionOwnerLabel,
+  ConditionTerms,
+  EventCondition,
+  GroupCondition,
+  GroupScope,
+  Media,
+  NumberOperator,
+  OrgRevenuCondition,
+  PoolCondition,
+  RightCondition,
+  TargetIn,
+  TargetValue,
+  Territory,
+  numberOperator
 } from '@blockframes/model';
-import { FormList } from '@blockframes/utils/form';
 
-export function createConditionForm() {
-  return new FormGroup({
+function createConditionFormControl() {
+  return {
     conditionType: new FormControl<'revenue' | 'sales' | 'event' | ''>(''), // Revenue Earned, Sales Specificity, Event
-
 
     // Condition Type: Revenue Earned
     revenueOwnerType: new FormControl<ConditionOwnerLabel | ''>(''), // Right Holder, Revenue Share, Group, Pool
@@ -38,39 +37,37 @@ export function createConditionForm() {
     // Target Type: Investment or Expense
     revenueTarget: new FormControl(''), // Investment = every documents of type 'contract' with a price != 0, Expense = something inside this right's contract: see with @phpgeek
     // Target Type: Investment
-    revenuePercentage: new FormControl(0), // * Numeric value
+    revenuePercentage: new FormControl(0), // Numeric value
     // Target Type: Expense
     revenueCap: new FormControl<'cap' | 'uncap' | ''>(''), // Cap, Uncap
     // Target Type: Specific Amount, Expense
-    revenueAmount: new FormControl(0), // * Numeric value
+    revenueAmount: new FormControl(0), // Numeric value
     // --------------------
-
 
     // Condition Type: Sales Specificity
     salesType: new FormControl<ConditionName | ''>(''), // Payment Date, Contract Date, Contract Amount, Terms
     // Sales Type: Payment Date, Contract Date
     salesDateOperator: new FormControl<'before' | 'after' | 'between' | ''>(''), // Date Operator (before, after, between)
     // Sales Date Operator: After, Between
-    salesDateFrom: new FormControl(new Date()), // * Date
+    salesDateFrom: new FormControl(new Date()), // Date
     // Sales Date Operator: Before, Between
-    salesDateTo: new FormControl(new Date()), // * Date
+    salesDateTo: new FormControl(new Date()), // Date
     // Sales Type: Contract Amount
     salesOperator: new FormControl<NumberOperator | ''>(''), // Numerical Operator (<, >, =, <=, >=)
-    salesAmount: new FormControl(0), // * Numeric value
+    salesAmount: new FormControl(0), // Numeric value
     // Sales Type: Terms
     salesTermsType: new FormControl<GroupScope | ''>(''), // Media, Territory
     salesTermsOperator: new FormControl<ArrayOperator | ''>(''), // Inclusion Operator
-    salesTerms: new FormControl<Media[] | Territory[]>([]), // *
+    salesTerms: new FormControl<Media[] | Territory[]>([]),
     // --------------------
-
 
     // Condition Type: Event
     eventName: new FormControl(''), // Event
     eventOperator: new FormControl<NumberOperator | ArrayOperator | ''>(''), // Numerical Operator (<, >, =, <=, >=) or Inclusion Operator
     // Operator: is numerical
-    eventAmount: new FormControl(0), // * Numeric value
+    eventAmount: new FormControl(0), // Numeric value
     // Operator: is inclusion
-    eventList: FormList.factory([]), // *
+    eventList: FormList.factory([]),
     // --------------------
 
     // Condition Type: Interest
@@ -78,10 +75,23 @@ export function createConditionForm() {
     interestComposite: new FormControl(false), // Boolean
     // --------------------
 
-  });
+  };
 }
 
-export type ConditionForm = ReturnType<typeof createConditionForm>;
+type ConditionFormControl = ReturnType<typeof createConditionFormControl>;
+
+export class ConditionForm extends FormEntity<ConditionFormControl> {
+  constructor() {
+    const control = createConditionFormControl();
+    super(control);
+  }
+
+  reset() {
+    super.reset();
+    this.controls.salesTerms = new FormControl<Media[] | Territory[]>([]);
+    this.markAsPristine();
+  }
+}
 
 export function setConditionForm(form: ConditionForm, condition?: Partial<Condition>) {
   if (!condition) return;
@@ -245,15 +255,19 @@ function formToIncomeCondition(form: ConditionForm): Condition | undefined {
     const from = form.controls.salesDateFrom.value;
     const to = form.controls.salesDateTo.value;
 
+    const payload: ConditionDuration = {};
     if (operator === 'between') {
       if (!from || !to) return undefined;
+      payload.from = from;
+      payload.to = to;
     } else if (operator === 'after') {
       if (!from) return undefined;
+      payload.from = from;
     } else if (operator === 'before') {
       if (!to) return undefined;
+      payload.to = to;
     }
 
-    const payload: ConditionDuration = { from, to };
     return { name: conditionName, payload };
   }
 
@@ -392,8 +406,6 @@ function formToRevenueCondition(form: ConditionForm): Condition | undefined {
 
       return { name: conditionName, payload };
     }
-
-
     default:
       break;
   }
@@ -406,4 +418,3 @@ function formToTarget(form: ConditionForm, targetIn: TargetIn): TargetValue {
     percent: form.controls.revenuePercentage.value / 100
   }
 }
-

@@ -2,7 +2,7 @@
   <section>
     <h1 *ngIf="statement">
       <span>{{ rightholderName }} Statement #{{ statementNumber }}</span>
-      <mat-icon *ngIf="statement.duplicatedFrom" svgIcon="warning" color="warn" matTooltip="You are viewing a duplicated statement."></mat-icon>
+      <mat-icon *ngIf="statement.duplicatedFrom" svgIcon="warning" color="warn" matTooltip="You are viewing a duplicated Statement."></mat-icon>
       <mat-icon *ngIf="statement.reviewStatus === 'pending'" svgIcon="update" color="warn" matTooltip="Statement is waiting for a review."></mat-icon>
     </h1>
     

@@ -67,6 +67,7 @@ export class SalesMapComponent implements OnInit {
   }
 
   public territoriesSold: Record<string, TerritorySoldMarker[]>;
+  public empty: boolean;
 
   constructor(private cdr: ChangeDetectorRef) { }
 
@@ -77,6 +78,10 @@ export class SalesMapComponent implements OnInit {
 
     const res = filterContractsByTitle(this.data.waterfall.id, [], [], sales, salesTerms);
     this.territoriesSold = territoriesSold([...res.sales.filter(s => s.terms)]);
+    this.empty = false;
+    if(this.territoriesSold.all.length === 0 && this.territoriesSold.tv.length === 0 && this.territoriesSold.vod.length === 0 && this.territoriesSold.other.length === 0) { 
+      this.empty = true;
+    }
     this.cdr.markForCheck();
   }
 

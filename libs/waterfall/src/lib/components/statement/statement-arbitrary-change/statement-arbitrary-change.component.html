@@ -65,9 +65,9 @@
             <ul>
               <li *ngFor="let stm of warning.directSales">
                 <span>
-                  <h3>{{ stm.senderId | rightholderName: data.waterfall }} {{ stm.duration.from | date: 'dd/MM/yyyy' }} -  {{ stm.duration.to | date: 'dd/MM/yyyy' }}</h3>
+                  <h3>{{ stm.senderId | rightholderName: data.waterfall }} {{ stm.duration.from | date }} -  {{ stm.duration.to | date }}</h3>
                   <a mat-icon-button [routerLink]="['/c/o/dashboard/title', stm.waterfallId, 'statement', stm.id]" target="_blank">
-                    <mat-icon svgIcon="document" matTooltip="View statement"></mat-icon>
+                    <mat-icon svgIcon="document" matTooltip="View Statement"></mat-icon>
                   </a>
                 </span>
               </li>
@@ -84,9 +84,9 @@
             <ul>
               <li *ngFor="let stm of warning.outgoing">
                 <span>
-                  <h3>{{ stm.senderId | rightholderName: data.waterfall }} {{ stm.duration.from | date: 'dd/MM/yyyy' }} -  {{ stm.duration.to | date: 'dd/MM/yyyy' }}</h3>
+                  <h3>{{ stm.senderId | rightholderName: data.waterfall }} {{ stm.duration.from | date }} -  {{ stm.duration.to | date }}</h3>
                   <a mat-icon-button [routerLink]="['/c/o/dashboard/title', stm.waterfallId, 'statement', stm.id]" target="_blank">
-                    <mat-icon svgIcon="document" matTooltip="View statement"></mat-icon>
+                    <mat-icon svgIcon="document" matTooltip="View Statement"></mat-icon>
                   </a>
                 </span>
               </li>
@@ -99,7 +99,7 @@
             <mat-label>Gross Receipts</mat-label>
             <mat-icon [svgIcon]="mainCurrency" matPrefix></mat-icon>
             <input matInput type="number" min="0" [max]="config.max" [formControl]="override.get('amount')" required />
-            <mat-error>Please fill in a value between 0 and {{ config.max }}.</mat-error>
+            <mat-error>Please fill in a value between 0 and {{ config.max }}. Note that the receipt share cannot exceed the income received.</mat-error>
           </mat-form-field>
     
           <button mat-icon-button (click)="restore(i)" matTooltip="Restore to initial value">

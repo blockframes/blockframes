@@ -1,20 +1,24 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 
+// Component
 import { WaterfallStepItemComponent } from './step-item.component';
 
+// Material
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
-  declarations: [ WaterfallStepItemComponent ],
+  declarations: [WaterfallStepItemComponent],
   imports: [
     CommonModule,
 
     MatIconModule,
     MatButtonModule,
+    MatTooltipModule,
   ],
-  exports: [ WaterfallStepItemComponent ],
+  exports: [WaterfallStepItemComponent],
 })
-export class WaterfallStepItemModule {}
+export class WaterfallStepItemModule { }

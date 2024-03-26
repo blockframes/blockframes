@@ -5,15 +5,16 @@ div {
   border: dashed 1px var(--primary);
   padding: 32px;
 
-  p.name {
+  button.name {
     position: absolute;
     top: 2px;
     left: 6px;
     color: var(--primary);
     text-transform: uppercase;
+    font-weight: normal;
+    padding: 0;
   }
 
-  p.amount,
   price-per-currency.amount {
     position: absolute;
     font-size: 12px;
@@ -28,7 +29,7 @@ div {
     z-index: 1;
   }
 
-  button {
+  button.right, button.bottom {
     position: absolute;
     z-index: 3;
 

@@ -147,7 +147,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   );
 
   // ---------
-  // Waterfall, Blocks, Rights, Statements, Incomes, Expenses and State
+  // Waterfall, Sources, Righholders, Blocks, Rights, Statements, Incomes, Expenses and State
   // ---------
   public waterfall$ = this.movie$.pipe(
     switchMap(movie => this.waterfallService.valueChanges(movie.id)),
@@ -279,6 +279,16 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   );
 
   /**
+   * Observable of the rightholders that have rights on the current state
+   */
+  public rightholders$ = combineLatest([this.waterfall$, this.state$]).pipe(
+    map(([waterfall, state]) => {
+      const rightholderIds = Array.from(new Set(Object.values(state.waterfall.state.rights).map(r => r.orgId)));
+      return waterfall.rightholders.filter(r => rightholderIds.includes(r.id));
+    })
+  );
+
+  /**
    * Observable of the statements that current rightholder is allowed to see
    */
   public rightholderStatements$ = combineLatest([this.canBypassRules$, this.currentRightholder$, this.statements$]).pipe(
@@ -297,13 +307,12 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   public currentStatementId$ = new BehaviorSubject<string>(undefined);
 
   // ---------
-  // Graph Hide & Highlight
+  // Graph sidebar options
   // ---------
-
-  public highlightedRightHolderIds$ = new BehaviorSubject<string[]>([]);
+  public highlightedRightIds$ = new BehaviorSubject<string[]>([]);
   public highlightedSourceIds$ = new BehaviorSubject<string[]>([]);
   public hiddenRightHolderIds$ = new BehaviorSubject<string[]>([]);
-  public isCalculatedRevenue$ = new BehaviorSubject(true);
+  public revenueMode$: BehaviorSubject<'calculated' | 'actual'> = new BehaviorSubject('calculated'); // keyof AmountState
 
   @Input() routes: RouteDescription[];
   @Input() editRoute?: string | string[];
@@ -432,8 +441,9 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     if (!this.canBypassRules) throw new Error('You are not allowed to duplicate waterfall');
     const waterfall = await firstValueFrom(this.waterfall$);
     const blocks = await firstValueFrom(this.blocks$);
-    // TODO #9520 version{} of rights, incomes, expenses should be duplicated into new version to keep overrides
-    return this.waterfallService.duplicateVersion(waterfall, blocks, versionIdToDuplicate, version);
+    const versionToDuplicate = waterfall.versions.find(v => v.id === versionIdToDuplicate);
+    if (!versionIdToDuplicate) throw new Error(`Version ${versionIdToDuplicate} to duplicate not found in waterfall`);
+    return this.waterfallService.duplicateVersion(waterfall, blocks, versionToDuplicate, version);
   }
 
   /**

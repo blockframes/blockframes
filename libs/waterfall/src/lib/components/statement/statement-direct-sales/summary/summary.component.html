@@ -42,7 +42,7 @@
                 </button>
                 <ng-container *ngIf="hasOverrides(item, statement)">
                   <button mat-icon-button 
-                    matTooltip="This value has been overridden."
+                    matTooltip="Value manually adjusted."
                     (click)="showOverrides(item, statement)"
                   >
                     <mat-icon svgIcon="comment"></mat-icon>
@@ -101,7 +101,7 @@
                 </button>
                 <ng-container *ngIf="hasOverrides(item, statement)">
                   <button mat-icon-button 
-                    matTooltip="This value has been overridden."
+                    matTooltip="Value manually adjusted."
                     (click)="showOverrides(item, statement)"
                   >
                     <mat-icon svgIcon="comment"></mat-icon>
@@ -132,7 +132,7 @@
           </mat-expansion-panel-header>
           <bf-table [source]="expenses" pagination="50">
             <ng-template colRef="date" label="Date" let-date sort defaultSort>
-              {{ date | date: 'dd/MM/yyyy' }}
+              {{ date | date }}
             </ng-template>
             <ng-template colRef="nature" label="Expenses name" let-nature sort>
               {{ nature }}

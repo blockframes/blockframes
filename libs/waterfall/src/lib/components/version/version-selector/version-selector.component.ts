@@ -87,7 +87,7 @@ export class VersionSelectorComponent implements OnInit {
 
           const version = _version.standalone ?
             await this.waterfallService.addVersion(this.shell.waterfall, _version) :
-            await this.shell.duplicateVersion(this.versionId, _version);
+            await this.shell.duplicateVersion(getDefaultVersionId(this.shell.waterfall), _version);
 
           const rightholders = this.shell.waterfall.rightholders.map(r => rightholderIds.includes(r.id) ? { ...r, lockedVersionId: version.id } : r);
           await this.waterfallService.update(this.shell.waterfall.id, { id: this.shell.waterfall.id, rightholders });

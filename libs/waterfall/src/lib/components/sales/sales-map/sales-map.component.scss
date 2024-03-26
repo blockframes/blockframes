@@ -99,3 +99,16 @@ world-map {
   }
 }
 
+div.empty-map {
+  flex-direction: column;
+  text-align: center;
+  height: 100%;
+  p.mat-body-1 {
+    font-weight: bold;
+  }
+  img {
+    width: 100%;
+    max-height: 450px;
+  }
+}
+

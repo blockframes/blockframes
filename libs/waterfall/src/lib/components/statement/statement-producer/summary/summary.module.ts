@@ -1,6 +1,5 @@
 // Angular
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 // Blockframes
 import { StatementPeriodModule } from '../../statement-period/statement-period.module';
@@ -15,6 +14,7 @@ import { ExpenseTypePipeModule } from '../../../../pipes/expense-type.pipe';
 import { RightHolderNamePipeModule } from '../../../../pipes/rightholder-name.pipe';
 import { StatementExpenseEditModule } from '../../statement-expense-edit/statement-expense-edit.module';
 import { InterestTableModule } from '../../../../components/interests-table/interest-table.module';
+import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 
 // Components
 import { StatementProducerSummaryComponent } from './summary.component';
@@ -25,11 +25,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [StatementProducerSummaryComponent],
   imports: [
-    CommonModule,
+    BfCommonModule,
 
     // Blockframes
     StatementPeriodModule,
@@ -51,6 +52,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatIconModule,
     MatTooltipModule,
     MatDialogModule,
+    MatSnackBarModule,
   ],
   exports: [StatementProducerSummaryComponent]
 })

@@ -21,7 +21,7 @@
           FROM SCRATCH - Creates a completely new version
         </mat-radio-button>
         <mat-radio-button [value]="false">
-          DUPLICATE - Creates a duplicate of the current version
+          DUPLICATE - Creates a duplicate of the default version
         </mat-radio-button>
       </mat-radio-group>
     </ng-container>
@@ -34,7 +34,7 @@
 
     <mat-form-field appearance="outline">
       <mat-label>Version Description</mat-label>
-      <textarea matInput formControlName="description" placeholder="e.g. Following the amendments made to the Sales Agent's contract..." type="string" cdkTextareaAutosize cdkAutosizeMinRows="6" ></textarea>
+      <textarea matInput formControlName="description" placeholder="The waterfall version refers to the specific configuration or distribution plan used to allocate revenues among different right holders or stakeholders involved in a film project." type="string" cdkTextareaAutosize cdkAutosizeMinRows="6" ></textarea>
       <mat-hint *ngIf="!data.isDefaultVersion">Clarify the purpose and changes in this Waterfall version for better understanding by you and other Right Holders.</mat-hint>
     </mat-form-field>
 
