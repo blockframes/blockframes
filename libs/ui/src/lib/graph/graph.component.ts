@@ -77,7 +77,7 @@ export class GraphContainerComponent implements AfterViewInit, OnDestroy {
       if ((event as any).webkitDirectionInvertedFromDevice) { // Safari user who has "natural" scrolling enabled
         this.service.move(-event.deltaX, event.deltaY);
       } else {
-        this.service.move(event.deltaX, -(event.deltaY));
+        this.service.move(-event.deltaX, -(event.deltaY));
       }
     }
   }
