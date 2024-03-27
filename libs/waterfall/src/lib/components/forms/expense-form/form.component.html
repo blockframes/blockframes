@@ -12,7 +12,7 @@
       <p class="mat-body-1">Uncapped</p>
     </ng-template>
   </div>
-  <bf-form-table *ngIf="form.getExpenseType(expenseType.id)" [columns]="expenseColumns" [form]="form.getExpenseType(expenseType.id)" [defaultFormValue]="defaultExpenseValue(expenseType)" (itemSaved)="form.markAsDirty()">
+  <bf-form-table *ngIf="form.getExpenseType(expenseType.id)" [columns]="expenseColumns" [form]="form.getExpenseType(expenseType.id)" showEmptyForm="false" [defaultFormValue]="defaultExpenseValue(expenseType)" (itemSaved)="form.markAsDirty()">
     <!-- Columns -->
     <ng-template colRef="" label="Amount" let-item>
       <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>

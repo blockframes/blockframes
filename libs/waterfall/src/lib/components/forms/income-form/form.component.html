@@ -1,7 +1,7 @@
 <section *ngFor="let source of sources" class="surface">
   <h3>{{ source.name }}</h3>
   <p class="mat-body-1">Please declare below the gross receipts that will be used for waterfall calculation.</p>
-  <bf-form-table *ngIf="form.getSource(source.id)" [columns]="incomeColumns" [form]="form.getSource(source.id)" [defaultFormValue]="defaultIncomeValue(source)" (itemSaved)="form.markAsDirty()">
+  <bf-form-table *ngIf="form.getSource(source.id)" [columns]="incomeColumns" [form]="form.getSource(source.id)" showEmptyForm="false" [defaultFormValue]="defaultIncomeValue(source)" (itemSaved)="form.markAsDirty()">
     <!-- Columns -->
     <ng-template colRef="" label="Gross Receipts" let-item>
       <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>

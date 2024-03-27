@@ -10,6 +10,8 @@ import { FormList } from '@blockframes/utils/form';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { WaterfallService } from '../../../waterfall.service';
 
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 @Component({
   selector: '[contractId] waterfall-expense-types-form',
   templateUrl: './form.component.html',
@@ -27,6 +29,7 @@ export class ExpenseTypesFormComponent implements OnInit {
   constructor(
     private shell: DashboardWaterfallShellComponent,
     private waterfallService: WaterfallService,
+    private snackbar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -37,7 +40,7 @@ export class ExpenseTypesFormComponent implements OnInit {
     }
   }
 
-  save(waterfall: Waterfall) {
+  async save(waterfall: Waterfall) {
     const { expenseTypes, id } = waterfall;
     const expenseType = this.form.getRawValue().filter(c => !!c.name).map(c => createExpenseType({
       ...c,
@@ -46,7 +49,8 @@ export class ExpenseTypesFormComponent implements OnInit {
     }));
     expenseTypes[this.contractId] = expenseType;
 
-    return this.waterfallService.update({ id, expenseTypes });
+    await this.waterfallService.update({ id, expenseTypes });
+    this.snackbar.open('Expense types saved', 'close', { duration: 2000 });
   }
 
 }

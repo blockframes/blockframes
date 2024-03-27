@@ -105,12 +105,12 @@
     </ng-container>
   </ng-container>
 
-  <article *ngIf="showExpenseTypes$ | async">
+  <ng-container *ngIf="showExpenseTypes$ | async">
     <h3>Expenses</h3>
     <div class="surface">
       <waterfall-expense-types-form [contractId]="contract.id"></waterfall-expense-types-form>
     </div>
-  </article>
+  </ng-container>
 
   <ng-container *ngIf="interests$ | async as interests">
     <article *ngIf="interests.length">
