@@ -37,9 +37,11 @@ export class ExpenseFormComponent implements OnInit {
       map(([expenseTypes, simulation, formValue]) => {
         const realTimeExpenses: Record<string, PricePerCurrency> = {};
         expenseTypes.forEach(expenseType => {
-          const expenses = Object.values(simulation.waterfall.state.expenses).filter(e => e.typeId === expenseType.id).map(e => e.amount);
+          const values: { currency: MovieCurrency, price: number, capped: boolean, id: string }[] = formValue[`expenses-${expenseType.id}`];
+          const expenses = Object.values(simulation.waterfall.state.expenses)
+            .filter(e => e.typeId === expenseType.id && !values.find(v => v.id === e.id))
+            .map(e => e.amount);
           realTimeExpenses[expenseType.id] = { [mainCurrency]: sum(expenses) };
-          const values: { currency: MovieCurrency, price: number, capped: boolean }[] = formValue[`expenses-${expenseType.id}`];
 
           values?.forEach(value => {
             if (value.capped) {
