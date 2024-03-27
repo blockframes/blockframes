@@ -1011,7 +1011,24 @@ function getExpensesRecoupment(
       cumulated: getTotalPerCurrency(cumulatedExpenses)
     });
 
-    recoupment.push(...cumulatedExpenses);
+    if (cap > 0) {
+      // convert expenses to expenseType currency
+      const cumulatedExpensesConverted = cumulatedExpenses.map(e => ({
+        ...e,
+        price: convertCurrenciesTo({ [e.currency]: e.price }, expenseType.currency)[expenseType.currency],
+        currency: expenseType.currency
+      }));
+
+      const cappedCumulatedExpenses = cumulatedExpensesConverted.filter(e => e.capped);
+      const uncappedCumulatedExpenses = cumulatedExpensesConverted.filter(e => !e.capped);
+
+      const cappedAmount = Math.min(sum(cappedCumulatedExpenses.map(e => e.price)), cap);
+      const uncappedAmount = sum(uncappedCumulatedExpenses.map(e => e.price));
+
+      recoupment.push({ price: cappedAmount + uncappedAmount, currency: expenseType.currency });
+    } else {
+      recoupment.push(...cumulatedExpenses);
+    }
   }
 
   if (rightExpenseTypes.length > 0) recoupment.push(...cumulatedRightPayment.map(r => ({ currency: r.currency, price: -r.price })));
