@@ -50,6 +50,7 @@ export class FormTableComponent<T> implements OnInit, OnDestroy {
   @Input() defaultFormValue: T;
   @Input() @boolean disableDelete: boolean;
   @Input() @boolean editOnly = false;
+  @Input() @boolean showEmptyForm = true;
   @Input() tablePosition: 'top' | 'bottom' | 'left' | 'right' = 'top';
   @Input() set active(index: number) {
     if (typeof index !== 'number' || index < 0) return;
@@ -78,7 +79,7 @@ export class FormTableComponent<T> implements OnInit, OnDestroy {
 
   ngOnInit() {
     // If active has not been triggered add a default item
-    if (!this.formItem) this.add();
+    if (!this.formItem && this.showEmptyForm) this.add();
     this.cdr.markForCheck();
   }
 
