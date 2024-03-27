@@ -12,7 +12,7 @@ import { GraphService } from './graph.service';
 export class GraphContainerComponent implements AfterViewInit, OnDestroy {
 
   dragging = false;
-  
+
   subscriptions: Subscription[] = [];
 
   @ViewChild('dragContainer') container: ElementRef<HTMLDivElement>;
@@ -52,13 +52,13 @@ export class GraphContainerComponent implements AfterViewInit, OnDestroy {
     if (!this.dragging) return;
     this.service.move(arg.movementX, arg.movementY);
   }
-  
+
   @HostListener('mouseup')
   onMouseUp() {
     this.dragging = false;
     this.container.nativeElement.style.transition = 'transform 0.2s';
   }
-  
+
   @HostListener('mouseleave')
   onMouseLeave() {
     this.dragging = false;
@@ -74,11 +74,11 @@ export class GraphContainerComponent implements AfterViewInit, OnDestroy {
       const y = event.clientY - rect.top;
       this.service.zoom(event.deltaY, x, y);
     } else {
-      if ((event as any).webkitDirectionInvertedFromDevice) { // Safari user who has "natural" scrolling enabled
-        this.service.move(-event.deltaX, event.deltaY);
-      } else {
-        this.service.move(event.deltaX, -(event.deltaY));
-      }
+      /**
+       * @dev "if ((event as any).webkitDirectionInvertedFromDevice)"
+       * Can be used for Safari user who has "natural" scrolling enabled
+       */
+      this.service.move(-event.deltaX, -(event.deltaY));
     }
   }
 
