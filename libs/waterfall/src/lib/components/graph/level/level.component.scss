@@ -9,7 +9,7 @@
     font-size: 12px;
     text-transform: uppercase;
     width: 240px;
-    height: 76px;
+    height: 112px;
     padding: 18px 12px 6px 12px;
     text-align: center;
     color: var(--foreground-text);
@@ -64,6 +64,27 @@
         white-space: nowrap;
         font-weight: 400;
         font-size: 10px;
+      }
+    }
+
+    div.total {
+      font-size: 10px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 4px;
+      background: color-mix(in srgb, var(--primary) 12%, transparent);
+      border: solid 1px var(--primary);
+      padding: 0px 8px;
+      border-radius: 8px;
+
+      mat-icon {
+        width: 18px;
+        color: var(--primary);
+      }
+      p {
+        color: var(--primary);
+        margin: 0;
       }
     }
   }

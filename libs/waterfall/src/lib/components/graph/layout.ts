@@ -134,7 +134,7 @@ const colors = [
 
 const RIGHT_WIDTH = 240;
 const RIGHT_HEIGHT = 180;
-const LEVEL_HEIGHT = 76;
+const LEVEL_HEIGHT = 112;
 const SOURCE_WIDTH = 400;
 const SOURCE_HEIGHT = 70;
 const SPACING = 32;
