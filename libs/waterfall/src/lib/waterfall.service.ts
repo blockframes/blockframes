@@ -294,7 +294,7 @@ function groupActions(data: WaterfallData, versionId: string, isSimulation = fal
     (s.status === 'reported' && (!s.reviewStatus || s.reviewStatus === 'accepted')) || // Include previous reported statements
     (isSimulation && s.id === currentStatementId) // Include current, possibly not reported, statement in simulation
   );
-  // Skip hidden incomes for this version
+  // Skip hidden incomes for this version: prevent them to be part of state
   const incomes = isSimulation ? Object.values(data.incomes) : Object.values(data.incomes).filter(i => !i.version[versionId] || !i.version[versionId].hidden);
 
   const expenseTypesActions = expenseTypesToAction(Object.values(data.waterfall.expenseTypes).flat(), versionId);
@@ -302,7 +302,7 @@ function groupActions(data: WaterfallData, versionId: string, isSimulation = fal
   const investmentActions = investmentsToActions(data.contracts);
   const rightActions = rightsToActions(data.rights);
   const incomeActions = incomesToActions(data.contracts, incomes, sources, incomesAndExpensesStatements);
-  // Skip hidden expenses for this version
+  // Skip hidden expenses for this version: prevent them to be part of state
   const expenses = isSimulation ? Object.values(data.expenses) : Object.values(data.expenses).filter(i => !i.version[versionId] || !i.version[versionId].hidden);
   const expenseActions = expensesToActions(expenses, incomesAndExpensesStatements);
   const paymentActions = statementsToActions(data.statements, incomes);
