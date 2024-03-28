@@ -2,6 +2,7 @@
     <section class="flex-center">
       <waterfall-statement-empty-card type="mainDistributor" (selected)="addStatement('mainDistributor')"></waterfall-statement-empty-card>
       <waterfall-statement-empty-card type="salesAgent" (selected)="addStatement('salesAgent')"></waterfall-statement-empty-card>
+      <waterfall-statement-empty-card *ngIf="isStandaloneVersion$ | async" type="directSales" (selected)="addStatement('directSales')"></waterfall-statement-empty-card>
       <waterfall-statement-empty-card type="producer" disabled></waterfall-statement-empty-card>
     </section>
 </ng-container>
