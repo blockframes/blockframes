@@ -1,2 +1,3 @@
 <span>{{ label }}:</span>
-<price-per-currency [price]="payment.price | formatPair: payment.currency" default="€ 0"></price-per-currency>
+<price-per-currency *ngIf="payment" [price]="payment.price | formatPair: payment.currency" default="€ 0"></price-per-currency>
+<price-per-currency *ngIf="price" [price]="price" default="€ 0"></price-per-currency>

@@ -69,6 +69,14 @@
           </span>
         </div>
       {{/if}}
+      {{#if data.statement.reportedData.producerNetParticipation}}
+        <div class="statement-participation">
+          <span>total participation:</span>
+          <span>
+            {{pricePerCurrency data.statement.reportedData.producerNetParticipation}}
+          </span>
+        </div>
+      {{/if}}
 
       {{#if data.statement.reportedData.sourcesBreakdown}}
         {{#data.statement.reportedData.sourcesBreakdown}}
@@ -364,6 +372,14 @@
               {{formatPair data.statement.payments.rightholder.price data.statement.payments.rightholder.currency}}
           </div>
         {{/if}}
+        {{#if data.statement.reportedData.producerNetParticipation}}
+          <div class="statement-participation">
+            <span>total participation:</span>
+            <span>
+              {{pricePerCurrency data.statement.reportedData.producerNetParticipation}}
+            </span>
+          </div>
+        {{/if}}
       </div>
 
       {{#if data.statement.comment}}
@@ -423,6 +439,14 @@
             <span>total participation:</span>
             <span>
               {{formatPair payments.rightholder.price payments.rightholder.currency}}
+            </span>
+          </div>
+        {{/if}}
+        {{#if reportedData.producerNetParticipation}}
+          <div class="statement-participation">
+            <span>total participation:</span>
+            <span>
+              {{pricePerCurrency reportedData.producerNetParticipation}}
             </span>
           </div>
         {{/if}}
@@ -575,6 +599,14 @@
               <span>total participation:</span>
               <span>
                 {{formatPair payments.rightholder.price payments.rightholder.currency}}
+            </div>
+          {{/if}}
+          {{#if reportedData.producerNetParticipation}}
+            <div class="statement-participation">
+              <span>total participation:</span>
+              <span>
+                {{pricePerCurrency reportedData.producerNetParticipation}}
+              </span>
             </div>
           {{/if}}
         </div>

@@ -239,9 +239,9 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
       const existingPaymentInfos = impactedStatement.payments.right.map(p => ({ id: p.id, to: p.to, date: p.date, status: p.status }));
       impactedStatement.payments.right = isDirectSalesStatement(impactedStatement) ? [] : impactedStatement.payments.right.filter(p => p.mode === 'internal');
 
-      const sources = getStatementSources(impactedStatement, this.waterfall.sources, incomes, _rights, simulation.waterfall.state);
+      const declaredSources = getStatementSources(impactedStatement, this.waterfall.sources, incomes, _rights, simulation.waterfall.state);
       const statementRights = getStatementRights(impactedStatement, _rights);
-      const rightIds = unique(sources.map(s => getAssociatedRights(s.id, statementRights, simulation.waterfall.state)).flat().map(r => r.id));
+      const rightIds = unique(declaredSources.map(s => getAssociatedRights(s.id, statementRights, simulation.waterfall.state)).flat().map(r => r.id));
       const rights = statementRights.filter(r => rightIds.includes(r.id));
 
       const updatedStatement = generatePayments(impactedStatement, simulation.waterfall.state, rights, incomes);
@@ -253,9 +253,8 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
       });
 
       updatedStatement.reportedData.sourcesBreakdown = getSourcesBreakdown(
-        this.shell.versionId$.value,
         this.shell.waterfall,
-        sources,
+        declaredSources,
         updatedStatement,
         incomes,
         expenses,
@@ -271,7 +270,8 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
         expenses,
         history,
         _rights,
-        simulation.waterfall.state
+        simulation.waterfall.state,
+        declaredSources
       );
 
       updatedStatement.reportedData.expenses = updatedStatement.expenseIds
@@ -319,9 +319,9 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
       } : undefined;
       delete impactedStatement.payments.rightholder;
 
-      const sources = getStatementSources(impactedStatement, this.waterfall.sources, incomes, _rights, simulation.waterfall.state);
+      const declaredSources = getStatementSources(impactedStatement, this.waterfall.sources, incomes, _rights, simulation.waterfall.state);
       const statementRights = getStatementRights(impactedStatement, _rights);
-      const rightIds = unique(sources.map(s => getAssociatedRights(s.id, statementRights, simulation.waterfall.state)).flat().map(r => r.id));
+      const rightIds = unique(declaredSources.map(s => getAssociatedRights(s.id, statementRights, simulation.waterfall.state)).flat().map(r => r.id));
       const rights = statementRights.filter(r => rightIds.includes(r.id));
 
       const updatedStatement = generatePayments(impactedStatement, simulation.waterfall.state, rights, incomes);
@@ -344,10 +344,11 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
         return payment;
       });
 
+      updatedStatement.versionId = this.shell.versionId$.value;
+
       updatedStatement.reportedData.sourcesBreakdown = getSourcesBreakdown(
-        this.shell.versionId$.value,
         this.shell.waterfall,
-        sources,
+        declaredSources,
         updatedStatement,
         incomes,
         expenses,
@@ -363,7 +364,8 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
         expenses,
         history,
         _rights,
-        simulation.waterfall.state
+        simulation.waterfall.state,
+        declaredSources
       );
 
       updatedStatement.reportedData.expenses = updatedStatement.expenseIds
@@ -377,7 +379,6 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
       ...s,
       _meta: createDocumentMeta(),
       id: this.statementService.createId(),
-      versionId: this.shell.versionId$.value,
       duplicatedFrom: s.id,
     })));
 

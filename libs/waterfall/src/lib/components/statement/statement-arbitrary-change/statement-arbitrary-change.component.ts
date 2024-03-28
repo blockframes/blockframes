@@ -114,7 +114,7 @@ export class StatementArbitraryChangeComponent implements OnInit {
       if (override.amount === override.initial) return; // No change
 
       const percent = override.amount === 0 ? 0 : (override.amount / config.max) * 100;
-      if (percent === this.data.right.percent) return; // No change
+      if (percent === this.data.right.percent && override.amount === override.initial) return; // No change
 
       return createRightOverride({
         incomeId: config.income.id,

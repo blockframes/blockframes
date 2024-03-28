@@ -1,5 +1,5 @@
 import { DocumentMeta } from '../meta';
-import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups, statementsRolesMapping, NegotiationStatus } from '../static';
+import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups, statementsRolesMapping, NegotiationStatus, RightType } from '../static';
 import { Duration, createDuration } from '../terms';
 import { PricePerCurrency, convertCurrenciesTo, getTotalPerCurrency, sortByDate, sum, toLabel } from '../utils';
 import { TitleState, TransferState } from './state';
@@ -113,7 +113,7 @@ export interface Statement {
   reported?: Date;
   incomeIds: string[];
   expenseIds?: string[];
-  versionId: string; // Version used to create this statement
+  versionId: string; // Version used to create this statement. Except for standalone versions, this id is set when statement is reported
   duplicatedFrom: string; // Id of the statement this one was duplicated from
   standalone: boolean; // True if statement was generated using a standalone waterfall version
   payments: {
@@ -130,6 +130,7 @@ export interface Statement {
     details?: DetailsRow[];
     expenses?: (Expense & { cap?: PricePerCurrency })[];
     interests?: InterestDetail[];
+    producerNetParticipation?: PricePerCurrency; // Producer's net participation (for direct sales statements only)
   },
   hash: {
     requested: boolean;
@@ -768,27 +769,27 @@ export interface DetailsRow {
 
 /**
  * For Distributor and Direct Sales statements.
- * @param versionId 
  * @param waterfall 
- * @param sources 
+ * @param declaredSources 
  * @param current 
  * @param incomes 
  * @param _expenses 
  * @param _history 
  * @param rights 
  * @param state 
+ * @param displayedRightTypes
  * @returns 
  */
 export function getSourcesBreakdown(
-  versionId: string,
   waterfall: Waterfall,
-  sources: WaterfallSource[],
+  declaredSources: WaterfallSource[],
   current: Statement,
   incomes: Income[],
   _expenses: Expense[],
   _history: (Statement & { number: number })[],
   rights: Right[],
-  state: TitleState): SourcesBreakdown[] {
+  state: TitleState,
+  displayedRightTypes: RightType[] = []): SourcesBreakdown[] {
   const indexOfCurrent = _history.findIndex(s => s.id === current.id || s.id === current.duplicatedFrom);
   _history[indexOfCurrent] = { ...current, number: _history[indexOfCurrent].number };
   const previous = _history.slice(indexOfCurrent + 1);
@@ -796,17 +797,9 @@ export function getSourcesBreakdown(
 
   const displayedRights = getStatementRightsToDisplay(current, rights);
   const orderedRights = getOrderedRights(displayedRights, state);
-  const statementIncomes = incomes.filter(i => current.incomeIds.includes(i.id));
-  const expenseTypes = isDirectSalesStatement(current) ? waterfall.expenseTypes.directSales : waterfall.expenseTypes[current.contractId];
-  return sources.map(source => {
+  const expenseTypes = getExpenseTypes(current, waterfall);
+  return skipSourcesWithAllHiddenIncomes(current, declaredSources, incomes).map(source => {
     const rows: BreakdownRow[] = [];
-
-    // Remove sources where all incomes are hidden from reported statement 
-    if (current.status === 'reported') {
-      const sourceIncomes = statementIncomes.filter(i => i.sourceId === source.id);
-      const allHidden = sourceIncomes.every(i => i.version[versionId]?.hidden);
-      if (allHidden) return;
-    }
 
     // Incomes declared by statement.senderId
     const previousSourcePayments = previous.map(s => s.payments.income).flat().filter(income => incomes.find(i => i.id === income.incomeId).sourceId === source.id);
@@ -819,10 +812,12 @@ export function getSourcesBreakdown(
       cumulated: getTotalPerCurrency(cumulatedSourcePayments)
     });
 
-    const rights = orderedRights.filter(right => {
-      const rightSources = getSources(state, right.id);
-      return rightSources.length === 1 && rightSources[0].id === source.id;
-    });
+    const rights = orderedRights
+      .filter(right => displayedRightTypes.length ? displayedRightTypes.includes(right.type) : true)
+      .filter(right => {
+        const rightSources = getSources(state, right.id);
+        return rightSources.length === 1 && rightSources[0].id === source.id;
+      });
 
     // What senderId took from source to pay his rights
     const previousSum: RightPayment[] = [];
@@ -881,7 +876,7 @@ export function getSourcesBreakdown(
       stillToBeRecouped: expensesToBeRecouped.length ? getTotalPerCurrency(expensesToBeRecouped) : undefined,
       mgStatus: mgStatus.investments ? { investments: { [mainCurrency]: mgStatus.investments }, stillToBeRecouped: { [mainCurrency]: mgStatus.stillToBeRecouped } } : undefined
     };
-  }).filter(r => r);
+  });
 }
 
 /**
@@ -893,6 +888,8 @@ export function getSourcesBreakdown(
  * @param _history 
  * @param rights 
  * @param state 
+ * @param _declaredSources used to skip rights belonging to sender or receiver but that is not linked to current declared sources
+ * @param displayedRightTypes
  * @returns 
  */
 export function getRightsBreakdown(
@@ -902,7 +899,10 @@ export function getRightsBreakdown(
   _expenses: Expense[],
   _history: (Statement & { number: number })[],
   rights: Right[],
-  state: TitleState): RightsBreakdown[] {
+  state: TitleState,
+  _declaredSources: WaterfallSource[],
+  displayedRightTypes: RightType[] = []): RightsBreakdown[] {
+  const declaredSources = skipSourcesWithAllHiddenIncomes(current, _declaredSources, incomes);
 
   const indexOfCurrent = _history.findIndex(s => s.id === current.id || s.id === current.duplicatedFrom);
   _history[indexOfCurrent] = { ...current, number: _history[indexOfCurrent].number };
@@ -911,10 +911,15 @@ export function getRightsBreakdown(
 
   const displayedRights = getStatementRightsToDisplay(current, rights);
   const orderedRights = getOrderedRights(displayedRights, state);
-  const rightsWithManySources = orderedRights.filter(right => getSources(state, right.id).length > 1);
+  const rightsWithManySources = orderedRights
+    .filter(right => displayedRightTypes.length ? displayedRightTypes.includes(right.type) : true)
+    .filter(right => {
+      const rightSources = getSources(state, right.id);
+      return rightSources.length > 1 && rightSources.some(s => declaredSources.find(ds => ds.id === s.id));
+    });
 
   const rightTypes = Array.from(new Set(rightsWithManySources.map(right => right.type)));
-  const expenseTypes = isDirectSalesStatement(current) ? waterfall.expenseTypes.directSales : waterfall.expenseTypes[current.contractId];
+  const expenseTypes = getExpenseTypes(current, waterfall);
   return rightTypes.map(type => {
     const rows: BreakdownRow[] = [];
 
@@ -955,7 +960,7 @@ export function getRightsBreakdown(
       });
     }
 
-    const total = rows.filter(r => r.type === 'right').map(r => r.current).reduce((acc, curr) => {
+    const total: PricePerCurrency = rows.filter(r => r.type === 'right').map(r => r.current).reduce((acc, curr) => {
       for (const currency of Object.keys(curr)) {
         acc[currency] = (acc[currency] || 0) + curr[currency];
       }
@@ -1035,6 +1040,40 @@ function getExpensesRecoupment(
   return recoupment;
 }
 
+export function getExpenseTypes(statement: Statement, waterfall: Waterfall) {
+  return isDirectSalesStatement(statement) ? waterfall.expenseTypes.directSales : waterfall.expenseTypes[statement.contractId];
+}
+
+/**
+ * Return expenses history for a statement filtered by expense types defined in rights conditions
+ * @param current 
+ * @param history 
+ * @param expenses 
+ * @param _declaredSources 
+ * @param _rights 
+ * @param state 
+ * @param incomes
+ * @returns 
+ */
+export function getExpensesHistory(current: Statement, history: Statement[], expenses: Expense[], _declaredSources: WaterfallSource[], _rights: Right[], state: TitleState, incomes: Income[]) {
+  const declaredSources = skipSourcesWithAllHiddenIncomes(current, _declaredSources, incomes);
+  const rights = getStatementRightsToDisplay(current, _rights).filter(right => getSources(state, right.id).some(s => declaredSources.find(ds => ds.id === s.id)));
+  const expenseTypeIds = [];
+  for (const right of rights) {
+    const rightExpenseTypeIds = getRightExpenseTypes(right, undefined, undefined);
+    for (const typeId of rightExpenseTypeIds) {
+      if (!expenseTypeIds.includes(typeId)) expenseTypeIds.push(typeId);
+    }
+  }
+
+  const currentExpenses = current.expenseIds.map(id => expenses.find(e => e.id === id)).filter(e => current.status === 'reported' ? !e.version[current.versionId]?.hidden : true);
+  const indexOfCurrent = history.findIndex(s => s.id === current.id || s.id === current.duplicatedFrom);
+  const previousStatements = history.slice(indexOfCurrent).filter(s => s.status === 'reported' && s.id !== current.id && (!s.reviewStatus || s.reviewStatus === 'accepted'));
+  const previousExpenses = expenses.filter(e => previousStatements.find(previous => previous.expenseIds.includes(e.id) && !e.version[previous.versionId]?.hidden));
+  const expensesHistory = [...currentExpenses, ...previousExpenses].filter(e => expenseTypeIds.includes(e.typeId));
+  return sortByDate(expensesHistory, 'date');
+}
+
 function getMgRecoupment(right: Right, cumulatedRightPayment: RightPayment[], state: TitleState): { investments: number, stillToBeRecouped: number } {
   const contractIds = getRightInvestContractId(right);
 
@@ -1066,4 +1105,20 @@ export function initStatementDuration(date: Date, previousDuration?: Duration): 
   }
 
   return duration;
+}
+
+/**
+ * Remove sources where all incomes are hidden from reported statement 
+ * @param statement 
+ * @param sources 
+ * @param incomes 
+ * @returns 
+ */
+export function skipSourcesWithAllHiddenIncomes(statement: Statement, sources: WaterfallSource[], incomes: Income[]) {
+  if (statement.status !== 'reported') return sources;
+  const statementIncomes = incomes.filter(i => statement.incomeIds.includes(i.id));
+  return sources.filter(source => {
+    const sourceIncomes = statementIncomes.filter(i => i.sourceId === source.id);
+    return !sourceIncomes.every(i => i.version[statement.versionId]?.hidden);
+  });
 }

@@ -1,4 +1,4 @@
-<waterfall-statement-header *ngIf="sources$ | async as sources" [statement]="statement" [sources]="sources"></waterfall-statement-header>
+<waterfall-statement-header *ngIf="cleanSources$ | async as sources" [statement]="statement" [sources]="sources"></waterfall-statement-header>
 <section>
   <mat-divider></mat-divider>
   <p class="mat-body-2" *ngIf="statement.status === 'draft'">Here is the <strong>Summary of your Statement</strong>. Please verify the information below.</p>
@@ -78,9 +78,9 @@
       Total Net Receipts:
       <price-per-currency *ngIf="totalNetReceipt$ | async as totalNet" [price]="totalNet" default="€ 0"></price-per-currency>
     </div>
-    <mat-divider></mat-divider>
 
     <ng-container *ngIf="rightsBreakdown$ | async as breakdown">
+      <mat-divider *ngIf="breakdown.length"></mat-divider>
       <div class="surface" *ngFor="let item of breakdown">
         <mat-expansion-panel>
           <mat-expansion-panel-header>
@@ -143,16 +143,16 @@
       </div>
     </ng-container>
 
-    <ng-container *ngIf="expenses$ | async as expenses">
-      <mat-divider *ngIf="expenses.length"></mat-divider>
-      <div class="surface" *ngIf="expenses.length">
+    <ng-container *ngIf="expensesHistory$ | async as expensesHistory">
+      <mat-divider *ngIf="expensesHistory.length"></mat-divider>
+      <div class="surface" *ngIf="expensesHistory.length">
         <mat-expansion-panel>
           <mat-expansion-panel-header>
             <mat-panel-title>
-              <span>Expenses details</span>
+              <span>Expenses History</span>
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <bf-table [source]="expenses" pagination="50">
+          <bf-table [source]="expensesHistory" pagination="50">
             <ng-template colRef="date" label="Date" let-date sort defaultSort>
               {{ date | date }}
             </ng-template>

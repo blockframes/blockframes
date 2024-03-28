@@ -38,7 +38,8 @@ import {
   isStandaloneVersion,
   isVerticalGroup,
   interestDetail,
-  canOnlyReadStatements
+  canOnlyReadStatements,
+  skipSourcesWithAllHiddenIncomes
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../../dashboard/shell/shell.component';
 import { StatementForm } from '../../../../form/statement.form';
@@ -130,8 +131,9 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
   private incomes: Income[] = [];
   private statementDuplicates: Statement[] = [];
   private readonly = canOnlyReadStatements(this.shell.currentRightholder, this.shell.canBypassRules);
+  private devMode = false;
 
-  public sources$ = combineLatest([this.incomeIds$, this.shell.incomes$, this.shell.rights$, this.shell.simulation$]).pipe(
+  private sources$ = combineLatest([this.incomeIds$, this.shell.incomes$, this.shell.rights$, this.shell.simulation$]).pipe(
     map(([incomeIds, incomes, rights, simulation]) => getStatementSources({ ...this.statement, incomeIds }, this.waterfall.sources, incomes, rights, simulation.waterfall.state)),
     shareReplay({ bufferSize: 1, refCount: true })
   );
@@ -173,12 +175,16 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
+  public cleanSources$ = combineLatest([this.statement$, this.sources$, this.shell.incomes$, ]).pipe(
+    map(([statement, sources, incomes]) => skipSourcesWithAllHiddenIncomes(statement, sources, incomes)),
+  );
+
   public groupsBreakdown$ = combineLatest([
     this.statement$, this.shell.rights$, this.shell.incomes$,
     this.shell.simulation$, this.sources$
   ]).pipe(
     map(([statement, rights, incomes, simulation, sources]) => {
-      if (statement.status === 'reported' && statement.reportedData.groupsBreakdown) return statement.reportedData.groupsBreakdown;
+      if (!this.devMode && statement.status === 'reported' && statement.reportedData.groupsBreakdown) return statement.reportedData.groupsBreakdown;
       const displayedRights = getStatementRightsToDisplay(statement, rights);
       const orderedRights = getOrderedRights(displayedRights, simulation.waterfall.state);
       const statementIncomes = incomes.filter(i => statement.incomeIds.includes(i.id));
@@ -243,7 +249,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     this.statement$, this.shell.rights$
   ]).pipe(
     map(([groups, simulation, statement, rights]) => {
-      if (statement.status === 'reported' && statement.reportedData.details) return statement.reportedData.details;
+      if (!this.devMode && statement.status === 'reported' && statement.reportedData.details) return statement.reportedData.details;
       const sourcesDetails = groups.map(g => g.rows.filter(r => r.type === 'source')).flat();
 
       const items: DetailsRow[] = [];
@@ -290,7 +296,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     this.shell.expenses$, this.shell.versionId$
   ]).pipe(
     map(([statement, statements, expenses, versionId]) => {
-      if (statement.status === 'reported' && statement.reportedData.expenses) return statement.reportedData.expenses;
+      if (!this.devMode && statement.status === 'reported' && statement.reportedData.expenses) return statement.reportedData.expenses;
       const parentStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
         .filter(s => s.payments.right.some(r => r.incomeIds.some(id => statement.incomeIds.includes(id))));
       const expenseIds = parentStatements.map(s => s.expenseIds).flat();
@@ -317,7 +323,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
 
   public interests$ = combineLatest([this.shell.rights$, this.shell.simulation$]).pipe(
     map(([_rights, state]) => {
-      if (this.statement.status === 'reported' && this.statement.reportedData.interests) return this.statement.reportedData.interests;
+      if (!this.devMode && this.statement.status === 'reported' && this.statement.reportedData.interests) return this.statement.reportedData.interests;
       const rights = getStatementRightsToDisplay(this.statement, _rights);
       const allConditions = rights.map(right => getRightCondition(right)).filter(condition => !!condition).flat();
       const interestCondition = allConditions.find(condition => condition.name === 'interest');

@@ -1,4 +1,4 @@
-<waterfall-statement-header *ngIf="sources$ | async as sources" [statement]="statement" [sources]="sources"></waterfall-statement-header>
+<waterfall-statement-header *ngIf="cleanSources$ | async as sources" [statement]="statement" [sources]="sources"></waterfall-statement-header>
 <waterfall-statement-period [statement]="statement" [form]="form"></waterfall-statement-period>
 
 <section>

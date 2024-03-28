@@ -1,22 +1,25 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import {
   BreakdownRow,
+  PricePerCurrency,
   RightOverride,
   Statement,
   canOnlyReadStatements,
   filterStatements,
   generatePayments,
   getAssociatedRights,
+  getExpensesHistory,
   getRightsBreakdown,
   getSourcesBreakdown,
   getStatementRights,
   getStatementSources,
+  skipSourcesWithAllHiddenIncomes,
   sortStatements
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '../../../../dashboard/shell/shell.component';
 import { StatementForm } from '../../../../form/statement.form';
-import { combineLatest, map, shareReplay, switchMap, tap } from 'rxjs';
+import { Observable, combineLatest, map, shareReplay, switchMap, tap } from 'rxjs';
 import { StatementService } from '../../../../statement.service';
 import { StatementArbitraryChangeComponent } from '../../statement-arbitrary-change/statement-arbitrary-change.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -34,8 +37,9 @@ export class StatementDistributorSummaryComponent {
   @Input() form: StatementForm;
   @Input() public statement: Statement;
   private readonly = canOnlyReadStatements(this.shell.currentRightholder, this.shell.canBypassRules);
-  
-  public sources$ = combineLatest([this.shell.incomes$, this.shell.rights$, this.shell.simulation$]).pipe(
+  private devMode = false;
+
+  private sources$ = combineLatest([this.shell.incomes$, this.shell.rights$, this.shell.simulation$]).pipe(
     map(([incomes, rights, simulation]) => getStatementSources(this.statement, this.waterfall.sources, incomes, rights, simulation.waterfall.state)),
     shareReplay({ bufferSize: 1, refCount: true })
   );
@@ -93,17 +97,20 @@ export class StatementDistributorSummaryComponent {
     map(statements => sortStatements(statements))
   );
 
+  public cleanSources$ = combineLatest([this.statement$, this.sources$, this.shell.incomes$,]).pipe(
+    map(([statement, sources, incomes]) => skipSourcesWithAllHiddenIncomes(statement, sources, incomes)),
+  );
+
   public sourcesBreakdown$ = combineLatest([
     this.sources$, this.statement$, this.shell.incomes$, this.shell.expenses$,
     this.statementsHistory$, this.shell.rights$, this.shell.simulation$
   ]).pipe(
-    map(([sources, current, incomes, expenses, history, rights, simulation]) => {
-      if (current.status === 'reported' && current.reportedData.sourcesBreakdown) return current.reportedData.sourcesBreakdown;
+    map(([declaredSources, current, incomes, expenses, history, rights, simulation]) => {
+      if (!this.devMode && current.status === 'reported' && current.reportedData.sourcesBreakdown) return current.reportedData.sourcesBreakdown;
       try {
         return getSourcesBreakdown(
-          this.shell.versionId$.value,
           this.shell.waterfall,
-          sources,
+          declaredSources,
           current,
           incomes,
           expenses,
@@ -118,7 +125,7 @@ export class StatementDistributorSummaryComponent {
       }
     }),
     tap(async sourcesBreakdown => {
-      if(this.readonly) return;
+      if (this.readonly) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.sourcesBreakdown) {
         this.statement.reportedData.sourcesBreakdown = sourcesBreakdown;
@@ -129,7 +136,7 @@ export class StatementDistributorSummaryComponent {
     })
   );
 
-  public totalNetReceipt$ = this.sourcesBreakdown$.pipe(
+  public totalNetReceipt$: Observable<PricePerCurrency> = this.sourcesBreakdown$.pipe(
     map(sources => sources.map(s => s.net).reduce((acc, curr) => {
       for (const currency of Object.keys(curr)) {
         acc[currency] = (acc[currency] || 0) + curr[currency];
@@ -140,10 +147,10 @@ export class StatementDistributorSummaryComponent {
 
   public rightsBreakdown$ = combineLatest([
     this.statement$, this.statementsHistory$, this.shell.expenses$,
-    this.shell.incomes$, this.shell.rights$, this.shell.simulation$
+    this.shell.incomes$, this.shell.rights$, this.shell.simulation$, this.sources$
   ]).pipe(
-    map(([current, history, expenses, incomes, rights, simulation]) => {
-      if (current.status === 'reported' && current.reportedData.rightsBreakdown) return current.reportedData.rightsBreakdown;
+    map(([current, history, expenses, incomes, rights, simulation, declaredSources]) => {
+      if (!this.devMode && current.status === 'reported' && current.reportedData.rightsBreakdown) return current.reportedData.rightsBreakdown;
       try {
         return getRightsBreakdown(
           this.shell.waterfall,
@@ -152,7 +159,8 @@ export class StatementDistributorSummaryComponent {
           expenses,
           history,
           rights,
-          simulation.waterfall.state
+          simulation.waterfall.state,
+          declaredSources
         );
       } catch (error) {
         if (error.message) this.snackbar.open(error.message, 'close', { duration: 5000 });
@@ -161,7 +169,7 @@ export class StatementDistributorSummaryComponent {
       }
     }),
     tap(async rightsBreakdown => {
-      if(this.readonly) return;
+      if (this.readonly) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.rightsBreakdown) {
         this.statement.reportedData.rightsBreakdown = rightsBreakdown;
@@ -172,16 +180,19 @@ export class StatementDistributorSummaryComponent {
     })
   );
 
-  public expenses$ = combineLatest([this.statement$, this.shell.expenses$]).pipe(
-    map(([statement, expenses]) =>
-      statement.expenseIds.map(id => expenses.find(e => e.id === id))
-        .filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true)
-    ),
-    tap(async expenses => {
-      if(this.readonly) return;
+  public expensesHistory$ = combineLatest([
+    this.statement$, this.statementsHistory$, this.shell.expenses$,
+    this.sources$, this.shell.rights$, this.shell.simulation$, this.shell.incomes$,
+  ]).pipe(
+    map(([current, history, expenses, declaredSources, _rights, simulation, incomes]) => {
+      if (!this.devMode && current.status === 'reported' && current.reportedData.expenses) return current.reportedData.expenses;
+      return getExpensesHistory(current, history, expenses, declaredSources, _rights, simulation.waterfall.state, incomes);
+    }),
+    tap(async expensesHistory => {
+      if (this.readonly) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.expenses) {
-        this.statement.reportedData.expenses = expenses;
+        this.statement.reportedData.expenses = expensesHistory;
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
       } else if (this.statement.status !== 'reported' && reportedData.expenses) {
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
