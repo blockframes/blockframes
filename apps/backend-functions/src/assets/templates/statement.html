@@ -290,37 +290,55 @@
       {{/if}}
 
       <div class="group">
-        {{#if data.statement.reportedData.expenses}}
+        {{#if data.statement.reportedData.distributorExpenses}} <!-- Expenses details for distributor statements -->
+          {{#data.statement.reportedData.distributorExpenses}}
+            <div class="breakdown">
+              <div class="surface">
+                <div class="header">
+                  <h3>Expenses "{{name}}" Details</h3>
+                </div>
+                <table>
+                  <tr>
+                    <th>Previous</th>
+                    <th>Current</th>
+                    <th>Cumulated</th>
+                    <th>Capped</th>
+                  </tr>
+                  {{#rows}}
+                    <tr>
+                      <td>{{pricePerCurrency previous}}</td>
+                      <td>{{pricePerCurrency current}}</td>
+                      <td>{{pricePerCurrency cumulated}}</td>
+                      <td>{{#if capped}} Yes {{else}} No {{/if}}</td>
+                    </tr>
+                  {{/rows}}
+                </table>
+              </div>
+            </div>
+          {{/data.statement.reportedData.distributorExpenses}}
+        {{/if}}
+
+        {{#if data.statement.reportedData.expenses}} <!-- Expenses history for distributor statements -->
           <div class="breakdown">
             <div class="surface">
               <div class="header">
-                <h3>
-                  {{#if (eq data.statement.type "producer")}}
-                    Distributor details
-                  {{else}}
-                    Expenses details
-                  {{/if}}
-                </h3>
+                <h3>Expenses History</h3>
               </div>
               <table>
                 <tr>
-                  {{#if (eq data.statement.type "producer")}}
-                    <th>Rightholder</th>
-                  {{/if}}
                   <th>Date</th>
                   <th>Expenses name</th>
                   <th>Type</th>
                   <th>Amount</th>
+                  <th>Capped</th>
                 </tr>
                 {{#data.statement.reportedData.expenses}}
                   <tr>
-                    {{#if (eq ../data.statement.type "producer")}}
-                      <td>{{rightholderName rightholderId}}</td>
-                    {{/if}}
                     <td>{{date date}}</td>
                     <td>{{nature}}</td>
                     <td>{{expenseType typeId contractId}}</td>
                     <td>{{formatPair price currency}}</td>
+                    <td>{{#if capped}} Yes {{else}} No {{/if}}</td>
                   </tr>
                 {{/data.statement.reportedData.expenses}}
               </table>
@@ -567,12 +585,40 @@
               {{/reportedData.rightsBreakdown}}
             </div>
           {{/if}}
+
+          {{#if reportedData.distributorExpenses}} <!-- Expenses details for distributor statements -->
+            {{#reportedData.distributorExpenses}}
+              <div class="breakdown">
+                <div class="surface">
+                  <div class="header">
+                    <h3>Expenses "{{name}}" Details</h3>
+                  </div>
+                  <table>
+                    <tr>
+                      <th>Previous</th>
+                      <th>Current</th>
+                      <th>Cumulated</th>
+                      <th>Capped</th>
+                    </tr>
+                    {{#rows}}
+                      <tr>
+                        <td>{{pricePerCurrency previous}}</td>
+                        <td>{{pricePerCurrency current}}</td>
+                        <td>{{pricePerCurrency cumulated}}</td>
+                        <td>{{#if capped}} Yes {{else}} No {{/if}}</td>
+                      </tr>
+                    {{/rows}}
+                  </table>
+                </div>
+              </div>
+            {{/reportedData.distributorExpenses}}
+          {{/if}}
   
-          {{#if reportedData.expenses}}
+          {{#if reportedData.expenses}} <!-- Expenses history for distributor statements -->
             <div class="breakdown">
               <div class="surface">
                 <div class="header">
-                  <h3>Expenses details</h3>
+                  <h3>Expenses History</h3>
                 </div>
                 <table>
                   <tr>
@@ -580,6 +626,7 @@
                     <th>Expenses name</th>
                     <th>Type</th>
                     <th>Amount</th>
+                    <th>Capped</th>
                   </tr>
                   {{#reportedData.expenses}}
                     <tr>
@@ -587,6 +634,7 @@
                       <td>{{nature}}</td>
                       <td>{{expenseType typeId contractId}}</td>
                       <td>{{formatPair price currency}}</td>
+                      <td>{{#if capped}} Yes {{else}} No {{/if}}</td>
                     </tr>
                   {{/reportedData.expenses}}
                 </table>
