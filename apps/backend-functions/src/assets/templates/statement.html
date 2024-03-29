@@ -9,7 +9,7 @@
     <div class="page">
       <img class="right-corner" src="{{images.rightCorner}}" >
       <div class="doc-title">
-        <p><strong>Movie: </strong>{{data.movie.title.international}}</p>
+        <p><strong>Title: </strong>{{data.movie.title.international}}</p>
         <h1>{{pageTitle}}</h1>
         <h1>{{data.rightholder.name}}</h1>
         <div class="separator"></div>
@@ -63,7 +63,7 @@
 
       {{#if data.statement.payments.rightholder}}
         <div class="statement-participation">
-          <span>total participation:</span>
+          <span>Total Participation Due:</span>
           <span>
             {{formatPair data.statement.payments.rightholder.price data.statement.payments.rightholder.currency}}
           </span>
@@ -71,7 +71,7 @@
       {{/if}}
       {{#if data.statement.reportedData.producerNetParticipation}}
         <div class="statement-participation">
-          <span>total participation:</span>
+          <span>Total Participation Due:</span>
           <span>
             {{pricePerCurrency data.statement.reportedData.producerNetParticipation}}
           </span>
@@ -367,14 +367,14 @@
 
         {{#if data.statement.payments.rightholder}}
           <div class="statement-participation">
-            <span>total participation:</span>
+            <span>Total Participation Due:</span>
             <span>
               {{formatPair data.statement.payments.rightholder.price data.statement.payments.rightholder.currency}}
           </div>
         {{/if}}
         {{#if data.statement.reportedData.producerNetParticipation}}
           <div class="statement-participation">
-            <span>total participation:</span>
+            <span>Total Participation Due:</span>
             <span>
               {{pricePerCurrency data.statement.reportedData.producerNetParticipation}}
             </span>
@@ -436,7 +436,7 @@
 
         {{#if payments.rightholder}}
           <div class="statement-participation">
-            <span>total participation:</span>
+            <span>Total Participation Due:</span>
             <span>
               {{formatPair payments.rightholder.price payments.rightholder.currency}}
             </span>
@@ -444,7 +444,7 @@
         {{/if}}
         {{#if reportedData.producerNetParticipation}}
           <div class="statement-participation">
-            <span>total participation:</span>
+            <span>Total Participation Due:</span>
             <span>
               {{pricePerCurrency reportedData.producerNetParticipation}}
             </span>
@@ -596,14 +596,14 @@
     
           {{#if payments.rightholder}}
             <div class="statement-participation">
-              <span>total participation:</span>
+              <span>Total Participation Due:</span>
               <span>
                 {{formatPair payments.rightholder.price payments.rightholder.currency}}
             </div>
           {{/if}}
           {{#if reportedData.producerNetParticipation}}
             <div class="statement-participation">
-              <span>total participation:</span>
+              <span>Total Participation Due:</span>
               <span>
                 {{pricePerCurrency reportedData.producerNetParticipation}}
               </span>
