@@ -8,6 +8,7 @@ import {
   filterStatements,
   generatePayments,
   getAssociatedRights,
+  getDistributorExpensesDetails,
   getExpensesHistory,
   getRightsBreakdown,
   getSourcesBreakdown,
@@ -195,6 +196,23 @@ export class StatementDistributorSummaryComponent {
         this.statement.reportedData.expenses = expensesHistory;
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
       } else if (this.statement.status !== 'reported' && reportedData.expenses) {
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
+      }
+    })
+  );
+
+  public expensesDetails$ = combineLatest([this.statement$, this.expensesHistory$]).pipe(
+    map(([current, history]) => {
+      if (!this.devMode && current.status === 'reported' && current.reportedData.distributorExpenses) return current.reportedData.distributorExpenses;
+      return getDistributorExpensesDetails(current, history, this.shell.waterfall);
+    }),
+    tap(async expensesDetails => {
+      if (this.readonly) return;
+      const reportedData = this.statement.reportedData;
+      if (this.statement.status === 'reported' && !reportedData.distributorExpenses) {
+        this.statement.reportedData.distributorExpenses = expensesDetails;
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
+      } else if (this.statement.status !== 'reported' && reportedData.distributorExpenses) {
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
       }
     })

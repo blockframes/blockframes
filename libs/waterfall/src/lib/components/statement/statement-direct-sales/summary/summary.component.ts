@@ -9,6 +9,7 @@ import {
   filterStatements,
   generatePayments,
   getAssociatedRights,
+  getDistributorExpensesDetails,
   getExpensesHistory,
   getRightsBreakdown,
   getSourcesBreakdown,
@@ -188,6 +189,12 @@ export class StatementDirectSalesSummaryComponent {
     })
   );
 
+  /**
+   * This calculus is directSales specific since there is no rightholder payment in the statement
+   * (direstSales statements are from producer to producer)
+   * @dev This code takes totalNetReceipt and substitute price from commission and expenses from rightsBreakdown
+   * to get the amount that the producer (from distributor point of view) will send to producer.
+   */
   public producerNetParticipation$: Observable<PricePerCurrency> = combineLatest([this.statement$, this.totalNetReceipt$, this.rightsBreakdown$]).pipe(
     map(([current, totalNetReceipt, rightsBreakdown]) => {
       if (!this.devMode && current.status === 'reported' && current.reportedData.producerNetParticipation) return current.reportedData.producerNetParticipation;
@@ -234,6 +241,23 @@ export class StatementDirectSalesSummaryComponent {
         this.statement.reportedData.expenses = expensesHistory;
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
       } else if (this.statement.status !== 'reported' && reportedData.expenses) {
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
+      }
+    })
+  );
+
+  public expensesDetails$ = combineLatest([this.statement$, this.expensesHistory$]).pipe(
+    map(([current, history]) => {
+      if (!this.devMode && current.status === 'reported' && current.reportedData.distributorExpenses) return current.reportedData.distributorExpenses;
+      return getDistributorExpensesDetails(current, history, this.shell.waterfall);
+    }),
+    tap(async expensesDetails => {
+      if (this.readonly) return;
+      const reportedData = this.statement.reportedData;
+      if (this.statement.status === 'reported' && !reportedData.distributorExpenses) {
+        this.statement.reportedData.distributorExpenses = expensesDetails;
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
+      } else if (this.statement.status !== 'reported' && reportedData.distributorExpenses) {
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
       }
     })

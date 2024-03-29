@@ -129,6 +129,7 @@ export interface Statement {
     groupsBreakdown?: GroupsBreakdown[];
     details?: DetailsRow[];
     expenses?: (Expense & { cap?: PricePerCurrency })[];
+    distributorExpenses?: DistributorExpenses[];
     interests?: InterestDetail[];
     producerNetParticipation?: PricePerCurrency; // Producer's net participation (for direct sales statements only)
   },
@@ -767,6 +768,16 @@ export interface DetailsRow {
   }[]
 }
 
+export interface DistributorExpenses {
+  name: string;
+  rows: {
+    capped: boolean;
+    previous: PricePerCurrency;
+    current: PricePerCurrency,
+    cumulated: PricePerCurrency
+  }[]
+}
+
 /**
  * For Distributor and Direct Sales statements.
  * @param waterfall 
@@ -1072,6 +1083,46 @@ export function getExpensesHistory(current: Statement, history: Statement[], exp
   const previousExpenses = expenses.filter(e => previousStatements.find(previous => previous.expenseIds.includes(e.id) && !e.version[previous.versionId]?.hidden));
   const expensesHistory = [...currentExpenses, ...previousExpenses].filter(e => expenseTypeIds.includes(e.typeId));
   return sortByDate(expensesHistory, 'date');
+}
+
+export function getDistributorExpensesDetails(current: Statement, history: Expense[], waterfall: Waterfall): DistributorExpenses[] {
+  const expenseTypes = getExpenseTypes(current, waterfall);
+
+  return expenseTypes.map(expenseType => {
+    const expenses = history.filter(e => e.typeId === expenseType.id);
+    const capped = expenses.filter(e => e.capped);
+    const uncapped = expenses.filter(e => !e.capped);
+
+    const currentCapped = capped.filter(e => current.expenseIds.includes(e.id));
+    const currentUncapped = uncapped.filter(e => current.expenseIds.includes(e.id));
+
+    const historyCapped = capped.filter(e => !current.expenseIds.includes(e.id));
+    const historyUncapped = uncapped.filter(e => !current.expenseIds.includes(e.id));
+
+    const cummulatedCapped = [...historyCapped, ...currentCapped];
+    const cummulatedUncapped = [...historyUncapped, ...currentUncapped];
+
+    const rows: { capped: boolean, previous: PricePerCurrency, current: PricePerCurrency, cumulated: PricePerCurrency }[] = [];
+    if (cummulatedCapped.length) {
+      rows.push({
+        capped: true,
+        previous: getTotalPerCurrency(historyCapped),
+        current: getTotalPerCurrency(currentCapped),
+        cumulated: getTotalPerCurrency(cummulatedCapped),
+      });
+    }
+
+    if (cummulatedUncapped.length) {
+      rows.push({
+        capped: false,
+        previous: getTotalPerCurrency(historyUncapped),
+        current: getTotalPerCurrency(currentUncapped),
+        cumulated: getTotalPerCurrency(cummulatedUncapped),
+      });
+    }
+
+    return { name: expenseType.name, rows };
+  }).filter(e => e.rows.length);
 }
 
 function getMgRecoupment(right: Right, cumulatedRightPayment: RightPayment[], state: TitleState): { investments: number, stillToBeRecouped: number } {
