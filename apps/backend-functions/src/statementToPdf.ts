@@ -16,11 +16,10 @@ import {
   convertStatementsTo,
   displayName,
   getOrgEmailData,
+  getParentStatements,
   getStatementData,
   getUserEmailData,
   getWaterfallEmailData,
-  isDirectSalesStatement,
-  isDistributorStatement,
   isProducerStatement,
   mainCurrency,
   rightholderKey,
@@ -92,8 +91,7 @@ async function _statementToPdf(statementId: string, waterfall: Waterfall, movie:
     if (!orgId) return { rightholderId: r.id, org: null };
     return { rightholderId: r.id, org: orgs.find(o => o.id === orgId) };
   });
-  const parentStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
-    .filter(s => s.payments.right.some(r => r.incomeIds.some(id => statement.incomeIds.includes(id))));
+  const parentStatements = getParentStatements(statements, statement.incomeIds);
   let contract: WaterfallContract;
   if (statement.contractId) {
     const document = await getDocument<WaterfallDocument>(`waterfall/${waterfall.id}/documents/${statement.contractId}`);

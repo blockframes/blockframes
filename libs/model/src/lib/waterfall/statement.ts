@@ -1193,3 +1193,9 @@ export function skipSourcesWithAllHiddenIncomes(statement: Statement, sources: W
     return !sourceIncomes.every(i => i.version[statement.versionId]?.hidden);
   });
 }
+
+export function getParentStatements(statements: Statement[], incomeIds: string[], skipDuplicates = false) {
+  return statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
+    .filter(s => skipDuplicates ? !s.duplicatedFrom : true) // Skip already duplicated statements
+    .filter(s => s.payments.right.some(r => r.incomeIds.some(id => incomeIds.includes(id))));
+}

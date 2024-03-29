@@ -32,8 +32,6 @@ import {
   getStatementSources,
   getTransferDetails,
   isDefaultVersion,
-  isDirectSalesStatement,
-  isDistributorStatement,
   isSource,
   isStandaloneVersion,
   isVerticalGroup,
@@ -45,7 +43,8 @@ import {
   getExpensesHistory,
   sortByDate,
   getDistributorExpensesDetails,
-  DistributorExpenses
+  DistributorExpenses,
+  getParentStatements
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../../dashboard/shell/shell.component';
 import { StatementForm } from '../../../../form/statement.form';
@@ -303,8 +302,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
   ]).pipe(
     map(([statement, statements, expenses, declaredSources, rights, simulation, incomes, versionId]) => {
       if (!this.devMode && statement.status === 'reported' && statement.reportedData.expensesPerDistributor) return statement.reportedData.expensesPerDistributor;
-      const parentStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
-        .filter(s => s.payments.right.some(r => r.incomeIds.some(id => statement.incomeIds.includes(id))));
+      const parentStatements = getParentStatements(statements, statement.incomeIds);
 
       const expensesHistory: Record<string, (Expense & { cap?: PricePerCurrency, editable: boolean })[]> = {};
       for (const parentStatement of parentStatements) {
@@ -352,8 +350,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     map(([current, history, statements]) => {
       if (!this.devMode && current.status === 'reported' && current.reportedData.distributorExpensesPerDistributor) return current.reportedData.distributorExpensesPerDistributor;
 
-      const parentStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
-        .filter(s => s.payments.right.some(r => r.incomeIds.some(id => current.incomeIds.includes(id))));
+      const parentStatements = getParentStatements(statements, current.incomeIds);
 
       const expensesDetails: Record<string, DistributorExpenses[]> = {};
       Object.entries(history).forEach(([rightholderId, expenses]) => {

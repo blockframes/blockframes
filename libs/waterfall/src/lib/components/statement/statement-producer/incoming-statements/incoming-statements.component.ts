@@ -5,8 +5,7 @@ import {
   WaterfallRightholder,
   getDefaultVersionId,
   getOutgoingStatementPrerequists,
-  isDirectSalesStatement,
-  isDistributorStatement,
+  getParentStatements,
   isProducerStatement,
   sortStatements
 } from '@blockframes/model';
@@ -59,8 +58,7 @@ export class IncomingStatementComponent implements OnInit, OnDestroy {
     if (this.statement.status === 'reported') {
       const statementSub = this.statement$.subscribe(statement => {
         const filteredStatements = statements.filter(s => s.id !== statement.id && !isProducerStatement(s));
-        const reportableStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
-          .filter(s => s.payments.right.some(r => r.incomeIds.some(id => statement.incomeIds.includes(id))));
+        const reportableStatements = getParentStatements(statements, statement.incomeIds);
         this.computeReportableStatements(statement, reportableStatements, filteredStatements, contracts);
       });
       this.subs.push(statementSub);
