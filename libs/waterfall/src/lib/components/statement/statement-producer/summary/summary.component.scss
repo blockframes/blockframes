@@ -2,6 +2,9 @@
 section {
   padding: 24px;
   display: block;
+  mat-divider {
+    margin: 32px 0;
+  }
 
   article {
     padding: 24px;
@@ -17,7 +20,7 @@ section {
     mat-panel-title {
       font-weight: 800;
       font-size: 26px;
-      line-height: 24px;
+      line-height: 32px;
       color: var(--foreground-third-text);
       display: flex;
       justify-content: space-between;

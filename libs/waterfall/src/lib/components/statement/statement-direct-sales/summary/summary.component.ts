@@ -98,7 +98,7 @@ export class StatementDirectSalesSummaryComponent {
     map(statements => sortStatements(statements))
   );
 
-  public cleanSources$ = combineLatest([this.statement$, this.sources$, this.shell.incomes$,]).pipe(
+  public cleanSources$ = combineLatest([this.statement$, this.sources$, this.shell.incomes$]).pipe(
     map(([statement, sources, incomes]) => skipSourcesWithAllHiddenIncomes(statement, sources, incomes)),
   );
 
@@ -228,11 +228,11 @@ export class StatementDirectSalesSummaryComponent {
 
   public expensesHistory$ = combineLatest([
     this.statement$, this.statementsHistory$, this.shell.expenses$,
-    this.sources$, this.shell.rights$, this.shell.simulation$, this.shell.incomes$,
+    this.sources$, this.shell.rights$, this.shell.simulation$, this.shell.incomes$
   ]).pipe(
-    map(([current, history, expenses, declaredSources, _rights, simulation, incomes]) => {
+    map(([current, history, expenses, declaredSources, rights, simulation, incomes]) => {
       if (!this.devMode && current.status === 'reported' && current.reportedData.expenses) return current.reportedData.expenses;
-      return getExpensesHistory(current, history, expenses, declaredSources, _rights, simulation.waterfall.state, incomes);
+      return getExpensesHistory(current, history, expenses, declaredSources, rights, simulation.waterfall.state, incomes);
     }),
     tap(async expensesHistory => {
       if (this.readonly) return;
@@ -249,7 +249,7 @@ export class StatementDirectSalesSummaryComponent {
   public expensesDetails$ = combineLatest([this.statement$, this.expensesHistory$]).pipe(
     map(([current, history]) => {
       if (!this.devMode && current.status === 'reported' && current.reportedData.distributorExpenses) return current.reportedData.distributorExpenses;
-      return getDistributorExpensesDetails(current, history, this.shell.waterfall);
+      return getDistributorExpensesDetails([current], history, this.shell.waterfall);
     }),
     tap(async expensesDetails => {
       if (this.readonly) return;

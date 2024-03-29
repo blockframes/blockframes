@@ -128,8 +128,10 @@ export interface Statement {
     rightsBreakdown?: RightsBreakdown[];
     groupsBreakdown?: GroupsBreakdown[];
     details?: DetailsRow[];
-    expenses?: (Expense & { cap?: PricePerCurrency })[];
-    distributorExpenses?: DistributorExpenses[];
+    expenses?: Expense[]; // Expenses history for distributor statements
+    distributorExpenses?: DistributorExpenses[]; // Expenses details for distributor statements
+    expensesPerDistributor?: Record<string, (Expense & { cap?: PricePerCurrency, editable: boolean })[]>; // Expenses history for outgoing statements
+    distributorExpensesPerDistributor?: Record<string, DistributorExpenses[]>; // Expenses details for outgoing statements
     interests?: InterestDetail[];
     producerNetParticipation?: PricePerCurrency; // Producer's net participation (for direct sales statements only)
   },
@@ -1064,9 +1066,19 @@ export function getExpenseTypes(statement: Statement, waterfall: Waterfall) {
  * @param _rights 
  * @param state 
  * @param incomes
+ * @param _versionId
  * @returns 
  */
-export function getExpensesHistory(current: Statement, history: Statement[], expenses: Expense[], _declaredSources: WaterfallSource[], _rights: Right[], state: TitleState, incomes: Income[]) {
+export function getExpensesHistory(
+  current: Statement,
+  history: Statement[],
+  expenses: Expense[],
+  _declaredSources: WaterfallSource[],
+  _rights: Right[],
+  state: TitleState,
+  incomes: Income[],
+  _versionId?: string
+) {
   const declaredSources = skipSourcesWithAllHiddenIncomes(current, _declaredSources, incomes);
   const rights = getStatementRightsToDisplay(current, _rights).filter(right => getSources(state, right.id).some(s => declaredSources.find(ds => ds.id === s.id)));
   const expenseTypeIds = [];
@@ -1077,27 +1089,35 @@ export function getExpensesHistory(current: Statement, history: Statement[], exp
     }
   }
 
-  const currentExpenses = current.expenseIds.map(id => expenses.find(e => e.id === id)).filter(e => current.status === 'reported' ? !e.version[current.versionId]?.hidden : true);
+  const currentExpenses = current.expenseIds.map(id => expenses.find(e => e.id === id)).filter(e => current.status === 'reported' ? !e.version[_versionId || current.versionId]?.hidden : true);
   const indexOfCurrent = history.findIndex(s => s.id === current.id || s.id === current.duplicatedFrom);
   const previousStatements = history.slice(indexOfCurrent).filter(s => s.status === 'reported' && s.id !== current.id && (!s.reviewStatus || s.reviewStatus === 'accepted'));
-  const previousExpenses = expenses.filter(e => previousStatements.find(previous => previous.expenseIds.includes(e.id) && !e.version[previous.versionId]?.hidden));
+  const previousExpenses = expenses.filter(e => previousStatements.find(previous => previous.expenseIds.includes(e.id) && !e.version[_versionId || previous.versionId]?.hidden));
   const expensesHistory = [...currentExpenses, ...previousExpenses].filter(e => expenseTypeIds.includes(e.typeId));
   return sortByDate(expensesHistory, 'date');
 }
 
-export function getDistributorExpensesDetails(current: Statement, history: Expense[], waterfall: Waterfall): DistributorExpenses[] {
-  const expenseTypes = getExpenseTypes(current, waterfall);
+export function getDistributorExpensesDetails(currents: Statement[], history: Expense[], waterfall: Waterfall): DistributorExpenses[] {
+  const expenseTypes: ExpenseType[] = [];
+  for (const current of currents) {
+    const currentExpenseTypes = getExpenseTypes(current, waterfall);
+    for (const expenseType of currentExpenseTypes) {
+      if (!expenseTypes.find(et => et.id === expenseType.id)) expenseTypes.push(expenseType);
+    }
+  }
+
+  const currentExpenseIds = Array.from(new Set(currents.map(e => e.expenseIds).flat()));
 
   return expenseTypes.map(expenseType => {
     const expenses = history.filter(e => e.typeId === expenseType.id);
     const capped = expenses.filter(e => e.capped);
     const uncapped = expenses.filter(e => !e.capped);
 
-    const currentCapped = capped.filter(e => current.expenseIds.includes(e.id));
-    const currentUncapped = uncapped.filter(e => current.expenseIds.includes(e.id));
+    const currentCapped = capped.filter(e => currentExpenseIds.includes(e.id));
+    const currentUncapped = uncapped.filter(e => currentExpenseIds.includes(e.id));
 
-    const historyCapped = capped.filter(e => !current.expenseIds.includes(e.id));
-    const historyUncapped = uncapped.filter(e => !current.expenseIds.includes(e.id));
+    const historyCapped = capped.filter(e => !currentExpenseIds.includes(e.id));
+    const historyUncapped = uncapped.filter(e => !currentExpenseIds.includes(e.id));
 
     const cummulatedCapped = [...historyCapped, ...currentCapped];
     const cummulatedUncapped = [...historyUncapped, ...currentUncapped];

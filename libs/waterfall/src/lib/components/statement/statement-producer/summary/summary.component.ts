@@ -39,11 +39,17 @@ import {
   isVerticalGroup,
   interestDetail,
   canOnlyReadStatements,
-  skipSourcesWithAllHiddenIncomes
+  skipSourcesWithAllHiddenIncomes,
+  filterStatements,
+  sortStatements,
+  getExpensesHistory,
+  sortByDate,
+  getDistributorExpensesDetails,
+  DistributorExpenses
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../../dashboard/shell/shell.component';
 import { StatementForm } from '../../../../form/statement.form';
-import { BehaviorSubject, Observable, Subscription, combineLatest, debounceTime, map, shareReplay, tap } from 'rxjs';
+import { BehaviorSubject, Subscription, combineLatest, debounceTime, map, shareReplay, tap } from 'rxjs';
 import { unique } from '@blockframes/utils/helpers';
 import { MatDialog } from '@angular/material/dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
@@ -175,7 +181,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  public cleanSources$ = combineLatest([this.statement$, this.sources$, this.shell.incomes$, ]).pipe(
+  public cleanSources$ = combineLatest([this.statement$, this.sources$, this.shell.incomes$]).pipe(
     map(([statement, sources, incomes]) => skipSourcesWithAllHiddenIncomes(statement, sources, incomes)),
   );
 
@@ -291,31 +297,79 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     })
   );
 
-  public expenses$: Observable<(Expense & { cap?: PricePerCurrency })[]> = combineLatest([
-    this.statement$, this.shell.statements$,
-    this.shell.expenses$, this.shell.versionId$
+  public expensesHistory$ = combineLatest([
+    this.statement$, this.shell.statements$, this.shell.expenses$, this.sources$,
+    this.shell.rights$, this.shell.simulation$, this.shell.incomes$, this.shell.versionId$
   ]).pipe(
-    map(([statement, statements, expenses, versionId]) => {
-      if (!this.devMode && statement.status === 'reported' && statement.reportedData.expenses) return statement.reportedData.expenses;
+    map(([statement, statements, expenses, declaredSources, rights, simulation, incomes, versionId]) => {
+      if (!this.devMode && statement.status === 'reported' && statement.reportedData.expensesPerDistributor) return statement.reportedData.expensesPerDistributor;
       const parentStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
         .filter(s => s.payments.right.some(r => r.incomeIds.some(id => statement.incomeIds.includes(id))));
-      const expenseIds = parentStatements.map(s => s.expenseIds).flat();
-      return expenses.filter(e => expenseIds.includes(e.id)).map(e => {
-        const type = e.typeId ? this.waterfall.expenseTypes[e.contractId].find(t => t.id === e.typeId) : undefined;
-        if (!type) return e;
-        const versionKey = isDefaultVersion(this.shell.waterfall, versionId) ? 'default' : versionId;
-        const cap = type.cap.version[versionKey] !== undefined ? type.cap.version[versionKey] : type.cap.default;
-        if (cap === 0) return e;
-        return { ...e, cap: { [type.currency]: cap } };
-      }).filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true);
+
+      const expensesHistory: Record<string, (Expense & { cap?: PricePerCurrency, editable: boolean })[]> = {};
+      for (const parentStatement of parentStatements) {
+        const _statementHistory = filterStatements(parentStatement.type, [parentStatement.senderId, parentStatement.receiverId], parentStatement.contractId, statements);
+        const statementHistory = sortStatements(_statementHistory);
+
+        const history: (Expense & { cap?: PricePerCurrency })[] = getExpensesHistory(parentStatement, statementHistory, expenses, declaredSources, rights, simulation.waterfall.state, incomes, versionId)
+          .map(e => {
+            const type = e.typeId ? this.waterfall.expenseTypes[e.contractId].find(t => t.id === e.typeId) : undefined;
+            if (!type) return e;
+            const versionKey = isDefaultVersion(this.shell.waterfall, versionId) ? 'default' : versionId;
+            const cap = type.cap.version[versionKey] !== undefined ? type.cap.version[versionKey] : type.cap.default;
+            if (cap === 0) return e;
+            return { ...e, cap: { [type.currency]: cap } };
+          });
+
+        for (const e of history) {
+          if (!expensesHistory[e.rightholderId]) expensesHistory[e.rightholderId] = [];
+          if (!expensesHistory[e.rightholderId].find(h => h.id === e.id)) {
+            expensesHistory[e.rightholderId].push({ ...e, editable: parentStatement.expenseIds.includes(e.id) });
+          }
+        }
+      }
+
+      // sort expenses by date
+      for (const rightholderId in expensesHistory) {
+        expensesHistory[rightholderId] = sortByDate(expensesHistory[rightholderId], 'date');
+      }
+
+      return expensesHistory;
     }),
-    tap(async expenses => {
+    tap(async expensesHistory => {
       if (this.readonly) return;
       const reportedData = this.statement.reportedData;
-      if (this.statement.status === 'reported' && !reportedData.expenses) {
-        this.statement.reportedData.expenses = expenses;
+      if (this.statement.status === 'reported' && !reportedData.expensesPerDistributor) {
+        this.statement.reportedData.expensesPerDistributor = expensesHistory;
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
-      } else if (this.statement.status !== 'reported' && reportedData.expenses) {
+      } else if (this.statement.status !== 'reported' && reportedData.expensesPerDistributor) {
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
+      }
+    })
+  );
+
+  public expensesDetails$ = combineLatest([this.statement$, this.expensesHistory$, this.shell.statements$]).pipe(
+    map(([current, history, statements]) => {
+      if (!this.devMode && current.status === 'reported' && current.reportedData.distributorExpensesPerDistributor) return current.reportedData.distributorExpensesPerDistributor;
+
+      const parentStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
+        .filter(s => s.payments.right.some(r => r.incomeIds.some(id => current.incomeIds.includes(id))));
+
+      const expensesDetails: Record<string, DistributorExpenses[]> = {};
+      Object.entries(history).forEach(([rightholderId, expenses]) => {
+        const currentStatements = parentStatements.filter(s => s.senderId === rightholderId);
+        expensesDetails[rightholderId] = getDistributorExpensesDetails(currentStatements, expenses, this.shell.waterfall);
+      });
+
+      return expensesDetails;
+    }),
+    tap(async expensesDetails => {
+      if (this.readonly) return;
+      const reportedData = this.statement.reportedData;
+      if (this.statement.status === 'reported' && !reportedData.distributorExpensesPerDistributor) {
+        this.statement.reportedData.distributorExpensesPerDistributor = expensesDetails;
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
+      } else if (this.statement.status !== 'reported' && reportedData.distributorExpensesPerDistributor) {
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
       }
     })
