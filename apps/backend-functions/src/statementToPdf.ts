@@ -16,11 +16,10 @@ import {
   convertStatementsTo,
   displayName,
   getOrgEmailData,
+  getParentStatements,
   getStatementData,
   getUserEmailData,
   getWaterfallEmailData,
-  isDirectSalesStatement,
-  isDistributorStatement,
   isProducerStatement,
   mainCurrency,
   rightholderKey,
@@ -92,8 +91,7 @@ async function _statementToPdf(statementId: string, waterfall: Waterfall, movie:
     if (!orgId) return { rightholderId: r.id, org: null };
     return { rightholderId: r.id, org: orgs.find(o => o.id === orgId) };
   });
-  const parentStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
-    .filter(s => s.payments.right.some(r => r.incomeIds.some(id => statement.incomeIds.includes(id))));
+  const parentStatements = getParentStatements(statements, statement.incomeIds);
   let contract: WaterfallContract;
   if (statement.contractId) {
     const document = await getDocument<WaterfallDocument>(`waterfall/${waterfall.id}/documents/${statement.contractId}`);
@@ -155,6 +153,12 @@ async function generate(
   hb.registerHelper('toLabel', (value: string, scope: Scope) => {
     return toLabel(value, scope);
   });
+  hb.registerHelper('assign', (varName: string, varValue: string, options) => {
+    if (!options.data.root) {
+      options.data.root = {};
+    }
+    options.data.root[varName] = varValue;
+  });
 
   // Data
   const rightholder = rightholders.find(r => r.id === statement[rightholderKey(statement.type)]);
@@ -179,6 +183,15 @@ async function generate(
       }, {})
     };
   });
+
+  let showCalculationDetails = false;
+  const parentSenderIds = parentStatements.map(stm => stm.senderId);
+  for (const senderId of parentSenderIds) {
+    if (parentStatements.filter(s => s.senderId === senderId).length > 1) {
+      showCalculationDetails = true;
+      break;
+    }
+  }
 
   // CSS
   const css = fs.readFileSync(path.resolve(`assets/style/${templateName}.css`), 'utf8');
@@ -209,6 +222,12 @@ async function generate(
         senderAddress: senderAddress?.country ? senderAddress : null,
         receiver: rightholders.find(r => r.id === statement.receiverId).name,
         totalNetReceipt,
+        reportedData: {
+          ...statement.reportedData,
+          details: showCalculationDetails ? statement.reportedData.details : undefined,
+          expensesPerDistributor: showCalculationDetails ? statement.reportedData.expensesPerDistributor : undefined,
+          distributorExpensesPerDistributor: showCalculationDetails ? statement.reportedData.distributorExpensesPerDistributor : undefined,
+        }
       },
       contract,
       rightholder,

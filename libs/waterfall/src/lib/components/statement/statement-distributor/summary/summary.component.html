@@ -143,8 +143,34 @@
       </div>
     </ng-container>
 
+    <ng-container *ngIf="expensesDetails$ | async as expensesDetails">
+      <mat-divider *ngIf="expensesDetails.length"></mat-divider>
+      <div class="surface" *ngFor="let expensesDetail of expensesDetails;">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <span>Expenses {{ expensesDetail.name }} Details</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <bf-table [source]="expensesDetail.rows" pagination="50">
+            <ng-template colRef="previous" label="Previous" let-previous>
+              <price-per-currency [price]="previous"></price-per-currency>
+            </ng-template>
+            <ng-template colRef="current" label="Current" let-current>
+              <price-per-currency [price]="current"></price-per-currency>
+            </ng-template>
+            <ng-template colRef="cumulated" label="Cumulated" let-cumulated>
+              <price-per-currency [price]="cumulated"></price-per-currency>
+            </ng-template>
+            <ng-template colRef="capped" label="Capped" let-capped>
+              {{ capped ? 'Yes' : 'No' }}
+            </ng-template>
+          </bf-table>
+        </mat-expansion-panel>
+      </div>
+    </ng-container>
+
     <ng-container *ngIf="expensesHistory$ | async as expensesHistory">
-      <mat-divider *ngIf="expensesHistory.length"></mat-divider>
       <div class="surface" *ngIf="expensesHistory.length">
         <mat-expansion-panel>
           <mat-expansion-panel-header>

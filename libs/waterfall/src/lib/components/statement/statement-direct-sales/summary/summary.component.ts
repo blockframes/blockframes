@@ -9,6 +9,7 @@ import {
   filterStatements,
   generatePayments,
   getAssociatedRights,
+  getDistributorExpensesDetails,
   getExpensesHistory,
   getRightsBreakdown,
   getSourcesBreakdown,
@@ -97,7 +98,7 @@ export class StatementDirectSalesSummaryComponent {
     map(statements => sortStatements(statements))
   );
 
-  public cleanSources$ = combineLatest([this.statement$, this.sources$, this.shell.incomes$,]).pipe(
+  public cleanSources$ = combineLatest([this.statement$, this.sources$, this.shell.incomes$]).pipe(
     map(([statement, sources, incomes]) => skipSourcesWithAllHiddenIncomes(statement, sources, incomes)),
   );
 
@@ -129,7 +130,7 @@ export class StatementDirectSalesSummaryComponent {
       }
     }),
     tap(async sourcesBreakdown => {
-      if (this.readonly) return;
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.sourcesBreakdown) {
         this.statement.reportedData.sourcesBreakdown = sourcesBreakdown;
@@ -177,7 +178,7 @@ export class StatementDirectSalesSummaryComponent {
       }
     }),
     tap(async rightsBreakdown => {
-      if (this.readonly) return;
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.rightsBreakdown) {
         this.statement.reportedData.rightsBreakdown = rightsBreakdown;
@@ -188,6 +189,12 @@ export class StatementDirectSalesSummaryComponent {
     })
   );
 
+  /**
+   * This calculus is directSales specific since there is no rightholder payment in the statement
+   * (direstSales statements are from producer to producer)
+   * @dev This code takes totalNetReceipt and substitute price from commission and expenses from rightsBreakdown
+   * to get the amount that the producer (from distributor point of view) will send to producer.
+   */
   public producerNetParticipation$: Observable<PricePerCurrency> = combineLatest([this.statement$, this.totalNetReceipt$, this.rightsBreakdown$]).pipe(
     map(([current, totalNetReceipt, rightsBreakdown]) => {
       if (!this.devMode && current.status === 'reported' && current.reportedData.producerNetParticipation) return current.reportedData.producerNetParticipation;
@@ -208,7 +215,7 @@ export class StatementDirectSalesSummaryComponent {
       return total;
     }),
     tap(async producerNetParticipation => {
-      if (this.readonly) return;
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.producerNetParticipation) {
         this.statement.reportedData.producerNetParticipation = producerNetParticipation;
@@ -221,19 +228,36 @@ export class StatementDirectSalesSummaryComponent {
 
   public expensesHistory$ = combineLatest([
     this.statement$, this.statementsHistory$, this.shell.expenses$,
-    this.sources$, this.shell.rights$, this.shell.simulation$, this.shell.incomes$,
+    this.sources$, this.shell.rights$, this.shell.simulation$, this.shell.incomes$
   ]).pipe(
-    map(([current, history, expenses, declaredSources, _rights, simulation, incomes]) => {
+    map(([current, history, expenses, declaredSources, rights, simulation, incomes]) => {
       if (!this.devMode && current.status === 'reported' && current.reportedData.expenses) return current.reportedData.expenses;
-      return getExpensesHistory(current, history, expenses, declaredSources, _rights, simulation.waterfall.state, incomes);
+      return getExpensesHistory(current, history, expenses, declaredSources, rights, simulation.waterfall.state, incomes);
     }),
     tap(async expensesHistory => {
-      if (this.readonly) return;
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.expenses) {
         this.statement.reportedData.expenses = expensesHistory;
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
       } else if (this.statement.status !== 'reported' && reportedData.expenses) {
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
+      }
+    })
+  );
+
+  public expensesDetails$ = combineLatest([this.statement$, this.expensesHistory$]).pipe(
+    map(([current, history]) => {
+      if (!this.devMode && current.status === 'reported' && current.reportedData.distributorExpenses) return current.reportedData.distributorExpenses;
+      return getDistributorExpensesDetails([current], history, this.shell.waterfall);
+    }),
+    tap(async expensesDetails => {
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
+      const reportedData = this.statement.reportedData;
+      if (this.statement.status === 'reported' && !reportedData.distributorExpenses) {
+        this.statement.reportedData.distributorExpenses = expensesDetails;
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
+      } else if (this.statement.status !== 'reported' && reportedData.distributorExpenses) {
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
       }
     })

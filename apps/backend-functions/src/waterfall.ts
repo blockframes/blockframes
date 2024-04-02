@@ -20,7 +20,8 @@ import {
   isDirectSalesStatement,
   isDistributorStatement,
   isStandaloneVersion,
-  Notification
+  Notification,
+  isProducerStatement
 } from '@blockframes/model';
 import { getDocument, getCollection, getDocumentSnap, queryDocuments } from '@blockframes/firebase-utils/firebase-utils';
 import { BlockframesChange, BlockframesSnapshot, removeAllSubcollections } from '@blockframes/firebase-utils';
@@ -255,11 +256,11 @@ export async function onWaterfallStatementDelete(docSnapshot: BlockframesSnapsho
       const incomes = await Promise.all(statement.incomeIds.map(id => getDocumentSnap(`incomes/${id}`, db)));
       const expenses = await Promise.all(statement.expenseIds.map(id => getDocumentSnap(`expenses/${id}`, db)));
 
-      // Remove related (producer/outgoing) statements
+      // Remove related (producer/outgoing or duplicated from) statements
       const statements = await waterfallSnap.ref.collection('statements').get();
       const statementsToDelete = statements.docs.filter(s => {
         const stm = s.data() as Statement;
-        return stm.incomeIds.some(id => statement.incomeIds.includes(id))
+        return stm.incomeIds.some(id => statement.incomeIds.includes(id)) && (isProducerStatement(stm) || stm.duplicatedFrom === statement.id);
       });
       await Promise.all(statementsToDelete.map(d => d.ref.delete()));
 

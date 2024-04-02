@@ -15,6 +15,8 @@ import {
   generatePayments,
   getAssociatedRights,
   getDefaultVersionId,
+  getDistributorExpensesDetails,
+  getParentStatements,
   getRightsBreakdown,
   getSourcesBreakdown,
   getStatementRights,
@@ -228,8 +230,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     const incomes = await this.shell.incomes();
     const expenses = await this.shell.expenses();
 
-    const impactedStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
-      .filter(s => s.payments.right.some(r => r.incomeIds.some(id => incomeIds.includes(id))));
+    const impactedStatements = getParentStatements(statements, incomeIds);
 
     // Rewrite right payments of impacted statements
     const statementsToUpdate = impactedStatements.map(impactedStatement => {
@@ -276,7 +277,13 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
 
       updatedStatement.reportedData.expenses = updatedStatement.expenseIds
         .map(id => expenses.find(e => e.id === id))
-        .filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true)
+        .filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true);
+
+      updatedStatement.reportedData.distributorExpenses = getDistributorExpensesDetails(
+        [updatedStatement],
+        updatedStatement.reportedData.expenses,
+        this.waterfall
+      );
 
       return updatedStatement;
     });
@@ -296,9 +303,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     const incomes = await this.shell.incomes();
     const expenses = await this.shell.expenses();
 
-    const impactedStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
-      .filter(s => !s.duplicatedFrom) // Skip already duplicated statements
-      .filter(s => s.payments.right.some(r => r.incomeIds.some(id => incomeIds.includes(id))));
+    const impactedStatements = getParentStatements(statements, incomeIds, true);
 
     // Rewrite right payments of impacted statements
     const statementsToUpdate = impactedStatements.map(impactedStatement => {
@@ -370,7 +375,13 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
 
       updatedStatement.reportedData.expenses = updatedStatement.expenseIds
         .map(id => expenses.find(e => e.id === id))
-        .filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true)
+        .filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true);
+
+      updatedStatement.reportedData.distributorExpenses = getDistributorExpensesDetails(
+        [updatedStatement],
+        updatedStatement.reportedData.expenses,
+        this.waterfall
+      );
 
       return updatedStatement;
     });

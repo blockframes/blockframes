@@ -105,50 +105,75 @@
     </article>
   </ng-container>
 
-  <ng-container *ngIf="expenses$ | async as expenses">
-    <article *ngIf="expenses.length" class="breakdown">
+  <ng-container *ngIf="expensesDetails$ | async as expensesDetails">
+    <article *ngIf="(expensesDetails | keyvalue).length" class="breakdown">
       <header>
         <span>Expenses</span>
       </header>
-      <div class="surface" >
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <span>Distributor details</span>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <bf-table [source]="expenses" pagination="50">
-            <ng-template colRef="rightholderId" label="Rightholder" let-rightholderId sort>
-              {{ rightholderId | rightholderName: waterfall }}
-            </ng-template>
-            <ng-template colRef="date" label="Date" let-date sort defaultSort>
-              {{ date | date }}
-            </ng-template>
-            <ng-template colRef="nature" label="Expenses name" let-nature sort>
-              {{ nature }}
-            </ng-template>
-            <ng-template colRef="" label="Type" let-item sort>
-              {{ item.typeId | expenseType : item.contractId : waterfall }}
-            </ng-template>
-            <ng-template colRef="" label="Amount" let-item sort>
-              <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
-              <button mat-icon-button 
-                [disabled]="!canEditExpense(item.id, statement)"
-                [matTooltip]="!canEditExpense(item.id, statement) ? 'This cannot be edited.' : 'Change Expense value'"
-                (click)="editExpense(item.id)"
-                >
-                <mat-icon svgIcon="statement_warning"></mat-icon>
-              </button>
-            </ng-template>
-            <ng-template colRef="" label="Capped" let-item sort>
-              {{ item.capped ? 'Yes' : 'No' }}
-              <ng-container *ngIf="item.cap">
-                <span class="cap">( CAP: <price-per-currency [price]="item.cap"></price-per-currency> )</span>
-              </ng-container>
-            </ng-template>
-          </bf-table>
-        </mat-expansion-panel>
-      </div>
+      <ng-container *ngFor="let expenses of (expensesDetails | keyvalue)">
+        <div class="surface" *ngFor="let expensesDetail of expenses.value;">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <span>{{ expenses.key | rightholderName: waterfall }}'s Expenses {{ expensesDetail.name }} Details</span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <bf-table [source]="expensesDetail.rows" pagination="50">
+              <ng-template colRef="previous" label="Previous" let-previous>
+                <price-per-currency [price]="previous"></price-per-currency>
+              </ng-template>
+              <ng-template colRef="current" label="Current" let-current>
+                <price-per-currency [price]="current"></price-per-currency>
+              </ng-template>
+              <ng-template colRef="cumulated" label="Cumulated" let-cumulated>
+                <price-per-currency [price]="cumulated"></price-per-currency>
+              </ng-template>
+              <ng-template colRef="capped" label="Capped" let-capped>
+                {{ capped ? 'Yes' : 'No' }}
+              </ng-template>
+            </bf-table>
+          </mat-expansion-panel>
+        </div>
+      </ng-container>
+      <mat-divider></mat-divider>
+      <ng-container *ngIf="expensesHistory$ | async as expensesHistory">
+        <div class="surface" *ngFor="let expenses of expensesHistory | keyvalue">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <span>{{ expenses.key | rightholderName: waterfall }}'s Expenses History</span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <bf-table [source]="expenses.value" pagination="50">
+              <ng-template colRef="date" label="Date" let-date sort defaultSort>
+                {{ date | date }}
+              </ng-template>
+              <ng-template colRef="nature" label="Expenses name" let-nature sort>
+                {{ nature }}
+              </ng-template>
+              <ng-template colRef="" label="Type" let-item sort>
+                {{ item.typeId | expenseType : item.contractId : waterfall }}
+              </ng-template>
+              <ng-template colRef="" label="Amount" let-item sort>
+                <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
+                <button mat-icon-button 
+                  [disabled]="!canEditExpense(item.id, statement) || !item.editable"
+                  [matTooltip]="(!canEditExpense(item.id, statement) || !item.editable) ? 'This cannot be edited.' : 'Change Expense value'"
+                  (click)="editExpense(item.id)"
+                  >
+                  <mat-icon svgIcon="statement_warning"></mat-icon>
+                </button>
+              </ng-template>
+              <ng-template colRef="" label="Capped" let-item sort>
+                {{ item.capped ? 'Yes' : 'No' }}
+                <ng-container *ngIf="item.cap">
+                  <span class="cap">( CAP: <price-per-currency [price]="item.cap"></price-per-currency> )</span>
+                </ng-container>
+              </ng-template>
+            </bf-table>
+          </mat-expansion-panel>
+        </div>
+      </ng-container>
     </article>
   </ng-container>
 
