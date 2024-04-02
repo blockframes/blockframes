@@ -23,44 +23,30 @@
       </mat-chip-list>
       <waterfall-version-selector></waterfall-version-selector>
     </article>
-    <article>
-      <section>
-        <ng-container *ngIf="rightholders.length > 0">
-          <waterfall-rightholder-select *ngIf="selected !== 'directSales'"
-            [rightholders]="rightholders"
-            [control]="rightholderControl">
-            <mat-label>{{ selected | toLabel: 'statementParty'}}</mat-label>
-          </waterfall-rightholder-select>
-          <ng-container *ngIf="selected !== 'directSales'">
-            <a *ngIf="rightholderContracts.length === 1 && rightholderContracts[0].id" mat-icon-button target="_blank" [routerLink]="['..', 'document', rightholderContracts[0].id]">
-              <mat-icon svgIcon="contract" matTooltip="See Contract"></mat-icon>
-            </a>
+    <section>
+      <ng-container *ngIf="rightholders.length > 0">
+        <waterfall-rightholder-select *ngIf="selected !== 'directSales'"
+          [rightholders]="rightholders"
+          [control]="rightholderControl">
+          <mat-label>{{ selected | toLabel: 'statementParty'}}</mat-label>
+        </waterfall-rightholder-select>
+        <ng-container *ngIf="selected !== 'directSales'">
+          <a *ngIf="rightholderContracts.length === 1 && rightholderContracts[0].id" mat-icon-button target="_blank" [routerLink]="['..', 'document', rightholderContracts[0].id]">
+            <mat-icon svgIcon="contract" matTooltip="See Contract"></mat-icon>
+          </a>
 
-            <button *ngIf="rightholderContracts.length > 1" mat-icon-button [matMenuTriggerFor]="contractsMenu">
-              <mat-icon svgIcon="contract" matTooltip="See Contracts"></mat-icon>
-            </button>
-            
-            <mat-menu #contractsMenu="matMenu">
-              <a mat-menu-item *ngFor="let rightholderContract of rightholderContracts" target="_blank" [routerLink]="['..', 'document', rightholderContract.id]">
-                {{ rightholderContract.name }}
-              </a>
-            </mat-menu>
-          </ng-container>
+          <button *ngIf="rightholderContracts.length > 1" mat-icon-button [matMenuTriggerFor]="contractsMenu">
+            <mat-icon svgIcon="contract" matTooltip="See Contracts"></mat-icon>
+          </button>
+          
+          <mat-menu #contractsMenu="matMenu">
+            <a mat-menu-item *ngFor="let rightholderContract of rightholderContracts" target="_blank" [routerLink]="['..', 'document', rightholderContract.id]">
+              {{ rightholderContract.name }}
+            </a>
+          </mat-menu>
         </ng-container>
-      </section>
-      <div *ngIf="selected !== 'directSales' && rightholderContracts.length === 1 && canCreateStatement(selected, rightholderContracts, rightholderControl.value)">
-        <button mat-button color="primary" (click)="createStatement(rightholderControl.value, rightholderContracts[0].id)" class="main-dashboard-cta">
-          <mat-icon svgIcon="add"></mat-icon>
-          <span>Add Statement</span>
-        </button>
-      </div>
-      <div *ngIf="selected === 'directSales' && haveStatements && canCreateStatement(selected)">
-        <button mat-button color="primary" (click)="createStatement()" class="main-dashboard-cta">
-          <mat-icon svgIcon="add"></mat-icon>
-          <span>Add Statement</span>
-        </button>
-      </div>
-    </article>
+      </ng-container>
+    </section>
   </header>
 
   <section *ngIf="(isRefreshing$ | async) === false; else loading">
@@ -82,6 +68,18 @@
     </mat-tab-group>
 
     <ng-template #singleContract>
+      <div *ngIf="selected !== 'directSales' && rightholderContracts.length === 1 && canCreateStatement(selected, rightholderContracts, rightholderControl.value)">
+        <button mat-button color="primary" (click)="createStatement(rightholderControl.value, rightholderContracts[0].id)" class="main-dashboard-cta">
+          <mat-icon svgIcon="add"></mat-icon>
+          <span>Add Statement</span>
+        </button>
+      </div>
+      <div *ngIf="selected === 'directSales' && haveStatements && canCreateStatement(selected)">
+        <button mat-button color="primary" (click)="createStatement()" class="main-dashboard-cta">
+          <mat-icon svgIcon="add"></mat-icon>
+          <span>Add Statement</span>
+        </button>
+      </div>
       <waterfall-statement-table *ngIf="haveStatements" [statements]="rightholderContracts[0].statements" (delete)="removeStatement($event)"></waterfall-statement-table>
     </ng-template>
   </section>
