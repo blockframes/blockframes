@@ -134,7 +134,7 @@ const colors = [
 
 const RIGHT_WIDTH = 240;
 const RIGHT_HEIGHT = 180;
-const LEVEL_HEIGHT = 76;
+const LEVEL_HEIGHT = 112;
 const SOURCE_WIDTH = 400;
 const SOURCE_HEIGHT = 70;
 const SPACING = 32;
@@ -731,15 +731,22 @@ export function createChild(parentId: string, graph: Node[], producerId: string)
 }
 
 export function createStep(nodeId: string, graph: Node[]) {
+  const group = graph.find(n => n.type === 'horizontal' && (n as HorizontalNode).members.find(m => m.id === nodeId)) as HorizontalNode;
+  const groupIndex = group?.members.findIndex(member => member.id === nodeId);
+  const isGroupChild = groupIndex !== undefined && groupIndex !== -1;
   const nodeIndex = graph.findIndex(node => node.id === nodeId);
-  if (nodeIndex === -1) return;
+  const node = isGroupChild ? group.members[groupIndex] : graph[nodeIndex];
 
-  const node = graph[nodeIndex];
+  if (!node) return;
 
   // if current node is a simple right, create a new group with this right and add new right in the group
   if (node.type === 'right') {
 
-    graph.splice(nodeIndex, 1);
+    if (isGroupChild) {
+      group.members.splice(groupIndex, 1);
+    } else {
+      graph.splice(nodeIndex, 1);
+    }
 
     // update current node
     const children = [...node.children];
@@ -764,14 +771,18 @@ export function createStep(nodeId: string, graph: Node[]) {
       height: RIGHT_HEIGHT + (LEVEL_HEIGHT * (members.length - 1)) + (SPACING * (members.length + 1)),
       width: RIGHT_WIDTH + (SPACING * 2),
     });
-    graph.push(verticalNode);
+    if (isGroupChild) {
+      group.members.push(verticalNode);
+    } else {
+      graph.push(verticalNode);
 
-    // update parents
-    const parents = graph.filter(node => node.children.includes(nodeId));
-    parents.forEach(parent => {
-      parent.children = parent.children.filter(childId => childId !== nodeId);
-      parent.children.push(verticalNode.id);
-    });
+      // update parents
+      const parents = graph.filter(node => node.children.includes(nodeId));
+      parents.forEach(parent => {
+        parent.children = parent.children.filter(childId => childId !== nodeId);
+        parent.children.push(verticalNode.id);
+      });
+    }
 
     // if current node is already a vertical group simply add a new member
   } else if (node.type === 'vertical') {
@@ -789,26 +800,38 @@ export function createStep(nodeId: string, graph: Node[]) {
 }
 
 export function deleteStep(groupId: string, stepIndex: number, graph: Node[]) {
+  const hGroup = graph.find(n => n.type === 'horizontal' && (n as HorizontalNode).members.find(m => m.id === groupId)) as HorizontalNode;
 
-  const group = graph.find(node => node.id === groupId);
-  if (!group || group.type !== 'vertical') return;
+  const hGroupIndex = hGroup?.members.findIndex(member => member.id === groupId);
+  const nodeIndex = graph.findIndex(node => node.id === groupId);
+  const isHGroupChild = hGroupIndex !== undefined && hGroupIndex !== -1;
+  const vGroup = isHGroupChild ? hGroup.members[hGroupIndex] : graph[nodeIndex];
 
-  group.members.splice(stepIndex, 1);
+  if (!vGroup || vGroup.type !== 'vertical') return;
 
-  group.members.forEach((member, index) => {
+  vGroup.members.splice(stepIndex, 1);
+
+  vGroup.members.forEach((member, index) => {
     member.name = `Step ${index + 1}`;
   });
 
   // if the group has only one member left, remove the group
-  if (group.members.length === 1) {
-    const lastMember = group.members[0];
-    const parents = graph.filter(node => node.children.includes(group.id));
-    parents.forEach(parent => {
-      parent.children = parent.children.filter(childId => childId !== group.id);
-      parent.children.push(lastMember.id);
-    });
-    graph.splice(graph.findIndex(node => node.id === group.id), 1);
-    graph.push(lastMember);
+  if (vGroup.members.length === 1) {
+    const lastMember = vGroup.members[0];
+
+    if (isHGroupChild) {
+      hGroup.members.splice(hGroupIndex, 1);
+      hGroup.members.push(lastMember);
+    } else {
+      const parents = graph.filter(node => node.children.includes(vGroup.id));
+      parents.forEach(parent => {
+        parent.children = parent.children.filter(childId => childId !== vGroup.id);
+        parent.children.push(lastMember.id);
+      });
+      graph.splice(nodeIndex, 1);
+      graph.push(lastMember);
+    }
+
   }
 }
 

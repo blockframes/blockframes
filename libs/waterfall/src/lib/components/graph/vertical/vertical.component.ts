@@ -20,7 +20,7 @@ export class WaterfallGraphVerticalComponent implements OnInit {
   @Output() handleSelect = new EventEmitter<string>();
 
   public amount$ = combineLatest([this.shell.state$, this.shell.revenueMode$]).pipe(
-    map(([state, revenueMode]) => state.waterfall.state.rights[this.vertical.id]?.revenu[revenueMode] ?? 0),
+    map(([state, revenueMode]) => state.waterfall.state.verticals[this.vertical.id]?.revenu[revenueMode] ?? 0),
     startWith(0),
   );
 

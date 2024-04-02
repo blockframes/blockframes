@@ -8,5 +8,9 @@
       <p class="nodrag percent">{{ right.percent / 100 | percent: '1.0-2' }}</p>
       <p class="nodrag name" [matTooltip]="right.name || 'Right Name'">{{right.name || 'Right Name'}}</p>
     </div>
+    <div class="nodrag total">
+      <mat-icon svgIcon="monetization"></mat-icon>
+      <p class="nodrag">Revenue: <price-per-currency [price]="amount$ | async | formatPair" default="0€"></price-per-currency></p>
+    </div>
   </div>
 </ng-container>

@@ -17,6 +17,7 @@ export class WaterfallGraphRightComponent implements OnChanges {
   @Input() public selected: boolean;
   @Input() public canUpdate = false;
   @Input() @boolean public hideAmount: boolean;
+  @Input() public monetizationLabel = 'Total Revenue';
 
   @Output() addChild = new EventEmitter<string>();
   @Output() addSibling = new EventEmitter<string>();

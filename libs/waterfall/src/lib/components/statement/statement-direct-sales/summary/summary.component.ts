@@ -1,22 +1,27 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import {
   BreakdownRow,
+  PricePerCurrency,
   RightOverride,
+  RightType,
   Statement,
   canOnlyReadStatements,
   filterStatements,
   generatePayments,
   getAssociatedRights,
+  getDistributorExpensesDetails,
+  getExpensesHistory,
   getRightsBreakdown,
   getSourcesBreakdown,
   getStatementRights,
   getStatementSources,
+  skipSourcesWithAllHiddenIncomes,
   sortStatements
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '../../../../dashboard/shell/shell.component';
 import { StatementForm } from '../../../../form/statement.form';
-import { combineLatest, map, shareReplay, switchMap, tap } from 'rxjs';
+import { Observable, combineLatest, map, shareReplay, switchMap, tap } from 'rxjs';
 import { StatementService } from '../../../../statement.service';
 import { StatementArbitraryChangeComponent } from '../../statement-arbitrary-change/statement-arbitrary-change.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -34,8 +39,9 @@ export class StatementDirectSalesSummaryComponent {
   @Input() form: StatementForm;
   @Input() public statement: Statement;
   private readonly = canOnlyReadStatements(this.shell.currentRightholder, this.shell.canBypassRules);
-  
-  public sources$ = combineLatest([this.shell.incomes$, this.shell.rights$, this.shell.simulation$]).pipe(
+  private devMode = false;
+
+  private sources$ = combineLatest([this.shell.incomes$, this.shell.rights$, this.shell.simulation$]).pipe(
     map(([incomes, rights, simulation]) => getStatementSources(this.statement, this.waterfall.sources, incomes, rights, simulation.waterfall.state)),
     shareReplay({ bufferSize: 1, refCount: true })
   );
@@ -92,23 +98,30 @@ export class StatementDirectSalesSummaryComponent {
     map(statements => sortStatements(statements))
   );
 
+  public cleanSources$ = combineLatest([this.statement$, this.sources$, this.shell.incomes$]).pipe(
+    map(([statement, sources, incomes]) => skipSourcesWithAllHiddenIncomes(statement, sources, incomes)),
+  );
+
   public sourcesBreakdown$ = combineLatest([
     this.sources$, this.statement$, this.shell.incomes$, this.shell.expenses$,
     this.statementsHistory$, this.shell.rights$, this.shell.simulation$
   ]).pipe(
-    map(([sources, current, incomes, expenses, history, rights, simulation]) => {
-      if (current.status === 'reported' && current.reportedData.sourcesBreakdown) return current.reportedData.sourcesBreakdown;
+    map(([declaredSources, current, incomes, expenses, history, rights, simulation]) => {
+      if (!this.devMode && current.status === 'reported' && current.reportedData.sourcesBreakdown) return current.reportedData.sourcesBreakdown;
       try {
+        // On direct sales statements, only display commission and expenses rights
+        // This is needed to show only theses kind of rights since directSales statements does not have a contract Id.
+        const displayedRightTypes: RightType[] = ['commission', 'expenses'];
         return getSourcesBreakdown(
-          this.shell.versionId$.value,
           this.shell.waterfall,
-          sources,
+          declaredSources,
           current,
           incomes,
           expenses,
           history,
           rights,
-          simulation.waterfall.state
+          simulation.waterfall.state,
+          displayedRightTypes
         );
       } catch (error) {
         if (error.message) this.snackbar.open(error.message, 'close', { duration: 5000 });
@@ -117,7 +130,7 @@ export class StatementDirectSalesSummaryComponent {
       }
     }),
     tap(async sourcesBreakdown => {
-      if(this.readonly) return;
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.sourcesBreakdown) {
         this.statement.reportedData.sourcesBreakdown = sourcesBreakdown;
@@ -128,7 +141,7 @@ export class StatementDirectSalesSummaryComponent {
     })
   );
 
-  public totalNetReceipt$ = this.sourcesBreakdown$.pipe(
+  public totalNetReceipt$: Observable<PricePerCurrency> = this.sourcesBreakdown$.pipe(
     map(sources => sources.map(s => s.net).reduce((acc, curr) => {
       for (const currency of Object.keys(curr)) {
         acc[currency] = (acc[currency] || 0) + curr[currency];
@@ -139,11 +152,14 @@ export class StatementDirectSalesSummaryComponent {
 
   public rightsBreakdown$ = combineLatest([
     this.statement$, this.statementsHistory$, this.shell.expenses$,
-    this.shell.incomes$, this.shell.rights$, this.shell.simulation$
+    this.shell.incomes$, this.shell.rights$, this.shell.simulation$, this.sources$
   ]).pipe(
-    map(([current, history, expenses, incomes, rights, simulation]) => {
-      if (current.status === 'reported' && current.reportedData.rightsBreakdown) return current.reportedData.rightsBreakdown;
+    map(([current, history, expenses, incomes, rights, simulation, declaredSources]) => {
+      if (!this.devMode && current.status === 'reported' && current.reportedData.rightsBreakdown) return current.reportedData.rightsBreakdown;
       try {
+        // On direct sales statements, only display commission and expenses rights
+        // This is needed to show only theses kind of rights since directSales statements does not have a contract Id.
+        const displayedRightTypes: RightType[] = ['commission', 'expenses'];
         return getRightsBreakdown(
           this.shell.waterfall,
           current,
@@ -151,7 +167,9 @@ export class StatementDirectSalesSummaryComponent {
           expenses,
           history,
           rights,
-          simulation.waterfall.state
+          simulation.waterfall.state,
+          declaredSources,
+          displayedRightTypes
         );
       } catch (error) {
         if (error.message) this.snackbar.open(error.message, 'close', { duration: 5000 });
@@ -160,7 +178,7 @@ export class StatementDirectSalesSummaryComponent {
       }
     }),
     tap(async rightsBreakdown => {
-      if(this.readonly) return;
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.rightsBreakdown) {
         this.statement.reportedData.rightsBreakdown = rightsBreakdown;
@@ -171,18 +189,75 @@ export class StatementDirectSalesSummaryComponent {
     })
   );
 
-  public expenses$ = combineLatest([this.statement$, this.shell.expenses$]).pipe(
-    map(([statement, expenses]) =>
-      statement.expenseIds.map(id => expenses.find(e => e.id === id))
-        .filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true)
-    ),
-    tap(async expenses => {
-      if(this.readonly) return;
+  /**
+   * This calculus is directSales specific since there is no rightholder payment in the statement
+   * (direstSales statements are from producer to producer)
+   * @dev This code takes totalNetReceipt and substitute price from commission and expenses from rightsBreakdown
+   * to get the amount that the producer (from distributor point of view) will send to producer.
+   */
+  public producerNetParticipation$: Observable<PricePerCurrency> = combineLatest([this.statement$, this.totalNetReceipt$, this.rightsBreakdown$]).pipe(
+    map(([current, totalNetReceipt, rightsBreakdown]) => {
+      if (!this.devMode && current.status === 'reported' && current.reportedData.producerNetParticipation) return current.reportedData.producerNetParticipation;
+      const rightsTaken = rightsBreakdown.map(rb => rb.total).map(total => {
+        return Object.keys(total).reduce((acc, currency) => {
+          acc[currency] = total[currency] * -1;
+          return acc;
+        }, {});
+      });
+
+      const total: PricePerCurrency = [...rightsTaken, totalNetReceipt].reduce((acc, curr) => {
+        for (const currency of Object.keys(curr)) {
+          acc[currency] = (acc[currency] || 0) + curr[currency];
+        }
+        return acc;
+      }, {});
+
+      return total;
+    }),
+    tap(async producerNetParticipation => {
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
-      if (this.statement.status === 'reported' && !reportedData.expenses) {
-        this.statement.reportedData.expenses = expenses;
+      if (this.statement.status === 'reported' && !reportedData.producerNetParticipation) {
+        this.statement.reportedData.producerNetParticipation = producerNetParticipation;
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
       } else if (this.statement.status !== 'reported' && reportedData.expenses) {
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
+      }
+    })
+  );
+
+  public expensesHistory$ = combineLatest([
+    this.statement$, this.statementsHistory$, this.shell.expenses$,
+    this.sources$, this.shell.rights$, this.shell.simulation$, this.shell.incomes$
+  ]).pipe(
+    map(([current, history, expenses, declaredSources, rights, simulation, incomes]) => {
+      if (!this.devMode && current.status === 'reported' && current.reportedData.expenses) return current.reportedData.expenses;
+      return getExpensesHistory(current, history, expenses, declaredSources, rights, simulation.waterfall.state, incomes);
+    }),
+    tap(async expensesHistory => {
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
+      const reportedData = this.statement.reportedData;
+      if (this.statement.status === 'reported' && !reportedData.expenses) {
+        this.statement.reportedData.expenses = expensesHistory;
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
+      } else if (this.statement.status !== 'reported' && reportedData.expenses) {
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
+      }
+    })
+  );
+
+  public expensesDetails$ = combineLatest([this.statement$, this.expensesHistory$]).pipe(
+    map(([current, history]) => {
+      if (!this.devMode && current.status === 'reported' && current.reportedData.distributorExpenses) return current.reportedData.distributorExpenses;
+      return getDistributorExpensesDetails([current], history, this.shell.waterfall);
+    }),
+    tap(async expensesDetails => {
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
+      const reportedData = this.statement.reportedData;
+      if (this.statement.status === 'reported' && !reportedData.distributorExpenses) {
+        this.statement.reportedData.distributorExpenses = expensesDetails;
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
+      } else if (this.statement.status !== 'reported' && reportedData.distributorExpenses) {
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
       }
     })

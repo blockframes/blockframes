@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { StatementHeaderModule } from '../../statement-header/statement-header.module';
+import { StatementParticipationModule } from '../../statement-participation/statement-participation.module';
 import { StatementArbitraryChangeModule } from '../../statement-arbitrary-change/statement-arbitrary-change.module';
 import { ExpenseTypePipeModule } from '../../../../pipes/expense-type.pipe';
 import { BfCommonModule } from '@blockframes/utils/bf-common.module';
@@ -34,6 +35,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     PricePerCurrencyModule,
     TableModule,
     StatementHeaderModule,
+    StatementParticipationModule,
     StatementArbitraryChangeModule,
     ExpenseTypePipeModule,
 

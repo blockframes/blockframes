@@ -23,6 +23,7 @@ import {
   hasContractWith,
   initStatementDuration,
   isProducerStatement,
+  isStandaloneVersion,
   rightholderKey,
   sortStatements,
   statementType,
@@ -125,6 +126,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
   public statementChips: StatementChipConfig[] = [];
   public selected: StatementType;
   public isRefreshing$ = this.shell.isRefreshing$;
+  public isStandaloneVersion$ = this.shell.versionId$.pipe(map(versionId => isStandaloneVersion(this.shell.waterfall, versionId)));
 
   private contracts: WaterfallContract[] = [];
   private statements: Statement[] = [];
@@ -259,7 +261,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
   }
 
   public async addStatement(type: StatementType) {
-    if (type === 'directSales') return this.createStatement();
+    if (type === 'directSales') return this.createStatement(undefined, undefined, type);
     const statements = await this.shell.statements();
     const rights = await this.shell.rights();
 

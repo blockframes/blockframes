@@ -52,5 +52,10 @@
         Statement Reported: {{ statement.reported | date }}
       </span>
     </section>
+
+    <span *ngIf="statement.status !== 'reported' && statement.type === 'directSales'">
+      <mat-icon svgIcon="warning" color="warn"></mat-icon><span matLine><strong>Warning: </strong>Direct sales statements display only producer's rights that have a type "Expenses" or "Commission" for the Net receipts calculation.</span>
+    </span>
+
   </article>
 </ng-template>

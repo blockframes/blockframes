@@ -89,7 +89,7 @@ export function conditionToString(condition?: Condition, waterfall?: Waterfall, 
   if (condition.name === 'amount') {
     /** @dev not implemented in libs/waterfall/src/lib/components/forms/conditions-form/condition.form.ts  */
     const { operator, target } = condition.payload;
-    return `Amount is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
+    return `Amount is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'terms') {
@@ -104,7 +104,7 @@ export function conditionToString(condition?: Condition, waterfall?: Waterfall, 
   if (condition.name === 'termsLength') {
     /** @dev not implemented in libs/waterfall/src/lib/components/forms/conditions-form/condition.form.ts  */
     const { operator, target } = condition.payload;
-    return `Terms length is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
+    return `Terms length is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'contract') {
@@ -119,56 +119,56 @@ export function conditionToString(condition?: Condition, waterfall?: Waterfall, 
 
   if (condition.name === 'contractAmount') {
     const { operator, target } = condition.payload;
-    return `Contract amount is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
+    return `Contract amount is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'orgRevenu') {
     const { operator, orgId, target } = condition.payload;
-    return `Org ${rightholderName(orgId, waterfall)}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
+    return `Org ${rightholderName(orgId, waterfall)}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'orgTurnover') {
     const { operator, orgId, target } = condition.payload;
-    return `Org ${rightholderName(orgId, waterfall)}'s turnover is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
+    return `Org ${rightholderName(orgId, waterfall)}'s turnover is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'rightRevenu') {
     const { operator, rightId, target } = condition.payload;
     const right = rights?.find(r => r.id === rightId);
-    return `Right ${right?.name || rightId}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
+    return `Right ${right?.name || rightId}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'rightTurnover') {
     const { operator, rightId, target } = condition.payload;
     const right = rights?.find(r => r.id === rightId);
-    return `Right ${right?.name || rightId}'s turnover is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
+    return `Right ${right?.name || rightId}'s turnover is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'groupRevenu') {
     const { operator, groupId, target } = condition.payload;
     const group = rights?.find(r => r.id === groupId);
-    return `Group ${group?.name || groupId}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
+    return `Group ${group?.name || groupId}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'groupTurnover') {
     const { operator, groupId, target } = condition.payload;
     const group = rights?.find(r => r.id === groupId);
-    return `Group ${group?.name || groupId}'s turnover is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
+    return `Group ${group?.name || groupId}'s turnover is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'poolRevenu') {
     const { operator, target, pool } = condition.payload;
-    return `Pool ${pool}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
+    return `Pool ${pool}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'poolTurnover') {
     const { operator, target, pool } = condition.payload;
-    return `Pool ${pool}'s turnover is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
+    return `Pool ${pool}'s turnover is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'poolShadowRevenu') {
     const { operator, target, pool } = condition.payload;
-    return `Pool ${pool}'s theoretical revenue is ${operatorToString(operator)} ${targetToString(target, waterfall)}`;
+    return `Pool ${pool}'s theoretical revenue is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'interest') {

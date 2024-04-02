@@ -32,17 +32,23 @@ import {
   getStatementSources,
   getTransferDetails,
   isDefaultVersion,
-  isDirectSalesStatement,
-  isDistributorStatement,
   isSource,
   isStandaloneVersion,
   isVerticalGroup,
   interestDetail,
-  canOnlyReadStatements
+  canOnlyReadStatements,
+  skipSourcesWithAllHiddenIncomes,
+  filterStatements,
+  sortStatements,
+  getExpensesHistory,
+  sortByDate,
+  getDistributorExpensesDetails,
+  DistributorExpenses,
+  getParentStatements
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../../dashboard/shell/shell.component';
 import { StatementForm } from '../../../../form/statement.form';
-import { BehaviorSubject, Observable, Subscription, combineLatest, debounceTime, map, shareReplay, tap } from 'rxjs';
+import { BehaviorSubject, Subscription, combineLatest, debounceTime, map, shareReplay, tap } from 'rxjs';
 import { unique } from '@blockframes/utils/helpers';
 import { MatDialog } from '@angular/material/dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
@@ -130,8 +136,9 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
   private incomes: Income[] = [];
   private statementDuplicates: Statement[] = [];
   private readonly = canOnlyReadStatements(this.shell.currentRightholder, this.shell.canBypassRules);
+  private devMode = false;
 
-  public sources$ = combineLatest([this.incomeIds$, this.shell.incomes$, this.shell.rights$, this.shell.simulation$]).pipe(
+  private sources$ = combineLatest([this.incomeIds$, this.shell.incomes$, this.shell.rights$, this.shell.simulation$]).pipe(
     map(([incomeIds, incomes, rights, simulation]) => getStatementSources({ ...this.statement, incomeIds }, this.waterfall.sources, incomes, rights, simulation.waterfall.state)),
     shareReplay({ bufferSize: 1, refCount: true })
   );
@@ -173,12 +180,16 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
+  public cleanSources$ = combineLatest([this.statement$, this.sources$, this.shell.incomes$]).pipe(
+    map(([statement, sources, incomes]) => skipSourcesWithAllHiddenIncomes(statement, sources, incomes)),
+  );
+
   public groupsBreakdown$ = combineLatest([
     this.statement$, this.shell.rights$, this.shell.incomes$,
     this.shell.simulation$, this.sources$
   ]).pipe(
     map(([statement, rights, incomes, simulation, sources]) => {
-      if (statement.status === 'reported' && statement.reportedData.groupsBreakdown) return statement.reportedData.groupsBreakdown;
+      if (!this.devMode && statement.status === 'reported' && statement.reportedData.groupsBreakdown) return statement.reportedData.groupsBreakdown;
       const displayedRights = getStatementRightsToDisplay(statement, rights);
       const orderedRights = getOrderedRights(displayedRights, simulation.waterfall.state);
       const statementIncomes = incomes.filter(i => statement.incomeIds.includes(i.id));
@@ -227,7 +238,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
       return Object.values(groups).filter(g => g.rows.filter(r => r.type === 'source').length) as GroupsBreakdown[];
     }),
     tap(async groupsBreakdown => {
-      if (this.readonly) return;
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.groupsBreakdown) {
         this.statement.reportedData.groupsBreakdown = groupsBreakdown;
@@ -243,7 +254,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     this.statement$, this.shell.rights$
   ]).pipe(
     map(([groups, simulation, statement, rights]) => {
-      if (statement.status === 'reported' && statement.reportedData.details) return statement.reportedData.details;
+      if (!this.devMode && statement.status === 'reported' && statement.reportedData.details) return statement.reportedData.details;
       const sourcesDetails = groups.map(g => g.rows.filter(r => r.type === 'source')).flat();
 
       const items: DetailsRow[] = [];
@@ -274,7 +285,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
       return items;
     }),
     tap(async details => {
-      if (this.readonly) return;
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.details) {
         this.statement.reportedData.details = details;
@@ -285,31 +296,77 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     })
   );
 
-  public expenses$: Observable<(Expense & { cap?: PricePerCurrency })[]> = combineLatest([
-    this.statement$, this.shell.statements$,
-    this.shell.expenses$, this.shell.versionId$
+  public expensesHistory$ = combineLatest([
+    this.statement$, this.shell.statements$, this.shell.expenses$, this.sources$,
+    this.shell.rights$, this.shell.simulation$, this.shell.incomes$, this.shell.versionId$
   ]).pipe(
-    map(([statement, statements, expenses, versionId]) => {
-      if (statement.status === 'reported' && statement.reportedData.expenses) return statement.reportedData.expenses;
-      const parentStatements = statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
-        .filter(s => s.payments.right.some(r => r.incomeIds.some(id => statement.incomeIds.includes(id))));
-      const expenseIds = parentStatements.map(s => s.expenseIds).flat();
-      return expenses.filter(e => expenseIds.includes(e.id)).map(e => {
-        const type = e.typeId ? this.waterfall.expenseTypes[e.contractId].find(t => t.id === e.typeId) : undefined;
-        if (!type) return e;
-        const versionKey = isDefaultVersion(this.shell.waterfall, versionId) ? 'default' : versionId;
-        const cap = type.cap.version[versionKey] !== undefined ? type.cap.version[versionKey] : type.cap.default;
-        if (cap === 0) return e;
-        return { ...e, cap: { [type.currency]: cap } };
-      }).filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true);
+    map(([statement, statements, expenses, declaredSources, rights, simulation, incomes, versionId]) => {
+      if (!this.devMode && statement.status === 'reported' && statement.reportedData.expensesPerDistributor) return statement.reportedData.expensesPerDistributor;
+      const parentStatements = getParentStatements(statements, statement.incomeIds);
+
+      const expensesHistory: Record<string, (Expense & { cap?: PricePerCurrency, editable: boolean })[]> = {};
+      for (const parentStatement of parentStatements) {
+        const _statementHistory = filterStatements(parentStatement.type, [parentStatement.senderId, parentStatement.receiverId], parentStatement.contractId, statements);
+        const statementHistory = sortStatements(_statementHistory);
+
+        const history: (Expense & { cap?: PricePerCurrency })[] = getExpensesHistory(parentStatement, statementHistory, expenses, declaredSources, rights, simulation.waterfall.state, incomes, versionId, statement.status !== 'reported')
+          .map(e => {
+            const type = e.typeId ? this.waterfall.expenseTypes[e.contractId].find(t => t.id === e.typeId) : undefined;
+            if (!type) return e;
+            const versionKey = isDefaultVersion(this.shell.waterfall, versionId) ? 'default' : versionId;
+            const cap = type.cap.version[versionKey] !== undefined ? type.cap.version[versionKey] : type.cap.default;
+            if (cap === 0) return e;
+            return { ...e, cap: { [type.currency]: cap } };
+          });
+
+        for (const e of history) {
+          if (!expensesHistory[e.rightholderId]) expensesHistory[e.rightholderId] = [];
+          if (!expensesHistory[e.rightholderId].find(h => h.id === e.id)) {
+            expensesHistory[e.rightholderId].push({ ...e, editable: parentStatement.expenseIds.includes(e.id) });
+          }
+        }
+      }
+
+      // sort expenses by date
+      for (const rightholderId in expensesHistory) {
+        expensesHistory[rightholderId] = sortByDate(expensesHistory[rightholderId], 'date');
+      }
+
+      return expensesHistory;
     }),
-    tap(async expenses => {
-      if (this.readonly) return;
+    tap(async expensesHistory => {
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
-      if (this.statement.status === 'reported' && !reportedData.expenses) {
-        this.statement.reportedData.expenses = expenses;
+      if (this.statement.status === 'reported' && !reportedData.expensesPerDistributor) {
+        this.statement.reportedData.expensesPerDistributor = expensesHistory;
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
-      } else if (this.statement.status !== 'reported' && reportedData.expenses) {
+      } else if (this.statement.status !== 'reported' && reportedData.expensesPerDistributor) {
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
+      }
+    })
+  );
+
+  public expensesDetails$ = combineLatest([this.statement$, this.expensesHistory$, this.shell.statements$]).pipe(
+    map(([current, history, statements]) => {
+      if (!this.devMode && current.status === 'reported' && current.reportedData.distributorExpensesPerDistributor) return current.reportedData.distributorExpensesPerDistributor;
+
+      const parentStatements = getParentStatements(statements, current.incomeIds);
+
+      const expensesDetails: Record<string, DistributorExpenses[]> = {};
+      Object.entries(history).forEach(([rightholderId, expenses]) => {
+        const currentStatements = parentStatements.filter(s => s.senderId === rightholderId);
+        expensesDetails[rightholderId] = getDistributorExpensesDetails(currentStatements, expenses, this.shell.waterfall);
+      });
+
+      return expensesDetails;
+    }),
+    tap(async expensesDetails => {
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
+      const reportedData = this.statement.reportedData;
+      if (this.statement.status === 'reported' && !reportedData.distributorExpensesPerDistributor) {
+        this.statement.reportedData.distributorExpensesPerDistributor = expensesDetails;
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
+      } else if (this.statement.status !== 'reported' && reportedData.distributorExpensesPerDistributor) {
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
       }
     })
@@ -317,7 +374,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
 
   public interests$ = combineLatest([this.shell.rights$, this.shell.simulation$]).pipe(
     map(([_rights, state]) => {
-      if (this.statement.status === 'reported' && this.statement.reportedData.interests) return this.statement.reportedData.interests;
+      if (!this.devMode && this.statement.status === 'reported' && this.statement.reportedData.interests) return this.statement.reportedData.interests;
       const rights = getStatementRightsToDisplay(this.statement, _rights);
       const allConditions = rights.map(right => getRightCondition(right)).filter(condition => !!condition).flat();
       const interestCondition = allConditions.find(condition => condition.name === 'interest');
@@ -326,7 +383,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
       return interestDetail(this.statement.contractId, payload, state.waterfall.state);
     }),
     tap(async interests => {
-      if (this.readonly) return;
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.interests) {
         this.statement.reportedData.interests = interests;

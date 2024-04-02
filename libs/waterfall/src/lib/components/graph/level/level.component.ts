@@ -5,6 +5,7 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 
 import { RightNode } from '../layout';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
+import { combineLatest, map, startWith } from 'rxjs';
 
 
 @Component({
@@ -23,6 +24,11 @@ export class WaterfallGraphLevelComponent implements OnChanges {
 
   @HostBinding('class.nodrag') nodrag = true;
   @HostBinding('class.selected') selectedClass = false;
+
+  public amount$ = combineLatest([this.shell.state$, this.shell.revenueMode$]).pipe(
+    map(([state, revenueMode]) => state.waterfall.state.rights[this.right.id]?.revenu[revenueMode] ?? 0),
+    startWith(0),
+  );
 
   constructor(
     public shell: DashboardWaterfallShellComponent,
