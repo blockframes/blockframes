@@ -238,7 +238,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
       return Object.values(groups).filter(g => g.rows.filter(r => r.type === 'source').length) as GroupsBreakdown[];
     }),
     tap(async groupsBreakdown => {
-      if (this.readonly) return;
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.groupsBreakdown) {
         this.statement.reportedData.groupsBreakdown = groupsBreakdown;
@@ -285,7 +285,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
       return items;
     }),
     tap(async details => {
-      if (this.readonly) return;
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.details) {
         this.statement.reportedData.details = details;
@@ -309,7 +309,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
         const _statementHistory = filterStatements(parentStatement.type, [parentStatement.senderId, parentStatement.receiverId], parentStatement.contractId, statements);
         const statementHistory = sortStatements(_statementHistory);
 
-        const history: (Expense & { cap?: PricePerCurrency })[] = getExpensesHistory(parentStatement, statementHistory, expenses, declaredSources, rights, simulation.waterfall.state, incomes, versionId)
+        const history: (Expense & { cap?: PricePerCurrency })[] = getExpensesHistory(parentStatement, statementHistory, expenses, declaredSources, rights, simulation.waterfall.state, incomes, versionId, statement.status !== 'reported')
           .map(e => {
             const type = e.typeId ? this.waterfall.expenseTypes[e.contractId].find(t => t.id === e.typeId) : undefined;
             if (!type) return e;
@@ -335,7 +335,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
       return expensesHistory;
     }),
     tap(async expensesHistory => {
-      if (this.readonly) return;
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.expensesPerDistributor) {
         this.statement.reportedData.expensesPerDistributor = expensesHistory;
@@ -361,7 +361,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
       return expensesDetails;
     }),
     tap(async expensesDetails => {
-      if (this.readonly) return;
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.distributorExpensesPerDistributor) {
         this.statement.reportedData.distributorExpensesPerDistributor = expensesDetails;
@@ -383,7 +383,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
       return interestDetail(this.statement.contractId, payload, state.waterfall.state);
     }),
     tap(async interests => {
-      if (this.readonly) return;
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.interests) {
         this.statement.reportedData.interests = interests;

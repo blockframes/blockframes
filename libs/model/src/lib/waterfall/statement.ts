@@ -1067,6 +1067,7 @@ export function getExpenseTypes(statement: Statement, waterfall: Waterfall) {
  * @param state 
  * @param incomes
  * @param _versionId
+ * @param showHidden show hidden expenses to allow edition even if set to zero
  * @returns 
  */
 export function getExpensesHistory(
@@ -1077,7 +1078,8 @@ export function getExpensesHistory(
   _rights: Right[],
   state: TitleState,
   incomes: Income[],
-  _versionId?: string
+  _versionId?: string,
+  showHidden = false
 ) {
   const declaredSources = skipSourcesWithAllHiddenIncomes(current, _declaredSources, incomes);
   const rights = getStatementRightsToDisplay(current, _rights).filter(right => getSources(state, right.id).some(s => declaredSources.find(ds => ds.id === s.id)));
@@ -1089,7 +1091,7 @@ export function getExpensesHistory(
     }
   }
 
-  const currentExpenses = current.expenseIds.map(id => expenses.find(e => e.id === id)).filter(e => current.status === 'reported' ? !e.version[_versionId || current.versionId]?.hidden : true);
+  const currentExpenses = current.expenseIds.map(id => expenses.find(e => e.id === id)).filter(e => (current.status === 'reported' && !showHidden) ? (!e.version[_versionId || current.versionId]?.hidden) : true);
   const indexOfCurrent = history.findIndex(s => s.id === current.id || s.id === current.duplicatedFrom);
   const previousStatements = history.slice(indexOfCurrent).filter(s => s.status === 'reported' && s.id !== current.id && (!s.reviewStatus || s.reviewStatus === 'accepted'));
   const previousExpenses = expenses.filter(e => previousStatements.find(previous => previous.expenseIds.includes(e.id) && !e.version[_versionId || previous.versionId]?.hidden));

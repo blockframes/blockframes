@@ -15,6 +15,7 @@ import {
   generatePayments,
   getAssociatedRights,
   getDefaultVersionId,
+  getDistributorExpensesDetails,
   getParentStatements,
   getRightsBreakdown,
   getSourcesBreakdown,
@@ -276,7 +277,13 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
 
       updatedStatement.reportedData.expenses = updatedStatement.expenseIds
         .map(id => expenses.find(e => e.id === id))
-        .filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true)
+        .filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true);
+
+      updatedStatement.reportedData.distributorExpenses = getDistributorExpensesDetails(
+        [updatedStatement],
+        updatedStatement.reportedData.expenses,
+        this.waterfall
+      );
 
       return updatedStatement;
     });
@@ -368,7 +375,13 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
 
       updatedStatement.reportedData.expenses = updatedStatement.expenseIds
         .map(id => expenses.find(e => e.id === id))
-        .filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true)
+        .filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true);
+
+      updatedStatement.reportedData.distributorExpenses = getDistributorExpensesDetails(
+        [updatedStatement],
+        updatedStatement.reportedData.expenses,
+        this.waterfall
+      );
 
       return updatedStatement;
     });

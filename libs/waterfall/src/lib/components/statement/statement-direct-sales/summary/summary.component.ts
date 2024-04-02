@@ -130,7 +130,7 @@ export class StatementDirectSalesSummaryComponent {
       }
     }),
     tap(async sourcesBreakdown => {
-      if (this.readonly) return;
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.sourcesBreakdown) {
         this.statement.reportedData.sourcesBreakdown = sourcesBreakdown;
@@ -178,7 +178,7 @@ export class StatementDirectSalesSummaryComponent {
       }
     }),
     tap(async rightsBreakdown => {
-      if (this.readonly) return;
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.rightsBreakdown) {
         this.statement.reportedData.rightsBreakdown = rightsBreakdown;
@@ -215,7 +215,7 @@ export class StatementDirectSalesSummaryComponent {
       return total;
     }),
     tap(async producerNetParticipation => {
-      if (this.readonly) return;
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.producerNetParticipation) {
         this.statement.reportedData.producerNetParticipation = producerNetParticipation;
@@ -235,7 +235,7 @@ export class StatementDirectSalesSummaryComponent {
       return getExpensesHistory(current, history, expenses, declaredSources, rights, simulation.waterfall.state, incomes);
     }),
     tap(async expensesHistory => {
-      if (this.readonly) return;
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.expenses) {
         this.statement.reportedData.expenses = expensesHistory;
@@ -252,7 +252,7 @@ export class StatementDirectSalesSummaryComponent {
       return getDistributorExpensesDetails([current], history, this.shell.waterfall);
     }),
     tap(async expensesDetails => {
-      if (this.readonly) return;
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
       if (this.statement.status === 'reported' && !reportedData.distributorExpenses) {
         this.statement.reportedData.distributorExpenses = expensesDetails;
