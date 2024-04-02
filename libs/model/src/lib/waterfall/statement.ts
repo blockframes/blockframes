@@ -124,15 +124,15 @@ export interface Statement {
   comment: string;
   rightOverrides: RightOverride[];
   reportedData: { // Final data of the statement once it is reported
-    sourcesBreakdown?: SourcesBreakdown[];
-    rightsBreakdown?: RightsBreakdown[];
-    groupsBreakdown?: GroupsBreakdown[];
-    details?: DetailsRow[];
+    sourcesBreakdown?: SourcesBreakdown[]; // For Distributor and Direct Sales statements.
+    rightsBreakdown?: RightsBreakdown[]; // For Distributor and Direct Sales statements.
+    groupsBreakdown?: GroupsBreakdown[]; // For outgoing statements 
+    details?: DetailsRow[]; // Rights details for outgoing statements
     expenses?: Expense[]; // Expenses history for distributor statements
     distributorExpenses?: DistributorExpenses[]; // Expenses details for distributor statements
     expensesPerDistributor?: Record<string, (Expense & { cap?: PricePerCurrency, editable: boolean })[]>; // Expenses history for outgoing statements
     distributorExpensesPerDistributor?: Record<string, DistributorExpenses[]>; // Expenses details for outgoing statements
-    interests?: InterestDetail[];
+    interests?: InterestDetail[]; // Interest details for outgoing statements 
     producerNetParticipation?: PricePerCurrency; // Producer's net participation (for direct sales statements only)
   },
   hash: {

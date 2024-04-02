@@ -78,7 +78,7 @@
         </div>
       {{/if}}
 
-      {{#if data.statement.reportedData.sourcesBreakdown}}
+      {{#if data.statement.reportedData.sourcesBreakdown}} <!-- For Distributor and Direct Sales statements. -->
         {{#data.statement.reportedData.sourcesBreakdown}}
           <div class="breakdown">
             {{#if (eq @index 0)}}
@@ -135,7 +135,7 @@
         {{/data.statement.reportedData.sourcesBreakdown}}
       {{/if}}
 
-      {{#if data.statement.reportedData.groupsBreakdown}}
+      {{#if data.statement.reportedData.groupsBreakdown}} <!-- For outgoing statements  -->
         {{#data.statement.reportedData.groupsBreakdown}}
           <div class="breakdown">
             {{#if (eq @index 0)}}
@@ -191,7 +191,7 @@
         {{/data.statement.reportedData.groupsBreakdown}}
       {{/if}}
 
-      {{#if data.statement.reportedData.details}}
+      {{#if data.statement.reportedData.details}} <!-- For outgoing statements  -->
         {{#data.statement.reportedData.details}}
           <div class="breakdown">
             {{#if (eq @index 0)}}
@@ -230,7 +230,7 @@
         {{/data.statement.reportedData.details}}
       {{/if}}
 
-      {{#if data.statement.reportedData.rightsBreakdown}}
+      {{#if data.statement.reportedData.rightsBreakdown}} <!-- For Distributor and Direct Sales statements. -->
         <div class="breakdown">
           {{#data.statement.reportedData.rightsBreakdown}}
             <div class="surface">
@@ -346,7 +346,68 @@
           </div>
         {{/if}}
 
-        {{#if data.statement.reportedData.interests}}
+        {{#if data.statement.reportedData.distributorExpensesPerDistributor}} <!-- Expenses details for outgoing statements -->
+          {{#each data.statement.reportedData.distributorExpensesPerDistributor}}
+            {{assign 'rightholderId' @key}}
+            {{#this}}
+              <div class="breakdown">
+                <div class="surface">
+                  <div class="header">
+                    <h3>{{rightholderName @root.rightholderId}}'s Expenses "{{this.name}}" Details</h3>
+                  </div>
+                  <table>
+                    <tr>
+                      <th>Previous</th>
+                      <th>Current</th>
+                      <th>Cumulated</th>
+                      <th>Capped</th>			
+                    </tr>
+                    {{#this.rows}}
+                      <tr>
+                        <td>{{pricePerCurrency previous}}</td>
+                        <td>{{pricePerCurrency current}}</td>
+                        <td>{{pricePerCurrency cumulated}}</td>
+                        <td>{{#if capped}} Yes {{else}} No {{/if}}</td>
+                      </tr>
+                    {{/this.rows}}
+                  </table>
+                </div>
+              </div>
+            {{/this}}
+          {{/each}}
+        {{/if}}
+
+        {{#if data.statement.reportedData.expensesPerDistributor}} <!-- Expenses history for outgoing statements -->
+          {{#each data.statement.reportedData.expensesPerDistributor}}
+            <div class="breakdown">
+              <div class="surface">
+                <div class="header">
+                  <h3>{{rightholderName @key}}'s Expenses History</h3>
+                </div>
+                <table>
+                  <tr>
+                    <th>Date</th>
+                    <th>Expenses name</th>
+                    <th>Type</th>
+                    <th>Amount</th>		
+                    <th>Capped</th>		
+                  </tr>
+                  {{#this}}
+                    <tr>
+                      <td>{{date date}}</td>
+                      <td>{{nature}}</td>
+                      <td>{{expenseType typeId contractId}}</td>
+                      <td>{{formatPair price currency}}</td>
+                      <td>{{#if capped}} Yes {{else}} No {{/if}}</td>
+                    </tr>
+                  {{/this}}
+                </table>
+              </div>
+            </div>
+          {{/each}}
+        {{/if}}
+
+        {{#if data.statement.reportedData.interests}} <!-- Interest details for outgoing statements  -->
           <div class="breakdown">
             <div class="header">
               <span>Interest Calculation</span>
@@ -469,7 +530,7 @@
           </div>
         {{/if}}
     
-        {{#if reportedData.sourcesBreakdown}}
+        {{#if reportedData.sourcesBreakdown}} <!-- For Distributor and Direct Sales statements. -->
           {{#reportedData.sourcesBreakdown}}
             <div class="breakdown">
               {{#if (eq @index 0)}}
@@ -527,7 +588,7 @@
         {{/if}}
 
         <div class="group">
-          {{#if reportedData.rightsBreakdown}}
+          {{#if reportedData.rightsBreakdown}} <!-- For Distributor and Direct Sales statements. -->
             <div class="breakdown">
               {{#reportedData.rightsBreakdown}}
                 <div class="surface">
