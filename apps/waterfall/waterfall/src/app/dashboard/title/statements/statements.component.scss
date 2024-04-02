@@ -23,31 +23,26 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    section {
-      display: flex;
-      gap: 24px;
-      align-items: center;
-      flex-grow: 2;
-      waterfall-rightholder-select {
-        width: 30%;
-      }
-      button, a {
-        mat-icon {
-          vertical-align: inherit;
-        }
-      }
-    }
-    div {
+  }
+
+  section {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    flex-grow: 2;
+    waterfall-rightholder-select {
       width: 30%;
-      text-align: right;
+    }
+    button, a {
+      mat-icon {
+        vertical-align: inherit;
+      }
     }
   }
 }
 
-mat-tab-group {
-  div {
-    text-align: right;
-  }
+div {
+  text-align: right;
 }
 
 section {

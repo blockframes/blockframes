@@ -100,7 +100,13 @@ export class WaterfallConditionsComponent implements OnInit, OnDestroy {
     this.selectedStep$.next(step);
   }
 
+  addStep() {
+    this.rightForm.controls.steps.value.push([]);
+    this.createStep.emit();
+  }
+
   removeStep(step: number) {
+    this.rightForm.controls.steps.value.splice(step, 1);
     this.deleteStep.emit(step);
   }
 }
