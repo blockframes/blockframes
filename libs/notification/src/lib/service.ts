@@ -535,7 +535,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const imgRef = this.getPoster(movie);
         let message = `Your statement has been declined by the ${toLabel('producer', 'rightholderRoles')}.`;
         if (notification.statementId) {
-          message = `Your <a href="/c/o/dashboard/title/${movie.id}/statement/${notification.statementId}" target="_blank">statement</a> for ${movie.title.international}'s Waterfall has been declined.`;
+          message = `Your <a href="/c/o/dashboard/title/${movie.id}/statement/${notification.statementId}/edit" target="_blank">statement</a> for ${movie.title.international}'s Waterfall has been declined.`;
         }
         return {
           ...notification,
@@ -543,7 +543,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           message,
           imgRef,
           placeholderUrl: 'empty_poster.svg',
-          url: `${applicationUrl[notification._meta.createdFrom]}/c/o/dashboard/title/${notification.docId}/statement/${notification.statementId}`,
+          url: `${applicationUrl[notification._meta.createdFrom]}/c/o/dashboard/title/${notification.docId}/statement/${notification.statementId}/edit`,
         };
       }
       case 'userRequestedStatementReview': {
