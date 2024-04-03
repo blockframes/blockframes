@@ -44,7 +44,7 @@ html {
 }
 
 .doc-title p {
-  font-size: 14px;
+  font-size: 18px;
   text-align: center;
 }
 
@@ -200,6 +200,10 @@ h1 {
   border-collapse: collapse;
 }
 
+.surface table.small-first-col th:first-of-type {
+  width: 40%;
+}
+
 .surface table td:first-of-type, .surface table th:first-of-type {
   border-left: solid 1px #d3d5dc;
 }
@@ -219,7 +223,7 @@ h1 {
   border-collapse: collapse;
   font-size: 13px;
   font-weight: 400;
-  padding: 16px;
+  padding: 12px;
 }
 
 .surface table tr.net td {
