@@ -980,14 +980,16 @@ async function sendRequestForStatementReviewEmail(recipient: User, notification:
   const statement = await getDocument<Statement>(`waterfall/${movie.id}/statements/${notification.statementId}`);
   const statementData = getStatementData(statement, waterfall);
   const urlToUse = applicationUrl[waterfallAppKey];
-  const link = `c/o/dashboard/title/${movie.id}/statement/${notification.statementId}`;
+  let link = '';
   let templateId = templateIds.statement.review.requested;
   switch (notification.type) {
     case 'requestForStatementReviewApproved':
       templateId = templateIds.statement.review.approved;
+      link = `c/o/dashboard/title/${movie.id}/statement/${notification.statementId}`;
       break;
     case 'requestForStatementReviewDeclined':
       templateId = templateIds.statement.review.declined;
+      link = `c/o/dashboard/title/${movie.id}/statement/${notification.statementId}/edit`;
       break;
   }
   const templateInvitation = requestForStatementReview(toUser, orgData, waterfallEmailData, statementData, link, urlToUse, templateId);

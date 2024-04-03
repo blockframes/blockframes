@@ -12,7 +12,7 @@ import { mainCurrency } from './action';
 import { ConditionWithTarget, getInvestmentValue, isConditionWithTarget } from './conditions';
 import { Expense, ExpenseType } from '../expense';
 import { InterestDetail } from './interest';
-import { add, differenceInMonths, isLastDayOfMonth, lastDayOfMonth } from 'date-fns';
+import { add, differenceInMonths, isLastDayOfMonth, lastDayOfMonth, sub } from 'date-fns';
 
 export interface Payment {
   id: string;
@@ -1102,7 +1102,7 @@ export function getExpensesHistory(
 export function getDistributorExpensesDetails(currents: Statement[], history: Expense[], waterfall: Waterfall): DistributorExpenses[] {
   const expenseTypes: ExpenseType[] = [];
   for (const current of currents) {
-    const currentExpenseTypes = getExpenseTypes(current, waterfall);
+    const currentExpenseTypes = getExpenseTypes(current, waterfall) || [];
     for (const expenseType of currentExpenseTypes) {
       if (!expenseTypes.find(et => et.id === expenseType.id)) expenseTypes.push(expenseType);
     }
@@ -1162,8 +1162,8 @@ function getMgRecoupment(right: Right, cumulatedRightPayment: RightPayment[], st
 
 export function initStatementDuration(date: Date, previousDuration?: Duration): Duration {
   const duration = createDuration({
-    from: add(date, { days: 1 }),
-    to: add(date, { days: 1, months: 6 }),
+    from: sub(date, { months: 6 }),
+    to: date,
   });
 
   // Set duration from previous statement date & periodicity

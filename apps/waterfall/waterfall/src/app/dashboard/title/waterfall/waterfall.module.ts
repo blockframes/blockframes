@@ -33,7 +33,7 @@ import { MatButtonModule } from '@angular/material/button';
     // Routing
     RouterModule.forChild([{
       path: '', 
-      canActivate: [WaterfallAdminGuard], // Temp #9703 - remove once we allow non-admin to view waterfall
+      canActivate: [WaterfallAdminGuard], // Temp #9706 - remove once we allow non-admin to view waterfall
       component: WaterfallComponent
     }]),
   ],
