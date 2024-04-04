@@ -18,7 +18,6 @@ import {
   isConditionGroup,
   getContractsWith,
   isDefaultVersion,
-  waterfallSources,
   WaterfallContract,
   getDefaultVersionId,
   WaterfallRightholder,
@@ -103,17 +102,18 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     }
 
     this.subscriptions.push(combineLatest([
-      this.shell.rights$,
+      this.shell.rightholderRights$,
+      this.shell.rightholderSources$,
       this.shell.waterfall$,
       this.shell.versionId$.pipe(tap(_ => this.unselect())),
       this.shell.statements$.pipe(map(statements => statements.filter(s => s.status === 'reported'))),
       this.shell.contracts$,
       this.shell.hiddenRightHolderIds$,
-    ]).subscribe(([rights, waterfall, versionId, reportedStatements, contracts, hiddenRightHolderIds]) => {
-      this.rights = rights; // TODO #9706 filtered rights if needed
+    ]).subscribe(([rights, sources, waterfall, versionId, reportedStatements, contracts, hiddenRightHolderIds]) => {
+      this.rights = rights;
       this.contracts = contracts;
       this.version = waterfall.versions.find(v => v.id === versionId);
-      this.sources = waterfallSources(waterfall, this.version?.id); // TODO #9706 filtered sources if needed
+      this.sources = sources;
       this.rightholders = waterfall.rightholders;
       this.rightholderNames$.next(this.rightholders.map(r => r.name));
       this.isDefaultVersion = isDefaultVersion(waterfall, versionId);
