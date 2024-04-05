@@ -73,7 +73,7 @@
 
     <mat-form-field appearance="outline" *ngIf="(form.controls.revenueTargetType.value === 'contracts.investment' || form.controls.revenueTargetType.value === 'expense') && form.controls.revenueTarget.value">
       <mat-label>Percentage</mat-label>
-      <input matInput type="number" min="0" max="100" [formControl]="form.controls.revenuePercentage" />
+      <input matInput type="number" min="0" [formControl]="form.controls.revenuePercentage" />
     </mat-form-field>
 
     <ng-container *ngIf="form.controls.revenueTargetType.value === 'contracts.investment' && 

@@ -16,6 +16,8 @@ import { rightholderName } from '../../../../pipes/rightholder-name.pipe';
 import { format } from 'date-fns';
 import { getUserDefaultDateFormat } from '@blockframes/utils/date-adapter';
 
+const toFixedPercentage = (percent: number) => (percent * 100).toLocaleString(undefined, { maximumFractionDigits: 4, minimumFractionDigits: 0 });
+
 function targetToString(target: TargetValue, waterfall?: Waterfall, contracts?: WaterfallContract[]) {
   if (typeof target === 'number') return `${target}€`;
 
@@ -25,15 +27,15 @@ function targetToString(target: TargetValue, waterfall?: Waterfall, contracts?: 
     case 'expense': {
       const expenseTypes = Object.values(waterfall?.expenseTypes || {}).flat();
       const expenseType = expenseTypes.find(e => e.id === id);
-      return `${percent * 100}% of ${expenseType?.name || id}'s expenses`;
+      return `${toFixedPercentage(percent)}% of ${expenseType?.name || id}'s expenses`;
 
     }
     case 'contracts.investment': {
       const contract = contracts?.find(c => c.id === id);
-      return `${percent * 100}% of contract ${contract?.name || id}'s investments`;
+      return `${toFixedPercentage(percent)}% of contract ${contract?.name || id}'s investments`;
     }
     default:
-      return `${percent * 100}% of ${targetIn} ${id}`;
+      return `${toFixedPercentage(percent)}% of ${targetIn} ${id}`;
   }
 
 }
@@ -175,7 +177,7 @@ export function conditionToString(condition?: Condition, waterfall?: Waterfall, 
     const { isComposite, operator, orgId, rate, percent, contractId } = condition.payload;
     const contract = contracts?.find(c => c.id === contractId);
     const contractName = contract?.name || contractId;
-    return `Org ${rightholderName(orgId, waterfall)}'s revenue is ${operatorToString(operator)} ${percent * 100}% of contract ${contractName}'s investments and ${isComposite ? 'composite' : ''} interest with a rate of ${rate * 100}%`;
+    return `Org ${rightholderName(orgId, waterfall)}'s revenue is ${operatorToString(operator)} ${toFixedPercentage(percent)}% of contract ${contractName}'s investments and ${isComposite ? 'composite' : ''} interest with a rate of ${toFixedPercentage(rate)}%`;
   }
 
   return 'Unknown condition';

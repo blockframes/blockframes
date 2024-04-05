@@ -94,7 +94,10 @@
           {{ getPayloadPair(to) }}
         </ng-template>
         <ng-template colRef="payload.percent" label="%" let-percent>
-          {{ percent ? percent * 100  : '--' }}
+          <ng-container *ngIf="percent else noPercent">
+            {{ percent | percent: '1.0-4' }}
+          </ng-container>
+          <ng-template #noPercent>--</ng-template>
         </ng-template>
       </bf-table>
     </ng-container>
