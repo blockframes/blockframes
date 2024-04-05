@@ -293,9 +293,14 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     }
 
     const rightId = this.selected$.getValue();
-
     const graph = this.nodes$.getValue();
-    updateParents(rightId, this.rightForm.controls.parents.value, graph, this.producer?.id);
+
+    try {
+      updateParents(rightId, this.rightForm.controls.parents.value, graph, this.producer?.id);
+    } catch (error) {
+      this.snackBar.open(error, 'close', { duration: 3000 });
+      return;
+    }
     const newGraph = fromGraph(graph, this.version);
     const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
     const right = changes.updated.rights.find(right => right.id === rightId);
@@ -404,7 +409,14 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       return;
     }
     const graph = this.nodes$.getValue();
-    createChild(id, graph, this.producer?.id);
+
+    try {
+      createChild(id, graph, this.producer?.id);
+    } catch (error) {
+      this.snackBar.open(error, 'close', { duration: 3000 });
+      return;
+    }
+
     const newGraph = fromGraph(graph, this.version);
     const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
 
