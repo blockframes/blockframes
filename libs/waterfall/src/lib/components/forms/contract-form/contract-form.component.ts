@@ -123,6 +123,7 @@ export class WaterfallContractFormComponent implements OnInit, OnChanges, OnDest
   }
 
   ngOnChanges() {
+    this.previousIds = { licensor: '', licensee: '' };
     const showTerms = rightholderGroups.withTerms.includes(this.type);
     this.showRightToogle = showTerms;
     this.toggleTermsControl.setValue(this.form.get('terms').value.length > 0);
@@ -132,13 +133,13 @@ export class WaterfallContractFormComponent implements OnInit, OnChanges, OnDest
       this.form.controls.expenseTypes.push(ExpenseTypeForm.factory({}, createExpenseTypeControl));
     };
 
-    const defaultLicensorRoles = this.getDefaultLicenseeRoles();
+    const defaultLicensorRoles = this.getDefaultLicensorRoles();
     const licensor = this.waterfall.rightholders.find(r => r.name === this.form.controls.licensorName.value);
     const licensorRole: RightholderRole[] = licensor?.roles ? [...defaultLicensorRoles, ...licensor.roles] : defaultLicensorRoles;
     this.form.controls.licensorRole.setValue(unique(licensorRole), { emitEvent: false });
     this.disabledValues.licensors = licensor?.roles ? [...licensor.roles, ...defaultLicensorRoles] : defaultLicensorRoles;
 
-    const defaultLicenseeRoles = this.getDefaultLicensorRoles();
+    const defaultLicenseeRoles = this.getDefaultLicenseeRoles();
     const licensee = this.waterfall.rightholders.find(r => r.name === this.form.controls.licenseeName.value);
     const licenseeRole: RightholderRole[] = licensee ? [...defaultLicenseeRoles, ...licensee.roles] : defaultLicenseeRoles;
     this.form.controls.licenseeRole.setValue(unique(licenseeRole), { emitEvent: false });
@@ -178,16 +179,16 @@ export class WaterfallContractFormComponent implements OnInit, OnChanges, OnDest
 
   private handleRoles(value: WaterfallContractFormValue) {
 
-    const defaultLicensorRoles = this.getDefaultLicenseeRoles();
+    const defaultLicensorRoles = this.getDefaultLicensorRoles();
     if (value.licensorName) {
       const licensor = this.waterfall.rightholders.find(r => r.name === value.licensorName);
       const licensorRoles = [...defaultLicensorRoles];
       if (licensor) {
         this.disabledValues.licensors = [...licensor.roles, ...defaultLicensorRoles];
-        if (this.previousIds.licensor && this.previousIds.licensor !== licensor.id) {
+        if (!this.previousIds.licensor || this.previousIds.licensor !== licensor.id) {
           licensorRoles.push(...licensor.roles);
           this.previousIds.licensor = licensor.id;
-        } else if (value.licenseeRole?.length > 0) {
+        } else if (value.licensorRole?.length > 0) {
           licensorRoles.push(...licensor.roles, ...value.licensorRole);
           this.previousIds.licensor = licensor.id;
         }
@@ -200,13 +201,13 @@ export class WaterfallContractFormComponent implements OnInit, OnChanges, OnDest
       this.form.controls.licensorRole.setValue(unique(licensorRoles), { emitEvent: false });
     }
 
-    const defaultLicenseeRoles = this.getDefaultLicensorRoles();
+    const defaultLicenseeRoles = this.getDefaultLicenseeRoles();
     if (value.licenseeName) {
       const licensee = this.waterfall.rightholders.find(r => r.name === value.licenseeName);
       const licenseeRoles = [...defaultLicenseeRoles];
       if (licensee) {
         this.disabledValues.licensees = [...licensee.roles, ...defaultLicenseeRoles];
-        if (this.previousIds.licensee && (this.previousIds.licensee !== licensee.id)) {
+        if (!this.previousIds.licensee || (this.previousIds.licensee !== licensee.id)) {
           licenseeRoles.push(...licensee.roles);
           this.previousIds.licensee = licensee.id;
         } else if (value.licenseeRole?.length > 0) {
@@ -225,23 +226,23 @@ export class WaterfallContractFormComponent implements OnInit, OnChanges, OnDest
   private getDefaultLicenseeRoles(): RightholderRole[] {
     switch (this.type) {
       case 'author':
-        return ['author'];
-      case 'agent':
-        return ['agent'];
-      default:
-        return [];
-    }
-  }
-
-  private getDefaultLicensorRoles(): RightholderRole[] {
-    switch (this.type) {
-      case 'author':
       case 'agent':
         return ['producer'];
       case 'other':
         return [];
       default:
         return [this.type];
+    }
+  }
+
+  private getDefaultLicensorRoles(): RightholderRole[] {
+    switch (this.type) {
+      case 'author':
+        return ['author'];
+      case 'agent':
+        return ['agent'];
+      default:
+        return [];
     }
   }
 }
