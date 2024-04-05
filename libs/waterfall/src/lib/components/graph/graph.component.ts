@@ -554,7 +554,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
             await this.waterfallService.updateSource(this.waterfallId, parentSource, { write });
           };
 
-          members[0].groupId = '';
+          members[0].groupId = group.groupId ?? '';
           members[0].nextIds = [...group.nextIds];
           const rightsToUpdate = [members[0]];
 

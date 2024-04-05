@@ -868,6 +868,7 @@ export function deleteStep(groupId: string, stepIndex: number, graph: Node[]) {
         parent.children = parent.children.filter(childId => childId !== vGroup.id);
         parent.children.push(lastMember.id);
       });
+      lastMember.children = vGroup.children;
       graph.splice(nodeIndex, 1);
       graph.push(lastMember);
     }
