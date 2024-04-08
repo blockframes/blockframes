@@ -35,6 +35,8 @@ import { groupIds } from '@blockframes/utils/emails/ids';
 import { sendMailFromTemplate } from './internals/email';
 import { CallableContext } from 'firebase-functions/lib/common/providers/https';
 
+const locale = 'en-us';
+
 export const statementToPdf = async (req: StatementPdfRequest, res: Response) => {
   res.set('Access-Control-Allow-Origin', '*');
 
@@ -132,16 +134,17 @@ async function generate(
   hb.registerHelper('eq', (a, b) => a === b);
   hb.registerHelper('isLast', (index, array) => index === array.length - 1);
   hb.registerHelper('pricePerCurrency', (price: PricePerCurrency) => {
-    if (price.USD) return `${toLabel('USD', 'movieCurrenciesSymbols')} ${(Math.round(price.USD * 100) / 100).toFixed(2)}`;
-    if (price.EUR) return `${toLabel('EUR', 'movieCurrenciesSymbols')} ${(Math.round(price.EUR * 100) / 100).toFixed(2)}`;
-    return '€ O';
+    if (!price.USD && !price.EUR) return '€ O';
+    const p = price.USD ? (Math.round(price.USD * 100) / 100) : (Math.round(price.EUR * 100) / 100);
+    return `${toLabel(price.USD ? 'USD' : 'EUR', 'movieCurrenciesSymbols')} ${p.toLocaleString(locale, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}`;
   });
   hb.registerHelper('formatPair', (price: number, currency: MovieCurrency) => {
-    return `${toLabel(currency, 'movieCurrenciesSymbols')} ${(Math.round(price * 100) / 100).toFixed(2)}`;
+    const p = (Math.round(price * 100) / 100);
+    return `${toLabel(currency, 'movieCurrenciesSymbols')} ${p.toLocaleString(locale, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}`;
   });
   hb.registerHelper('date', (date: Date) => {
     // @dev similar to toTimezone() function
-    const tzDate = new Date(date.toLocaleString('en-us', { timeZone: 'Europe/Paris' }));
+    const tzDate = new Date(date.toLocaleString(locale, { timeZone: 'Europe/Paris' }));
     return format(tzDate, 'dd/MM/yyyy');
   });
   hb.registerHelper('expenseType', (typeId: string, contractId: string) => {
@@ -197,7 +200,7 @@ async function generate(
   const css = fs.readFileSync(path.resolve(`assets/style/${templateName}.css`), 'utf8');
 
   // Front page
-  const pageTitle = `${toLabel(statement.type, 'statementType')} Statement #${statement.number}`;
+  const pageTitle = isProducerStatement(statement) ? 'Financial Statement' : `${toLabel(statement.type, 'statementType')} Statement #${statement.number}`;
   const appLogo = fs.readFileSync(path.resolve(`assets/logo/blockframes.svg`), 'utf8');
   const rightCorner = fs.readFileSync(path.resolve(`assets/images/corner-right.svg`), 'utf8');
   const leftCorner = fs.readFileSync(path.resolve(`assets/images/corner-left.svg`), 'utf8');

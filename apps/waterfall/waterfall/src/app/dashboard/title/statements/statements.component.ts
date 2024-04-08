@@ -127,6 +127,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
   public selected: StatementType;
   public isRefreshing$ = this.shell.isRefreshing$;
   public isStandaloneVersion$ = this.shell.versionId$.pipe(map(versionId => isStandaloneVersion(this.shell.waterfall, versionId)));
+  public canBypassRules = this.shell.canBypassRules;
 
   private contracts: WaterfallContract[] = [];
   private statements: Statement[] = [];
@@ -328,6 +329,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
   }
 
   public canCreateStatement(type: StatementType, contracts: ContractAndStatements[] = this.rightholderContracts, rightholderId?: string) {
+    if (this.readonly) return false;
     const rightholder = rightholderId ? this.shell.waterfall.rightholders.find(r => r.id === rightholderId) : this.shell.currentRightholder;
     return canCreateStatement(type, rightholder, this.producer, contracts, this.shell.canBypassRules);
   }

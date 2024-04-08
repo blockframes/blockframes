@@ -30,7 +30,7 @@
           [control]="rightholderControl">
           <mat-label>{{ selected | toLabel: 'statementParty'}}</mat-label>
         </waterfall-rightholder-select>
-        <ng-container *ngIf="selected !== 'directSales'">
+        <ng-container *ngIf="selected !== 'directSales' && canBypassRules"> <!-- TODO #9553 update when non-admin can see documents-->
           <a *ngIf="rightholderContracts.length === 1 && rightholderContracts[0].id" mat-icon-button target="_blank" [routerLink]="['..', 'document', rightholderContracts[0].id]">
             <mat-icon svgIcon="contract" matTooltip="See Contract"></mat-icon>
           </a>
