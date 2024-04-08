@@ -38,7 +38,19 @@ import { WaterfallService } from '../../waterfall.service';
 import { createRightForm, setRightFormValue } from '../../form/right.form';
 import { createSourceForm, setSourceFormValue } from '../../form/source.form';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
-import { Arrow, Node, computeDiff, createChild, createSibling, createStep, deleteStep, fromGraph, toGraph, updateParents } from './layout';
+import {
+  Arrow,
+  HorizontalNode,
+  Node,
+  computeDiff,
+  createChild,
+  createSibling,
+  createStep,
+  deleteStep,
+  fromGraph,
+  toGraph,
+  updateParents
+} from './layout';
 
 @Component({
   selector: 'waterfall-graph',
@@ -57,6 +69,21 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   public selected$ = new BehaviorSubject<string>('');
   public isSourceSelected = false;
   public nodes$ = new BehaviorSubject<Node[]>([]);
+  public availableNodes$ = combineLatest([this.nodes$, this.selected$]).pipe(
+    map(([nodes, selected]) => {
+      const isGroupOfSelected = (node: HorizontalNode) => node.members.find(m => m.id === selected || (m.type === 'vertical' && m.members.find(v => v.id === selected)));
+      const isSelectedHorizontalGroup = (node: Node) => node.type === 'horizontal' && isGroupOfSelected(node);
+
+      const selectedNode = nodes.find(node => node.id === selected); // Directly clicked node
+      const currenthGroup = nodes.find(isSelectedHorizontalGroup); // Horizontal Group of the clicked node
+      const current = selectedNode || currenthGroup;
+      return nodes.filter(node =>
+        node.id !== selected && // removes current node
+        !(isSelectedHorizontalGroup(node)) &&  // removes current node group
+        !(current && current.children.includes(node.id)) // removes direct children of the current node
+      );
+    })
+  );
   public arrows$ = new BehaviorSubject<Arrow[]>([]);
   public rightForm = createRightForm();
   public sourceForm = createSourceForm();
@@ -266,9 +293,14 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     }
 
     const rightId = this.selected$.getValue();
-
     const graph = this.nodes$.getValue();
-    updateParents(rightId, this.rightForm.controls.parents.value, graph, this.producer?.id);
+
+    try {
+      updateParents(rightId, this.rightForm.controls.parents.value, graph, this.producer?.id);
+    } catch (error) {
+      this.snackBar.open(error, 'close', { duration: 3000 });
+      return;
+    }
     const newGraph = fromGraph(graph, this.version);
     const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
     const right = changes.updated.rights.find(right => right.id === rightId);
@@ -377,7 +409,14 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       return;
     }
     const graph = this.nodes$.getValue();
-    createChild(id, graph, this.producer?.id);
+
+    try {
+      createChild(id, graph, this.producer?.id);
+    } catch (error) {
+      this.snackBar.open(error, 'close', { duration: 3000 });
+      return;
+    }
+
     const newGraph = fromGraph(graph, this.version);
     const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
 
@@ -515,7 +554,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
             await this.waterfallService.updateSource(this.waterfallId, parentSource, { write });
           };
 
-          members[0].groupId = '';
+          members[0].groupId = group.groupId ?? '';
           members[0].nextIds = [...group.nextIds];
           const rightsToUpdate = [members[0]];
 

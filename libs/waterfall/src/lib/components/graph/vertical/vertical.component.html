@@ -30,7 +30,7 @@
     <button mat-mini-fab color="primary" class="right" matTooltip="Add new Receipt Share" (click)="handleAddSibling($event)">
       <mat-icon svgIcon="add"></mat-icon>
     </button>
-    <button mat-mini-fab color="primary" class="bottom" matTooltip="Add new Receipt Share" (click)="handleAddChild($event)">
+    <button *ngIf="vertical | canAddChild : group" mat-mini-fab color="primary" class="bottom" matTooltip="Add new Receipt Share" (click)="handleAddChild($event)">
       <mat-icon svgIcon="add"></mat-icon>
     </button>
   </ng-container>

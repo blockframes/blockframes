@@ -29,7 +29,7 @@
         <strong>Calculated Turnover:</strong> {{ right.turnover.calculated | currency:currency }}<br>
         <strong>Actual Revenu:</strong> {{ right.revenu.actual | currency:currency }}<br>
         <strong>Actual Turnover:</strong> {{ right.turnover.actual | currency:currency }}<br>
-        <strong>Percent:</strong> {{ right.percent | percent: '1.0-2' }}<br>
+        <strong>Percent:</strong> {{ right.percent | percent: '1.0-4' }}<br>
       </p>
     </ng-container>
     <ng-container *ngIf="transfer">
@@ -61,7 +61,7 @@
         <strong>Calculated Turnover:</strong> {{ verticalGroup.turnover.calculated | currency:currency }}<br>
         <strong>Actual Revenu:</strong> {{ verticalGroup.revenu.actual | currency:currency }}<br>
         <strong>Actual Turnover:</strong> {{ verticalGroup.turnover.actual | currency:currency }}<br>
-        <strong>Percent:</strong> {{ verticalGroup.percent | percent: '1.0-2' }}<br>
+        <strong>Percent:</strong> {{ verticalGroup.percent | percent: '1.0-4' }}<br>
       </p>
     </ng-container>
     <ng-container *ngIf="horizontalGroup">
@@ -78,7 +78,7 @@
         <strong>Calculated Turnover:</strong> {{ horizontalGroup.turnover.calculated | currency:currency }}<br>
         <strong>Actual Revenu:</strong> {{ horizontalGroup.revenu.actual | currency:currency }}<br>
         <strong>Actual Turnover:</strong> {{ horizontalGroup.turnover.actual | currency:currency }}<br>
-        <strong>Percent:</strong> {{ horizontalGroup.percent | percent: '1.0-2' }}<br>
+        <strong>Percent:</strong> {{ horizontalGroup.percent | percent: '1.0-4' }}<br>
       </p>
     </ng-container>
   </aside>

@@ -550,21 +550,57 @@ export function updateParents(nodeId: string, newParentIds: string[], graph: Nod
     oldParent.children = oldParent.children.filter(childId => childId !== nodeId);
   });
 
-  // create new groups if needed
-  const siblings = graph.filter(node => {
-    if (node.type === 'source') return false;
+  const haveSameParents = (node: Node) => {
     const parentIds = parentIndex[node.id] ?? [];
-    if (parentIds.length === 0) return false;
-    return parentIds.every(parentId => newParentIds.includes(parentId))
-      && newParentIds.every(parentId => parentIds.includes(parentId))
-      && node.id !== nodeId
-      ;
-  }) as (RightNode | VerticalNode)[];
+    const checkA = parentIds.every(parentId => newParentIds.includes(parentId));
+    const checkB = newParentIds.every(parentId => parentIds.includes(parentId));
+    return checkA && checkB;
+  }
 
-  if (siblings.length > 0) { // we need to group
+  const haveSameChildren = (node: Node) => {
+    const currentChilds = current.children;
+    const nodeChilds = node.children;
+    const checkA = currentChilds.every(childId => nodeChilds.includes(childId));
+    const checkB = nodeChilds.every(childId => currentChilds.includes(childId));
+    return checkA && checkB;
+  }
 
-    // remove siblings from their parents' children list, and remove siblings from the graph
-    siblings.forEach(sibling => {
+  const siblings = graph
+    .filter(node => node.id !== nodeId) // exclude current node
+    .filter(node => node.type !== 'source') // exclude sources
+    .filter(node => parentIndex[node.id]?.length > 0) // exclude nodes without parents
+    .filter(haveSameParents) // Must have the same parents
+    .filter(haveSameChildren); // Must have the same children
+
+  if (siblings.length > 1) throw new Error('Multiple nodes with the same parents');
+
+  if (siblings.length) {
+    const sibling = siblings[0];
+    if (sibling.type === 'horizontal') {
+
+      if (current.type === 'horizontal') {
+        sibling.children = []; // groups will be merged so we keep only one children list
+        graph.splice(graph.findIndex(n => n.id === sibling.id), 1); // remove one of the groups from graph
+        // merge children of the two groups
+        current.members.push(...sibling.members);
+        current.children = current.children.filter(childId => childId !== sibling.id); // Prevent loops
+
+        // replace sibling with current in parents' children list
+        const parentIds = parentIndex[sibling.id] ?? [];
+        parentIds.forEach(parentId => {
+          const parent = graph.find(node => node.id === parentId);
+          if (!parent) return;
+          parent.children = parent.children.filter(childId => childId !== sibling.id);
+          parent.children.push(current.id);
+        });
+      } else {
+        current.children = []; // node will be grouped so it has no children anymore
+        graph.splice(graph.findIndex(n => n.id === nodeId), 1); // remove node from the graph
+        // add current node to existing group
+        sibling.members.push(current as RightNode | VerticalNode);
+      }
+    } else { // we need to group
+      // remove sibling from its parents' children list, and remove sibling from the graph
       const parentIds = parentIndex[sibling.id] ?? [];
       parentIds.forEach(parentId => {
         const parent = graph.find(node => node.id === parentId);
@@ -572,49 +608,43 @@ export function updateParents(nodeId: string, newParentIds: string[], graph: Nod
         parent.children = parent.children.filter(childId => childId !== sibling.id);
       });
       graph.splice(graph.findIndex(node => node.id === sibling.id), 1);
-    });
 
-    // collect all children ids of the group
-    const childrenIds = new Set<string>();
-    siblings.forEach(sibling => {
+      // collect all children ids of the group
+      const childrenIds = new Set<string>();
       sibling.children.forEach(childId => childrenIds.add(childId));
-    });
-    current.children.forEach(childId => childrenIds.add(childId));
+      current.children.forEach(childId => childrenIds.add(childId));
 
-    // member of a group don't have any children
-    siblings.forEach(sibling => {
+      // member of a group don't have any children
       sibling.children = [];
-    });
 
-    if (current.type === 'horizontal') { // node is already a group, move siblings to it
-      current.members.push(...siblings);
-      current.children = [...childrenIds];
-      return;
+      if (current.type === 'horizontal') { // node is already a group, move sibling to it
+        current.members.push(sibling as RightNode | VerticalNode);
+        current.children = [...childrenIds];
+        return;
+      }
+
+      current.children = []; // node will be grouped so it has no children anymore
+      graph.splice(graph.findIndex(n => n.id === nodeId), 1); // remove node from the graph
+
+      // create a new group and add it to the graph
+      const group = createHorizontalNode({
+        id: createNodeId('z-group'),
+        name: 'New group',
+        width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
+        children: [...childrenIds],
+        members: [sibling as RightNode | VerticalNode, current as RightNode | VerticalNode],
+        blameId: producerId
+      });
+      graph.push(group);
+
+      // add the new group to its new parents' children list
+      newParentIds.forEach(newParentId => {
+        const newParent = graph.find(node => node.id === newParentId);
+        if (!newParent) return;
+        if (newParent.type === 'source') newParent.children = [group.id];
+        else newParent.children.push(group.id);
+      });
     }
-
-    current.children = []; // node will be grouped so it has no children anymore
-    graph.splice(graph.findIndex(n => n.id === nodeId), 1); // remove node from the graph
-
-    // create a new group and add it to the graph
-    const group = createHorizontalNode({
-      id: createNodeId('z-group'),
-      name: 'New group',
-      width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
-      children: [...childrenIds],
-      members: [...siblings, current as RightNode | VerticalNode],
-      blameId: producerId
-    });
-    graph.push(group);
-
-    // add the new group to its new parents' children list
-    newParentIds.forEach(newParentId => {
-      const newParent = graph.find(node => node.id === newParentId);
-      if (!newParent) return;
-      if (newParent.type === 'source') newParent.children = [group.id];
-      else newParent.children.push(group.id);
-    });
-    return;
-
   } else {
     // add current node to its new parents' children list
     newParentIds.forEach(newParentId => {
@@ -697,15 +727,16 @@ export function createChild(parentId: string, graph: Node[], producerId: string)
     graph.push(right);
     return;
 
-  } else { // create a group and a new right and move the children to the group
+  } else {
+    const siblings = parent.children.map(childId => graph.find(node => node.id === childId));
 
-    const children = new Set<string>();
-    const siblings = parent.children.map(childId => {
-      const sibling = graph.find(node => node.id === childId);
-      sibling.children.forEach(childId => children.add(childId));
-      sibling.children = []; // siblings will be grouped so they have no children anymore
-      return sibling as RightNode | VerticalNode;
-    });
+    /**
+     * @see pipe canAddChild
+     * libs/waterfall/src/lib/pipes/can-add-child.pipe.ts
+     */
+    if (siblings.length > 1) throw new Error('Cannot add child to a node that already have many children.');
+
+    const sibling = siblings[0];
 
     // create a new right
     const right = createRightNode({
@@ -713,20 +744,29 @@ export function createChild(parentId: string, graph: Node[], producerId: string)
       name: 'New right',
     });
 
-    // create a new group with the new right and its siblings as members
-    // the children of this new group is the whole children of the siblings
-    const group = createHorizontalNode({
-      id: createNodeId('z-group'),
-      name: 'New group',
-      width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
-      children: [...children],
-      members: [...siblings, right],
-      blameId: producerId,
-    });
+    if (sibling.type === 'horizontal') { // add new right to existing group
+      // add new right to existing group
+      sibling.members.push(right);
+    } else { // create a group and a new right and move the children to the group
+      const children = new Set<string>();
+      sibling.children.forEach(childId => children.add(childId));
+      sibling.children = []; // sibling will be grouped so it does not have children anymore
 
-    parent.children = [group.id];
-    graph.push(group);
-    return;
+      // create a new group with the new right and sibling as members
+      // the children of this new group is the whole children of the sibling
+      const group = createHorizontalNode({
+        id: createNodeId('z-group'),
+        name: 'New group',
+        width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
+        children: [...children],
+        members: [sibling as RightNode | VerticalNode, right],
+        blameId: producerId,
+      });
+
+      parent.children = [group.id];
+      graph.push(group);
+      return;
+    }
   }
 }
 
@@ -828,6 +868,7 @@ export function deleteStep(groupId: string, stepIndex: number, graph: Node[]) {
         parent.children = parent.children.filter(childId => childId !== vGroup.id);
         parent.children.push(lastMember.id);
       });
+      lastMember.children = vGroup.children;
       graph.splice(nodeIndex, 1);
       graph.push(lastMember);
     }

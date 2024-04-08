@@ -24,6 +24,8 @@ import {
   numberOperator
 } from '@blockframes/model';
 
+const toFixedPercentage = (percent: number) => Math.round((percent * 100) * 10000) / 10000;
+
 function createConditionFormControl() {
   return {
     conditionType: new FormControl<'revenue' | 'sales' | 'event' | ''>(''), // Revenue Earned, Sales Specificity, Event
@@ -179,7 +181,7 @@ export function setConditionForm(form: ConditionForm, condition?: Partial<Condit
       form.controls.revenueOwner.setValue(condition.payload.orgId ?? '');
       form.controls.revenueType.setValue('Revenu');
       form.controls.revenueOperator.setValue(condition.payload.operator ?? '');
-      form.controls.interestRate.setValue(condition.payload.rate * 100 ?? 0);
+      form.controls.interestRate.setValue(toFixedPercentage(condition.payload.rate ?? 0));
       form.controls.interestComposite.setValue(condition.payload.isComposite ?? false);
       setConditionTarget(form, {
         id: condition.payload.contractId,
@@ -203,7 +205,7 @@ function setConditionTarget(form: ConditionForm, target?: TargetValue) {
     form.controls.revenueAmount.setValue(target as number ?? 0);
   } else {
     form.controls.revenueTarget.setValue(target.id);
-    form.controls.revenuePercentage.setValue(target.percent * 100);
+    form.controls.revenuePercentage.setValue(toFixedPercentage(target.percent));
     form.controls.revenueTargetType.setValue(target.in);
   }
 }
