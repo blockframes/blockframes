@@ -40,7 +40,7 @@ import { MatIconModule } from '@angular/material/icon';
     // Routing
     RouterModule.forChild([{
       path: '',
-      canActivate: [WaterfallAdminGuard], // Temp #9703 - remove once we allow non-admin to view documents
+      canActivate: [WaterfallAdminGuard], // Temp #9553 - remove once we allow non-admin to view documents
       component: DocumentsComponent
     }]),
   ],

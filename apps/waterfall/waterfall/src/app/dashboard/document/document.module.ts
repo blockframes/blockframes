@@ -22,7 +22,7 @@ const routes: Routes = [{
     },
     {
       path: ':documentId',
-      canActivate: [DocumentActiveGuard, WaterfallAdminGuard], // Temp #9703 - remove WaterfallAdminGuard once we allow non-admin to view documents
+      canActivate: [DocumentActiveGuard, WaterfallAdminGuard], // Temp #9553 - remove WaterfallAdminGuard once we allow non-admin to view documents
       children: [
         {
           path: '',
