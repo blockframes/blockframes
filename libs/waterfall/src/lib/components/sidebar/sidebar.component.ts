@@ -29,22 +29,26 @@ export class WaterfallSidebarComponent implements OnInit, OnDestroy {
   public hiddenRightHolderControl = new FormControl<string[]>([]);
   public highlightedSourceControl = new FormControl<string[]>([]);
   public rightHolderFilterControl = new FormControl<RightholderRole[]>([]);
-  public roles$ = this.shell.rightholders$.pipe(map(rightholders => unique(rightholders.map(r => r.roles).flat())));
   public filteredRightHolders$ = new BehaviorSubject<(OrgState & { role: RightholderRole[], name: string })[]>([]);
   public statementYears$ = new BehaviorSubject<number[]>([]);
   public groupedStatements$ = new BehaviorSubject<StatementEnhanced>({});
+  public rightholders$ = combineLatest([this.shell.rightholderRights$, this.shell.rightholders$]).pipe(
+    map(([rights, rightholders]) => rightholders.filter(r => rights.some(right => right.rightholderId === r.id)))
+  );
+  public roles$ = this.rightholders$.pipe(map(rightholders => unique(rightholders.map(r => r.roles).flat())));
+  public sources$ = this.shell.rightholderSources$;
 
   private subs: Subscription[] = [];
 
   constructor(
-    public shell: DashboardWaterfallShellComponent,
+    private shell: DashboardWaterfallShellComponent,
   ) { }
 
   ngOnInit() {
     this.subs.push(this.revenueModeControl.valueChanges.pipe(startWith(this.revenueModeControl.value)).subscribe(mode => {
       this.shell.revenueMode$.next(mode);
     }));
-    const statements$ = this.shell.statements$.pipe(
+    const statements$ = this.shell.rightholderStatements$.pipe(
       map(statements => statements.filter(s => s.status === 'reported' && (!s.reviewStatus || s.reviewStatus === 'accepted')))
     );
     this.subs.push(statements$.subscribe(statements => {
@@ -88,7 +92,7 @@ export class WaterfallSidebarComponent implements OnInit, OnDestroy {
       this.shell.state$,
       this.rightHolderFilterControl.valueChanges.pipe(startWith([])),
       this.shell.revenueMode$,
-      this.shell.rightholders$
+      this.rightholders$
     ]).subscribe(([state, rightHolderFilter, revenueMode, rightholders]) => {
       const filtered = Object.values(state.waterfall.state.orgs)
         .filter(org => rightholders.some(r => r.id === org.id))

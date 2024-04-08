@@ -131,6 +131,81 @@ export function getChilds(rightId: string, rights: Right[]): Right[] {
   return uniqueChilds.filter(c => !!c)
 }
 
+/**
+ * Get rights to display on graph for a rightholder that is not admin:
+ * Includes all rights that belongs to the rightholder and their parents includind group childs.
+ * Does not include root rights of a an horizontal group that does not belong to the rightholder.
+ * @param rightholderId 
+ * @param _rights 
+ * @returns 
+ */
+export function getRightsToDisplay(rightholderId: string, _rights: Right[]): Right[] {
+  const rights = _rights.filter(r => r.rightholderId === rightholderId);
+  const rightsToDisplay: Right[] = [];
+  for (const right of rights) {
+    const parents = getParents(right.id, _rights);
+    if (right.groupId) {
+      const group = _rights.find(r => r.id === right.groupId);
+      parents.push(group);
+      const childs = _rights.filter(r => r.groupId === group.id && r.rightholderId === right.rightholderId);
+      parents.push(...childs);
+
+      if (group.groupId) {
+        const subGroup = _rights.find(r => r.id === group.groupId);
+        parents.push(subGroup);
+        const subChilds = _rights.filter(r => r.groupId === subGroup.id && r.rightholderId === right.rightholderId);
+        parents.push(...subChilds);
+      }
+    } else {
+      rightsToDisplay.push(right);
+    }
+
+    for (const parent of parents) {
+      if (!rightsToDisplay.find(r => r.id === parent.id)) {
+        rightsToDisplay.push(parent);
+      }
+    }
+  }
+
+  return rightsToDisplay;
+}
+
+function getParents(rightId: string, rights: Right[]): Right[] {
+  const right = rights.find(r => r.id === rightId);
+  if (!right) return [];
+  let parents: Right[] = [];
+  if (right.groupId) {
+    const group = rights.find(r => r.id === right.groupId);
+    if (group.groupId) {
+      const subGroup = rights.find(r => r.id === group.groupId);
+      parents = _getParents(subGroup, rights);
+    } else {
+      parents = _getParents(group, rights);
+    }
+  } else {
+    parents = _getParents(right, rights);
+  }
+
+  const parentIds = Array.from(new Set(parents.map(p => p.id)));
+  return parentIds.map(id => parents.find(p => p.id === id));
+}
+
+function _getParents(right: Right, rights: Right[]): Right[] {
+  if (!right) return [];
+  const parents = right.nextIds.map(id => rights.find(r => r.id === id));
+  if (!parents.length) return [];
+  const parentGroups = parents.filter(p => isGroup(p));
+  for (const group of parentGroups) {
+    const childs = rights.filter(r => r.groupId === group.id);
+    parents.push(...childs);
+    const subGroups = childs.filter(c => isGroup(c));
+    for (const subGroup of subGroups) {
+      parents.push(...rights.filter(r => r.groupId === subGroup.id));
+    }
+  }
+  return parents.concat(parents.map(p => _getParents(p, rights)).flat());
+}
+
 function isGroup(right?: Right): boolean {
   if (!right) return false;
   return ['horizontal', 'vertical'].includes(right.type);
