@@ -142,7 +142,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>Parent Name(s)</mat-label>
                 <mat-select multiple [formControl]="rightForm.get('parents')">
-                  <mat-option *ngFor="let node of (nodes$ | async)" [value]="node.id">{{node.name}}</mat-option>
+                  <mat-option *ngFor="let node of (availableNodes$ | async)" [value]="node.id">{{node.name}}</mat-option>
                 </mat-select>
                 <mat-hint>Choose parent revenue elements from which this Receipt Share draw funds. You can add as many parents as you want.</mat-hint>
               </mat-form-field>

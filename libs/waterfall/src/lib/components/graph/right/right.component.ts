@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, HostBinding, HostList
 import { combineLatest, map, startWith } from 'rxjs';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
-import { RightNode } from '../layout';
+import { HorizontalNode, RightNode, VerticalNode } from '../layout';
 
 @Component({
   selector: 'waterfall-graph-right',
@@ -14,6 +14,7 @@ import { RightNode } from '../layout';
 export class WaterfallGraphRightComponent implements OnChanges {
 
   @Input() public right: RightNode;
+  @Input() public group: HorizontalNode | VerticalNode;
   @Input() public selected: boolean;
   @Input() public canUpdate = false;
   @Input() @boolean public hideAmount: boolean;
