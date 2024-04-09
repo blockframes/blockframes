@@ -39,6 +39,7 @@ import {
   WaterfallBudget,
   isFinancingPlan,
   WaterfallFinancingPlan,
+  getRightsToDisplay,
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { filter, map, pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
@@ -298,6 +299,29 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
+
+  /**
+   * Observable of the rights that current rightholder is allowed to see
+   */
+  public rightholderRights$ = combineLatest([this.canBypassRules$, this.currentRightholder$, this.rights$]).pipe(
+    map(([canBypassRules, rightholder, rights]) => {
+      if (canBypassRules) return rights;
+      return getRightsToDisplay(rightholder.id, rights);
+    }),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  /**
+   * Observable of the sources that current rightholder is allowed to see
+   */
+  public rightholderSources$ = combineLatest([this.canBypassRules$, this.rightholderRights$, this.sources$]).pipe(
+    map(([canBypassRules, rights, sources]) => {
+      if (canBypassRules) return sources;
+      return sources.filter(s => rights.find(r => r.id === s.destinationId));
+    }),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
   public lockedVersionId: string; // VersionId that is locked for the current rightholder
 
   private _simulation$ = new BehaviorSubject<WaterfallState>(undefined);

@@ -29,7 +29,7 @@ export class TitleViewComponent {
     {
       path: 'waterfall',
       label: 'Waterfall',
-      requireKeys: ['waterfall-ready', 'admin'] // Temp #9706 - remove admin once we allow non-admin to view waterfall
+      requireKeys: ['waterfall-ready']
     },
     {
       path: 'right-holders',

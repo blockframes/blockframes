@@ -10,6 +10,7 @@ import { NumberPipeModule } from '@blockframes/utils/pipes';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { WaterfallGraphLevelModule } from '../level/level.module';
 import { WaterfallGraphRightModule } from '../right/right.module';
+import { CanAddChildPipeModule } from '../../../pipes/can-add-child.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -25,6 +26,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     PricePerCurrencyModule,
     WaterfallGraphRightModule,
     WaterfallGraphLevelModule,
+    CanAddChildPipeModule,
 
     MatIconModule,
     MatButtonModule,

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { combineLatest, map, startWith } from 'rxjs';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
-import { VerticalNode } from '../layout';
+import { HorizontalNode, VerticalNode } from '../layout';
 
 @Component({
   selector: 'waterfall-graph-vertical',
@@ -12,6 +12,7 @@ import { VerticalNode } from '../layout';
 export class WaterfallGraphVerticalComponent implements OnInit {
 
   @Input() public vertical: VerticalNode;
+  @Input() public group: HorizontalNode;
   @Input() public selected: '' | '*' | string;
   @Input() public canUpdate = false;
 
