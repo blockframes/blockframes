@@ -27,7 +27,7 @@ function targetToString(target: TargetValue, waterfall?: Waterfall, contracts?: 
     case 'expense': {
       const expenseTypes = Object.values(waterfall?.expenseTypes || {}).flat();
       const expenseType = expenseTypes.find(e => e.id === id);
-      return `${toFixedPercentage(percent)}% of ${expenseType?.name || id}'s expenses`;
+      return `${expenseType?.name || id}'s expenses`; // For expense target, percent is always 100
 
     }
     case 'contracts.investment': {
