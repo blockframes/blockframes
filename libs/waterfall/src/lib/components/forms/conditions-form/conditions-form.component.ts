@@ -1,6 +1,6 @@
 
 import { BehaviorSubject, Subscription, combineLatest, startWith } from 'rxjs';
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Pipe, PipeTransform } from '@angular/core';
 
 import {
   Right,
@@ -15,6 +15,7 @@ import {
   ExpenseType,
   createExpenseType,
   Waterfall,
+  PricePerCurrency,
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 
@@ -48,6 +49,7 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
   public expenseTypes: ExpenseType[] = [];
   public waterfall$ = this.shell.waterfall$;
   public dateInputFormat = dateInputFormat;
+  public versionId$ = this.shell.versionId$;
 
   private rights: Right[] = [];
   private groups: Right[] = [];
@@ -164,5 +166,16 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
         }
       })
     });
+  }
+}
+
+@Pipe({ name: 'expenseTypeCap' })
+export class ExpenseTypeCapPipe implements PipeTransform {
+  transform(typeId: string, expenseTypes: ExpenseType[], versionId: string): PricePerCurrency {
+    if (!typeId) return undefined;
+    const expenseType = expenseTypes.find(type => type.id === typeId);
+    if (!expenseType) return undefined;
+    const cap = versionId && expenseType.cap.version[versionId] ? expenseType.cap.version[versionId] : expenseType.cap.default;
+    return cap ? { [expenseType.currency]: cap } : undefined;
   }
 }
