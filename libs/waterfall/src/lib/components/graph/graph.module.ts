@@ -19,7 +19,7 @@ import { WaterfallGraphLabelModule } from './label/label.module';
 import { WaterfallPoolListModule } from './pool-list/pool-list.module';
 import { WaterfallRightListModule } from './right-list/right-list.module';
 import { WaterfallConditionsModule } from './conditions/conditions.module';
-import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.module';
+import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -48,7 +48,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     WaterfallRightListModule,
     WaterfallGraphLabelModule,
     WaterfallConditionsModule,
-    ConfirmInputModule,
+    ConfirmModule,
     ImageModule,
 
     MatIconModule,

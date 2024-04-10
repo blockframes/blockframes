@@ -32,7 +32,7 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 import { GraphService } from '@blockframes/ui/graph/graph.service';
 import { CardModalComponent } from '@blockframes/ui/card-modal/card-modal.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
+import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { RightService } from '../../right.service';
 import { WaterfallService } from '../../waterfall.service';
 import { createRightForm, setRightFormValue } from '../../form/right.form';
@@ -517,13 +517,14 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     const id = rightId ?? this.selected$.getValue();
     const right = this.rights.find(right => right.id === id);
 
-    this.dialog.open(ConfirmInputComponent, {
+    const subject = right ? 'Receipt Share' : 'Source';
+
+    this.dialog.open(ConfirmComponent, {
       data: createModalData({
-        title: `Delete ${right ? 'Receipt Shares' : 'Source'}`,
-        subtitle: `Pay attention, if you delete the following ${right ? 'Receipt Shares' : 'Source'}, it will have an impact on conditions and the whole Waterfall.`,
-        text: `Please type "DELETE" to confirm.`,
-        confirmationWord: 'DELETE',
-        confirmButtonText: `Delete ${right ? 'Receipt Shares' : 'Source'}`,
+        title: `Are you sure to delete this ${subject}`,
+        question: `Pay attention, if you delete the following ${subject}, it will have an impact on conditions and the whole Waterfall.`,
+        confirm: `Yes, delete ${subject}`,
+        cancel: 'No, come back to Waterfall Builder',
         onConfirm: () => this.handleDeletion(id),
       })
     });
