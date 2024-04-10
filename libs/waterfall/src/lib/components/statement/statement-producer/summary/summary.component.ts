@@ -104,7 +104,7 @@ function getRightTaken(rights: Right[], statement: Statement, state: TitleState,
     .map(income => ({
       income,
       max: getIncomingAmount(right.id, income.id, state.transfers),
-      current: getCalculatedAmount(right.id, income.id, state.transfers),
+      current: getCalculatedAmount(right.id, income.id, state.transfers, { rounded: true }),
       source: sources.find(s => s.id === income.sourceId)
     })).filter(i => i.max > 0);
 

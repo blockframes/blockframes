@@ -3,6 +3,17 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
+// Components
+import { ExpenseTypeCapPipe, WaterfallConditionsFormComponent } from './conditions-form.component';
+
+// Blockframes
+import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/group/group.module';
+import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
+import { ToLabelModule } from '@blockframes/utils/pipes';
+import { ExpenseTypesModalModule } from '../../expense/expense-types-modal/expense-types-modal.module';
+import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
+
+// Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,15 +25,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
-import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/group/group.module';
-import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
-import { ToLabelModule } from '@blockframes/utils/pipes';
-import { ExpenseTypesModalModule } from '../../expense/expense-types-modal/expense-types-modal.module';
-
-import { WaterfallConditionsFormComponent } from './conditions-form.component';
-
 @NgModule({
-  declarations: [ WaterfallConditionsFormComponent ],
+  declarations: [WaterfallConditionsFormComponent, ExpenseTypeCapPipe],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -31,6 +35,7 @@ import { WaterfallConditionsFormComponent } from './conditions-form.component';
     ChipsAutocompleteModule,
     ToLabelModule,
     ExpenseTypesModalModule,
+    PricePerCurrencyModule,
 
     MatIconModule,
     MatInputModule,
@@ -43,6 +48,6 @@ import { WaterfallConditionsFormComponent } from './conditions-form.component';
     MatDialogModule,
     MatSnackBarModule,
   ],
-  exports: [ WaterfallConditionsFormComponent ],
+  exports: [WaterfallConditionsFormComponent],
 })
-export class WaterfallConditionsFormModule {}
+export class WaterfallConditionsFormModule { }

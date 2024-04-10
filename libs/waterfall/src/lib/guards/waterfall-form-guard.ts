@@ -13,11 +13,12 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 
 export interface WaterfallFormGuardedComponent {
   contractForm: WaterfallContractForm;
-  rightholdersForm: FormArray<FormGroup<{ id: FormControl<string>, name: FormControl<string>, roles: FormControl<RightholderRole[]> }>>
+  rightholdersForm: FormArray<FormGroup<{ id: FormControl<string>, name: FormControl<string>, roles: FormControl<RightholderRole[]> }>>;
+  canLeaveGraphForm: boolean;
 };
 
 @Injectable({ providedIn: 'root' })
-export class WaterfallFormGuard<T extends WaterfallFormGuardedComponent> implements CanDeactivate<T>{
+export class WaterfallFormGuard<T extends WaterfallFormGuardedComponent> implements CanDeactivate<T> {
 
   constructor(
     private dialog: MatDialog,
@@ -26,11 +27,16 @@ export class WaterfallFormGuard<T extends WaterfallFormGuardedComponent> impleme
   canDeactivate(component: T) {
     if (
       component.rightholdersForm.pristine &&
-      component.contractForm.pristine
+      component.contractForm.pristine &&
+      component.canLeaveGraphForm
     ) return true;
+
+    let subject = 'Contracts Form';
+    if (!component.rightholdersForm) subject = 'Right Holders Form';
+    if (!component.canLeaveGraphForm) subject = 'Waterfall Builder';
     const dialogRef = this.dialog.open(ConfirmComponent, {
       data: createModalData({
-        title: 'You are about to leave the form',
+        title: `You are about to leave the ${subject}`,
         question: 'Some changes have not been saved. If you leave now, you might lose these changes',
         cancel: 'Cancel',
         confirm: 'Leave anyway'
