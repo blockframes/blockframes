@@ -164,7 +164,15 @@
         </mat-tab>
         <mat-tab label="Conditions" *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-conditions [canUpdate]="canUpdateConditions" [rightForm]="rightForm" [rightId]="selected" (createStep)="createNewStep()" (deleteStep)="deleteStep($event)" (validCondition)="addCondition($event)"></waterfall-conditions>
+            <waterfall-conditions 
+              [canUpdate]="canUpdateConditions"
+              [rightForm]="rightForm"
+              [rightId]="selected"
+              (createStep)="createNewStep()"
+              (deleteStep)="deleteStep($event)"
+              (validCondition)="addCondition($event)"
+              (conditionFormPristine)="conditionFormPristine$.next($event)">
+            </waterfall-conditions>
           </section>
         </mat-tab>
       </mat-tab-group>

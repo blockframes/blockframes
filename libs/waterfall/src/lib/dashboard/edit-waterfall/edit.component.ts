@@ -44,6 +44,7 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
   );
   public createMode = !hasDefaultVersion(this.shell.waterfall);
   public manualCreation$ = new BehaviorSubject(false);
+  public canLeaveGraphForm = true;
 
   private sub: Subscription;
 
@@ -70,8 +71,8 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
 
   onStepClicked($event: MouseEvent) {
     const id = ($event.target as HTMLElement)?.id || ($event.target as HTMLElement)?.offsetParent?.id;
-    const nextId = parseFloat(id?.indexOf('cdk-step-label-') === 0 ? id[id.length-1] : undefined);
-    if (nextId) this.canLeaveStep(nextId - 1);
+    const nextId = parseFloat(id?.indexOf('cdk-step-label-') === 0 ? id[id.length - 1] : undefined);
+    if (!isNaN(nextId)) this.canLeaveStep(nextId - 1);
   }
 
   previous() {
@@ -88,7 +89,7 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
   }
 
   async exit() {
-    if (this.canLeaveStep(-1)) {
+    if (this.canLeaveStep(-2)) {
       await this.updateRightHolders();
       this.snackBar.open('Waterfall saved', 'close', { duration: 3000 });
       this.router.navigate(['..'], { relativeTo: this.route });
@@ -96,10 +97,11 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
   }
 
   private canLeaveStep(nextStep: number) {
-    if (!this.contractForm.pristine && this.stepper.selectedIndex === 0) {
+    if ((!this.contractForm.pristine && this.stepper.selectedIndex === 0 && nextStep !== -1) || (!this.canLeaveGraphForm && nextStep === -2)) {
+      const subject = !this.contractForm.pristine ? 'Contracts Form' : 'Waterfall Builder';
       const dialogRef = this.dialog.open(ConfirmComponent, {
         data: createModalData({
-          title: 'You are about to leave the form',
+          title: `You are about to leave the ${subject}`,
           question: 'Some changes have not been saved. If you leave now, you might lose these changes',
           cancel: 'Cancel',
           confirm: 'Leave anyway'
@@ -110,7 +112,8 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
         if (leave) {
           this.contractForm.markAsPristine();
           this.stepper.selected.completed = true;
-          if (nextStep === -1) {
+          this.canLeaveGraphForm = true;
+          if (nextStep === -2) {
             this.router.navigate(['..'], { relativeTo: this.route });
           } else {
             this.stepper.selectedIndex = nextStep;
