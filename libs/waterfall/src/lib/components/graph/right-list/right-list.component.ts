@@ -17,7 +17,8 @@ import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell
 })
 export class WaterfallRightListComponent implements OnInit, OnDestroy {
 
-  @Input() @boolean public canUpdate = true;
+  @Input() public nonEditableNodeIds: string[] = [];
+  @Input() @boolean public canCreatePool = true;
 
   @Output() selectRight = new EventEmitter<string>();
   @Output() deleteRight = new EventEmitter<string>();
@@ -41,6 +42,7 @@ export class WaterfallRightListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subs.push(this.shell.rights$.subscribe(rights => {
+      this.selected = new Set<string>();
       this.rights = rights;
       this.init(rights);
     }));
@@ -122,32 +124,33 @@ export class WaterfallRightListComponent implements OnInit, OnDestroy {
   }
 
   remove(id: string) {
-    if (!this.canUpdate) return;
+    if (this.nonEditableNodeIds.includes(id)) return;
     this.deleteRight.emit(id);
   }
 
   edit(id: string) {
-    if (!this.canUpdate) return;
+    if (this.nonEditableNodeIds.includes(id)) return;
     this.selectRight.emit(id);
   }
 
   poolModal() {
-    if (!this.canUpdate) return;
+    if (!this.canCreatePool) return;
     this.dialog.open(
       WaterfallPoolModalComponent,
       {
         data: {
-          rights: this.rights,
+          rights: this.rights.filter(r => !this.nonEditableNodeIds.includes(r.id)),
           selected: this.selected,
           onConfirm: async ({ name, rightIds }: { name: string, rightIds: string[] }) => {
             this.rightService.batch();
-            const updatedRight = rightIds.map(id => this.rights.find(r => r.id === id));
-            updatedRight.forEach(r => r.pools.push(name));
+            const updatedRight = rightIds.map(id => this.rights.find(i => i.id === id));
+            console.log(this.rights.length, updatedRight, rightIds);
+            updatedRight.forEach(j => j.pools.push(name));
 
             await this.rightService.update(updatedRight, { params: { waterfallId: this.shell.waterfall.id } });
-          },
-        },
-      },
+          }
+        }
+      }
     );
   }
 
@@ -168,7 +171,7 @@ export class WaterfallRightListComponent implements OnInit, OnDestroy {
 
   selectAll(event: MatCheckboxChange) {
     if (event.checked) {
-      this.selected = new Set(this.rights.map(r => r.id));
+      this.selected = new Set(this.rights.map(r => r.id).filter(id => !this.nonEditableNodeIds.includes(id)));
     } else {
       this.selected = new Set<string>();
     }

@@ -1,10 +1,10 @@
 
 <p>{{ condition | conditionToString : shell.waterfall : (shell.contracts$ | async) : (shell.rights$ | async) }}</p>
-<div>
-  <button mat-icon-button [disabled]="!canUpdate" (click)="edit.emit()">
+<div *ngIf="canUpdate">
+  <button mat-icon-button (click)="edit.emit()">
     <mat-icon svgIcon="edit"></mat-icon>
   </button>
-  <button mat-icon-button [disabled]="!canUpdate" (click)="delete.emit()">
+  <button mat-icon-button (click)="delete.emit()">
     <mat-icon svgIcon="delete"></mat-icon>
   </button>
 </div>

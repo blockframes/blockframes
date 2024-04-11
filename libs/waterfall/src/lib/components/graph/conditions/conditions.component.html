@@ -27,9 +27,9 @@
       (delete)="deleteCondition(conditionIndex)"
     ></waterfall-condition-item>
 
-    <waterfall-conditions-form [form]="conditionForm" [rightId]="rightId"></waterfall-conditions-form>
+    <waterfall-conditions-form *ngIf="canUpdate" [form]="conditionForm" [rightId]="rightId"></waterfall-conditions-form>
 
-    <div class="add-next">
+    <div class="add-next" *ngIf="canUpdate">
       <hr />
       <p class="mat-caption">Add Next Condition</p>
       <button mat-mini-fab color="primary" [disabled]="!newCondition || !canUpdate" (click)="addNewCondition(step.length)">
@@ -38,7 +38,7 @@
     </div>
   </ng-container>
   <ng-template #item>
-    <waterfall-step-item class="surface" [index]="stepIndex" [conditionCount]="step.length" (editStep)="selectStep(stepIndex)" (deleteStep)="removeStep(stepIndex)"></waterfall-step-item>
+    <waterfall-step-item class="surface" [index]="stepIndex" [conditionCount]="step.length" (editStep)="selectStep(stepIndex)" (deleteStep)="removeStep(stepIndex)" [canUpdate]="canUpdate"></waterfall-step-item>
   </ng-template>
 </ng-container>
 

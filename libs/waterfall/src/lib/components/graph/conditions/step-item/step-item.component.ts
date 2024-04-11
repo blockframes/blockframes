@@ -12,6 +12,7 @@ export class WaterfallStepItemComponent {
 
   @Input() index: number;
   @Input() conditionCount: number;
+  @Input() canUpdate: boolean;
 
   @Output() editStep = new EventEmitter();
   @Output() deleteStep = new EventEmitter();

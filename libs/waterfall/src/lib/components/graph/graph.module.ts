@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Components
-import { IsHorizontalPipe, IsStepPipe, WaterfallGraphComponent } from './graph.component';
+import { GetGroupPipe, GetNodePipe, IsHorizontalPipe, IsStepPipe, WaterfallGraphComponent } from './graph.component';
 
 // Blockframes
 import { BlockframesGraphModule } from '@blockframes/ui/graph/graph.module';
@@ -20,6 +20,7 @@ import { WaterfallPoolListModule } from './pool-list/pool-list.module';
 import { WaterfallRightListModule } from './right-list/right-list.module';
 import { WaterfallConditionsModule } from './conditions/conditions.module';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
+import { CanAddChildPipeModule } from '../../pipes/can-add-child.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -32,7 +33,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
-  declarations: [WaterfallGraphComponent, IsHorizontalPipe, IsStepPipe],
+  declarations: [WaterfallGraphComponent, IsHorizontalPipe, IsStepPipe, GetNodePipe, GetGroupPipe],
   imports: [
     ReactiveFormsModule,
     CommonModule,
@@ -50,6 +51,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     WaterfallConditionsModule,
     ConfirmModule,
     ImageModule,
+    CanAddChildPipeModule,
 
     MatIconModule,
     MatTabsModule,

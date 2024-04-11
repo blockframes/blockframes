@@ -14,7 +14,7 @@ export class WaterfallGraphVerticalComponent implements OnInit {
   @Input() public vertical: VerticalNode;
   @Input() public group: HorizontalNode;
   @Input() public selected: '' | '*' | string;
-  @Input() public canUpdate = false;
+  @Input() public nonEditableNodeIds: string[] = [];
 
   @Output() addChild = new EventEmitter<string>();
   @Output() addSibling = new EventEmitter<string>();
