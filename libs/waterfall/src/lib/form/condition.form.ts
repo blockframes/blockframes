@@ -417,6 +417,6 @@ function formToTarget(form: ConditionForm, targetIn: TargetIn): TargetValue {
   return {
     in: targetIn,
     id: form.controls.revenueTarget.value,
-    percent: form.controls.revenuePercentage.value / 100
+    percent: targetIn === 'expense' ? 1 : (form.controls.revenuePercentage.value / 100)
   }
 }

@@ -32,6 +32,7 @@ export class WaterfallConditionsComponent implements OnInit, OnDestroy {
   @Output() createStep = new EventEmitter();
   @Output() deleteStep = new EventEmitter();
   @Output() validCondition = new EventEmitter<{ rightId: string, condition: Condition, step: number, index: number }>();
+  @Output() conditionFormPristine = new EventEmitter<boolean>();
 
   private _rightId: string;
   private index = 0;
@@ -41,6 +42,7 @@ export class WaterfallConditionsComponent implements OnInit, OnDestroy {
     this.conditionForm.enable();
     if (!this.canUpdate) this.conditionForm.disable();
     const formSub = this.conditionForm.valueChanges.subscribe(() => {
+      this.conditionFormPristine.emit(this.conditionForm.pristine);
       const condition = formToCondition(this.conditionForm);
       if (condition) { // ie: condition is valid
         this.newCondition = condition;
@@ -90,8 +92,8 @@ export class WaterfallConditionsComponent implements OnInit, OnDestroy {
     const steps = this.rightForm.controls.steps.value;
     steps[this.selectedStep$.value].splice(index, 1);
     this.rightForm.controls.steps.setValue(steps);
-
     this.conditionForm.reset();
+    this.conditionFormPristine.emit(false);
     this.newCondition = undefined;
     this.index = steps.length;
   }

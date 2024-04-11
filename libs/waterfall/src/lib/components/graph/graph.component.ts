@@ -1,8 +1,20 @@
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Optional,
+  Output,
+  Pipe,
+  PipeTransform,
+  ViewChild
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Intercom } from 'ng-intercom';
 import { WriteBatch } from 'firebase/firestore';
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Optional, Pipe, PipeTransform, ViewChild } from '@angular/core';
 import { BehaviorSubject, Subscription, combineLatest, map, tap } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -32,7 +44,7 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 import { GraphService } from '@blockframes/ui/graph/graph.service';
 import { CardModalComponent } from '@blockframes/ui/card-modal/card-modal.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
+import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { RightService } from '../../right.service';
 import { WaterfallService } from '../../waterfall.service';
 import { createRightForm, setRightFormValue } from '../../form/right.form';
@@ -61,6 +73,7 @@ import {
 export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   @Input() @boolean public readonly = false;
+  @Output() canLeaveGraphForm = new EventEmitter<boolean>(true);
   public showEditPanel = this.shell.canBypassRules;
   public waterfall = this.shell.waterfall;
   public isDefaultVersion: boolean;
@@ -91,6 +104,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   public rightholderNames$ = new BehaviorSubject<string[]>([]);
   public relevantContracts$ = new BehaviorSubject<WaterfallContract[]>([]);
   public rights: Right[];
+  public conditionFormPristine$ = new BehaviorSubject<boolean>(true);
 
   private waterfallId = this.shell.waterfall.id;
   private sources: WaterfallSource[];
@@ -132,7 +146,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.shell.rightholderRights$,
       this.shell.rightholderSources$,
       this.shell.waterfall$,
-      this.shell.versionId$.pipe(tap(_ => this.unselect())),
+      this.shell.versionId$.pipe(tap(_ => this.select(''))),
       this.shell.statements$.pipe(map(statements => statements.filter(s => s.status === 'reported'))),
       this.shell.contracts$,
       this.shell.hiddenRightHolderIds$,
@@ -184,14 +198,23 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.rightholderControl.valueChanges.subscribe(name => {
       const rightholder = this.rightholders.find(r => r.name === name);
       if (rightholder) {
-        if (this.rightForm.controls.org.value !== rightholder.name) this.rightForm.controls.org.setValue(rightholder.name);
+        if (this.rightForm.controls.org.value !== rightholder.name) {
+          this.rightForm.markAsDirty();
+          this.rightForm.controls.org.setValue(rightholder.name);
+        }
       } else if (name !== '') {
         this.rightholderControl.setErrors({ invalidValue: true });
+        if (this.rightForm.controls.org.value) this.rightForm.markAsDirty();
       }
     }));
 
     this.subscriptions.push(this.sourceForm.controls.medias.valueChanges.subscribe(medias => this.updateSourceName(medias, undefined)));
     this.subscriptions.push(this.sourceForm.controls.territories.valueChanges.subscribe(territories => this.updateSourceName(undefined, territories)));
+
+    this.subscriptions.push(combineLatest([this.rightForm.valueChanges, this.sourceForm.valueChanges, this.conditionFormPristine$]).subscribe(() => {
+      const canLeaveGraphForm = this.rightForm.pristine && this.sourceForm.pristine && this.conditionFormPristine$.value;
+      this.canLeaveGraphForm.emit(canLeaveGraphForm);
+    }));
   }
 
   ngOnDestroy() {
@@ -227,8 +250,41 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     return this.intercom.show('I need help to create a waterfall');
   }
 
-  async select(id: string) {
+  select(id: string) {
+    if (id == this.selected$.value) return;
+    const allPristine = this.rightForm.pristine && this.sourceForm.pristine && this.conditionFormPristine$.value;
+    if (allPristine) return this._select(id);
+
+    let subject = 'Receipt Share';
+    if (!this.sourceForm.pristine) subject = 'Source';
+    if (!this.conditionFormPristine$.value) subject = 'Receipt Share Conditions';
+    const dialogRef = this.dialog.open(ConfirmComponent, {
+      data: createModalData({
+        title: `You are about to leave the ${subject} form`,
+        question: 'Some changes have not been saved. If you leave now, you might lose these changes',
+        cancel: 'Cancel',
+        confirm: 'Leave anyway'
+      }, 'small'),
+      autoFocus: false
+    });
+    const sub = dialogRef.afterClosed().subscribe((leave: boolean) => {
+      if (leave) {
+        this.rightForm.markAsPristine();
+        this.sourceForm.markAsPristine();
+        this.conditionFormPristine$.next(true);
+        return this._select(id);
+      } else {
+        return;
+      }
+    });
+
+    this.subscriptions.push(sub);
+
+  }
+
+  private async _select(id: string) {
     this.selected$.next(id);
+    if (!id) return;
 
     const source = this.sources.find(source => source.id === id);
     if (source) {
@@ -270,10 +326,6 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       const parents = this.nodes$.getValue().filter(node => node.children.includes(right.groupId || id)); // do not use ?? instead of ||, it will break since '' can be considered truthy
       setRightFormValue(this.rightForm, { ...right, type, rightholderId: rightholderName, nextIds: parents.map(parent => parent.id) }, steps);
     }
-  }
-
-  unselect() {
-    this.selected$.next('');
   }
 
   async updateRight() {
@@ -353,6 +405,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     ]);
     await write.commit();
 
+    this.rightForm.markAsPristine();
+    this.conditionFormPristine$.next(true);
+
     if (right.type === 'horizontal') {
       this.snackBar.open('Group Details saved', 'close', { duration: 3000 });
     } else {
@@ -360,7 +415,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateSource() {
+  async updateSource() {
     const sourceId = this.selected$.getValue();
     const source = this.sources.find(source => source.id === sourceId);
     if (!source) return;
@@ -369,7 +424,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     source.medias = this.sourceForm.controls.medias.value;
     source.territories = this.sourceForm.controls.territories.value;
 
-    return this.waterfallService.updateSource(this.waterfallId, source);
+    this.sourceForm.markAsPristine();
+
+    await this.waterfallService.updateSource(this.waterfallId, source);
+    this.snackBar.open('Receipt Source saved', 'close', { duration: 3000 });
   }
 
   async layout(hiddenRightHolderIds: string[]) {
@@ -517,13 +575,14 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     const id = rightId ?? this.selected$.getValue();
     const right = this.rights.find(right => right.id === id);
 
-    this.dialog.open(ConfirmInputComponent, {
+    const subject = right ? 'Receipt Share' : 'Source';
+
+    this.dialog.open(ConfirmComponent, {
       data: createModalData({
-        title: `Delete ${right ? 'Receipt Shares' : 'Source'}`,
-        subtitle: `Pay attention, if you delete the following ${right ? 'Receipt Shares' : 'Source'}, it will have an impact on conditions and the whole Waterfall.`,
-        text: `Please type "DELETE" to confirm.`,
-        confirmationWord: 'DELETE',
-        confirmButtonText: `Delete ${right ? 'Receipt Shares' : 'Source'}`,
+        title: `Are you sure to delete this ${subject}`,
+        question: `Pay attention, if you delete the following ${subject}, it will have an impact on conditions and the whole Waterfall.`,
+        confirm: `Yes, delete ${subject}`,
+        cancel: 'No, come back to Waterfall Builder',
         onConfirm: () => this.handleDeletion(id),
       })
     });
@@ -535,6 +594,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     const source = this.sources.find(source => source.id === id);
 
     if (!right && !source) return;
+
+    this.rightForm.markAsPristine();
+    this.sourceForm.markAsPristine();
+    this.conditionFormPristine$.next(true);
 
     if (right) {
       if (right.groupId) {

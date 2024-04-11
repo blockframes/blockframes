@@ -14,6 +14,8 @@ import { Expense, ExpenseType } from '../expense';
 import { InterestDetail } from './interest';
 import { add, differenceInMonths, isLastDayOfMonth, lastDayOfMonth, sub } from 'date-fns';
 
+const toFixed = (number: number) => Math.round(number * 100) / 100;
+
 export interface Payment {
   id: string;
   type: PaymentType;
@@ -521,7 +523,7 @@ function getTransfersHistory(rightId: string, _incomeIds: string[] | string, tra
  */
 export function getIncomingAmount(rightId: string, incomeIds: string[] | string, transferState: Record<string, TransferState>): number {
   const history = getTransfersHistory(rightId, incomeIds, transferState, { checked: false });
-  return sum(history, i => i.amount);
+  return toFixed(sum(history, i => i.amount));
 }
 
 /**
@@ -531,9 +533,10 @@ export function getIncomingAmount(rightId: string, incomeIds: string[] | string,
  * @param transferState 
  * @returns number
  */
-export function getCalculatedAmount(rightId: string, incomeIds: string[] | string, transferState: Record<string, TransferState>): number {
+export function getCalculatedAmount(rightId: string, incomeIds: string[] | string, transferState: Record<string, TransferState>, options?: { rounded: boolean }): number {
   const history = getTransfersHistory(rightId, incomeIds, transferState);
-  return sum(history, i => i.amount * i.percent);
+  const amount = sum(history, i => i.amount * i.percent);
+  return options?.rounded ? toFixed(amount) : amount;
 }
 
 /**
@@ -857,7 +860,7 @@ export function getSourcesBreakdown(
       const maxPerIncome = Array.from(new Set(currentRightPayment.map(r => r.incomeIds).flat())).map(incomeId => ({
         income: incomes.find(i => i.id === incomeId),
         max: getIncomingAmount(right.id, incomeId, state.transfers),
-        current: getCalculatedAmount(right.id, incomeId, state.transfers),
+        current: getCalculatedAmount(right.id, incomeId, state.transfers, { rounded: true }),
         source
       })).filter(i => i.max > 0);
 
@@ -958,7 +961,7 @@ export function getRightsBreakdown(
         .map(income => ({
           income,
           max: getIncomingAmount(right.id, income.id, state.transfers),
-          current: getCalculatedAmount(right.id, income.id, state.transfers),
+          current: getCalculatedAmount(right.id, income.id, state.transfers, { rounded: true }),
           source: waterfall.sources.find(s => s.id === income.sourceId)
         })).filter(i => i.max > 0);
 

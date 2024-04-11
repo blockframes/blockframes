@@ -5,6 +5,7 @@ import { ExpenseService } from '@blockframes/contract/expense/service';
 import { IncomeService } from '@blockframes/contract/income/service';
 import {
   NegotiationStatus,
+  RightType,
   Statement,
   createDocumentMeta,
   createIncomePayment,
@@ -16,6 +17,7 @@ import {
   getAssociatedRights,
   getDefaultVersionId,
   getDistributorExpensesDetails,
+  getExpensesHistory,
   getParentStatements,
   getRightsBreakdown,
   getSourcesBreakdown,
@@ -253,6 +255,10 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
         return payment;
       });
 
+      // On direct sales statements, only display commission and expenses rights
+      // This is needed to show only theses kind of rights since directSales statements does not have a contract Id.
+      const displayedRightTypes: RightType[] = isDirectSalesStatement(impactedStatement) ? ['commission', 'expenses'] : [];
+
       updatedStatement.reportedData.sourcesBreakdown = getSourcesBreakdown(
         this.shell.waterfall,
         declaredSources,
@@ -261,7 +267,8 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
         expenses,
         history,
         _rights,
-        simulation.waterfall.state
+        simulation.waterfall.state,
+        displayedRightTypes
       );
 
       updatedStatement.reportedData.rightsBreakdown = getRightsBreakdown(
@@ -272,12 +279,11 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
         history,
         _rights,
         simulation.waterfall.state,
-        declaredSources
+        declaredSources,
+        displayedRightTypes
       );
 
-      updatedStatement.reportedData.expenses = updatedStatement.expenseIds
-        .map(id => expenses.find(e => e.id === id))
-        .filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true);
+      updatedStatement.reportedData.expenses = getExpensesHistory(updatedStatement, history, expenses, declaredSources, _rights, simulation.waterfall.state, incomes);
 
       updatedStatement.reportedData.distributorExpenses = getDistributorExpensesDetails(
         [updatedStatement],
@@ -351,6 +357,10 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
 
       updatedStatement.versionId = this.shell.versionId$.value;
 
+      // On direct sales statements, only display commission and expenses rights
+      // This is needed to show only theses kind of rights since directSales statements does not have a contract Id.
+      const displayedRightTypes: RightType[] = isDirectSalesStatement(impactedStatement) ? ['commission', 'expenses'] : [];
+
       updatedStatement.reportedData.sourcesBreakdown = getSourcesBreakdown(
         this.shell.waterfall,
         declaredSources,
@@ -359,7 +369,8 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
         expenses,
         history,
         _rights,
-        simulation.waterfall.state
+        simulation.waterfall.state,
+        displayedRightTypes
       );
 
       updatedStatement.reportedData.rightsBreakdown = getRightsBreakdown(
@@ -370,12 +381,11 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
         history,
         _rights,
         simulation.waterfall.state,
-        declaredSources
+        declaredSources,
+        displayedRightTypes
       );
 
-      updatedStatement.reportedData.expenses = updatedStatement.expenseIds
-        .map(id => expenses.find(e => e.id === id))
-        .filter(e => statement.status === 'reported' ? !e.version[statement.versionId]?.hidden : true);
+      updatedStatement.reportedData.expenses = getExpensesHistory(updatedStatement, history, expenses, declaredSources, _rights, simulation.waterfall.state, incomes);
 
       updatedStatement.reportedData.distributorExpenses = getDistributorExpensesDetails(
         [updatedStatement],
