@@ -84,6 +84,7 @@ export const icons = [
   { name: 'launch', url: 'assets/icons/launch.svg' },
   { name: 'last_page', url: 'assets/icons/last_page.svg' },
   { name: 'local_offer', url: 'assets/icons/local_offer.svg' },
+  { name: 'lock', url: 'assets/icons/lock.svg' },
   { name: 'logo_archipel_content', url: 'assets/icons/logo_archipel_content.svg' },
   { name: 'logo_archipel_content_fill', url: 'assets/icons/logo_archipel_content_fill.svg' },
   { name: 'logo_archipel_market_fill', url: 'assets/icons/logo_archipel_market_fill.svg' },
