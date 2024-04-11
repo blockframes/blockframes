@@ -1,6 +1,6 @@
 
 <section class="pool">
-  <button mat-button color="primary" [disabled]="selected.size === 0 || nonEditableNodeIds.length" (click)="poolModal()"> <!-- TODO #9749 -->
+  <button mat-button color="primary" [disabled]="selected.size === 0 || !canCreatePool" (click)="poolModal()">
     <mat-icon svgIcon="add"></mat-icon>
     <span>Group Right Share</span>
   </button>
@@ -36,6 +36,7 @@
         (change)="check($event, right.id)"
         [checked]="selected.has(right.id)"
         [indeterminate]="!isDeterminate(right.id)"
+        [disabled]="nonEditableNodeIds.includes(right.id)"
       >
         {{right.name}}
       </mat-checkbox>
@@ -72,6 +73,7 @@
             (change)="check($event, member.id)"
             [checked]="selected.has(member.id)"
             [indeterminate]="!isDeterminate(member.id)"
+            [disabled]="nonEditableNodeIds.includes(member.id)"
           >
             {{member.name}}
           </mat-checkbox>
@@ -108,6 +110,7 @@
                 (change)="check($event, subMember.id)"
                 [checked]="selected.has(subMember.id)"
                 [indeterminate]="!isDeterminate(subMember.id)"
+                [disabled]="nonEditableNodeIds.includes(subMember.id)"
               >
                 {{subMember.name}}
               </mat-checkbox>
@@ -137,6 +140,7 @@
             (change)="check($event, member.id)"
             [checked]="selected.has(member.id)"
             [indeterminate]="!isDeterminate(member.id)"
+            [disabled]="nonEditableNodeIds.includes(member.id)"
           >
             {{member.name}}
           </mat-checkbox>

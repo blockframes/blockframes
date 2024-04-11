@@ -93,7 +93,7 @@
         <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'">
           <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
         </button>
-        <button mat-icon-button matTooltip="Save changes" (click)="updateRight()" [disabled]="nonPartiallyEditableNodeIds$.value.includes(selected)">
+        <button mat-icon-button matTooltip="Save changes" (click)="updateRight()">
           <mat-icon svgIcon="save"></mat-icon>
         </button>
         <button mat-icon-button matTooltip="Delete Right" (click)="delete()" [disabled]="nonEditableNodeIds$.value.includes(selected)">
@@ -200,21 +200,21 @@
       <mat-tab-group>
         <mat-tab label="Receipts Shares">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-right-list (deleteRight)="delete($event)" (selectRight)="select($event)" [nonEditableNodeIds]="nonEditableNodeIds$.value"></waterfall-right-list>
+            <waterfall-right-list (deleteRight)="delete($event)" (selectRight)="select($event)" [nonEditableNodeIds]="nonEditableNodeIds$.value" [canCreatePool]="!isDuplicateVersion"></waterfall-right-list>
           </section>
         </mat-tab>
         <mat-tab label="Pools Only">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-pool-list [canUpdate]="canUpdateGraph"></waterfall-pool-list> <!-- TODO #9749 check how can a pool be updated or created-->
+            <waterfall-pool-list [nonEditableNodeIds]="nonEditableNodeIds$.value"></waterfall-pool-list>
           </section>
         </mat-tab>
       </mat-tab-group>
       <section class="add">
-        <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="!canUpdateGraph" >
+        <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="isDuplicateVersion" >
           <mat-icon svgIcon="add"></mat-icon>
           <span>New Receipt Source</span>
         </button>
-        <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="!canUpdateGraph" >
+        <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="isDuplicateVersion" >
           <mat-icon svgIcon="add"></mat-icon>
           <span>New Receipt Share</span>
         </button>
@@ -248,11 +248,11 @@
           <span>Ask for Help</span>
         </button>
         <section class="add">
-          <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="!canUpdateGraph" >
+          <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="isDuplicateVersion" >
             <mat-icon svgIcon="add"></mat-icon>
             <span>New Receipt Source</span>
           </button>
-          <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="!canUpdateGraph" >
+          <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="isDuplicateVersion" >
             <mat-icon svgIcon="add"></mat-icon>
             <span>New Receipt Share</span>
           </button>

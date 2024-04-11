@@ -72,10 +72,10 @@ import { unique } from '@blockframes/utils/helpers';
 
 function getNonEditableNodeIds(rights: Right[], sources: WaterfallSource[], reportedStatements: Statement[], incomes: Income[]) {
   const incomeIds = unique(reportedStatements.map(s => s.incomeIds).flat());
-  const reportedIncomes = incomeIds.map(id => incomes.find(i => i.id === id));
-  const nonEditableSources = getIncomesSources(reportedIncomes, sources);
-  const topLevelRights = nonEditableSources.map(s => rights.find(r => r.id === s.destinationId));
-  const childIds = unique(topLevelRights.map(r => getChilds(r.id, rights).map(r => r.id)).flat());
+  const reportedIncomes = incomeIds.map(id => incomes.find(i => i.id === id)).filter(i => !!i);
+  const nonEditableSources = reportedIncomes ? getIncomesSources(reportedIncomes, sources).filter(s => !!s) : [];
+  const topLevelRights = nonEditableSources.map(s => rights.find(r => r.id === s.destinationId)).filter(r => !!r);
+  const childIds = unique(topLevelRights.map(r => getChilds(r.id, rights).map(c => c.id)).flat());
   const nonEditableRights = childIds.map(id => rights.find(r => r.id === id));
   const groupIds = unique(nonEditableRights.filter(r => r.groupId).map(r => r.groupId));
   const nonEditableGroups = groupIds.map(id => rights.find(r => r.id === id));
@@ -96,7 +96,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   public showEditPanel = this.shell.canBypassRules;
   public waterfall = this.shell.waterfall;
   public isDefaultVersion: boolean;
-  public canUpdateGraph = true; // TODO #9749 remove
+  public isDuplicateVersion = false;
   public selected$ = new BehaviorSubject<string>('');
   public isSourceSelected = false;
   public nodes$ = new BehaviorSubject<Node[]>([]);
@@ -183,51 +183,25 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.rightholderNames$.next(this.rightholders.map(r => r.name));
       this.isDefaultVersion = isDefaultVersion(waterfall, versionId);
       this.defaultVersionId = getDefaultVersionId(waterfall);
-
-      // Enable or disable possible updates
-      this.rightForm.enable();
-      this.sourceForm.enable();
-      this.rightholderControl.enable();
-
       const allNodeIds = [...rights.map(r => r.id), ...this.sources.map(s => s.id)];
 
-      if(this.readonly) {
-        this.canUpdateGraph = false;
+      if (this.readonly) {
         this.nonEditableNodeIds$.next(allNodeIds); // All nodes are non-editable
-        this.rightForm.disable(); // TODO #9749 check if needed
-        this.rightholderControl.disable(); // TODO #9749 check if needed
-        this.sourceForm.disable(); // TODO #9749 check if needed
+        this.nonPartiallyEditableNodeIds$.next(this.nonEditableNodeIds$.value); // All nodes are non-editable
       } else {
-        this.canUpdateGraph =  true;
         this.nonEditableNodeIds$.next([]);
+        this.nonPartiallyEditableNodeIds$.next(this.nonEditableNodeIds$.value);
 
-        if ((this.version?.id && !this.isDefaultVersion && !this.version.standalone)) {
+        this.isDuplicateVersion = this.version?.id && !this.isDefaultVersion && !this.version.standalone;
 
+        if (this.isDuplicateVersion) {
           this.nonEditableNodeIds$.next(allNodeIds); // All nodes are non-editable
           // Nodes not "touched" by a reported statement are still partially editable (percentage and conditions)
-          this.nonPartiallyEditableNodeIds$.next(getNonEditableNodeIds(rights, this.sources, reportedStatements, incomes)); 
-  
-          this.rightForm.disable();// TODO #9749 check if needed
-          this.rightholderControl.disable();// TODO #9749 check if needed
-          this.sourceForm.disable();// TODO #9749 check if needed
-
-          /*if (reportedStatements.length === 0) {
-            this.rightForm.controls.percent.enable(); // TODO #9749 TODO
-            this.rightForm.controls.steps.enable(); // TODO #9749 check if needed
-            this.nonEditableConditionsNodeIds$.next([]); // All nodes conditions are editable
-          }*/
-          
-          this.canUpdateGraph = false;
-        } else if (reportedStatements.length > 0) {
-          // Nodes not "touched" by a reported statement are still editable (percentage and conditions)
+          this.nonPartiallyEditableNodeIds$.next(getNonEditableNodeIds(rights, this.sources, reportedStatements, incomes));
+        } else {
+          // Nodes not "touched" by a reported statement are still fully editable
           this.nonEditableNodeIds$.next(getNonEditableNodeIds(rights, this.sources, reportedStatements, incomes));
           this.nonPartiallyEditableNodeIds$.next(this.nonEditableNodeIds$.value);
-  
-          this.rightForm.disable(); // TODO #9749 check if needed
-          this.rightholderControl.disable(); // TODO #9749 check if needed
-  
-          this.sourceForm.disable(); // TODO #9749 check if needed
-          this.canUpdateGraph = false;
         }
       }
 
@@ -357,7 +331,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
         this.rightForm.disable();
         this.rightForm.get('parents').enable();
         this.rightholderControl.disable();
-        if(!this.nonPartiallyEditableNodeIds$.value.includes(id)) {
+        if (!this.nonPartiallyEditableNodeIds$.value.includes(id)) {
           this.rightForm.controls.percent.enable();
           this.rightForm.controls.steps.enable();
         }
@@ -487,6 +461,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   async updateSource() {
     const sourceId = this.selected$.getValue();
+    if (this.nonEditableNodeIds$.value.includes(sourceId)) {
+      this.snackBar.open('Operation not permitted.', 'close', { duration: 5000 });
+      return;
+    }
     const source = this.sources.find(source => source.id === sourceId);
     if (!source) return;
 
@@ -512,8 +490,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async addSibling(id: string) {
-    if (!this.canUpdateGraph) {
-      this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
+    if (this.nonEditableNodeIds$.value.includes(id)) {
+      this.snackBar.open('Operation not permitted.', 'close', { duration: 5000 });
       return;
     }
     const graph = this.nodes$.getValue();
@@ -532,8 +510,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async addChild(id: string) {
-    if (!this.canUpdateGraph) {
-      this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
+    if (this.nonEditableNodeIds$.value.includes(id)) {
+      this.snackBar.open('Operation not permitted.', 'close', { duration: 5000 });
       return;
     }
     const graph = this.nodes$.getValue();
@@ -559,12 +537,12 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async createNewStep() {
-    if (!this.canUpdateGraph) {
-      this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
-      return;
-    }
     const graph = this.nodes$.getValue();
     const rightId = this.selected$.getValue();
+    if (this.nonEditableNodeIds$.value.includes(rightId)) {
+      this.snackBar.open('Operation not permitted.', 'close', { duration: 5000 });
+      return;
+    }
     createStep(rightId, graph);
     const newGraph = fromGraph(graph, this.version);
     const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
@@ -580,12 +558,12 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async deleteStep(index: number) {
-    if (!this.canUpdateGraph) {
-      this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
-      return;
-    }
     const graph = this.nodes$.getValue();
     const rightId = this.selected$.getValue();
+    if (this.nonEditableNodeIds$.value.includes(rightId)) {
+      this.snackBar.open('Operation not permitted.', 'close', { duration: 5000 });
+      return;
+    }
     deleteStep(rightId, index, graph);
     const newGraph = fromGraph(graph, this.version);
     const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
@@ -601,8 +579,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async createNewSource() {
-    if (!this.canUpdateGraph) {
-      this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
+    if (this.isDuplicateVersion) {
+      this.snackBar.open('Operation not permitted on this version. Switch to default.', 'close', { duration: 5000 });
       return;
     }
     const newSource = createWaterfallSource({
@@ -619,8 +597,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async createNewRight() {
-    if (!this.canUpdateGraph) {
-      this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
+    if (this.isDuplicateVersion) {
+      this.snackBar.open('Operation not permitted on this version. Switch to default.', 'close', { duration: 5000 });
       return;
     }
     const newRight = createRight({
@@ -637,8 +615,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   async delete(rightId?: string) {
-    if (!this.canUpdateGraph) {
-      this.snackBar.open('Operation not permitted on this version. Switch to default', 'close', { duration: 5000 });
+    if (this.nonEditableNodeIds$.value.includes(rightId)) {
+      this.snackBar.open('Operation not permitted.', 'close', { duration: 5000 });
       return;
     }
 

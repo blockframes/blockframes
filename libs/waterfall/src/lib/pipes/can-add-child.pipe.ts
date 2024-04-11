@@ -4,6 +4,7 @@ import { HorizontalNode, Node, VerticalNode } from '../components/graph/layout';
 @Pipe({ name: 'canAddChild' })
 export class CanAddPipe implements PipeTransform {
   transform(node: Node, group?: VerticalNode | HorizontalNode, nonEditableNodeIds?: string[]) {
+    if (!node) return false;
     if (node.children.length > 1 || group?.children.length > 1) return false;
     if (nonEditableNodeIds?.includes(node.id)) return false;
     if (group && nonEditableNodeIds?.includes(group.id)) return false;
