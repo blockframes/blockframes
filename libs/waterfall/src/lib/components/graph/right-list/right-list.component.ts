@@ -4,7 +4,6 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Right } from '@blockframes/model';
-import { boolean } from '@blockframes/utils/decorators/decorators';
 import { RightService } from '../../../right.service';
 import { WaterfallPoolModalComponent } from '../pool-modal/pool-modal.component';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
@@ -17,7 +16,7 @@ import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell
 })
 export class WaterfallRightListComponent implements OnInit, OnDestroy {
 
-  @Input() @boolean public canUpdate = true;
+  @Input() public nonEditableNodeIds: string[] = [];
 
   @Output() selectRight = new EventEmitter<string>();
   @Output() deleteRight = new EventEmitter<string>();
@@ -122,17 +121,17 @@ export class WaterfallRightListComponent implements OnInit, OnDestroy {
   }
 
   remove(id: string) {
-    if (!this.canUpdate) return;
+    if (this.nonEditableNodeIds.includes(id)) return;
     this.deleteRight.emit(id);
   }
 
   edit(id: string) {
-    if (!this.canUpdate) return;
+    if (this.nonEditableNodeIds.includes(id)) return;
     this.selectRight.emit(id);
   }
 
   poolModal() {
-    if (!this.canUpdate) return;
+    if (this.nonEditableNodeIds.length) return; // TODO #9749
     this.dialog.open(
       WaterfallPoolModalComponent,
       {

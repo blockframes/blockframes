@@ -24,7 +24,7 @@
       <waterfall-graph-node
         *ngFor="let node of nodes"
         [node]="node"
-        [canUpdate]="canUpdateGraph"
+        [nonEditableNodeIds]="nonEditableNodeIds$.value"
         (addChild)="addChild($event)"
         (handleSelect)="select($event)"
         (addSibling)="addSibling($event)"
@@ -49,14 +49,17 @@
   <ng-container *ngIf="selected$ | async as selected; else noSelection">
     <ng-container *ngIf="isSourceSelected; else notSource">
       <header>
-        <h2>Receipt Source</h2>
+        <h2>
+          <span>Receipt Source</span>
+          <mat-icon *ngIf="nonEditableNodeIds$.value.includes(selected)" matTooltip="This cannot be edited anymore" svgIcon="lock"></mat-icon>
+        </h2>
         <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'">
           <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
         </button>
-        <button mat-icon-button matTooltip="Save changes" (click)="updateSource()" [disabled]="!canUpdateGraph">
+        <button mat-icon-button matTooltip="Save changes" (click)="updateSource()" [disabled]="nonEditableNodeIds$.value.includes(selected)">
           <mat-icon svgIcon="save"></mat-icon>
         </button>
-        <button mat-icon-button matTooltip="Delete Source" (click)="delete()" [disabled]="!canUpdateGraph">
+        <button mat-icon-button matTooltip="Delete Source" (click)="delete()" [disabled]="nonEditableNodeIds$.value.includes(selected)">
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </header>
@@ -83,14 +86,17 @@
     </ng-container>
     <ng-template #notSource>
       <header>
-        <h2>Receipt Share</h2>
+        <h2>
+          <span>Receipt Share</span>
+          <mat-icon *ngIf="nonEditableNodeIds$.value.includes(selected)" matTooltip="This cannot be edited anymore" svgIcon="lock"></mat-icon>
+        </h2>
         <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'">
           <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
         </button>
-        <button mat-icon-button matTooltip="Save changes" (click)="updateRight()">
+        <button mat-icon-button matTooltip="Save changes" (click)="updateRight()" [disabled]="nonPartiallyEditableNodeIds$.value.includes(selected)">
           <mat-icon svgIcon="save"></mat-icon>
         </button>
-        <button mat-icon-button matTooltip="Delete Right" (click)="delete()" [disabled]="!canUpdateGraph">
+        <button mat-icon-button matTooltip="Delete Right" (click)="delete()" [disabled]="nonEditableNodeIds$.value.includes(selected)">
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </header>
@@ -142,7 +148,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>Parent Name(s)</mat-label>
                 <mat-select multiple [formControl]="rightForm.get('parents')">
-                  <mat-option *ngFor="let node of (availableNodes$ | async)" [value]="node.id">{{node.name}}</mat-option>
+                  <mat-option *ngFor="let node of (availableNodes$ | async)" [disabled]="node.disabled" [value]="node.id">{{node.name}}</mat-option>
                 </mat-select>
                 <mat-hint>Choose parent revenue elements from which this Receipt Share draw funds. You can add as many parents as you want.</mat-hint>
               </mat-form-field>
@@ -156,7 +162,11 @@
             <div class="add-next" *ngIf="!(selected$.value | isStep : rights)">
               <hr/>
               <p class="mat-caption">Add Next Receipt Share</p>
-              <button mat-mini-fab color="primary" (click)="addChild(selected)"[disabled]="!canUpdateGraph" >
+              <button 
+                *ngIf="nodes$ | async as nodes"
+                mat-mini-fab color="primary" 
+                (click)="addChild(selected)"
+                [disabled]="!((selected | getNode : nodes) | canAddChild : (selected | getGroup : nodes) : nonEditableNodeIds$.value)">
                 <mat-icon svgIcon="add"></mat-icon>
               </button>
             </div>
@@ -165,7 +175,7 @@
         <mat-tab label="Conditions" *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
             <waterfall-conditions 
-              [canUpdate]="canUpdateConditions"
+              [canUpdate]="!nonPartiallyEditableNodeIds$.value.includes(selected)"
               [rightForm]="rightForm"
               [rightId]="selected"
               (createStep)="createNewStep()"
@@ -190,12 +200,12 @@
       <mat-tab-group>
         <mat-tab label="Receipts Shares">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-right-list (deleteRight)="delete($event)" (selectRight)="select($event)" [canUpdate]="canUpdateGraph"></waterfall-right-list>
+            <waterfall-right-list (deleteRight)="delete($event)" (selectRight)="select($event)" [nonEditableNodeIds]="nonEditableNodeIds$.value"></waterfall-right-list>
           </section>
         </mat-tab>
         <mat-tab label="Pools Only">
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-pool-list [canUpdate]="canUpdateGraph"></waterfall-pool-list>
+            <waterfall-pool-list [canUpdate]="canUpdateGraph"></waterfall-pool-list> <!-- TODO #9749 check how can a pool be updated or created-->
           </section>
         </mat-tab>
       </mat-tab-group>

@@ -16,7 +16,7 @@ export class WaterfallGraphRightComponent implements OnChanges {
   @Input() public right: RightNode;
   @Input() public group: HorizontalNode | VerticalNode;
   @Input() public selected: boolean;
-  @Input() public canUpdate = false;
+  @Input() public nonEditableNodeIds: string[] = [];
   @Input() @boolean public hideAmount: boolean;
   @Input() public monetizationLabel = 'Total Revenue';
 

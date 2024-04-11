@@ -13,7 +13,7 @@ export class WaterfallGraphHorizontalComponent implements OnInit, OnDestroy {
 
   @Input() public horizontal: HorizontalNode;
   @Input() private selected: string;
-  @Input() public canUpdate = false;
+  @Input() public nonEditableNodeIds: string[] = [];
 
   @Output() addChild = new EventEmitter<string>();
   @Output() addSibling = new EventEmitter<string>();

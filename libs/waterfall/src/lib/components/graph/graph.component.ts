@@ -15,7 +15,7 @@ import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Intercom } from 'ng-intercom';
 import { WriteBatch } from 'firebase/firestore';
-import { BehaviorSubject, Subscription, combineLatest, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, combineLatest, map, tap } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
@@ -39,6 +39,10 @@ import {
   toGroupLabel,
   smartJoin,
   trimString,
+  getIncomesSources,
+  getChilds,
+  Statement,
+  Income,
 } from '@blockframes/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { GraphService } from '@blockframes/ui/graph/graph.service';
@@ -54,6 +58,7 @@ import {
   Arrow,
   HorizontalNode,
   Node,
+  VerticalNode,
   computeDiff,
   createChild,
   createSibling,
@@ -63,6 +68,20 @@ import {
   toGraph,
   updateParents
 } from './layout';
+import { unique } from '@blockframes/utils/helpers';
+
+function getNonEditableNodeIds(rights: Right[], sources: WaterfallSource[], reportedStatements: Statement[], incomes: Income[]) {
+  const incomeIds = unique(reportedStatements.map(s => s.incomeIds).flat());
+  const reportedIncomes = incomeIds.map(id => incomes.find(i => i.id === id));
+  const nonEditableSources = getIncomesSources(reportedIncomes, sources);
+  const topLevelRights = nonEditableSources.map(s => rights.find(r => r.id === s.destinationId));
+  const childIds = unique(topLevelRights.map(r => getChilds(r.id, rights).map(r => r.id)).flat());
+  const nonEditableRights = childIds.map(id => rights.find(r => r.id === id));
+  const groupIds = unique(nonEditableRights.filter(r => r.groupId).map(r => r.groupId));
+  const nonEditableGroups = groupIds.map(id => rights.find(r => r.id === id));
+
+  return [...nonEditableSources.map(s => s.id), ...nonEditableRights.map(r => r.id), ...nonEditableGroups.map(g => g.id)];
+}
 
 @Component({
   selector: 'waterfall-graph',
@@ -77,13 +96,14 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   public showEditPanel = this.shell.canBypassRules;
   public waterfall = this.shell.waterfall;
   public isDefaultVersion: boolean;
-  public canUpdateGraph = true;
-  public canUpdateConditions = true;
+  public canUpdateGraph = true; // TODO #9749 remove
   public selected$ = new BehaviorSubject<string>('');
   public isSourceSelected = false;
   public nodes$ = new BehaviorSubject<Node[]>([]);
-  public availableNodes$ = combineLatest([this.nodes$, this.selected$]).pipe(
-    map(([nodes, selected]) => {
+  public nonEditableNodeIds$ = new BehaviorSubject<string[]>([]);
+  public nonPartiallyEditableNodeIds$ = new BehaviorSubject<string[]>([]);
+  public availableNodes$: Observable<(Node & { disabled: boolean })[]> = combineLatest([this.nodes$, this.selected$, this.nonEditableNodeIds$]).pipe(
+    map(([nodes, selected, nonEditableNodeIds]) => {
       const isGroupOfSelected = (node: HorizontalNode) => node.members.find(m => m.id === selected || (m.type === 'vertical' && m.members.find(v => v.id === selected)));
       const isSelectedHorizontalGroup = (node: Node) => node.type === 'horizontal' && isGroupOfSelected(node);
 
@@ -94,7 +114,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
         node.id !== selected && // removes current node
         !(isSelectedHorizontalGroup(node)) &&  // removes current node group
         !(current && current.children.includes(node.id)) // removes direct children of the current node
-      );
+      ).map(node => {
+        const disabled = nonEditableNodeIds.includes(node.id);
+        return { ...node, disabled };
+      });
     })
   );
   public arrows$ = new BehaviorSubject<Arrow[]>([]);
@@ -150,7 +173,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.shell.statements$.pipe(map(statements => statements.filter(s => s.status === 'reported'))),
       this.shell.contracts$,
       this.shell.hiddenRightHolderIds$,
-    ]).subscribe(([rights, sources, waterfall, versionId, reportedStatements, contracts, hiddenRightHolderIds]) => {
+      this.shell.incomes$,
+    ]).subscribe(([rights, sources, waterfall, versionId, reportedStatements, contracts, hiddenRightHolderIds, incomes]) => {
       this.rights = rights;
       this.contracts = contracts;
       this.version = waterfall.versions.find(v => v.id === versionId);
@@ -164,20 +188,49 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.rightForm.enable();
       this.sourceForm.enable();
       this.rightholderControl.enable();
-      this.canUpdateGraph = !this.readonly;
-      this.canUpdateConditions = true;
-      if ((this.version?.id && !this.isDefaultVersion && !this.version.standalone) || reportedStatements.length > 0) {
-        this.rightForm.disable();
-        this.rightholderControl.disable();
-        this.canUpdateConditions = false;
-        if (reportedStatements.length === 0) {
-          this.rightForm.controls.percent.enable();
-          this.rightForm.controls.steps.enable();
-          this.canUpdateConditions = true;
-        }
-        this.sourceForm.disable();
+
+      const allNodeIds = [...rights.map(r => r.id), ...this.sources.map(s => s.id)];
+
+      if(this.readonly) {
         this.canUpdateGraph = false;
+        this.nonEditableNodeIds$.next(allNodeIds); // All nodes are non-editable
+        this.rightForm.disable(); // TODO #9749 check if needed
+        this.rightholderControl.disable(); // TODO #9749 check if needed
+        this.sourceForm.disable(); // TODO #9749 check if needed
+      } else {
+        this.canUpdateGraph =  true;
+        this.nonEditableNodeIds$.next([]);
+
+        if ((this.version?.id && !this.isDefaultVersion && !this.version.standalone)) {
+
+          this.nonEditableNodeIds$.next(allNodeIds); // All nodes are non-editable
+          // Nodes not "touched" by a reported statement are still partially editable (percentage and conditions)
+          this.nonPartiallyEditableNodeIds$.next(getNonEditableNodeIds(rights, this.sources, reportedStatements, incomes)); 
+  
+          this.rightForm.disable();// TODO #9749 check if needed
+          this.rightholderControl.disable();// TODO #9749 check if needed
+          this.sourceForm.disable();// TODO #9749 check if needed
+
+          /*if (reportedStatements.length === 0) {
+            this.rightForm.controls.percent.enable(); // TODO #9749 TODO
+            this.rightForm.controls.steps.enable(); // TODO #9749 check if needed
+            this.nonEditableConditionsNodeIds$.next([]); // All nodes conditions are editable
+          }*/
+          
+          this.canUpdateGraph = false;
+        } else if (reportedStatements.length > 0) {
+          // Nodes not "touched" by a reported statement are still editable (percentage and conditions)
+          this.nonEditableNodeIds$.next(getNonEditableNodeIds(rights, this.sources, reportedStatements, incomes));
+          this.nonPartiallyEditableNodeIds$.next(this.nonEditableNodeIds$.value);
+  
+          this.rightForm.disable(); // TODO #9749 check if needed
+          this.rightholderControl.disable(); // TODO #9749 check if needed
+  
+          this.sourceForm.disable(); // TODO #9749 check if needed
+          this.canUpdateGraph = false;
+        }
       }
+
       this.layout(hiddenRightHolderIds);
     }));
 
@@ -288,6 +341,11 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
     const source = this.sources.find(source => source.id === id);
     if (source) {
+      if (this.nonEditableNodeIds$.value.includes(id)) {
+        this.sourceForm.disable();
+      } else {
+        this.sourceForm.enable();
+      }
       this.isSourceSelected = true;
       setSourceFormValue(this.sourceForm, source);
       return;
@@ -295,6 +353,18 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
     const right = this.rights.find(right => right.id === id);
     if (right) {
+      if (this.nonEditableNodeIds$.value.includes(id)) {
+        this.rightForm.disable();
+        this.rightForm.get('parents').enable();
+        this.rightholderControl.disable();
+        if(!this.nonPartiallyEditableNodeIds$.value.includes(id)) {
+          this.rightForm.controls.percent.enable();
+          this.rightForm.controls.steps.enable();
+        }
+      } else {
+        this.rightForm.enable();
+        this.rightholderControl.enable();
+      }
       this.isSourceSelected = false;
       let steps: Condition[][] = [];
 
@@ -726,5 +796,39 @@ export class IsStepPipe implements PipeTransform {
   transform(id: string, rights: Right[]) {
     const groupId = rights.find(r => r.id === id)?.groupId;
     return rights.find(r => r.id === groupId)?.type === 'vertical';
+  }
+}
+
+@Pipe({ name: 'getNode' })
+export class GetNodePipe implements PipeTransform {
+  transform(id: string, nodes: Node[]) {
+    let node = nodes.find(r => r.id === id);
+    if (node) return node;
+    for (const n of nodes) {
+      if (n.type === 'horizontal') {
+        node = n.members.find(r => r.id === id);
+        if (node) return node;
+        for (const nn of n.members) {
+          if (nn.type === 'vertical') {
+            node = nn.members.find(r => r.id === id);
+            if (node) return node;
+          }
+        }
+      } else if (n.type === 'vertical') {
+        node = n.members.find(r => r.id === id);
+        if (node) return node;
+      }
+    }
+  }
+}
+
+@Pipe({ name: 'getGroup' })
+export class GetGroupPipe implements PipeTransform {
+  transform(childId: string, nodes: Node[]) {
+    const isGroupOfSelected = (node: HorizontalNode) => node.members.some(m => m.id === childId || (m.type === 'vertical' && m.members.some(v => v.id === childId)));
+    const isSelectedHorizontalGroup = (node: Node) => node.type === 'horizontal' && isGroupOfSelected(node);
+    const isSelectedVerticalGroup = (node: Node) => node.type === 'vertical' && node.members.some(m => m.id === childId);
+
+    return nodes.find(node => isSelectedHorizontalGroup(node) || isSelectedVerticalGroup(node)) as HorizontalNode | VerticalNode;
   }
 }
