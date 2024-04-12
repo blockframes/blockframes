@@ -581,7 +581,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message,
           imgRef,
-          placeholderUrl: 'profil_user.svg',
+          placeholderUrl: 'empty_poster.svg',
           url,
         };
       }
