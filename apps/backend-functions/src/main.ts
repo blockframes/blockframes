@@ -50,7 +50,8 @@ import {
   onWaterfallUpdate,
   removeWaterfallFile,
   onWaterfallStatementUpdate,
-  requestStatementReview as _requestStatementReview
+  requestStatementReview as _requestStatementReview,
+  onWaterfallDocumentUpdate
 } from './waterfall';
 import { projectId, storageBucket } from './environments/environment';
 
@@ -313,6 +314,11 @@ export const onWaterfallUpdateEvent = onDocumentUpdate('waterfall/{waterfallID}'
  * Trigger: when a waterfall is deleted
  */
 export const onWaterfallDeleteEvent = onDocumentDelete('waterfall/{waterfallID}', onWaterfallDelete);
+
+/**
+ * Trigger: when a waterfallDocument is updated
+ */
+export const onWaterfallDocumentUpdateEvent = onDocumentUpdate('waterfall/{waterfallID}/documents/{documentID}', onWaterfallDocumentUpdate);
 
 /**
  * Trigger: when a waterfallDocument is deleted

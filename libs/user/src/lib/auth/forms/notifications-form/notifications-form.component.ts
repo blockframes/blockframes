@@ -50,6 +50,7 @@ const titleType: Partial<Record<NotificationTypes, NotificationSetting>> = {
   requestForStatementReviewApproved: { text: 'Your statement has been approved.', tooltip: false },
   requestForStatementReviewDeclined: { text: 'Your statement has been declined.', tooltip: false },
   userRequestedStatementReview: { text: 'A user requested a statement review.', tooltip: false },
+  documentSharedWithOrg: { text: 'A document has been shared with your organization.', tooltip: false },
   // #7946 this may be reactivated later
   // underSignature: { text: 'Your offer is now under signature or validated by all parties. (RECOMMENDED)', tooltip: true },
 };
@@ -136,7 +137,8 @@ const tables: { title: string, types: NotificationTypes[], appAuthorized: App[] 
       'requestForStatementReviewCreated',
       'requestForStatementReviewApproved',
       'requestForStatementReviewDeclined',
-      'userRequestedStatementReview'
+      'userRequestedStatementReview',
+      'documentSharedWithOrg'
     ],
     appAuthorized: ['waterfall']
   }

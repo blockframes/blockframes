@@ -142,6 +142,31 @@ export async function onWaterfallDocumentDelete(docSnapshot: BlockframesSnapshot
   return true;
 }
 
+export async function onWaterfallDocumentUpdate(change: BlockframesChange<WaterfallDocument>) {
+  const before = change.before.data();
+  const after = change.after.data();
+
+  if (!before || !after) {
+    console.error('Invalid document data, before:', before, 'after:', after);
+    throw new Error('Document update function got invalid data');
+  }
+
+  const orgAddedIds = difference(after.sharedWith || [], before.sharedWith || []);
+  const organizations = await Promise.all(orgAddedIds.map(o => getDocument<Organization>(`orgs/${o}`)));
+  const userIds = Array.from(new Set(organizations.map(o => o.userIds).flat()));
+
+  const notifications = userIds.map(toUserId => createNotification({
+    toUserId,
+    docId: after.waterfallId,
+    documentId: after.id,
+    _meta: createInternalDocumentMeta({ createdFrom: 'waterfall' }),
+    type: 'documentSharedWithOrg'
+  }));
+
+  await triggerNotifications(notifications);
+  return true;
+}
+
 export async function onWaterfallStatementUpdate(change: BlockframesChange<Statement>, context: EventContext) {
   const before = change.before.data();
   const after = change.after.data();

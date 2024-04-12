@@ -67,6 +67,7 @@ export const notifications = {
     'requestForStatementReviewApproved', // Sent to user if approved
     'requestForStatementReviewDeclined', // Sent to user if declined
     'userRequestedStatementReview', // Sent to producer
+    'documentSharedWithOrg', // Sent to user
   ] as const,
 }
 
@@ -106,6 +107,7 @@ export interface Notification {
   invitation?: PublicInvitation;
   bucket?: Bucket;
   statementId?: string;
+  documentId?: string; // Waterfall document id
   appAccess?: App;
   data?: Record<string, string>;
   /** @dev Type of the notification */

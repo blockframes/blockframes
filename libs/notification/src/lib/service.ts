@@ -29,6 +29,7 @@ import { NegotiationService } from '@blockframes/contract/negotiation/service';
 import { getReviewer } from '@blockframes/contract/negotiation/utils';
 import { where } from 'firebase/firestore';
 import { SentryService } from '@blockframes/utils/sentry.service';
+import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService extends BlockframesCollection<Notification> {
@@ -59,6 +60,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
     private movieService: MovieService,
     private negotiationService: NegotiationService,
     private contractService: ContractService,
+    private documentService: WaterfallDocumentsService,
     private userService: UserService,
     private eventService: EventService,
     private sentryService: SentryService,
@@ -560,6 +562,27 @@ export class NotificationService extends BlockframesCollection<Notification> {
           imgRef: notification.user?.avatar || notification.organization?.logo,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl[notification._meta.createdFrom]}/c/o/dashboard/title/${notification.docId}/statement/${notification.statementId}`,
+        };
+      }
+      case 'documentSharedWithOrg': {
+        const movie = await this.loadMovie(notification.docId);
+        const imgRef = this.getPoster(movie);
+        let url = `${applicationUrl[notification._meta.createdFrom]}/c/o/dashboard/title/${notification.docId}/documents`;
+        let message = `A new <a href="/c/o/dashboard/title/${movie.id}/documents" target="_blank">document</a> was shared with your organization on ${movie.title.international}'s Waterfall.`;
+        if (notification.documentId) {
+          const doc = await this.documentService.load(notification.documentId, { waterfallId: notification.docId });
+          if (doc?.type === 'contract') {
+            message = `A new <a href="/c/o/dashboard/title/${movie.id}/document/${doc.id}" target="_blank">document</a> was shared with your organization on ${movie.title.international}'s Waterfall.`;
+            url = `${applicationUrl[notification._meta.createdFrom]}/c/o/dashboard/title/${notification.docId}/document/${doc.id}`;
+          }
+        }
+        return {
+          ...notification,
+          _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
+          message,
+          imgRef,
+          placeholderUrl: 'profil_user.svg',
+          url,
         };
       }
       default:
