@@ -1,12 +1,15 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { WaterfallFinancingPlanForm } from '../../../form/financing-plan.form';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
-import { WaterfallDocument, WaterfallFinancingPlan, createWaterfallDocument, createWaterfallFinancingPlan } from '@blockframes/model';
+import { Organization, WaterfallDocument, WaterfallFinancingPlan, WaterfallPermissions, createWaterfallDocument, createWaterfallFinancingPlan } from '@blockframes/model';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 import { WaterfallDocumentsService } from '../../../documents.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationService } from '@blockframes/organization/service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, map, of, switchMap } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { DocumentShareComponent } from '../document-share/document-share.component';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 
 @Component({
@@ -21,12 +24,22 @@ export class FinancingPlanListComponent implements OnInit {
   public disabled = true;
   public loading$ = new BehaviorSubject(false);
 
+  private permissions$: Observable<WaterfallPermissions[]> = this.shell.canBypassRules$.pipe(
+    switchMap(canBypassRules => canBypassRules ? this.shell.permissions$ : of([])),
+  );
+
+  public organizations$ = this.permissions$.pipe(
+    switchMap(permissions => this.orgService.valueChanges(permissions.map(p => p.id))),
+    map(orgs => orgs.filter(o => o.id !== this.orgService.org.id))
+  );
+
   constructor(
     private snackBar: MatSnackBar,
     public shell: DashboardWaterfallShellComponent,
     private documentService: WaterfallDocumentsService,
     private uploaderService: FileUploaderService,
     private orgService: OrganizationService,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit() {
@@ -63,6 +76,13 @@ export class FinancingPlanListComponent implements OnInit {
   async delete(documentId: string) {
     await this.documentService.remove(documentId, { params: { waterfallId: this.shell.waterfall.id } });
     this.snackBar.open('Document deleted', 'close', { duration: 3000 });
+  }
+
+  share(documentId: string, waterfallId: string, organizations: Organization[]) {
+    this.dialog.open(DocumentShareComponent, {
+      data: createModalData({ organizations, documentId, waterfallId }, 'medium'),
+      autoFocus: false
+    });
   }
 
 }

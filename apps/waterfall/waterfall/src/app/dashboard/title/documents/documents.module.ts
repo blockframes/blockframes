@@ -9,7 +9,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ContractListModule } from '@blockframes/waterfall/components/document/contract/contract-list/contract-list.module';
 import { BudgetListModule } from '@blockframes/waterfall/components/document/budget-list/budget-list.module';
 import { FinancingPlanListModule } from '@blockframes/waterfall/components/document/financing-plan-list/financing-plan-list.module';
-import { WaterfallAdminGuard } from '@blockframes/waterfall/guards/waterfall-admin.guard';
 
 // Pages
 import { DocumentsComponent } from './documents.component';
@@ -38,11 +37,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatIconModule,
 
     // Routing
-    RouterModule.forChild([{
-      path: '',
-      canActivate: [WaterfallAdminGuard], // Temp #9553 - remove once we allow non-admin to view documents
-      component: DocumentsComponent
-    }]),
+    RouterModule.forChild([{ path: '', component: DocumentsComponent }]),
   ],
 })
 export class DocumentsModule { }

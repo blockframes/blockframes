@@ -13,6 +13,7 @@ import { PreviewFileModalComponent } from '../preview-file-modal/preview-file-mo
 export class OpenPreviewComponent {
 
   @Input() ref: StorageFile;
+  @Input() color = 'primary'
   @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<unknown>;
 
   private dialogRef: MatDialogRef<unknown>;

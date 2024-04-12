@@ -1,10 +1,10 @@
-<ng-container *ngIf="shell.documents$ | async as documents else loading">
+<ng-container *ngIf="shell.rightholderDocuments$ | async as documents else loading">
 
   <article class="header">
     <h2>Contracts</h2>
   </article>
 
-  <p>Please provide us with all the contracts, so that we can create a waterfall.</p>
+  <p *ngIf="shell.canBypassRules">Please provide us with all the contracts, so that we can create a waterfall.</p>
 
   <article *ngIf="shell.waterfall$ | async as waterfall">
     <ul>
@@ -59,7 +59,13 @@
             
             <!-- TODO #9436 -->
             <!-- <p class="amendment">1 amendment - 30/06/2023</p> -->
-            
+
+            <ng-container *ngIf="organizations$ | async as organizations">
+              <button mat-icon-button *ngIf="shell.canBypassRules" matTooltip="Share Contract" (click)="share(contract.id, waterfall.id, organizations)">
+                <mat-icon svgIcon="person_add"></mat-icon>
+              </button>
+            </ng-container>
+  
             <button mat-icon-button *ngIf="shell.canBypassRules" matTooltip="Edit Contract" (click)="edit(contract, waterfall)">
               <mat-icon svgIcon="edit"></mat-icon>
             </button>
