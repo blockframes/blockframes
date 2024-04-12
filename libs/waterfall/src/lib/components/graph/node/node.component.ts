@@ -14,7 +14,7 @@ export class WaterfallGraphNodeComponent implements OnInit, OnDestroy {
 
   @Input() public node: Node;
   @Input() public selected = '';
-  @Input() @boolean public canUpdate = false;
+  @Input() public nonEditableNodeIds: string[] = [];
 
   @Output() addChild = new EventEmitter<string>();
   @Output() addSibling = new EventEmitter<string>();

@@ -3,7 +3,7 @@
   <waterfall-graph-source
     [source]="node" 
     [selected]="sourceSelection()"
-    [canUpdate]="canUpdate"
+    [canUpdate]="!nonEditableNodeIds.includes(node.id)"
     (handleSelect)="handleSelect.emit($event)"
     (addSibling)="addSibling.emit($event)"
     (addChild)="addChild.emit($event)"
@@ -14,7 +14,7 @@
   <waterfall-graph-right
     [right]="node"
     [selected]="rightSelection()"
-    [canUpdate]="canUpdate"
+    [nonEditableNodeIds]="nonEditableNodeIds"
     (handleSelect)="handleSelect.emit($event)"
     (addSibling)="addSibling.emit($event)"
     (addChild)="addChild.emit($event)"
@@ -25,7 +25,7 @@
   <waterfall-graph-vertical
     [vertical]="node"
     [selected]="verticalSelection()"
-    [canUpdate]="canUpdate"
+    [nonEditableNodeIds]="nonEditableNodeIds"
     (handleSelect)="handleSelect.emit($event)"
     (addSibling)="addSibling.emit($event)"
     (addChild)="addChild.emit($event)"
@@ -36,7 +36,7 @@
   <waterfall-graph-horizontal
     [horizontal]="node"
     [selected]="selected"
-    [canUpdate]="canUpdate"
+    [nonEditableNodeIds]="nonEditableNodeIds"
     (handleSelect)="handleSelect.emit($event)"
     (addSibling)="addSibling.emit($event)"
     (addChild)="addChild.emit($event)"

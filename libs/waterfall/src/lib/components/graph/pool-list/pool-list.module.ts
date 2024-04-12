@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // Component
-import { WaterfallPoolListComponent } from './pool-list.component';
+import { WaterfallPoolListComponent, CanUpdatePoolPipe } from './pool-list.component';
 
 // Blockframes
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
@@ -13,7 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
-  declarations: [ WaterfallPoolListComponent ],
+  declarations: [WaterfallPoolListComponent, CanUpdatePoolPipe],
   imports: [
     CommonModule,
 
@@ -22,6 +22,6 @@ import { MatButtonModule } from '@angular/material/button';
     MatIconModule,
     MatButtonModule,
   ],
-  exports: [ WaterfallPoolListComponent ],
+  exports: [WaterfallPoolListComponent],
 })
-export class WaterfallPoolListModule {}
+export class WaterfallPoolListModule { }

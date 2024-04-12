@@ -1,9 +1,9 @@
 <section *ngFor="let pool of (existingPools$ | async)">
   <p>{{pool}}</p>
-  <button mat-icon-button (click)="editPool(pool)" [disabled]="!canUpdate">
+  <button mat-icon-button (click)="editPool(pool)" [disabled]="!(pool | canUpdatePool : rights : nonEditableNodeIds)">
     <mat-icon svgIcon="edit"></mat-icon>
   </button>
-  <button mat-icon-button (click)="removePool(pool)" [disabled]="!canUpdate">
+  <button mat-icon-button (click)="removePool(pool)" [disabled]="!(pool | canUpdatePool : rights : nonEditableNodeIds)">
     <mat-icon svgIcon="delete"></mat-icon>
   </button>
 </section>
