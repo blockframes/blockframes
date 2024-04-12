@@ -12,6 +12,7 @@ import { DownloadPipeModule } from '@blockframes/media/file/pipes/download.pipe'
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { OpenPreviewModule } from '@blockframes/ui/open-preview/open-preview.module'
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
+import { DocumentShareModule } from '../document-share/document-share.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -20,6 +21,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [FinancingPlanListComponent],
@@ -34,6 +36,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FileNameModule,
     OpenPreviewModule,
     ImageModule,
+    DocumentShareModule,
 
     // Material
     MatButtonModule,
@@ -42,6 +45,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatDividerModule,
     MatListModule,
     MatTooltipModule,
+    MatDialogModule
   ],
   exports: [
     FinancingPlanListComponent

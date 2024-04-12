@@ -1,4 +1,4 @@
-<ng-container *ngIf="shell.documents$ | async as documents else loading">
+<ng-container *ngIf="shell.rightholderDocuments$  | async as documents else loading">
 
   <article class="header">
     <h2>Financing plan documents</h2>
@@ -18,7 +18,7 @@
       </div>
       <mat-divider></mat-divider>
     </ng-container>
-    <ng-container *ngIf="shell.financingPlans$ | async as financingPlans">
+    <ng-container *ngIf="shell.rightholderFinancingPlans$ | async as financingPlans">
       <ng-container *ngIf="financingPlans.length else empty">
         <mat-list>
           <ng-container *ngFor="let financingPlan of financingPlans; let index = index">
@@ -27,11 +27,16 @@
               <span mat-line [matTooltip]="file.storagePath | fileName">
                 {{file.storagePath | fileName}}
               </span>
-              <bf-preview-modal [ref]="file"></bf-preview-modal>
-              <a mat-icon-button color="primary" [href]="file | getUrl | async" target="_blank" matTooltip="Download Document">
+              <bf-preview-modal color="" [ref]="file"></bf-preview-modal>
+              <a mat-icon-button [href]="file | getUrl | async" target="_blank" matTooltip="Download Document">
                 <mat-icon svgIcon="cloud_download"></mat-icon>
               </a>
-              <button mat-icon-button *ngIf="shell.canBypassRules" color="primary" matTooltip="Delete File" (click)="delete(file.id)">
+              <ng-container *ngIf="organizations$ | async as organizations">
+                <button mat-icon-button *ngIf="shell.canBypassRules" matTooltip="Share Document" (click)="share(financingPlan.id, waterfall.id, organizations)">
+                  <mat-icon svgIcon="person_add"></mat-icon>
+                </button>
+              </ng-container>
+              <button mat-icon-button *ngIf="shell.canBypassRules" matTooltip="Delete File" (click)="delete(file.id)">
                 <mat-icon svgIcon="delete"></mat-icon>
               </button>
             </mat-list-item>

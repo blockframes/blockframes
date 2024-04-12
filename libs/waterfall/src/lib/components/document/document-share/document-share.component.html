@@ -1,0 +1,32 @@
+<global-modal>
+  <h2>Share document with Company</h2>
+  <header>
+    <p class="mat-body-1">
+      Share this document with all users within the organization who are using Blockframes to ensure seamless collaboration and access.
+    </p>
+  </header>
+
+  <section>
+    <mat-form-field appearance="outline" >
+      <mat-label>Select Companies</mat-label>
+      <mat-select [formControl]="control" multiple>
+        <mat-option *ngFor="let org of data.organizations" [value]="org.id">
+          <article>
+            <img height="40" width="40" [ref]="org.logo" asset="empty_organization.svg" type="logo" alt="Organization Logo">
+            <span class="mat-body-1"><b>{{ org.name }}</b></span>
+          </article>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </section>
+
+  <mat-dialog-actions>
+    <button mat-flat-button color="primary" (click)="confirm()">
+      <span>Share document</span>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
+    </button>
+    <button mat-button (click)="close()">
+      Close window
+    </button>
+  </mat-dialog-actions>
+</global-modal>

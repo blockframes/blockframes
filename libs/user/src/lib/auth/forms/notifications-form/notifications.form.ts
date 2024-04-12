@@ -54,6 +54,7 @@ function createNotificationsControls(settings: Partial<NotificationSettings> = {
     requestForStatementReviewApproved: new NotificationSettingsForm(settings.requestForStatementReviewApproved),
     requestForStatementReviewDeclined: new NotificationSettingsForm(settings.requestForStatementReviewDeclined),
     userRequestedStatementReview: new NotificationSettingsForm(settings.userRequestedStatementReview),
+    documentSharedWithOrg: new NotificationSettingsForm(settings.documentSharedWithOrg),
     // #7946 this may be reactivated later
     // underSignature: new NotificationSettingsForm(settings.underSignature, true),
   }

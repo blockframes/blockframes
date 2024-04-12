@@ -322,6 +322,45 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
+
+  /**
+   * Observable of the documents that current rightholder is allowed to see
+   */
+  public rightholderDocuments$ = combineLatest([this.canBypassRules$, this.permission$, this.documents$]).pipe(
+    map(([canBypassRules, permission, documents]) => {
+      if (canBypassRules) return documents;
+      return documents.filter(d => d.sharedWith?.includes(permission.id));
+    }),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  /**
+   * Observable of the contracts that current rightholder is allowed to see
+   */
+  public rightholderContracts$ = this.rightholderDocuments$.pipe(
+    map(documents => documents.filter(d => isContract(d))),
+    map(documents => sortContracts(documents.map(d => convertDocumentTo<WaterfallContract>(d)))),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  /**
+   * Observable of the budget documents that current rightholder is allowed to see
+   */
+  public rightholderBudgets$ = this.rightholderDocuments$.pipe(
+    map(documents => documents.filter(d => isBudget(d))),
+    map(documents => documents.map(d => convertDocumentTo<WaterfallBudget>(d))),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  /**
+   * Observable of the financing plan documents that current rightholder is allowed to see
+   */
+  public rightholderFinancingPlans$ = this.rightholderDocuments$.pipe(
+    map(documents => documents.filter(d => isFinancingPlan(d))),
+    map(documents => documents.map(d => convertDocumentTo<WaterfallFinancingPlan>(d))),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
   public lockedVersionId: string; // VersionId that is locked for the current rightholder
 
   private _simulation$ = new BehaviorSubject<WaterfallState>(undefined);

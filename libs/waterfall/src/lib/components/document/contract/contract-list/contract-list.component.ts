@@ -1,5 +1,5 @@
 
-import { map, startWith, tap } from 'rxjs';
+import { Observable, map, of, startWith, switchMap, tap } from 'rxjs';
 import { Component, ChangeDetectionStrategy, ViewChild, Input, ChangeDetectorRef } from '@angular/core';
 
 import { WaterfallService } from '../../../../waterfall.service';
@@ -18,7 +18,9 @@ import {
   createTerm,
   createWaterfallRightholder,
   createExpenseType,
-  Term
+  Term,
+  WaterfallPermissions,
+  Organization
 } from '@blockframes/model';
 import { TermService } from '@blockframes/contract/term/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -28,6 +30,7 @@ import { DashboardWaterfallShellComponent } from '../../../../dashboard/shell/sh
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { DocumentShareComponent } from '../../document-share/document-share.component';
 
 @Component({
   selector: 'waterfall-contract-list',
@@ -41,7 +44,7 @@ export class ContractListComponent {
 
   public selected?: RightholderRole;
   public creating = false;
-  public contracts$ = this.shell.contracts$.pipe(
+  public contracts$ = this.shell.rightholderContracts$.pipe(
     startWith([]),
     map(rawContracts => {
       const contracts: Partial<Record<RightholderRole, WaterfallContract[]>> = {};
@@ -52,6 +55,15 @@ export class ContractListComponent {
       return contracts;
     }),
     tap(rawContracts => this.contracts = rawContracts)
+  );
+
+  private permissions$: Observable<WaterfallPermissions[]> = this.shell.canBypassRules$.pipe(
+    switchMap(canBypassRules => canBypassRules ? this.shell.permissions$ : of([])),
+  );
+
+  public organizations$ = this.permissions$.pipe(
+    switchMap(permissions => this.orgService.valueChanges(permissions.map(p => p.id))),
+    map(orgs => orgs.filter(o => o.id !== this.currentOrgId))
   );
 
   private contracts: Partial<Record<RightholderRole, WaterfallContract[]>>;
@@ -236,6 +248,13 @@ export class ContractListComponent {
     this.contractForm.markAsPristine();
 
     this.snackBar.open('Contract saved', 'close', { duration: 3000 });
+  }
+
+  share(documentId: string, waterfallId: string, organizations: Organization[]) {
+    this.dialog.open(DocumentShareComponent, {
+      data: createModalData({ organizations, documentId, waterfallId }, 'medium'),
+      autoFocus: false
+    });
   }
 }
 

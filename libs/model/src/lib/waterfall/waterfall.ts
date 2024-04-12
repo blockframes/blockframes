@@ -277,6 +277,7 @@ export interface WaterfallDocument<Meta extends (WaterfallDocumentMeta | unknown
   type: 'financingPlan' | 'budget' | 'contract';
   waterfallId: string; // Parent document Id
   ownerId: string; // Uploader orgId
+  sharedWith?: string[]; // OrgIds that can read this document
   meta: Meta;
 }
 

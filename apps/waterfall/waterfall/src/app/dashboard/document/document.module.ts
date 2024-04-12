@@ -9,7 +9,6 @@ import { DashboardWaterfallShellModule } from '@blockframes/waterfall/dashboard/
 
 // Guards
 import { DocumentActiveGuard } from '@blockframes/waterfall/guards/document-active.guard';
-import { WaterfallAdminGuard } from '@blockframes/waterfall/guards/waterfall-admin.guard';
 
 const routes: Routes = [{
   path: '',
@@ -22,7 +21,7 @@ const routes: Routes = [{
     },
     {
       path: ':documentId',
-      canActivate: [DocumentActiveGuard, WaterfallAdminGuard], // Temp #9553 - remove WaterfallAdminGuard once we allow non-admin to view documents
+      canActivate: [DocumentActiveGuard],
       children: [
         {
           path: '',

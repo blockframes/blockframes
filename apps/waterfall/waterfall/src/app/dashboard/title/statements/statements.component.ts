@@ -128,6 +128,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
   public isRefreshing$ = this.shell.isRefreshing$;
   public isStandaloneVersion$ = this.shell.versionId$.pipe(map(versionId => isStandaloneVersion(this.shell.waterfall, versionId)));
   public canBypassRules = this.shell.canBypassRules;
+  public accessibleDocumentIds$ = this.shell.rightholderDocuments$.pipe(map(docs => docs.map(doc => doc.id)));
 
   private contracts: WaterfallContract[] = [];
   private statements: Statement[] = [];
@@ -341,6 +342,5 @@ export class StatementsComponent implements OnInit, OnDestroy {
     const contracts = getContractsWith([this.producer.id, this.shell.currentRightholder.id], this.contracts).filter(c => statementsRolesMapping[type].includes(c.type));
     return contracts.some(c => !this.rightholderContracts.find(rc => rc.id === c.id && rc.statements.length));
   }
-
 
 }

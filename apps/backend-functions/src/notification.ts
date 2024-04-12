@@ -361,6 +361,9 @@ export async function onNotificationCreate(snap: BlockframesSnapshot<Notificatio
           .then(() => notification.email.isSent = true)
           .catch(e => notification.email.error = e.message);
         break;
+      case 'documentSharedWithOrg':
+        // No email is sent to user for whom document was shared, only a notification
+        break;
       default:
         notification.email.error = emailErrorCodes.noTemplate.code;
         break;

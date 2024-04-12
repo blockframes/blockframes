@@ -15,6 +15,7 @@ import { WaterfallContractFormModule } from '../../../forms/contract-form/contra
 import { DownloadPipeModule } from '@blockframes/media/file/pipes/download.pipe';
 import { RightHolderNamePipeModule } from '../../../../pipes/rightholder-name.pipe';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
+import { DocumentShareModule } from '../../document-share/document-share.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -38,6 +39,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     DownloadPipeModule,
     RightHolderNamePipeModule,
     LogoSpinnerModule,
+    DocumentShareModule,
 
     // Material
     MatIconModule,
