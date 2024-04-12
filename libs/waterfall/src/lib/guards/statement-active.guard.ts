@@ -13,7 +13,7 @@ export class StatementActiveGuard implements CanActivate {
   ) { }
 
   /**
-   * TODO #9553
+   * TODO #9758
    * check if current user can read statement : not waterfall admin users should be allowed to see only their own statements 
    * and the ones of contracts (right.contractId) located above in the waterfall
    * @param next 
