@@ -17,6 +17,11 @@ export class WaterfallConditionsComponent implements OnInit, OnDestroy {
   @Input() @boolean public canUpdate = true;
   @Input() public set rightId(id: string) {
     this.conditionForm.reset();
+    if (this.canUpdate) {
+      this.conditionForm.enable();
+    } else {
+      this.conditionForm.disable();
+    }
     this.newCondition = undefined;
     this.selectedStep$.next(0);
     const steps = this.rightForm.get('steps').value;
