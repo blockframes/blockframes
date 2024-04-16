@@ -3,7 +3,7 @@
   <ng-container *ngIf="titles.length; else noMovies">
     <header>
       <h1 i18n>My Movies</h1>
-      <a mat-flat-button color="primary" routerLink="../title/create" matTooltip="Add Title">
+      <a mat-flat-button color="primary" routerLink="../title/create" i18n-matTooltip matTooltip="Add Title">
         <mat-icon svgIcon="add"></mat-icon>
         <span i18n>Add Movie</span>
       </a>

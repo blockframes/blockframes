@@ -5,6 +5,7 @@ import { AppModule } from './app/app.module';
 import { production } from '@env';
 import { loadTranslations } from "@angular/localize";
 import { supportedLanguages } from '@blockframes/utils/date-adapter';
+import { registerLocaleData } from '@angular/common';
 
 if (production) {
   enableProdMode();
@@ -40,4 +41,17 @@ async function initLanguage(locale: string): Promise<void> {
 
   loadTranslations(translations);
   $localize.locale = locale;
+
+  // Load required locale module
+  switch (locale) {
+    case 'fr': {
+      const localeModule = await import('../../../../node_modules/@angular/common/locales/fr');
+      registerLocaleData(localeModule.default);
+      break;
+    }
+    default:
+      console.warn('No locale module loaded');
+      break;
+  }
+
 }

@@ -2,13 +2,21 @@
   "locale": "en-US",
   "translations": {
     "2557636838397827495": "My Movies",
+    "9216548238264778039": "Add Title",
     "914828652303147085": "Add Movie",
     "6570363013146073520": "Dashboard",
     "4165850386196559100": "Empty",
+    "3872011783980566092": "Statements",
+    "4733307402565258070": "Documents",
+    "676761560757341812": "Waterfall",
+    "6732054330730169472": "Right Holders",
+    "2016983634478557788": "World Sales",
     "3903233957055104372": "Uploading {$INTERPOLATION} item{$ICU} ",
     "6974122261690012203": "{VAR_PLURAL, plural, =1 {} other {s}}",
     "6934730642585076350": "Send invitation{$ICU}",
     "420193595297649766": "Sending the invitation{$ICU}, please wait a few seconds",
-    "1823917487562062819": "Profile Information"
+    "1823917487562062819": "Profile Information",
+    "5175063519062921675": "Waterfall Management",
+    "4126547754925407239": "Create Waterfall"
   }
 }

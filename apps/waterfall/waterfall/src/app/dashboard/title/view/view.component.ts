@@ -13,30 +13,30 @@ export class TitleViewComponent {
   navLinks: RouteDescription[] = [
     {
       path: 'dashboard',
-      label: 'Dashboard',
+      label: $localize`Dashboard`,
       requireKeys: ['admin']
     },
     {
       path: 'statements',
-      label: 'Statements',
+      label: $localize`Statements`,
       requireKeys: ['waterfall-ready']
     },
     {
       path: 'documents',
-      label: 'Documents'
+      label: $localize`Documents`
     },
     {
       path: 'waterfall',
-      label: 'Waterfall',
+      label: $localize`Waterfall`,
       requireKeys: ['waterfall-ready']
     },
     {
       path: 'right-holders',
-      label: 'Right Holders',
+      label: $localize`Right Holders`,
     },
     {
       path: 'sales',
-      label: 'World Sales',
+      label: $localize`World Sales`,
       requireKeys: ['waterfall-ready', 'admin']
     },
   ];

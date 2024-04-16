@@ -11,6 +11,7 @@ import { MovieTableGridModule } from '@blockframes/movie/dashboard/table-grid/ta
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Pages
 import { HomeComponent } from './home.component';
@@ -26,6 +27,7 @@ import { HomeComponent } from './home.component';
     // Material
     MatButtonModule,
     MatIconModule,
+    MatTooltipModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: HomeComponent }])
