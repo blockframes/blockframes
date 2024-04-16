@@ -26,7 +26,6 @@ export function getUserDefaultDateFormat() {
 }
 
 export function getUserLocaleId(): string {
-  // TODO #9699 add more locales
   switch (navigator.language) {
     case 'fr':
     case 'fr-FR':
@@ -39,5 +38,7 @@ export function getUserLocaleId(): string {
       return 'en-GB';
   }
 }
+
+export const supportedLanguages = ['en', 'fr'];
 
 export const dateInputFormat = getUserDefaultDateFormat().toUpperCase();

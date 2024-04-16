@@ -1,12 +1,11 @@
 
 <ng-container *ngIf="titles$ | async as titles; else loading">
-  
   <ng-container *ngIf="titles.length; else noMovies">
     <header>
-      <h1>My Movies</h1>
+      <h1 i18n>My Movies</h1>
       <a mat-flat-button color="primary" routerLink="../title/create" matTooltip="Add Title">
         <mat-icon svgIcon="add"></mat-icon>
-        <span>Add Movie</span>
+        <span i18n>Add Movie</span>
       </a>
     </header>
 
