@@ -4,10 +4,27 @@
 </header>
 
 <div class="surface organization">
-  Organization
+  <h2>Organization</h2>
+  <p>The amortization of the film cost will be added to their reports.</p>
+
+  <section>
+    <mat-form-field *ngIf="contracts$ | async as contracts" appearance="outline">
+      <mat-label>Choose Contracts concerned</mat-label>
+      <mat-select [formControl]="amortizationForm.get('contractIds')" multiple required>
+        <ng-container *ngFor="let contract of contracts">
+          <mat-option [value]="contract.id">{{ contract.rightholder.name }} ({{ contract.type | toLabel : 'rightholderRoles' }})</mat-option>
+        </ng-container>
+      </mat-select>
+    </mat-form-field>
+  
+    <mat-form-field appearance="outline">
+      <mat-label>Give name to Calculation</mat-label>
+      <input matInput [formControl]="amortizationForm.get('name')" required />
+    </mat-form-field>
+  </section>
 </div>
 
-<mat-stepper #stepper (click)="onStepClicked($event)" linear>
+<mat-stepper #stepper>
   <!-- override default stepper icons for the "edit" & "done" steps -->
   <ng-template matStepperIcon="edit" let-index="index">
     {{ index + 1 }}
@@ -31,7 +48,7 @@
             <span>Continue</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </button>
-          <button mat-button class="save" (click)="exit()">
+          <button mat-button class="save" (click)="exit()" [disabled]="amortizationForm.invalid">
             <mat-icon svgIcon="save"></mat-icon>
             <span>Save & Come back later</span>
           </button>
@@ -60,7 +77,7 @@
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </button>
         </section>
-        <button mat-button class="save" (click)="exit()">
+        <button mat-button class="save" (click)="exit()" [disabled]="amortizationForm.invalid">
           <mat-icon svgIcon="save"></mat-icon>
           <span>Save & Come back later</span>
         </button>
@@ -83,12 +100,12 @@
             <mat-icon svgIcon="arrow_back"></mat-icon>
             <span>Back</span>
           </button>
-          <button mat-flat-button color="primary" matTooltip="Save" (click)="save()">
-            <span>Save</span>
+          <button mat-flat-button color="primary" matTooltip="Save" (click)="exit(true)" [disabled]="amortizationForm.invalid">
+            <span>Publish</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </button>
         </section>
-        <button mat-button class="save" (click)="exit()">
+        <button mat-button class="save" (click)="exit()" [disabled]="amortizationForm.invalid">
           <mat-icon svgIcon="save"></mat-icon>
           <span>Save & Come back later</span>
         </button>

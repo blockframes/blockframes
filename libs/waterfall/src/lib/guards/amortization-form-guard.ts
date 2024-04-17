@@ -6,10 +6,10 @@ import { MatDialog } from '@angular/material/dialog';
 // Blockframes
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-
+import { AmortizationForm } from '../form/amortization.form';
 
 export interface AmortizationFormGuardedComponent {
-  canLeaveForm: boolean;
+  amortizationForm: AmortizationForm;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -20,7 +20,7 @@ export class AmortizationFormGuard<T extends AmortizationFormGuardedComponent> i
   ) { }
 
   canDeactivate(component: T) {
-    if (component.canLeaveForm) return true;
+    if (component.amortizationForm.pristine) return true;
 
     const dialogRef = this.dialog.open(ConfirmComponent, {
       data: createModalData({

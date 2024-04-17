@@ -16,6 +16,12 @@ div {
 
 div.organization {
   margin: 32px;
+  section {
+    justify-content: left;
+    mat-form-field {
+      width: 30%;
+    }
+  }
 }
 
 article {
