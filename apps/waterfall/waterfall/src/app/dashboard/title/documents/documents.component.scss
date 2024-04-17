@@ -34,3 +34,16 @@ section {
     padding: 32px;
   }
 }
+
+div.empty {
+  text-align: center;
+  display: block;
+  img {
+    margin-top: 128px;
+    max-width: 512px;
+  }
+  p {
+    text-align: center;
+    margin: 32px 12px;
+  }
+}

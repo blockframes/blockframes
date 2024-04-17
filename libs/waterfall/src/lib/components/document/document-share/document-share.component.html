@@ -18,6 +18,12 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    <div>
+      <p class="mat-body-1">
+        Can't find the right holder's company on the list? <br/>
+        <a [routerLink]="['/c/o/dashboard/title/', data.waterfallId, 'right-holders']" (click)="close()">Please invite the right holder's company</a> and then share your document.
+      </p>
+    </div>
   </section>
 
   <mat-dialog-actions>
