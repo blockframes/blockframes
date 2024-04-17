@@ -85,6 +85,11 @@ const routes: Routes = [{
               path: 'document',
               loadChildren: () => import('./document/document.module').then(m => m.DocumentModule),
             },
+            {
+              path: 'amortization-edit',
+              canActivate: [WaterfallAdminGuard],
+              loadChildren: () => import('./amortization/amortization.module').then(m => m.AmortizationModule),
+            },
           ],
         },
       ],

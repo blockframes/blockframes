@@ -1,0 +1,98 @@
+<header>
+  <h1>Film Amortization</h1>
+  <mat-icon svgIcon="movie"></mat-icon><span matLine><strong>Title: </strong>{{ movie.title.international }}</span>
+</header>
+
+<div class="surface organization">
+  Organization
+</div>
+
+<mat-stepper #stepper (click)="onStepClicked($event)" linear>
+  <!-- override default stepper icons for the "edit" & "done" steps -->
+  <ng-template matStepperIcon="edit" let-index="index">
+    {{ index + 1 }}
+  </ng-template>
+  <ng-template matStepperIcon="done" let-index="index">
+    {{ index + 1 }}
+  </ng-template>
+
+  <mat-step>
+    <ng-template matStepLabel>Film Cost</ng-template>
+    <ng-template matStepContent>
+      <div class="surface">
+        Film Cost
+      </div>
+      <article>
+        <ng-container *ngIf="updating$ | async; else editCosts">
+          <logo-spinner></logo-spinner>
+        </ng-container>
+        <ng-template #editCosts>
+          <button mat-flat-button color="primary" (click)="next()">
+            <span>Continue</span>
+            <mat-icon svgIcon="arrow_forward"></mat-icon>
+          </button>
+          <button mat-button class="save" (click)="exit()">
+            <mat-icon svgIcon="save"></mat-icon>
+            <span>Save & Come back later</span>
+          </button>
+        </ng-template>
+      </article>
+    </ng-template>
+  </mat-step>
+
+  <mat-step completed>
+    <ng-template matStepLabel>Financing</ng-template>
+    <div class="surface">
+      Financing
+    </div>
+    <article>
+      <ng-container *ngIf="updating$ | async; else editFinancing">
+        <logo-spinner></logo-spinner>
+      </ng-container>
+      <ng-template #editFinancing>
+        <section>
+          <button mat-button color="primary" (click)="previous()">
+            <mat-icon svgIcon="arrow_back"></mat-icon>
+            <span>Back</span>
+          </button>
+          <button mat-flat-button color="primary" (click)="next()">
+            <span>Continue</span>
+            <mat-icon svgIcon="arrow_forward"></mat-icon>
+          </button>
+        </section>
+        <button mat-button class="save" (click)="exit()">
+          <mat-icon svgIcon="save"></mat-icon>
+          <span>Save & Come back later</span>
+        </button>
+      </ng-template>
+    </article>
+  </mat-step>
+
+  <mat-step>
+    <ng-template matStepLabel>Net Revenue Producer Shares</ng-template>
+    <div class="surface">
+      Net Revenue Producer Shares
+    </div>
+    <article>
+      <ng-container *ngIf="updating$ | async; else editShares">
+        <logo-spinner></logo-spinner>
+      </ng-container>
+      <ng-template #editShares>
+        <section>
+          <button mat-button color="primary" (click)="previous()">
+            <mat-icon svgIcon="arrow_back"></mat-icon>
+            <span>Back</span>
+          </button>
+          <button mat-flat-button color="primary" matTooltip="Save" (click)="save()">
+            <span>Save</span>
+            <mat-icon svgIcon="arrow_forward"></mat-icon>
+          </button>
+        </section>
+        <button mat-button class="save" (click)="exit()">
+          <mat-icon svgIcon="save"></mat-icon>
+          <span>Save & Come back later</span>
+        </button>
+      </ng-template>
+    </article>
+  </mat-step>
+</mat-stepper>

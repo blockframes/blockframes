@@ -4,22 +4,23 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
 // Components
-import { WaterfallEditComponent } from './waterfall-edit.component';
+import { AmortizationComponent } from './amortization.component';
 import { DashboardWaterfallShellModule } from '@blockframes/waterfall/dashboard/shell/shell.module';
 
+
 const routes: Routes = [{
-  path: '',
-  component: WaterfallEditComponent,
+  path: ':amortizationId',
+  component: AmortizationComponent,
   children: [
     {
       path: '',
-      loadChildren: () => import('@blockframes/waterfall/dashboard/edit-waterfall/edit.module').then(m => m.WaterfallEditFormModule),
+      loadChildren: () => import('@blockframes/waterfall/dashboard/edit-amortization/edit.module').then(m => m.WaterfallEditAmortizationModule),
     },
   ]
 }];
 
 @NgModule({
-  declarations: [WaterfallEditComponent],
+  declarations: [AmortizationComponent],
   imports: [
     CommonModule,
 
@@ -30,4 +31,4 @@ const routes: Routes = [{
     RouterModule.forChild(routes),
   ],
 })
-export class WaterfallEditModule { }
+export class AmortizationModule { }
