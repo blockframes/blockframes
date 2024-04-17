@@ -13,18 +13,18 @@
   </header>
   <mat-divider></mat-divider>
   <ng-container *ngIf="currentPath$ | async as currentPath">
-    <ng-container [ngSwitch]="currentPath">
+    <ng-container [ngSwitch]="currentPath" *ngIf="(shell.canBypassRules || (shell.rightholderDocuments$ | async)?.length) else empty">
       <ng-container *ngSwitchCase="'Documents'">
         <mat-action-list>
-          <button mat-list-item (click)="navigate(['Documents', 'Financing Plan'])">
+          <button mat-list-item (click)="navigate(['Documents', 'Financing Plan'])" *ngIf="shell.canBypassRules || (shell.rightholderFinancingPlans$ | async)?.length">
             <mat-icon mat-list-icon svgIcon="folder_open"></mat-icon>
             <span mat-line>Financing Plan</span>
           </button>
-          <button mat-list-item (click)="navigate(['Documents', 'Budget'])">
+          <button mat-list-item (click)="navigate(['Documents', 'Budget'])" *ngIf="shell.canBypassRules || (shell.rightholderBudgets$ | async)?.length">
             <mat-icon mat-list-icon svgIcon="folder_open"></mat-icon>
             <span mat-line>Budget</span>
           </button>
-          <button mat-list-item (click)="navigate(['Documents', 'Contracts'])">
+          <button mat-list-item (click)="navigate(['Documents', 'Contracts'])" *ngIf="shell.canBypassRules || (shell.rightholderContracts$ | async)?.length">
             <mat-icon mat-list-icon svgIcon="folder_open"></mat-icon>
             <span mat-line>Contracts</span>
           </button>
@@ -40,5 +40,11 @@
         <waterfall-contract-list [contractForm]="contractForm"></waterfall-contract-list>
       </article>
     </ng-container>
+    <ng-template #empty>
+      <div class="empty">
+        <img asset="empty-contracts.svg" alt="Image, you have no documents yet">
+        <p>There is no file here yet.</p>
+      </div>
+    </ng-template>
   </ng-container>
 </section>
