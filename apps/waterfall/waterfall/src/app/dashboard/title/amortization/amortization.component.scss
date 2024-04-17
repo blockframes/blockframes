@@ -1,0 +1,26 @@
+section.surface {
+  margin: 32px;
+
+  article {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    
+    div.surface {
+      margin-top: 42px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 330px;
+      cursor: pointer;
+      
+      img {
+        width: 100px;
+        align-self: center;
+      }
+    }
+  }
+}
