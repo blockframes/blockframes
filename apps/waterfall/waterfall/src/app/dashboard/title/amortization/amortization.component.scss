@@ -1,6 +1,28 @@
 section.surface {
   margin: 32px;
 
+  header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  div.amortization {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px;
+    background-color: var(--background-card);
+    border: 1px solid var(--foreground-divider);
+    margin-bottom: 12px;
+    border-bottom: 3px solid var(--foreground-divider);
+
+    h3 {
+      color: var(--foreground-text);
+      font-weight: 500;
+    }
+  }
+
   article {
     display: flex;
     flex-direction: column;
@@ -23,4 +45,9 @@ section.surface {
       }
     }
   }
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
 }

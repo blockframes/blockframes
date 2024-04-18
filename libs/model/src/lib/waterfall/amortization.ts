@@ -1,4 +1,5 @@
 import { DocumentMeta } from '../meta';
+import { AmortizationStatus } from '../static';
 
 export interface Amortization {
   _meta?: DocumentMeta;
@@ -6,7 +7,7 @@ export interface Amortization {
   waterfallId: string;
   name: string;
   contractIds: string[];
-  status: string; // TODO #9753 Create a type for this
+  status: AmortizationStatus;
 }
 
 export function createAmortization(params: Partial<Amortization>): Amortization {

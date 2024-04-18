@@ -37,7 +37,7 @@
     <ng-template matStepLabel>Film Cost</ng-template>
     <ng-template matStepContent>
       <div class="surface">
-        Film Cost
+        TODO #9753 Film Cost
       </div>
       <article>
         <ng-container *ngIf="updating$ | async; else editCosts">
@@ -60,7 +60,7 @@
   <mat-step completed>
     <ng-template matStepLabel>Financing</ng-template>
     <div class="surface">
-      Financing
+      TODO #9753 Financing
     </div>
     <article>
       <ng-container *ngIf="updating$ | async; else editFinancing">
@@ -88,7 +88,7 @@
   <mat-step>
     <ng-template matStepLabel>Net Revenue Producer Shares</ng-template>
     <div class="surface">
-      Net Revenue Producer Shares
+      TODO #9753 Net Revenue Producer Shares
     </div>
     <article>
       <ng-container *ngIf="updating$ | async; else editShares">
@@ -101,7 +101,7 @@
             <span>Back</span>
           </button>
           <button mat-flat-button color="primary" matTooltip="Save" (click)="exit(true)" [disabled]="amortizationForm.invalid">
-            <span>Publish</span>
+            <span>Apply</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </button>
         </section>
