@@ -1,4 +1,3 @@
-
 <p>{{ condition | conditionToString : shell.waterfall : (shell.contracts$ | async) : (shell.rights$ | async) }}</p>
 <div>
   <button mat-icon-button (click)="edit.emit()">
