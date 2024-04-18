@@ -7,7 +7,7 @@
       </ng-container>
 
       <ng-container *ngSwitchCase="'pdf'">
-        <pdf-viewer [ref]="ref"></pdf-viewer>
+        <pdf-viewer [ref]="ref" [showControls]="ref.showControls"></pdf-viewer>
       </ng-container>
 
       <ng-container *ngSwitchCase="'video'">

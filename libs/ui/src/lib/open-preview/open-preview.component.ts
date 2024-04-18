@@ -3,6 +3,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { StorageFile } from '@blockframes/model';
 import { createModalData } from '../global-modal/global-modal.component';
 import { PreviewFileModalComponent } from '../preview-file-modal/preview-file-modal.component';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
   selector: '[ref] bf-preview-modal',
@@ -14,6 +15,7 @@ export class OpenPreviewComponent {
 
   @Input() ref: StorageFile;
   @Input() color = 'primary'
+  @Input() @boolean showControls = false;
   @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<unknown>;
 
   private dialogRef: MatDialogRef<unknown>;
@@ -24,7 +26,7 @@ export class OpenPreviewComponent {
 
   async openModal() {
     this.dialogRef = this.dialog.open(PreviewFileModalComponent, {
-      data: createModalData({ ...this.ref }),
+      data: createModalData({ ...this.ref, showControls: this.showControls }),
       hasBackdrop: true,
       autoFocus: false,
     });
