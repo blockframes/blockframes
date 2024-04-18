@@ -4,6 +4,7 @@ import { WaterfallBudgetForm } from '@blockframes/waterfall/form/budget.form';
 import { WaterfallFinancingPlanForm } from '@blockframes/waterfall/form/financing-plan.form';
 import { WaterfallContractForm } from '@blockframes/waterfall/form/contract.form';
 import { BehaviorSubject } from 'rxjs';
+import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 
 type Path = 'Documents' | 'Contracts' | 'Financing Plan' | 'Budget';
 
@@ -20,6 +21,10 @@ export class DocumentsComponent {
   public financingPlanForm = new WaterfallFinancingPlanForm({ id: '' });
   public crumbs$ = new BehaviorSubject<Path[]>(['Documents']);
   public currentPath$ = new BehaviorSubject<Path>('Documents');
+
+  constructor(
+    public shell: DashboardWaterfallShellComponent,
+  ) {}
 
   public navigate(path: Path[]) {
     this.crumbs$.next(path);

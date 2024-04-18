@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { RouterModule } from '@angular/router';
 import { DocumentShareComponent } from './document-share.component';
 
 // Blockframes
@@ -21,6 +21,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    RouterModule,
     
     // Blockframes
     GlobalModalModule,
