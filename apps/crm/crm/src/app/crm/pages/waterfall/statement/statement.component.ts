@@ -96,6 +96,7 @@ export class StatementComponent implements OnInit {
       this.expenses = await this.shell.expenses(statement.expenseIds);
     }
 
+    this.shell.currentStatementId$.next(statement.id);
     this.shell.setDate(statement.duration.to);
     this.snackBar.open('Initializing waterfall... Please wait', 'close', { duration: 5000 });
     this.simulation = await this.shell.simulateWaterfall();
