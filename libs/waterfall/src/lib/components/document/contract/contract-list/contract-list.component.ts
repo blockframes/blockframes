@@ -108,7 +108,7 @@ export class ContractListComponent {
 
   private _select(role: RightholderRole) {
     this.selected = role;
-    this.creating = this.contracts[role].length === 0; // if we select an empty role we automatically switch to create mode
+    this.creating = role ? this.contracts[role].length === 0 : false; // if we select an empty role we automatically switch to create mode
     if (this.creating) {
       this.terms = [];
       this.contractForm.reset({ id: this.documentService.createId() });
@@ -254,6 +254,27 @@ export class ContractListComponent {
     this.dialog.open(DocumentShareComponent, {
       data: createModalData({ organizations, documentId, waterfallId }, 'medium'),
       autoFocus: false
+    });
+  }
+
+  close() {
+    if (this.cardModal.isOpened) this.cardModal.close();
+    if (this.contractForm.pristine) return this._select(undefined);
+
+    const dialogRef = this.dialog.open(ConfirmComponent, {
+      data: createModalData({
+        title: 'You are about to leave the form',
+        question: 'Some changes have not been saved. If you leave now, you might lose these changes',
+        cancel: 'Cancel',
+        confirm: 'Leave anyway'
+      }, 'small'),
+      autoFocus: false
+    });
+    dialogRef.afterClosed().subscribe((leave: boolean) => {
+      if (leave) {
+        this.contractForm.markAsPristine();
+        this._select(undefined);
+      }
     });
   }
 }

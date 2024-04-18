@@ -29,9 +29,9 @@
     <mat-form-field appearance="outline" *ngIf="form.controls.revenueOwner.value">
       <mat-label>Has</mat-label>
       <mat-select [formControl]="form.controls.revenueType">
-        <mat-option value="Turnover">(turnover)</mat-option>
-        <mat-option value="Revenu">(profit)</mat-option>
-        <mat-option *ngIf="form.controls.revenueOwnerType.value === 'pool'" value="ShadowRevenu">(theoretical profit)</mat-option>
+        <mat-option value="Turnover">(Turnover)</mat-option>
+        <mat-option value="Revenu">(Amount kept)</mat-option>
+        <mat-option *ngIf="form.controls.revenueOwnerType.value === 'pool'" value="ShadowRevenu">(Theoretical profit)</mat-option>
       </mat-select>
     </mat-form-field>
     

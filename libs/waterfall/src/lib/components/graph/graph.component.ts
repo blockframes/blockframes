@@ -282,6 +282,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   select(id: string) {
     if (id == this.selected$.value) return;
+    if (this.cardModal.isOpened) this.cardModal.toggle();
     const allPristine = this.rightForm.pristine && this.sourceForm.pristine && this.conditionFormPristine$.value;
     if (allPristine) return this._select(id);
 
@@ -623,6 +624,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if (this.cardModal.isOpened) this.cardModal.toggle();
     const id = rightId ?? this.selected$.getValue();
     const right = this.rights.find(right => right.id === id);
 
@@ -686,6 +688,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
             this.rightService.remove([id, group.id], { params: { waterfallId: this.waterfallId }, write }),
           ]);
           await write.commit();
+          this.select('');
           return;
         }
 
@@ -705,6 +708,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
           promises.push(this.rightService.remove(id, { params: { waterfallId: this.waterfallId }, write }));
           await Promise.all(promises);
           await write.commit();
+          this.select('');
           return;
         }
       }

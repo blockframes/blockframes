@@ -51,6 +51,9 @@
           <button *ngIf="shell.canBypassRules" mat-icon-button matTooltip="Save changes" (click)="save(waterfall, documents)">
             <mat-icon svgIcon="save"></mat-icon>
           </button>
+          <button mat-icon-button matTooltip="Close" (click)="close()">
+            <mat-icon svgIcon="close"></mat-icon>
+          </button>
         </header>
 
         <ng-container *ngIf="(contracts$ | async)[selected].length > 0 && !creating; else creatingContracts">
