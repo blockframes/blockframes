@@ -185,6 +185,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.defaultVersionId = getDefaultVersionId(waterfall);
       const allNodeIds = [...rights.map(r => r.id), ...this.sources.map(s => s.id)];
 
+      this.sourceForm.enable();
+      this.rightForm.enable();
+
       if (this.readonly) {
         this.nonEditableNodeIds$.next(allNodeIds); // All nodes are non-editable
         this.nonPartiallyEditableNodeIds$.next(this.nonEditableNodeIds$.value); // All nodes are non-editable
