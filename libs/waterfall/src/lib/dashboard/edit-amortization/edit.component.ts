@@ -10,7 +10,7 @@ import { BehaviorSubject, Observable, map } from 'rxjs';
 import { AmortizationFormGuardedComponent } from '../../guards/amortization-form-guard';
 import { AmortizationService } from '../../amortization.service';
 import { WaterfallContract, WaterfallRightholder, createAmortization, rightholderGroups } from '@blockframes/model';
-import { AmortizationForm } from '@blockframes/waterfall/form/amortization.form';
+import { AmortizationForm } from '../../form/amortization.form';
 
 @Component({
   selector: 'waterfall-edit-amortization',
@@ -29,7 +29,7 @@ export class WaterfallEditAmortizationComponent implements AmortizationFormGuard
   public amortizationForm = new AmortizationForm({ id: this.amortizationId });
   public contracts$: Observable<(WaterfallContract & { rightholder: WaterfallRightholder })[]> = this.shell.contracts$.pipe(
     map(contracts => contracts.filter(c => Object.keys(rightholderGroups.beneficiaries).includes(c.type))), // Only contract for outgoing statements
-    map(contracts => contracts.filter(c => [c.buyerId, c.sellerId].includes(this.producer.id))), // Only contracts where the producer is involved
+    map(contracts => contracts.filter(c => !!this.producer?.id && [c.buyerId, c.sellerId].includes(this.producer.id))), // Only contracts where the producer is involved
     map(contracts => contracts.map(c => {
       const rightholderId = c.buyerId === this.producer.id ? c.sellerId : c.buyerId;
       const rightholder = this.shell.waterfall.rightholders.find(r => r.id === rightholderId);

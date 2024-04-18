@@ -3,7 +3,7 @@
   <section class="surface" *ngIf="amortizations.length else empty">
     <header>
       <h2>Film Amortization</h2>
-      <a mat-button  matTooltip="Add new Calculation" [routerLink]="['..', 'amortization-edit', service.createId()]">
+      <a mat-button [disabled]="!producer?.id" matTooltip="Add new Calculation" [routerLink]="['..', 'amortization-edit', service.createId()]">
         <mat-icon svgIcon="add"></mat-icon>
         <span>New Calculation</span>
       </a>
@@ -39,7 +39,7 @@
     <article>
       <a class="surface" matTooltip="Calculate Film Amortization" [routerLink]="['..', 'amortization-edit', service.createId()]">
         <img asset="film_amortization.svg" alt="Calculate Film Amortization image">
-        <button mat-button color="primary">Calculate Film Amortization</button>
+        <button mat-button [disabled]="!producer?.id" color="primary">Calculate Film Amortization</button>
       </a>
     </article>
   </section>
