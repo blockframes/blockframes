@@ -61,13 +61,13 @@ export class WaterfallEditAmortizationComponent implements AmortizationFormGuard
     this.stepper?.next();
   }
 
-  async exit(publish: boolean = false) {
+  async exit(applied: boolean = false) {
     this.updating$.next(true);
     const amortization = createAmortization({ ...this.amortizationForm.value, waterfallId: this.shell.waterfall.id });
-    if (publish) amortization.status = 'published';
+    if (applied) amortization.status = 'applied';
     this.amortizationForm.markAsPristine();
     await this.service.upsert(amortization, { params: { waterfallId: this.shell.waterfall.id } });
     this.snackBar.open('Film Amortization saved', 'close', { duration: 3000 });
-    this.router.navigate(['../..'], { relativeTo: this.route });
+    this.router.navigate(['../..', 'amortization'], { relativeTo: this.route });
   }
 }
