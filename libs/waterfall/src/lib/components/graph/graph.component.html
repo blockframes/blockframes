@@ -69,7 +69,8 @@
       <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
         <group-multiselect
           scope="medias"
-          label="Choose Media"
+          selectIcon="play_arrow"
+          label="Choose Medias"
           displayAll="All Medias"
           filterPlaceholder="Specify territories to filter"
           [control]="sourceForm.get('medias')"

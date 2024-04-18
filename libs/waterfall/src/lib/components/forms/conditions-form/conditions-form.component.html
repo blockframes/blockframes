@@ -162,7 +162,7 @@
     <mat-form-field appearance="outline" *ngIf="form.controls.salesType.value === 'terms'">
       <mat-label>Terms Type</mat-label>
       <mat-select [formControl]="form.controls.salesTermsType">
-        <mat-option value="medias">Media</mat-option>
+        <mat-option value="medias">Medias</mat-option>
         <mat-option value="territories">Territories</mat-option>
       </mat-select>
     </mat-form-field>
@@ -186,8 +186,9 @@
     <group-multiselect
       *ngIf="form.controls.salesType.value === 'terms' && form.controls.salesTermsOperator.value && form.controls.salesTermsType.value === 'medias'"
       scope="medias"
-      displayAll="All Rights"
+      displayAll="All Medias"
       label="Medias"
+      selectIcon="play_arrow"
       filterPlaceholder="Specify medias"
       [control]="form.controls.salesTerms"
     ></group-multiselect>
