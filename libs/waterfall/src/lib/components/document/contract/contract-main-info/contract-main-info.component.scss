@@ -14,7 +14,6 @@ article {
 }
 
 div {
-  width: 50%;
   padding: 12px 0;
   display: flex;
   mat-icon {
@@ -22,11 +21,15 @@ div {
   }
 
   section {
-    flex-grow: 1;
     display: flex;
     flex-direction: column;
     span {
       min-height: 28px;
+      margin-left: 16px;
+    }
+
+    span.group-label {
+      cursor: pointer;
     }
   }
 }
