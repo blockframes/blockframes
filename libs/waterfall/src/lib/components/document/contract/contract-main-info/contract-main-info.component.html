@@ -16,7 +16,6 @@
       <mat-icon svgIcon="sellers"></mat-icon>
       <span matLine><strong>Licensor: </strong>{{ contract.sellerId | rightholderName: waterfall }}</span>
     </span>
-
     <span>
       <mat-icon svgIcon="calendar_today"></mat-icon>
       <span matLine><strong>Covered Period: </strong>{{ contract.duration.from | date }} -  {{ contract.duration.to | date }}</span>
@@ -35,3 +34,21 @@
     </span>
   </section>
 </div>
+<ng-container *ngIf="contract.terms as terms">
+  <div *ngIf="terms.length">
+    <section>
+      <span matLine><strong>Rights assigned : </strong></span>
+      <span class="group-label" *ngFor="let term of terms" (click)="openDetails(term.medias, 'medias')">
+        <mat-icon svgIcon="play_arrow"></mat-icon>
+        <span matLine><strong>Medias: </strong>{{ term.medias | toGroupLabel : 'medias' : 'All Medias' | join | maxLength : 30 }}</span>
+      </span>
+    </section>
+    <section>
+      <span></span>
+      <span class="group-label" *ngFor="let term of terms" (click)="openDetails(term.territories, 'territories')">
+        <mat-icon svgIcon="world"></mat-icon>
+        <span matLine><strong>Territories: </strong>{{ term.territories | toGroupLabel : 'territories' : 'World' | join  | maxLength : 30 }}</span>
+      </span>
+    </section>
+  </div>
+</ng-container>

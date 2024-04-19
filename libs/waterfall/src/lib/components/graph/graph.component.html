@@ -62,11 +62,15 @@
         <button mat-icon-button matTooltip="Delete Source" (click)="delete()" [disabled]="nonEditableNodeIds$.value.includes(selected)">
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
+        <button mat-icon-button matTooltip="Close" (click)="select('')">
+          <mat-icon svgIcon="close"></mat-icon>
+        </button>
       </header>
       <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
         <group-multiselect
           scope="medias"
-          label="Choose Media"
+          selectIcon="play_arrow"
+          label="Choose Medias"
           displayAll="All Medias"
           filterPlaceholder="Specify territories to filter"
           [control]="sourceForm.get('medias')"
@@ -98,6 +102,9 @@
         </button>
         <button mat-icon-button matTooltip="Delete Right" (click)="delete()" [disabled]="nonEditableNodeIds$.value.includes(selected)">
           <mat-icon svgIcon="delete"></mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="Close" (click)="select('')">
+          <mat-icon svgIcon="close"></mat-icon>
         </button>
       </header>
       <mat-tab-group>

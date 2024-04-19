@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { StorageFile } from '@blockframes/model';
 
 @Component({
   selector: 'preview-file-modal',
@@ -10,9 +11,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class PreviewFileModalComponent {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA)
-    public ref: any,
+    @Inject(MAT_DIALOG_DATA) public ref: StorageFile & { showControls?: boolean },
     private dialogRef: MatDialogRef<PreviewFileModalComponent>
   ) { }
-
 }

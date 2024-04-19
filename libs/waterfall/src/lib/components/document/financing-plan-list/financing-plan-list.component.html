@@ -27,7 +27,7 @@
               <span mat-line [matTooltip]="file.storagePath | fileName">
                 {{file.storagePath | fileName}}
               </span>
-              <bf-preview-modal color="" [ref]="file"></bf-preview-modal>
+              <bf-preview-modal color="" [ref]="file" showControls></bf-preview-modal>
               <a mat-icon-button [href]="file | getUrl | async" target="_blank" matTooltip="Download Document">
                 <mat-icon svgIcon="cloud_download"></mat-icon>
               </a>
