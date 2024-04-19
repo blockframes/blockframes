@@ -632,7 +632,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
     this.dialog.open(ConfirmComponent, {
       data: createModalData({
-        title: `Are you sure to delete this ${subject}`,
+        title: `Are you sure to delete this ${subject}?`,
         question: `Pay attention, if you delete the following ${subject}, it will have an impact on conditions and the whole Waterfall.`,
         confirm: `Yes, delete ${subject}`,
         cancel: 'No, come back to Waterfall Builder',

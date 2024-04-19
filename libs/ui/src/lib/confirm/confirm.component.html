@@ -5,6 +5,12 @@
     <p class="mat-body-1">{{ data.question || 'Do you confirm ?' }}</p>
     <p class="mat-body-1" *ngIf="data.advice">
       {{ data.advice }} 
+      <ng-container *ngIf="data.additionalData?.length">
+        <ul>
+          <li *ngFor="let item of data.additionalData"><strong>{{ item }}</strong></li>
+        </ul>
+        <br/>
+      </ng-container>
       <button *ngIf="data.intercom" (click)="openIntercom()"><strong>{{ data.intercom }}</strong></button>
     </p>
     

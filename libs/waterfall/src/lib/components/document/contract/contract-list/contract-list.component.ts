@@ -20,7 +20,8 @@ import {
   createExpenseType,
   Term,
   WaterfallPermissions,
-  Organization
+  Organization,
+  Right
 } from '@blockframes/model';
 import { TermService } from '@blockframes/contract/term/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -65,6 +66,8 @@ export class ContractListComponent {
     switchMap(permissions => this.orgService.valueChanges(permissions.map(p => p.id))),
     map(orgs => orgs.filter(o => o.id !== this.currentOrgId))
   );
+
+  public rights$ = this.shell.rightholderRights$;
 
   private contracts: Partial<Record<RightholderRole, WaterfallContract[]>>;
   private removeFileOnSave = false;
@@ -276,6 +279,35 @@ export class ContractListComponent {
         this._select(undefined);
       }
     });
+  }
+
+  delete(contractId: string, _rights: Right[]) {
+    if (this.cardModal.isOpened) this.cardModal.close();
+    const rights = _rights.filter(r => r.contractId === contractId);
+    if (rights.length === 0) {
+      this.dialog.open(ConfirmComponent, {
+        data: createModalData({
+          title: 'Are you sure to delete this Contract?',
+          question: 'Pay attention, if you delete the following Contract, you might loose some information.',
+          confirm: 'Yes, delete Contract',
+          onConfirm: async () => {
+            await this.documentService.remove(contractId, { params: { waterfallId: this.shell.waterfall.id } });
+            this.snackBar.open('Contract deleted', 'close', { duration: 3000 });
+          },
+        })
+      });
+    } else {
+      this.dialog.open(ConfirmComponent, {
+        data: createModalData({
+          title: 'Sorry, unable to delete Contract right now.',
+          question: 'We value your commitment to Contract management. However, please note that Contracts cannot be deleted immediately as they are linked to your Waterfall. Deleting a Contract could disrupt this structure.',
+          advice: 'If you still wish to proceed with the deletion, please remove all concerned Rights using the Waterfall Builded before deleting the Contract :',
+          intercom: 'Contact us for more information',
+          additionalData: rights.map(r => r.name),
+        })
+      });
+    }
+
   }
 }
 

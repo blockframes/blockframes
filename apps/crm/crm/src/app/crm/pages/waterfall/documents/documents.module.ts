@@ -13,16 +13,21 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [DocumentsComponent],
   imports: [
     BfCommonModule,
+
     TableModule,
+
     MatIconModule,
     MatButtonModule,
     MatSnackBarModule,
     MatTooltipModule,
+    MatDialogModule,
+
     RouterModule.forChild([{ path: '', component: DocumentsComponent }])
   ]
 })
