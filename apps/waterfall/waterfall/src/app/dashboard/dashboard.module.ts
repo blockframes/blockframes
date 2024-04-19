@@ -108,6 +108,10 @@ const routes: Routes = [{
     {
       path: 'privacy',
       loadChildren: () => import('@blockframes/ui/static-informations/privacy/privacy.module').then(m => m.PrivacyModule)
+    },
+    {
+      path: 'security',
+      loadChildren: () => import('@blockframes/ui/static-informations/security/security.module').then(m => m.SecurityModule)
     }
   ]
 },
