@@ -51,7 +51,7 @@ interface StatementChipConfig {
   divider: boolean;
   selected: boolean;
   key: StatementType;
-  value: StatementTypeValue;
+  value: StatementTypeValue | 'Financiers / Co-Producers / Authors...';
 }
 
 function initStatementChips(statements: Statement[]): StatementChipConfig[] {
@@ -60,7 +60,7 @@ function initStatementChips(statements: Statement[]): StatementChipConfig[] {
     {
       selected: false,
       key,
-      value: statementType[key],
+      value: key === 'producer' ? 'Financiers / Co-Producers / Authors...' : statementType[key],
       ...value,
       // producer statements are visible only if there are reported statements from distributors or direct sales
       visible: key === 'producer' ? hasDistribOrDirectSalesReportedStatements : value.visible,
