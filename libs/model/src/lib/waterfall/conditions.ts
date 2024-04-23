@@ -180,6 +180,7 @@ export function checkCondition(ctx: ConditionContext) {
 }
 
 export const isConditionGroup = (condition: Condition | ConditionGroup): condition is ConditionGroup => {
+  if (!condition) return false;
   return 'operator' in condition;
 }
 
