@@ -47,7 +47,7 @@ export class ExpenseTypeForm extends FormEntity<ExpenseTypeControl> {
 export function createWaterfallInvestmentControl(config?: Partial<WaterfallInvestment>) {
   return {
     value: new FormControl(config?.value ?? 0),
-    date: new FormControl(config?.date ?? new Date()),
+    date: new FormControl<Date>(config?.date),
   };
 }
 
