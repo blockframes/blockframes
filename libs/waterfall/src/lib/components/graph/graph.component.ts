@@ -282,6 +282,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   select(id: string) {
     if (id == this.selected$.value) return;
+    if (this.cardModal.isOpened) this.cardModal.toggle();
     const allPristine = this.rightForm.pristine && this.sourceForm.pristine && this.conditionFormPristine$.value;
     if (allPristine) return this._select(id);
 
@@ -623,6 +624,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if (this.cardModal.isOpened) this.cardModal.toggle();
     const id = rightId ?? this.selected$.getValue();
     const right = this.rights.find(right => right.id === id);
 
@@ -630,7 +632,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
     this.dialog.open(ConfirmComponent, {
       data: createModalData({
-        title: `Are you sure to delete this ${subject}`,
+        title: `Are you sure to delete this ${subject}?`,
         question: `Pay attention, if you delete the following ${subject}, it will have an impact on conditions and the whole Waterfall.`,
         confirm: `Yes, delete ${subject}`,
         cancel: 'No, come back to Waterfall Builder',
@@ -686,6 +688,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
             this.rightService.remove([id, group.id], { params: { waterfallId: this.waterfallId }, write }),
           ]);
           await write.commit();
+          this.select('');
           return;
         }
 
@@ -705,6 +708,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
           promises.push(this.rightService.remove(id, { params: { waterfallId: this.waterfallId }, write }));
           await Promise.all(promises);
           await write.commit();
+          this.select('');
           return;
         }
       }

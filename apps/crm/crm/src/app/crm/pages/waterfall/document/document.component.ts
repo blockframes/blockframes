@@ -1,9 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { ConditionInterest, Scope, Term, getRightCondition, interestDetail, rightholderGroups } from '@blockframes/model';
-import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
+import { ConditionInterest, getRightCondition, interestDetail, rightholderGroups } from '@blockframes/model';
 import { combineLatest, filter, map, switchMap } from 'rxjs';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 
@@ -56,15 +53,7 @@ export class DocumentComponent {
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
-    private route: ActivatedRoute,
-    private dialog: MatDialog,
+    private route: ActivatedRoute
   ) { }
 
-  public openDetails(items: string[], scope: Scope) {
-    this.dialog.open(DetailedGroupComponent, { data: createModalData({ items, scope }), autoFocus: false });
-  }
-
-  public getTermAmount(term: Term) {
-    return { [term.currency]: term.price };
-  }
 }

@@ -20,7 +20,8 @@ import {
   createExpenseType,
   Term,
   WaterfallPermissions,
-  Organization
+  Organization,
+  Right
 } from '@blockframes/model';
 import { TermService } from '@blockframes/contract/term/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -66,6 +67,8 @@ export class ContractListComponent {
     map(orgs => orgs.filter(o => o.id !== this.currentOrgId))
   );
 
+  public rights$ = this.shell.rightholderRights$;
+
   private contracts: Partial<Record<RightholderRole, WaterfallContract[]>>;
   private removeFileOnSave = false;
   private terms: Term[] = [];
@@ -108,7 +111,7 @@ export class ContractListComponent {
 
   private _select(role: RightholderRole) {
     this.selected = role;
-    this.creating = this.contracts[role].length === 0; // if we select an empty role we automatically switch to create mode
+    this.creating = role ? this.contracts[role].length === 0 : false; // if we select an empty role we automatically switch to create mode
     if (this.creating) {
       this.terms = [];
       this.contractForm.reset({ id: this.documentService.createId() });
@@ -255,6 +258,56 @@ export class ContractListComponent {
       data: createModalData({ organizations, documentId, waterfallId }, 'medium'),
       autoFocus: false
     });
+  }
+
+  close() {
+    if (this.cardModal.isOpened) this.cardModal.close();
+    if (this.contractForm.pristine) return this._select(undefined);
+
+    const dialogRef = this.dialog.open(ConfirmComponent, {
+      data: createModalData({
+        title: 'You are about to leave the form',
+        question: 'Some changes have not been saved. If you leave now, you might lose these changes',
+        cancel: 'Cancel',
+        confirm: 'Leave anyway'
+      }, 'small'),
+      autoFocus: false
+    });
+    dialogRef.afterClosed().subscribe((leave: boolean) => {
+      if (leave) {
+        this.contractForm.markAsPristine();
+        this._select(undefined);
+      }
+    });
+  }
+
+  delete(contractId: string, _rights: Right[]) {
+    if (this.cardModal.isOpened) this.cardModal.close();
+    const rights = _rights.filter(r => r.contractId === contractId);
+    if (rights.length === 0) {
+      this.dialog.open(ConfirmComponent, {
+        data: createModalData({
+          title: 'Are you sure to delete this Contract?',
+          question: 'Pay attention, if you delete the following Contract, you might loose some information.',
+          confirm: 'Yes, delete Contract',
+          onConfirm: async () => {
+            await this.documentService.remove(contractId, { params: { waterfallId: this.shell.waterfall.id } });
+            this.snackBar.open('Contract deleted', 'close', { duration: 3000 });
+          },
+        })
+      });
+    } else {
+      this.dialog.open(ConfirmComponent, {
+        data: createModalData({
+          title: 'Sorry, unable to delete Contract right now.',
+          question: 'We value your commitment to Contract management. However, please note that Contracts cannot be deleted immediately as they are linked to your Waterfall. Deleting a Contract could disrupt this structure.',
+          advice: 'If you still wish to proceed with the deletion, please remove all concerned Rights using the Waterfall Builded before deleting the Contract :',
+          intercom: 'Contact us for more information',
+          additionalData: rights.map(r => r.name),
+        })
+      });
+    }
+
   }
 }
 

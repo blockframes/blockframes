@@ -126,11 +126,15 @@ export async function onWaterfallDocumentDelete(docSnapshot: BlockframesSnapshot
     waterfallSnap.ref.update({ documents, expenseTypes: waterfall.expenseTypes });
   }
 
-  // If document is a contract, clean income, terms etc..
+  // If document is a contract, clean income, terms, statements, rights etc..
   if (isContract(waterfallDocument)) {
     await cleanRelatedContractDocuments(convertDocumentTo<WaterfallContract>(waterfallDocument), { filterByTitleId: true });
+
     const statements = await waterfallSnap.ref.collection('statements').where('contractId', '==', waterfallDocument.id).get();
     await Promise.all(statements.docs.map(d => d.ref.delete()));
+
+    const rights = await waterfallSnap.ref.collection('rights').where('contractId', '==', waterfallDocument.id).get();
+    await Promise.all(rights.docs.map(d => d.ref.delete()));
   }
 
   // Check for amendments and remove them if any
@@ -320,10 +324,15 @@ export async function onWaterfallRightDelete(docSnapshot: BlockframesSnapshot<Ri
 
   const waterfallSnap = await getDocumentSnap(`waterfall/${waterfallID}`);
 
-  // Remove childs if current right is a group
-  const childs = await waterfallSnap.ref.collection('rights').where('groupId', '==', right.id).get();
-  await Promise.all(childs.docs.map(d => d.ref.delete()));
+  const rightsSnap = await waterfallSnap.ref.collection('rights').get();
 
+  // Remove members if current right is a group
+  const members = rightsSnap.docs.filter(r => (r.data() as Right).groupId === right.id);
+  await Promise.all(members.map(d => d.ref.delete()));
+
+  // Update parents referencing this right
+  const parents = rightsSnap.docs.filter(r => (r.data() as Right).nextIds.includes(right.id));
+  await Promise.all(parents.map(d => d.ref.update({ nextIds: (d.data() as Right).nextIds.filter(id => id !== right.id) })));
   return true;
 }
 

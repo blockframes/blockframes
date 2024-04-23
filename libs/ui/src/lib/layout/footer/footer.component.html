@@ -9,6 +9,10 @@
     <a mat-button [routerLink]="['/c/o', module, 'contact']">Contact us</a>
     <a mat-button [routerLink]="['/c/o', module, 'terms']">Legal Terms</a>
     <a mat-button [routerLink]="['/c/o', module, 'privacy']">Privacy Policy</a>
+
+    <ng-container *ngIf="app === 'waterfall'">
+      <a color="warn" mat-button [routerLink]="['/c/o', module, 'security']">Data Security</a>
+    </ng-container>
   </div>
   <span class="mat-body-2">
     © {{ currentYear }} {{ app | appName }}, Paris

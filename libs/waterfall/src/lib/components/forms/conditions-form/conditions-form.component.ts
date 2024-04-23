@@ -50,6 +50,7 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
   public waterfall$ = this.shell.waterfall$;
   public dateInputFormat = dateInputFormat;
   public versionId$ = this.shell.versionId$;
+  public displayForm$ = new BehaviorSubject<boolean>(true);
 
   private rights: Right[] = [];
   private groups: Right[] = [];
@@ -65,6 +66,7 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.displayForm$.next(this.form.enabled);
     this.subs.push(
       combineLatest([this.shell.rights$, this.shell.contracts$, this.shell.waterfall$]).subscribe(([rights, contracts, waterfall]) => {
         const groupIds = new Set<string>();
@@ -88,6 +90,10 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
         const isProducerRight = waterfall.rightholders.find(r => r.id === right.rightholderId)?.roles.includes('producer');
         this.contractId = isProducerRight ? 'directSales' : right.contractId;
         this.expenseTypes = waterfall.expenseTypes[this.contractId] || [];
+      }),
+
+      this.form.controls.conditionType.valueChanges.subscribe(v => {
+        this.displayForm$.next(!!v || this.form.enabled);
       }),
 
       this.form.controls.revenueOwnerType.valueChanges.pipe(startWith(this.form.controls.revenueOwnerType.value)).subscribe(value => {

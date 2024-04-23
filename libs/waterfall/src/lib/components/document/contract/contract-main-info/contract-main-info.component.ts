@@ -1,6 +1,8 @@
-// Angular
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Movie, Term, Waterfall, WaterfallContract } from '@blockframes/model';
+import { MatDialog } from '@angular/material/dialog';
+import { Movie, Scope, Term, Waterfall, WaterfallContract } from '@blockframes/model';
+import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({
   selector: 'waterfall-contract-main-info',
@@ -14,4 +16,11 @@ export class ContractMainInfoComponent {
   @Input() movie: Movie;
   @Input() waterfall: Waterfall;
 
+  constructor(
+    private dialog: MatDialog,
+  ) { }
+
+  public openDetails(items: string[], scope: Scope) {
+    this.dialog.open(DetailedGroupComponent, { data: createModalData({ items, scope }), autoFocus: false });
+  }
 }
