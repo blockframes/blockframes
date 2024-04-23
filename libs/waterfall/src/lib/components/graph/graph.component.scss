@@ -68,7 +68,6 @@
     section.card,
     section.begin {
       padding: 12px;
-      margin-bottom: 12px;
       display: flex;
       flex-direction: column;
     }
@@ -88,7 +87,7 @@
     }
 
     section.add {
-      margin: 16px 0;
+      margin: 32px 0 16px 0;
       display: flex;
       justify-content: center;
       align-items: center;

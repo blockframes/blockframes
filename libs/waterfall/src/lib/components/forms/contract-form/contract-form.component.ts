@@ -18,6 +18,7 @@ import {
   WaterfallInvestmentForm
 } from '../../../form/contract.form';
 import { unique } from '@blockframes/utils/helpers';
+import { dateInputFormat } from '@blockframes/utils/date-adapter';
 
 @Component({
   selector: '[waterfall][form] waterfall-contract-form',
@@ -33,7 +34,7 @@ export class WaterfallContractFormComponent implements OnInit, OnChanges, OnDest
   @Input() toggleTermsControl: FormControl<boolean>;
 
   public hideStartDate$ = new BehaviorSubject(true);
-
+  public dateInputFormat = dateInputFormat;
   public durationControl = new FormControl<number | undefined>(undefined);
 
   public periods: (keyof Duration)[] = ['days', 'weeks', 'months', 'years'];

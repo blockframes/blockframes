@@ -96,8 +96,12 @@
       <input matInput type="number" [formControl]="invest.get('value')" />
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <mat-label>Payment Date</mat-label>
-      <time-picker [formControl]="invest.get('date')" allDay small></time-picker>
+      <mat-label>Payment Date (optional)</mat-label>
+      <input matInput [formControl]="invest.get('date')" [matDatepicker]="datePickerPaymentDate" [placeholder]="dateInputFormat">
+      <mat-datepicker-toggle matPrefix [for]="datePickerPaymentDate">
+        <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
+      </mat-datepicker-toggle>
+      <mat-datepicker #datePickerPaymentDate></mat-datepicker>
     </mat-form-field>
   </div>
 </ng-container>
@@ -119,7 +123,8 @@
 </div>
 
 <ng-container *ngIf="toggleTermsControl.value">
-  <ng-container *ngFor="let term of form.get('terms').controls">
+  <ng-container *ngFor="let term of form.get('terms').controls; let index = index">
+    <mat-divider *ngIf="index > 0"></mat-divider>
     <div class="group">
       <group-multiselect
         scope="medias"
@@ -136,8 +141,8 @@
         filterPlaceholder="Specify territories to filter"
         [control]="term.get('territories')"
       ></group-multiselect>
-      <mat-checkbox color="primary" [formControl]="term.get('exclusive')">Exclusive</mat-checkbox>
     </div>
+    <mat-checkbox color="primary" [formControl]="term.get('exclusive')">Exclusive</mat-checkbox>
   </ng-container>
 
   <div class="add-item">
