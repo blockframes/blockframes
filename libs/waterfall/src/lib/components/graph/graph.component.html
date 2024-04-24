@@ -155,7 +155,7 @@
               <mat-form-field appearance="outline">
                 <mat-label>Parent Name(s)</mat-label>
                 <mat-select multiple [formControl]="rightForm.get('parents')">
-                  <mat-option *ngFor="let node of (availableNodes$ | async)" [disabled]="node.disabled" [value]="node.id">{{node.name}}</mat-option>
+                  <mat-option [matTooltip]="node.name" *ngFor="let node of (availableNodes$ | async)" [disabled]="node.disabled" [value]="node.id">{{ node.name }}</mat-option>
                 </mat-select>
                 <mat-hint>Choose parent revenue elements from which this Receipt Share draw funds. You can add as many parents as you want.</mat-hint>
               </mat-form-field>
@@ -203,6 +203,16 @@
           <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
         </button>
       </header>
+      <section class="add">
+        <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="isDuplicateVersion" >
+          <mat-icon svgIcon="add"></mat-icon>
+          <span>New Receipt Source</span>
+        </button>
+        <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="isDuplicateVersion" >
+          <mat-icon svgIcon="add"></mat-icon>
+          <span>New Receipt Share</span>
+        </button>
+      </section>
       <p class="description"><strong>Pool</strong> is needed when several Receipts Shares come from different sources, but should be used in the same condition.</p>
       <mat-tab-group>
         <mat-tab label="Receipts Shares">
@@ -216,6 +226,11 @@
           </section>
         </mat-tab>
       </mat-tab-group>
+    </ng-container>
+    <ng-template #emptyGraph>
+      <header>
+        <h2>Instructions</h2>
+      </header>
       <section class="add">
         <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="isDuplicateVersion" >
           <mat-icon svgIcon="add"></mat-icon>
@@ -226,11 +241,6 @@
           <span>New Receipt Share</span>
         </button>
       </section>
-    </ng-container>
-    <ng-template #emptyGraph>
-      <header>
-        <h2>Instructions</h2>
-      </header>
       <section class="begin">
         <h3>Title Waterfall Creation Guide</h3>
         <p class="mat-body-1">Welcome to the section dedicated to crafting the revenue distribution (waterfall) for your film or series (Title). Please adhere to the following structured guidelines to ensure an accurate and efficient setup:</p>
@@ -254,16 +264,6 @@
           <mat-icon svgIcon="help"></mat-icon>
           <span>Ask for Help</span>
         </button>
-        <section class="add">
-          <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="isDuplicateVersion" >
-            <mat-icon svgIcon="add"></mat-icon>
-            <span>New Receipt Source</span>
-          </button>
-          <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="isDuplicateVersion" >
-            <mat-icon svgIcon="add"></mat-icon>
-            <span>New Receipt Share</span>
-          </button>
-        </section>
       </section>
     </ng-template>
   </ng-template>

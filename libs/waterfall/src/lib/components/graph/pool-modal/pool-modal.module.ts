@@ -8,14 +8,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 
 import { WaterfallPoolModalComponent } from './pool-modal.component';
 
-
 @NgModule({
-  declarations: [ WaterfallPoolModalComponent ],
+  declarations: [WaterfallPoolModalComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -27,7 +27,8 @@ import { WaterfallPoolModalComponent } from './pool-modal.component';
     MatSelectModule,
     MatButtonModule,
     MatFormFieldModule,
+    MatTooltipModule
   ],
-  exports: [ WaterfallPoolModalComponent ],
+  exports: [WaterfallPoolModalComponent],
 })
-export class WaterfallPoolModalModule {}
+export class WaterfallPoolModalModule { }

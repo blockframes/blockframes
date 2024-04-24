@@ -199,13 +199,19 @@ export class ContractListComponent {
       }));
     }
 
+    const signatureDate = this.contractForm.controls.signatureDate.value;
     const existingDoc = documents.find(d => d.id === this.contractForm.controls.id.value);
+    const price = this.contractForm.controls.price.value.filter(p => p.value > 0).map(p => ({
+      ...p,
+      date: p.date || signatureDate
+    }));
+
     const document = createWaterfallDocument<WaterfallContract>({
       id: this.contractForm.controls.id.value,
       name: this.contractForm.controls.name.value,
       type: 'contract',
       waterfallId,
-      signatureDate: this.contractForm.controls.signatureDate.value,
+      signatureDate,
       ownerId: existingDoc?.ownerId || this.orgService.org.id,
       meta: createWaterfallContract({
         type: this.selected,
@@ -216,7 +222,7 @@ export class ContractListComponent {
           from: this.contractForm.controls.startDate.value,
           to: this.contractForm.controls.endDate.value,
         },
-        price: this.contractForm.controls.price.value.filter(p => p.value > 0),
+        price,
         currency: this.contractForm.controls.currency.value,
       }),
     });

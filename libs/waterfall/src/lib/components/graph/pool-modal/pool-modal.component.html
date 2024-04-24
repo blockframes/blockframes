@@ -4,7 +4,7 @@
   <mat-form-field appearance="outline">
     <mat-label>Group of Receipt Shares</mat-label>
     <mat-select multiple [formControl]="poolRightsControl">
-      <mat-option *ngFor="let right of data.rights" [value]="right.id">{{right.name}}</mat-option>
+      <mat-option [matTooltip]="right.name" *ngFor="let right of data.rights" [value]="right.id">{{ right.name }}</mat-option>
     </mat-select>
   </mat-form-field>
   <mat-form-field appearance="outline">
