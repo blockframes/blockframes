@@ -37,7 +37,13 @@
     <ng-template matStepLabel>Film Cost</ng-template>
     <ng-template matStepContent>
       <div class="surface">
-        TODO #9753 Film Cost
+        <h2>Film Cost</h2>
+        <p>Please provide us with the following information so we can calculate the film amortization.</p>
+        <mat-form-field appearance="outline">
+          <mat-label>Effective Film Cost (Total Amount)</mat-label>
+          <mat-icon svgIcon="EUR" matSuffix></mat-icon>
+          <input matInput type="number" [formControl]="amortizationForm.get('filmCost')" required />
+        </mat-form-field>
       </div>
       <article>
         <ng-container *ngIf="updating$ | async; else editCosts">
@@ -48,7 +54,7 @@
             <span>Continue</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </button>
-          <button mat-button class="save" (click)="exit()" [disabled]="amortizationForm.invalid">
+          <button mat-button class="save" (click)="exit()" [disabled]="!amortizationForm.get('filmCost').value">
             <mat-icon svgIcon="save"></mat-icon>
             <span>Save & Come back later</span>
           </button>
@@ -60,7 +66,13 @@
   <mat-step completed>
     <ng-template matStepLabel>Financing</ng-template>
     <div class="surface">
-      TODO #9753 Financing
+      <h2>Financing</h2>
+      <p>Please take into account all the financing sources that need to be considered when calculating the amortization of the film's costs.</p>
+      <mat-form-field appearance="outline">
+        <mat-label>Total Financing Amount</mat-label>
+        <mat-icon svgIcon="EUR" matSuffix></mat-icon>
+        <input matInput type="number" [formControl]="amortizationForm.get('financing')" required />
+      </mat-form-field>
     </div>
     <article>
       <ng-container *ngIf="updating$ | async; else editFinancing">
@@ -77,7 +89,7 @@
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </button>
         </section>
-        <button mat-button class="save" (click)="exit()" [disabled]="amortizationForm.invalid">
+        <button mat-button class="save" (click)="exit()" [disabled]="amortizationForm.get('financing').value === null">
           <mat-icon svgIcon="save"></mat-icon>
           <span>Save & Come back later</span>
         </button>
@@ -88,7 +100,12 @@
   <mat-step>
     <ng-template matStepLabel>Net Revenue Producer Shares</ng-template>
     <div class="surface">
-      TODO #9753 Net Revenue Producer Shares
+      <h2>Producer's Net Participation Definition</h2>
+      <p>
+        Please choose the receipts that will be summed to amortized the film cost.<br/>
+        You can modify them in the <a [routerLink]="['/c/o/dashboard/title/', movie.id, 'init']" target="_blank">Waterfall Management</a> section.
+      </p>
+      <waterfall-right-list multiple="false" [defaultPool]="amortizationForm.get('poolName').value" *ngIf="nonEditableNodeIds$ | async as nonEditableNodeIds" (selectedPool)="selectPool($event)" [nonEditableNodeIds]="nonEditableNodeIds"></waterfall-right-list>
     </div>
     <article>
       <ng-container *ngIf="updating$ | async; else editShares">
@@ -101,11 +118,11 @@
             <span>Back</span>
           </button>
           <button mat-flat-button color="primary" matTooltip="Save" (click)="exit(true)" [disabled]="amortizationForm.invalid">
-            <span>Apply</span>
+            <span>Continue</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </button>
         </section>
-        <button mat-button class="save" (click)="exit()" [disabled]="amortizationForm.invalid">
+        <button mat-button class="save" (click)="exit()">
           <mat-icon svgIcon="save"></mat-icon>
           <span>Save & Come back later</span>
         </button>

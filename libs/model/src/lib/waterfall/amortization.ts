@@ -8,6 +8,9 @@ export interface Amortization {
   name: string;
   contractIds: string[];
   status: AmortizationStatus;
+  filmCost: number;
+  financing: number;
+  poolName: string;
 }
 
 export function createAmortization(params: Partial<Amortization>): Amortization {
@@ -17,6 +20,9 @@ export function createAmortization(params: Partial<Amortization>): Amortization 
     name: '',
     waterfallId: '',
     contractIds: [],
+    filmCost: 0,
+    financing: 0,
+    poolName: '',
     ...params
   };
 }

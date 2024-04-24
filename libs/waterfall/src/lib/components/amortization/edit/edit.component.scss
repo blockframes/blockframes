@@ -18,9 +18,6 @@ div.organization {
   margin: 32px;
   section {
     justify-content: left;
-    mat-form-field {
-      width: 30%;
-    }
   }
 }
 
@@ -40,4 +37,8 @@ section {
   gap: 12px;
   display: flex;
   justify-content: center;
+}
+
+mat-form-field {
+  width: 30%;
 }

@@ -14,7 +14,11 @@ const routes: Routes = [{
   children: [
     {
       path: '',
-      loadChildren: () => import('@blockframes/waterfall/dashboard/edit-amortization/edit.module').then(m => m.WaterfallEditAmortizationModule),
+      loadChildren: () => import('@blockframes/waterfall/components/amortization/edit/edit.module').then(m => m.WaterfallEditAmortizationModule),
+    },
+    {
+      path: 'summary',
+      loadChildren: () => import('@blockframes/waterfall/components/amortization/summary/summary.module').then(m => m.WaterfallSummaryAmortizationModule),
     },
   ]
 }];

@@ -18,8 +18,11 @@
       </div> 
 
       <span>
-        <a mat-icon-button matTooltip="Edit Calculation" [routerLink]="['..', 'amortization-edit', amortization.id]">
+        <a *ngIf="amortization.status === 'draft'" mat-icon-button matTooltip="Edit Calculation" [routerLink]="['..', 'amortization-edit', amortization.id]">
           <mat-icon svgIcon="edit"></mat-icon>
+        </a>
+        <a *ngIf="amortization.status === 'applied'" mat-icon-button matTooltip="View Calculation" [routerLink]="['..', 'amortization-edit', amortization.id, 'summary']">
+          <mat-icon svgIcon="visibility"></mat-icon>
         </a>
         <button mat-icon-button matTooltip="Delete Calculation" (click)="delete(amortization.id)">
           <mat-icon svgIcon="delete"></mat-icon>

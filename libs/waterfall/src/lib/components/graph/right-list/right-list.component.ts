@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -19,9 +19,18 @@ export class WaterfallRightListComponent implements OnInit, OnDestroy {
 
   @Input() public nonEditableNodeIds: string[] = [];
   @Input() @boolean public canCreatePool = true;
+  @Input() set defaultPool(pool: string) {
+    if (!pool) return;
+    this._defaultPool = pool;
+    this.poolsFilter.delete(pool);
+    this.selectFilterPool(this._defaultPool);
+  };
+  private _defaultPool: string;
+  @Input() @boolean private multiple = true;
 
   @Output() selectRight = new EventEmitter<string>();
   @Output() deleteRight = new EventEmitter<string>();
+  @Output() selectedPool = new EventEmitter<string>();
 
   public rights: Right[] = [];
   public rootRights: Right[] = [];
@@ -38,13 +47,19 @@ export class WaterfallRightListComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private rightService: RightService,
     private shell: DashboardWaterfallShellComponent,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
     this.subs.push(this.shell.rights$.subscribe(rights => {
       this.selected = new Set<string>();
       this.rights = rights;
-      this.init(rights);
+      if (this._defaultPool) {
+        this.poolsFilter.delete(this._defaultPool);
+        this.selectFilterPool(this._defaultPool);
+      } else {
+        this.init(rights);
+      }
     }));
     this.subs.push(this.searchControl.valueChanges.subscribe(value => {
       if (value === '') this.init(this.rights);
@@ -72,6 +87,7 @@ export class WaterfallRightListComponent implements OnInit, OnDestroy {
     rights.filter(r => r.type === 'horizontal').forEach(h => {
       this.hMembers[h.id] = rights.filter(r => r.groupId === h.id).sort((a, b) => a.order - b.order);
     });
+    this.cdr.markForCheck();
   }
 
   check(event: MatCheckboxChange, id: string) {
@@ -143,11 +159,10 @@ export class WaterfallRightListComponent implements OnInit, OnDestroy {
           selected: this.selected,
           onConfirm: async ({ name, rightIds }: { name: string, rightIds: string[] }) => {
             this.rightService.batch();
-            const updatedRight = rightIds.map(id => this.rights.find(i => i.id === id));
-            console.log(this.rights.length, updatedRight, rightIds);
-            updatedRight.forEach(j => j.pools.push(name));
+            const updatedRights = rightIds.map(id => this.rights.find(i => i.id === id));
+            updatedRights.forEach(j => j.pools.push(name));
 
-            await this.rightService.update(updatedRight, { params: { waterfallId: this.shell.waterfall.id } });
+            await this.rightService.update(updatedRights, { params: { waterfallId: this.shell.waterfall.id } });
           }
         }
       }
@@ -156,16 +171,19 @@ export class WaterfallRightListComponent implements OnInit, OnDestroy {
 
   selectFilterPool(pool: string) {
     if (this.poolsFilter.has(pool)) this.poolsFilter.delete(pool);
-    else this.poolsFilter.add(pool);
+    else if (this.multiple) this.poolsFilter.add(pool);
+    else this.poolsFilter = new Set([pool]);
 
     if (this.poolsFilter.size === 0) {
       this.init(this.rights);
+      this.selectedPool.emit();
     } else {
       const poolRights = this.rights.filter(r => r.pools.some(p => this.poolsFilter.has(p)));
       const groups = new Set(poolRights.map(r => r.groupId));
       const filteredRightIds = new Set([...poolRights.map(r => r.id), ...groups]);
       const filteredRights = this.rights.filter(r => filteredRightIds.has(r.id));
       this.init(filteredRights);
+      this.selectedPool.emit(pool);
     }
   }
 

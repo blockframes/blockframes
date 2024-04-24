@@ -1,0 +1,74 @@
+<header>
+  <h1>Film Amortization</h1>
+  <article>
+    <section>
+      <mat-icon svgIcon="movie"></mat-icon><span matLine><strong>Title: </strong>{{ movie.title.international }}</span>
+    </section>
+    <section *ngIf="contracts$ | async as contracts">
+      <mat-icon svgIcon="business"></mat-icon>
+      <span matLine>
+        <strong>Organizations (s): </strong>
+        <span *ngFor="let contract of contracts; let index = index">
+          <span>{{ contract.rightholder.name }} ({{ contract.type | toLabel : 'rightholderRoles' }})</span>
+          <ng-container *ngIf="index < contracts.length - 1">, </ng-container>
+        </span>
+      </span>
+    </section>
+  </article>
+</header>
+
+<div class="surface" *ngIf="amortization$ | async as amortization">
+  <article class="breakdown">
+    <header>
+      <span>{{ amortization.name }}</span>
+    </header>
+    <div class="surface">
+      <section>
+        <span>Film Cost</span>
+        <price-per-currency [price]="amortization.filmCost | formatPair" default="€ 0"></price-per-currency>
+      </section>
+    </div>
+    <div class="surface">
+      <section>
+        <span>Financing</span>
+        <price-per-currency [price]="amortization.financing | formatPair" default="€ 0"></price-per-currency>
+      </section>
+    </div>
+    <div class="surface" *ngIf="rights$ | async as rights">
+      <mat-expansion-panel expanded>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <span>Revenue Shares</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <ul>
+          <li *ngFor="let right of rights">
+            <span>{{ right.name }} ({{ right.type | toLabel: 'rightTypes' }}) - {{ right.rightholderId | rightholderName: waterfall }}</span>
+            <mat-divider></mat-divider>
+          </li>
+        </ul>
+      </mat-expansion-panel>
+    </div>
+  </article>
+  <article class="actions">
+    <ng-container *ngIf="updating$ | async; else showActions">
+      <logo-spinner></logo-spinner>
+    </ng-container>
+    <ng-template #showActions>
+      <section>
+        <button mat-button color="primary" (click)="previous()">
+          <mat-icon svgIcon="arrow_back"></mat-icon>
+          <span>Edit</span>
+        </button>
+        <button mat-flat-button color="primary" matTooltip="Save" (click)="exit(amortization)">
+          <span>Apply Calculation Method</span>
+          <mat-icon svgIcon="arrow_forward"></mat-icon>
+        </button>
+      </section>
+      <button mat-button class="save" (click)="exit()">
+        <mat-icon svgIcon="save"></mat-icon>
+        <span>Save & Come back later</span>
+      </button>
+    </ng-template>
+  </article>
+</div>

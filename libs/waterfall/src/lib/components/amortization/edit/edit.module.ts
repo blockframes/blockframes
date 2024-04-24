@@ -8,8 +8,9 @@ import { WaterfallEditAmortizationComponent } from './edit.component';
 
 // Blockframes
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
-import { AmortizationFormGuard } from '../../guards/amortization-form-guard';
+import { AmortizationFormGuard } from '../../../guards/amortization-form-guard';
 import { BfCommonModule } from '@blockframes/utils/bf-common.module';
+import { WaterfallRightListModule } from '../../../components/graph/right-list/right-list.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -29,6 +30,7 @@ import { MatInputModule } from '@angular/material/input';
 
     // Blockframes
     LogoSpinnerModule,
+    WaterfallRightListModule,
 
     // Material
     MatFormFieldModule,

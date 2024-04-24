@@ -2,15 +2,15 @@
 // Angular
 import { Component, ChangeDetectionStrategy, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DashboardWaterfallShellComponent } from '../shell/shell.component';
+import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatStepper } from '@angular/material/stepper';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BehaviorSubject, Observable, map } from 'rxjs';
-import { AmortizationFormGuardedComponent } from '../../guards/amortization-form-guard';
-import { AmortizationService } from '../../amortization.service';
-import { WaterfallContract, WaterfallRightholder, createAmortization, rightholderGroups } from '@blockframes/model';
-import { AmortizationForm } from '../../form/amortization.form';
+import { BehaviorSubject, Observable, combineLatest, map } from 'rxjs';
+import { AmortizationFormGuardedComponent } from '../../../guards/amortization-form-guard';
+import { AmortizationService } from '../../../amortization.service';
+import { WaterfallContract, WaterfallRightholder, createAmortization, getDefaultVersionId, getNonEditableNodeIds, rightholderGroups } from '@blockframes/model';
+import { AmortizationForm } from '../../../form/amortization.form';
 
 @Component({
   selector: 'waterfall-edit-amortization',
@@ -36,6 +36,18 @@ export class WaterfallEditAmortizationComponent implements AmortizationFormGuard
       return { ...c, rightholder };
     }))
   );
+  public nonEditableNodeIds$ = combineLatest([
+    this.shell.rightholderRights$,
+    this.shell.rightholderSources$,
+    this.shell.statements$.pipe(map(statements => statements.filter(s => s.status === 'reported'))),
+    this.shell.incomes$,
+  ]).pipe(
+    map(([rights, sources, reportedStatements, incomes]) => {
+      const defaultVersionId = getDefaultVersionId(this.shell.waterfall);
+      this.shell.setVersionId(defaultVersionId);
+      return getNonEditableNodeIds(rights, sources, reportedStatements, incomes);
+    })
+  );
 
   constructor(
     private router: Router,
@@ -49,6 +61,7 @@ export class WaterfallEditAmortizationComponent implements AmortizationFormGuard
   }
 
   async ngOnInit() {
+    this.shell.versionId$
     const amortization = await this.service.getValue(this.amortizationId, { waterfallId: this.shell.waterfall.id });
     this.amortizationForm.patchValue(amortization);
   }
@@ -61,13 +74,21 @@ export class WaterfallEditAmortizationComponent implements AmortizationFormGuard
     this.stepper?.next();
   }
 
-  async exit(applied: boolean = false) {
+  async exit(redirectToSummary: boolean = false) {
     this.updating$.next(true);
     const amortization = createAmortization({ ...this.amortizationForm.value, waterfallId: this.shell.waterfall.id });
-    if (applied) amortization.status = 'applied';
+    
     this.amortizationForm.markAsPristine();
     await this.service.upsert(amortization, { params: { waterfallId: this.shell.waterfall.id } });
     this.snackBar.open('Film Amortization saved', 'close', { duration: 3000 });
-    this.router.navigate(['../..', 'amortization'], { relativeTo: this.route });
+    if(redirectToSummary) {
+      this.router.navigate(['summary'], { relativeTo: this.route });
+    } else {
+      this.router.navigate(['../..', 'amortization'], { relativeTo: this.route });
+    }
+  }
+
+  public selectPool(pool: string) {
+    this.amortizationForm.get('poolName').setValue(pool);
   }
 }
