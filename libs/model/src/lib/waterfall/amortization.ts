@@ -13,6 +13,8 @@ export interface Amortization {
   poolName: string;
 }
 
+export type AmortizationDetails = Amortization & { restToBeAmortized: number, poolRevenue: number };
+
 export function createAmortization(params: Partial<Amortization>): Amortization {
   return {
     id: '',

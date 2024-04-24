@@ -3,6 +3,9 @@
 
 <section>
   <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment" label="Total Participation"></waterfall-statement-participation>
+  <ng-container *ngIf="amortizationDetails$ | async as amortizationDetails">
+    <waterfall-statement-participation class="restToBeAmortized" *ngIf="amortizationDetails" [price]="amortizationDetails.restToBeAmortized | formatPair" label="Rest To Be Amortized"></waterfall-statement-participation>
+  </ng-container>
 </section>
 
 <waterfall-incoming-statements [statement]="statement" [form]="form" (incomeIds)="incomeIds$.next($event)"></waterfall-incoming-statements>
@@ -192,6 +195,33 @@
           <waterfall-interest-table [interests]="interests"></waterfall-interest-table>
         </mat-expansion-panel>
       </div>
+    </article>
+  </ng-container>
+
+  <ng-container *ngIf="amortizationDetails$ | async as amortizationDetails">
+    <article *ngIf="amortizationDetails" class="breakdown">
+      <header>
+        <span>Film Amortization</span>
+      </header>
+      <div class="surface">
+        <section>
+          <span>Cost of the film to amortize</span>
+          <price-per-currency [price]="amortizationDetails.filmCost | formatPair" default="€ 0"></price-per-currency>
+        </section>
+      </div>
+      <div class="surface">
+        <section>
+          <span>Financing</span>
+          <price-per-currency [price]="amortizationDetails.financing | formatPair" default="€ 0"></price-per-currency>
+        </section>
+      </div>
+      <div class="surface">
+        <section>
+          <span>Producer's Net Participation</span>
+          <price-per-currency [price]="amortizationDetails.poolRevenue | formatPair" default="€ 0"></price-per-currency>
+        </section>
+      </div>
+      <waterfall-statement-participation class="restToBeAmortized"  [price]="amortizationDetails.restToBeAmortized | formatPair" label="Rest To Be Amortized"></waterfall-statement-participation>
     </article>
   </ng-container>
 

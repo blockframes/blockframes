@@ -13,6 +13,7 @@ import { ConditionWithTarget, getInvestmentValue, isConditionWithTarget } from '
 import { Expense, ExpenseType } from '../expense';
 import { InterestDetail } from './interest';
 import { add, differenceInMonths, isLastDayOfMonth, lastDayOfMonth, sub } from 'date-fns';
+import { AmortizationDetails } from './amortization';
 
 const toFixed = (number: number) => Math.round(number * 100) / 100;
 
@@ -136,6 +137,7 @@ export interface Statement {
     distributorExpensesPerDistributor?: Record<string, DistributorExpenses[]>; // Expenses details for outgoing statements
     interests?: InterestDetail[]; // Interest details for outgoing statements 
     producerNetParticipation?: PricePerCurrency; // Producer's net participation (for direct sales statements only)
+    amortization?: AmortizationDetails; // Amortization details for outgoing statements
   },
   hash: {
     requested: boolean;
