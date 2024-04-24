@@ -27,6 +27,7 @@ export class WaterfallRightListComponent implements OnInit, OnDestroy {
   };
   private _defaultPool: string;
   @Input() @boolean private multiple = true;
+  @Input() @boolean readonly = false;
 
   @Output() selectRight = new EventEmitter<string>();
   @Output() deleteRight = new EventEmitter<string>();
