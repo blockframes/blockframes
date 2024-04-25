@@ -14,7 +14,7 @@
     <ng-template matStepLabel>Add Contracts</ng-template>
     <ng-template matStepContent>
       <div class="surface">
-        <waterfall-contract-list [contractForm]="contractForm"></waterfall-contract-list>
+        <waterfall-contract-list [contractForm]="contractForm" (redirectToBuilder)="redirectToBuilder()"></waterfall-contract-list>
       </div>
       <article>
         <ng-container *ngIf="updating$ | async; else editContracts">
