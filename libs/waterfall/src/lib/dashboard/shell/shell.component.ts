@@ -59,7 +59,7 @@ import { WaterfallPermissionsService } from '../../permissions.service';
 import { AuthService } from '@blockframes/auth/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { AmortizationService } from '@blockframes/waterfall/amortization.service';
+import { AmortizationService } from '../../amortization.service';
 
 @Directive({ selector: 'waterfall-cta, [waterfallCta]' })
 export class WaterfallCtaDirective { }
