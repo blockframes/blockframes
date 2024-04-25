@@ -316,7 +316,7 @@ const incomeConditions: AllIncomeConditions = {
     if (current >= value) return Infinity;
     return (value - current) / revenuRate;
   },
-  filmAmortized(incomeState, state, condition) { // TODO #9771 test 10% & not amortized
+  filmAmortized(incomeState, state, condition) {
     const { target } = condition;
     if (typeof target === 'number') throw new Error('FilmAmortized condition should have a target with a reference');
     const amortization = state.amortizations[target.id];
