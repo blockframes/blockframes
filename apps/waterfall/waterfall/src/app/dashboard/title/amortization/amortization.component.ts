@@ -19,7 +19,7 @@ export class AmortizationComponent {
 
   public producer = this.shell.waterfall.rightholders.find(r => r.roles.includes('producer'));
 
-  public amortizations$: Observable<(Amortization & { rightholders: WaterfallRightholder[] })[]> = combineLatest([this.service.valueChanges({ waterfallId: this.shell.waterfall.id }), this.shell.contracts$]).pipe(
+  public amortizations$: Observable<(Amortization & { rightholders: WaterfallRightholder[] })[]> = combineLatest([this.shell.amortizations$, this.shell.contracts$]).pipe(
     map(([amortizations, _contracts]) => sortByDate(amortizations, '_meta.createdAt').reverse().map(amortization => {
       const contracts = _contracts.filter(c => !!this.producer?.id && amortization.contractIds.includes(c.id));
       const rightholdersIds = contracts.map(c => c.buyerId === this.producer.id ? c.sellerId : c.buyerId);

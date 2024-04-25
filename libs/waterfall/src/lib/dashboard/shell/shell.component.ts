@@ -59,6 +59,7 @@ import { WaterfallPermissionsService } from '../../permissions.service';
 import { AuthService } from '@blockframes/auth/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { AmortizationService } from '@blockframes/waterfall/amortization.service';
 
 @Directive({ selector: 'waterfall-cta, [waterfallCta]' })
 export class WaterfallCtaDirective { }
@@ -361,6 +362,10 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
+  public amortizations$ = this.movie$.pipe(
+    switchMap(({ id: waterfallId }) => this.amortizationService.valueChanges({ waterfallId }))
+  );
+
   public lockedVersionId: string; // VersionId that is locked for the current rightholder
 
   private _simulation$ = new BehaviorSubject<WaterfallState>(undefined);
@@ -395,6 +400,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     private blockService: BlockService,
     private authService: AuthService,
     private permissionService: WaterfallPermissionsService,
+    private amortizationService: AmortizationService,
     private router: Router,
     private route: ActivatedRoute,
     private navService: NavigationService,
@@ -417,6 +423,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     const expenses = await this.expenses();
     const statements = await this.statements();
     const terms = await this.terms();
+    const amortizations = await this.amortizations();
 
     const data: WaterfallData = {
       waterfall: this.waterfall,
@@ -425,7 +432,8 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
       incomes: {},
       expenses: {},
       statements,
-      terms
+      terms,
+      amortizations
     };
 
     for (const income of incomes) {
@@ -466,6 +474,10 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
 
   terms() {
     return this.termService.getValue([where('titleId', '==', this.waterfall.id)]);
+  }
+
+  amortizations() {
+    return this.amortizationService.getValue({ waterfallId: this.waterfall.id });
   }
 
   setVersionId(versionId: string) {

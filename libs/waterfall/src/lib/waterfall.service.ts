@@ -32,7 +32,9 @@ import {
   sourcesToAction,
   expenseTypesToAction,
   waterfallSources,
-  WaterfallRightholder
+  WaterfallRightholder,
+  Amortization,
+  amortizationsToActions
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { AuthService } from '@blockframes/auth/service';
@@ -57,6 +59,7 @@ export interface WaterfallData {
   incomes: Record<string, Income>;
   expenses: Record<string, Expense>;
   statements: Statement[];
+  amortizations: Amortization[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -306,6 +309,7 @@ function groupActions(data: WaterfallData, versionId: string, isSimulation = fal
   const expenses = isSimulation ? Object.values(data.expenses) : Object.values(data.expenses).filter(i => !i.version[versionId] || !i.version[versionId].hidden);
   const expenseActions = expensesToActions(expenses, incomesAndExpensesStatements);
   const paymentActions = statementsToActions(data.statements, incomes);
+  const amortizationActions = amortizationsToActions(data.amortizations);
 
   const groupedActions = groupByDate([
     ...sourceActions,
@@ -315,7 +319,8 @@ function groupActions(data: WaterfallData, versionId: string, isSimulation = fal
     ...rightActions,
     ...expenseActions, // Expenses should be added before incomes
     ...incomeActions,
-    ...paymentActions
+    ...paymentActions,
+    ...amortizationActions
   ]);
 
   return groupedActions;

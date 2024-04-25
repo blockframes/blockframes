@@ -105,7 +105,7 @@
         Please choose the receipts that will be summed to amortized the film cost.<br/>
         You can modify them in the <a [routerLink]="['/c/o/dashboard/title/', movie.id, 'init']" target="_blank">Waterfall Management</a> section.
       </p>
-      <waterfall-right-list multiple="false" [defaultPool]="amortizationForm.get('poolName').value" *ngIf="nonEditableNodeIds$ | async as nonEditableNodeIds" (selectedPool)="selectPool($event)" [nonEditableNodeIds]="nonEditableNodeIds"></waterfall-right-list>
+      <waterfall-right-list multiple="false" readonly [defaultPool]="amortizationForm.get('poolName').value" *ngIf="nonEditableNodeIds$ | async as nonEditableNodeIds" (selectedPool)="selectPool($event)" [nonEditableNodeIds]="nonEditableNodeIds"></waterfall-right-list>
     </div>
     <article>
       <ng-container *ngIf="updating$ | async; else editShares">

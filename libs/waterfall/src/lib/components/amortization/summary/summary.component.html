@@ -43,7 +43,7 @@
         </mat-expansion-panel-header>
         <ul>
           <li *ngFor="let right of rights">
-            <span>{{ right.name }} ({{ right.type | toLabel: 'rightTypes' }}) - {{ right.rightholderId | rightholderName: waterfall }}</span>
+            <span>{{ right.name }} ({{ right.type | toLabel: 'rightTypes' }}) <ng-container *ngIf="right.rightholderId">- {{ right.rightholderId | rightholderName: waterfall }}</ng-container></span>
             <mat-divider></mat-divider>
           </li>
         </ul>
