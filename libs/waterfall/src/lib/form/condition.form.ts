@@ -198,9 +198,10 @@ export function setConditionForm(form: ConditionForm, condition?: Partial<Condit
       break;
     case 'filmAmortized':
       form.controls.conditionType.setValue('amortization');
-      form.controls.amortizationTarget.setValue(condition.payload.amortizationId ?? '');
+      if (typeof condition.payload.target === 'number') return;
+      form.controls.amortizationTarget.setValue(condition.payload.target.id ?? '');
       form.controls.amortizationOperator.setValue(condition.payload.operator ?? '');
-      form.controls.amortizationPercentage.setValue(toFixedPercentage(condition.payload.percent ?? 100));
+      form.controls.amortizationPercentage.setValue(toFixedPercentage(condition.payload.target.percent ?? 100));
       break;
     case 'amount':
     case 'termsLength':
@@ -271,9 +272,8 @@ function formToAmortizationCondition(form: ConditionForm): Condition | undefined
 
   const name = 'filmAmortized';
   const payload: FilmAmortizedCondition = {
-    amortizationId,
+    target: { id: amortizationId, percent: percent / 100, in: 'amortization.filmCost' }, // TODO #9771 use formToTarget
     operator,
-    percent: percent / 100
   };
   return { name, payload };
 }
