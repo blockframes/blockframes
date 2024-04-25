@@ -6,6 +6,10 @@ section {
     margin: 32px 0;
   }
 
+  waterfall-statement-participation.restToBeAmortized {
+    margin-top: 32px;
+  }
+
   article {
     padding: 24px;
   }
@@ -17,7 +21,8 @@ section {
     margin-top: 24px;
     margin-bottom: 24px;
 
-    mat-panel-title {
+    mat-panel-title,
+    section {
       font-weight: 800;
       font-size: 26px;
       line-height: 32px;

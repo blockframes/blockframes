@@ -48,6 +48,7 @@
         </mat-chip-list>
       </ng-container>
       <button
+        *ngIf="!readonly"
         mat-icon-button
         [disabled]="nonEditableNodeIds.includes(right.id)"
         (click)="edit(right.id)"
@@ -56,7 +57,7 @@
         <mat-icon svgIcon="edit"></mat-icon>
       </button>
       <button
-        *ngIf="right.type !== 'vertical' || right.type === 'horizontal'"
+        *ngIf="(right.type !== 'vertical' || right.type === 'horizontal') && !readonly"
         mat-icon-button
         [disabled]="nonEditableNodeIds.includes(right.id)"
         (click)="remove(right.id)"
@@ -85,6 +86,7 @@
             </mat-chip-list>
           </ng-container>
           <button
+            *ngIf="!readonly"
             mat-icon-button
             [disabled]="nonEditableNodeIds.includes(member.id)"
             (click)="edit(member.id)"
@@ -93,7 +95,7 @@
             <mat-icon svgIcon="edit"></mat-icon>
           </button>
           <button
-            *ngIf="right.type !== 'vertical' || right.type === 'horizontal'"
+            *ngIf="(right.type !== 'vertical' || right.type === 'horizontal') && !readonly"
             mat-icon-button
             [disabled]="nonEditableNodeIds.includes(member.id)"
             (click)="remove(member.id)"
@@ -121,10 +123,10 @@
                   </mat-chip>
                 </mat-chip-list>
               </ng-container>
-              <button mat-icon-button matTooltip="Edit Receipt Share" (click)="edit(subMember.id)" [disabled]="nonEditableNodeIds.includes(subMember.id)">
+              <button *ngIf="!readonly" mat-icon-button matTooltip="Edit Receipt Share" (click)="edit(subMember.id)" [disabled]="nonEditableNodeIds.includes(subMember.id)">
                 <mat-icon svgIcon="edit"></mat-icon>
               </button>
-              <button mat-icon-button matTooltip="Delete Receipt Share" (click)="remove(subMember.id)" [disabled]="nonEditableNodeIds.includes(subMember.id)">
+              <button *ngIf="!readonly" mat-icon-button matTooltip="Delete Receipt Share" (click)="remove(subMember.id)" [disabled]="nonEditableNodeIds.includes(subMember.id)">
                 <mat-icon svgIcon="delete"></mat-icon>
               </button>
             </section>
@@ -151,10 +153,10 @@
               </mat-chip>
             </mat-chip-list>
           </ng-container>
-          <button mat-icon-button matTooltip="Edit Receipt Share" (click)="edit(member.id)" [disabled]="nonEditableNodeIds.includes(member.id)">
+          <button *ngIf="!readonly" mat-icon-button matTooltip="Edit Receipt Share" (click)="edit(member.id)" [disabled]="nonEditableNodeIds.includes(member.id)">
             <mat-icon svgIcon="edit"></mat-icon>
           </button>
-          <button mat-icon-button matTooltip="Delete Receipt Share" (click)="remove(member.id)" [disabled]="nonEditableNodeIds.includes(member.id)">
+          <button *ngIf="!readonly" mat-icon-button matTooltip="Delete Receipt Share" (click)="remove(member.id)" [disabled]="nonEditableNodeIds.includes(member.id)">
             <mat-icon svgIcon="delete"></mat-icon>
           </button>
         </section>

@@ -8,3 +8,4 @@ export * from './waterfall';
 export * from './block';
 export * from './right';
 export * from './statement';
+export * from './amortization';

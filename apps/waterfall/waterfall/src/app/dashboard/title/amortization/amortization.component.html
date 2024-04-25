@@ -1,0 +1,55 @@
+<ng-container *ngIf="amortizations$ | async as amortizations else loading">
+
+  <section class="surface" *ngIf="amortizations.length else empty">
+    <header>
+      <h2>Film Amortization</h2>
+      <a mat-button [disabled]="!producer?.id" matTooltip="Add new Calculation" [routerLink]="['..', 'amortization-edit', service.createId()]">
+        <mat-icon svgIcon="add"></mat-icon>
+        <span>New Calculation</span>
+      </a>
+    </header>
+
+    <div class="amortization" *ngFor="let amortization of amortizations; let i = index">
+
+      <div>
+        <h3>{{ amortization.name }}</h3>
+        <p>{{ amortization.rightholders | join : 'name' }}</p>
+        <bf-tag>{{ amortization.status | toLabel : 'amortizationStatus' }}</bf-tag>
+      </div> 
+
+      <span>
+        <a *ngIf="amortization.status === 'draft'" mat-icon-button matTooltip="Edit Calculation" [routerLink]="['..', 'amortization-edit', amortization.id]">
+          <mat-icon svgIcon="edit"></mat-icon>
+        </a>
+        <a *ngIf="amortization.status === 'applied'" mat-icon-button matTooltip="View Calculation" [routerLink]="['..', 'amortization-edit', amortization.id, 'summary']">
+          <mat-icon svgIcon="visibility"></mat-icon>
+        </a>
+        <button mat-icon-button matTooltip="Delete Calculation" (click)="delete(amortization.id)">
+          <mat-icon svgIcon="delete"></mat-icon>
+        </button>
+      </span>
+    </div>
+
+  </section>
+
+</ng-container>
+<ng-template #empty>
+  <section class="surface">
+    <p class="mat-body-1">
+      Here you can define your own Calculation Method for Film Amortization. <br/>
+      You can have several different Calculation Methods for different Right Holders.
+    </p>
+    <article>
+      <a class="surface" matTooltip="Calculate Film Amortization" [routerLink]="['..', 'amortization-edit', service.createId()]">
+        <img asset="film_amortization.svg" alt="Calculate Film Amortization image">
+        <button mat-button [disabled]="!producer?.id" color="primary">Calculate Film Amortization</button>
+      </a>
+    </article>
+  </section>
+</ng-template>
+
+<ng-template #loading>
+  <article class="spinner">
+    <logo-spinner></logo-spinner>
+  </article>
+</ng-template>

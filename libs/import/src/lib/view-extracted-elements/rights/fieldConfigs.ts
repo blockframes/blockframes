@@ -1,4 +1,5 @@
 import {
+  getAmortizationId,
   getRightholderId,
   getTitleId,
   getWaterfallDocument,
@@ -24,10 +25,12 @@ import {
   ActionName,
   conditionNames,
   RightType,
-  isContract
+  isContract,
+  Amortization
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
+import { AmortizationService } from '@blockframes/waterfall/amortization.service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
@@ -63,12 +66,14 @@ interface Caches {
   rightholderCache: Record<string, WaterfallRightholder[]>,
   titleCache: Record<string, Movie>,
   documentCache: Record<string, WaterfallDocument>,
+  amortizationCache: Record<string, Amortization[]>
 }
 
 interface RightConfig {
   waterfallService: WaterfallService,
   titleService: MovieService,
   waterfallDocumentsService: WaterfallDocumentsService,
+  amortizationService: AmortizationService,
   userOrgId: string,
   caches: Caches,
   separator: string,
@@ -79,12 +84,13 @@ export function getRightConfig(option: RightConfig) {
     waterfallService,
     titleService,
     waterfallDocumentsService,
+    amortizationService,
     userOrgId,
     caches,
     separator
   } = option;
 
-  const { rightholderCache, titleCache, documentCache } = caches;
+  const { rightholderCache, titleCache, documentCache, amortizationCache } = caches;
 
   function getAdminConfig(): FieldsConfigType {
     // ! The order of the property should be the same as excel columns
@@ -150,7 +156,7 @@ export function getRightConfig(option: RightConfig) {
         return extractConditionTargetIn(value, data.conditionA);
       },
         /* m */ 'conditionA.target.id': (value: string, data: FieldsConfig) => {
-        return extractConditionTargetId(value, data.conditionA);
+        return extractConditionTargetId(value, data.conditionA, data.waterfallId);
       },
         /* n */ 'conditionA.target.percent': (value: string, data: FieldsConfig) => {
         return extractConditionPercent(value, data.conditionA);
@@ -168,7 +174,7 @@ export function getRightConfig(option: RightConfig) {
         return extractConditionTargetIn(value, data.conditionB);
       },
         /* s */ 'conditionB.target.id': (value: string, data: FieldsConfig) => {
-        return extractConditionTargetId(value, data.conditionB);
+        return extractConditionTargetId(value, data.conditionB, data.waterfallId);
       },
         /* t */ 'conditionB.target.percent': (value: string, data: FieldsConfig) => {
         return extractConditionPercent(value, data.conditionB);
@@ -186,7 +192,7 @@ export function getRightConfig(option: RightConfig) {
         return extractConditionTargetIn(value, data.conditionC);
       },
         /* y */ 'conditionC.target.id': (value: string, data: FieldsConfig) => {
-        return extractConditionTargetId(value, data.conditionC);
+        return extractConditionTargetId(value, data.conditionC, data.waterfallId);
       },
         /* z */ 'conditionC.target.percent': (value: string, data: FieldsConfig) => {
         return extractConditionPercent(value, data.conditionC);
@@ -261,6 +267,7 @@ export function getRightConfig(option: RightConfig) {
        * @see https://docs.google.com/spreadsheets/d/19cKIMr-988727kfRnWor5FNAjBDgg2ZSRwbjj4s5iM0/edit#gid=1880420768
        */
       if (!targetIn.includes(value as TargetIn)) {
+        if (cond.conditionName === 'filmAmortized') return 'amortization.filmCost';
         if (!value.trim()) return;
 
         switch (value.trim().toLowerCase()) {
@@ -283,9 +290,12 @@ export function getRightConfig(option: RightConfig) {
     }
   }
 
-  function extractConditionTargetId(value: string, cond: ImportedCondition) {
+  function extractConditionTargetId(value: string, cond: ImportedCondition, waterfallId: string) {
     if (targetIn.includes(cond.target.in as TargetIn)) {
       if (!value) throw mandatoryError(value, 'Right Operand subject', `Right Operand subject must be specified for "${cond.target.in}"`);
+      if (cond.target.in === 'amortization.filmCost') {
+        return getAmortizationId(value, waterfallId, cond.left, amortizationService, amortizationCache);
+      }
       return valueToId(value);
     }
 
@@ -371,6 +381,9 @@ export function getRightConfig(option: RightConfig) {
           return 'poolShadowRevenu';
         case 'poolrevenue':
           return 'poolRevenu';
+        case 'film amortization':
+        case 'film amortized':
+          return 'filmAmortized';
         case 'source total revenue':
         case 'producer\'s net participation':
         case 'distributor\'s gross receipts':

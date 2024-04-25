@@ -13,7 +13,6 @@ import { createAppConfig, createMovieAppConfig, createWaterfallRightholder } fro
 
 import { WaterfallService } from '../../waterfall.service';
 
-
 @Component({
   selector: 'waterfall-title-edit-form',
   templateUrl: './edit.component.html',

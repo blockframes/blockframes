@@ -15,6 +15,8 @@ import {
   createWaterfallRightholder,
   Statement,
   ExpenseType,
+  Amortization,
+  createAmortization,
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
@@ -24,6 +26,7 @@ import { UserService } from '@blockframes/user/service';
 import { where } from 'firebase/firestore';
 import { TermService } from '@blockframes/contract/term/service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
+import { AmortizationService } from '@blockframes/waterfall/amortization.service';
 
 export const spreadsheetImportTypes = ['titles', 'organizations', 'contracts', 'documents', 'sources', 'rights', 'statements'] as const;
 
@@ -79,6 +82,7 @@ export interface RightsImportState extends ImportState {
   waterfallId: string;
   right: Right;
   rightholders: Record<string, WaterfallRightholder[]>;
+  amortizations: Record<string, Amortization[]>;
 }
 
 export interface StatementsImportState extends ImportState {
@@ -183,6 +187,26 @@ export async function getTitleId(
   if (!titles.length) throw noTitleError(nameOrId);
   if (titles.length !== 1) throw sameTitleNameError(nameOrId);
   return memo(nameOrId, titles[0]);
+}
+
+export async function getAmortizationId(
+  valueOrId: string,
+  waterfallId: string,
+  poolName: string,
+  amortizationService: AmortizationService,
+  cache: Record<string, Amortization[]>
+) {
+
+  const value = valueOrId.trim();
+  if (!cache[waterfallId]) {
+    cache[waterfallId] = await amortizationService.getValue({ waterfallId });
+  }
+
+  const amortization = cache[waterfallId].find(r => r.name.toLowerCase() === value.toLowerCase() || r.id === valueOrId);
+  if (amortization) return amortization.id;
+
+  cache[waterfallId].push(createAmortization({ id: amortizationService.createId(), name: value, waterfallId, poolName }));
+  return cache[waterfallId].find(r => r.name === value || r.id === valueOrId).id;
 }
 
 export async function getContract(
@@ -471,7 +495,7 @@ export function valueToId(value: string) {
     .toLowerCase()
     .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove accents
     .replace(/[\])}[{(]/g, '') // remove brackets
-    .replace(/[-.,/\\()]/g, ' ') // replace special characters by space
+    .replace(/['"+-.,/\\()]/g, ' ') // replace special characters by space
     .replace(/&/g, 'AND')
     .replace(/<=/g, 'lte')
     .replace(/>=/g, 'gte')

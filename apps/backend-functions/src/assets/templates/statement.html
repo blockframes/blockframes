@@ -78,6 +78,15 @@
         </div>
       {{/if}}
 
+      {{#if data.statement.reportedData.amortization}}
+        <div class="statement-participation rest-to-be-amortized">
+          <span>Rest To Be Amortized:</span>
+          <span>
+            {{formatPair data.statement.reportedData.amortization.restToBeAmortized data.mainCurrency}}
+          </span>
+        </div>
+      {{/if}}
+
       {{#if data.statement.reportedData.sourcesBreakdown}} <!-- For Distributor and Direct Sales statements. -->
         {{#data.statement.reportedData.sourcesBreakdown}}
           <div class="breakdown">
@@ -440,6 +449,38 @@
                   </tr>
                 {{/data.statement.reportedData.interests}}
               </table>
+            </div>
+          </div>
+        {{/if}}
+
+        {{#if data.statement.reportedData.amortization}} <!-- Film Amortization details for outgoing statements  -->
+          <div class="breakdown">
+            <div class="header">
+              <span>Film Amortization</span>
+            </div>
+            <div class="surface">
+              <div class="header">
+                <h3>Cost of the film to amortize</h3>
+                <div>{{formatPair data.statement.reportedData.amortization.filmCost data.mainCurrency}}</div>
+              </div>
+            </div>
+            <div class="surface">
+              <div class="header">
+                <h3>Financing</h3>
+                <div>{{formatPair data.statement.reportedData.amortization.financing data.mainCurrency}}</div>
+              </div>
+            </div>
+            <div class="surface">
+              <div class="header">
+                <h3>Producer's Net Participation</h3>
+                <div>{{formatPair data.statement.reportedData.amortization.currentValue data.mainCurrency}}</div>
+              </div>
+            </div>
+            <div class="statement-participation rest-to-be-amortized">
+              <span>Rest To Be Amortized:</span>
+              <span>
+                {{formatPair data.statement.reportedData.amortization.restToBeAmortized data.mainCurrency}}
+              </span>
             </div>
           </div>
         {{/if}}

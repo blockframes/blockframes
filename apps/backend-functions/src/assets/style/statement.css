@@ -23,6 +23,10 @@ html {
   .statement-participation {
     page-break-inside: avoid;
   }
+
+  .rest-to-be-amortized {
+    margin-top: 32px;
+  }
 }
 
 /** FRONT PAGE **/

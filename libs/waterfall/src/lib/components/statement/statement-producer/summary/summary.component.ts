@@ -44,11 +44,12 @@ import {
   sortByDate,
   getDistributorExpensesDetails,
   DistributorExpenses,
-  getParentStatements
+  getParentStatements,
+  AmortizationDetails
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../../dashboard/shell/shell.component';
 import { StatementForm } from '../../../../form/statement.form';
-import { BehaviorSubject, Subscription, combineLatest, debounceTime, map, shareReplay, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, combineLatest, debounceTime, map, shareReplay, tap } from 'rxjs';
 import { unique } from '@blockframes/utils/helpers';
 import { MatDialog } from '@angular/material/dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
@@ -389,6 +390,32 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
         this.statement.reportedData.interests = interests;
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
       } else if (this.statement.status !== 'reported' && reportedData.interests) {
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
+      }
+    })
+  );
+
+  public amortizationDetails$: Observable<AmortizationDetails> = combineLatest([this.shell.simulation$, this.shell.amortizations$]).pipe(
+    map(([simulation, amortizations]) => {
+      if (!this.devMode && this.statement.status === 'reported' && this.statement.reportedData.amortization) return this.statement.reportedData.amortization;
+      const contractId = this.statement.contractId;
+      const amortization = amortizations.find(a => a.contractIds.includes(contractId));
+      if (!amortization) return undefined;
+      const amortizationState = simulation.waterfall.state.amortizations[amortization.id];
+      if (!amortizationState) return undefined;
+      const pool = simulation.waterfall.state.pools[amortizationState.poolId];
+      const currentValue = pool.turnover.calculated;
+      const rest = amortizationState.filmCost - (currentValue + amortizationState.financing);
+      const restToBeAmortized = rest <= 0 ? 0 : rest;
+      return { restToBeAmortized, currentValue, ...amortization };
+    }),
+    tap(async amortization => {
+      if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
+      const reportedData = this.statement.reportedData;
+      if (this.statement.status === 'reported' && !reportedData.amortization) {
+        this.statement.reportedData.amortization = amortization;
+        await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
+      } else if (this.statement.status !== 'reported' && reportedData.amortization) {
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
       }
     })

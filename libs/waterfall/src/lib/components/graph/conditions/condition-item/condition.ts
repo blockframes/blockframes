@@ -34,6 +34,9 @@ function targetToString(target: TargetValue, waterfall?: Waterfall, contracts?: 
       const contract = contracts?.find(c => c.id === id);
       return `${toFixedPercentage(percent)}% of contract ${contract?.name || id}'s investments`;
     }
+    case 'amortization.filmCost': {
+      return `${toFixedPercentage(percent)}%`;
+    }
     default:
       return `${toFixedPercentage(percent)}% of ${targetIn} ${id}`;
   }
@@ -178,6 +181,14 @@ export function conditionToString(condition?: Condition, waterfall?: Waterfall, 
     const contract = contracts?.find(c => c.id === contractId);
     const contractName = contract?.name || contractId;
     return `Org ${rightholderName(orgId, waterfall)}'s revenue is ${operatorToString(operator)} ${toFixedPercentage(percent)}% of contract ${contractName}'s investments and ${isComposite ? 'composite' : ''} interest with a rate of ${toFixedPercentage(rate)}%`;
+  }
+
+  if (condition.name === 'filmAmortized') {
+    const { target, operator } = condition.payload;
+    if (typeof target === 'number') return 'Invalid condition';
+    if (operator === '>=' && target.percent === 1) return 'Film is amortized';
+    if (operator === '<' && target.percent === 1) return 'Film is not amortized';
+    return `Film amortization is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   return 'Unknown condition';
