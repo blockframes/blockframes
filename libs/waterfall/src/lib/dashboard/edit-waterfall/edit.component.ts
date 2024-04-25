@@ -161,4 +161,9 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
     this.snackBar.open(`Waterfall ${this.createMode ? 'Published' : 'Updated'}`, 'close', { duration: 3000 });
     this.router.navigate(['..'], { relativeTo: this.route });
   }
+
+  redirectToBuilder() {
+    this.stepper.selectedIndex = 1;
+    this.stepper.next();
+  }
 }

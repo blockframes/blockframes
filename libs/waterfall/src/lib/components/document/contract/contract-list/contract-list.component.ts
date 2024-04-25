@@ -1,6 +1,6 @@
 
 import { Observable, map, of, startWith, switchMap, tap } from 'rxjs';
-import { Component, ChangeDetectionStrategy, ViewChild, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, Input, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 
 import { WaterfallService } from '../../../../waterfall.service';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
@@ -74,6 +74,7 @@ export class ContractListComponent {
   private terms: Term[] = [];
 
   @Input() contractForm: WaterfallContractForm;
+  @Output() redirectToBuilder = new EventEmitter<void>();
   public toggleTermsControl = new FormControl(true);
   public currentOrgId = this.orgService.org.id;
 
@@ -306,10 +307,12 @@ export class ContractListComponent {
       this.dialog.open(ConfirmComponent, {
         data: createModalData({
           title: 'Sorry, unable to delete Contract right now.',
-          question: 'We value your commitment to Contract management. However, please note that Contracts cannot be deleted immediately as they are linked to your Waterfall. Deleting a Contract could disrupt this structure.',
-          advice: 'If you still wish to proceed with the deletion, please remove all concerned Rights using the Waterfall Builded before deleting the Contract :',
+          question: 'This Contract cannot be deleted immediately due to it\'s integration with your Waterfall. Deleting a Contract could potentially disrupt the Waterfall\'s structure.',
+          advice: 'If you still wish to proceed with the deletion, please ensure that all relevant rights are removed using the Waterfall Builder feature before deleting the contract.',
           intercom: 'Contact us for more information',
+          confirm: 'Go to Waterfall Builder & Delete Rights',
           additionalData: rights.map(r => r.name),
+          onConfirm: () => this.redirectToBuilder.emit(),
         })
       });
     }
