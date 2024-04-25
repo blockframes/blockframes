@@ -1,0 +1,53 @@
+section.surface {
+  margin: 32px;
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  div.amortization {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px;
+    background-color: var(--background-card);
+    border: 1px solid var(--foreground-divider);
+    margin-bottom: 12px;
+    border-bottom: 3px solid var(--foreground-divider);
+
+    h3 {
+      color: var(--foreground-text);
+      font-weight: 500;
+    }
+  }
+
+  article {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    
+    a.surface {
+      margin-top: 42px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 330px;
+      cursor: pointer;
+      
+      img {
+        width: 100px;
+        align-self: center;
+      }
+    }
+  }
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+}

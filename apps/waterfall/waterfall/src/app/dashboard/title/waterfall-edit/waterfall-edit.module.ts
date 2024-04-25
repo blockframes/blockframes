@@ -19,7 +19,7 @@ const routes: Routes = [{
 }];
 
 @NgModule({
-  declarations: [ WaterfallEditComponent ],
+  declarations: [WaterfallEditComponent],
   imports: [
     CommonModule,
 

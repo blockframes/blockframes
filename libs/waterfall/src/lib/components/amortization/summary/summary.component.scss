@@ -1,0 +1,89 @@
+:host {
+  display: block;
+  padding: 0 24px 0px 24px;
+}
+
+header {
+  padding: 0 24px;
+  mat-icon {
+    vertical-align: middle;
+  }
+
+  article {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+div {
+  margin: 32px 0;
+
+  article {
+    padding: 24px;
+  }
+
+  article.breakdown {
+    background-color: rgba(#D3D5DC, 0.2);
+    border: 1px solid var(--foreground-divider);
+    border-radius: 4px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+
+    header {
+      width: 100%;
+      padding: 0;
+      span {
+        font-weight: 800;
+        font-size: 28px;
+        line-height: 24px;
+        color: var(--foreground-text);
+      }
+    }
+
+    div.surface {
+      margin-top: 24px;
+      mat-panel-title,
+      section {
+        font-weight: 800;
+        font-size: 26px;
+        line-height: 32px;
+        color: var(--foreground-third-text);
+        display: flex;
+        justify-content: space-between;
+      }
+
+      section {
+        margin-left: 12px;
+      }
+
+      ul {
+        padding-left: 24px;
+        li {
+          margin-top: 12px;
+        }
+        mat-divider {
+          margin-top: 12px;
+        }
+      }
+    }
+  }
+
+  article.actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 32px;
+  
+    button.save {
+      margin-top: 24px;
+    }
+
+    section {
+      gap: 12px;
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+}
