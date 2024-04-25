@@ -100,7 +100,7 @@ export class WaterfallConditionsComponent implements OnInit, OnDestroy {
     this.conditionForm.reset();
     this.conditionFormPristine.emit(false);
     this.newCondition = undefined;
-    this.index = steps.length;
+    this.index = steps[this.selectedStep$.value].length;
   }
 
   selectStep(step: number) {
