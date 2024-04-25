@@ -404,10 +404,10 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
       const amortizationState = simulation.waterfall.state.amortizations[amortization.id];
       if (!amortizationState) return undefined;
       const pool = simulation.waterfall.state.pools[amortizationState.poolId];
-      const poolRevenue = pool.revenu.calculated; // TODO #9771 use pool.turnover ?
-      const rest = amortizationState.filmCost - (poolRevenue + amortizationState.financing);
+      const currentValue = pool.turnover.calculated;
+      const rest = amortizationState.filmCost - (currentValue + amortizationState.financing);
       const restToBeAmortized = rest <= 0 ? 0 : rest;
-      return { restToBeAmortized, poolRevenue, ...amortization };
+      return { restToBeAmortized, currentValue, ...amortization };
     }),
     tap(async amortization => {
       if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
