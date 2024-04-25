@@ -9,6 +9,7 @@ import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { MovieService } from '@blockframes/movie/service';
 import { AuthService } from '@blockframes/auth/service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
+import { AmortizationService } from '@blockframes/waterfall/amortization.service';
 
 @Component({
   selector: 'import-view-extracted-rights[sheetTab]',
@@ -28,6 +29,7 @@ export class ViewExtractedRightsComponent implements OnInit {
     private waterfallDocumentService: WaterfallDocumentsService,
     private movieService: MovieService,
     private authService: AuthService,
+    private amortizationService: AmortizationService
   ) {
     this.dynTitle.setPageTitle('Submit your rights');
   }
@@ -38,6 +40,7 @@ export class ViewExtractedRightsComponent implements OnInit {
       this.waterfallService,
       this.movieService,
       this.waterfallDocumentService,
+      this.amortizationService,
       this.authService.profile.orgId,
     );
     this.rightsToCreate$.next(new MatTableDataSource(rightsToCreate));

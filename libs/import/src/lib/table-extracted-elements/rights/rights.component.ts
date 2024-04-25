@@ -11,6 +11,7 @@ import { RightsImportState, SpreadsheetImportError } from '../../utils';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { RightService } from '@blockframes/waterfall/right.service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
+import { AmortizationService } from '@blockframes/waterfall/amortization.service';
 
 const hasImportErrors = (importState: RightsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -46,6 +47,7 @@ export class TableExtractedRightsComponent implements AfterViewInit {
     private dialog: MatDialog,
     private rightService: RightService,
     private waterfallService: WaterfallService,
+    private amortizationService: AmortizationService,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -101,6 +103,15 @@ export class TableExtractedRightsComponent implements AfterViewInit {
         }
 
         await this.waterfallService.update(waterfallId, { id: waterfallId, rightholders: waterfall.rightholders });
+      }
+    }
+
+    if (importState.amortizations) {
+      for (const [waterfallId, amortizations] of Object.entries(importState.amortizations)) {
+        for (const amortization of amortizations) {
+          const a = await this.amortizationService.getValue(amortization.id, { waterfallId });
+          if (!a?.id) await this.amortizationService.add(amortization, { params: { waterfallId } });
+        }
       }
     }
 
