@@ -122,6 +122,10 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
         // Hack to force the valueChanges in parent component
         this.form.controls.salesTermsOperator.setValue(this.form.controls.salesTermsOperator.value);
       }),
+
+      this.form.controls.salesTermsType.valueChanges.subscribe(() => {
+        this.form.controls.salesTerms.setValue([]);
+      })
     );
   }
 

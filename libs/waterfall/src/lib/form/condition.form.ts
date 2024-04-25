@@ -97,7 +97,7 @@ export class ConditionForm extends FormEntity<ConditionFormControl> {
 
   reset() {
     super.reset();
-    this.controls.salesTerms = new FormControl<Media[] | Territory[]>([]);
+    this.controls.salesTerms.reset([]);
     this.markAsPristine();
   }
 }
@@ -345,9 +345,10 @@ function formToRevenueCondition(form: ConditionForm): Condition | undefined {
 
   const operator = form.controls.revenueOperator.value as NumberOperator;
   const specificAmount = form.controls.revenueAmount.value;
-  const percent = form.controls.revenuePercentage.value;
+  const percent = targetIn === 'expense' ? 100 : form.controls.revenuePercentage.value;
   const revenueOwnerType = form.controls.revenueOwnerType.value;
   const revenueType = form.controls.revenueType.value;
+  const targetId = form.controls.revenueTarget.value;
 
   switch (revenueOwnerType) {
     case 'org': {
@@ -359,7 +360,7 @@ function formToRevenueCondition(form: ConditionForm): Condition | undefined {
       if (targetIn === 'contracts.investment' && revenueType === 'Revenu' && interestRate > 0) {
         const payload: ConditionInterest = {
           orgId: form.controls.revenueOwner.value,
-          contractId: form.controls.revenueTarget.value,
+          contractId: targetId,
           percent: percent / 100,
           operator,
           rate: interestRate / 100,
@@ -374,8 +375,8 @@ function formToRevenueCondition(form: ConditionForm): Condition | undefined {
       let target: TargetValue | number;
 
       if (targetIn !== 'amount') {
-        if (!percent) return undefined;
-        target = formToTarget(form, targetIn);
+        if (!percent || !targetId) return undefined;
+        target = formToTarget(targetId, percent, targetIn);
       } else {
         if (!specificAmount) return undefined;
         target = specificAmount;
@@ -394,8 +395,8 @@ function formToRevenueCondition(form: ConditionForm): Condition | undefined {
       let target: TargetValue | number;
 
       if (targetIn !== 'amount') {
-        if (!percent) return undefined;
-        target = formToTarget(form, targetIn);
+        if (!percent || !targetId) return undefined;
+        target = formToTarget(targetId, percent, targetIn);
       } else {
         if (!specificAmount) return undefined;
         target = specificAmount;
@@ -414,8 +415,8 @@ function formToRevenueCondition(form: ConditionForm): Condition | undefined {
       let target: TargetValue | number;
 
       if (targetIn !== 'amount') {
-        if (!percent) return undefined;
-        target = formToTarget(form, targetIn);
+        if (!percent || !targetId) return undefined;
+        target = formToTarget(targetId, percent, targetIn);
       } else {
         if (!specificAmount) return undefined;
         target = specificAmount;
@@ -434,8 +435,8 @@ function formToRevenueCondition(form: ConditionForm): Condition | undefined {
       let target: TargetValue | number;
 
       if (targetIn !== 'amount') {
-        if (!percent) return undefined;
-        target = formToTarget(form, targetIn);
+        if (!percent || !targetId) return undefined;
+        target = formToTarget(targetId, percent, targetIn);
       } else {
         if (!specificAmount) return undefined;
         target = specificAmount;
@@ -450,10 +451,6 @@ function formToRevenueCondition(form: ConditionForm): Condition | undefined {
   }
 }
 
-function formToTarget(form: ConditionForm, targetIn: TargetIn): TargetValue {
-  return {
-    in: targetIn,
-    id: form.controls.revenueTarget.value,
-    percent: targetIn === 'expense' ? 1 : (form.controls.revenuePercentage.value / 100)
-  }
+function formToTarget(id: string, percent: number, targetIn: TargetIn): TargetValue {
+  return { id, percent: percent / 100, in: targetIn };
 }
