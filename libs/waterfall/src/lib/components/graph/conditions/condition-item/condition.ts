@@ -180,5 +180,12 @@ export function conditionToString(condition?: Condition, waterfall?: Waterfall, 
     return `Org ${rightholderName(orgId, waterfall)}'s revenue is ${operatorToString(operator)} ${toFixedPercentage(percent)}% of contract ${contractName}'s investments and ${isComposite ? 'composite' : ''} interest with a rate of ${toFixedPercentage(rate)}%`;
   }
 
+  if (condition.name === 'filmAmortized') {
+    const { percent, operator } = condition.payload;
+    if(operator === '>=' && percent ===1 ) return 'Film is amortized';
+    if(operator === '<' && percent ===1 ) return 'Film is not amortized';
+    return `Film amortization is ${operatorToString(operator)} ${toFixedPercentage(percent)}%`;
+  }
+
   return 'Unknown condition';
 }

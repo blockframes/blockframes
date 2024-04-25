@@ -11,6 +11,7 @@ import {
   ConditionOwnerLabel,
   ConditionTerms,
   EventCondition,
+  FilmAmortizedCondition,
   GroupCondition,
   GroupScope,
   Media,
@@ -28,7 +29,7 @@ const toFixedPercentage = (percent: number) => Math.round((percent * 100) * 1000
 
 function createConditionFormControl() {
   return {
-    conditionType: new FormControl<'revenue' | 'sales' | 'event' | ''>(''), // Revenue Earned, Sales Specificity, Event
+    conditionType: new FormControl<'revenue' | 'sales' | 'event' | 'amortization' | ''>(''), // Revenue Earned, Sales Specificity, Event, Film Amortization
 
     // Condition Type: Revenue Earned
     revenueOwnerType: new FormControl<ConditionOwnerLabel | ''>(''), // Right Holder, Revenue Share, Group, Pool
@@ -75,6 +76,12 @@ function createConditionFormControl() {
     // Condition Type: Interest
     interestRate: new FormControl(0), // Numeric value
     interestComposite: new FormControl(false), // Boolean
+    // --------------------
+
+    // Condition Type: Film Amortization
+    amortizationTarget: new FormControl(''), // Amortization Id
+    amortizationOperator: new FormControl<NumberOperator | ''>(''), // Numerical Operator (<, >, =, <=, >=)
+    amortizationPercentage: new FormControl(100), // Numeric value
     // --------------------
 
   };
@@ -189,6 +196,12 @@ export function setConditionForm(form: ConditionForm, condition?: Partial<Condit
         in: 'contracts.investment'
       });
       break;
+    case 'filmAmortized':
+      form.controls.conditionType.setValue('amortization');
+      form.controls.amortizationTarget.setValue(condition.payload.amortizationId ?? '');
+      form.controls.amortizationOperator.setValue(condition.payload.operator ?? '');
+      form.controls.amortizationPercentage.setValue(toFixedPercentage(condition.payload.percent ?? 100));
+      break;
     case 'amount':
     case 'termsLength':
     case 'contract':
@@ -215,6 +228,7 @@ export function formToCondition(form: ConditionForm): Condition | undefined {
   if (conditionType === 'event') return formToEventCondition(form);
   if (conditionType === 'sales') return formToIncomeCondition(form);
   if (conditionType === 'revenue') return formToRevenueCondition(form);
+  if (conditionType === 'amortization') return formToAmortizationCondition(form);
 }
 
 /**
@@ -237,6 +251,29 @@ function formToEventCondition(form: ConditionForm): Condition | undefined {
     eventId: form.controls.eventName.value,
     operator,
     value: form.controls.eventAmount.value ?? form.controls.eventList.value
+  };
+  return { name, payload };
+}
+
+/**
+ * Conditions about film Amortization
+ * @param form 
+ * @returns 
+ */
+function formToAmortizationCondition(form: ConditionForm): Condition | undefined {
+  const operator = form.controls.amortizationOperator.value;
+  const percent = form.controls.amortizationPercentage.value;
+  const amortizationId = form.controls.amortizationTarget.value;
+
+  if (!operator) return undefined;
+  if (!amortizationId) return undefined;
+  if (!percent) return undefined;
+
+  const name = 'filmAmortized';
+  const payload: FilmAmortizedCondition = {
+    amortizationId,
+    operator,
+    percent: percent / 100
   };
   return { name, payload };
 }
