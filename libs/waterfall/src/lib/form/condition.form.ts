@@ -272,7 +272,7 @@ function formToAmortizationCondition(form: ConditionForm): Condition | undefined
 
   const name = 'filmAmortized';
   const payload: FilmAmortizedCondition = {
-    target: { id: amortizationId, percent: percent / 100, in: 'amortization.filmCost' }, // TODO #9771 use formToTarget
+    target: formToTarget(amortizationId, percent, 'amortization.filmCost'),
     operator,
   };
   return { name, payload };
