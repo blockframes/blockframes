@@ -315,5 +315,16 @@ const incomeConditions: AllIncomeConditions = {
     const value = investmentWithInterest(rate, contractOperations, isComposite) * percent;
     if (current >= value) return Infinity;
     return (value - current) / revenuRate;
+  },
+  filmAmortized(incomeState, state, condition) {
+    const { amortizationId, percent } = condition;
+    const amortization = state.amortizations[amortizationId];
+    if (!amortization) return Infinity;
+    if (!incomeState.pools[amortization.poolId]) return Infinity;
+    const turnoverRate = incomeState.pools[amortization.poolId].turnoverRate;
+    const current = (state.pools[amortization.poolId]?.turnover.calculated ?? 0) + amortization.financing;
+    const value = amortization.filmCost * percent;
+    if (current >= value) return Infinity;
+    return (value - current) / turnoverRate;
   }
 }
