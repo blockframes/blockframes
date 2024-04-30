@@ -333,7 +333,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
   public canCreateStatement(type: StatementType, contracts: ContractAndStatements[] = this.rightholderContracts, rightholderId?: string) {
     if (this.readonly) return false;
     const rightholder = rightholderId ? this.shell.waterfall.rightholders.find(r => r.id === rightholderId) : this.shell.currentRightholder;
-    return canCreateStatement(type, rightholder, this.producer, contracts, this.shell.canBypassRules, this.shell.versionId$.value, this.shell.waterfall);
+    return canCreateStatement(type, rightholder, this.producer, contracts, this.shell.canBypassRules);
   }
 
   public canAddStatement(type: StatementType,) {

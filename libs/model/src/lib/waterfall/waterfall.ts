@@ -306,23 +306,8 @@ export interface WaterfallFinancingPlan {
   id: string; // Same as the WaterfallFile id
 }
 
-export function canCreateStatement(
-  type: StatementType,
-  rightholder: WaterfallRightholder,
-  producer: WaterfallRightholder,
-  contracts: WaterfallContract[],
-  canBypassRules = false,
-  versionId: string,
-  waterfall: Waterfall
-): boolean {
+export function canCreateStatement(type: StatementType, rightholder: WaterfallRightholder, producer: WaterfallRightholder, contracts: WaterfallContract[], canBypassRules = false): boolean {
   if (!type) return false;
-  const isStandalone = isStandaloneVersion(waterfall, versionId);
-  if (isStandalone) {
-    if (type === 'producer' && rightholder.lockedVersionId !== versionId) return false;
-  } else {
-    const isLockedStandalone = isStandaloneVersion(waterfall, rightholder.lockedVersionId);
-    if (isLockedStandalone) return false;
-  }
   if (canBypassRules) return true;
   // Only the producer can create direct sales and producer statements, and producer is always an admin
   if (['directSales', 'producer'].includes(type)) return false;
