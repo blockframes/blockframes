@@ -2,11 +2,14 @@
   width: 100%;
 }
 
-p {
+article.description {
   margin: 16px 0px 32px 0;
+  p {
+    margin: 0;
+  }
 }
 
-.header {
+article.header {
   align-items: center;
   justify-content: space-between;
 
@@ -46,7 +49,7 @@ div.empty {
   }
 }
 
-.spinner {
+article.spinner {
   display: flex;
   justify-content: center;
 }
