@@ -4,8 +4,11 @@
     <h2>Contracts</h2>
   </article>
 
-  <p *ngIf="shell.canBypassRules">Please provide us with all the contracts, so that we can create a waterfall.</p>
-
+  <section *ngIf="shell.canBypassRules">
+    <p>Please provide us with all the contracts, so that we can create a waterfall.</p>
+    <p class="mat-body-2">All your data is secured on our platform. To learn more, you can read our <a [routerLink]="['/c/o/dashboard', 'security']">Data Security Policy</a>.</p>
+  </section>
+  
   <article *ngIf="shell.waterfall$ | async as waterfall">
     <ul>
       <ng-container *ngIf="shell.canBypassRules else readonly">

@@ -6,7 +6,10 @@
 
   <ng-container *ngIf="shell.waterfall$ | async as waterfall">
     <ng-container *ngIf="shell.canBypassRules">
-      <p>Please provide us with all the required documents.</p>
+      <article class="description">
+        <p>Please provide us with all the required documents.</p>
+        <p class="mat-body-2">All your data is secured on our platform. To learn more, you can read our <a [routerLink]="['/c/o/dashboard', 'security']">Data Security Policy</a>.</p>
+      </article>
       <div>
         <waterfall-budget-form *ngIf="(loading$ | async) === false else loading" [waterfall]="waterfall" [form]="form" (addedFile)="addedFile($event)"></waterfall-budget-form>
         <section>

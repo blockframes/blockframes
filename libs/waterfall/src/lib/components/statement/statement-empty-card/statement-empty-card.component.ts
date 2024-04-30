@@ -37,7 +37,7 @@ export class StatementEmptyCardComponent implements OnInit {
   ngOnInit() {
     const producer = this.shell.waterfall.rightholders.find(r => r.roles.includes('producer'));
     this.isDisabled$ = combineLatest([this.type$, this.shell.contracts$]).pipe(
-      map(([type, contracts]) => !canCreateStatement(type, this.shell.currentRightholder, producer, contracts, this.shell.canBypassRules)),
+      map(([type, contracts]) => !canCreateStatement(type, this.shell.currentRightholder, producer, contracts, this.shell.canBypassRules, this.shell.versionId$.value, this.shell.waterfall)),
       tap(disabled => this._disabled = disabled)
     );
   }

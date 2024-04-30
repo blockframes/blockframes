@@ -272,6 +272,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
       currentRightholder: this.shell.currentRightholder,
       canBypassRules: this.shell.canBypassRules,
       waterfall: this.shell.waterfall,
+      versionId: this.shell.versionId$.value,
       producer: this.producer,
       contracts: this.contracts,
       statements,
@@ -332,7 +333,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
   public canCreateStatement(type: StatementType, contracts: ContractAndStatements[] = this.rightholderContracts, rightholderId?: string) {
     if (this.readonly) return false;
     const rightholder = rightholderId ? this.shell.waterfall.rightholders.find(r => r.id === rightholderId) : this.shell.currentRightholder;
-    return canCreateStatement(type, rightholder, this.producer, contracts, this.shell.canBypassRules);
+    return canCreateStatement(type, rightholder, this.producer, contracts, this.shell.canBypassRules, this.shell.versionId$.value, this.shell.waterfall);
   }
 
   public canAddStatement(type: StatementType,) {
