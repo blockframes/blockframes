@@ -5,9 +5,9 @@ import { RouterModule, Routes } from '@angular/router';
 
 // Components
 import { TitleViewComponent } from './view.component';
-import { DashboardWaterfallShellModule } from '@blockframes/waterfall/dashboard/shell/shell.module';
 
-// Material
+// Blockframes
+import { DashboardWaterfallShellModule } from '@blockframes/waterfall/dashboard/shell/shell.module';
 
 
 const routes: Routes = [{
@@ -40,14 +40,19 @@ const routes: Routes = [{
       data: { animation: 3 }
     },
     {
+      path: 'amortization',
+      loadChildren: () => import('../amortization/amortization.module').then(m => m.AmortizationModule),
+      data: { animation: 4 }
+    },
+    {
       path: 'right-holders',
       loadChildren: () => import('../right-holders/right-holders.module').then(m => m.RightHoldersModule),
-      data: { animation: 4 }
+      data: { animation: 5 }
     },
     {
       path: 'sales',
       loadChildren: () => import('../sales/sales.module').then(m => m.SalesModule),
-      data: { animation: 5 }
+      data: { animation: 6 }
     },
   ]
 }];
