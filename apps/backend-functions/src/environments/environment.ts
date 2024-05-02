@@ -52,3 +52,5 @@ export const twilioApiKeySid = mockConfigIfNeeded('twilio', 'api', 'key', 'sid')
 export const mailchimpAPIKey = mockConfigIfNeeded('mailchimp', 'api_key');
 
 export const airtableToken = mockConfigIfNeeded('airtable', 'token');
+
+export const openaiAPIKey = mockConfigIfNeeded('openai', 'api_key');
