@@ -4,7 +4,7 @@ import { Duration, createDuration } from '../terms';
 import { PricePerCurrency, convertCurrenciesTo, getTotalPerCurrency, sortByDate, sum, toLabel } from '../utils';
 import { TitleState, TransferState } from './state';
 import { Version, Waterfall, WaterfallContract, WaterfallRightholder, WaterfallSource, getIncomesSources } from './waterfall';
-import { Right, RightOverride, createRightOverride, getRightCondition, skipGroups } from './right';
+import { Right, RightOverride, createRightOverride, getChilds, getRightCondition, skipGroups } from './right';
 import { getSources, isVerticalGroupChild, nodeExists, pathExists } from './node';
 import { Income, createIncome } from '../income';
 import { getContractsWith } from '../contract';
@@ -13,6 +13,7 @@ import { ConditionWithTarget, getInvestmentValue, isConditionWithTarget } from '
 import { Expense, ExpenseType } from '../expense';
 import { InterestDetail } from './interest';
 import { add, differenceInMonths, isLastDayOfMonth, lastDayOfMonth, sub } from 'date-fns';
+import { AmortizationDetails } from './amortization';
 
 const toFixed = (number: number) => Math.round(number * 100) / 100;
 
@@ -136,6 +137,7 @@ export interface Statement {
     distributorExpensesPerDistributor?: Record<string, DistributorExpenses[]>; // Expenses details for outgoing statements
     interests?: InterestDetail[]; // Interest details for outgoing statements 
     producerNetParticipation?: PricePerCurrency; // Producer's net participation (for direct sales statements only)
+    amortization?: AmortizationDetails; // Amortization details for outgoing statements
   },
   hash: {
     requested: boolean;
@@ -1203,4 +1205,17 @@ export function getParentStatements(statements: Statement[], incomeIds: string[]
   return statements.filter(s => isDirectSalesStatement(s) || isDistributorStatement(s))
     .filter(s => skipDuplicates ? !s.duplicatedFrom : true) // Skip already duplicated statements
     .filter(s => s.payments.right.some(r => r.incomeIds.some(id => incomeIds.includes(id))));
+}
+
+export function getNonEditableNodeIds(rights: Right[], sources: WaterfallSource[], reportedStatements: Statement[], incomes: Income[]) {
+  const incomeIds = Array.from(new Set(reportedStatements.map(s => s.incomeIds).flat()));
+  const reportedIncomes = incomeIds.map(id => incomes.find(i => i.id === id)).filter(i => !!i);
+  const nonEditableSources = reportedIncomes ? getIncomesSources(reportedIncomes, sources).filter(s => !!s) : [];
+  const topLevelRights = nonEditableSources.map(s => rights.find(r => r.id === s.destinationId)).filter(r => !!r);
+  const childIds = Array.from(new Set(topLevelRights.map(r => getChilds(r.id, rights).map(c => c.id)).flat()));
+  const nonEditableRights = childIds.map(id => rights.find(r => r.id === id));
+  const groupIds = Array.from(new Set(nonEditableRights.filter(r => r.groupId).map(r => r.groupId)));
+  const nonEditableGroups = groupIds.map(id => rights.find(r => r.id === id));
+
+  return [...nonEditableSources.map(s => s.id), ...nonEditableRights.map(r => r.id), ...nonEditableGroups.map(g => g.id)];
 }

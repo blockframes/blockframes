@@ -1796,6 +1796,11 @@ export const statementStatus = {
   rejected: 'Rejected'
 } as const;
 
+export const amortizationStatus = {
+  draft: 'Draft',
+  applied: 'Applied',
+} as const;
+
 export const statementType = {
   salesAgent: 'Sales Agent',
   mainDistributor: 'Main Distributor',
@@ -1918,6 +1923,7 @@ export const staticModel = {
   paymentType,
   paymentStatus,
   statementStatus,
+  amortizationStatus,
   statementType,
   statementParty,
   conditionOwnerLabels

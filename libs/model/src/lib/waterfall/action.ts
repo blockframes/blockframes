@@ -16,6 +16,7 @@ import {
   ContractState,
   createExpenseState,
   createExpenseTypeState,
+  createAmortizationState,
 } from './state';
 import { getMinThreshold } from './threshold';
 import { assertNode, getChildRights, getGroup, getNode, getNodeOrg, isGroupChild, isRight, updateNode } from './node';
@@ -28,6 +29,7 @@ import { convertCurrenciesTo, sortByDate, sum } from '../utils';
 import { MovieCurrency, Media, Territory, rightholderGroups } from '../static';
 import { Right, orderRights } from './right';
 import { Statement, isDirectSalesStatement, isDistributorStatement } from './statement';
+import { Amortization } from './amortization';
 
 const actions = {
   /**
@@ -46,6 +48,7 @@ const actions = {
   prependVertical,
   invest,
   source,
+  amortization,
   income,
   /**
    * Add a new payment to the state.
@@ -457,6 +460,22 @@ export function statementsToActions(statements: Statement[], incomes: Income[]) 
   return payments.map(p => action('payment', p));
 }
 
+export function amortizationsToActions(amortizations: Amortization[]) {
+  const actions: Action[] = [];
+
+  amortizations.filter(a => a.status === 'applied').forEach((a, index) => {
+    actions.push(action('amortization', {
+      id: a.id,
+      filmCost: a.filmCost,
+      financing: a.financing,
+      poolId: a.poolName,
+      date: new Date(1 + (index * 1000)) // 01/01/1970 + "index" seconds 
+    }));
+  });
+
+  return actions;
+}
+
 /////////////
 // ACTIONS //
 /////////////
@@ -756,6 +775,17 @@ export interface SourceAction extends BaseAction {
 function source(state: TitleState, payload: SourceAction) {
   state.rights[payload.id] ||= createRightState({ id: payload.id, orgId: payload.id, percent: 0 });
   state.sources[payload.id] ||= createSourceState({ id: payload.id, amount: 0, destinationId: payload.destinationId });
+}
+
+export interface AmortizationAction extends BaseAction {
+  id: string;
+  filmCost: number;
+  financing: number;
+  poolId: string;
+}
+
+function amortization(state: TitleState, payload: AmortizationAction) {
+  state.amortizations[payload.id] ||= createAmortizationState(payload);
 }
 
 export interface IncomeActionRightOverride {
