@@ -47,6 +47,9 @@ RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --
 RUN sudo apt-get update -q -y && sudo apt-get install google-cloud-sdk -q -y
 RUN gcloud config set pass_credentials_to_gsutil true
 
+RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+RUN sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
+
 # Used in CI
 ENV GOOGLE_APPLICATION_CREDENTIALS /home/circleci/repo/tools/credentials/creds.json
 ENV NODE_OPTIONS --max_old_space_size=7168
