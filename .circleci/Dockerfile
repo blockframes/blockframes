@@ -3,13 +3,14 @@
 #   - add libraries required by cypress
 #
 # The image shall be pushed to dockerhub:
-#    docker build -t blockframes/ci:node-16 .
-#    docker push blockframes/ci:node-16
+#    docker login --username=YOUR_DOCKERHUB_USERNAME
+#    docker build -t blockframes/ci:demo-env-node-20 .
+#    docker push blockframes/ci:demo-env-node-20
 #
-FROM circleci/node:16-browsers
+FROM cimg/node:20.12.2-browsers
 
 # Required cypress packages
-RUN sudo apt-get -y install xvfb libgtk2.0-0 libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2
+RUN sudo apt-get update && sudo apt-get -y install xvfb libgtk2.0-0 libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 
 
 # Add vim for debugging purposes
 RUN sudo apt-get update && sudo apt-get -y install vim
@@ -32,8 +33,8 @@ RUN export JAVA_HOME
 
 # Install node and npm
 RUN sudo npm install -g n && \
-    sudo n 16.14.2 && \
-    sudo npm install npm@8.5.2 -g
+    sudo n 20.12.2 && \
+    sudo npm install npm@10.5.0 -g
 
 ## Install firebase and the emulator (requires java)
 RUN sudo npm install --global firebase-tools
