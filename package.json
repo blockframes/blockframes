@@ -3,8 +3,8 @@
   "version": "4.1.0",
   "license": "MIT",
   "engines": {
-    "node": "^16.14.0",
-    "npm": "^8.5.0"
+    "node": "^20.12.2",
+    "npm": "^10.5.0"
   },
   "scripts": {
     "ng": "nx",
@@ -177,7 +177,7 @@
     "eslint-config-prettier": "8.1.0",
     "eslint-plugin-cypress": "^2.10.3",
     "firebase-functions-test": "^0.3.3",
-    "firebase-tools": "12.9.1",
+    "firebase-tools": "13.8.0",
     "google-auth-library": "^8.8.0",
     "husky": "^3.1.0",
     "inquirer": "^7.3.3",

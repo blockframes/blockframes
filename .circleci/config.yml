@@ -165,7 +165,7 @@ orbs:
 executors:
   blockframes-ci:
     docker:
-      - image: blockframes/ci:demo-env
+      - image: blockframes/ci:demo-env-node-20
         environment:
           NODE_OPTIONS: '--max-old-space-size=8192'
           PROJECT_ID: blockframes-ci
