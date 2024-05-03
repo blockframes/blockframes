@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {  WaterfallDocument} from '@blockframes/model';
+import { WaterfallDocument } from '@blockframes/model';
 import { BlockframesSubCollection } from '@blockframes/utils/abstract-service';
 import { CallableFunctions } from 'ngfire';
 import { AskContractParams, AskContractResponse } from '@blockframes/utils/openai/utils';
