@@ -1,6 +1,7 @@
 import { getStorage } from '@blockframes/firebase-utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import PDFParser from 'pdf2json';
+import 'openai/shims/node';
 import OpenAI from 'openai';
 import { openaiAPIKey, storageBucket } from './environments/environment';
 import { ChatCompletionMessageParam } from 'openai/resources';
