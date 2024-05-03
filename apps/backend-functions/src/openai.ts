@@ -58,8 +58,13 @@ export const askContractData = async (params: AskContractParams, context: Callab
 
   questionParts.push("Effectue les taches suivantes:");
 
-  questionParts.push(" 1 - identifier les contractants. Si tu ne trouves pas les contractants dans la liste ci-dessous, retourne les noms que tu as trouvés.");
-  questionParts.push(`Voici une liste des parties prenantes du film : ${params.rightholders.map(r => `${r.name} (role: ${rightholderRoles[r.roles[0]]})`).join(', ')}. \n\n`);
+  if (params.rightholders.length) {
+    questionParts.push(" 1 - identifier les contractants. Si tu ne trouves pas les contractants dans la liste ci-dessous, retourne les noms que tu as trouvés.");
+    questionParts.push(`Voici une liste des parties prenantes du film : ${params.rightholders.map(r => `${r.name} (role: ${rightholderRoles[r.roles[0]]})`).join(', ')}. \n\n`);
+  } else {
+    questionParts.push(" 1 - identifier les contractants.");
+  }
+
   if (!['agent', 'author'].includes(params.type)) questionParts.push('(Dans ce type de contrat, le producteur est toujours le vendeur.)');
   questionParts.push(" 2 - donner un nom au document.");
   questionParts.push(" 3 - identifier la date de signature.");

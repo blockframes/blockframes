@@ -371,23 +371,26 @@ export class ContractListComponent {
       console.log(output);
 
       if (output.status) {
-        if (output.data.name) {
-          this.contractForm.controls.name.patchValue(output.data.name);
+        const data = output.data;
+        if (data.name) {
+          this.contractForm.controls.name.patchValue(data.name);
         }
-        if (output.data.licensor.name) {
-          this.contractForm.controls.licensorName.patchValue(output.data.licensor.name);
+        if (data.licensor.name) {
+          this.contractForm.controls.licensorName.patchValue(data.licensor.name);
         }
-        if (output.data.licensee.name) {
-          this.contractForm.controls.licenseeName.patchValue(output.data.licensee.name);
+        if (data.licensee.name) {
+          this.contractForm.controls.licenseeName.patchValue(data.licensee.name);
         }
-        if (output.data.signatureTimestamp) {
-          this.contractForm.controls.signatureDate.patchValue(new Date(output.data.signatureTimestamp));
-        }
-        if (output.data.startDateTimestamp) {
-          this.contractForm.controls.startDate.patchValue(new Date(output.data.startDateTimestamp));
-        }
-        if (output.data.endDateTimestamp) {
-          this.contractForm.controls.endDate.patchValue(new Date(output.data.endDateTimestamp));
+        if (data.signatureTimestamp) {
+          this.contractForm.controls.signatureDate.patchValue(new Date(data.signatureTimestamp));
+
+          if (data.startDateTimestamp && data.startDateTimestamp >= data.signatureTimestamp) {
+            this.contractForm.controls.startDate.patchValue(new Date(data.startDateTimestamp));
+
+            if (data.endDateTimestamp && data.endDateTimestamp >= data.startDateTimestamp) {
+              this.contractForm.controls.endDate.patchValue(new Date(data.endDateTimestamp));
+            }
+          }
         }
         this.contractForm.markAsDirty();
       } else if (output.error) {
