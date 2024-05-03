@@ -129,3 +129,11 @@ article {
   display: flex;
   justify-content: center;
 }
+
+.computing {
+  margin-top: calc(20vh);
+  flex-direction: column;
+  p {
+    margin: auto;
+  }
+}

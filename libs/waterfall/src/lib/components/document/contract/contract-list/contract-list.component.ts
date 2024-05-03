@@ -1,6 +1,6 @@
 
-import { Observable, map, of, startWith, switchMap, tap } from 'rxjs';
-import { Component, ChangeDetectionStrategy, ViewChild, Input, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
+import { BehaviorSubject, Observable, map, of, startWith, switchMap, tap } from 'rxjs';
+import { Component, ChangeDetectionStrategy, ViewChild, Input, ChangeDetectorRef, Output, EventEmitter, Pipe, PipeTransform } from '@angular/core';
 
 import { WaterfallService } from '../../../../waterfall.service';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
@@ -21,7 +21,8 @@ import {
   Term,
   WaterfallPermissions,
   Organization,
-  Right
+  Right,
+  WaterfallFile
 } from '@blockframes/model';
 import { TermService } from '@blockframes/contract/term/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -77,6 +78,7 @@ export class ContractListComponent {
   @Output() redirectToBuilder = new EventEmitter<void>();
   public toggleTermsControl = new FormControl(true);
   public currentOrgId = this.orgService.org.id;
+  public computing$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private waterfallService: WaterfallService,
@@ -113,11 +115,9 @@ export class ContractListComponent {
   private _select(role: RightholderRole) {
     this.selected = role;
     this.creating = role ? this.contracts[role].length === 0 : false; // if we select an empty role we automatically switch to create mode
-    if (this.creating) {
-      this.terms = [];
-      this.contractForm.reset({ id: this.documentService.createId() });
-    }
-
+    this.terms = [];
+    this.uploaderService.clearQueue();
+    this.contractForm.reset({ id: this.documentService.createId() });
     this.cdr.markForCheck();
   }
 
@@ -318,5 +318,73 @@ export class ContractListComponent {
     }
 
   }
+
+  /**
+   * Checks if there is already a file linked to document or if there is a pending upload
+   */
+  canUseAI() {
+    if (!this.shell.canBypassRules) return false;
+    const formValue = this.contractForm.value;
+    if (formValue.file?.storagePath) return true;
+    const pendingUpload = this.uploaderService.retrieveFromQueue(`waterfall/${this.shell.waterfall.id}/documents`);
+    const docId = formValue.id;
+    return docId && pendingUpload?.metadata?.id === docId;
+  }
+
+  public async askAI() {
+    this.computing$.next(true);
+    const params = { waterfallId: this.shell.waterfall.id };
+    const docId = this.contractForm.controls.id.value;
+
+    let file = this.shell.waterfall.documents.find(d => d.id === docId);
+
+    if (!file?.storagePath) {
+      // Create a document if it doesn't exist
+      const existingDoc = await this.documentService.getValue(docId, params);
+      if (!existingDoc?.id) {
+        const doc = createWaterfallDocument<WaterfallContract>({
+          id: docId,
+          type: 'contract',
+          meta: createWaterfallContract({ type: this.selected }),
+        });
+        await this.documentService.upsert<WaterfallDocument>(doc, { params });
+      }
+
+      // Upload file and wait for it to be ready
+      const pendingUpload = this.uploaderService.retrieveFromQueue(`waterfall/${this.shell.waterfall.id}/documents`);
+      if (pendingUpload.metadata?.id === docId) {
+        this.uploaderService.upload();
+        file = await this.isFileReady(docId);
+        this.contractForm.controls.file.patchValue(file);
+      }
+    }
+
+    const data = await this.documentService.askContractData(file, this.shell.waterfall.rightholders, this.shell.movie);
+
+    if (data.response.name) {
+      this.contractForm.controls.name.patchValue(data.response.name);
+    }
+    if (data.response.licensor.name) {
+      this.contractForm.controls.licensorName.patchValue(data.response.licensor.name);
+    }
+    if (data.response.licensee.name) {
+      this.contractForm.controls.licenseeName.patchValue(data.response.licensee.name);
+    }
+    this.contractForm.markAsDirty();
+    this.computing$.next(false);
+  }
+
+  private isFileReady(docId: string) {
+    return new Promise<WaterfallFile>((resolve) => {
+      const sub = this.shell.waterfall$.subscribe(async waterfall => {
+        const doc = waterfall.documents.find(d => d.id === docId);
+        if (doc?.storagePath) {
+          sub.unsubscribe();
+          resolve(doc);
+        }
+      });
+    });
+  }
 }
+
 
