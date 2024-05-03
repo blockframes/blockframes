@@ -345,7 +345,7 @@ export class ContractListComponent {
         const doc = createWaterfallDocument<WaterfallContract>({
           id: docId,
           type: 'contract',
-          meta: createWaterfallContract({ type: this.selected }),
+          meta: createWaterfallContract({ type: this.selected, name: 'default name' }),
         });
         await this.documentService.upsert<WaterfallDocument>(doc, { params });
       }
@@ -359,18 +359,45 @@ export class ContractListComponent {
       }
     }
 
-    const data = await this.documentService.askContractData(file, this.shell.waterfall.rightholders, this.shell.movie);
+    const defaultErrorMessage = 'Something went wrong. Please try again later.';
+    try {
+      const output = await this.documentService.askContractData({
+        file,
+        type: this.selected,
+        rightholders: this.shell.waterfall.rightholders,
+        movie: this.shell.movie
+      });
 
-    if (data.response.name) {
-      this.contractForm.controls.name.patchValue(data.response.name);
+      console.log(output);
+
+      if (output.status) {
+        if (output.data.name) {
+          this.contractForm.controls.name.patchValue(output.data.name);
+        }
+        if (output.data.licensor.name) {
+          this.contractForm.controls.licensorName.patchValue(output.data.licensor.name);
+        }
+        if (output.data.licensee.name) {
+          this.contractForm.controls.licenseeName.patchValue(output.data.licensee.name);
+        }
+        if (output.data.signatureTimestamp) {
+          this.contractForm.controls.signatureDate.patchValue(new Date(output.data.signatureTimestamp));
+        }
+        if (output.data.startDateTimestamp) {
+          this.contractForm.controls.startDate.patchValue(new Date(output.data.startDateTimestamp));
+        }
+        if (output.data.endDateTimestamp) {
+          this.contractForm.controls.endDate.patchValue(new Date(output.data.endDateTimestamp));
+        }
+        this.contractForm.markAsDirty();
+      } else if (output.error) {
+        this.snackBar.open(`Something went wrong: ${output.error}`, 'close', { duration: 3000 });
+      } else {
+        this.snackBar.open(defaultErrorMessage, 'close', { duration: 3000 });
+      }
+    } catch (error) {
+      this.snackBar.open(defaultErrorMessage, 'close', { duration: 3000 });
     }
-    if (data.response.licensor.name) {
-      this.contractForm.controls.licensorName.patchValue(data.response.licensor.name);
-    }
-    if (data.response.licensee.name) {
-      this.contractForm.controls.licenseeName.patchValue(data.response.licensee.name);
-    }
-    this.contractForm.markAsDirty();
     this.computing$.next(false);
   }
 
