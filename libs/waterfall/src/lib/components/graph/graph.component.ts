@@ -39,10 +39,7 @@ import {
   toGroupLabel,
   smartJoin,
   trimString,
-  getIncomesSources,
-  getChilds,
-  Statement,
-  Income,
+  getNonEditableNodeIds,
 } from '@blockframes/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { GraphService } from '@blockframes/ui/graph/graph.service';
@@ -68,20 +65,6 @@ import {
   toGraph,
   updateParents
 } from './layout';
-import { unique } from '@blockframes/utils/helpers';
-
-function getNonEditableNodeIds(rights: Right[], sources: WaterfallSource[], reportedStatements: Statement[], incomes: Income[]) {
-  const incomeIds = unique(reportedStatements.map(s => s.incomeIds).flat());
-  const reportedIncomes = incomeIds.map(id => incomes.find(i => i.id === id)).filter(i => !!i);
-  const nonEditableSources = reportedIncomes ? getIncomesSources(reportedIncomes, sources).filter(s => !!s) : [];
-  const topLevelRights = nonEditableSources.map(s => rights.find(r => r.id === s.destinationId)).filter(r => !!r);
-  const childIds = unique(topLevelRights.map(r => getChilds(r.id, rights).map(c => c.id)).flat());
-  const nonEditableRights = childIds.map(id => rights.find(r => r.id === id));
-  const groupIds = unique(nonEditableRights.filter(r => r.groupId).map(r => r.groupId));
-  const nonEditableGroups = groupIds.map(id => rights.find(r => r.id === id));
-
-  return [...nonEditableSources.map(s => s.id), ...nonEditableRights.map(r => r.id), ...nonEditableGroups.map(g => g.id)];
-}
 
 @Component({
   selector: 'waterfall-graph',
@@ -282,6 +265,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   select(id: string) {
     if (id == this.selected$.value) return;
+    if (this.cardModal.isOpened) this.cardModal.toggle();
     const allPristine = this.rightForm.pristine && this.sourceForm.pristine && this.conditionFormPristine$.value;
     if (allPristine) return this._select(id);
 
@@ -623,6 +607,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if (this.cardModal.isOpened) this.cardModal.toggle();
     const id = rightId ?? this.selected$.getValue();
     const right = this.rights.find(right => right.id === id);
 
@@ -630,7 +615,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
     this.dialog.open(ConfirmComponent, {
       data: createModalData({
-        title: `Are you sure to delete this ${subject}`,
+        title: `Are you sure to delete this ${subject}?`,
         question: `Pay attention, if you delete the following ${subject}, it will have an impact on conditions and the whole Waterfall.`,
         confirm: `Yes, delete ${subject}`,
         cancel: 'No, come back to Waterfall Builder',
@@ -686,6 +671,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
             this.rightService.remove([id, group.id], { params: { waterfallId: this.waterfallId }, write }),
           ]);
           await write.commit();
+          this.select('');
           return;
         }
 
@@ -705,6 +691,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
           promises.push(this.rightService.remove(id, { params: { waterfallId: this.waterfallId }, write }));
           await Promise.all(promises);
           await write.commit();
+          this.select('');
           return;
         }
       }

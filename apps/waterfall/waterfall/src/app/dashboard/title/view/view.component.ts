@@ -31,6 +31,11 @@ export class TitleViewComponent {
       requireKeys: ['waterfall-ready']
     },
     {
+      path: 'amortization',
+      label: 'Film Amortization',
+      requireKeys: ['admin']
+    },
+    {
       path: 'right-holders',
       label: $localize`Right Holders`,
     },

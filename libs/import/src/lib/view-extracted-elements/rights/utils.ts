@@ -1,5 +1,6 @@
 import { RightsImportState, getDate } from '../../utils';
 import {
+  Amortization,
   App,
   ArrayOperator,
   Condition,
@@ -16,6 +17,7 @@ import { FieldsConfig, ImportedCondition, ImportedTarget, getRightConfig } from 
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { MovieService } from '@blockframes/movie/service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
+import { AmortizationService } from '@blockframes/waterfall/amortization.service';
 
 export interface FormatConfig {
   app: App;
@@ -26,18 +28,21 @@ export async function formatRight(
   waterfallService: WaterfallService,
   titleService: MovieService,
   waterfallDocumentsService: WaterfallDocumentsService,
+  amortizationService: AmortizationService,
   userOrgId: string,
 ) {
   // Cache to avoid  querying db every time
   const rightholderCache: Record<string, WaterfallRightholder[]> = {};
   const titleCache: Record<string, Movie> = {};
   const documentCache: Record<string, WaterfallDocument> = {};
-  const caches = { rightholderCache, titleCache, documentCache };
+  const amortizationCache: Record<string, Amortization[]> = {};
+  const caches = { rightholderCache, titleCache, documentCache, amortizationCache };
 
   const option = {
     waterfallService,
     titleService,
     waterfallDocumentsService,
+    amortizationService,
     userOrgId,
     caches,
     separator: ';'
@@ -73,7 +78,7 @@ export async function formatRight(
       right.conditions.conditions.push(formatCondition(data.conditionC, rightholderCache[data.waterfallId]));
     }
 
-    rights.push({ waterfallId: data.waterfallId, right, errors, rightholders: rightholderCache });
+    rights.push({ waterfallId: data.waterfallId, right, errors, rightholders: rightholderCache, amortizations: amortizationCache });
   }
   return rights;
 }
@@ -173,6 +178,15 @@ function formatCondition(cond: ImportedCondition, rightholders: WaterfallRightho
           percent: cond.target.percent,
           rate: cond.interest.rate,
           isComposite: cond.interest.isComposite
+        }
+      }
+    }
+    case 'filmAmortized': {
+      return {
+        name: 'filmAmortized',
+        payload: {
+          operator: cond.operator as NumberOperator,
+          target: formatTarget(cond.target)
         }
       }
     }

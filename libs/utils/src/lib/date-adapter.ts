@@ -10,6 +10,7 @@ export class BlockframesDateAdapter extends NativeDateAdapter {
   }
 
   parse(value: any): Date | null {
+    if (!value) return null;
     return parse(value, getUserDefaultDateFormat(), new Date());
   }
 }

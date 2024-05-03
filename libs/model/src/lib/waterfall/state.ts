@@ -248,6 +248,23 @@ export function createSourceState(source: Partial<SourceState>): SourceState {
   }
 }
 
+export interface AmortizationState {
+  id: string;
+  filmCost: number;
+  financing: number;
+  poolId: string;
+}
+
+export function createAmortizationState(amortization: Partial<AmortizationState>): AmortizationState {
+  return {
+    id: '',
+    filmCost: 0,
+    financing: 0,
+    poolId: '',
+    ...amortization,
+  }
+}
+
 export interface TransferState {
   /** from->to */
   id: `${string}->${string}`;
@@ -340,7 +357,10 @@ export interface TitleState {
   },
   payments: {
     [id: string]: PaymentState;
-  }
+  },
+  amortizations: {
+    [amortizationId: string]: AmortizationState
+  },
 }
 
 export interface History extends TitleState {
@@ -368,5 +388,6 @@ export const createTitleState = (id: string): TitleState => ({
   bonuses: {},
   sources: {},
   payments: {},
+  amortizations: {},
 });
 

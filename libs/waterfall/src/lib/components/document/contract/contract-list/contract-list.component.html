@@ -51,6 +51,9 @@
           <button *ngIf="shell.canBypassRules" mat-icon-button matTooltip="Save changes" (click)="save(waterfall, documents)">
             <mat-icon svgIcon="save"></mat-icon>
           </button>
+          <button mat-icon-button matTooltip="Close" (click)="close()">
+            <mat-icon svgIcon="close"></mat-icon>
+          </button>
         </header>
 
         <ng-container *ngIf="(contracts$ | async)[selected].length > 0 && !creating; else creatingContracts">
@@ -83,6 +86,11 @@
             <!-- <button mat-icon-button class="circle" matTooltip="Create Amendment">
               <mat-icon svgIcon="add"></mat-icon>
             </button> -->
+            <ng-container *ngIf="shell.canBypassRules">
+              <button mat-icon-button *ngIf="rights$ | async as rights" matTooltip="Delete Contract" (click)="delete(contract.id, rights)">
+                <mat-icon svgIcon="delete"></mat-icon>
+              </button>
+            </ng-container>
           </div>
           <div>
             <button *ngIf="shell.canBypassRules" mat-button color="primary" class="main-dashboard-cta" (click)="create()">

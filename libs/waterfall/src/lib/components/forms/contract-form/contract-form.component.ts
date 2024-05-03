@@ -18,6 +18,7 @@ import {
   WaterfallInvestmentForm
 } from '../../../form/contract.form';
 import { unique } from '@blockframes/utils/helpers';
+import { dateInputFormat } from '@blockframes/utils/date-adapter';
 
 @Component({
   selector: '[waterfall][form] waterfall-contract-form',
@@ -33,7 +34,9 @@ export class WaterfallContractFormComponent implements OnInit, OnChanges, OnDest
   @Input() toggleTermsControl: FormControl<boolean>;
 
   public hideStartDate$ = new BehaviorSubject(true);
-
+  public hideEndDate$ = new BehaviorSubject(false);
+  private noLimitEndDate = new Date('2199/01/01');
+  public dateInputFormat = dateInputFormat;
   public durationControl = new FormControl<number | undefined>(undefined);
 
   public periods: (keyof Duration)[] = ['days', 'weeks', 'months', 'years'];
@@ -74,8 +77,18 @@ export class WaterfallContractFormComponent implements OnInit, OnChanges, OnDest
       this.hideStartDate$.next(false);
     }
 
+    if (this.form.controls.endDate.value?.getTime() === this.noLimitEndDate.getTime()) {
+      this.hideEndDate$.next(true);
+    } else {
+      this.hideEndDate$.next(false);
+    }
+
     if (this.hideStartDate$.value && this.form.controls.signatureDate.value) {
       this.form.controls.startDate.setValue(this.form.controls.signatureDate.value, { emitEvent: false });
+    }
+
+    if (this.hideEndDate$.value) {
+      this.form.controls.endDate.setValue(this.noLimitEndDate, { emitEvent: false });
     }
 
     this.subscription.push(
@@ -118,6 +131,9 @@ export class WaterfallContractFormComponent implements OnInit, OnChanges, OnDest
           this.form.controls.startDate.setValue(this.form.controls.signatureDate.value, { emitEvent: false });
         }
       }),
+      this.hideEndDate$.subscribe(hide => {
+        if (hide) this.form.controls.endDate.setValue(this.noLimitEndDate, { emitEvent: false });
+      }),
     );
 
   }
@@ -157,6 +173,10 @@ export class WaterfallContractFormComponent implements OnInit, OnChanges, OnDest
 
   toggleStartDate(event: MatSlideToggleChange) {
     this.hideStartDate$.next(event.checked);
+  }
+
+  toggleEndDate(event: MatSlideToggleChange) {
+    this.hideEndDate$.next(event.checked);
   }
 
   addTerm() {

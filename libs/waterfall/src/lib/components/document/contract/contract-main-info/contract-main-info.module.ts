@@ -13,6 +13,7 @@ import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [ContractMainInfoComponent],
@@ -28,6 +29,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
+    MatDialogModule,
   ],
   exports: [ContractMainInfoComponent]
 })

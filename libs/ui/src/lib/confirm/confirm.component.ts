@@ -7,6 +7,7 @@ interface ConfirmationData {
   question: string,
   advice?: string,
   intercom?: string,
+  additionalData?: string[],
   confirm: string,
   cancel: string,
   onConfirm?: () => void,

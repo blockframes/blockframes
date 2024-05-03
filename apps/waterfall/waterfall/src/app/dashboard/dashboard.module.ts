@@ -13,6 +13,7 @@ import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboar
 import { SidenavAuthModule } from '@blockframes/auth/components/sidenav-auth/sidenav-auth.module';
 import { SidenavWidgetModule } from '@blockframes/auth/components/sidenav-widget/sidenav-widget.module';
 import { WaterfallAdminGuard } from '@blockframes/waterfall/guards/waterfall-admin.guard';
+import { WaterfallActiveGuard } from '@blockframes/waterfall/guards/waterfall-active.guard';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -55,7 +56,7 @@ const routes: Routes = [{
         },
         {
           path: ':movieId',
-          canActivate: [MovieActiveGuard, MovieTunnelGuard],
+          canActivate: [WaterfallActiveGuard, MovieActiveGuard, MovieTunnelGuard],
           children: [
             {
               path: '',
@@ -85,6 +86,11 @@ const routes: Routes = [{
               path: 'document',
               loadChildren: () => import('./document/document.module').then(m => m.DocumentModule),
             },
+            {
+              path: 'amortization-edit',
+              canActivate: [WaterfallAdminGuard],
+              loadChildren: () => import('./amortization/amortization.module').then(m => m.AmortizationModule),
+            },
           ],
         },
       ],
@@ -108,6 +114,10 @@ const routes: Routes = [{
     {
       path: 'privacy',
       loadChildren: () => import('@blockframes/ui/static-informations/privacy/privacy.module').then(m => m.PrivacyModule)
+    },
+    {
+      path: 'security',
+      loadChildren: () => import('@blockframes/ui/static-informations/security/security.module').then(m => m.SecurityModule)
     }
   ]
 },

@@ -685,6 +685,27 @@ service cloud.firestore {
           && isOrgMember(userOrgId())
           && canUpdateWaterfallDocument(waterfallId, documentId);
       }
+
+      match /amortizations/{amortizationId} {
+        allow read: if userHasValidOrg()
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && isWaterfallMember(waterfallId);
+        allow create: if userHasValidOrg()
+          && isRequestFieldValueEqualToOrNotSetted(['id'], amortizationId)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && isWaterfallAdmin(waterfallId);
+        allow update: if userHasValidOrg()
+          && isNotUpdatingId('id', existingData().id)
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && isWaterfallAdmin(waterfallId);
+        allow delete: if userHasValidOrg()
+          && notInMaintenance()
+          && isOrgMember(userOrgId())
+          && isWaterfallAdmin(waterfallId);
+      }
     }
 
     function isCreatingWaterfall(waterfallId) {

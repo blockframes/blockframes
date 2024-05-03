@@ -16,6 +16,8 @@ import {
   createExpenseType,
   Waterfall,
   PricePerCurrency,
+  Amortization,
+  NumberOperator,
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 
@@ -43,13 +45,16 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
 
   public revenueOwnerList$ = new BehaviorSubject<{ id: string, name: string }[]>([]);
   public investments: WaterfallContract[] = [];
+  public amortizations: Amortization[] = [];
   public numberOperator = numberOperator;
+  public tinyNumberOperator: NumberOperator[] = ['<', '>='];
   public arrayOperator = arrayOperator;
   public toggleRateControl = new FormControl(false);
   public expenseTypes: ExpenseType[] = [];
   public waterfall$ = this.shell.waterfall$;
   public dateInputFormat = dateInputFormat;
   public versionId$ = this.shell.versionId$;
+  public displayForm$ = new BehaviorSubject<boolean>(true);
 
   private rights: Right[] = [];
   private groups: Right[] = [];
@@ -65,14 +70,21 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.displayForm$.next(this.form.enabled);
     this.subs.push(
-      combineLatest([this.shell.rights$, this.shell.contracts$, this.shell.waterfall$]).subscribe(([rights, contracts, waterfall]) => {
+      combineLatest([
+        this.shell.rights$,
+        this.shell.contracts$,
+        this.shell.waterfall$,
+        this.shell.amortizations$
+      ]).subscribe(([rights, contracts, waterfall, amortization]) => {
         const groupIds = new Set<string>();
         rights.forEach(right => {
           if (right.groupId) groupIds.add(right.groupId);
         });
         this.rights = rights.filter(right => !groupIds.has(right.id));
         this.groups = rights.filter(right => groupIds.has(right.id));
+        this.amortizations = amortization.filter(a => a.status === 'applied');
         const pools = new Set<string>();
         rights.forEach(right => right.pools.filter(pool => pool).forEach(pool => pools.add(pool)));
         this.pools = [...pools];
@@ -88,6 +100,10 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
         const isProducerRight = waterfall.rightholders.find(r => r.id === right.rightholderId)?.roles.includes('producer');
         this.contractId = isProducerRight ? 'directSales' : right.contractId;
         this.expenseTypes = waterfall.expenseTypes[this.contractId] || [];
+      }),
+
+      this.form.controls.conditionType.valueChanges.subscribe(v => {
+        this.displayForm$.next(!!v || this.form.enabled);
       }),
 
       this.form.controls.revenueOwnerType.valueChanges.pipe(startWith(this.form.controls.revenueOwnerType.value)).subscribe(value => {
@@ -106,6 +122,10 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
         // Hack to force the valueChanges in parent component
         this.form.controls.salesTermsOperator.setValue(this.form.controls.salesTermsOperator.value);
       }),
+
+      this.form.controls.salesTermsType.valueChanges.subscribe(() => {
+        this.form.controls.salesTerms.setValue([]);
+      })
     );
   }
 

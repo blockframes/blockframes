@@ -1,6 +1,6 @@
 
 import { Observable, map, of, startWith, switchMap, tap } from 'rxjs';
-import { Component, ChangeDetectionStrategy, ViewChild, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, Input, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 
 import { WaterfallService } from '../../../../waterfall.service';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
@@ -20,7 +20,8 @@ import {
   createExpenseType,
   Term,
   WaterfallPermissions,
-  Organization
+  Organization,
+  Right
 } from '@blockframes/model';
 import { TermService } from '@blockframes/contract/term/service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -66,11 +67,14 @@ export class ContractListComponent {
     map(orgs => orgs.filter(o => o.id !== this.currentOrgId))
   );
 
+  public rights$ = this.shell.rightholderRights$;
+
   private contracts: Partial<Record<RightholderRole, WaterfallContract[]>>;
   private removeFileOnSave = false;
   private terms: Term[] = [];
 
   @Input() contractForm: WaterfallContractForm;
+  @Output() redirectToBuilder = new EventEmitter<void>();
   public toggleTermsControl = new FormControl(true);
   public currentOrgId = this.orgService.org.id;
 
@@ -108,7 +112,7 @@ export class ContractListComponent {
 
   private _select(role: RightholderRole) {
     this.selected = role;
-    this.creating = this.contracts[role].length === 0; // if we select an empty role we automatically switch to create mode
+    this.creating = role ? this.contracts[role].length === 0 : false; // if we select an empty role we automatically switch to create mode
     if (this.creating) {
       this.terms = [];
       this.contractForm.reset({ id: this.documentService.createId() });
@@ -196,13 +200,19 @@ export class ContractListComponent {
       }));
     }
 
+    const signatureDate = this.contractForm.controls.signatureDate.value;
     const existingDoc = documents.find(d => d.id === this.contractForm.controls.id.value);
+    const price = this.contractForm.controls.price.value.filter(p => p.value > 0).map(p => ({
+      ...p,
+      date: p.date || signatureDate
+    }));
+
     const document = createWaterfallDocument<WaterfallContract>({
       id: this.contractForm.controls.id.value,
       name: this.contractForm.controls.name.value,
       type: 'contract',
       waterfallId,
-      signatureDate: this.contractForm.controls.signatureDate.value,
+      signatureDate,
       ownerId: existingDoc?.ownerId || this.orgService.org.id,
       meta: createWaterfallContract({
         type: this.selected,
@@ -213,7 +223,7 @@ export class ContractListComponent {
           from: this.contractForm.controls.startDate.value,
           to: this.contractForm.controls.endDate.value,
         },
-        price: this.contractForm.controls.price.value.filter(p => p.value > 0),
+        price,
         currency: this.contractForm.controls.currency.value,
       }),
     });
@@ -255,6 +265,58 @@ export class ContractListComponent {
       data: createModalData({ organizations, documentId, waterfallId }, 'medium'),
       autoFocus: false
     });
+  }
+
+  close() {
+    if (this.cardModal.isOpened) this.cardModal.close();
+    if (this.contractForm.pristine) return this._select(undefined);
+
+    const dialogRef = this.dialog.open(ConfirmComponent, {
+      data: createModalData({
+        title: 'You are about to leave the form',
+        question: 'Some changes have not been saved. If you leave now, you might lose these changes',
+        cancel: 'Cancel',
+        confirm: 'Leave anyway'
+      }, 'small'),
+      autoFocus: false
+    });
+    dialogRef.afterClosed().subscribe((leave: boolean) => {
+      if (leave) {
+        this.contractForm.markAsPristine();
+        this._select(undefined);
+      }
+    });
+  }
+
+  delete(contractId: string, _rights: Right[]) {
+    if (this.cardModal.isOpened) this.cardModal.close();
+    const rights = _rights.filter(r => r.contractId === contractId);
+    if (rights.length === 0) {
+      this.dialog.open(ConfirmComponent, {
+        data: createModalData({
+          title: 'Are you sure to delete this Contract?',
+          question: 'Pay attention, if you delete the following Contract, you might loose some information.',
+          confirm: 'Yes, delete Contract',
+          onConfirm: async () => {
+            await this.documentService.remove(contractId, { params: { waterfallId: this.shell.waterfall.id } });
+            this.snackBar.open('Contract deleted', 'close', { duration: 3000 });
+          },
+        })
+      });
+    } else {
+      this.dialog.open(ConfirmComponent, {
+        data: createModalData({
+          title: 'Sorry, unable to delete Contract right now.',
+          question: 'This Contract cannot be deleted immediately due to it\'s integration with your Waterfall. Deleting a Contract could potentially disrupt the Waterfall\'s structure.',
+          advice: 'If you still wish to proceed with the deletion, please ensure that all relevant rights are removed using the Waterfall Builder feature before deleting the contract.',
+          intercom: 'Contact us for more information',
+          confirm: 'Go to Waterfall Builder & Delete Rights',
+          additionalData: rights.map(r => r.name),
+          onConfirm: () => this.redirectToBuilder.emit(),
+        })
+      });
+    }
+
   }
 }
 

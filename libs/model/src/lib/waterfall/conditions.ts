@@ -45,6 +45,7 @@ export const thresholdConditions = {
    * (Income and investments must have a date)
    */
   interest,
+  filmAmortized
 }
 
 export const blockingConditions = {
@@ -111,7 +112,7 @@ export type ConditionList = {
 };
 
 export type ThresholdCondition = ConditionList[keyof typeof thresholdConditions];
-export type BlockingCondition = ConditionList[keyof typeof blockingConditions];
+type BlockingCondition = ConditionList[keyof typeof blockingConditions];
 export type ConditionWithTarget = ConditionList[Exclude<keyof typeof thresholdConditions, 'interest'>];
 export type Condition = ThresholdCondition | BlockingCondition;
 
@@ -180,6 +181,7 @@ export function checkCondition(ctx: ConditionContext) {
 }
 
 export const isConditionGroup = (condition: Condition | ConditionGroup): condition is ConditionGroup => {
+  if (!condition) return false;
   return 'operator' in condition;
 }
 
@@ -249,7 +251,8 @@ export const targetIn = [
   'pools.turnover', 
   'investment', */
   'expense',
-  'contracts.investment'
+  'contracts.investment',
+  'amortization.filmCost'
 ] as const;
 export type TargetIn = typeof targetIn[number];
 export type TargetValue = {
@@ -274,6 +277,7 @@ export function toTargetValue(state: TitleState, target: TargetValue) {
     case 'investment': return state.investment * percent;*/
     case 'expense': return getExpensesValue(state, Object.values(state.expenses).filter(e => e.typeId === id)) * percent;
     case 'contracts.investment': return getInvestmentValue(state, id) * percent;
+    case 'amortization.filmCost': return getFilmCost(state, id) * percent;
     default: throw new Error(`Target "${target.in}" not supported.`);
   }
 }
@@ -312,6 +316,11 @@ export function getInvestmentValue(state: TitleState, contractId: string) {
   const operations = org?.operations.filter(op => op.contractId === contractId && op.type === 'investment') ?? [];
   const values = operations.map(o => o.amount);
   return sum(values);
+}
+
+function getFilmCost(state: TitleState, amortizationId: string) {
+  const amortization = state.amortizations[amortizationId];
+  return amortization.filmCost;
 }
 
 export interface OrgRevenuCondition {
@@ -362,6 +371,21 @@ function poolTurnover(ctx: ConditionContext, payload: PoolCondition) {
   const { state } = ctx;
   const { target, operator, pool } = payload;
   const currentValue = state.pools[pool]?.turnover.calculated ?? 0;
+  const targetValue = toTargetValue(state, target);
+  return numericOperator(operator, currentValue, targetValue);
+}
+
+export interface FilmAmortizedCondition {
+  target: TargetValue;
+  operator: NumberOperator;
+}
+
+function filmAmortized(ctx: ConditionContext, payload: FilmAmortizedCondition) {
+  const { state } = ctx;
+  const { target, operator } = payload;
+  if (isNumber(target)) throw new Error('FilmAmortized condition should have a target with a reference');
+  const amortization = state.amortizations[target.id];
+  const currentValue = (state.pools[amortization.poolId]?.turnover.calculated ?? 0) + amortization.financing;
   const targetValue = toTargetValue(state, target);
   return numericOperator(operator, currentValue, targetValue);
 }
