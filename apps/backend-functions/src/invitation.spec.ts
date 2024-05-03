@@ -1,4 +1,5 @@
 ﻿process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
+import { fetch } from 'openai/_shims'; // Test, for openAI @see https://github.com/openai/openai-node/issues/304
 import { initFirestoreApp, invitationsFixtures } from '@blockframes/testing/unit-tests';
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { inviteUsers, acceptOrDeclineInvitationAsAnonymous } from './main';
