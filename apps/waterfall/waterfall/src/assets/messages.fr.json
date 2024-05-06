@@ -1,5 +1,5 @@
 {
-  "locale": "fr-FR",
+  "locale": "fr-FR", // TODO #9699 to translate (& remove this comment)
   "translations": {
     "2557636838397827495": "My Movies",
     "9216548238264778039": "Add Title",

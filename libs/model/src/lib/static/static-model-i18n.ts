@@ -1,3 +1,4 @@
+ // TODO #9699 to translate (& remove this comment)
 const rightholderRoles = {
   salesAgent: 'Sales Agent',
   mainDistributor: 'Main Distributor',
