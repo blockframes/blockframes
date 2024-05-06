@@ -1,3 +1,5 @@
+<file-uploader [form]="form.get('file')" [meta]="['waterfall', 'documents', waterfall.id]" accept="pdf" (selectionChange)="change($event)"></file-uploader>
+
 <mat-form-field appearance="outline">
   <mat-label>Document Name</mat-label>
   <input matInput [formControl]="form.get('name')" required />
@@ -161,5 +163,4 @@
   <waterfall-expense-types [form]="form.get('expenseTypes')"></waterfall-expense-types>  
 </section>
 
-<file-uploader [form]="form.get('file')" [meta]="['waterfall', 'documents', waterfall.id]" accept="pdf" (selectionChange)="change($event)"></file-uploader>
 
