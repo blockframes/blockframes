@@ -3,7 +3,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { production } from '@env';
-import { loadTranslations } from "@angular/localize";
+import { loadTranslations } from '@angular/localize';
 import { supportedLanguages } from '@blockframes/utils/date-adapter';
 import { registerLocaleData } from '@angular/common';
 
