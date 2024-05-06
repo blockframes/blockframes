@@ -866,28 +866,28 @@ export const stakeholderRoles = {
 export const rightholderGroups = {
   // Distributors
   distributors: {
-    salesAgent: $localize`Sales Agent`,
-    mainDistributor: $localize`Main Distributor`,
+    salesAgent: 'Sales Agent',
+    mainDistributor: 'Main Distributor',
   },
   // Roles used for the "world sales" map
   sales: {
-    localDistributor: $localize`Local Distributor`,
-    sale: $localize`Broadcaster`,
-    mainDistributor: $localize`Main Distributor`,
+    localDistributor: 'Local Distributor',
+    sale: 'Broadcaster',
+    mainDistributor: 'Main Distributor',
   },
   // Producer 
   producers: {
-    producer: $localize`Producer`,
+    producer: 'Producer',
   },
   // Beneficiaries
   beneficiaries: {
-    author: $localize`Author`,
-    agent: $localize`Agent`,
-    coProducer: $localize`Co-Producer`,
-    financier: $localize`Financier`,
-    institution: $localize`Institution`,
-    performer: $localize`Cast`,
-    other: $localize`Other`
+    author: 'Author',
+    agent: 'Agent',
+    coProducer: 'Co-Producer',
+    financier: 'Financier',
+    institution: 'Institution',
+    performer: 'Cast',
+    other: 'Other'
   },
   // Custom groups
   withStatements: ['salesAgent', 'mainDistributor', 'producer'] as string[], // Rightholders that can create a statement
@@ -910,23 +910,23 @@ export const statementsRolesMapping: Record<keyof typeof statementType, (keyof t
 }
 
 export const rightTypes = {
-  commission: $localize`Commission`,
-  expenses: $localize`Expenses Recoupment`,
-  mg: $localize`MG Recoupment`,
-  horizontal: $localize`Horizontal Group`,
-  vertical: $localize`Vertical Group`,
-  rnpp: $localize`Producer\'s Net Participation`,
-  investments: $localize`Investment Recoupment`,
-  residuals: $localize`Residuals`,
-  royalties: $localize`Royalties`,
-  unknown: $localize`Other`
+  commission: 'Commission',
+  expenses: 'Expenses Recoupment',
+  mg: 'MG Recoupment',
+  horizontal: 'Horizontal Group',
+  vertical: 'Vertical Group',
+  rnpp: 'Producer\'s Net Participation',
+  investments: 'Investment Recoupment',
+  residuals: 'Residuals',
+  royalties: 'Royalties',
+  unknown: 'Other'
 } as const
 
 export const conditionOwnerLabels = {
-  org: $localize`Right Holder Name`,
-  right: $localize`Revenue Share Name`,
-  group: $localize`Group Name`,
-  pool: $localize`Pool Name`,
+  org: 'Right Holder Name',
+  right: 'Revenue Share Name',
+  group: 'Group Name',
+  pool: 'Pool Name',
 };
 
 export const movieNoteRoles = {
