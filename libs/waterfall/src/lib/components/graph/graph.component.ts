@@ -260,7 +260,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   openIntercom() {
-    return this.intercom.show('I need help to create a waterfall');
+    return this.intercom.show($localize`I need help to create a waterfall`);
   }
 
   select(id: string) {
@@ -269,15 +269,15 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     const allPristine = this.rightForm.pristine && this.sourceForm.pristine && this.conditionFormPristine$.value;
     if (allPristine) return this._select(id);
 
-    let subject = 'Receipt Share';
-    if (!this.sourceForm.pristine) subject = 'Source';
-    if (!this.conditionFormPristine$.value) subject = 'Receipt Share Conditions';
+    let subject = $localize`Receipt Share`;
+    if (!this.sourceForm.pristine) subject = $localize`Source`;
+    if (!this.conditionFormPristine$.value) subject = $localize`Receipt Share Conditions`;
     const dialogRef = this.dialog.open(ConfirmComponent, {
       data: createModalData({
-        title: `You are about to leave the ${subject} form`,
-        question: 'Some changes have not been saved. If you leave now, you might lose these changes',
-        cancel: 'Cancel',
-        confirm: 'Leave anyway'
+        title: $localize`You are about to leave the ${subject} form`,
+        question: $localize`Some changes have not been saved. If you leave now, you might lose these changes`,
+        cancel: $localize`Cancel`,
+        confirm: $localize`Leave anyway`
       }, 'small'),
       autoFocus: false
     });
@@ -363,7 +363,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     const rightholderName = this.rightForm.controls.org.value;
     const rightholder = this.rightholders.find(r => r.name === rightholderName);
     if (!rightholder) {
-      this.snackBar.open('Please provide a valid Right Holder name', 'close', { duration: 3000 });
+      this.snackBar.open($localize`Please provide a valid Right Holder name`, 'close', { duration: 3000 });
       return;
     }
 
@@ -371,7 +371,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
     const producer = this.rightholders.find(r => r.roles.includes('producer'));
     if (producer?.id !== rightholder.id && this.rightForm.controls.type.value !== 'horizontal' && !this.rightForm.controls.contract.value) {
-      this.snackBar.open('Please provide the contract associated to this Receipt Share', 'close', { duration: 3000 });
+      this.snackBar.open($localize`Please provide the contract associated to this Receipt Share`, 'close', { duration: 3000 });
       return;
     }
 
@@ -440,16 +440,16 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     this.conditionFormPristine$.next(true);
 
     if (right.type === 'horizontal') {
-      this.snackBar.open('Group Details saved', 'close', { duration: 3000 });
+      this.snackBar.open($localize`Group Details saved`, 'close', { duration: 3000 });
     } else {
-      this.snackBar.open('Receipt Share saved', 'close', { duration: 3000 });
+      this.snackBar.open($localize`Receipt Share saved`, 'close', { duration: 3000 });
     }
   }
 
   async updateSource() {
     const sourceId = this.selected$.getValue();
     if (this.nonEditableNodeIds$.value.includes(sourceId)) {
-      this.snackBar.open('Operation not permitted.', 'close', { duration: 5000 });
+      this.snackBar.open($localize`Operation not permitted.`, 'close', { duration: 5000 });
       return;
     }
     const source = this.sources.find(source => source.id === sourceId);
@@ -462,7 +462,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     this.sourceForm.markAsPristine();
 
     await this.waterfallService.updateSource(this.waterfallId, source);
-    this.snackBar.open('Receipt Source saved', 'close', { duration: 3000 });
+    this.snackBar.open($localize`Receipt Source saved`, 'close', { duration: 3000 });
   }
 
   async layout(hiddenRightHolderIds: string[]) {
@@ -478,7 +478,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   async addSibling(id: string) {
     if (this.nonEditableNodeIds$.value.includes(id)) {
-      this.snackBar.open('Operation not permitted.', 'close', { duration: 5000 });
+      this.snackBar.open($localize`Operation not permitted.`, 'close', { duration: 5000 });
       return;
     }
     const graph = this.nodes$.getValue();
@@ -498,7 +498,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   async addChild(id: string) {
     if (this.nonEditableNodeIds$.value.includes(id)) {
-      this.snackBar.open('Operation not permitted.', 'close', { duration: 5000 });
+      this.snackBar.open($localize`Operation not permitted.`, 'close', { duration: 5000 });
       return;
     }
     const graph = this.nodes$.getValue();
@@ -527,7 +527,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     const graph = this.nodes$.getValue();
     const rightId = this.selected$.getValue();
     if (this.nonEditableNodeIds$.value.includes(rightId)) {
-      this.snackBar.open('Operation not permitted.', 'close', { duration: 5000 });
+      this.snackBar.open($localize`Operation not permitted.`, 'close', { duration: 5000 });
       return;
     }
     createStep(rightId, graph);
@@ -548,7 +548,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     const graph = this.nodes$.getValue();
     const rightId = this.selected$.getValue();
     if (this.nonEditableNodeIds$.value.includes(rightId)) {
-      this.snackBar.open('Operation not permitted.', 'close', { duration: 5000 });
+      this.snackBar.open($localize`Operation not permitted.`, 'close', { duration: 5000 });
       return;
     }
     deleteStep(rightId, index, graph);
@@ -567,7 +567,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   async createNewSource() {
     if (this.isDuplicateVersion) {
-      this.snackBar.open('Operation not permitted on this version. Switch to default.', 'close', { duration: 5000 });
+      this.snackBar.open($localize`Operation not permitted on this version. Switch to default.`, 'close', { duration: 5000 });
       return;
     }
     const newSource = createWaterfallSource({
@@ -585,7 +585,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   async createNewRight() {
     if (this.isDuplicateVersion) {
-      this.snackBar.open('Operation not permitted on this version. Switch to default.', 'close', { duration: 5000 });
+      this.snackBar.open($localize`Operation not permitted on this version. Switch to default.`, 'close', { duration: 5000 });
       return;
     }
     const newRight = createRight({
@@ -603,7 +603,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   async delete(rightId?: string) {
     if (this.nonEditableNodeIds$.value.includes(rightId)) {
-      this.snackBar.open('Operation not permitted.', 'close', { duration: 5000 });
+      this.snackBar.open($localize`Operation not permitted.`, 'close', { duration: 5000 });
       return;
     }
 
@@ -615,10 +615,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
     this.dialog.open(ConfirmComponent, {
       data: createModalData({
-        title: `Are you sure to delete this ${subject}?`,
-        question: `Pay attention, if you delete the following ${subject}, it will have an impact on conditions and the whole Waterfall.`,
-        confirm: `Yes, delete ${subject}`,
-        cancel: 'No, come back to Waterfall Builder',
+        title: $localize`Are you sure to delete this ${subject}?`,
+        question: $localize`Pay attention, if you delete the following ${subject}, it will have an impact on conditions and the whole Waterfall.`,
+        confirm: $localize`Yes, delete ${subject}`,
+        cancel: $localize`No, come back to Waterfall Builder`,
         onConfirm: () => this.handleDeletion(id),
       })
     });

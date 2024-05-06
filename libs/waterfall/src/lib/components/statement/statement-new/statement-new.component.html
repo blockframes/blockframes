@@ -1,16 +1,16 @@
 <global-modal>
-  <h2>Right Holder’s 1st Statement Settings</h2>
+  <h2 i18n>Right Holder’s 1st Statement Settings</h2>
   
   <header>
-    <p class="mat-body-1">Please verify the information below</p>
+    <p class="mat-body-1" i18n>Please verify the information below</p>
   </header>
 
   <waterfall-rightholder-select [rightholders]="rightholders" [control]="rightholderControl">
-    <mat-label>{{ data.type | toLabel: 'statementParty'}}</mat-label>
+    <mat-label>{{ data.type | toLabel: 'statementParty' : true }}</mat-label>
   </waterfall-rightholder-select>
 
   <mat-form-field *ngIf="rightholderContracts.length" appearance="outline">
-    <mat-label>Choose contract</mat-label>
+    <mat-label i18n>Choose contract</mat-label>
     <mat-select [formControl]="contractControl">
       <ng-container *ngFor="let contract of rightholderContracts">
         <mat-option [value]="contract.id">{{ contract.name }}</mat-option>
@@ -19,20 +19,20 @@
   </mat-form-field>
 
   <section>
-    <p class="mat-body-1">Can’t find right holder or contract on the list?</p>
-    <p class="mat-body-1" *ngIf="data.canBypassRules"><a [routerLink]="['/c/o/dashboard/title', data.waterfall.id, 'init']" target="_blank" (click)="close()">Please add a new contract</a> before adding a Statement.</p>
+    <p class="mat-body-1" i18n>Can’t find right holder or contract on the list?</p>
+    <p class="mat-body-1" *ngIf="data.canBypassRules" i18n><a [routerLink]="['/c/o/dashboard/title', data.waterfall.id, 'init']" target="_blank" (click)="close()">Please add a new contract</a> before adding a Statement.</p>
     <button mat-button *ngIf="!data.canBypassRules" (click)="openIntercom()">
       <mat-icon svgIcon="help"></mat-icon>
-      <span>Ask for Help</span>
+      <span i18n>Ask for Help</span>
     </button>
   </section>
 
   <mat-dialog-actions>
     <button [disabled]="!contractControl.value" mat-flat-button color="primary" (click)="confirm()">
-      <span>Continue</span>
+      <span i18n>Continue</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>
-    <button mat-button (click)="close()">
+    <button mat-button (click)="close()" i18n>
       Close window
     </button>
   </mat-dialog-actions>

@@ -1,28 +1,28 @@
 <section class="surface">
-  <h3>Statement Period</h3>
-  <p class="mat-body-1">Please indicate the period covered by this report.</p>
+  <h3 i18n>Statement Period</h3>
+  <p class="mat-body-1" i18n>Please indicate the period covered by this report.</p>
 
   <form [formGroup]="form">
     <article>
-      <button *ngIf="previousStatementId else noPrevious" mat-icon-button matTooltip="Go to previous Statement" (click)="goTo(previousStatementId)">
+      <button *ngIf="previousStatementId else noPrevious" mat-icon-button matTooltip="Go to previous Statement" (click)="goTo(previousStatementId)" i18n-matTooltip>
         <mat-icon svgIcon="arrow_back"></mat-icon>
       </button>
       <ng-template #noPrevious>
-        <button mat-icon-button disabled matTooltip="There is no previous Statement">
+        <button mat-icon-button disabled matTooltip="There is no previous Statement" i18n-matTooltip>
           <mat-icon svgIcon="arrow_back"></mat-icon>
         </button>
       </ng-template>
       <section>
         <mat-form-field appearance="outline">
           <mat-icon svgIcon="timer" matPrefix></mat-icon>
-          <mat-label>Duration Period</mat-label>
+          <mat-label i18n>Duration Period</mat-label>
           <mat-select [disabled]="statement.status === 'reported'" [formControl]="periodicity" placeholder="Duration Period">
             <mat-option *ngFor="let period of periods | keyvalue" [value]="period.key">{{ period.value }}</mat-option>
           </mat-select>
         </mat-form-field>
         
         <mat-form-field appearance="outline">
-          <mat-label>From</mat-label>
+          <mat-label i18n>From</mat-label>
           <input matInput [disabled]="statement.status === 'reported'" [formControl]="form.get('duration').get('from')" [matDatepicker]="datePickerFrom" required [placeholder]="dateInputFormat">
           <mat-datepicker-toggle matPrefix [for]="datePickerFrom">
             <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
@@ -33,7 +33,7 @@
         </mat-form-field>
       
         <mat-form-field appearance="outline">
-          <mat-label>To</mat-label>
+          <mat-label i18n>To</mat-label>
           <input matInput [disabled]="statement.status === 'reported'" [formControl]="form.get('duration').get('to')" [matDatepicker]="datePickerTo" required [placeholder]="dateInputFormat">
           <mat-datepicker-toggle matPrefix [for]="datePickerTo">
             <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
@@ -44,19 +44,19 @@
           <mat-error *ngIf="form.get('duration').get('to').hasError('maxDate')">Date must be earlier than contract termination date : {{ contract.duration.to | date }}</mat-error>
         </mat-form-field>
       </section>
-      <button *ngIf="nextStatementId else noNext" mat-icon-button matTooltip="Go to next Statement" (click)="goTo(nextStatementId)">
+      <button *ngIf="nextStatementId else noNext" mat-icon-button matTooltip="Go to next Statement" (click)="goTo(nextStatementId)" i18n-matTooltip>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
       </button>
       <ng-template #noNext>
-        <button mat-icon-button disabled matTooltip="There is no next Statement">
+        <button mat-icon-button disabled matTooltip="There is no next Statement" i18n-matTooltip>
           <mat-icon svgIcon="arrow_forward"></mat-icon>
         </button>
       </ng-template>
     </article>
     <div>
-      <p class="mat-body-1">You can modify the issue date, which is particularly useful for older films.</p>
+      <p class="mat-body-1" i18n>You can modify the issue date, which is particularly useful for older films.</p>
       <mat-form-field appearance="outline">
-        <mat-label>Reported on</mat-label>
+        <mat-label i18n>Reported on</mat-label>
         <input [disabled]="statement.status === 'reported'" matInput [formControl]="form.get('reported')" [matDatepicker]="datePickerReported" required [placeholder]="dateInputFormat">
         <mat-datepicker-toggle matPrefix [for]="datePickerReported">
           <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>

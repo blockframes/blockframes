@@ -13,8 +13,8 @@
 <section>
   <article class="breakdown">
     <header>
-      <span>Calculation breakdown</span>
-      <div>Net Receipts</div>
+      <span i18n>Calculation breakdown</span>
+      <div i18n>Net Receipts</div>
     </header>
 
     <ng-container *ngIf="groupsBreakdown$ | async as breakdown">
@@ -26,13 +26,13 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <bf-table [source]="item.rows">
-            <ng-template colRef="" label="Section" let-item>
+            <ng-template colRef="" label="Section" let-item i18n-label>
               <span [class]="item.type">{{ item.name }}</span>
             </ng-template>
             <ng-template colRef="" label="" let-item>
               <span *ngIf="item.type === 'right'" [class]="item.type">{{ item.percent }} %</span>
             </ng-template>
-            <ng-template colRef="" label="Net Receipts" let-item>
+            <ng-template colRef="" label="Net Receipts" let-item i18n-label>
               <price-per-currency [class]="item.type" [price]="item.taken | formatPair" default="€ 0"></price-per-currency>
             </ng-template>
             <ng-template colRef="" label="" let-item>
@@ -63,7 +63,7 @@
   <ng-container *ngIf="details$ | async as details">
     <article *ngIf="details.length" class="breakdown">
       <header>
-        <span>Calculation details</span>
+        <span i18n>Calculation details</span>
       </header>
       <div class="surface" *ngFor="let item of details">
         <mat-expansion-panel>
@@ -76,10 +76,10 @@
             <ng-template colRef="" label="#" let-index="index">
               {{ index + 1 }}
             </ng-template>
-            <ng-template colRef="from" label="From" let-from>
+            <ng-template colRef="from" label="From" let-from i18n-label>
               {{ from }}
             </ng-template>
-            <ng-template colRef="to" label="To" let-to>
+            <ng-template colRef="to" label="To" let-to i18n-label>
               {{ to }}
             </ng-template>
             <ng-template colRef="" label="" let-item let-index="index">
@@ -111,27 +111,27 @@
   <ng-container *ngIf="expensesDetails$ | async as expensesDetails">
     <article *ngIf="(expensesDetails | keyvalue).length" class="breakdown">
       <header>
-        <span>Expenses</span>
+        <span i18n>Expenses</span>
       </header>
       <ng-container *ngFor="let expenses of (expensesDetails | keyvalue)">
         <div class="surface" *ngFor="let expensesDetail of expenses.value;">
           <mat-expansion-panel>
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <span>{{ expenses.key | rightholderName: waterfall }}'s Expenses {{ expensesDetail.name }} Details</span>
+                <span i18n>{{ expenses.key | rightholderName: waterfall }}'s Expenses {{ expensesDetail.name }} Details</span>
               </mat-panel-title>
             </mat-expansion-panel-header>
             <bf-table [source]="expensesDetail.rows" pagination="50">
-              <ng-template colRef="previous" label="Previous" let-previous>
+              <ng-template colRef="previous" label="Previous" let-previous i18n-label>
                 <price-per-currency [price]="previous"></price-per-currency>
               </ng-template>
-              <ng-template colRef="current" label="Current" let-current>
+              <ng-template colRef="current" label="Current" let-current i18n-label>
                 <price-per-currency [price]="current"></price-per-currency>
               </ng-template>
-              <ng-template colRef="cumulated" label="Cumulated" let-cumulated>
+              <ng-template colRef="cumulated" label="Cumulated" let-cumulated i18n-label>
                 <price-per-currency [price]="cumulated"></price-per-currency>
               </ng-template>
-              <ng-template colRef="capped" label="Capped" let-capped>
+              <ng-template colRef="capped" label="Capped" let-capped i18n-label>
                 {{ capped ? 'Yes' : 'No' }}
               </ng-template>
             </bf-table>
@@ -148,16 +148,16 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <bf-table [source]="expenses.value" pagination="50">
-              <ng-template colRef="date" label="Date" let-date sort defaultSort>
+              <ng-template colRef="date" label="Date" let-date sort defaultSort i18n-label>
                 {{ date | date }}
               </ng-template>
-              <ng-template colRef="nature" label="Expenses name" let-nature sort>
+              <ng-template colRef="nature" label="Expenses name" let-nature sort i18n-label>
                 {{ nature }}
               </ng-template>
-              <ng-template colRef="" label="Type" let-item sort>
+              <ng-template colRef="" label="Type" let-item sort i18n-label>
                 {{ item.typeId | expenseType : item.contractId : waterfall }}
               </ng-template>
-              <ng-template colRef="" label="Amount" let-item sort>
+              <ng-template colRef="" label="Amount" let-item sort i18n-label>
                 <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
                 <button mat-icon-button 
                   [disabled]="!canEditExpense(item.id, statement) || !item.editable"
@@ -167,7 +167,7 @@
                   <mat-icon svgIcon="statement_warning"></mat-icon>
                 </button>
               </ng-template>
-              <ng-template colRef="" label="Capped" let-item sort>
+              <ng-template colRef="" label="Capped" let-item sort i18n-label>
                 {{ item.capped ? 'Yes' : 'No' }}
                 <ng-container *ngIf="item.cap">
                   <span class="cap">( CAP: <price-per-currency [price]="item.cap"></price-per-currency> )</span>
@@ -183,13 +183,13 @@
   <ng-container *ngIf="interests$ | async as interests">
     <article *ngIf="interests.length" class="breakdown">
       <header>
-        <span>Interest Calculation</span>
+        <span i18n>Interest Calculation</span>
       </header>
       <div class="surface" >
         <mat-expansion-panel>
           <mat-expansion-panel-header>
             <mat-panel-title>
-              <span>Interest Rate Details</span>
+              <span i18n>Interest Rate Details</span>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <waterfall-interest-table [interests]="interests"></waterfall-interest-table>
@@ -201,23 +201,23 @@
   <ng-container *ngIf="amortizationDetails$ | async as amortizationDetails">
     <article *ngIf="amortizationDetails" class="breakdown">
       <header>
-        <span>Film Amortization</span>
+        <span i18n>Film Amortization</span>
       </header>
       <div class="surface">
         <section>
-          <span>Cost of the film to amortize</span>
+          <span i18n>Cost of the film to amortize</span>
           <price-per-currency [price]="amortizationDetails.filmCost | formatPair" default="€ 0"></price-per-currency>
         </section>
       </div>
       <div class="surface">
         <section>
-          <span>Financing</span>
+          <span i18n>Financing</span>
           <price-per-currency [price]="amortizationDetails.financing | formatPair" default="€ 0"></price-per-currency>
         </section>
       </div>
       <div class="surface">
         <section>
-          <span>Producer's Net Participation</span>
+          <span i18n>Producer's Net Participation</span>
           <price-per-currency [price]="amortizationDetails.currentValue | formatPair" default="€ 0"></price-per-currency>
         </section>
       </div>

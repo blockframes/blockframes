@@ -31,7 +31,7 @@ export class RightHoldersManagementComponent implements OnInit, OnDestroy {
     private dynTitle: DynamicTitleService,
     private snackbar: MatSnackBar,
   ) {
-    this.dynTitle.setPageTitle('Manage Right Holders');
+    this.dynTitle.setPageTitle($localize`Manage Right Holders`);
   }
 
   async ngOnInit() {

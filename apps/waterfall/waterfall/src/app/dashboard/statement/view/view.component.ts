@@ -84,7 +84,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     private router: Router,
     private functions: CallableFunctions,
   ) {
-    this.dynTitle.setPageTitle(this.shell.movie.title.international, 'View Statement');
+    this.dynTitle.setPageTitle(this.shell.movie.title.international, $localize`View Statement`);
     this.form = new StatementForm();
   }
 

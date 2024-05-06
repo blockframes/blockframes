@@ -10,7 +10,7 @@
     <ul>
       <ng-container *ngIf="shell.canBypassRules else readonly">
         <li *ngFor="let item of contracts$ | async | keyvalue" (click)="select(item.key)" [ngClass]="{'selected': item.key === selected}">
-          <p class="role">{{item.key | toLabel: 'rightholderRoles'}}</p>
+          <p class="role">{{ item.key | toLabel: 'rightholderRoles' : true }}</p>
           <p class="action">
             <ng-container *ngIf="item.key === selected && creating; else notCreating">
               <span i18n>Adding contract...</span>
@@ -18,7 +18,7 @@
 
             <ng-template #notCreating>
               <ng-container *ngIf="item.value.length > 0; else noContracts">
-                <span>{{item.value.length}} contract{{item.value.length > 1 ? 's' : ''}}</span>
+                <span i18n>{{ item.value.length }} contract{{ item.value.length > 1 ? 's' : '' }}</span>
               </ng-container>
               <ng-template #noContracts>
                 <mat-icon svgIcon="add"></mat-icon>
@@ -32,8 +32,8 @@
         <ng-container *ngFor="let item of contracts$ | async | keyvalue">
           <ng-container *ngIf="item.value.length > 0">
             <li (click)="select(item.key)" [ngClass]="{'selected': item.key === selected}">
-              <p class="role">{{item.key | toLabel: 'rightholderRoles'}}</p>
-              <span>{{item.value.length}} contract{{item.value.length > 1 ? 's' : ''}}</span>
+              <p class="role">{{ item.key | toLabel: 'rightholderRoles' : true }}</p>
+              <span i18n>{{ item.value.length }} contract{{ item.value.length > 1 ? 's' : '' }}</span>
             </li>
           </ng-container>
         </ng-container>
@@ -44,7 +44,7 @@
       <ng-container *ngIf="selected; else notSelected">
         <header>
           <mat-icon svgIcon="document"></mat-icon>
-          <h2 i18n>{{selected | toLabel: 'rightholderRoles'}} Contract</h2>
+          <h2 i18n>{{ selected | toLabel: 'rightholderRoles' : true }} Contract</h2>
           <button *ngIf="canUseAI()" color="warn" mat-icon-button [disabled]="computing$ | async" matTooltip="Ask AI to fill contract information" (click)="askAI()">
             <mat-icon svgIcon="ai"></mat-icon>
           </button>

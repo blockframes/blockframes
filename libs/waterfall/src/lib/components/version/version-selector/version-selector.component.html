@@ -7,7 +7,7 @@
           <section>
             <mat-radio-group (click)="switchToVersion(version.id)" (change)="switchToVersion($event.value)">
               <mat-radio-button [checked]="versionId === version.id"  [value]="version.id">
-                <strong>{{ version.name }} {{ version.default ? '(default)' : '' }} {{ version.standalone ? '(standalone)' : '' }}</strong>
+                <strong>{{ version.name }} {{ version.default ? '(default)' : '' }} {{ version.standalone ? '(standalone)' : '' }}</strong>  <!-- TODO #9699 i18n-->
               </mat-radio-button>
             </mat-radio-group>
             <button mat-icon-button (click)="edit(version.id);$event.stopPropagation()" matTooltip="Edit Version">

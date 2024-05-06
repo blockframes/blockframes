@@ -26,9 +26,17 @@ const rightTypes = {
   unknown: 'Autre'
 } as const
 
+const statementParty = {
+  salesAgent: 'Sales Agent',
+  mainDistributor: 'Distributor',
+  producer: 'Beneficiary',
+  directSales: 'Direct Sales',
+} as const;
+
 export const staticModeli18n = {
   fr: {
     rightholderRoles,
-    rightTypes
+    rightTypes,
+    statementParty
   }
 };

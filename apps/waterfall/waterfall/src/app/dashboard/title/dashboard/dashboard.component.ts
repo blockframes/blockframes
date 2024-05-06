@@ -327,7 +327,7 @@ export class DashboardComponent {
     @Optional() private intercom: Intercom,
   ) {
     this.shell.setDate(undefined);
-    this.dynTitle.setPageTitle(this.shell.movie.title.international, 'Waterfall Dashboard');
+    this.dynTitle.setPageTitle(this.shell.movie.title.international, $localize`Waterfall Dashboard`);
   }
 
   private getLastHistoryPerYear(history: History[]) {

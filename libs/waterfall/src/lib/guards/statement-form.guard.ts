@@ -41,10 +41,10 @@ export class StatementFormGuard<T extends StartementFormGuardedComponent> implem
     if (component.form.pristine) return true;
     const dialogRef = this.dialog.open(ConfirmComponent, {
       data: createModalData({
-        title: 'You are about to leave the form',
-        question: 'Some changes have not been saved. If you leave now, you might lose these changes',
-        cancel: 'Cancel',
-        confirm: 'Leave anyway'
+        title: $localize`You are about to leave the form`,
+        question: $localize`Some changes have not been saved. If you leave now, you might lose these changes`,
+        cancel: $localize`Cancel`,
+        confirm: $localize`Leave anyway`
       }, 'small'),
       autoFocus: false
     });

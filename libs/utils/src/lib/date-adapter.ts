@@ -1,5 +1,6 @@
 import { NativeDateAdapter } from '@angular/material/core';
 import { format, parse } from 'date-fns';
+import '@angular/localize/init';
 
 /**
  * @dev adapted from https://stackblitz.com/edit/angular-datepicker-custom-adapter?file=app%2Fdate-adapter.component.ts

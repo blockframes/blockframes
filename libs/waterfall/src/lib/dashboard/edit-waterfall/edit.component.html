@@ -1,5 +1,5 @@
 
-<h1>{{ createMode ? 'Create' : 'Edit' }} Waterfall for {{ shell.movie.title.international }}</h1>
+<h1>{{ createMode ? 'Create' : 'Edit' }} Waterfall for {{ shell.movie.title.international }}</h1> <!-- TODO #9699 i18n -->
 
 <mat-stepper #stepper (click)="onStepClicked($event)" linear>
   <!-- override default stepper icons for the "edit" & "done" steps -->
@@ -11,7 +11,7 @@
   </ng-template>
 
   <mat-step [completed]="contractForm.pristine">
-    <ng-template matStepLabel>Add Contracts</ng-template>
+    <ng-template matStepLabel i18n>Add Contracts</ng-template>
     <ng-template matStepContent>
       <div class="surface">
         <waterfall-contract-list [contractForm]="contractForm" (redirectToBuilder)="redirectToBuilder()"></waterfall-contract-list>
@@ -21,14 +21,14 @@
           <logo-spinner></logo-spinner>
         </ng-container>
         <ng-template #editContracts>
-          <p *ngIf="invalidDocument$ | async" class="mat-error">Add at least 1 contract to continue</p>
+          <p *ngIf="invalidDocument$ | async" class="mat-error" i18n>Add at least 1 contract to continue</p>
           <button mat-flat-button color="primary" [disabled]="invalidDocument$ | async" (click)="next()">
-            <span>Continue</span>
+            <span i18n>Continue</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </button>
           <button mat-button class="save" (click)="exit()">
             <mat-icon svgIcon="save"></mat-icon>
-            <span>Save & Come back later</span>
+            <span i18n>Save & Come back later</span>
           </button>
         </ng-template>
       </article>
@@ -36,51 +36,51 @@
   </mat-step>
 
   <mat-step completed>
-    <ng-template matStepLabel>Add Right Holders</ng-template>
+    <ng-template matStepLabel i18n>Add Right Holders</ng-template>
     <waterfall-rightholder-form [rightholdersForm]="rightholdersForm" [waterfall]="shell.waterfall"></waterfall-rightholder-form>
     <article>
       <ng-container *ngIf="updating$ | async; else editRightHolders">
         <logo-spinner></logo-spinner>
       </ng-container>
       <ng-template #editRightHolders>
-        <p *ngIf="noProducer$ | async" class="mat-error">There might be only one {{ 'producer' | toLabel: 'rightholderRoles' }} per film</p>
+        <p *ngIf="noProducer$ | async" class="mat-error" i18n>There might be only one {{ 'producer' | toLabel: 'rightholderRoles' }} per film</p>
         <section>
           <button mat-button color="primary" (click)="previous()">
             <mat-icon svgIcon="arrow_back"></mat-icon>
-            <span>Back</span>
+            <span i18n>Back</span>
           </button>
           <button mat-flat-button color="primary" (click)="next()" [disabled]="rightholdersForm.invalid || (noProducer$ | async)">
-            <span>Continue</span>
+            <span i18n>Continue</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </button>
         </section>
         <button mat-button class="save" (click)="exit()" [disabled]="rightholdersForm.invalid">
           <mat-icon svgIcon="save"></mat-icon>
-          <span>Save & Come back later</span>
+          <span i18n>Save & Come back later</span>
         </button>
       </ng-template>
     </article>
   </mat-step>
 
   <mat-step>
-    <ng-template matStepLabel>Build Waterfall</ng-template>
+    <ng-template matStepLabel i18n>Build Waterfall</ng-template>
     <ng-container *ngIf="(manualCreation$ | async) || (shell.sources$ | async)?.length > 0 || (shell.rights$ | async)?.length > 0; else noWaterfall">
       <waterfall-version-selector [ngClass]="(shell.versionId$ | async) ? '' : 'hide'"></waterfall-version-selector>
       <waterfall-graph (canLeaveGraphForm)="canLeaveGraphForm = $event"></waterfall-graph>
     </ng-container>
     <ng-template #noWaterfall>
       <article class="surface">
-        <h1>Build your Waterfall</h1>
-        <p>Please choose if you want to create a waterfall yourself or import one, or else our team can do it for you.</p>
-        <p>Do you need help? <a>Contact our team.</a></p>
+        <h1 i18n>Build your Waterfall</h1>
+        <p i18n>Please choose if you want to create a waterfall yourself or import one, or else our team can do it for you.</p>
+        <p i18n>Do you need help? <a>Contact our team.</a></p>
         <section>
           <a class="surface" (click)="displayGraph()">
             <img asset="add_draft.svg" alt="Create waterfall image">
-            <button mat-button color="primary">Create Waterfall yourself</button>
+            <button mat-button color="primary" i18n>Create Waterfall yourself</button>
           </a>
           <a class="surface" (click)="openIntercom()">
             <img asset="feature_key3.svg" alt="Ask out team image">
-            <button mat-button color="primary">Ask Blockframes Team to do it!</button>
+            <button mat-button color="primary" i18n>Ask Blockframes Team to do it!</button>
           </a>
         </section>
       </article>
@@ -93,21 +93,21 @@
         <section>
           <button mat-button color="primary" (click)="previous()">
             <mat-icon svgIcon="arrow_back"></mat-icon>
-            <span>Back</span>
+            <span i18n>Back</span>
           </button>
           <button 
             mat-flat-button 
             color="primary"
             [disabled]="(shell.canInitWaterfall$ | async) === false"
             [matTooltip]="(shell.canInitWaterfall$ | async) === false  ? 'Missing data to publish Waterfall. Make sure to have Contracts and Receipt Shares' : ''"
-            (click)="publishWaterfall()">
+            (click)="publishWaterfall()"> <!-- TODO #9699 tooltip & span-->
             <span>{{ createMode ? 'Publish' : 'Update' }} Waterfall</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </button>
         </section>
         <button mat-button class="save" (click)="exit()">
           <mat-icon svgIcon="save"></mat-icon>
-          <span>Save & Come back later</span>
+          <span i18n>Save & Come back later</span>
         </button>
       </ng-template>
     </article>

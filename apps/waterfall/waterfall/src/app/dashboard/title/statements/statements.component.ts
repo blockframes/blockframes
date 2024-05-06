@@ -60,7 +60,7 @@ function initStatementChips(statements: Statement[]): StatementChipConfig[] {
     {
       selected: false,
       key,
-      value: key === 'producer' ? 'Financiers / Co-Producers / Authors...' : statementType[key],
+      value: key === 'producer' ? 'Financiers / Co-Producers / Authors...' : statementType[key], // TODO #9699  lang
       ...value,
       // producer statements are visible only if there are reported statements from distributors or direct sales
       visible: key === 'producer' ? hasDistribOrDirectSalesReportedStatements : value.visible,
@@ -150,32 +150,32 @@ export class StatementsComponent implements OnInit, OnDestroy {
     @Optional() private intercom: Intercom,
   ) {
     this.shell.setDate(this.currentDate);
-    this.dynTitle.setPageTitle(this.shell.movie.title.international, 'Statements');
+    this.dynTitle.setPageTitle(this.shell.movie.title.international, $localize`Statements`);
   }
 
   async ngOnInit() {
 
     if (!this.shell.currentRightholder) {
-      this.snackbar.open(`Organization "${this.orgService.org.name}" is not associated to any rightholders.`, this.shell.canBypassRules ? 'EDIT RIGHT HOLDERS' : 'ASK FOR HELP', { duration: 5000 })
+      this.snackbar.open($localize`Organization "${this.orgService.org.name}" is not associated to any rightholders.`, this.shell.canBypassRules ? $localize`EDIT RIGHT HOLDERS` : $localize`ASK FOR HELP`, { duration: 5000 })
         .onAction()
         .subscribe(() => {
           if (this.shell.canBypassRules) {
             this.router.navigate(['c/o/dashboard/title', this.shell.waterfall.id, 'right-holders']);
           } else {
-            this.intercom.show(`My organization "${this.orgService.org.name}" is not associated to any rightholders in the waterfall "${this.shell.movie.title.international}"`);
+            this.intercom.show($localize`My organization "${this.orgService.org.name}" is not associated to any rightholders in the waterfall "${this.shell.movie.title.international}"`);
           }
         });
       return;
     }
 
     if (!this.producer) {
-      this.snackbar.open(`${toLabel('producer', 'rightholderRoles')} is not defined.`, this.shell.canBypassRules ? 'WATERFALL MANAGEMENT' : 'ASK FOR HELP', { duration: 5000 })
+      this.snackbar.open(`${toLabel('producer', 'rightholderRoles')} is not defined.`, this.shell.canBypassRules ? $localize`WATERFALL MANAGEMENT` : $localize`ASK FOR HELP`, { duration: 5000 }) // TODO #9699 tolabel lang
         .onAction()
         .subscribe(() => {
           if (this.shell.canBypassRules) {
             this.router.navigate(['c/o/dashboard/title', this.shell.waterfall.id, 'init']);
           } else {
-            this.intercom.show(`${toLabel('producer', 'rightholderRoles')} is not defined in the waterfall "${this.shell.movie.title.international}"`);
+            this.intercom.show(`${toLabel('producer', 'rightholderRoles')} is not defined in the waterfall "${this.shell.movie.title.international}"`); // TODO #9699 tolabel lang
           }
         });
       return;
@@ -183,23 +183,23 @@ export class StatementsComponent implements OnInit, OnDestroy {
 
     const rightsSub = this.shell.rights$.subscribe(async rights => {
       if (!rights.find(r => r.rightholderId === this.producer.id)) {
-        this.snackbar.open(`${toLabel('producer', 'rightholderRoles')} should have at least one receipt share in the waterfall.`, this.shell.canBypassRules ? 'WATERFALL MANAGEMENT' : 'ASK FOR HELP', { duration: 5000 })
+        this.snackbar.open(`${toLabel('producer', 'rightholderRoles')} should have at least one receipt share in the waterfall.`, this.shell.canBypassRules ? $localize`WATERFALL MANAGEMENT` : $localize`ASK FOR HELP`, { duration: 5000 }) // TODO #9699 tolabel lang
           .onAction()
           .subscribe(() => {
             if (this.shell.canBypassRules) {
               this.router.navigate(['c/o/dashboard/title', this.shell.waterfall.id, 'init']);
             } else {
-              this.intercom.show(`${toLabel('producer', 'rightholderRoles')} is not defined in the waterfall "${this.shell.movie.title.international}"`);
+              this.intercom.show(`${toLabel('producer', 'rightholderRoles')} is not defined in the waterfall "${this.shell.movie.title.international}"`); // TODO #9699 tolabel lang
             }
           });
       } else if (!canOnlyReadStatements(this.shell.currentRightholder, this.shell.canBypassRules) && !rights.find(r => r.rightholderId === this.shell.currentRightholder.id)) {
-        this.snackbar.open('Current rightholder should have at least one receipt share in the waterfall.', this.shell.canBypassRules ? 'WATERFALL MANAGEMENT' : 'ASK FOR HELP', { duration: 5000 })
+        this.snackbar.open($localize`Current rightholder should have at least one receipt share in the waterfall.`, this.shell.canBypassRules ? $localize`WATERFALL MANAGEMENT` : $localize`ASK FOR HELP`, { duration: 5000 })
           .onAction()
           .subscribe(() => {
             if (this.shell.canBypassRules) {
               this.router.navigate(['c/o/dashboard/title', this.shell.waterfall.id, 'init']);
             } else {
-              this.intercom.show(`${toLabel('producer', 'rightholderRoles')} is not defined in the waterfall "${this.shell.movie.title.international}"`);
+              this.intercom.show(`${toLabel('producer', 'rightholderRoles')} is not defined in the waterfall "${this.shell.movie.title.international}"`); // TODO #9699 tolabel lang
             }
           });
       }
@@ -316,13 +316,13 @@ export class StatementsComponent implements OnInit, OnDestroy {
 
     this.dialog.open(ConfirmComponent, {
       data: createModalData({
-        title: 'Are you sure?',
-        question: 'If you remove a statement from the waterfall, you will be able to create it again.',
-        confirm: 'Yes, remove statement.',
-        cancel: 'No, keep statement.',
+        title: $localize`Are you sure?`,
+        question: $localize`If you remove a statement from the waterfall, you will be able to create it again.`,
+        confirm: $localize`Yes, remove statement.`,
+        cancel: $localize`No, keep statement.`,
         onConfirm: async () => {
           await this.statementService.remove(statement.id, { params: { waterfallId: statement.waterfallId } })
-          this.snackbar.open('Statement deleted', 'close', { duration: 5000 });
+          this.snackbar.open($localize`Statement deleted`, 'close', { duration: 5000 });
         }
       }, 'small'),
       autoFocus: false

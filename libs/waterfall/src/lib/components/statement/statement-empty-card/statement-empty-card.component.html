@@ -1,11 +1,11 @@
-<a class="surface" *ngIf="((isDisabled$ | async) === false && !disabled) else isDisabled" matTooltip="Add {{ type$.value | toLabel: 'statementType' }} Statement">
+<a class="surface" *ngIf="((isDisabled$ | async) === false && !disabled) else isDisabled" matTooltip="Add {{ type$.value | toLabel: 'statementType' : true }} Statement" i18n-matTooltip>
   <img asset="add_statement.svg" alt="Add Statement image">
-  <button mat-button color="primary">Add {{ type$.value | toLabel: 'statementType' }} Statement</button>
+  <button mat-button color="primary" i18n>Add {{ type$.value | toLabel: 'statementType' : true }} Statement</button>
 </a>
 
 <ng-template #isDisabled>
-  <div class="surface" matTooltip="No contract found for this kind of statement">
+  <div class="surface" matTooltip="No contract found for this kind of statement" i18n-matTooltip>
     <img asset="add_statement.svg" alt="Add Statement image">
-    <button mat-button color="primary">Add {{ type$.value | toLabel: 'statementType' }} Statement</button>
+    <button mat-button color="primary" i18n>Add {{ type$.value | toLabel: 'statementType' : true }} Statement</button>
   </div>
 </ng-template>

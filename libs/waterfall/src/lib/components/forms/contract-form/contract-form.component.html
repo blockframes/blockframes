@@ -16,7 +16,7 @@
     i18n-placeholder
     [form]="form.get('licensorName')"
   ></bf-autocomplete>
-  <static-select [control]="form.get('licensorRole')" scope="rightholderRoles" mode="outline" multiple required [disabledValues]="disabledValues.licensors">
+  <static-select [control]="form.get('licensorRole')" scope="rightholderRoles" mode="outline" multiple required [disabledValues]="disabledValues.licensors" bfi18n>
     <mat-label i18n>Licensor Waterfall Role</mat-label>
     <mat-error i18n>This field is mandatory</mat-error>
   </static-select>
@@ -32,7 +32,7 @@
     i18n-placeholder
     [form]="form.get('licenseeName')"
   ></bf-autocomplete>
-  <static-select [control]="form.get('licenseeRole')" scope="rightholderRoles" mode="outline" multiple required [disabledValues]="disabledValues.licensees">
+  <static-select [control]="form.get('licenseeRole')" scope="rightholderRoles" mode="outline" multiple required [disabledValues]="disabledValues.licensees" bfi18n>
     <mat-label i18n>Licensee Waterfall Role</mat-label>
     <mat-error i18n>This field is mandatory</mat-error>
   </static-select>
@@ -138,7 +138,7 @@
         scope="medias"
         label="Choose Medias"
         i18n-label
-        i18n-placeholder
+        i18n-filterPlaceholder
         selectIcon="play_arrow"
         displayAll="All Medias"
         filterPlaceholder="Specify territories to filter"
@@ -148,7 +148,7 @@
         scope="territories"
         label="Choose Territories"
         i18n-label
-        i18n-placeholder
+        i18n-filterPlaceholder
         displayAll="World"
         filterPlaceholder="Specify territories to filter"
         [control]="term.get('territories')"
