@@ -40,6 +40,4 @@ export function getUserLocaleId(): string {
   }
 }
 
-export const supportedLanguages = ['en', 'fr'];
-
 export const dateInputFormat = getUserDefaultDateFormat().toUpperCase();

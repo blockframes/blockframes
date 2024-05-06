@@ -25,6 +25,7 @@ export class StaticSelectComponent implements OnInit {
   @Input() disabledValues: string[];
   @Input() only: string[];
   @Input() prefixIcon: string;
+  @Input() @boolean bfi18n: boolean;
 
   ngOnInit() {
     if (this.withoutValues) {

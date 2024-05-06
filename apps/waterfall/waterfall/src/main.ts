@@ -4,7 +4,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
 import { production } from '@env';
 import { loadTranslations } from '@angular/localize';
-import { supportedLanguages } from '@blockframes/utils/date-adapter';
+import { supportedLanguages } from '@blockframes/model';
 import { registerLocaleData } from '@angular/common';
 
 if (production) {
@@ -33,7 +33,7 @@ initLanguage(appLang);
  * @returns 
  */
 async function initLanguage(locale: string): Promise<void> {
-  if (locale === 'en' || !supportedLanguages.includes(locale)) return;
+  if (locale === 'en' || !Object.keys(supportedLanguages).includes(locale)) return;
 
   const resp = await fetch('/assets/messages.' + locale + '.json');
   const text = await resp.text();

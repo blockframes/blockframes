@@ -115,7 +115,7 @@
             <p *ngIf="(selected$.value | isStep : rights)">Fill the following fields to define the Step Details.</p>
 
             <ng-container *ngIf="!(selected$.value | isStep : rights)">
-              <static-select *ngIf="!(rightForm.get('type').value | isHorizontal)" [control]="rightForm.get('type')" scope="rightTypes" [withoutValues]="['horizontal','vertical']">
+              <static-select *ngIf="!(rightForm.get('type').value | isHorizontal)" [control]="rightForm.get('type')" scope="rightTypes" [withoutValues]="['horizontal','vertical']" bfi18n>
                 <mat-label>Type</mat-label>
               </static-select>
 

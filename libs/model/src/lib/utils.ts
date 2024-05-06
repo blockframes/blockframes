@@ -1,7 +1,7 @@
 import { addYears, subYears } from 'date-fns';
 import { Person } from './identity';
 import { LanguageRecord } from './movie';
-import { App, MovieCurrency, Scope, staticModel } from './static';
+import { App, MovieCurrency, Scope, staticModel, staticModeli18n } from './static';
 import { mainCurrency } from './waterfall';
 
 export interface ErrorResultResponse {
@@ -280,19 +280,21 @@ export function toLabel(
   value: string | string[],
   scope: Scope,
   joinWith?: string,
-  endWith?: string
+  endWith?: string,
+  lang?: SupportedLanguages
 ): string {
   if (!value) return '';
   if (!scope && typeof value === 'string') return value;
   try {
+    const data = (lang && staticModeli18n[lang] && staticModeli18n[lang][scope]) ? staticModeli18n[lang][scope] : staticModel[scope];
     if (Array.isArray(value)) {
       return smartJoin(
-        value.map((val) => staticModel[scope][val]),
+        value.map((val) => data[val] || staticModel[scope][val]),
         joinWith,
         endWith
       );
     } else {
-      return staticModel[scope][value];
+      return data[value] || staticModel[scope][value];
     }
   } catch (error) {
     console.error(`Could not find label for key "${value}" in scope "${scope}"`);
@@ -404,3 +406,10 @@ export function sortByDate<T>(objects: T[], field: string) {
   const resolve = (path: string, obj: T) => path.split('.').reduce((prev, curr) => prev?.[curr], obj);
   return objects.sort((a, b) => resolve(field, a).getTime() - resolve(field, b).getTime());
 }
+
+export const supportedLanguages = {
+  en: 'English',
+  fr: 'French',
+} as const
+
+export type SupportedLanguages = keyof typeof supportedLanguages;

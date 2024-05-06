@@ -6,7 +6,7 @@
     {{ name }}
   </ng-template>
   <ng-template *ngIf="columns.roles" colRef="roles" [label]="columns.roles" let-roles sort>
-    {{ roles | toLabel: 'rightholderRoles' }}
+    {{ roles | toLabel: 'rightholderRoles' : true }}
   </ng-template>
   <ng-template *ngIf="columns.lockedVersionId" colRef="lockedVersionId" [label]="columns.lockedVersionId" let-lockedVersionId sort>
     {{ lockedVersionId | versionName: waterfall }}
