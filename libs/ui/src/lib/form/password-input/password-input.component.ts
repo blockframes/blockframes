@@ -14,4 +14,8 @@ export class PasswordInputComponent {
   @Input() public errorStateMatcher: ErrorStateMatcher;
   @Input() public label: string;
   public hidePassword = true;
+  
+  passwordTooltip() {
+    return this.hidePassword ? $localize`Show Password` : $localize`Hide Password`
+  }
 }

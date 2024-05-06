@@ -8,16 +8,16 @@
     </button>
     <ng-content select="[title]"></ng-content>
     <p class="mat-body-2">{{ cropDimensions }}</p>
-    <p class="mat-caption">Accepted Formats: {{ accept.join(', ') }}<br/>
+    <p class="mat-caption" i18n>Accepted Formats: {{ accept.join(', ') }}<br/>
     Max file size: {{ maxSize | fileSize }}</p>
-    <p class="mat-caption">Drag and drop a file here or</p>
-    <button mat-button (click)="fileUploader.click()">Browse computer</button> 
+    <p class="mat-caption" i18n>Drag and drop a file here or</p>
+    <button mat-button (click)="fileUploader.click()" i18n>Browse computer</button> 
   </article>
 
   <!-- Hovering -->
   <article *ngSwitchCase="'hovering'" class="drop-zone">
     <img asset="add_files.svg" alt="upload image" class="picture-hover">
-    <h3>Drop your file here</h3>
+    <h3 i18n>Drop your file here</h3>
   </article>
 
   <!-- Crop -->
@@ -28,7 +28,7 @@
       <button mat-mini-fab color="primary" (click)="cropIt()" matTooltip="Crop Image" test-id="crop-image">
         <mat-icon svgIcon="check"></mat-icon>
       </button>
-      <button mat-mini-fab color="warn" (click)="nextStep('drop')" matTooltip="Cancel & Choose another picture">
+      <button mat-mini-fab color="warn" (click)="nextStep('drop')" matTooltip="Cancel & Choose another picture" i18n-matTooltip>
         <mat-icon svgIcon="close"></mat-icon>
       </button>
     </div>
@@ -40,15 +40,15 @@
     <div class="buttons" fxLayout="row" fxLayoutAlign="space-evenly center">
       <ng-container *ngIf="useFileUploader">
         <button mat-mini-fab color="primary" (click)="fileUploader.click()">
-          <mat-icon svgIcon="image" matTooltip="Select new picture"></mat-icon>
+          <mat-icon svgIcon="image" matTooltip="Select new picture" i18n-matTooltip></mat-icon>
         </button>
       </ng-container>
       <button mat-mini-fab color="accent" *ngIf="(previewUrl$ | async) as url">
-        <mat-icon [cdkCopyToClipboard]="url" svgIcon="archive" matTooltip="Copy image url"></mat-icon>
+        <mat-icon [cdkCopyToClipboard]="url" svgIcon="archive" matTooltip="Copy image url" i18n-matTooltip></mat-icon>
       </button>
       <ng-container *ngIf="useDelete">
         <button mat-mini-fab color="warn" (click)="delete()">
-          <mat-icon svgIcon="delete" matTooltip="Delete current picture"></mat-icon>
+          <mat-icon svgIcon="delete" matTooltip="Delete current picture" i18n-matTooltip></mat-icon>
         </button>
       </ng-container>
     </div>

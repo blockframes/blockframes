@@ -81,16 +81,16 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
 
     switch (ratio) {
       case 'square':
-        this.cropDimensions = 'Recommended : 512 x 512 px';
+        this.cropDimensions = $localize`Recommended : 512 x 512 px`;
         break;
       case 'poster':
-        this.cropDimensions = 'Ratio : 3:4';
+        this.cropDimensions = $localize`Ratio : 3:4`;
         break;
       case 'banner':
-        this.cropDimensions = 'Ratio : 16:9';
+        this.cropDimensions = $localize`Ratio : 16:9`;
         break;
       case 'still':
-        this.cropDimensions = 'Ratio : 16/10';
+        this.cropDimensions = $localize`Ratio : 16/10`;
         break;
       default:
         throw new Error('Unknown ratio');

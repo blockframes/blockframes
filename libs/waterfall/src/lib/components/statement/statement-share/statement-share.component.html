@@ -1,7 +1,7 @@
 <global-modal>
-  <h2>Share your Statement</h2>
+  <h2 i18n>Share your Statement</h2>
   <header>
-    <p class="mat-body-1">
+    <p class="mat-body-1" i18n>
       Provide and verify Recipient’s email before sending. <br/> 
       You can add several Recipients in a time.
     </p>
@@ -16,25 +16,25 @@
           <span>{{email}}</span>
           <mat-icon svgIcon="cancel" matChipRemove></mat-icon>
         </mat-chip>
-        <input [formControl]="emailForm" placeholder="Add an email"
+        <input [formControl]="emailForm" placeholder="Add an email" i18n-placeholder
                [matChipInputFor]="chipList"
                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                [matChipInputAddOnBlur]="true"
                (matChipInputTokenEnd)="add()">
       </mat-chip-list>
-      <mat-label>Email Address</mat-label>
+      <mat-label i18n>Email Address</mat-label>
       <mat-icon matSuffix svgIcon="mail"></mat-icon>
-      <mat-hint>Enter emails separated by a comma.</mat-hint>
+      <mat-hint i18n>Enter emails separated by a comma.</mat-hint>
     </mat-form-field>
     <p class="mat-caption text-warn" *ngIf="error"><i>{{ error }}</i></p>
   </section>
 
   <mat-dialog-actions>
     <button mat-flat-button color="primary" (click)="confirm()" [disabled]="emailForm.value === ''">
-      <span>Send</span>
+      <span i18n>Send</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>
-    <button mat-button (click)="close()">
+    <button mat-button (click)="close()" i18n>
       Close window
     </button>
   </mat-dialog-actions>

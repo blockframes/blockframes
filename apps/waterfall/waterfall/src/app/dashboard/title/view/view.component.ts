@@ -32,7 +32,7 @@ export class TitleViewComponent {
     },
     {
       path: 'amortization',
-      label: 'Film Amortization',
+      label: $localize`Film Amortization`,
       requireKeys: ['admin']
     },
     {

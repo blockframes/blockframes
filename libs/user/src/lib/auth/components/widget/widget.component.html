@@ -13,11 +13,11 @@
           <mat-nav-list>
             <a mat-list-item routerLink="/c/o/account/profile" test-id="profile">
               <mat-icon matListIcon svgIcon="account_circle"></mat-icon>
-              <span matLine>Profile</span>
+              <span matLine i18n>Profile</span>
             </a>
             <a mat-list-item [routerLink]="['/c/o/organization', organization.id]" test-id="widget-organization">
               <mat-icon matListIcon svgIcon="business"></mat-icon>
-              <span matLine>Organization</span>
+              <span matLine i18n>Organization</span>
             </a>
             <ng-container *ngIf="canSwitchTheme">
               <mat-list-item *ngIf="theme$ | async as theme">
@@ -30,7 +30,7 @@
           <footer widgetFooter>
             <button mat-button test-id="logout" color="warn" (click)="logout()" test-id="auth-logout">
               <mat-icon svgIcon="logout"></mat-icon>
-              <span>Log out</span>
+              <span i18n>Log out</span>
             </button>
           </footer>
         </widget-card>

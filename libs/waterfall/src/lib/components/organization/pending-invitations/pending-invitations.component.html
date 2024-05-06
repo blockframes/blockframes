@@ -1,21 +1,21 @@
 <section class="surface" *ngIf="invitations?.length">
-  <h1>Pending Right Holders ({{ invitations.length }})</h1>
+  <h1  i18n>Pending Right Holders ({{ invitations.length }})</h1>
   <bf-table *ngIf="invitations.length" [source]="invitations" pagination="10" useFilter>
-    <ng-template colRef="toUser" label="NAME" let-user sort  [filter]="filters.displayName">
+    <ng-template colRef="toUser" label="NAME" let-user sort  [filter]="filters.displayName" i18n-label>
       <span *ngIf="user.firstName && user.lastName else notRegistered">{{ user | displayName }}</span>
     </ng-template>
-    <ng-template colRef="data" label="Waterfall Organization" let-data sort>
+    <ng-template colRef="data" label="Waterfall Organization" let-data sort i18n-label>
       <span>{{ data.rightholderIds[0] | rightholderName: waterfall }}</span>
     </ng-template>
-    <ng-template colRef="guestOrg" label="Representative Organization" let-guestOrg sort [filter]="filters.orgName">
+    <ng-template colRef="guestOrg" label="Representative Organization" let-guestOrg sort [filter]="filters.orgName" i18n-label>
       <span *ngIf="guestOrg else notRegistered" >{{ guestOrg.name }}</span>
     </ng-template>
-    <ng-template colRef="toUser.email" label="EMAIL" let-email sort>
+    <ng-template colRef="toUser.email" label="EMAIL" let-email sort  i18n-label>
       <span>{{ email }}</span>
     </ng-template>
-    <ng-template colRef="id" label="ACTIONS" let-id let-invitation="item" sticky>
+    <ng-template colRef="id" label="ACTIONS" let-id let-invitation="item" sticky i18n-label>
       <div>
-        <button *ngIf="invitation.status !== 'accepted'" mat-icon-button matTooltip="Resend Invitation" (click)="resendInvitation(invitation)">
+        <button *ngIf="invitation.status !== 'accepted'" mat-icon-button matTooltip="Resend Invitation" (click)="resendInvitation(invitation)" i18n-matTooltip>
           <mat-icon svgIcon="refresh"></mat-icon>
         </button>
         <button mat-icon-button matTooltip="Cancel Invitation" (click)="removeRightHolder(invitation)">
@@ -25,7 +25,7 @@
     </ng-template>
   </bf-table>
 
-  <ng-template #notRegistered>
+  <ng-template #notRegistered i18n>
     Not Registered yet
   </ng-template>
 </section>

@@ -7,10 +7,10 @@
 
 <section class="surface">
   <header>
-    <h1>Involved Companies</h1>
+    <h1 i18n>Involved Companies</h1>
     <a *ngIf="shell.canBypassRules" mat-button [routerLink]="['../right-holders-management']" >
       <mat-icon svgIcon="business"></mat-icon>
-      <span>Manage Companies</span>
+      <span i18n>Manage Companies</span>
     </a>
   </header>
   <waterfall-rightholder-table *ngIf="shell.waterfall$ | async as waterfall" [waterfall]="waterfall"></waterfall-rightholder-table>
@@ -18,7 +18,7 @@
 
 <section class="surface" *ngIf="shell.canBypassRules">
   <header>
-    <h1>Accepted Right Holders</h1>
+    <h1 i18n>Right Holders using Blockframes</h1>
   </header>
   <waterfall-organization-table></waterfall-organization-table>
 </section>

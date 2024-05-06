@@ -2,11 +2,11 @@
 
   <h2>Waterfall</h2>
 
-  <div >
-    <mat-label>Amount Display</mat-label>
+  <div>
+    <mat-label i18n>Amount Display</mat-label>
     <mat-button-toggle-group [formControl]="revenueModeControl">
-      <mat-button-toggle value="actual">Statement Amount</mat-button-toggle>
-      <mat-button-toggle value="calculated">Total to Date</mat-button-toggle>
+      <mat-button-toggle value="actual" i18n>Statement Amount</mat-button-toggle>
+      <mat-button-toggle value="calculated" i18n>Total to Date</mat-button-toggle>
     </mat-button-toggle-group>
   </div>
 
@@ -30,29 +30,29 @@
   </mat-accordion>
 
   <mat-form-field appearance="outline" >
-    <mat-label>Highlight Right Holder</mat-label>
+    <mat-label i18n>Highlight Right Holder</mat-label>
     <mat-select [formControl]="highlightedRightHolderControl" placeholder="Choose Right Holders" multiple>
       <mat-option *ngFor="let rightHolder of (rightholders$ | async)" [value]="rightHolder.id">{{ rightHolder.name }}</mat-option>
     </mat-select>
   </mat-form-field>
 
   <mat-form-field appearance="outline" >
-    <mat-label>Hide Right Holder</mat-label>
+    <mat-label i18n>Hide Right Holder</mat-label>
     <mat-select [formControl]="hiddenRightHolderControl" placeholder="Choose Right Holders" multiple>
       <mat-option *ngFor="let rightHolder of (rightholders$ | async)" [value]="rightHolder.id">{{ rightHolder.name }}</mat-option>
     </mat-select>
   </mat-form-field>
 
   <mat-form-field appearance="outline">
-    <mat-label>Highlight Revenue Source</mat-label>
+    <mat-label i18n>Highlight Revenue Source</mat-label>
     <mat-select [formControl]="highlightedSourceControl" placeholder="Choose Sources" multiple>
       <mat-option *ngFor="let source of (sources$ | async)" [value]="source.id">{{ source.name }}</mat-option>
     </mat-select>
   </mat-form-field>
 
-  <h5>Breakdown by Right Holder</h5>
+  <h5 i18n>Breakdown by Right Holder</h5>
   <mat-form-field appearance="outline">
-    <mat-label>Filter Right Holders by Activity</mat-label>
+    <mat-label i18n>Filter Right Holders by Activity</mat-label>
     <mat-select [formControl]="rightHolderFilterControl" multiple>
       <mat-option *ngFor="let role of (roles$ | async)" [value]="role">{{ role | toLabel: 'rightholderRoles' }}</mat-option>
     </mat-select>

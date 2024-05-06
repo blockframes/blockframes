@@ -23,13 +23,13 @@ export class MemberRepertoryComponent {
   public displayRole(role: UserRole) {
     switch (role) {
       case 'superAdmin':
-        return 'Super Admin';
+        return $localize`Super Admin`;
       case 'admin':
-        return 'Admin';
+        return $localize`Admin`;
       case 'member':
-        return 'Member';
+        return $localize`Member`;
       default:
-        return 'Member';
+        return $localize`Member`;
     }
   }
 }

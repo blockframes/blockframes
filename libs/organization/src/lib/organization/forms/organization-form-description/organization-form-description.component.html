@@ -1,5 +1,5 @@
 <mat-form-field appearance="outline">
-  <mat-label>Activity</mat-label>
+  <mat-label i18n>Activity</mat-label>
   <mat-select [formControl]="activity" aria-label="activity description" test-id="activity">
     <mat-option *ngFor="let activity of activities | keyvalue" [value]="activity.key" [attr.test-id]="'option_' + activity.key">
       {{ activity.value }}
@@ -8,7 +8,7 @@
 </mat-form-field>
 
 <mat-form-field appearance="outline">
-  <mat-label>Activity Description</mat-label>
+  <mat-label i18n>Activity Description</mat-label>
   <textarea matInput
   [formControl]="description"
   cdkTextareaAutosize
@@ -16,6 +16,6 @@
   cdkAutosizeMinRows="4"
   maxlength="500"
   test-id="description"></textarea>
-  <mat-hint>The description will be shown on your page and will help users to learn more about your company.</mat-hint>
-  <mat-hint align="end">Limited to 500 characters.</mat-hint>
+  <mat-hint i18n>The description will be shown on your page and will help users to learn more about your company.</mat-hint>
+  <mat-hint align="end" i18n>Limited to 500 characters.</mat-hint>
 </mat-form-field>

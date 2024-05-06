@@ -1,45 +1,45 @@
 <section class="surface">
 
   <article class="header">
-    <h2>Right Holders Information</h2>
+    <h2 i18n>Right Holders Information</h2>
     <button *ngIf="skippable" mat-button color="primary" (click)="skip.emit()">
-      <span>Skip and do it later</span>
+      <span i18n>Skip and do it later</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>
   </article>
 
-  <p>
+  <p i18n>
     Please add the companies that will be involved into the waterfall.
     <ng-container *ngIf="autoSave"> Changes are saved automatically.</ng-container>
   </p>
 
   <article *ngFor="let item of rightholdersForm.controls; let index = index; let last = last">
     <mat-form-field appearance="outline">
-      <mat-label>Company Name</mat-label>
+      <mat-label i18n>Company Name</mat-label>
       <mat-icon matPrefix svgIcon="business"></mat-icon>
-      <input matInput type="text" placeholder="Company Name" [formControl]="item.controls.name" />
+      <input matInput type="text" placeholder="Company Name" [formControl]="item.controls.name" i18n-placeholder />
     </mat-form-field>
 
     <static-select [control]="item.controls.roles" scope="rightholderRoles" multiple prefixIcon="supervisor"> 
-      <mat-label>Waterfall Role *</mat-label>
+      <mat-label i18n>Waterfall Role *</mat-label>
     </static-select>
 
     <ng-container *ngIf="!last; else isLast">
-      <button mat-icon-button class="delete" (click)="remove(index)" matTooltip="Delete Right Holder">
+      <button mat-icon-button class="delete" (click)="remove(index)" matTooltip="Delete Right Holder" i18n-matTooltip>
         <mat-icon svgIcon="delete"></mat-icon>
       </button>
     </ng-container>
     <ng-template #isLast>
-      <button mat-mini-fab color="primary" (click)="add()" matTooltip="Add Right Holder">
+      <button mat-mini-fab color="primary" (click)="add()" matTooltip="Add Right Holder" i18n-matTooltip>
         <mat-icon svgIcon="add"></mat-icon>
       </button>
     </ng-template>
   </article>
 
   <article *ngIf="rightholdersForm.controls.length === 0" class="no-rightholders">
-    <p>This title has no Right Holders. Start by creating one.</p>
+    <p i18n>This title has no Right Holders. Start by creating one.</p>
     <button mat-button color="primary" (click)="add('producer')">
-      <span>Add Right Holder</span>
+      <span i18n>Add Right Holder</span>
       <mat-icon svgIcon="add"></mat-icon>
     </button>
   </article>

@@ -36,7 +36,7 @@ export class MemberAddComponent {
       const emails: string[] = this.emailForm.value.split(',');
       const invalid = emails.filter(value => Validators.email({ value } as AbstractControl));
       if (invalid.length) {
-        this.error = `The following emails are invalid: ${invalid.join(', ')}.`;
+        this.error = $localize`The following emails are invalid: ${invalid.join(', ')}.`;
       } else {
         for (const email of emails) {
           if (!this.form.value.includes(email)) {
@@ -56,17 +56,17 @@ export class MemberAddComponent {
       this._isSending.next(true);
       const emails = Array.from(new Set(this.form.value.map(email => email.trim().toLowerCase())));
       const invitationsExist = await this.invitationService.hasUserAnOrgOrIsAlreadyInvited(emails);
-      if (invitationsExist) throw new Error('There is already an invitation existing for one or more of these users');
+      if (invitationsExist) throw new Error($localize`There is already an invitation existing for one or more of these users`);
       await this.invitationService.invite(emails, this.org).to('joinOrganization');
-      this.snackBar.open(multipleEmails ? 'Invitations sent.' : 'Invitation sent.', 'close', { duration: 5000 });
+      this.snackBar.open(multipleEmails ? $localize`Invitations sent.` : $localize`Invitation sent.`, 'close', { duration: 5000 });
       this._isSending.next(false);
       this.form.reset();
     } catch (err) {
       this._isSending.next(false);
-      if (err.message === 'There is already an invitation existing for one or more of these users') {
+      if (err.message === $localize`There is already an invitation existing for one or more of these users`) {
         this.snackBar.open(err.message, 'close', { duration: 5000 });
       } else {
-        this.snackBar.openFromComponent(SnackbarErrorComponent, { data: (`There was a problem sending your invitation${multipleEmails ? 's' : ''}...`), duration: 5000 });
+        this.snackBar.openFromComponent(SnackbarErrorComponent, { data: ($localize`There was a problem sending your invitation${multipleEmails ? 's' : ''}...`), duration: 5000 });
       }
     }
   }

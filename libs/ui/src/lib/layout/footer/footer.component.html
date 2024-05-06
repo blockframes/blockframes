@@ -3,15 +3,15 @@
   <div *ngIf="module">
     <!-- ATM there is no about page for festival and financiers -->
     <ng-container *ngIf="app === 'catalog'">
-      <a mat-button [routerLink]="['/c/o/'+module+'/about']">About us</a>
+      <a mat-button [routerLink]="['/c/o/'+module+'/about']" i18n>About us</a>
     </ng-container>
 
-    <a mat-button [routerLink]="['/c/o', module, 'contact']">Contact us</a>
-    <a mat-button [routerLink]="['/c/o', module, 'terms']">Legal Terms</a>
-    <a mat-button [routerLink]="['/c/o', module, 'privacy']">Privacy Policy</a>
+    <a mat-button [routerLink]="['/c/o', module, 'contact']" i18n>Contact us</a>
+    <a mat-button [routerLink]="['/c/o', module, 'terms']" i18n>Legal Terms</a>
+    <a mat-button [routerLink]="['/c/o', module, 'privacy']" i18n>Privacy Policy</a>
 
     <ng-container *ngIf="app === 'waterfall'">
-      <a mat-button [routerLink]="['/c/o', module, 'security']">Data Security</a>
+      <a mat-button [routerLink]="['/c/o', module, 'security']" i18n>Data Security</a>
     </ng-container>
   </div>
   <span class="mat-body-2">

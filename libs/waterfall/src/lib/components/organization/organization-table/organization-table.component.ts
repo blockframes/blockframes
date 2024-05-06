@@ -29,11 +29,11 @@ export class OrganizationTableComponent {
 
   @Input() baseUrl: string;
   @Input() columns: Record<string, string> = {
-    rightholder: 'Waterfall Organization',
-    org: 'Representative Organization',
-    isAdmin: 'Access',
-    lockedVersionId: 'Waterfall Version',
-    actions: 'Actions'
+    rightholder: $localize`Waterfall Organization`,
+    org: $localize`Representative Organization`,
+    isAdmin: $localize`Access`,
+    lockedVersionId: $localize`Waterfall Version`,
+    actions: $localize`Actions`
   };
 
   constructor(
@@ -49,23 +49,23 @@ export class OrganizationTableComponent {
 
   public async removeOrg(id: string) {
     if (this.orgService.org.id === id) {
-      this.snackBar.open('You cannot remove yourself from the Waterfall.', 'close', { duration: 5000 });
+      this.snackBar.open($localize`You cannot remove yourself from the Waterfall.`, 'close', { duration: 5000 });
       return;
     }
     await this.waterfallService.removeOrg(this.waterfall.id, id);
-    this.snackBar.open('Right Holder removed from Waterfall.', 'close', { duration: 5000 });
+    this.snackBar.open($localize`Right Holder removed from Waterfall.`, 'close', { duration: 5000 });
   }
 
   public async changeAccess(id: string, role: 'editor' | 'viewer') {
     if (this.orgService.org.id === id) {
-      this.snackBar.open('You cannot change your own access.', 'close', { duration: 5000 });
+      this.snackBar.open($localize`You cannot change your own access.`, 'close', { duration: 5000 });
       return;
     }
     // TODO #9692 if rightholder have producer role => always admin/editor
     const permission = await this.permissionService.getValue(id, { waterfallId: this.waterfall.id });
     permission.isAdmin = role === 'editor';
     await this.permissionService.update(permission, { params: { waterfallId: this.waterfall.id } });
-    this.snackBar.open('Access updated.', 'close', { duration: 5000 });
+    this.snackBar.open($localize`Access updated.`, 'close', { duration: 5000 });
   }
 
   public async changeVersion(rightholderId: string, versionId: string) {
@@ -77,7 +77,7 @@ export class OrganizationTableComponent {
     const rightholders = this.shell.waterfall.rightholders.map(r => r.id === rightholderId ? rightholder : r);
 
     await this.waterfallService.update({ id: this.waterfall.id, rightholders });
-    this.snackBar.open('Version updated', 'close', { duration: 3000 });
+    this.snackBar.open($localize`Version updated`, 'close', { duration: 3000 });
   }
 
   public changeRightholder(orgId: string, rightHolderId: string) {
@@ -93,7 +93,7 @@ export class OrganizationTableComponent {
           // TODO #9692 if rightholder have producer role => always admin/editor
           // TODO #9692 distributor/directsales should always be on default version
           await this.permissionService.update(permission, { params: { waterfallId: this.waterfall.id } });
-          this.snackBar.open('Right holder updated.', 'close', { duration: 5000 });
+          this.snackBar.open($localize`Right holder updated.`, 'close', { duration: 5000 });
         }
       })
     });

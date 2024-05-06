@@ -1,35 +1,35 @@
 <section>
-  <h1>Log in</h1>
+  <h1 i18n>Log in</h1>
   <mat-card>
     <form [formGroup]="signinForm" (ngSubmit)="submited.emit(signinForm)" fxLayout="column">
       <mat-form-field appearance="outline">
-        <mat-label>Email Address</mat-label>
+        <mat-label i18n>Email Address</mat-label>
         <input matInput type="email" placeholder="Email Address" formControlName="email" required test-id="signin-email" />
-        <mat-error *ngIf="signinForm.get('email').hasError('email') && !signinForm.get('email').hasError('required')">
+        <mat-error *ngIf="signinForm.get('email').hasError('email') && !signinForm.get('email').hasError('required')" i18n>
           Please enter a <strong>valid</strong> email address.
         </mat-error>
-        <mat-error *ngIf="signinForm.get('email').hasError('required')">
+        <mat-error *ngIf="signinForm.get('email').hasError('required')" i18n>
           Email Address is <strong>required</strong>.
         </mat-error>
       </mat-form-field>
-      <password-input [control]="signinForm.get('password')" placeholder="Password" label="Password" test-id="password" >   
-        <mat-hint>Between 6 and 24 characters.</mat-hint>
-        <mat-error *ngIf="signinForm.get('password').hasError('minlength')">
+      <password-input [control]="signinForm.get('password')" placeholder="Password" i18n-label label="Password" test-id="password" >   
+        <mat-hint i18n>Between 6 and 24 characters.</mat-hint>
+        <mat-error *ngIf="signinForm.get('password').hasError('minlength')" i18n>
           Password with less than <strong>6</strong> characters.
         </mat-error>
-        <mat-error *ngIf="signinForm.get('password').hasError('maxlength')">
+        <mat-error *ngIf="signinForm.get('password').hasError('maxlength')" i18n>
           Password with more than <strong>24</strong> characters.
         </mat-error>
-        <mat-error *ngIf="signinForm.get('password').hasError('required')">
+        <mat-error *ngIf="signinForm.get('password').hasError('required')" i18n>
           Password is <strong>required</strong>.
         </mat-error>
       </password-input>
-      <a type="button" mat-button routerLink="../reset-password" class="forgot-password" test-id="reset-password">Forgot your password?</a>
+      <a type="button" mat-button routerLink="../reset-password" class="forgot-password" test-id="reset-password" i18n>Forgot your password?</a>
       <div fxLayout="column" fxLayoutAlign="center center">
         <button class="submit" type="submit" mat-flat-button color="accent" test-id="submit"><ng-content select="[buttonText]"></ng-content></button>
         <a id="tosignup" type="button" color="accent" mat-button routerLink="/auth/identity">
-          <span>Don't have an account? </span> 
-          <span>Sign up here.</span>
+          <span i18n>Don't have an account? </span> 
+          <span i18n>Sign up here.</span>
         </a>
       </div>
     </form>

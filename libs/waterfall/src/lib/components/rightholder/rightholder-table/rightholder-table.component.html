@@ -13,10 +13,10 @@
   </ng-template>
   <ng-template *ngIf="columns.actions" colRef="" label="Actions" let-rightholder sticky>
     <a *ngIf="actions.crm" mat-icon-button [routerLink]="['/c/o/dashboard/crm/waterfall', waterfall.id, 'rightholders', rightholder.id]" (click)="$event.stopPropagation()">
-      <mat-icon svgIcon="launch" matTooltip="Edit Right Holder"></mat-icon>
+      <mat-icon svgIcon="launch" matTooltip="Edit Right Holder" i18n-matTooltip></mat-icon>
     </a>
     <button *ngIf="actions.delete" mat-icon-button (click)="delete.emit(rightholder); $event.stopPropagation()">
-      <mat-icon svgIcon="delete" matTooltip="Delete Right Holder"></mat-icon>
+      <mat-icon svgIcon="delete" matTooltip="Delete Right Holder" i18n-matTooltip></mat-icon>
     </button>
   </ng-template>
 </bf-table>

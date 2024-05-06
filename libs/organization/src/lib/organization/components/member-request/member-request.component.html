@@ -1,5 +1,5 @@
 <mat-card>
-  <mat-card-title>New Member Requests</mat-card-title>
+  <mat-card-title i18n>New Member Requests</mat-card-title>
   <bf-table [source]="users" pagination="50">
     <ng-template colRef="firstName" label="FirstName" let-firstName sort>
       <b>{{ firstName | titlecase }}</b>

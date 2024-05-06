@@ -4,44 +4,44 @@
   </mat-card-header>
   <mat-card-content>
     <mat-form-field appearance="outline">
-      <mat-label>First Name</mat-label>
+      <mat-label i18n>First Name</mat-label>
       <input matInput test-id="name-form" placeholder="First Name" type="text" [formControl]="form.get('firstName')" required />
-      <mat-error *ngIf="form.get('firstName').hasError('required')">
+      <mat-error *ngIf="form.get('firstName').hasError('required')" i18n>
         First Name is <strong>required</strong>.
       </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <mat-label>Last Name</mat-label>
+      <mat-label i18n>Last Name</mat-label>
       <input matInput test-id="surname-form" placeholder="Last Name" type="text" [formControl]="form.get('lastName')" required />
-      <mat-error *ngIf="form.get('lastName').hasError('required')">
+      <mat-error *ngIf="form.get('lastName').hasError('required')" i18n>
         Last Name is <strong>required</strong>.
       </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <mat-label>Position</mat-label>
+      <mat-label i18n>Position</mat-label>
       <input matInput test-id="position-form" placeholder="Position" type="text" [formControl]="form.get('position')" />
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <mat-label>Email Address</mat-label>
+      <mat-label i18n>Email Address</mat-label>
       <input matInput test-id="phone-form" placeholder="Email Address" type="tel" [formControl]="form.get('email')" />
     </mat-form-field>
 
     <user-hide-email [form]="form.get('hideEmail')"></user-hide-email>
 
     <mat-form-field appearance="outline">
-      <mat-label>Phone Number</mat-label>
+      <mat-label i18n>Phone Number</mat-label>
       <input matInput test-id="phone-form" placeholder="Phone Number" type="tel" [formControl]="form.get('phoneNumber')" />
     </mat-form-field>
   </mat-card-content>
 </mat-card>
 <mat-card>
   <mat-card-header>
-    <mat-card-title>Profile Picture</mat-card-title>
-    <mat-card-subtitle>Please upload an image to your profile.</mat-card-subtitle>
+    <mat-card-title i18n>Profile Picture</mat-card-title>
+    <mat-card-subtitle i18n>Please upload an image to your profile.</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
     <image-uploader ratio="square" [meta]="['users', 'avatar', uid]" [form]="form.avatar" listenToChanges test-id="image-uploader">
-      <h3 title>Profile Image</h3>
+      <h3 title i18n>Profile Image</h3>
     </image-uploader>
   </mat-card-content>
 </mat-card>

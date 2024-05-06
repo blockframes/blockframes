@@ -15,7 +15,7 @@ import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
-  public buttonText = 'Log in';
+  public buttonText = $localize`Log in`;
   public signinIn = false;
 
   constructor(
@@ -36,12 +36,12 @@ export class LoginComponent implements OnInit, OnDestroy {
   public async signin(signinForm: SigninForm) {
     if (this.signinIn) return;
     if (signinForm.invalid) {
-      this.snackBar.open('Information not valid', 'close', { duration: 8000 });
+      this.snackBar.open($localize`Information not valid`, 'close', { duration: 8000 });
       return;
     }
     this.signinIn = true;
     try {
-      this.buttonText = 'Logging in...'
+      this.buttonText = $localize`Logging in...`
       const { email, password } = signinForm.value;
       await this.service.signin(email.trim(), password);
       // Reset page title to default
@@ -54,14 +54,14 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.router.navigate(['c']);
       }
     } catch (err) {
-      this.buttonText = 'Log in';
+      this.buttonText = $localize`Log in`;
       console.error(err); // let the devs see what happened
       if (err.message.includes('INTERNAL ASSERTION FAILED')) {
         this.snackBar.open('Network error. Please refresh this page.', 'close', { duration: 8000 });
       } else if (err.code === 'auth/user-not-found') {
         this.snackBar.openFromComponent(SnackbarLinkComponent, {
           data: {
-            message: 'This account does not exist.',
+            message: $localize`This account does not exist.`,
             link: ['/auth/identity'],
             linkName: 'CREATE ACCOUNT'
           },
@@ -70,7 +70,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       } else if (err.code === 'auth/wrong-password') {
         this.snackBar.openFromComponent(SnackbarLinkComponent, {
           data: {
-            message: 'Incorrect password',
+            message: $localize`Incorrect password`,
             link: ['auth/reset-password'],
             linkName: 'RESET PASSWORD'
           },

@@ -1,6 +1,6 @@
 <mat-card  test-id="member-add">
-  <mat-card-title>Invite Members</mat-card-title>
-  <p class="mat-caption">Invite your co-workers to join your company so that they can use the application.</p>
+  <mat-card-title i18n>Invite Members</mat-card-title>
+  <p class="mat-caption" i18n>Invite your co-workers to join your company so that they can use the application.</p>
 
   <mat-form-field appearance="outline">
     <mat-chip-list #chipList aria-label="email selection">
@@ -8,15 +8,15 @@
         <span>{{email}}</span>
         <mat-icon svgIcon="cancel" matChipRemove></mat-icon>
       </mat-chip>
-      <input [formControl]="emailForm" placeholder="Add an email"
+      <input [formControl]="emailForm" placeholder="Add an email" i18n-placeholder
              [matChipInputFor]="chipList"
              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
              [matChipInputAddOnBlur]="true"
              (matChipInputTokenEnd)="add()">
     </mat-chip-list>
-    <mat-label>Email Address</mat-label>
+    <mat-label i18n>Email Address</mat-label>
     <mat-icon matSuffix svgIcon="mail"></mat-icon>
-    <mat-hint>Enter emails separated by a comma.</mat-hint>
+    <mat-hint i18n>Enter emails separated by a comma.</mat-hint>
   </mat-form-field>
   <p class="mat-caption text-warn" *ngIf="error"><i>{{ error }}</i></p>
 

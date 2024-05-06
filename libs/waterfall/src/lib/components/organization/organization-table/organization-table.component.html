@@ -8,7 +8,7 @@
         {{ rightholder.id | rightholderName: waterfall }}
       </ng-container>
       <ng-template #noRightholder>
-        <span>Not set</span>
+        <span i18n>Not set</span>
       </ng-template>
     </ng-template>
     <ng-template *ngIf="columns.org" [label]="columns.org" colRef="id" let-id sort>
@@ -24,7 +24,7 @@
         {{ rightholder.lockedVersionId | versionName: waterfall }} 
       </ng-container>
       <ng-template #noRightholder>
-        <span>Not set</span>
+        <span i18n>Not set</span>
       </ng-template>
     </ng-template>
     <ng-template *ngIf="columns.actions" [label]="columns.actions" colRef="" let-item sticky>
@@ -32,26 +32,26 @@
         <mat-icon svgIcon="more_vert"></mat-icon>
       </button>
       <mat-menu #menu>
-        <button mat-menu-item [matMenuTriggerFor]="accessMenu">
+        <button mat-menu-item [matMenuTriggerFor]="accessMenu" i18n>
           Change Access
         </button>
-        <button *ngIf="versions.length && item.rightholder" mat-menu-item [matMenuTriggerFor]="versionMenu">
+        <button *ngIf="versions.length && item.rightholder" mat-menu-item [matMenuTriggerFor]="versionMenu" i18n>
           Choose Waterfall Version
         </button>
         <button mat-menu-item (click)="changeRightholder(item.id, item.rightholder?.id);$event.stopPropagation()">
           <mat-icon color="warn" svgIcon="business"></mat-icon>
-          <span>Change organization</span>
+          <span i18n>Change organization</span>
         </button>
         <button mat-menu-item (click)="removeOrg(item.id);$event.stopPropagation()">
           <mat-icon color="warn" svgIcon="delete"></mat-icon>
-          <span>Remove Right Holder</span>
+          <span i18n>Remove Right Holder</span>
         </button>
       </mat-menu>
       <mat-menu #accessMenu>
-        <button mat-menu-item (click)="changeAccess(item.id, 'editor')">
+        <button mat-menu-item (click)="changeAccess(item.id, 'editor')" i18n>
           Editor
         </button>
-        <button mat-menu-item (click)="changeAccess(item.id, 'viewer')">
+        <button mat-menu-item (click)="changeAccess(item.id, 'viewer')" i18n>
           Viewer
         </button>
       </mat-menu>
