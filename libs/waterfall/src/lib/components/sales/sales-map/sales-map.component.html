@@ -59,29 +59,29 @@
         <ng-container *ngFor="let infos of clickedTerritory.infos; let isLast = last">
           <h4>{{ infos.buyerName }}</h4>
           <ul>
-            <li><span><b>Contract Duration: </b>{{ infos.duration.from | date }} - {{ infos.duration.to | date }}</span></li>
-            <li><span><b>Signature Date </b>{{ infos.signatureDate | date }}</span></li>
-            <li><span><b>Rights Type: </b>{{ infos.type | toLabel: 'rightholderRoles' }}</span></li>
-            <li><span><b>Territories: </b>{{ infos.territories | toGroupLabel:'territories':'World'| join | maxLength:120 }}</span></li>
-            <li><span><b>Medias: </b>{{ infos.medias | toGroupLabel:'medias':'All' | join | maxLength:120 }}</span></li>
+            <li><span><b i18n>Contract Duration: </b>{{ infos.duration.from | date }} - {{ infos.duration.to | date }}</span></li>
+            <li><span><b i18n>Signature Date </b>{{ infos.signatureDate | date }}</span></li>
+            <li><span><b i18n>Rights Type: </b>{{ infos.type | toLabel: 'rightholderRoles' }}</span></li>
+            <li><span><b i18n>Territories: </b>{{ infos.territories | toGroupLabel:'territories':'World'| join | maxLength:120 }}</span></li>
+            <li><span><b i18n>Medias: </b>{{ infos.medias | toGroupLabel:'medias':'All' | join | maxLength:120 }}</span></li>
             <li>
-              <span><b>Declared Amount: </b>
+              <span><b i18n>Declared Amount: </b>
                 <price-per-currency [price]="infos.declaredAmount"></price-per-currency>
               </span>
             </li>
             <li>
-              <span><b>Declared Incomes: </b>
+              <span><b i18n>Declared Incomes: </b>
                 <price-per-currency [price]="infos.totalIncome"></price-per-currency>
               </span>
             </li>
           </ul>
           <a mat-button color="primary" class="main-dashboard-cta" target="_blank" [routerLink]="['..', 'document', infos.rootContract]">
             <mat-icon svgIcon="document_signed"></mat-icon>
-            <span>See Contract</span>
+            <span i18n>See Contract</span>
           </a>
           <a *ngFor="let child of infos.childContracts" mat-button color="primary" class="main-dashboard-cta" target="_blank" [routerLink]="['..', 'document', child]">
             <mat-icon svgIcon="document_signed"></mat-icon>
-            <span>See Amendment</span>
+            <span i18n>See Amendment</span>
           </a>
           <mat-divider *ngIf="!isLast"></mat-divider>
         </ng-container>
@@ -96,31 +96,31 @@
           <svg viewBox="0 0 100 100" width="10px" height="10px">
             <rect fill="#67DF9C" x="0" y="0" width="100" height="100" rx="10" />
           </svg>
-          <span class="mat-caption">All Rights Sold</span>
+          <span class="mat-caption" i18n>All Rights Sold</span>
         </mat-list-item>
         <mat-list-item>
           <svg viewBox="0 0 100 100" width="10px" height="10px">
             <rect fill="#F3B244" x="0" y="0" width="100" height="100" rx="10" />
           </svg>
-          <span class="mat-caption">TV Rights Sold</span>
+          <span class="mat-caption" i18n>TV Rights Sold</span>
         </mat-list-item>
         <mat-list-item>
           <svg viewBox="0 0 100 100" width="10px" height="10px">
             <rect fill="#3A90F3" x="0" y="0" width="100" height="100" rx="10" />
           </svg>
-          <span class="mat-caption">VOD Rights Sold</span>
+          <span class="mat-caption" i18n>VOD Rights Sold</span>
         </mat-list-item>
         <mat-list-item>
           <svg viewBox="0 0 100 100" width="10px" height="10px">
             <rect fill="#7262CA" x="0" y="0" width="100" height="100" rx="10" />
           </svg>
-          <span class="mat-caption">Other Rights Sold</span>
+          <span class="mat-caption" i18n>Other Rights Sold</span>
         </mat-list-item>
         <mat-list-item>
           <svg viewBox="0 0 100 100" width="10px" height="10px">
             <rect fill="#F3F3F3" x="0" y="0" width="100" height="100" rx="10" />
           </svg>
-          <span class="mat-caption" fxLayout fxLayoutAlign="start center">
+          <span class="mat-caption" fxLayout fxLayoutAlign="start center" i18n>
             Available
           </span>
         </mat-list-item>
@@ -130,7 +130,7 @@
   <ng-template #emptyMap>
     <div class="empty-map">
       <img asset="empty_map.svg" alt="Empty Map">
-      <p class="mat-body-1">There are no sales available to show yet.</p>
+      <p class="mat-body-1" i18n>There are no sales available to show yet.</p>
     </div>
   </ng-template>
 </section>

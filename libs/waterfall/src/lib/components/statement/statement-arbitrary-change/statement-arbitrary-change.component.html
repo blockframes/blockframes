@@ -102,12 +102,12 @@
             <mat-error i18n>Please fill in a value between 0 and {{ config.max }}. Note that the receipt share cannot exceed the income received.</mat-error>
           </mat-form-field>
     
-          <button mat-icon-button (click)="restore(i)" matTooltip="Restore to initial value"  i18n-matTooltip>
+          <button mat-icon-button (click)="restore(i)" matTooltip="Restore to initial value" i18n-matTooltip>
             <mat-icon svgIcon="restore"></mat-icon>
           </button>
         </section>
         
-        <p class="mat-body-2">Before applying the changes, please tell us the main reason of the changes in the comment below.</p>
+        <p class="mat-body-2" i18n>Before applying the changes, please tell us the main reason of the changes in the comment below.</p>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label i18n>Comment</mat-label>
           <textarea matInput [formControl]="override.get('comment')" placeholder="Comment" type="string" cdkTextareaAutosize cdkAutosizeMinRows="6" required ></textarea>
@@ -118,7 +118,7 @@
 
     </ng-container>
 
-    <p class="mat-body-2">To confirm the changes, please type "SAVE"</p>
+    <p class="mat-body-2" i18n>To confirm the changes, please type "SAVE"</p>
     <mat-form-field appearance="outline">
       <mat-label i18n>Changes confirmation</mat-label>
       <input matInput [formControl]="form.get('confirm')" required />
