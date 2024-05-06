@@ -335,5 +335,6 @@ export const functionsConfigMap: { [key: string]: string } = {
   'gmail.client.id': 'CYPRESS_GMAIL_CLIENT_ID',
   'gmail.client.secret': 'CYPRESS_GMAIL_CLIENT_SECRET',
   'gmail.refresh.token': 'CYPRESS_GMAIL_REFRESH_TOKEN',
-  'airtable.token': 'AIRTABLE_TOKEN'
+  'airtable.token': 'AIRTABLE_TOKEN',
+  'openai.api_key': 'OPENAI_API_KEY'
 };

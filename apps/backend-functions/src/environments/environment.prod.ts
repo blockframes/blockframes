@@ -41,3 +41,5 @@ export const mailchimpAPIKey = functions.config().mailchimp.api_key;
 
 export const airtableToken = functions.config().airtable.token;
 
+export const openaiAPIKey = functions.config().openai.api_key;
+

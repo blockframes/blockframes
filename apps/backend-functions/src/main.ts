@@ -54,6 +54,7 @@ import {
   onWaterfallDocumentUpdate
 } from './waterfall';
 import { projectId, storageBucket } from './environments/environment';
+import { askContractData as _askContractData } from './openai';
 
 console.log('Function instance loaded');
 
@@ -369,3 +370,10 @@ export const updateAirtable = functions(noTimeoutConfig).https.onCall(skipInMain
 
 // Scheduled update every day at 1am
 export const scheduledAirtableUpdate = functions(noTimeoutConfig).pubsub.schedule('0 1 * * *').onRun(skipInMaintenance(() => scheduledAirtable()));
+
+//--------------------------------
+//            OpenAI  
+//--------------------------------
+
+export const askContractData = functions(noTimeoutConfig).https.onCall(skipInMaintenance(logErrors(_askContractData)));
+
