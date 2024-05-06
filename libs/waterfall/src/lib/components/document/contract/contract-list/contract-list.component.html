@@ -1,10 +1,10 @@
 <ng-container *ngIf="shell.rightholderDocuments$ | async as documents else loading">
 
   <article class="header">
-    <h2>Contracts</h2>
+    <h2 i18n>Contracts</h2>
   </article>
 
-  <p *ngIf="shell.canBypassRules">Please provide us with all the contracts, so that we can create a waterfall.</p>
+  <p *ngIf="shell.canBypassRules" i18n>Please provide us with all the contracts, so that we can create a waterfall.</p>
 
   <article *ngIf="shell.waterfall$ | async as waterfall">
     <ul>
@@ -13,7 +13,7 @@
           <p class="role">{{item.key | toLabel: 'rightholderRoles'}}</p>
           <p class="action">
             <ng-container *ngIf="item.key === selected && creating; else notCreating">
-              <span>Adding contract...</span>
+              <span i18n>Adding contract...</span>
             </ng-container>
 
             <ng-template #notCreating>
@@ -22,7 +22,7 @@
               </ng-container>
               <ng-template #noContracts>
                 <mat-icon svgIcon="add"></mat-icon>
-                <span>Add Contract</span>
+                <span i18n>Add Contract</span>
               </ng-template>
             </ng-template>
           </p>
@@ -44,7 +44,7 @@
       <ng-container *ngIf="selected; else notSelected">
         <header>
           <mat-icon svgIcon="document"></mat-icon>
-          <h2>{{selected | toLabel: 'rightholderRoles'}} Contract</h2>
+          <h2 i18n>{{selected | toLabel: 'rightholderRoles'}} Contract</h2>
           <button *ngIf="canUseAI()" color="warn" mat-icon-button [disabled]="computing$ | async" matTooltip="Ask AI to fill contract information" (click)="askAI()">
             <mat-icon svgIcon="ai"></mat-icon>
           </button>
@@ -78,6 +78,7 @@
             <a mat-icon-button *ngIf="contract.id | getFile: waterfall as file" 
               [href]="file | getUrl | async"
               target="_blank"
+              i18n-matTooltip
               matTooltip="Download Document"
             >
               <mat-icon svgIcon="cloud_download"></mat-icon>
@@ -90,7 +91,7 @@
               <mat-icon svgIcon="add"></mat-icon>
             </button> -->
             <ng-container *ngIf="shell.canBypassRules">
-              <button mat-icon-button *ngIf="rights$ | async as rights" matTooltip="Delete Contract" (click)="delete(contract.id, rights)">
+              <button mat-icon-button *ngIf="rights$ | async as rights" matTooltip="Delete Contract" (click)="delete(contract.id, rights)" i18n-matTooltip>
                 <mat-icon svgIcon="delete"></mat-icon>
               </button>
             </ng-container>
@@ -98,7 +99,7 @@
           <div>
             <button *ngIf="shell.canBypassRules" mat-button color="primary" class="main-dashboard-cta" (click)="create()">
               <mat-icon svgIcon="add"></mat-icon>
-              <span>Add Contract</span>
+              <span i18n>Add Contract</span>
             </button>
           </div>
         </ng-container>
@@ -107,7 +108,7 @@
           <ng-template #computing>
             <article class="spinner computing">
               <logo-spinner></logo-spinner>
-              <p>Computing...</p>
+              <p i18n>Computing...</p>
             </article>
           </ng-template>
         </ng-template>
@@ -115,7 +116,7 @@
       <ng-template #notSelected>
         <header>
           <mat-icon svgIcon="document"></mat-icon>
-          <h2>Contract Details</h2>
+          <h2 i18n>Contract Details</h2>
         </header>
         <div>
           <img asset="empty-contracts.svg" alt="No contracts" />

@@ -97,10 +97,10 @@ export class ContractListComponent {
 
     const dialogRef = this.dialog.open(ConfirmComponent, {
       data: createModalData({
-        title: 'You are about to leave the form',
-        question: 'Some changes have not been saved. If you leave now, you might lose these changes',
-        cancel: 'Cancel',
-        confirm: 'Leave anyway'
+        title: $localize`You are about to leave the form`,
+        question: $localize`Some changes have not been saved. If you leave now, you might lose these changes`,
+        cancel: $localize`Cancel`,
+        confirm: $localize`Leave anyway`
       }, 'small'),
       autoFocus: false
     });
@@ -163,7 +163,7 @@ export class ContractListComponent {
     }
 
     if (!this.contractForm.valid) {
-      this.snackBar.open('Please fill all required fields.', 'close', { duration: 3000 });
+      this.snackBar.open($localize`Please fill all required fields.`, 'close', { duration: 3000 });
       return;
     }
 
@@ -257,7 +257,7 @@ export class ContractListComponent {
     }
     this.contractForm.markAsPristine();
 
-    this.snackBar.open('Contract saved', 'close', { duration: 3000 });
+    this.snackBar.open($localize`Contract saved`, 'close', { duration: 3000 });
   }
 
   share(documentId: string, waterfallId: string, organizations: Organization[]) {
@@ -273,10 +273,10 @@ export class ContractListComponent {
 
     const dialogRef = this.dialog.open(ConfirmComponent, {
       data: createModalData({
-        title: 'You are about to leave the form',
-        question: 'Some changes have not been saved. If you leave now, you might lose these changes',
-        cancel: 'Cancel',
-        confirm: 'Leave anyway'
+        title: $localize`You are about to leave the form`,
+        question: $localize`Some changes have not been saved. If you leave now, you might lose these changes`,
+        cancel: $localize`Cancel`,
+        confirm: $localize`Leave anyway`
       }, 'small'),
       autoFocus: false
     });
@@ -294,23 +294,23 @@ export class ContractListComponent {
     if (rights.length === 0) {
       this.dialog.open(ConfirmComponent, {
         data: createModalData({
-          title: 'Are you sure to delete this Contract?',
-          question: 'Pay attention, if you delete the following Contract, you might loose some information.',
-          confirm: 'Yes, delete Contract',
+          title: $localize`Are you sure to delete this Contract?`,
+          question: $localize`Pay attention, if you delete the following Contract, you might loose some information.`,
+          confirm: $localize`Yes, delete Contract`,
           onConfirm: async () => {
             await this.documentService.remove(contractId, { params: { waterfallId: this.shell.waterfall.id } });
-            this.snackBar.open('Contract deleted', 'close', { duration: 3000 });
+            this.snackBar.open($localize`Contract deleted`, 'close', { duration: 3000 });
           },
         })
       });
     } else {
       this.dialog.open(ConfirmComponent, {
         data: createModalData({
-          title: 'Sorry, unable to delete Contract right now.',
-          question: 'This Contract cannot be deleted immediately due to it\'s integration with your Waterfall. Deleting a Contract could potentially disrupt the Waterfall\'s structure.',
-          advice: 'If you still wish to proceed with the deletion, please ensure that all relevant rights are removed using the Waterfall Builder feature before deleting the contract.',
-          intercom: 'Contact us for more information',
-          confirm: 'Go to Waterfall Builder & Delete Rights',
+          title: $localize`Sorry, unable to delete Contract right now.`,
+          question: $localize`This Contract cannot be deleted immediately due to it\'s integration with your Waterfall. Deleting a Contract could potentially disrupt the Waterfall\'s structure.`,
+          advice: $localize`If you still wish to proceed with the deletion, please ensure that all relevant rights are removed using the Waterfall Builder feature before deleting the contract.`,
+          intercom: $localize`Contact us for more information`,
+          confirm: $localize`Go to Waterfall Builder & Delete Rights`,
           additionalData: rights.map(r => r.name),
           onConfirm: () => this.redirectToBuilder.emit(),
         })
@@ -359,7 +359,7 @@ export class ContractListComponent {
       }
     }
 
-    const defaultErrorMessage = 'Something went wrong. Please try again later.';
+    const defaultErrorMessage = $localize`Something went wrong. Please try again later.`;
     try {
       const output = await this.documentService.askContractData({
         file,
@@ -394,7 +394,7 @@ export class ContractListComponent {
         }
         this.contractForm.markAsDirty();
       } else if (output.error) {
-        this.snackBar.open(`Something went wrong: ${output.error}`, 'close', { duration: 3000 });
+        this.snackBar.open($localize`Something went wrong: ${output.error}`, 'close', { duration: 3000 });
       } else {
         this.snackBar.open(defaultErrorMessage, 'close', { duration: 3000 });
       }

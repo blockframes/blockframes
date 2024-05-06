@@ -6,7 +6,7 @@ import { WaterfallContractForm } from '@blockframes/waterfall/form/contract.form
 import { BehaviorSubject } from 'rxjs';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 
-type Path = 'Documents' | 'Contracts' | 'Financing Plan' | 'Budget';
+type Path = 'Documents' | 'Contracts' | 'Financing Plan' | 'Budget'; // TODO #9699
 
 @Component({
   selector: 'waterfall-title-documents',

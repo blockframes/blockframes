@@ -1,7 +1,7 @@
 <file-uploader [form]="form.get('file')" [meta]="['waterfall', 'documents', waterfall.id]" accept="pdf" (selectionChange)="change($event)"></file-uploader>
 
 <mat-form-field appearance="outline">
-  <mat-label>Document Name</mat-label>
+  <mat-label i18n>Document Name</mat-label>
   <input matInput [formControl]="form.get('name')" required />
   <mat-error>This field is mandatory</mat-error>
 </mat-form-field>
@@ -12,11 +12,13 @@
     label="Licensor"
     [options]="licensor$"
     placeholder="Company Name"
+    i18n-label
+    i18n-placeholder
     [form]="form.get('licensorName')"
   ></bf-autocomplete>
   <static-select [control]="form.get('licensorRole')" scope="rightholderRoles" mode="outline" multiple required [disabledValues]="disabledValues.licensors">
-    <mat-label>Licensor Waterfall Role</mat-label>
-    <mat-error>This field is mandatory</mat-error>
+    <mat-label i18n>Licensor Waterfall Role</mat-label>
+    <mat-error i18n>This field is mandatory</mat-error>
   </static-select>
 </div>
 
@@ -26,81 +28,83 @@
     label="Licensee"
     [options]="licensee$"
     placeholder="Company Name"
+    i18n-label
+    i18n-placeholder
     [form]="form.get('licenseeName')"
   ></bf-autocomplete>
   <static-select [control]="form.get('licenseeRole')" scope="rightholderRoles" mode="outline" multiple required [disabledValues]="disabledValues.licensees">
-    <mat-label>Licensee Waterfall Role</mat-label>
-    <mat-error>This field is mandatory</mat-error>
+    <mat-label i18n>Licensee Waterfall Role</mat-label>
+    <mat-error i18n>This field is mandatory</mat-error>
   </static-select>
 </div>
 
 <mat-form-field appearance="outline">
-  <mat-label>Signature Date</mat-label>
+  <mat-label i18n>Signature Date</mat-label>
   <time-picker [formControl]="form.get('signatureDate')" allDay small></time-picker>
-  <mat-error *ngIf="form.get('signatureDate').hasError('signatureOverStart')">
+  <mat-error *ngIf="form.get('signatureDate').hasError('signatureOverStart')" i18n>
     Start date must not be later than start date
   </mat-error>
-  <mat-error *ngIf="form.get('endDate').hasError('signatureOverEnd')">
+  <mat-error *ngIf="form.get('endDate').hasError('signatureOverEnd')" i18n>
     Signature date must not be later than end date
   </mat-error>
 </mat-form-field>
-<mat-slide-toggle color="primary" (change)="toggleStartDate($event)" [checked]="(hideStartDate$ | async)">Start Date is the same as Signature Date</mat-slide-toggle>
+<mat-slide-toggle color="primary" (change)="toggleStartDate($event)" [checked]="(hideStartDate$ | async)" i18n>Start Date is the same as Signature Date</mat-slide-toggle>
 <ng-container *ngIf="(hideStartDate$ | async) === false">
   <mat-form-field appearance="outline">
-    <mat-label>Start Date</mat-label>
+    <mat-label i18n>Start Date</mat-label>
     <time-picker [formControl]="form.get('startDate')" allDay small></time-picker>
-    <mat-error *ngIf="form.get('endDate').hasError('startOverEnd')">
+    <mat-error *ngIf="form.get('endDate').hasError('startOverEnd')" i18n>
       Start date must not be later than end date
     </mat-error>
-    <mat-error *ngIf="form.get('startDate').hasError('signatureOverStart')">
+    <mat-error *ngIf="form.get('startDate').hasError('signatureOverStart')" i18n>
       Signature date must not be later than start date
     </mat-error>
   </mat-form-field>
 </ng-container>
 
-<mat-slide-toggle color="primary" (change)="toggleEndDate($event)" [checked]="(hideEndDate$ | async)">Contract with no time limit</mat-slide-toggle>
+<mat-slide-toggle color="primary" (change)="toggleEndDate($event)" [checked]="(hideEndDate$ | async)" i18n>Contract with no time limit</mat-slide-toggle>
 
 <ng-container *ngIf="(hideEndDate$ | async) === false">
   <div class="group">
     <mat-form-field appearance="outline">
       <mat-icon svgIcon="timer" matPrefix></mat-icon>
-      <mat-label>Duration Number</mat-label>
+      <mat-label i18n>Duration Number</mat-label>
       <input matInput type="number" min="0" [formControl]="durationControl" />
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-icon svgIcon="timer" matPrefix></mat-icon>
-      <mat-label>Duration Period</mat-label>
-      <mat-select [formControl]="periodControl" placeholder="Months/Years" >
+      <mat-label i18n>Duration Period</mat-label>
+      <mat-select [formControl]="periodControl" placeholder="Months/Years"  i18n-placeholder>
         <mat-option *ngFor="let period of periods" [value]="period">{{period}}</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
 
   <mat-form-field appearance="outline">
-    <mat-label>End Date</mat-label>
+    <mat-label i18n>End Date</mat-label>
     <time-picker [formControl]="form.get('endDate')" allDay small></time-picker>
-    <mat-error *ngIf="form.get('endDate').hasError('startOverEnd')">
+    <mat-error *ngIf="form.get('endDate').hasError('startOverEnd')" i18n>
       Start date must not be later than end date
     </mat-error>
-    <mat-error *ngIf="form.get('endDate').hasError('signatureOverEnd')">
+    <mat-error *ngIf="form.get('endDate').hasError('signatureOverEnd')" i18n>
       Signature date must not be later than end date
     </mat-error>
   </mat-form-field>
 </ng-container>
 
 <static-select [control]="form.get('currency')" [only]="['USD', 'EUR']" required scope="movieCurrencies">
-  <mat-label>Currency</mat-label>
+  <mat-label i18n>Currency</mat-label>
 </static-select>
 
 <ng-container *ngFor="let invest of form.get('price').controls">
   <div class="group">
     <mat-form-field appearance="outline">
-      <mat-label>Investment | Minimum Guarantee</mat-label>
+      <mat-label i18n>Investment | Minimum Guarantee</mat-label>
       <mat-icon *ngIf="form.get('currency').value" [svgIcon]="form.get('currency').value" matSuffix></mat-icon>
       <input matInput type="number" [formControl]="invest.get('value')" />
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <mat-label>Payment Date (optional)</mat-label>
+      <mat-label i18n>Payment Date (optional)</mat-label>
       <input matInput [formControl]="invest.get('date')" [matDatepicker]="datePickerPaymentDate" [placeholder]="dateInputFormat">
       <mat-datepicker-toggle matPrefix [for]="datePickerPaymentDate">
         <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
@@ -112,17 +116,17 @@
 
 <div class="add-item">
   <hr/>
-  <p class="mat-caption">Add More Investments</p>
+  <p class="mat-caption" i18n>Add More Investments</p>
   <button mat-mini-fab color="primary" (click)="addInvest()">
     <mat-icon svgIcon="add"></mat-icon>
   </button>
 </div>
 
 <div class="toggle" *ngIf="showRightToogle">
-  <p class="mat-caption">Right Assigned</p>
+  <p class="mat-caption" i18n>Right Assigned</p>
   <mat-button-toggle-group [formControl]="toggleTermsControl">
-    <mat-button-toggle [value]="true">Yes</mat-button-toggle>
-    <mat-button-toggle [value]="false">No</mat-button-toggle>
+    <mat-button-toggle [value]="true" i18n>Yes</mat-button-toggle>
+    <mat-button-toggle [value]="false" i18n>No</mat-button-toggle>
   </mat-button-toggle-group>
 </div>
 
@@ -133,6 +137,8 @@
       <group-multiselect
         scope="medias"
         label="Choose Medias"
+        i18n-label
+        i18n-placeholder
         selectIcon="play_arrow"
         displayAll="All Medias"
         filterPlaceholder="Specify territories to filter"
@@ -141,17 +147,19 @@
       <group-multiselect
         scope="territories"
         label="Choose Territories"
+        i18n-label
+        i18n-placeholder
         displayAll="World"
         filterPlaceholder="Specify territories to filter"
         [control]="term.get('territories')"
       ></group-multiselect>
     </div>
-    <mat-checkbox color="primary" [formControl]="term.get('exclusive')">Exclusive</mat-checkbox>
+    <mat-checkbox color="primary" [formControl]="term.get('exclusive')" i18n>Exclusive</mat-checkbox>
   </ng-container>
 
   <div class="add-item">
     <hr/>
-    <p class="mat-caption">Add More Terms</p>
+    <p class="mat-caption" i18n>Add More Terms</p>
     <button mat-mini-fab color="primary" (click)="addTerm()">
       <mat-icon svgIcon="add"></mat-icon>
     </button>
@@ -159,7 +167,7 @@
 </ng-container>
 
 <section *ngIf="showExpenseTypes">
-  <h2>Expenses</h2>
+  <h2 i18n>Expenses</h2>
   <waterfall-expense-types [form]="form.get('expenseTypes')"></waterfall-expense-types>  
 </section>
 
