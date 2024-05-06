@@ -30,11 +30,11 @@ export class TitleViewComponent {
       label: 'Waterfall',
       requireKeys: ['waterfall-ready']
     },
-    {
+    /*{ TODO hidden for release 5.0.9
       path: 'amortization',
       label: 'Film Amortization',
       requireKeys: ['admin']
-    },
+    },*/
     {
       path: 'right-holders',
       label: 'Right Holders',
