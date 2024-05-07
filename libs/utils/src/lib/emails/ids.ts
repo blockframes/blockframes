@@ -1,3 +1,5 @@
+import { SupportedLanguages } from '@blockframes/model';
+import { templateIdsFr } from './ids-i18n';
 
 // Sendgrid Emails
 export const templateIds = {
@@ -120,4 +122,21 @@ export const groupIds = {
   // Use this groupId to remove unsubscribe link at mail bottom. Typically for support emails
   // Note, only "text" emails (as opposition to "html") will remove the unsubscribe link
   noUnsubscribeLink: 0
+}
+
+const translatedTemplates: Partial<Record<SupportedLanguages, unknown>> = {
+  fr: templateIdsFr
+}
+
+export const getTemplateId = (path: string, lang?: SupportedLanguages): string => {
+  const resolve = (path: string, obj: unknown) => path.split('.').reduce((prev, curr) => prev?.[curr], obj);
+  const defaultId = resolve(path, templateIds) as string;
+  if (!lang || lang == 'en') return defaultId;
+  try {
+    const templateId = resolve(path, translatedTemplates[lang]) as string;
+    if (templateId) return templateId;
+    return defaultId;
+  } catch (error) {
+    return defaultId;
+  }
 }
