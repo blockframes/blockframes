@@ -3,8 +3,8 @@
   "version": "4.1.0",
   "license": "MIT",
   "engines": {
-    "node": "^16.14.0",
-    "npm": "^8.5.0"
+    "node": "^20.12.2",
+    "npm": "^10.5.0"
   },
   "scripts": {
     "ng": "nx",
@@ -116,6 +116,8 @@
     "ng-rive": "0.2.4",
     "ngfire": "^0.0.33",
     "ngx-image-cropper": "^3.0.3",
+    "openai": "^4.40.0",
+    "pdf2json": "3.0.5",
     "puppeteer": "^13.5.2",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.1",
@@ -177,7 +179,7 @@
     "eslint-config-prettier": "8.1.0",
     "eslint-plugin-cypress": "^2.10.3",
     "firebase-functions-test": "^0.3.3",
-    "firebase-tools": "11.30.0",
+    "firebase-tools": "13.8.0",
     "google-auth-library": "^8.8.0",
     "husky": "^3.1.0",
     "inquirer": "^7.3.3",
@@ -197,7 +199,7 @@
     "ts-jest": "27.0.5",
     "ts-node": "10.9.1",
     "tsconfig-paths": "^3.14.1",
-    "tsickle": "0.38.0",
+    "tsickle": "0.46.3",
     "tslib": "^2.2.0",
     "tslint": "6.1.3",
     "typescript": "^4.6.4"

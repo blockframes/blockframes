@@ -8,6 +8,7 @@ export const icons = [
   { name: 'account_balance_wallet', url: 'assets/icons/account_balance_wallet.svg' },
   { name: 'account_circle', url: 'assets/icons/account_circle.svg' },
   { name: 'add', url: 'assets/icons/add.svg' },
+  { name: 'ai', url: 'assets/icons/ai.svg' },
   { name: 'archive', url: 'assets/icons/archive.svg' },
   { name: 'arrow_back', url: 'assets/icons/arrow_back.svg' },
   { name: 'arrow_downward', url: 'assets/icons/arrow_downward.svg' },

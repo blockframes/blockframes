@@ -48,6 +48,9 @@
         <header>
           <mat-icon svgIcon="document"></mat-icon>
           <h2>{{selected | toLabel: 'rightholderRoles'}} Contract</h2>
+          <button *ngIf="canUseAI()" color="warn" mat-icon-button [disabled]="computing$ | async" matTooltip="Ask AI to fill contract information" (click)="askAI()">
+            <mat-icon svgIcon="ai"></mat-icon>
+          </button>
           <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'">
             <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
           </button>
@@ -103,7 +106,13 @@
           </div>
         </ng-container>
         <ng-template #creatingContracts>
-          <waterfall-contract-form [toggleTermsControl]="toggleTermsControl" [type]="selected" [waterfall]="waterfall" [form]="contractForm" (removeFile)="removeFile($event)"></waterfall-contract-form>
+          <waterfall-contract-form *ngIf="(computing$ | async) === false else computing" [toggleTermsControl]="toggleTermsControl" [type]="selected" [waterfall]="waterfall" [form]="contractForm" (removeFile)="removeFile($event)"></waterfall-contract-form>
+          <ng-template #computing>
+            <article class="spinner computing">
+              <logo-spinner></logo-spinner>
+              <p>Computing...</p>
+            </article>
+          </ng-template>
         </ng-template>
       </ng-container>
       <ng-template #notSelected>
