@@ -1,6 +1,6 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Scope, SupportedLanguages, toLabel } from '@blockframes/model';
+import { Scope, preferredLanguage, toLabel } from '@blockframes/model';
 
 @Pipe({ name: 'toLabel' })
 export class ToLabelPipe implements PipeTransform {
@@ -8,7 +8,7 @@ export class ToLabelPipe implements PipeTransform {
   transform(value: string | null | undefined, scope: Scope, i18n?: boolean): string
   transform(value: string[], scope: Scope, i18n?: boolean): string[]
   transform(value: string | null | undefined | string[], scope: Scope, i18n?: boolean): string | string[] {
-    const lang = i18n ? (localStorage.getItem('locale') || navigator.language) as SupportedLanguages : undefined; // TODO #9699 use auth preferedLanguage ?
+    const lang = i18n ? preferredLanguage() : undefined;
     return toLabel(value, scope, undefined, undefined, lang);
   }
 }

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { Location } from '@angular/common';
+import { preferredLanguage } from "@blockframes/model";
 
 @Component({
   selector: 'bf-security',
@@ -10,7 +11,7 @@ import { Location } from '@angular/common';
 export class SecurityComponent {
   canGoBack = window.history.length > 1;
 
-  public appLang = localStorage.getItem('locale') || navigator.language;// TODO #9699 use auth preferedLanguage ?
+  public appLang = preferredLanguage();
 
   constructor(
     private location: Location,

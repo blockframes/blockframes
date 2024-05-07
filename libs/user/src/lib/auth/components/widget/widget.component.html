@@ -26,6 +26,15 @@
                 </mat-slide-toggle>
               </mat-list-item>
             </ng-container>
+            <mat-list-item *ngIf="canSwitchLanguage">
+              <section>
+                <mat-select [value]="user.settings?.preferredLanguage?.language ? user.settings.preferredLanguage.language : defaultLang" (selectionChange)="langControl.setValue($event.value)">
+                  <mat-option *ngFor="let lang of supportedLanguages | keyvalue" [value]="lang.key" >
+                    {{ lang.value }}
+                  </mat-option>
+                </mat-select>
+              </section>
+            </mat-list-item>
           </mat-nav-list>
           <footer widgetFooter>
             <button mat-button test-id="logout" color="warn" (click)="logout()" test-id="auth-logout">

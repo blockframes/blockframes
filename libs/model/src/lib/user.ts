@@ -1,9 +1,10 @@
 import { createStorageFile, StorageFile } from './media';
 import type { DocumentMeta } from './meta';
-import { App, Genre, Language, Media, Territory } from './static';
+import { App, Genre, Language, Media, Territory, TerritoryISOA2Value } from './static';
 import type { NotificationTypes } from './notification';
 import type { UserRole } from './permissions';
 import { Organization } from './organisation';
+import { SupportedLanguages } from './utils';
 
 export interface User extends PublicUser {
   firstName: string;
@@ -35,6 +36,10 @@ export interface LegalTerms {
 
 interface UserSettings {
   notifications?: NotificationSettings;
+  preferredLanguage?: {
+    language: SupportedLanguages;
+    isoA2: TerritoryISOA2Value;
+  };
 }
 
 export interface NotificationSettingsTemplate {

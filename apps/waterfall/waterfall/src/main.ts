@@ -4,7 +4,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
 import { production } from '@env';
 import { loadTranslations } from '@angular/localize';
-import { supportedLanguages } from '@blockframes/model';
+import { SupportedLanguages, preferredLanguage, supportedLanguages } from '@blockframes/model';
 import { registerLocaleData } from '@angular/common';
 
 if (production) {
@@ -17,9 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch(err => console.error(err));
 });
 
-// Read locale from local storage or use browser language
-const appLang = localStorage.getItem('locale') || navigator.language;
-initLanguage(appLang);
+initLanguage(preferredLanguage());
 
 /**
  * @dev run this command to generate the translation files:
@@ -32,8 +30,8 @@ initLanguage(appLang);
  * @param locale 
  * @returns 
  */
-async function initLanguage(locale: string): Promise<void> {
-  if (locale === 'en' || !Object.keys(supportedLanguages).includes(locale)) return;
+async function initLanguage(locale: SupportedLanguages): Promise<void> {
+  if (!Object.keys(supportedLanguages).includes(locale)) locale = 'en';
 
   const resp = await fetch('/assets/messages.' + locale + '.json');
   const text = await resp.text();
@@ -47,6 +45,10 @@ async function initLanguage(locale: string): Promise<void> {
     case 'fr': {
       const localeModule = await import('../../../../node_modules/@angular/common/locales/fr');
       registerLocaleData(localeModule.default);
+      break;
+    }
+    case 'en': {
+      // Default locale is already loaded
       break;
     }
     default:
