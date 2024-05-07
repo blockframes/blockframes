@@ -404,6 +404,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
       const amortizationState = simulation.waterfall.state.amortizations[amortization.id];
       if (!amortizationState) return undefined;
       const pool = simulation.waterfall.state.pools[amortizationState.poolId];
+      if (!pool) return undefined;
       const currentValue = pool.turnover.calculated;
       const rest = amortizationState.filmCost - (currentValue + amortizationState.financing);
       const restToBeAmortized = rest <= 0 ? 0 : rest;

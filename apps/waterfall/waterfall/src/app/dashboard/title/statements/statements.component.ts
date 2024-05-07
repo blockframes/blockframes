@@ -272,6 +272,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
       currentRightholder: this.shell.currentRightholder,
       canBypassRules: this.shell.canBypassRules,
       waterfall: this.shell.waterfall,
+      versionId: this.shell.versionId$.value,
       producer: this.producer,
       contracts: this.contracts,
       statements,

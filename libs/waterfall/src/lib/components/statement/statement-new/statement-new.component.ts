@@ -11,6 +11,7 @@ import {
   WaterfallContract,
   WaterfallRightholder,
   getContractsWith,
+  isStandaloneVersion,
   rightholderKey,
   statementsRolesMapping
 } from '@blockframes/model';
@@ -23,6 +24,7 @@ export interface StatementNewData {
   canBypassRules: boolean;
   producer: WaterfallRightholder;
   waterfall: Waterfall,
+  versionId?: string;
   contracts: WaterfallContract[],
   date: Date,
   statements: Statement[], // All statements
@@ -67,6 +69,7 @@ export class StatementNewComponent implements OnInit, OnDestroy {
   ) { }
 
   public ngOnInit() {
+    const isStandalone = isStandaloneVersion(this.data.waterfall, this.data.versionId);
     this.rightholders = this.data.waterfall.rightholders
       .filter(r => r.id !== this.data.producer.id)
       .filter(r => r.roles.some(role => statementsRolesMapping[this.data.type].includes(role)))
@@ -74,6 +77,12 @@ export class StatementNewComponent implements OnInit, OnDestroy {
         const contracts = getContractsWith([this.data.producer.id, r.id], this.data.contracts, this.data.date)
           .filter(c => statementsRolesMapping[this.data.type].includes(c.type));
         if (!contracts.length) return false;
+        if (isStandalone) {
+          if (this.data.type === 'producer' && r.lockedVersionId !== this.data.versionId) return false;
+        } else {
+          const isLockedStandalone = isStandaloneVersion(this.data.waterfall, r.lockedVersionId);
+          if (isLockedStandalone) return false;
+        }
         // If there is at least one contract that does not have statement, we display rightholder
         return contracts.some(c => !statementsExists(this.data.type, r.id, c.id, this.data.statements))
       })
