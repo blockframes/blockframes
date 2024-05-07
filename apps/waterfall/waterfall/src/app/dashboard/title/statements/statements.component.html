@@ -30,7 +30,7 @@
           [control]="rightholderControl">
           <mat-label>{{ selected | toLabel: 'statementParty' : true }}</mat-label>
         </waterfall-rightholder-select>
-        <ng-container *ngIf="selected !== 'directSales' && accessibleDocumentIds.includes(rightholderContracts[0].id)">
+        <ng-container *ngIf="selected !== 'directSales' && rightholderContracts.length && accessibleDocumentIds.includes(rightholderContracts[0].id)">
           <a *ngIf="rightholderContracts.length === 1 && rightholderContracts[0].id" mat-icon-button target="_blank" [routerLink]="['..', 'document', rightholderContracts[0].id]">
             <mat-icon svgIcon="contract" matTooltip="See Contract" i18n-matTooltip></mat-icon>
           </a>

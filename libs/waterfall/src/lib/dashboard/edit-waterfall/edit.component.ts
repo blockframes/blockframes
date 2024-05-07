@@ -19,6 +19,7 @@ import { WaterfallFormGuardedComponent } from '../../guards/waterfall-form-guard
 import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '../../form/right-holder.form';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'waterfall-edit-form',
@@ -55,8 +56,11 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
     @Optional() private intercom: Intercom,
     private waterfallService: WaterfallService,
     public shell: DashboardWaterfallShellComponent,
+    private dynTitle: DynamicTitleService,
     private dialog: MatDialog,
-  ) { }
+  ) {
+    this.dynTitle.setPageTitle(this.shell.movie.title.international, 'Waterfall Management');
+  }
 
   ngOnInit() {
     this.sub = this.shell.waterfall$.subscribe(waterfall => {

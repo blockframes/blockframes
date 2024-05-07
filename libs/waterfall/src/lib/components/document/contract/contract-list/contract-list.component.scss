@@ -4,6 +4,10 @@
 }
 
 p {
+  margin: 0;
+}
+
+section {
   margin: 16px 0px 32px 0;
 }
 
@@ -33,9 +37,6 @@ article {
       border: solid 1px var(--foreground-divider);
       border-top: none;
 
-      p {
-        margin: 0;
-      }
       p.role {
         font-weight: 600;
       }
