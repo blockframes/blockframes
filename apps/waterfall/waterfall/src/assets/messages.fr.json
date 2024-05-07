@@ -1,5 +1,5 @@
 {
-  "locale": "fr-FR",
+  "locale": "fr-FR", // TODO remove comment
   "translations": {
     "2557636838397827495": "Mes films",
     "9216548238264778039": "Ajouter un titre",
