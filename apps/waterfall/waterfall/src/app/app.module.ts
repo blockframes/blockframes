@@ -36,7 +36,8 @@ import { AuthService } from '@blockframes/auth/service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { EMULATORS_CONFIG, setupEmulators } from '@blockframes/utils/emulator-front-setup';
 import { VersionModule } from '@blockframes/utils/version/version.module';
-import { BlockframesDateAdapter, getUserLocaleId } from '@blockframes/utils/date-adapter';
+import { BlockframesDateAdapter } from '@blockframes/utils/date-adapter';
+import { getUserLocaleId } from '@blockframes/model';
 
 @NgModule({
   declarations: [AppComponent],

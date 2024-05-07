@@ -1,7 +1,7 @@
 import { addYears, subYears } from 'date-fns';
 import { Person } from './identity';
 import { LanguageRecord } from './movie';
-import { App, MovieCurrency, Scope, staticModel, staticModeli18n } from './static';
+import { App, MovieCurrency, Scope, TerritoryISOA2Value, staticModel, staticModeli18n, territoriesISOA2 } from './static';
 import { mainCurrency } from './waterfall';
 
 export interface ErrorResultResponse {
@@ -408,8 +408,57 @@ export function sortByDate<T>(objects: T[], field: string) {
 }
 
 export const supportedLanguages = {
-  en: 'English',
-  fr: 'French',
-} as const
+  en: 'EN',
+  fr: 'FR',
+} as const;
 
 export type SupportedLanguages = keyof typeof supportedLanguages;
+
+export const supportedLocaleIds = {
+  'fr-FR': 'fr-FR',
+  'en-US': 'en-US',
+  'en-GB': 'en-GB',
+} as const;
+
+const supportedIsoA2 = {
+  'GB': 'GB',
+  'FR': 'FR',
+  'US': 'US',
+} as const;
+
+export type SupportedLocaleIds = keyof typeof supportedLocaleIds;
+
+function getNavigatorLanguage(): SupportedLanguages {
+  switch (navigator.language) {
+    case 'fr':
+    case 'fr-FR':
+      return 'fr';
+    default:
+      return 'en';
+  }
+}
+
+function getNavigatorIsoA2(): TerritoryISOA2Value {
+  if (Object.keys(supportedLocaleIds).includes(navigator.language)) return navigator.language.split('-')[1] as TerritoryISOA2Value;
+  if (navigator.language === 'fr') return 'FR';
+  return 'GB';
+}
+
+// Read locale from local storage or use browser language
+export const preferredLanguage = (): SupportedLanguages => {
+  const lang = localStorage.getItem('locale.lang') || getNavigatorLanguage();
+  if (!supportedLanguages[lang]) return 'en';
+  return lang as SupportedLanguages;
+};
+
+export const preferredIsoA2 = (): TerritoryISOA2Value => {
+  const isoA2 = localStorage.getItem('locale.isoA2') || getNavigatorIsoA2();
+  if (!supportedIsoA2[isoA2]) return 'GB';
+  return isoA2 as TerritoryISOA2Value;
+}
+
+export const getUserLocaleId = (): SupportedLocaleIds => {
+  const code = `${preferredLanguage()}-${preferredIsoA2()}`;
+  if (!supportedLocaleIds[code]) return 'en-GB';
+  return code as SupportedLocaleIds;
+}

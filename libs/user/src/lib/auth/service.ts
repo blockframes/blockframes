@@ -1,6 +1,21 @@
 import { Injectable, OnDestroy, Optional } from '@angular/core';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { createUser, PublicUser, User, LegalTerms, createDocumentMeta, DocumentMeta, AnonymousCredentials, AnonymousRole, App } from '@blockframes/model';
+import {
+  createUser,
+  PublicUser,
+  User,
+  LegalTerms,
+  createDocumentMeta,
+  DocumentMeta,
+  AnonymousCredentials,
+  AnonymousRole,
+  App,
+  SupportedLanguages,
+  supportedLocaleIds,
+  TerritoryISOA2Value,
+  preferredIsoA2,
+  SupportedLocaleIds
+} from '@blockframes/model';
 import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
@@ -150,10 +165,15 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
    * AuthService.signout is called
    */
   async onSignout() {
-    // Keep cookieConsent in localStorage
+    // Keep cookieConsent & preferredLanguage in localStorage
     const gdpr = localStorage.getItem('gdpr');
+    const lang = localStorage.getItem('locale.lang');
+    const isoA2 = localStorage.getItem('locale.isoA2');
+
     localStorage.clear();
     localStorage.setItem('gdpr', gdpr);
+    localStorage.setItem('locale.lang', lang);
+    localStorage.setItem('locale.isoA2', isoA2);
 
     this.ngIntercom?.shutdown();
     const { intercom } = this.gdprService.cookieConsent;
@@ -230,6 +250,27 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
     const ref = doc(this.db, `users/${userCredential.user.uid}`) as DocumentReference<User>;
     const user = await firstValueFrom(fromRef(ref).pipe(map(snap => snap.data())));
     this.ngIntercom?.update(getIntercomOptions(user));
+  }
+
+  public async updatePreferredLanguage(preferredLanguage: SupportedLanguages, isoA2: TerritoryISOA2Value, reload = true): Promise<SupportedLocaleIds> {
+    if (!preferredLanguage) return;
+    const user = this.profile;
+    if (!user.settings) user.settings = {};
+
+    const defaultIsoA2: TerritoryISOA2Value = preferredLanguage === 'fr' ? 'FR' : 'GB';
+
+    if (!isoA2 || !supportedLocaleIds[`${preferredLanguage}-${isoA2}`]) isoA2 = preferredIsoA2();
+
+    // Check if full language (ex: fr-FR) is logical
+    if (!supportedLocaleIds[`${preferredLanguage}-${isoA2}`]) isoA2 = defaultIsoA2;
+
+    user.settings.preferredLanguage = { language: preferredLanguage, isoA2 };
+    localStorage.setItem('locale.lang', user.settings.preferredLanguage.language);
+    localStorage.setItem('locale.isoA2', user.settings.preferredLanguage.isoA2);
+    await this.update(user);
+    if (reload) window.location.reload();
+
+    return `${user.settings.preferredLanguage.language}-${user.settings.preferredLanguage.isoA2}` as SupportedLocaleIds;
   }
 
   ////////////////////
