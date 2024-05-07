@@ -33,10 +33,16 @@ const statementParty = {
   directSales: 'Direct Sales',
 } as const;
 
+const amortizationStatus = {
+  draft: 'Draft',
+  applied: 'Applied',
+} as const;
+
 export const staticModeli18n = {
   fr: {
     rightholderRoles,
     rightTypes,
-    statementParty
+    statementParty,
+    amortizationStatus
   }
 };

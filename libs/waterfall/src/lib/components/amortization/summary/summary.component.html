@@ -1,15 +1,15 @@
 <header>
-  <h1>Film Amortization</h1>
+  <h1 i18n>Film Amortization</h1>
   <article>
     <section>
-      <mat-icon svgIcon="movie"></mat-icon><span matLine><strong>Title: </strong>{{ movie.title.international }}</span>
+      <mat-icon svgIcon="movie"></mat-icon><span matLine><strong i18n>Title: </strong>{{ movie.title.international }}</span>
     </section>
     <section *ngIf="contracts$ | async as contracts">
       <mat-icon svgIcon="business"></mat-icon>
       <span matLine>
-        <strong>Organizations (s): </strong>
+        <strong i18n>Organizations (s): </strong>
         <span *ngFor="let contract of contracts; let index = index">
-          <span>{{ contract.rightholder.name }} ({{ contract.type | toLabel : 'rightholderRoles' }})</span>
+          <span>{{ contract.rightholder.name }} ({{ contract.type | toLabel : 'rightholderRoles' : true }})</span>
           <ng-container *ngIf="index < contracts.length - 1">, </ng-container>
         </span>
       </span>
@@ -24,13 +24,13 @@
     </header>
     <div class="surface">
       <section>
-        <span>Film Cost</span>
+        <span i18n>Film Cost</span>
         <price-per-currency [price]="amortization.filmCost | formatPair" default="€ 0"></price-per-currency>
       </section>
     </div>
     <div class="surface">
       <section>
-        <span>Financing</span>
+        <span i18n>Financing</span>
         <price-per-currency [price]="amortization.financing | formatPair" default="€ 0"></price-per-currency>
       </section>
     </div>
@@ -38,12 +38,12 @@
       <mat-expansion-panel expanded>
         <mat-expansion-panel-header>
           <mat-panel-title>
-            <span>Revenue Shares</span>
+            <span i18n>Revenue Shares</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <ul>
           <li *ngFor="let right of rights">
-            <span>{{ right.name }} ({{ right.type | toLabel: 'rightTypes' }}) <ng-container *ngIf="right.rightholderId">- {{ right.rightholderId | rightholderName: waterfall }}</ng-container></span>
+            <span>{{ right.name }} ({{ right.type | toLabel: 'rightTypes' : true }}) <ng-container *ngIf="right.rightholderId">- {{ right.rightholderId | rightholderName: waterfall }}</ng-container></span>
             <mat-divider></mat-divider>
           </li>
         </ul>
@@ -58,16 +58,16 @@
       <section>
         <button mat-button color="primary" (click)="previous()">
           <mat-icon svgIcon="arrow_back"></mat-icon>
-          <span>Edit</span>
+          <span i18n>Edit</span>
         </button>
-        <button mat-flat-button color="primary" matTooltip="Save" (click)="exit(amortization)">
-          <span>Apply Calculation Method</span>
+        <button mat-flat-button color="primary" matTooltip="Save" (click)="exit(amortization)" i18n-matTooltip>
+          <span i18n>Apply Calculation Method</span>
           <mat-icon svgIcon="arrow_forward"></mat-icon>
         </button>
       </section>
       <button mat-button class="save" (click)="exit()">
         <mat-icon svgIcon="save"></mat-icon>
-        <span>Save & Come back later</span>
+        <span i18n>Save & Come back later</span>
       </button>
     </ng-template>
   </article>
