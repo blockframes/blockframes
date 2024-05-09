@@ -1,21 +1,23 @@
-<p i18n>Please chose a condition that will influence your waterfall.</p>
-<p i18n>According to the type you chose, the fields will adapt.</p>
-
-<div class="right">
-  <static-select [control]="rightForm.controls.type" scope="rightTypes" [withoutValues]="['horizontal','vertical']" bfi18n>
-    <mat-label i18n>Receipt Share Type</mat-label>
-  </static-select>
-  <mat-form-field appearance="outline">
-    <mat-label i18n>Receipt Share Name</mat-label>
-    <input matInput type="text" [formControl]="rightForm.controls.name" />
-  </mat-form-field>
-</div>
-
-<hr />
+<ng-container *ngIf="!readOnly">
+  <p i18n>Please chose a condition that will influence your waterfall.</p>
+  <p i18n>According to the type you chose, the fields will adapt.</p>
+  
+  <div class="right">
+    <static-select [control]="rightForm.controls.type" scope="rightTypes" [withoutValues]="['horizontal','vertical']" bfi18n>
+      <mat-label i18n>Receipt Share Type</mat-label>
+    </static-select>
+    <mat-form-field appearance="outline">
+      <mat-label i18n>Receipt Share Name</mat-label>
+      <input matInput type="text" [formControl]="rightForm.controls.name" />
+    </mat-form-field>
+  </div>
+  
+  <hr />
+</ng-container>
 
 <ng-container *ngFor="let step of rightForm.controls.steps.value; let stepIndex = index">
   <ng-container *ngIf="selectedStep$.value === stepIndex; else item">
-    <p class="step" *ngIf="canUpdate || step.length">Step {{stepIndex + 1}}</p>
+    <p class="step" *ngIf="canUpdate || step.length" i18n>Step {{stepIndex + 1}}</p>
   
     <waterfall-condition-item
       *ngFor="let condition of step; let conditionIndex = index"
@@ -29,7 +31,7 @@
 
     <div class="add-next" *ngIf="canUpdate">
       <hr />
-      <p class="mat-caption">Add Next Condition</p>
+      <p class="mat-caption" i18n>Add Next Condition</p>
       <button mat-mini-fab color="primary" [disabled]="!newCondition || !canUpdate" (click)="addNewCondition(step.length)">
         <mat-icon svgIcon="add"></mat-icon>
       </button>
@@ -40,6 +42,6 @@
   </ng-template>
 </ng-container>
 
-<div class="add-step">
+<div class="add-step" *ngIf="!readOnly">
   <button mat-button color="primary" [disabled]="!canUpdate" (click)="addStep()" i18n>Add New Step</button>
 </div>

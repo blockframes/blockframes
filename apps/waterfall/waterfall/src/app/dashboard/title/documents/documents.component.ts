@@ -27,7 +27,7 @@ export class DocumentsComponent {
     public shell: DashboardWaterfallShellComponent,
     private dynTitle: DynamicTitleService,
   ) {
-    this.dynTitle.setPageTitle(this.shell.movie.title.international, 'Documents');
+    this.dynTitle.setPageTitle(this.shell.movie.title.international, $localize`Documents`);
   }
 
   public navigate(path: Path[]) {

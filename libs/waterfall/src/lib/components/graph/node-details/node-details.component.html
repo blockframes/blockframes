@@ -1,10 +1,18 @@
-<h3>Sunset distribution</h3>
-<mat-tab-group>
-  <mat-tab label="Information">
-  info
-  </mat-tab>
-  <mat-tab label="Conditions">
-      condition
-  </mat-tab>
-</mat-tab-group>
-
+<ng-container *ngIf="right$ | async as right">
+  <h3>{{ right.org }}</h3>
+  <mat-tab-group>
+    <mat-tab label="Information" i18n-label>
+    info
+    </mat-tab>
+    <mat-tab label="Conditions" *ngIf="!(right.type | isHorizontal) && !(rightId | isStep : (rights$ | async))" i18n-label>
+      <section>
+        <waterfall-conditions 
+          canUpdate="false"
+          readOnly="true"
+          [rightForm]="rightForm"
+          [rightId]="rightId">
+        </waterfall-conditions>
+      </section>
+    </mat-tab>
+  </mat-tab-group>
+</ng-container>

@@ -16,7 +16,7 @@ import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/s
 
 
 @NgModule({
-  declarations: [ WaterfallConditionsComponent ],
+  declarations: [WaterfallConditionsComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -31,6 +31,6 @@ import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/s
     MatButtonModule,
     MatFormFieldModule,
   ],
-  exports: [ WaterfallConditionsComponent ],
+  exports: [WaterfallConditionsComponent],
 })
-export class WaterfallConditionsModule {}
+export class WaterfallConditionsModule { }
