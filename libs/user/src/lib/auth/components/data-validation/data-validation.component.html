@@ -2,12 +2,12 @@
   <article fxLayout fxLayoutAlign="space-between center">
     <div fxLayout>
       <img class="illustration" asset="user.svg" alt="user profile ilustration" />
-      <p>Profile Data</p>
+      <p i18n>Profile Data</p>
       <mat-icon class="icon-tooltip" svgIcon="info"
-        matTooltip="Fill in your profile information (first name, last name, etc.)"></mat-icon>
+        matTooltip="Fill in your profile information (first name, last name, etc.)" i18n-matTooltip></mat-icon>
     </div>
     <mat-icon *ngIf="profileData" svgIcon="check_circle" color="primary" class="margin" test-id="profile-data-ok"></mat-icon>
-    <button *ngIf="!profileData" mat-icon-button (click)="refresh()" matTooltip="Refresh page.">
+    <button *ngIf="!profileData" mat-icon-button (click)="refresh()" matTooltip="Refresh page." i18n-matTooltip>
       <mat-icon svgIcon="update" test-id="profile-data-pending"></mat-icon>
     </button>
   </article>
@@ -17,12 +17,12 @@
   <article fxLayout fxLayoutAlign="space-between center">
     <div fxLayout>
       <img class="illustration" asset="org.svg" alt="organization illustration" />
-      <p>Organization Data</p>
+      <p i18n>Organization Data</p>
       <mat-icon class="icon-tooltip" svgIcon="info"
-        matTooltip="Fill in your company information (activity, country, etc.)"></mat-icon>
+        matTooltip="Fill in your company information (activity, country, etc.)" i18n-matTooltip></mat-icon>
     </div>
     <mat-icon *ngIf="orgData" svgIcon="check_circle" color="primary" class="margin" test-id="org-data-ok"></mat-icon>
-    <button *ngIf="!orgData" mat-icon-button (click)="refresh()" matTooltip="Refresh page">
+    <button *ngIf="!orgData" mat-icon-button (click)="refresh()" matTooltip="Refresh page" i18n-matTooltip>
       <mat-icon svgIcon="update" test-id="org-data-pending"></mat-icon>
     </button>
   </article>
@@ -32,15 +32,15 @@
   <article fxLayout fxLayoutAlign="space-between center">
     <div fxLayout>
       <img class="illustration" asset="contact.svg" alt="enveloppe illustration" />
-      <p>Email Validation</p>
-      <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Click the link provided in your verification email.">
+      <p i18n>Email Validation</p>
+      <mat-icon class="icon-tooltip" svgIcon="info" matTooltip="Click the link provided in your verification email." i18n-matTooltip>
       </mat-icon>
     </div>
     <ng-container *ngIf="emailValidate$ | async; else notValid">
       <mat-icon svgIcon="check_circle" color="primary" class="margin" test-id="email-ok"></mat-icon>
     </ng-container>
     <ng-template #notValid>
-      <button mat-icon-button (click)="resendEmailVerification()" matTooltip="Resend verification email">
+      <button mat-icon-button (click)="resendEmailVerification()" matTooltip="Resend verification email" i18n-matTooltip>
         <mat-icon color="primary" svgIcon="resend_email" test-id="email-pending"></mat-icon>
       </button>
     </ng-template>
@@ -51,20 +51,20 @@
   <article fxLayout fxLayoutAlign="space-between center">
     <div fxLayout>
       <img class="illustration" asset="org_approval.svg" alt="organization illustration" />
-      <p>Organization Approval</p>
+      <p i18n>Organization Approval</p>
       <mat-icon class="icon-tooltip" svgIcon="info"
-        matTooltip="Please wait for the approval of the company information you provided."></mat-icon>
+        matTooltip="Please wait for the approval of the company information you provided." i18n-matTooltip></mat-icon>
     </div>
     <mat-icon *ngIf="orgApproval" svgIcon="check_circle" color="primary" class="margin" test-id="org-approval-ok"></mat-icon>
-    <button *ngIf="!orgApproval" mat-icon-button (click)="refresh()"  matTooltip="Refresh page.">
+    <button *ngIf="!orgApproval" mat-icon-button (click)="refresh()"  matTooltip="Refresh page." i18n-matTooltip>
       <mat-icon svgIcon="update" test-id="org-approval-pending"></mat-icon>
     </button>
   </article>
 </section>
 
 <footer>
-  <button mat-flat-button color="primary" (click)="openIntercom()" fxHide.xs="true" test-id="contact-desktop">Contact {{ app | appName }}
+  <button mat-flat-button color="primary" (click)="openIntercom()" fxHide.xs="true" test-id="contact-desktop" i18n>Contact {{ app | appName }}
     Team</button>
-  <button mat-flat-button color="primary" (click)="openIntercom()" fxHide.gt-xs="true" test-id="contact-mobile">Contact Us</button>
-  <button mat-button color="primary" (click)="refresh()" test-id="refresh">Refresh Page</button>
+  <button mat-flat-button color="primary" (click)="openIntercom()" fxHide.gt-xs="true" test-id="contact-mobile" i18n>Contact Us</button>
+  <button mat-button color="primary" (click)="refresh()" test-id="refresh" i18n>Refresh Page</button>
 </footer>

@@ -200,6 +200,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   private async create() {
     if (this.existingOrgId) {
       // Create user
+      // TODO #9699 const org = await this.orgService.getValue(this.existingOrgId); & check that "full" "en-GB" is logical (see updatePreferredLanguage)
       this.publicUser = await this.createUser(this.form.value);
       // Request to join existing org
       await this.invitationService.request(this.existingOrgId, this.publicUser).to('joinOrganization');
@@ -221,6 +222,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       }
 
       // Create user
+      // TODO #9699 check orgFrom country  & check that "full" "en-GB" is logical (see updatePreferredLanguage)
       this.publicUser = await this.createUserFromAnonymous(this.form.value);
 
       // Create the org
@@ -334,7 +336,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
         firstName,
         lastName,
         privacyPolicy,
-        termsAndConditions
+        termsAndConditions,
+        // TODO #9699 preferred language
       });
     }
 
