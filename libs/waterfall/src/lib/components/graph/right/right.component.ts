@@ -18,7 +18,7 @@ export class WaterfallGraphRightComponent implements OnChanges {
   @Input() public selected: boolean;
   @Input() public nonEditableNodeIds: string[] = [];
   @Input() @boolean public hideAmount: boolean;
-  @Input() public monetizationLabel = 'Total Revenue';
+  @Input() public monetizationLabel = $localize`Total Revenue`;
 
   @Output() addChild = new EventEmitter<string>();
   @Output() addSibling = new EventEmitter<string>();

@@ -6,14 +6,14 @@
     <small class="mat-caption">{{ notification._meta.createdAt | date: 'shortTime' }}</small>
   </span>
   <button *ngIf="!notification.app?.isRead; else isRead" mat-button (click)="markAsRead(notification)" test-id="mark-as-read">
-    <div class="mat-caption" fxLayout="column" fxLayoutAlign="center center">
+    <div class="mat-caption" fxLayout="column" fxLayoutAlign="center center" i18n>
       <mat-icon svgIcon="done_all"></mat-icon>
       Mark as read
     </div>
   </button>
 
   <ng-template #isRead>
-    <bf-tag disabled fxLayout>
+    <bf-tag disabled fxLayout i18n>
       <mat-icon svgIcon="check" test-id="already-read"></mat-icon>
       READ
     </bf-tag>
@@ -24,7 +24,7 @@
   </button>
 </mat-list-item>
 <mat-menu #menu="matMenu">
-  <a mat-menu-item [target]="targetLink" [href]="notification.url">{{ notification.actionText ?? 'More Details' }}</a>
+  <a mat-menu-item [target]="targetLink" [href]="notification.url">{{ notification.actionText ?? defaultActionText }}</a>
 </mat-menu>
 <ng-container *ngIf="xs$ | async">
   <p [ngClass]="{ disabled: notification.app?.isRead }" class="mat-body-1" test-id="notification-message" [innerHtml]="notification.message"></p>
