@@ -30,6 +30,7 @@ import { getReviewer } from '@blockframes/contract/negotiation/utils';
 import { where } from 'firebase/firestore';
 import { SentryService } from '@blockframes/utils/sentry.service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
+import '@angular/localize/init'; // TODO #9699 why is this needed here?
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService extends BlockframesCollection<Notification> {
