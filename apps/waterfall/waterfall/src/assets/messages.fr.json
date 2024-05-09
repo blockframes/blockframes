@@ -111,6 +111,7 @@
     "8479436517803633502": "Directeur(s)",
     "236844921360077996": "Année de sortie",
     "8186497243936219977": "#Ventes (Recettes Brutes Totales)",
+    >> ICI 
     "3924198202241656343": "{$START_TAG_MAT_ICON}{$CLOSE_TAG_MAT_ICON} Mark as read ",
     "35419184095456162": "{$START_TAG_MAT_ICON}{$CLOSE_TAG_MAT_ICON} READ ",
     "935659957981393244": "More Details",
@@ -168,6 +169,7 @@
     "2576968567171069910": "Failed to load movie {$PH}",
     "4759844674224677998": "missing title",
     "2472429819189677988": "Failed to load contract for {$PH} ({$PH_1})",
+    END <<
     "185504950006603388": "Inviter des membres",
     "8275375403190895738": "Invitez vos collègues à rejoindre votre société afin qu'ils puissent utiliser l'application.",
     "5291126315631411875": "Ajouter un e-mail",
@@ -587,7 +589,7 @@
     "2739443487521010237": "Schéma du waterfall",
     "4523018803335361137": "Vous modifiez la version par défaut de ce waterfall. Sauf pour les pourcentages de partage des recettes déjà écrasés et les conditions, les modifications apportées à cette version seront appliquées à toutes les versions non autonomes.",
     "5055425343833721962": "Veuillez fournir les détails de la condition pour établir le waterfall correcte.",
-    "1126590495390081449": "Receipt Source",
+    "1126590495390081449": "Receipt Source", << ICI
     "3039992579098897964": "Cela ne peut plus être modifié.",
     "7000649363168371045": "Enregistrer les modifications",
     "7656685677879030509": "Supprimer la source",
@@ -638,9 +640,9 @@
     "8436351042167499978": "Faites attention, si vous supprimez le suivant {$PH}, cela aura un impact sur les conditions et tout le waterfall.",
     "1977110923519959622": "Oui, supprimer {$PH}",
     "964737233789589599": "Non, revenir au constructeur de waterfall.",
-    "3620290412817563324": "Total Revenue",
-    "1836325341458112664": "Revenue",
-    "7759842696570767329": "Add new Receipt Share",
+    "3620290412817563324": "Total Revenue", << ICI
+    "1836325341458112664": "Revenue", << ICI
+    "7759842696570767329": "Add new Receipt Share", << ICI
     "92357923573899602": "Inviter les ayants droit",
     "2224257262140691734": " Inviter les ayants droit à {$START_TAG_STRONG}rejoindre votre waterfall.{$CLOSE_TAG_STRONG} ainsi, ils pourront utiliser l'application en temps réel.. {$LINE_BREAK} Ils auront {$START_TAG_STRONG}un accès différent en fonction de leur rôle.{$CLOSE_TAG_STRONG}. {$LINE_BREAK} Chaque ayants droits {$START_TAG_STRONG}ne verra que la partie de la cascade qui le concerne{$CLOSE_TAG_STRONG}. ",
     "8491698033430888327": "{$START_TAG_STRONG}Distributeurs principaux et agents de vente{$CLOSE_TAG_STRONG} pourront ajouter et modifier leurs décomptes. {$LINE_BREAK}{$START_TAG_STRONG}Financiers, auteurs et coproducteurs{$CLOSE_TAG_STRONG} pourront accéder aux décomptes sortants. ",
