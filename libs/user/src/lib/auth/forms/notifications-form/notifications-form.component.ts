@@ -59,7 +59,7 @@ const tables: { title: string, types: NotificationTypes[], appAuthorized: App[] 
   {
     title: $localize`Company Management`,
     types: ['requestFromUserToJoinOrgCreate', 'orgMemberUpdated'],
-    appAuthorized: ['catalog', 'festival', 'financiers']
+    appAuthorized: ['catalog', 'festival', 'financiers', 'waterfall']
   },
   {
     title: $localize`Content Management`,
@@ -184,7 +184,9 @@ export class NotificationsFormComponent {
     try {
       const notifications = this.form.getRawValue();
       const uid = this.authService.uid;
-      await this.authService.update({ uid, settings: { notifications } });
+      const { settings } = this.authService.profile;
+      settings.notifications = notifications;
+      await this.authService.update({ uid, settings });
       this.snackBar.open($localize`Notification Settings updated. `, 'close', { duration: 4000 });
     } catch (err) {
       this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });

@@ -131,7 +131,7 @@ export const getOrInviteUserByMail = async (
  * @param email
  */
 export const createUserFromEmail = async (email: string, createdFrom: App = 'festival'): Promise<{ user: PublicUser, password: string }> => {
-  // TODO #9699 preferred language
+  // TODO #9699 preferred language (when created via CRM or when invited)
   const password = generatePassword();
 
   // User does not exists, we create it with a generated password
