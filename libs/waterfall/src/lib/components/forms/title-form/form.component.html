@@ -1,36 +1,36 @@
 
 <section class="surface">
   <h2>
-    <span>Main Information</span>
-    <mat-icon class="icon-tooltip" *ngIf="(canEditMovie$ | async) === false" svgIcon="info" matTooltip="Only Admins can edit the Movie informations"></mat-icon>
+    <span i18n>Main Information</span>
+    <mat-icon class="icon-tooltip" *ngIf="(canEditMovie$ | async) === false" svgIcon="info" matTooltip="Only Admins can edit the Movie informations" i18n-matTooltip></mat-icon>
   </h2>
   <mat-form-field appearance="outline" class="title">
-    <mat-label>Title</mat-label>
-    <input matInput type="text" placeholder="Title" [formControl]="movieForm.title.controls.international" required />
-    <mat-error>This field is mandatory</mat-error>
+    <mat-label i18n>Title</mat-label>
+    <input matInput type="text" placeholder="Title" [formControl]="movieForm.title.controls.international" required i18n-placeholder/>
+    <mat-error i18n>This field is mandatory</mat-error>
   </mat-form-field>
 
   <div *ngFor="let director of movieForm.directors.controls; let index = index; let last = last">
     <mat-form-field appearance="outline">
-      <mat-label>Director's First Name</mat-label>
-      <input matInput type="text" placeholder="Director's First Name" [formControl]="director.controls.firstName" />
-      <mat-error>This field is mandatory</mat-error>
+      <mat-label i18n>Director's First Name</mat-label>
+      <input matInput type="text" placeholder="Director's First Name" [formControl]="director.controls.firstName" i18n-placeholder/>
+      <mat-error i18n>This field is mandatory</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Director's Last Name</mat-label>
-      <input matInput type="text" placeholder="Director's Last Name" [formControl]="director.controls.lastName" />
-      <mat-error>This field is mandatory</mat-error>
+      <mat-label i18n>Director's Last Name</mat-label>
+      <input matInput type="text" placeholder="Director's Last Name" [formControl]="director.controls.lastName" i18n-placeholder/>
+      <mat-error i18n>This field is mandatory</mat-error>
     </mat-form-field>
 
     <ng-container *ngIf="canEditMovie$ | async">
       <ng-container *ngIf="last else notLast">
-        <button mat-mini-fab color="primary" (click)="addDirector()" matTooltip="Add a new Director">
+        <button mat-mini-fab color="primary" (click)="addDirector()" matTooltip="Add a new Director" i18n-matTooltip>
           <mat-icon svgIcon="add"></mat-icon>
         </button>
       </ng-container>
       <ng-template #notLast>
-        <button mat-icon-button color="danger" (click)="removeDirector(index)" matTooltip="Delete Director">
+        <button mat-icon-button color="danger" (click)="removeDirector(index)" matTooltip="Delete Director" i18n-matTooltip>
           <mat-icon svgIcon="delete"></mat-icon>
         </button>
       </ng-template>
@@ -43,7 +43,7 @@
     [form]="movieForm.poster"
     listenToChanges
   >
-    <h3 title>Movie Poster</h3>
+    <h3 title i18n>Movie Poster</h3>
   </image-uploader>
 
   <ng-template #noUpload>

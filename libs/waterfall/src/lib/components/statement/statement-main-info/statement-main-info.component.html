@@ -2,24 +2,24 @@
   <article>
     <section>
       <span>
-        <mat-icon svgIcon="movie"></mat-icon><span matLine><strong>Title: </strong>{{ movie.title.international }}</span>
+        <mat-icon svgIcon="movie"></mat-icon><span matLine><strong i18n>Title: </strong>{{ movie.title.international }}</span>
       </span>
-      <span *ngIf="showLink">
+      <span *ngIf="showLink" i18n>
         Statement Reported: {{ statement.reported | date }}
       </span>
     </section>
   
     <section>
       <span>
-        <mat-icon svgIcon="calendar_today"></mat-icon><span matLine><strong>Covered Period: </strong>{{ statement.duration.from | date }} -  {{ statement.duration.to | date }}</span>
+        <mat-icon svgIcon="calendar_today"></mat-icon><span matLine><strong i18n>Covered Period: </strong>{{ statement.duration.from | date }} -  {{ statement.duration.to | date }}</span>
       </span>
       <span *ngIf="showLink">
         <a mat-button [routerLink]="['/c/o/dashboard/title', statement.waterfallId, 'statement', statement.id]" target="_blank">
           <mat-icon svgIcon="document" matTooltip="See Statement"></mat-icon>
-          <span>See Statement</span>
+          <span i18n>See Statement</span>
         </a>
       </span>
-      <span *ngIf="!showLink">
+      <span *ngIf="!showLink" i18n>
         Statement Reported: {{ statement.reported | date }}
       </span>
     </section>
@@ -28,33 +28,33 @@
 <ng-template #full>
   <article>
     <span>
-      <mat-icon svgIcon="movie"></mat-icon><span matLine><strong>Title: </strong>{{ movie.title.international }}</span>
+      <mat-icon svgIcon="movie"></mat-icon><span matLine><strong i18n>Title: </strong>{{ movie.title.international }}</span>
     </span>
   
     <span>
-      <mat-icon svgIcon="calendar_today"></mat-icon><span matLine><strong>Covered Period: </strong>{{ statement.duration.from | date }} -  {{ statement.duration.to | date }}</span>
+      <mat-icon svgIcon="calendar_today"></mat-icon><span matLine><strong i18n>Covered Period: </strong>{{ statement.duration.from | date }} -  {{ statement.duration.to | date }}</span>
     </span>
   
     <section *ngIf="contract">
       <span>
-        <mat-icon svgIcon="document"></mat-icon><span matLine><strong>Contract: </strong>{{ contract.name }} <ng-container *ngIf="sources">({{ sources.length ? (sources | join:'name') : 'Receipt sources not specified' }})</ng-container></span>
+        <mat-icon svgIcon="document"></mat-icon><span matLine><strong i18n>Contract: </strong>{{ contract.name }} <ng-container *ngIf="sources">({{ sources.length ? (sources | join:'name') : 'Receipt sources not specified' }})</ng-container></span>
       </span>
-      <span *ngIf="statement.status === 'reported' && !!statement.reported">
+      <span *ngIf="statement.status === 'reported' && !!statement.reported" i18n>
         Statement Reported: {{ statement.reported | date }}
       </span>
     </section>
   
     <section *ngIf="statement.type === 'directSales' && sources">
       <span>
-        <mat-icon svgIcon="document"></mat-icon><span matLine><strong>Sources: </strong> {{ sources.length ? (sources | join:'name') : 'Receipt sources not specified' }}</span>
+        <mat-icon svgIcon="document"></mat-icon><span matLine><strong i18n>Sources: </strong> {{ sources.length ? (sources | join:'name') : 'Receipt sources not specified' }}</span><!-- TODO #9699 -->
       </span>
-      <span *ngIf="statement.status === 'reported' && !!statement.reported">
+      <span *ngIf="statement.status === 'reported' && !!statement.reported" i18n>
         Statement Reported: {{ statement.reported | date }}
       </span>
     </section>
 
     <span *ngIf="statement.status !== 'reported' && statement.type === 'directSales'">
-      <mat-icon svgIcon="warning" color="warn"></mat-icon><span matLine><strong>Warning: </strong>Direct sales statements display only producer's rights that have a type "Expenses" or "Commission" for the Net receipts calculation.</span>
+      <mat-icon svgIcon="warning" color="warn"></mat-icon><span matLine i18n><strong>Warning: </strong>Direct sales statements display only producer's rights that have a type "Expenses" or "Commission" for the Net receipts calculation.</span>
     </span>
 
   </article>

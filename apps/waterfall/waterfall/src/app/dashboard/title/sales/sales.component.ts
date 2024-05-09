@@ -30,6 +30,6 @@ export class SalesComponent {
     private shell: DashboardWaterfallShellComponent,
     private dynTitle: DynamicTitleService,
   ) {
-    this.dynTitle.setPageTitle(this.shell.movie.title.international, 'World Sales');
+    this.dynTitle.setPageTitle(this.shell.movie.title.international, $localize`World Sales`);
   }
 }

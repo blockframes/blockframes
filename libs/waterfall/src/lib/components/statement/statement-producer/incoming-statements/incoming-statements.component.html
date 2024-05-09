@@ -1,11 +1,11 @@
 <section *ngIf="statement$ | async as statement">
-  <h3>Net Receipts Details</h3>
+  <h3 i18n>Net Receipts Details</h3>
   <mat-tab-group class="bf-tabs" *ngIf="distributors.length" selectedIndex="0" (selectedTabChange)="onTabChanged($event)">
     <mat-tab *ngFor="let distributor of distributors" [label]="distributor.name">
       <span *ngIf="distributorContracts[distributor.id]?.length > 1">
         <mat-form-field appearance="outline">
           <mat-icon matPrefix svgIcon="business"></mat-icon>
-          <mat-label>
+          <mat-label i18n>
             Choose Contract you want to work with
           </mat-label>
           <mat-select [formControl]="contractControl">
@@ -35,11 +35,11 @@
                           <mat-icon svgIcon="document" matTooltip="View Statement"></mat-icon>
                         </a>
                       </span>
-                      <p class="mat-body-1">Payment Date:  {{ stm.payments.rightholder.date | date }}
+                      <p class="mat-body-1" i18n>Payment Date:  {{ stm.payments.rightholder.date | date }}
                       </p>
                     </div>
                     <div class="statement-price">
-                      <h3 *ngIf="stm.payments.rightholder as payment">
+                      <h3 *ngIf="stm.payments.rightholder as payment" i18n>
                         Net Receipts Paid:
                         <price-per-currency [price]="payment.price | formatPair:payment.currency"></price-per-currency>
                       </h3>
@@ -62,7 +62,7 @@
                           <mat-icon svgIcon="document" matTooltip="View Statement"></mat-icon>
                         </a>
                       </span>
-                      <p class="mat-body-1">
+                      <p class="mat-body-1" i18n>
                         Payment Date: 
                         <ng-container *ngIf="stm.payments.right[0] as payment">
                           {{ payment.date | date }}

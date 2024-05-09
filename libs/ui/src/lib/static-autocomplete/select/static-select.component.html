@@ -7,7 +7,7 @@
     <mat-option [value]="null" *ngIf="showEmptyOption"></mat-option>
     <ng-container *ngFor="let value of staticValue">
       <mat-option [value]="value" [attr.test-id]="'option_' + value" [disabled]="disabledValues?.includes(value)">
-        {{ value | toLabel: scope }}
+        {{ value | toLabel: scope : bfi18n }}
       </mat-option>
     </ng-container>
   </mat-select>

@@ -10,8 +10,8 @@ import { Waterfall, WaterfallRightholder } from '@blockframes/model';
 export class RightholderTableComponent {
   @Input() waterfall: Waterfall;
   @Input() columns: Record<string, string> = {
-    name: 'Organization Name',
-    roles: 'Waterfall Roles',
+    name: $localize`Organization Name`,
+    roles: $localize`Waterfall Roles`,
   };
   @Input() actions: Record<string, boolean> = {
     crm: true,

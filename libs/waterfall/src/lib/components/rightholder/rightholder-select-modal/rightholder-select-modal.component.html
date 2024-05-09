@@ -1,9 +1,9 @@
 <global-modal>
   <h2>
-    <span>Change Organization</span>
+    <span i18n>Change Organization</span>
   </h2>
   <header>
-    <p class="mat-body-1">Select the Organization for this Right Holder.</p>
+    <p class="mat-body-1" i18n>Select the Organization for this Right Holder.</p>
   </header>
 
   <waterfall-rightholder-select
@@ -11,16 +11,16 @@
     [control]="rightholderId"
     [value]="rightholder"
     required>
-    <mat-label>Company name</mat-label>
-    <mat-hint>Select Company Name</mat-hint>
+    <mat-label i18n>Company name</mat-label>
+    <mat-hint i18n>Select Company Name</mat-hint>
   </waterfall-rightholder-select>
 
   <mat-dialog-actions>
     <button mat-flat-button color="primary" (click)="confirm()">
-      <span>Update</span>
+      <span i18n>Update</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>
-    <button mat-button (click)="close()">
+    <button mat-button (click)="close()" i18n>
       Close window
     </button>
   </mat-dialog-actions>

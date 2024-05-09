@@ -40,12 +40,12 @@ export class StatementTableComponent {
   @Input() statements: Statement[] = [];
   @Input() columns: Record<string, string> = {
     number: '#',
-    duration: 'Statement period',
-    due: 'Amount Due',
-    paid: 'Amount Paid',
-    date: 'Payment Date',
-    status: 'Status',
-    actions: 'Actions',
+    duration: $localize`Statement period`,
+    due: $localize`Amount Due`,
+    paid: $localize`Amount Paid`,
+    date: $localize`Payment Date`,
+    status: $localize`Status`,
+    actions: $localize`Actions`,
   };
   @Input() actions: Record<string, boolean> = {
     notify: true,
@@ -105,7 +105,7 @@ export class StatementTableComponent {
 
           this.statements = this.statements.map(s => s.id === statement.id ? statement : s);
 
-          this.snackBar.open('Declared payment confirmed.', 'close', { duration: 5000 });
+          this.snackBar.open($localize`Declared payment confirmed.`, 'close', { duration: 5000 });
           this.cdr.markForCheck();
         }
       })
@@ -120,12 +120,12 @@ export class StatementTableComponent {
       versionId: statement.versionId,
       fileName: statementFileName(statement)
     };
-    const snackbarRef = this.snackBar.open('Please wait, your statement is being generated...');
+    const snackbarRef = this.snackBar.open($localize`Please wait, your statement is being generated...`);
 
     const exportStatus = await this.pdfService.downloadStatement(settings);
     snackbarRef.dismiss();
     if (!exportStatus) {
-      this.snackBar.open('An error occurred, please try again.', 'close', { duration: 5000 });
+      this.snackBar.open($localize`An error occurred, please try again.`, 'close', { duration: 5000 });
     }
   }
 
@@ -146,14 +146,14 @@ export class StatementTableComponent {
         movie: this.shell.movie,
         onConfirm: async (emails: string[]) => {
           const emailStr = emails.length === 1 ? `"${emails[0]}"` : `${emails.length} emails`;
-          const snackbarRef = this.snackBar.open(`Please wait, statement is being sent to ${emailStr} ...`);
+          const snackbarRef = this.snackBar.open($localize`Please wait, statement is being sent to ${emailStr} ...`);
 
           const output = await this.functions.call<{ request: StatementPdfParams, emails: string[] }, boolean>('statementToEmail', { request, emails });
           snackbarRef.dismiss();
           if (!output) {
-            this.snackBar.open('An error occurred, please try again.', 'close', { duration: 5000 });
+            this.snackBar.open($localize`An error occurred, please try again.`, 'close', { duration: 5000 });
           } else {
-            this.snackBar.open('Your Statement has been successfully shared.', 'close', { duration: 5000 });
+            this.snackBar.open($localize`Your Statement has been successfully shared.`, 'close', { duration: 5000 });
           }
         }
       })
@@ -164,18 +164,18 @@ export class StatementTableComponent {
     if (statement.hash?.requested) return;
     this.dialog.open(ConfirmComponent, {
       data: createModalData({
-        title: 'Certify the document via Blockchain',
-        question: 'Objective of Blockchain timestamping is to have proof of reissue made, certify a digital document.',
-        advice: 'For any question, please',
-        intercom: 'Contact us',
-        confirm: 'Certify document',
-        cancel: 'Close window',
+        title: $localize`Certify the document via Blockchain`,
+        question: $localize`Objective of Blockchain timestamping is to have proof of reissue made, certify a digital document.`,
+        advice: $localize`For any question, please`,
+        intercom: $localize`Contact us`,
+        confirm: $localize`Certify document`,
+        cancel: $localize`Close window`,
         onConfirm: async () => {
           statement.hash.requested = true;
           statement.hash.requestDate = new Date();
           statement.hash.requestedBy = this.authService.user.uid;
           await this.statementService.update(statement, { params: { waterfallId: this.waterfall.id } });
-          this.snackBar.open('Request sent, we\'ll get back to you shortly.', 'close', { duration: 5000 });
+          this.snackBar.open($localize`Request sent, we'll get back to you shortly.`, 'close', { duration: 5000 });
         }
       }, 'small'),
       autoFocus: false

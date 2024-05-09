@@ -5,10 +5,10 @@
 </ng-container>
 
 <ng-template #notInitalized>
-  <h1>Waterfall not initialized.</h1>
+  <h1 i18n>Waterfall not initialized.</h1>
 
   <ng-container *ngIf="shell.canBypassRules else notAdmin">
-    <p class="mat-body-1">
+    <p class="mat-body-1" i18n>
       Please initialize a first version that you're going to work with.
     </p>
 
@@ -50,12 +50,12 @@
 
     <a *ngIf="shell.canInitWaterfall$ | async else canNotInit" (click)="initWaterfall()" class="surface">
       <img asset="add_draft.svg" alt="Add waterfall image">
-      <button mat-button color="primary" matTooltip="Initialize Waterfall">Initialize Waterfall</button>
+      <button mat-button color="primary" matTooltip="Initialize Waterfall" i18n>Initialize Waterfall</button>
     </a>
     <ng-template #canNotInit>
       <a class="surface" [routerLink]="showImportLinks === false ? '../init' : undefined">
         <img asset="add_draft.svg" alt="Add waterfall image">
-        <button mat-button [disabled]="showImportLinks === true" color="primary" [matTooltip]="showImportLinks === false ? 'Create Waterfall' : 'Not enough data to initialize Waterfall'">Initialize Waterfall</button>
+        <button mat-button [disabled]="showImportLinks === true" color="primary" [matTooltip]="showImportLinks === false ? 'Create Waterfall' : 'Not enough data to initialize Waterfall'" i18n>Initialize Waterfall</button>
       </a>
     </ng-template>
   </ng-container>
@@ -66,11 +66,11 @@
 </ng-template>
 
 <ng-template #notAdmin>
-  <p class="mat-body-1">
+  <p class="mat-body-1" i18n>
     You are not authorized to initialize waterfall.
   </p>
   <a class="surface">
     <img asset="add_draft.svg" alt="Add waterfall image">
-    <button mat-button disabled color="primary" matTooltip="Not authorized to initialize Waterfall">Initialize Waterfall</button>
+    <button mat-button disabled color="primary" matTooltip="Not authorized to initialize Waterfall" i18n>Initialize Waterfall</button>
   </a>
 </ng-template>

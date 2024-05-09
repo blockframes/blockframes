@@ -1,11 +1,11 @@
 <global-modal>
   <header>
-    <h2 *ngIf="data.mode === 'edit'">Edit Waterfall Version</h2>
-    <h2 *ngIf="data.mode === 'init'">Initialize Waterfall</h2>
+    <h2 *ngIf="data.mode === 'edit'" i18n>Edit Waterfall Version</h2>
+    <h2 *ngIf="data.mode === 'init'" i18n>Initialize Waterfall</h2>
 
     <ng-container *ngIf="data.mode === 'create'">
-      <h2>Create version of Waterfall</h2>
-      <p class="mat-body-2">
+      <h2 i18n>Create version of Waterfall</h2>
+      <p class="mat-body-2" i18n>
         You are about to create a new version of Waterfall. <br/>
         You will be able to view all other versions.
       </p>
@@ -15,27 +15,27 @@
   <form [formGroup]="form">
 
     <ng-container *ngIf="data.mode === 'create'">
-      <p class="mat-body-2">Please choose how you would like to proceed:</p>
+      <p class="mat-body-2" i18n>Please choose how you would like to proceed:</p>
       <mat-radio-group formControlName="standalone">
-        <mat-radio-button [value]="true">
+        <mat-radio-button [value]="true" i18n>
           FROM SCRATCH - Creates a completely new version
         </mat-radio-button>
-        <mat-radio-button [value]="false">
+        <mat-radio-button [value]="false" i18n>
           DUPLICATE - Creates a duplicate of the default version
         </mat-radio-button>
       </mat-radio-group>
     </ng-container>
 
     <mat-form-field appearance="outline">
-      <mat-label>Version Name</mat-label>
+      <mat-label i18n>Version Name</mat-label>
       <input matInput placeholder="e.g. Royalty Adjustment, New Studio Partnership..."  formControlName="name" required/>
-      <mat-hint>Please ensure to provide a clear and explicit name for your version.</mat-hint>
+      <mat-hint i18n>Please ensure to provide a clear and explicit name for your version.</mat-hint>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Version Description</mat-label>
-      <textarea matInput formControlName="description" placeholder="The waterfall version refers to the specific configuration or distribution plan used to allocate revenues among different right holders or stakeholders involved in a film project." type="string" cdkTextareaAutosize cdkAutosizeMinRows="6" ></textarea>
-      <mat-hint *ngIf="!data.isDefaultVersion">Clarify the purpose and changes in this Waterfall version for better understanding by you and other Right Holders.</mat-hint>
+      <mat-label i18n>Version Description</mat-label>
+      <textarea matInput formControlName="description" placeholder="The waterfall version refers to the specific configuration or distribution plan used to allocate revenues among different right holders or stakeholders involved in a film project." type="string" cdkTextareaAutosize cdkAutosizeMinRows="6" i18n-placeholder></textarea>
+      <mat-hint *ngIf="!data.isDefaultVersion" i18n>Clarify the purpose and changes in this Waterfall version for better understanding by you and other Right Holders.</mat-hint>
     </mat-form-field>
 
     <waterfall-rightholder-select 
@@ -43,17 +43,17 @@
       [rightholders]="data.rightholders"
       [control]="form.get('rightholderIds')"
       multiple>
-      <mat-label>Impacted Organizations</mat-label>
-      <mat-hint>Please specify the organizations that will be impacted by this new version.</mat-hint>
+      <mat-label i18n>Impacted Organizations</mat-label>
+      <mat-hint i18n>Please specify the organizations that will be impacted by this new version.</mat-hint>
     </waterfall-rightholder-select>
   </form>
 
   <mat-dialog-actions>
     <button mat-flat-button color="primary" (click)="confirm()">
-      <span>{{ data.mode === 'edit' ? 'Edit version' : 'Create version' }}</span>
+      <span>{{ data.mode === 'edit' ? 'Edit version' : 'Create version' }}</span><!-- TODO #9699 -->
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>
-    <button mat-button (click)="close()">
+    <button mat-button (click)="close()" i18n>
       Close window
     </button>
   </mat-dialog-actions>

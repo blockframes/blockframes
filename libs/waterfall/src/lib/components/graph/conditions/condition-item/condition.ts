@@ -27,18 +27,18 @@ function targetToString(target: TargetValue, waterfall?: Waterfall, contracts?: 
     case 'expense': {
       const expenseTypes = Object.values(waterfall?.expenseTypes || {}).flat();
       const expenseType = expenseTypes.find(e => e.id === id);
-      return `${expenseType?.name || id}'s expenses`; // For expense target, percent is always 100
+      return $localize`${expenseType?.name || id}'s expenses`; // For expense target, percent is always 100
 
     }
     case 'contracts.investment': {
       const contract = contracts?.find(c => c.id === id);
-      return `${toFixedPercentage(percent)}% of contract ${contract?.name || id}'s investments`;
+      return $localize`${toFixedPercentage(percent)}% of contract ${contract?.name || id}'s investments`;
     }
     case 'amortization.filmCost': {
-      return `${toFixedPercentage(percent)}%`;
+      return $localize`${toFixedPercentage(percent)}%`;
     }
     default:
-      return `${toFixedPercentage(percent)}% of ${targetIn} ${id}`;
+      return $localize`${toFixedPercentage(percent)}% of ${targetIn} ${id}`;
   }
 
 }
@@ -46,17 +46,17 @@ function targetToString(target: TargetValue, waterfall?: Waterfall, contracts?: 
 function operatorToString(operator: NumberOperator | ArrayOperator) {
   switch (operator) {
     case '>=':
-      return 'greater than or equal to';
+      return $localize`greater than or equal to`;
     case '<':
-      return 'lower than';
+      return $localize`lower than`;
     case '==':
-      return 'equal to';
+      return $localize`equal to`;
     case '!=':
-      return 'different from';
+      return $localize`different from`;
     case 'in':
-      return 'in';
+      return $localize`in`;
     case 'not-in':
-      return 'not in';
+      return $localize`not in`;
     default:
       return '';
   }
@@ -70,7 +70,7 @@ export function conditionToString(condition?: Condition, waterfall?: Waterfall, 
     let displayValue = '';
     if (Array.isArray(value)) {
       if (value.length > 3) displayValue = `${smartJoin([value[0], value[1], value[2]])} and ${value.length - 3} more`;
-      else displayValue = smartJoin(value, ', ', ' and ');
+      else displayValue = smartJoin(value, ', ', $localize` and `);
     } else displayValue = `${value}`;
     return `Event ${eventId} is ${operatorToString(operator)} ${displayValue}`;
   }
@@ -78,23 +78,23 @@ export function conditionToString(condition?: Condition, waterfall?: Waterfall, 
   if (condition.name === 'incomeDate') {
     const defaultFormat = getUserDefaultDateFormat();
     const { from, to } = condition.payload;
-    if (from && to) return `Income date is between ${format(from, defaultFormat)} and ${format(to, defaultFormat)}`;
-    if (from) return `Income date is after ${format(from, defaultFormat)}`;
-    if (to) return `Income date is before ${format(to, defaultFormat)}`;
+    if (from && to) return $localize`Income date is between ${format(from, defaultFormat)} and ${format(to, defaultFormat)}`;
+    if (from) return $localize`Income date is after ${format(from, defaultFormat)}`;
+    if (to) return $localize`Income date is before ${format(to, defaultFormat)}`;
   }
 
   if (condition.name === 'contractDate') {
     const defaultFormat = getUserDefaultDateFormat();
     const { from, to } = condition.payload;
-    if (from && to) return `Contract date is between ${format(from, defaultFormat)} and ${format(to, defaultFormat)}`;
-    if (from) return `Contract date is after ${format(from, defaultFormat)}`;
-    if (to) return `Contract date is before ${format(to, defaultFormat)}`;
+    if (from && to) return $localize`Contract date is between ${format(from, defaultFormat)} and ${format(to, defaultFormat)}`;
+    if (from) return $localize`Contract date is after ${format(from, defaultFormat)}`;
+    if (to) return $localize`Contract date is before ${format(to, defaultFormat)}`;
   }
 
   if (condition.name === 'amount') {
     /** @dev not implemented in libs/waterfall/src/lib/components/forms/conditions-form/condition.form.ts  */
     const { operator, target } = condition.payload;
-    return `Amount is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
+    return $localize`Amount is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'terms') {
@@ -102,14 +102,14 @@ export function conditionToString(condition?: Condition, waterfall?: Waterfall, 
     const list = _list.map((t: Media | Territory) => toLabel(t, 'territories') || toLabel(t, 'medias'));
     let displayList = '';
     if (list.length > 3) displayList = `${smartJoin([list[0], list[1], list[2]])} and ${list.length - 3} more`;
-    else displayList = smartJoin(list, ', ', ' and ');
-    return `Sales ${type} are ${operatorToString(operator)} ${displayList}`;
+    else displayList = smartJoin(list, ', ', $localize` and `);
+    return $localize`Sales ${type} are ${operatorToString(operator)} ${displayList}`;
   }
 
   if (condition.name === 'termsLength') {
     /** @dev not implemented in libs/waterfall/src/lib/components/forms/conditions-form/condition.form.ts  */
     const { operator, target } = condition.payload;
-    return `Terms length is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
+    return $localize`Terms length is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'contract') {
@@ -118,77 +118,77 @@ export function conditionToString(condition?: Condition, waterfall?: Waterfall, 
     const contractNames = contractIds.map(id => contracts?.find(c => c.id === id)?.name || id);
     let displayList = '';
     if (contractNames.length > 3) displayList = `${smartJoin([contractNames[0], contractNames[1], contractNames[2]])} and ${contractNames.length - 3} more`;
-    else displayList = smartJoin(contractNames, ', ', ' and ');
-    return `Contract ${displayList} is ${operatorToString(operator)}`;
+    else displayList = smartJoin(contractNames, ', ', $localize` and `);
+    return $localize`Contract ${displayList} is ${operatorToString(operator)}`;
   }
 
   if (condition.name === 'contractAmount') {
     const { operator, target } = condition.payload;
-    return `Contract amount is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
+    return $localize`Contract amount is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'orgRevenu') {
     const { operator, orgId, target } = condition.payload;
-    return `Org ${rightholderName(orgId, waterfall)}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
+    return $localize`Org ${rightholderName(orgId, waterfall)}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'orgTurnover') {
     const { operator, orgId, target } = condition.payload;
-    return `Org ${rightholderName(orgId, waterfall)}'s turnover is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
+    return $localize`Org ${rightholderName(orgId, waterfall)}'s turnover is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'rightRevenu') {
     const { operator, rightId, target } = condition.payload;
     const right = rights?.find(r => r.id === rightId);
-    return `Right ${right?.name || rightId}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
+    return $localize`Right ${right?.name || rightId}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'rightTurnover') {
     const { operator, rightId, target } = condition.payload;
     const right = rights?.find(r => r.id === rightId);
-    return `Right ${right?.name || rightId}'s turnover is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
+    return $localize`Right ${right?.name || rightId}'s turnover is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'groupRevenu') {
     const { operator, groupId, target } = condition.payload;
     const group = rights?.find(r => r.id === groupId);
-    return `Group ${group?.name || groupId}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
+    return $localize`Group ${group?.name || groupId}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'groupTurnover') {
     const { operator, groupId, target } = condition.payload;
     const group = rights?.find(r => r.id === groupId);
-    return `Group ${group?.name || groupId}'s turnover is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
+    return $localize`Group ${group?.name || groupId}'s turnover is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'poolRevenu') {
     const { operator, target, pool } = condition.payload;
-    return `Pool ${pool}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
+    return $localize`Pool ${pool}'s revenue is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'poolTurnover') {
     const { operator, target, pool } = condition.payload;
-    return `Pool ${pool}'s turnover is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
+    return $localize`Pool ${pool}'s turnover is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'poolShadowRevenu') {
     const { operator, target, pool } = condition.payload;
-    return `Pool ${pool}'s theoretical revenue is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
+    return $localize`Pool ${pool}'s theoretical revenue is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   if (condition.name === 'interest') {
     const { isComposite, operator, orgId, rate, percent, contractId } = condition.payload;
     const contract = contracts?.find(c => c.id === contractId);
     const contractName = contract?.name || contractId;
-    return `Org ${rightholderName(orgId, waterfall)}'s revenue is ${operatorToString(operator)} ${toFixedPercentage(percent)}% of contract ${contractName}'s investments and ${isComposite ? 'composite' : ''} interest with a rate of ${toFixedPercentage(rate)}%`;
+    return $localize`Org ${rightholderName(orgId, waterfall)}'s revenue is ${operatorToString(operator)} ${toFixedPercentage(percent)}% of contract ${contractName}'s investments and ${isComposite ? 'composite' : ''} interest with a rate of ${toFixedPercentage(rate)}%`;
   }
 
   if (condition.name === 'filmAmortized') {
     const { target, operator } = condition.payload;
-    if (typeof target === 'number') return 'Invalid condition';
-    if (operator === '>=' && target.percent === 1) return 'Film is amortized';
-    if (operator === '<' && target.percent === 1) return 'Film is not amortized';
-    return `Film amortization is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
+    if (typeof target === 'number') return $localize`Invalid condition`;
+    if (operator === '>=' && target.percent === 1) return $localize`Film is amortized`;
+    if (operator === '<' && target.percent === 1) return $localize`Film is not amortized`;
+    return $localize`Film amortization is ${operatorToString(operator)} ${targetToString(target, waterfall, contracts)}`;
   }
 
   return 'Unknown condition';

@@ -1,5 +1,7 @@
 import { NativeDateAdapter } from '@angular/material/core';
 import { format, parse } from 'date-fns';
+import '@angular/localize/init';
+import { getUserLocaleId } from '@blockframes/model';
 
 /**
  * @dev adapted from https://stackblitz.com/edit/angular-datepicker-custom-adapter?file=app%2Fdate-adapter.component.ts
@@ -23,21 +25,6 @@ export function getUserDefaultDateFormat() {
     case 'en-GB':
     default:
       return 'dd/MM/yyyy';
-  }
-}
-
-export function getUserLocaleId(): string {
-  // TODO #9699 add more locales
-  switch (navigator.language) {
-    case 'fr':
-    case 'fr-FR':
-      return 'fr-FR';
-    case 'en-US':
-      return 'en-US';
-    case 'en-GB':
-    case 'en':
-    default:
-      return 'en-GB';
   }
 }
 

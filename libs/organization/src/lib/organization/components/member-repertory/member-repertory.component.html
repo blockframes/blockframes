@@ -1,22 +1,22 @@
 <mat-card>
-  <mat-card-title>Company Members</mat-card-title>
+  <mat-card-title i18n>Company Members</mat-card-title>
   <bf-table [source]="members" pagination="50" [useFilter]="showFilter">
-    <ng-template colRef="avatar" let-avatar>
+    <ng-template colRef="avatar" let-avatar label="Avatar" i18n-label>
       <img class="avatar" [ref]="avatar" asset="profil_user.svg">
     </ng-template>
-    <ng-template colRef="firstName" label="First Name" let-firstName sort>
+    <ng-template colRef="firstName" label="First Name" let-firstName sort i18n-label>
       <b>{{ firstName }}</b>
     </ng-template>
-    <ng-template colRef="lastName" label="Last Name" let-lastName sort>
+    <ng-template colRef="lastName" label="Last Name" let-lastName sort i18n-label>
       <b>{{ lastName }}</b>
     </ng-template>
-    <ng-template colRef="email" label="Email Adress" let-email sort>
+    <ng-template colRef="email" label="Email Adress" let-email sort i18n-label>
       {{ email }}
     </ng-template>
-    <ng-template colRef="position" label="Position" let-position sort>
+    <ng-template colRef="position" label="Position" let-position sort i18n-label>
       {{ position }}
     </ng-template>
-    <ng-template colRef="role" label="Permissions" let-role sort>
+    <ng-template colRef="role" label="Permissions" let-role sort i18n-label>
       {{ displayRole(role) }}
     </ng-template>
     <ng-template *ngIf="isSuperAdmin" colRef="uid" let-uid label="Actions">

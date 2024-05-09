@@ -1,13 +1,13 @@
 <global-modal>
-  <h2>Declare the Payment</h2>
+  <h2 i18n>Declare the Payment</h2>
   
   <waterfall-statement-main-info [movie]="data.movie" [statement]="data.statement" [waterfall]="data.waterfall" lite></waterfall-statement-main-info>
 
-  <div *ngIf="data.statement.payments.rightholder as payment">
+  <div *ngIf="data.statement.payments.rightholder as payment" i18n>
     <mat-icon color="primary" svgIcon="payment"></mat-icon> Amount Due : <price-per-currency [price]="payment.price | formatPair: payment.currency" default="€ 0"></price-per-currency>
   </div>
 
-  <p class="mat-body-1">You can verify the <a target="_blank" [routerLink]="['/c/o/dashboard/title', data.movie.id, 'statement', data.statement.id]">Declared Statement Details here</a>.</p>
+  <p class="mat-body-1" i18n>You can verify the <a target="_blank" [routerLink]="['/c/o/dashboard/title', data.movie.id, 'statement', data.statement.id]">Declared Statement Details here</a>.</p>
 
   <section>
     <mat-form-field appearance="fill">
@@ -16,16 +16,16 @@
         <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
       </mat-datepicker-toggle>
       <mat-datepicker #datePickerPayment></mat-datepicker>
-      <mat-label>Payment Date</mat-label>
+      <mat-label i18n>Payment Date</mat-label>
     </mat-form-field>
   </section>
   
   <mat-dialog-actions>
     <button [disabled]="!dateControl.value" mat-flat-button color="primary" (click)="confirm(dateControl.value)">
-      <span>Declare Payment</span>
+      <span i18n>Declare Payment</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>
-    <button mat-button (click)="close()">
+    <button mat-button (click)="close()" i18n>
       Close window
     </button>
   </mat-dialog-actions>

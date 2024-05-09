@@ -1,6 +1,6 @@
 <section class="surface">
-  <h1>Invite Right Holders</h1>
-  <p class="mat-body-1">
+  <h1 i18n>Invite Right Holders</h1>
+  <p class="mat-body-1" i18n>
     Invite Right Holders to <strong>join your Waterfall</strong> so they can use the application in real time. <br/>
      They will have <strong>different access depending on their role</strong>. <br/>
      Each Right Holder will <strong>see only the concerned part of the Waterfall</strong>.
@@ -8,7 +8,7 @@
 
   <article>
     <mat-icon svgIcon="info"></mat-icon> 
-    <p class="mat-body-1">
+    <p class="mat-body-1" i18n>
       <strong>Main Distributors & Sales Agents</strong> will be able to add and edit their statements. <br/>
       <strong>Financiers, Authors & Coproducers</strong> will be able to access the outgoing statements.
     </p>
@@ -19,15 +19,15 @@
       [rightholders]="waterfall.rightholders"
       [control]="form.get('rightholderId')"
       required>
-      <mat-label>Company name</mat-label>
-      <mat-hint>Select Company Name</mat-hint>
+      <mat-label i18n>Company name</mat-label>
+      <mat-hint i18n>Select Company Name</mat-hint>
     </waterfall-rightholder-select>
 
     <mat-form-field appearance="outline">
-      <mat-label>Access</mat-label>
+      <mat-label i18n>Access</mat-label>
       <mat-select required [formControl]="form.get('isAdmin')">
-        <mat-option [value]="true">Editor</mat-option>
-        <mat-option [value]="false">Viewer</mat-option>
+        <mat-option [value]="true" i18n>Editor</mat-option>
+        <mat-option [value]="false" i18n>Viewer</mat-option>
       </mat-select>
       <mat-hint>Choose Access</mat-hint>
       <!-- TODO #9692 if rightholder have producer role => always admin/editor -->
@@ -39,6 +39,9 @@
       [form]="form.get('users')"
       label="Email Address"
       hint="Enter emails separated by a comma"
+      i18n-label
+      i18n-placeholder
+      i18n-hint
       [separators]="separators"
       placeholder="Enter guest email"
       [filters]="invitations | deepKey:'toUser.email || fromUser.email'"
@@ -61,7 +64,7 @@
       <ng-container *ngIf="(isSending$ | async) === false; else sendingInvitations">
         <button mat-flat-button color="primary" [disabled]="form.invalid || (isSending$ | async)" (click)="invite()">
           <mat-icon svgIcon="send"></mat-icon>
-          <span>Invite</span>
+          <span i18n>Invite</span>
         </button>
       </ng-container>
 

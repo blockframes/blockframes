@@ -3,11 +3,11 @@
     <button mat-button color="primary"  (click)="switchView()">
       <ng-container *ngIf="mode === 'grid'">
         <mat-icon svgIcon="view_list"></mat-icon>
-        <span>Switch to List View</span>
+        <span i18n>Switch to List View</span>
       </ng-container>
       <ng-container *ngIf="mode === 'table'">
         <mat-icon svgIcon="view_module"></mat-icon>
-        <span>Switch to Grid View</span>
+        <span i18n>Switch to Grid View</span>
       </ng-container>
     </button>
     <mat-divider></mat-divider>
@@ -16,7 +16,7 @@
   <ng-container *ngIf="mode === 'grid' else tableView">
     <section class="surface">
       <mat-form-field>
-        <mat-label>Tap to filter in the list below</mat-label>
+        <mat-label i18n>Tap to filter in the list below</mat-label>
         <input matInput type="text" [formControl]="search" />
         <mat-icon matPrefix svgIcon="filter_list"></mat-icon>
       </mat-form-field>
@@ -44,20 +44,20 @@
           <img class="poster" [ref]="poster" asset="empty_poster.svg">
         </a>
       </ng-template>
-      <ng-template *ngIf="columns.includes('title.international')" colRef="title.international" label="Title" let-title let-movie="item" sort defaultSort [filter]="filters.movieTitle">
+      <ng-template *ngIf="columns.includes('title.international')" colRef="title.international" label="Title" let-title let-movie="item" sort defaultSort [filter]="filters.movieTitle" i18n-label>
         <a [routerLink]="['/c/o/dashboard/title/', movie.id]" [matTooltip]="title">
           <u>{{ title | maxLength:50 }}</u>
         </a>
       </ng-template>
-      <ng-template *ngIf="columns.includes('directors')" colRef="directors" label="Director(s)" let-directors [filter]="filters.movieDirectors">
+      <ng-template *ngIf="columns.includes('directors')" colRef="directors" label="Director(s)" let-directors [filter]="filters.movieDirectors" i18n-label>
         <span (click)="openDetails('Director\'s', directors)">
           {{ directors | displayName | maxLength:50 }}
         </span>
       </ng-template>
-      <ng-template *ngIf="columns.includes('release.year')" colRef="release.year" label="Release Year" let-year sort>
+      <ng-template *ngIf="columns.includes('release.year')" colRef="release.year" label="Release Year" let-year sort i18n-label>
         {{ year }}
       </ng-template>
-      <ng-template *ngIf="columns.includes('id')" colRef="id" label="#Sales (Total Gross Receipt)" let-titleId>
+      <ng-template *ngIf="columns.includes('id')" colRef="id" label="#Sales (Total Gross Receipt)" let-titleId i18n-label>
         <ng-container *ngIf="titleId | getIncomesFromTitle | async as incomes">
           {{ incomes.length }}
           <ng-container *ngIf="incomes.length > 0; else noIncome">

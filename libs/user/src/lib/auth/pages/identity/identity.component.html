@@ -1,10 +1,10 @@
 <main bgAsset="rocket_background.svg">
   <button app-logo (click)="logout()"></button>
   <section fxLayout="column" fxLayoutAlign="center center">
-    <h1>Create your account</h1>
-    <p>Please fill in the form below to join the {{ app | appName }} platform.</p>
+    <h1 i18n>Create your account</h1>
+    <p i18n>Please fill in the form below to join the {{ app | appName }} platform.</p>
     <ng-container *ngIf="(user$ | async) === undefined">
-      <p class="mat-body-2 text-primary">
+      <p class="mat-body-2 text-primary" i18n>
         Already have an account? <a routerLink="/auth/connexion">Log in here.</a>
       </p>
     </ng-container>
@@ -14,9 +14,9 @@
         <!-- IDENTITY -->
         <mat-form-field class="email-input" appearance="outline" fxFlex>
           <mat-icon matPrefix svgIcon="mail"></mat-icon>
-          <mat-label>Email Address</mat-label>
+          <mat-label i18n>Email Address</mat-label>
           <input matInput type="email" aria-label="email" formControlName="email" email required test-id="email">
-          <mat-error *ngIf="form.get('email').hasError('required')">
+          <mat-error *ngIf="form.get('email').hasError('required')" i18n>
             Email Address is <strong>required</strong>.
           </mat-error>
         </mat-form-field>
@@ -25,17 +25,17 @@
 
         <article fxFlex fxLayout="row" fxLayoutGap="24px" fxLayout.lt-md="column">
           <mat-form-field appearance="outline">
-            <mat-label>First Name</mat-label>
+            <mat-label i18n>First Name</mat-label>
             <input matInput type="text" placeholder="First Name" formControlName="firstName" required test-id="first-name"/>
-            <mat-error *ngIf="form.get('firstName').hasError('required')" test-id="first-name-required">
+            <mat-error *ngIf="form.get('firstName').hasError('required')" test-id="first-name-required" i18n>
               First Name is <strong>required</strong>.
             </mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Last Name</mat-label>
+            <mat-label i18n>Last Name</mat-label>
             <input matInput type="text" placeholder="Last Name" formControlName="lastName" required test-id="last-name"/>
-            <mat-error *ngIf="form.get('lastName').hasError('required')" test-id="last-name-required">
+            <mat-error *ngIf="form.get('lastName').hasError('required')" test-id="last-name-required" i18n>
               Last Name is <strong>required</strong>.
             </mat-error>
           </mat-form-field>
@@ -60,11 +60,11 @@
               </div>
             </ng-template>
 
-            <mat-label>Company Name</mat-label>
-            <mat-hint>
+            <mat-label i18n>Company Name</mat-label>
+            <mat-hint i18n>
               Select an existing company from the list or create a new one.
             </mat-hint>
-            <mat-error>
+            <mat-error i18n>
               You have to select a choice from the list.
             </mat-error>
           </algolia-autocomplete>
@@ -72,9 +72,9 @@
 
         <ng-template #orgInput>
           <mat-form-field appearance="outline">
-            <mat-hint *ngIf="existingUser">Your Company Information is pre-filled as we found an invitation matching
+            <mat-hint *ngIf="existingUser" i18n>Your Company Information is pre-filled as we found an invitation matching
               your email address, associating you with an existing company.</mat-hint>
-            <mat-label>Company Name*</mat-label>
+            <mat-label i18n>Company Name*</mat-label>
             <input matInput type="text" [formControl]="orgForm.get('name')" disabled test-id="organization"/>
           </mat-form-field>
         </ng-template>
@@ -91,9 +91,9 @@
               label="Invitation Pass"
               test-id="invitation-code"
             >
-              <mat-hint>You'll find your Invitation Pass in your invitation email.</mat-hint>
+              <mat-hint i18n>You'll find your Invitation Pass in your invitation email.</mat-hint>
             </password-input>
-            <button mat-mini-fab color="primary" matTooltip="Contact us to get help" (click)="openIntercom()">?</button>
+            <button mat-mini-fab color="primary" i18n-matTooltip matTooltip="Contact us to get help" (click)="openIntercom()">?</button>
           </div>
         </ng-container>
 
@@ -101,20 +101,21 @@
           [control]="form.get('password')"
           placeholder="New Password"
           label="Password"
+          i18n-label
           test-id="password"
           [errorStateMatcher]="currentPasswordMatch"
         >
-          <mat-hint>Between 6 and 24 characters.</mat-hint>
-          <mat-error *ngIf="form.get('password').hasError('required')" test-id="password-required">
+          <mat-hint i18n>Between 6 and 24 characters.</mat-hint>
+          <mat-error *ngIf="form.get('password').hasError('required')" test-id="password-required" i18n>
             New password is <strong>required</strong>.
           </mat-error>
-          <mat-error *ngIf="form.get('password').hasError('minlength')" test-id="short-password">
+          <mat-error *ngIf="form.get('password').hasError('minlength')" test-id="short-password" i18n>
             New password with less than <strong>6</strong> characters.
           </mat-error>
-          <mat-error *ngIf="form.get('password').hasError('maxlength')" test-id="long-password">
+          <mat-error *ngIf="form.get('password').hasError('maxlength')" test-id="long-password" i18n>
             New password with more than <strong>24</strong> characters.
           </mat-error>
-          <mat-error *ngIf="form.hasError('currentPasswordMatch')" test-id="same-password">
+          <mat-error *ngIf="form.hasError('currentPasswordMatch')" test-id="same-password" i18n>
             Your new password has to be <strong>different</strong> than Invitation Pass.
           </mat-error>
         </password-input>
@@ -124,13 +125,14 @@
           [errorStateMatcher]="passwordsMatcher"
           placeholder="New Password Confirmation"
           label="Password Confirmation"
+          i18n-label
           test-id="password-confirm"
         >
-          <mat-hint>Please rewrite your password for confirmation.</mat-hint>
-          <mat-error *ngIf="form.get('confirm').hasError('required')" test-id="password-confirm-required">
+          <mat-hint i18n>Please rewrite your password for confirmation.</mat-hint>
+          <mat-error *ngIf="form.get('confirm').hasError('required')" test-id="password-confirm-required" i18n>
             New password confirmation is <strong>required</strong>.
           </mat-error>
-          <mat-error *ngIf="form.hasError('passwordsNotMatching')" test-id="password-confirm-mismatch">
+          <mat-error *ngIf="form.hasError('passwordsNotMatching')" test-id="password-confirm-mismatch" i18n>
             The confirmation password does not <strong>match your password</strong>.
           </mat-error>
         </password-input>
@@ -138,13 +140,13 @@
         <!-- TERMS OF USE & PRIVACY POLICY -->
         <div class="privacy" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="16px">
           <mat-checkbox test-id="terms" color="primary" formControlName="termsOfUse">
-            <span class="mat-caption">I hereby accept {{ app | appName }}&nbsp;
+            <span class="mat-caption" i18n>I hereby accept {{ app | appName }}&nbsp;
               <a target="_blank" routerLink="/auth/terms">Terms and Conditions</a>.
             </span>
           </mat-checkbox>
 
           <mat-checkbox test-id="gdpr" color="primary" formControlName="privacyPolicy">
-            <span class="mat-caption">I hereby accept the Processing of my Personal Data and declare to know&nbsp;
+            <span class="mat-caption" i18n>I hereby accept the Processing of my Personal Data and declare to know&nbsp;
               <a target="_blank" routerLink="/auth/privacy">the Conditions of such Processing and my rights under GDPR Regulation</a>.
             </span>
           </mat-checkbox>
@@ -153,13 +155,13 @@
 
       <ng-container *ngIf="!creating else creatingAccount">
         <button @slideDown (click)="signUp()" type="submit" mat-flat-button color="accent"
-          [disabled]="form.invalid || orgForm.invalid" test-id="submit"
+          [disabled]="form.invalid || orgForm.invalid" test-id="submit" i18n
         >
           Sign up
         </button>
       </ng-container>
       <ng-template #creatingAccount>
-        <button @slideUp mat-flat-button disabled>
+        <button @slideUp mat-flat-button disabled i18n>
           Creating account...
         </button>
       </ng-template>

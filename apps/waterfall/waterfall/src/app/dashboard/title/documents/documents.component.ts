@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
-type Path = 'Documents' | 'Contracts' | 'Financing Plan' | 'Budget';
+type Path = 'Documents' | 'Contracts' | 'Financing Plan' | 'Budget'; // TODO #9699
 
 @Component({
   selector: 'waterfall-title-documents',

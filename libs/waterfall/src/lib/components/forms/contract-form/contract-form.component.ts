@@ -39,7 +39,7 @@ export class WaterfallContractFormComponent implements OnInit, OnChanges, OnDest
   public dateInputFormat = dateInputFormat;
   public durationControl = new FormControl<number | undefined>(undefined);
 
-  public periods: (keyof Duration)[] = ['days', 'weeks', 'months', 'years'];
+  public periods: (keyof Duration)[] = ['days', 'weeks', 'months', 'years']; // TODO #9699 add i18n
   public periodControl = new FormControl<keyof Duration | undefined>(undefined);
 
   public licensee$ = new BehaviorSubject<string[]>([]); // buyer

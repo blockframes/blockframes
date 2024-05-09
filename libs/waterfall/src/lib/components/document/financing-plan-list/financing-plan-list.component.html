@@ -1,13 +1,13 @@
 <ng-container *ngIf="shell.rightholderDocuments$  | async as documents else loading">
 
   <article class="header">
-    <h2>Financing plan documents</h2>
+    <h2 i18n>Financing plan documents</h2>
   </article>
 
   <ng-container *ngIf="shell.waterfall$ | async as waterfall">
     <ng-container *ngIf="shell.canBypassRules">
       <article class="description">
-        <p>Please provide us with all the required documents.</p>
+        <p i18n>Please provide us with all the required documents.</p>
         <p class="mat-body-2">All your data is secured on our platform. To learn more, you can read our <a [routerLink]="['/c/o/dashboard', 'security']">Data Security Policy</a>.</p>
       </article>
       <div>
@@ -15,7 +15,7 @@
         <section>
           <button mat-stroked-button (click)="save(documents)" [disabled]="disabled">
             <mat-icon matPrefix svgIcon="save"></mat-icon>
-            <span>Save Document</span>
+            <span i18n>Save Document</span>
           </button>
         </section>
       </div>
@@ -35,11 +35,11 @@
                 <mat-icon svgIcon="cloud_download"></mat-icon>
               </a>
               <ng-container *ngIf="organizations$ | async as organizations">
-                <button mat-icon-button *ngIf="shell.canBypassRules" matTooltip="Share Document" (click)="share(financingPlan.id, waterfall.id, organizations)">
+                <button mat-icon-button *ngIf="shell.canBypassRules" matTooltip="Share Document" (click)="share(financingPlan.id, waterfall.id, organizations)" i18n-matTooltip>
                   <mat-icon svgIcon="person_add"></mat-icon>
                 </button>
               </ng-container>
-              <button mat-icon-button *ngIf="shell.canBypassRules" matTooltip="Delete File" (click)="delete(file.id)">
+              <button mat-icon-button *ngIf="shell.canBypassRules" matTooltip="Delete File" (click)="delete(file.id)" i18n-matTooltip>
                 <mat-icon svgIcon="delete"></mat-icon>
               </button>
             </mat-list-item>
@@ -49,8 +49,8 @@
       <ng-template #empty>
         <div class="empty">
           <img asset="empty-contracts.svg" alt="Image, you have no documents yet">
-          <p *ngIf="shell.canBypassRules">There is no file here yet. Use the upload box above to add new files.</p>
-          <p *ngIf="!shell.canBypassRules">There is no file here yet.</p>
+          <p *ngIf="shell.canBypassRules" i18n>There is no file here yet. Use the upload box above to add new files.</p>
+          <p *ngIf="!shell.canBypassRules" i18n>There is no file here yet.</p>
         </div>
       </ng-template>
     </ng-container>

@@ -1,13 +1,13 @@
 <ng-container *ngIf="versions$ | async as versions">
   <ng-container *ngIf="!lockedVersionId && canBypassRules">
     <ng-container *ngIf="versions.length !== 0 else initMode">
-      <button mat-flat-button color="primary" [matMenuTriggerFor]="menu">Choose Waterfall Version</button>
+      <button mat-flat-button color="primary" [matMenuTriggerFor]="menu" i18n>Choose Waterfall Version</button>
       <mat-menu class="bf-menu" #menu="matMenu">
         <div mat-menu-item *ngFor="let version of versions">
           <section>
             <mat-radio-group (click)="switchToVersion(version.id)" (change)="switchToVersion($event.value)">
               <mat-radio-button [checked]="versionId === version.id"  [value]="version.id">
-                <strong>{{ version.name }} {{ version.default ? '(default)' : '' }} {{ version.standalone ? '(standalone)' : '' }}</strong>
+                <strong>{{ version.name }} {{ version.default ? '(default)' : '' }} {{ version.standalone ? '(standalone)' : '' }}</strong>  <!-- TODO #9699 i18n-->
               </mat-radio-button>
             </mat-radio-group>
             <button mat-icon-button (click)="edit(version.id);$event.stopPropagation()" matTooltip="Edit Version">
@@ -19,20 +19,20 @@
         <div mat-menu-item class="new-version">
           <button mat-button class="main-dashboard-cta" color="primary" matTooltip="Create New Waterfall Version" (click)="create();$event.stopPropagation()">
             <mat-icon svgIcon="add"></mat-icon>
-            <span>Create New Waterfall Version</span>
+            <span i18n>Create New Waterfall Version</span>
           </button>
         </div>
       </mat-menu>
       <button mat-icon-button>
-        <mat-icon svgIcon="help" matTooltip="The Waterfall version refers to the specific configuration or distribution plan used to allocate Revenues among different Right Holders or Stakeholders involved in a film project."></mat-icon>
+        <mat-icon svgIcon="help" i18n-matTooltip matTooltip="The Waterfall version refers to the specific configuration or distribution plan used to allocate Revenues among different Right Holders or Stakeholders involved in a film project."></mat-icon>
       </button>
     </ng-container>
     <ng-template #initMode>
-      <button *ngIf="canInitWaterfall$ | async else missingData" mat-stroked-button color="primary" (click)="init();$event.stopPropagation()">
+      <button *ngIf="canInitWaterfall$ | async else missingData" mat-stroked-button color="primary" (click)="init();$event.stopPropagation()" i18n>
         Publish Waterfall
       </button>
       <ng-template #missingData>
-        <button mat-stroked-button color="primary" disabled matTooltip="Missing data to publish Waterfall. Make sure to have Contracts and Receipt Shares">
+        <button mat-stroked-button color="primary" disabled i18n-matTooltip matTooltip="Missing data to publish Waterfall. Make sure to have Contracts and Receipt Shares" i18n>
           Publish Waterfall
         </button>
       </ng-template>

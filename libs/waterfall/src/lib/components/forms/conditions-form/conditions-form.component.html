@@ -1,34 +1,34 @@
 <mat-form-field appearance="outline" *ngIf="displayForm$ | async">
-  <mat-label>Condition Type</mat-label>
+  <mat-label i18n>Condition Type</mat-label>
   <mat-select [formControl]="form.controls.conditionType">
-    <mat-option value="revenue">Revenue Earned</mat-option>
-    <mat-option value="sales">Sales</mat-option>
-    <mat-option value="event">Event</mat-option>
-    <mat-option value="amortization" *ngIf="amortizations.length">Film Amortization</mat-option>
+    <mat-option value="revenue" i18n>Revenue Earned</mat-option>
+    <mat-option value="sales" i18n>Sales</mat-option>
+    <mat-option value="event" i18n>Event</mat-option>
+    <mat-option value="amortization" *ngIf="amortizations.length" i18n>Film Amortization</mat-option>
   </mat-select>
 </mat-form-field>
 
 <ng-container [ngSwitch]="form.controls.conditionType.value">
   <ng-container *ngSwitchCase="'revenue'">
     <mat-form-field appearance="outline">
-      <mat-label>By who?</mat-label>
+      <mat-label i18n>By who?</mat-label>
       <mat-select [formControl]="form.controls.revenueOwnerType">
-        <mat-option value="org">by right holder</mat-option>
-        <mat-option value="right">by revenue share</mat-option>
-        <mat-option value="group">by group</mat-option>
-        <mat-option value="pool">by pool</mat-option>
+        <mat-option value="org" i18n>by right holder</mat-option>
+        <mat-option value="right" i18n>by revenue share</mat-option>
+        <mat-option value="group" i18n>by group</mat-option>
+        <mat-option value="pool" i18n>by pool</mat-option>
       </mat-select>
     </mat-form-field>
     
     <mat-form-field appearance="outline" *ngIf="form.controls.revenueOwnerType.value">
-      <mat-label>{{ form.controls.revenueOwnerType.value | toLabel: 'conditionOwnerLabels' }}</mat-label>
+      <mat-label>{{ form.controls.revenueOwnerType.value | toLabel: 'conditionOwnerLabels' : true }}</mat-label>
       <mat-select [formControl]="form.controls.revenueOwner">
         <mat-option [matTooltip]="owner.name" *ngFor="let owner of (revenueOwnerList$ | async)" [value]="owner.id">{{ owner.name }}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline" *ngIf="form.controls.revenueOwner.value">
-      <mat-label>Has</mat-label>
+      <mat-label i18n>Has</mat-label>
       <mat-select [formControl]="form.controls.revenueType">
         <mat-option value="Turnover">(Turnover)</mat-option>
         <mat-option value="Revenu">(Amount kept)</mat-option>
@@ -37,14 +37,14 @@
     </mat-form-field>
     
     <mat-form-field appearance="outline" *ngIf="form.controls.revenueType.value">
-      <mat-label>Is</mat-label>
+      <mat-label i18n>Is</mat-label>
       <mat-select [formControl]="form.controls.revenueOperator">
         <mat-option *ngFor="let op of numberOperator" [value]="op">{{op}}</mat-option>
       </mat-select>
     </mat-form-field>
     
     <mat-form-field appearance="outline" *ngIf="form.controls.revenueOperator.value">
-      <mat-label>Target Type</mat-label>
+      <mat-label i18n>Target Type</mat-label>
       <mat-select [formControl]="form.controls.revenueTargetType">
         <mat-option value="amount">than a specific amount</mat-option>
         <mat-option value="contracts.investment">than an investment</mat-option>
@@ -53,14 +53,14 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" *ngIf="form.controls.revenueTargetType.value === 'contracts.investment'">
-      <mat-label>Investments</mat-label>
+      <mat-label i18n>Investments</mat-label>
       <mat-select [formControl]="form.controls.revenueTarget">
         <mat-option [matTooltip]="invest.name" *ngFor="let invest of investments" [value]="invest.id">{{ invest.name }}</mat-option>
       </mat-select>
     </mat-form-field>
     <ng-container *ngIf="form.controls.revenueTargetType.value === 'expense'">
       <mat-form-field appearance="outline">
-        <mat-label>Expenses</mat-label>
+        <mat-label i18n>Expenses</mat-label>
         <mat-select [formControl]="form.controls.revenueTarget">
           <mat-option [matTooltip]="expenseType.name" *ngFor="let expenseType of expenseTypes" [value]="expenseType.id">{{ expenseType.name }}</mat-option>
         </mat-select>
@@ -74,7 +74,7 @@
     </ng-container>
 
     <mat-form-field appearance="outline" *ngIf="form.controls.revenueTargetType.value === 'contracts.investment' && form.controls.revenueTarget.value">
-      <mat-label>Percentage</mat-label>
+      <mat-label i18n>Percentage</mat-label>
       <input matInput type="number" min="0" [formControl]="form.controls.revenuePercentage" />
     </mat-form-field>
 
@@ -82,24 +82,24 @@
       form.controls.revenueTarget.value && form.controls.revenueOwnerType.value === 'org' && 
       form.controls.revenueType.value === 'Revenu'">
       <div class="toggle">
-        <p class="mat-caption">With interests</p>
+        <p class="mat-caption" i18n>With interests</p>
         <mat-button-toggle-group [formControl]="toggleRateControl">
-          <mat-button-toggle [value]="true">Yes</mat-button-toggle>
-          <mat-button-toggle [value]="false">No</mat-button-toggle>
+          <mat-button-toggle [value]="true" i18n>Yes</mat-button-toggle>
+          <mat-button-toggle [value]="false" i18n>No</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
   
       <div class="group">
         <ng-container *ngIf="toggleRateControl.value">
           <mat-form-field appearance="outline">
-            <mat-label>Interest rate</mat-label>
+            <mat-label i18n>Interest rate</mat-label>
             <input matInput type="number" min="0" max="100" [formControl]="form.controls.interestRate" />
           </mat-form-field>
           <section>
-            <p class="mat-caption">Composite interest</p>
+            <p class="mat-caption" i18n>Composite interest</p>
             <mat-button-toggle-group [formControl]="form.controls.interestComposite">
-              <mat-button-toggle [value]="true">Yes</mat-button-toggle>
-              <mat-button-toggle [value]="false">No</mat-button-toggle>
+              <mat-button-toggle [value]="true" i18n>Yes</mat-button-toggle>
+              <mat-button-toggle [value]="false" i18n>No</mat-button-toggle>
             </mat-button-toggle-group>
           </section>
         </ng-container>
@@ -107,32 +107,32 @@
     </ng-container>
 
     <mat-form-field appearance="outline" *ngIf="form.controls.revenueTargetType.value === 'amount' || (form.controls.revenueTargetType.value === 'expense' && form.controls.revenueCap.value)">
-      <mat-label>Amount</mat-label>
+      <mat-label i18n>Amount</mat-label>
       <input matInput type="number" min="0" [formControl]="form.controls.revenueAmount" />
     </mat-form-field>
   </ng-container>
 
   <ng-container *ngSwitchCase="'sales'">
     <mat-form-field appearance="outline">
-      <mat-label>Sales Parameter</mat-label>
+      <mat-label i18n>Sales Parameter</mat-label>
       <mat-select [formControl]="form.controls.salesType">
-        <mat-option value="incomeDate">payment date</mat-option>
-        <mat-option value="contractDate">contract date</mat-option>
-        <mat-option value="contractAmount">contract amount</mat-option>
-        <mat-option value="terms">terms</mat-option>
+        <mat-option value="incomeDate" i18n>payment date</mat-option>
+        <mat-option value="contractDate" i18n>contract date</mat-option>
+        <mat-option value="contractAmount" i18n>contract amount</mat-option>
+        <mat-option value="terms" i18n>terms</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline" *ngIf="(form.controls.salesType.value === 'incomeDate' || form.controls.salesType.value === 'contractDate')">
-      <mat-label>Operator</mat-label>
+      <mat-label i18n>Operator</mat-label>
       <mat-select [formControl]="form.controls.salesDateOperator">
-        <mat-option value="before">Before</mat-option>
-        <mat-option value="after">After</mat-option>
-        <mat-option value="between">Between</mat-option>
+        <mat-option value="before" i18n>Before</mat-option>
+        <mat-option value="after" i18n>After</mat-option>
+        <mat-option value="between" i18n>Between</mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field appearance="outline" *ngIf="(form.controls.salesType.value === 'incomeDate' || form.controls.salesType.value === 'contractDate') && (form.controls.salesDateOperator.value === 'after' || form.controls.salesDateOperator.value === 'between')">
-      <mat-label>From</mat-label>
+      <mat-label i18n>From</mat-label>
       <input matInput [formControl]="form.controls.salesDateFrom" [matDatepicker]="datePicker" [placeholder]="dateInputFormat"> 
       <mat-datepicker-toggle matSuffix [for]="datePicker">
         <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
@@ -140,7 +140,7 @@
       <mat-datepicker #datePicker></mat-datepicker>
     </mat-form-field>
     <mat-form-field appearance="outline" *ngIf="(form.controls.salesType.value === 'incomeDate' || form.controls.salesType.value === 'contractDate') && (form.controls.salesDateOperator.value === 'before' || form.controls.salesDateOperator.value === 'between')">
-      <mat-label>To</mat-label>
+      <mat-label i18n>To</mat-label>
       <input matInput [formControl]="form.controls.salesDateTo" [matDatepicker]="datePicker" [placeholder]="dateInputFormat"> 
       <mat-datepicker-toggle matSuffix [for]="datePicker">
         <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
@@ -149,27 +149,27 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" *ngIf="form.controls.salesType.value === 'contractAmount'">
-      <mat-label>Operator</mat-label>
+      <mat-label i18n>Operator</mat-label>
       <mat-select [formControl]="form.controls.salesOperator">
         <mat-option *ngFor="let op of numberOperator" [value]="op">{{op}}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline" *ngIf="form.controls.salesType.value === 'contractAmount' && form.controls.salesOperator.value">
-      <mat-label>Amount</mat-label>
+      <mat-label i18n>Amount</mat-label>
       <input matInput type="number" min="0" [formControl]="form.controls.salesAmount" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" *ngIf="form.controls.salesType.value === 'terms'">
-      <mat-label>Terms Type</mat-label>
+      <mat-label i18n>Terms Type</mat-label>
       <mat-select [formControl]="form.controls.salesTermsType">
-        <mat-option value="medias">Medias</mat-option>
-        <mat-option value="territories">Territories</mat-option>
+        <mat-option value="medias" i18n>Medias</mat-option>
+        <mat-option value="territories" i18n>Territories</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline" *ngIf="form.controls.salesType.value === 'terms' && form.controls.salesTermsType.value">
-      <mat-label>Operator</mat-label>
+      <mat-label i18n>Operator</mat-label>
       <mat-select [formControl]="form.controls.salesTermsOperator">
         <mat-option *ngFor="let op of arrayOperator" [value]="op">{{op}}</mat-option>
       </mat-select>
@@ -180,6 +180,9 @@
       scope="territories"
       displayAll="World"
       label="Territories"
+      i18n-label
+      i18n-filterPlaceholder
+      i18n-displayAll
       filterPlaceholder="Specify territories"
       [control]="form.controls.salesTerms"
     ></group-multiselect>
@@ -189,6 +192,9 @@
       scope="medias"
       displayAll="All Medias"
       label="Medias"
+      i18n-label
+      i18n-filterPlaceholder
+      i18n-displayAll
       selectIcon="play_arrow"
       filterPlaceholder="Specify medias"
       [control]="form.controls.salesTerms"
@@ -197,12 +203,12 @@
 
   <ng-container *ngSwitchCase="'event'">
     <mat-form-field appearance="outline">
-      <mat-label>Event Name</mat-label>
+      <mat-label i18n>Event Name</mat-label>
       <input matInput type="text" [formControl]="form.controls.eventName" />
     </mat-form-field>
 
     <mat-form-field appearance="outline" *ngIf="form.controls.eventName.value">
-      <mat-label>Operator</mat-label>
+      <mat-label i18n>Operator</mat-label>
       <mat-select [formControl]="form.controls.eventOperator">
         <mat-option *ngFor="let op of numberOperator" [value]="op">{{op}}</mat-option>
         <mat-option *ngFor="let op of arrayOperator" [value]="op">{{op}}</mat-option>
@@ -210,7 +216,7 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" *ngIf="form.controls.eventOperator.value && form.controls.eventOperator.value !== 'in' && form.controls.eventOperator.value !== 'not-in'">
-      <mat-label>Amount</mat-label>
+      <mat-label i18n>Amount</mat-label>
       <input matInput type="number" [formControl]="form.controls.eventAmount" />
     </mat-form-field>
 
@@ -218,26 +224,26 @@
       *ngIf="form.controls.eventOperator.value && (form.controls.eventOperator.value === 'in' || form.controls.eventOperator.value === 'not-in')"
       [form]="form.controls.eventList"
     >
-      <mat-label>Values</mat-label>
-      <mat-hint>Press Enter to validate</mat-hint>
+      <mat-label i18n>Values</mat-label>
+      <mat-hint i18n>Press Enter to validate</mat-hint>
     </chips-autocomplete>
   </ng-container>
 
   <ng-container *ngSwitchCase="'amortization'">
     <mat-form-field appearance="outline" >
-      <mat-label>Calculation Method</mat-label>
+      <mat-label i18n>Calculation Method</mat-label>
       <mat-select [formControl]="form.controls.amortizationTarget">
         <mat-option *ngFor="let amortization of amortizations" [value]="amortization.id">{{ amortization.name }}</mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field appearance="outline" *ngIf="form.controls.amortizationTarget.value" >
-      <mat-label>Is</mat-label>
+      <mat-label i18n>Is</mat-label>
       <mat-select [formControl]="form.controls.amortizationOperator">
         <mat-option *ngFor="let op of tinyNumberOperator" [value]="op">{{op}}</mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field appearance="outline" *ngIf="form.controls.amortizationTarget.value">
-      <mat-label>Percentage</mat-label>
+      <mat-label i18n>Percentage</mat-label>
       <input matInput type="number" min="0" [formControl]="form.controls.amortizationPercentage" />
     </mat-form-field>
   </ng-container>

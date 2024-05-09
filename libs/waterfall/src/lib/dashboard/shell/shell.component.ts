@@ -275,7 +275,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     }),
     map(versionId => {
       const name = this.waterfall.versions.find(v => v.id === versionId)?.name;
-      const isDefault = isDefaultVersion(this.waterfall, versionId) ? '(default)' : '';
+      const isDefault = isDefaultVersion(this.waterfall, versionId) ? $localize`(default)` : '';
       return name ? `${name} ${isDefault}` : '--';
     })
   );

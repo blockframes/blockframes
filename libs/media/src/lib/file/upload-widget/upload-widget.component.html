@@ -7,7 +7,7 @@
     <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="24px" class="content">
 
       <mat-divider></mat-divider>
-      <caption class="mat-caption">We’re uploading your files to our servers. That can take a while,
+      <caption class="mat-caption" i18n>We’re uploading your files to our servers. That can take a while,
         thank you for your patience! You can continue using the platform</caption>
 
       <div fxLayout="column-reverse" fxLayoutGap="24px">
@@ -23,27 +23,27 @@
 
                 <!-- Finished -->
                 <ng-template ngSwitchCase="success">
-                  <caption class="mat-caption succeeded"><em>Completed</em></caption>
+                  <caption class="mat-caption succeeded"><em i18n>Completed</em></caption>
                 </ng-template>
 
                 <!-- Paused -->
                 <ng-template ngSwitchCase="paused">
-                  <caption class="mat-caption"><em>Paused</em></caption>
+                  <caption class="mat-caption"><em i18n>Paused</em></caption>
                 </ng-template>
 
                 <!-- Running -->
                 <ng-template ngSwitchCase="running">
-                  <caption class="mat-caption"><em>Uploading</em></caption>
+                  <caption class="mat-caption"><em i18n>Uploading</em></caption>
                 </ng-template>
 
                 <!-- Canceled -->
                 <ng-template ngSwitchCase="canceled">
-                  <caption class="mat-caption"><em>Upload canceled</em></caption>
+                  <caption class="mat-caption"><em i18n>Upload canceled</em></caption>
                 </ng-template>
 
                 <!-- Error -->
                 <ng-template ngSwitchCase="error">
-                  <caption class="mat-caption error"><em>An error occured!</em></caption>
+                  <caption class="mat-caption error"><em i18n>An error occured!</em></caption>
                 </ng-template>
               </div>
 

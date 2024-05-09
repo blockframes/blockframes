@@ -11,16 +11,16 @@
 
     </label>
     <ng-content select="[title]"></ng-content>
-    <p class="mat-caption">Accepted Formats: {{ allowedTypes.join(', ') }}</p>
-    <p class="mat-caption">Max file size: {{ maxSize | fileSize }}</p>
-    <p class="mat-caption">Drag and drop a file here or</p>
-    <button mat-button (click)="fileExplorer.click()">Browse computer</button>
+    <p class="mat-caption" i18n>Accepted Formats: {{ allowedTypes.join(', ') }}</p>
+    <p class="mat-caption" i18n>Max file size: {{ maxSize | fileSize }}</p>
+    <p class="mat-caption" i18n>Drag and drop a file here or</p>
+    <button mat-button (click)="fileExplorer.click()" i18n>Browse computer</button>
   </section>
 
   <!-- Hovering -->
   <section *ngSwitchCase="'hovering'" class="drop-zone">
     <img asset="add_files.svg" alt="upload image" class="picture-hover">
-    <h3>Drop your file here</h3>
+    <h3 i18n>Drop your file here</h3>
   </section>
 
   <!-- Ready -->

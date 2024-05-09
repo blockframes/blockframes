@@ -10,11 +10,11 @@ import { NavigationService } from '@blockframes/ui/navigation.service';
 const navLinks = [
   {
     path: 'org',
-    label: 'Organization'
+    label: $localize`Organization`
   },
   {
     path: 'members',
-    label: 'Members'
+    label: $localize`Members`
   }
 ];
 
@@ -34,9 +34,9 @@ export class OrganizationViewComponent implements OnDestroy {
     distinctUntilChanged((a: NavigationEnd, b: NavigationEnd) => a.url === b.url),
   ).subscribe((event: NavigationEnd) => {
     if (event.url.includes('members')) {
-      this.dynTitle.setPageTitle('Members', `${this.orgService.org.name}`);
+      this.dynTitle.setPageTitle($localize`Members`, `${this.orgService.org.name}`);
     } else {
-      this.dynTitle.setPageTitle('Company details', `${this.orgService.org.name}`);
+      this.dynTitle.setPageTitle($localize`Company details`, `${this.orgService.org.name}`);
     }
 
     this.countRouteEvents++;

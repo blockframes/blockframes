@@ -14,15 +14,15 @@ import { NavigationService } from '@blockframes/ui/navigation.service';
 const navLinks = [
   {
     path: 'settings',
-    label: 'My Profile'
+    label: $localize`My Profile`
   },
   {
     path: 'notifications',
-    label: 'Notifications'
+    label: $localize`Notifications`
   },
   {
     path: 'cookies',
-    label: 'Cookies'
+    label: $localize`Cookies`
   }
 ];
 

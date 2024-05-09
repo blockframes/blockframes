@@ -1,12 +1,12 @@
 <ng-container *ngIf="form">
   <form [formGroup]="form" (ngSubmit)="update()">
     <header class="surface general">
-      <h2>General Notifications Settings</h2>
+      <h2 i18n>General Notifications Settings</h2>
       <article fxLayout="row" fxLayoutAlign="space-between">
-        <p>Activate all notifications:</p>
+        <p i18n>Activate all notifications:</p>
         <div fxLayout="row" fxLayoutGap="32px">
-          <mat-slide-toggle color="primary" labelPosition="before" name="email" [checked]="form.value | everyChecked: 'email' : types" (change)="toogleAll($event, 'email')">By Email:</mat-slide-toggle>
-          <mat-slide-toggle color="primary" labelPosition="before" name="app" [checked]="form.value | everyChecked: 'app' : types" (change)="toogleAll($event, 'app')">In App:</mat-slide-toggle>
+          <mat-slide-toggle color="primary" labelPosition="before" name="email" [checked]="form.value | everyChecked: 'email' : types" (change)="toogleAll($event, 'email')" i18n>By Email:</mat-slide-toggle>
+          <mat-slide-toggle color="primary" labelPosition="before" name="app" [checked]="form.value | everyChecked: 'app' : types" (change)="toogleAll($event, 'app')" i18n>In App:</mat-slide-toggle>
         </div>
       </article>
     </header>
@@ -21,7 +21,7 @@
                 color="primary"
                 [checked]="form.value | everyChecked: 'email':table.types"
                 [indeterminate]="form.value | someChecked: 'email': table.types"
-                (change)="setAll($event, 'email', table.types)">
+                (change)="setAll($event, 'email', table.types)" i18n>
                 By Email
               </mat-checkbox>
             </th>
@@ -30,14 +30,14 @@
                 color="primary"
                 [checked]="form.value | everyChecked: 'app':table.types"
                 [indeterminate]="form.value | someChecked: 'app':table.types"
-                (change)="setAll($event, 'app', table.types)">
+                (change)="setAll($event, 'app', table.types)" i18n>
                 In App
               </mat-checkbox>
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr class="mat-caption"><td colspan="3">Receive notifications when:</td></tr>
+          <tr class="mat-caption"><td colspan="3" i18n>Receive notifications when:</td></tr>
           <ng-container *ngFor="let type of table.types">
             <tr [formGroupName]="type">
               <td class="description">
@@ -45,7 +45,8 @@
                 <mat-icon
                   *ngIf="titleType[type].tooltip"
                   svgIcon="info"
-                  matTooltip="This notification cannot be disabled as it requires an answer from you.">
+                  matTooltip="This notification cannot be disabled as it requires an answer from you."
+                  i18n-matTooltip>
                 </mat-icon>
               </td>
               <td>
@@ -63,7 +64,7 @@
     <footer fxLayout fxLayoutAlign="center center">
       <button mat-flat-button color="primary" type="submit">
         <mat-icon svgIcon="save"></mat-icon>
-        <span>Update</span>
+        <span i18n>Update</span>
       </button>
     </footer>
   </form>

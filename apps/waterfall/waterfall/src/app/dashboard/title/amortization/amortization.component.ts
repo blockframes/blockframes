@@ -35,19 +35,19 @@ export class AmortizationComponent {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
   ) {
-    this.dynTitle.setPageTitle(this.shell.movie.title.international, 'Film Amortization');
+    this.dynTitle.setPageTitle(this.shell.movie.title.international, $localize`Film Amortization`);
   }
 
   public async delete(amortizationId: string) {
     this.dialog.open(ConfirmComponent, {
       data: createModalData({
-        title: 'Are you sure ?',
-        question: 'If you remove a Calculation that is already used in statements, problems might occur.',
-        confirm: 'Yes, remove Calculation.',
-        cancel: 'No, keep Calculation.',
+        title: $localize`Are you sure ?`,
+        question: $localize`If you remove a Calculation that is already used in statements, problems might occur.`,
+        confirm: $localize`Yes, remove Calculation.`,
+        cancel: $localize`No, keep Calculation.`,
         onConfirm: async () => {
           await this.service.remove(amortizationId, { params: { waterfallId: this.shell.waterfall.id } });
-          this.snackBar.open('Calculation deleted.', 'close', { duration: 5000 });
+          this.snackBar.open($localize`Calculation deleted.`, 'close', { duration: 5000 });
         }
       }, 'small'),
       autoFocus: false

@@ -68,16 +68,16 @@ export class AuthDataValidationComponent implements OnInit {
   }
 
   async resendEmailVerification() {
-    const snack = this.snackbar.open('Sending verification email...');
+    const snack = this.snackbar.open($localize`Sending verification email...`);
     const publicUser = this.authService.profile;
 
     try {
       await this.functions.call('sendVerifyEmailAddress', { email: publicUser.email, publicUser, app: this.app });
       snack.dismiss();
-      this.snackbar.open('Verification email sent.', '', { duration: 3000 });
+      this.snackbar.open($localize`Verification email sent.`, '', { duration: 3000 });
     } catch (err) {
       snack.dismiss();
-      this.snackbar.open('Something went wrong.', '', { duration: 3000 });
+      this.snackbar.open($localize`Something went wrong.`, '', { duration: 3000 });
     }
   }
 }

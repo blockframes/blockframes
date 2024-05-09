@@ -3,17 +3,17 @@
     <!-- Contact Information -->
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Contact Information</mat-card-title>
+        <mat-card-title i18n>Contact Information</mat-card-title>
       </mat-card-header>
       <mat-card-content fxLayout="column">
         <article>
           <mat-form-field appearance="outline">
             <!-- Here is missing an input for the public name of an organization,
             we always have to decide how we will handle that -->
-            <mat-label>Company Name</mat-label>
+            <mat-label i18n>Company Name</mat-label>
             <input test-id="name" matInput placeholder="Company Name" formControlName="name" type="text" (blur)="uniqueOrgName()" required/>
-            <mat-error *ngIf="form.get('name').hasError('required')">Company name is required</mat-error>
-            <mat-error *ngIf="form.get('name').hasError('notUnique')">This company already exists.</mat-error>
+            <mat-error *ngIf="form.get('name').hasError('required')" i18n>Company name is required</mat-error>
+            <mat-error *ngIf="form.get('name').hasError('notUnique')" i18n>This company already exists.</mat-error>
           </mat-form-field>
         </article>
         <mat-form-field appearance="outline">
@@ -22,10 +22,12 @@
             matInput
             placeholder="Contact Email Address"
             aria-label="Contact Email Address"
+            i18n-placeholder
+            i18n-aria-label
             type="email"
             formControlName="email"
           />
-          <mat-error *ngIf="form.get('email').hasError('email')">Email not valid</mat-error>
+          <mat-error *ngIf="form.get('email').hasError('email')" i18n>Email not valid</mat-error>
         </mat-form-field>
       </mat-card-content>
     </mat-card>
@@ -33,12 +35,12 @@
   <!-- Company Logo -->
   <mat-card *ngIf="!disableCropper">
     <mat-card-header>
-      <mat-card-title class="title">Company Logo</mat-card-title>
-      <mat-card-subtitle class="mat-caption">Please upload your company logo.</mat-card-subtitle>
+      <mat-card-title class="title" i18n>Company Logo</mat-card-title>
+      <mat-card-subtitle class="mat-caption" i18n>Please upload your company logo.</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content fxLayout="column">
       <image-uploader ratio="square" [meta]="['orgs', 'logo', orgId]" [form]="form.logo" (selectionChange)="change()" listenToChanges>
-        <h3 title>Logo</h3>
+        <h3 title i18n>Logo</h3>
       </image-uploader>
     </mat-card-content>
   </mat-card>
@@ -46,7 +48,7 @@
     <!-- Legal Entity -->
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Company Description</mat-card-title>
+        <mat-card-title i18n>Company Description</mat-card-title>
       </mat-card-header>
       <mat-card-content fxLayout="column">
         <organization-form-description

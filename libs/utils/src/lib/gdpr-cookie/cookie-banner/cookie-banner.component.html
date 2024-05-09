@@ -2,18 +2,20 @@
   <button mat-icon-button (click)="openCookieModal()">
     <mat-icon
       svgIcon="help"
+      i18n-matTooltip
       matTooltip="More details">
     </mat-icon>
   </button>
   <img asset="cookie.png" alt="cookie">
 
-  <p>This website uses cookies. Some of them are essential to the service, some are just here to improve your experience.</p>
+  <p i18n>This website uses cookies. Some of them are essential to the service, some are just here to improve your experience.</p>
   <form [formGroup]="form">
     <article>
       <label>
-        <span>Essential</span>
+        <span i18n>Essential</span>
         <mat-icon
           svgIcon="info"
+          i18n-matTooltip
           matTooltip="Essential cookies are necessary for Archipel products to function as intended.">
         </mat-icon>
       </label>
@@ -21,9 +23,10 @@
     </article>
     <article>
       <label>
-        <span>Behavioral analytics</span>
+        <span i18n>Behavioral analytics</span>
         <mat-icon
           svgIcon="info"
+          i18n-matTooltip
           matTooltip="Analytical cookies help us to improve Archipel products by collecting and reporting information on their usage.">
         </mat-icon>
       </label>
@@ -31,9 +34,10 @@
     </article>
     <article>
       <label>
-        <span>Chat</span>
+        <span i18n>Chat</span>
         <mat-icon
           svgIcon="info"
+          i18n-matTooltip
           matTooltip="Chat cookies are used to allow the Archipel team to communicate with its users through the chatbot tool.">
         </mat-icon>
       </label>
@@ -42,7 +46,7 @@
   </form>
 
   <footer>
-    <button test-id="cookies" mat-flat-button color="primary" (click)="saveCookies()">Save preferences</button>
-    <button mat-button color="primary" (click)="confirmCookies()">Decline all</button>
+    <button test-id="cookies" mat-flat-button color="primary" (click)="saveCookies()" i18n>Save preferences</button>
+    <button mat-button color="primary" (click)="confirmCookies()" i18n>Decline all</button>
   </footer>
 </section>

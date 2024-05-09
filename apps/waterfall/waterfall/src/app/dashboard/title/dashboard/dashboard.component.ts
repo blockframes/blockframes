@@ -159,15 +159,15 @@ export class DashboardComponent {
     map(rightholders => {
       const series = [
         {
-          name: 'Expenses',
+          name: $localize`Expenses`,
           data: rightholders.map(r => Math.round(r.expense))
         },
         {
-          name: 'Investment',
+          name: $localize`Investment`,
           data: rightholders.map(r => Math.round(r.investment))
         },
         {
-          name: 'Net receipts',
+          name: $localize`Net receipts`,
           data: rightholders.map(r => Math.round(r.revenu.actual))
         }
       ];
@@ -240,17 +240,17 @@ export class DashboardComponent {
 
       const series = [
         {
-          name: 'Yearly Net Revenue',
+          name: $localize`Yearly Net Revenue`,
           type: 'column',
           data: incomes
         },
         {
-          name: 'Cashflow',
+          name: $localize`Cashflow`,
           type: 'column',
           data: cashflow
         },
         {
-          name: 'Total Net Revenue',
+          name: $localize`Total Net Revenue`,
           type: 'line',
           data: revenue
         }
@@ -327,7 +327,7 @@ export class DashboardComponent {
     @Optional() private intercom: Intercom,
   ) {
     this.shell.setDate(undefined);
-    this.dynTitle.setPageTitle(this.shell.movie.title.international, 'Waterfall Dashboard');
+    this.dynTitle.setPageTitle(this.shell.movie.title.international, $localize`Waterfall Dashboard`);
   }
 
   private getLastHistoryPerYear(history: History[]) {

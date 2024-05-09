@@ -106,17 +106,17 @@ export class SalesMapComponent implements OnInit {
       switch (durationStatus) {
         case 'ongoing': {
           const infos = getDateDifference(contract.duration.to, now);
-          contractStatus = `Contract expires in ${infos.value} ${infos.label}`;
+          contractStatus = $localize`Contract expires in ${infos.value} ${infos.label}`;
           break;
         }
         case 'past': {
           const infos = getDateDifference(now, contract.duration.to);
-          contractStatus = `Contract expired ${infos.value} ${infos.label} ago`;
+          contractStatus = $localize`Contract expired ${infos.value} ${infos.label} ago`;
           break;
         }
         case 'future': {
           const infos = getDateDifference(contract.duration.from, now);
-          contractStatus = `Contract begins in ${infos.value} ${infos.label}`;
+          contractStatus = $localize`Contract begins in ${infos.value} ${infos.label}`;
           break;
         }
       }

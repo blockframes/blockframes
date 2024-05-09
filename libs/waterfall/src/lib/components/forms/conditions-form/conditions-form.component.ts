@@ -155,7 +155,7 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
 
   public editExpenseType(waterfall: Waterfall) {
     if (!this.contractId) {
-      this.snackBar.open('Please define contract first.', 'close', { duration: 5000 });
+      this.snackBar.open($localize`Please define contract first.`, 'close', { duration: 5000 });
       return;
     }
 

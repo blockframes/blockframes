@@ -95,20 +95,20 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
   async exit() {
     if (this.canLeaveStep(-2)) {
       await this.updateRightHolders();
-      this.snackBar.open('Waterfall saved', 'close', { duration: 3000 });
+      this.snackBar.open($localize`Waterfall saved`, 'close', { duration: 3000 });
       this.router.navigate(['..'], { relativeTo: this.route });
     }
   }
 
   private canLeaveStep(nextStep: number) {
     if ((!this.contractForm.pristine && this.stepper.selectedIndex === 0 && nextStep !== -1) || (!this.canLeaveGraphForm && nextStep === -2)) {
-      const subject = !this.contractForm.pristine ? 'Contracts Form' : 'Waterfall Builder';
+      const subject = !this.contractForm.pristine ? $localize`Contracts Form` : $localize`Waterfall Builder`;
       const dialogRef = this.dialog.open(ConfirmComponent, {
         data: createModalData({
-          title: `You are about to leave the ${subject}`,
-          question: 'Some changes have not been saved. If you leave now, you might lose these changes',
-          cancel: 'Cancel',
-          confirm: 'Leave anyway'
+          title: $localize`You are about to leave the ${subject}`,
+          question: $localize`Some changes have not been saved. If you leave now, you might lose these changes`,
+          cancel: $localize`Cancel`,
+          confirm: $localize`Leave anyway`
         }, 'small'),
         autoFocus: false
       });
@@ -155,14 +155,14 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
   }
 
   openIntercom() {
-    return this.intercom.show('I need help to create a waterfall');
+    return this.intercom.show($localize`I need help to create a waterfall`);
   }
 
   async publishWaterfall() {
     this.updating$.next(true);
     await this.shell.refreshWaterfall();
     this.updating$.next(false);
-    this.snackBar.open(`Waterfall ${this.createMode ? 'Published' : 'Updated'}`, 'close', { duration: 3000 });
+    this.snackBar.open(`Waterfall ${this.createMode ? $localize`Published` : $localize`Updated`}`, 'close', { duration: 3000 });
     this.router.navigate(['..'], { relativeTo: this.route });
   }
 

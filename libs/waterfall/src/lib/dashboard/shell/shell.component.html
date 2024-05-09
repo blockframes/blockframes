@@ -28,10 +28,10 @@
             >
               <mat-icon svgIcon="water_drop"></mat-icon>
               <ng-container *ngIf="canInitWaterfall$ | async; else noWaterfall">
-                <span>Waterfall Management</span>
+                <span i18n>Waterfall Management</span>
               </ng-container>
               <ng-template #noWaterfall>
-                <span>Create Waterfall</span>
+                <span i18n>Create Waterfall</span>
               </ng-template>
             </a>
           </waterfall-cta>

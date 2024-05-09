@@ -35,4 +35,8 @@ export class OpenPreviewComponent {
   public closeModal(): void {
     this.dialogRef.close(false);
   }
+
+  public getTooltip(): string {
+    return this.showControls ? $localize`Click to view Document` : $localize`Click to see preview`;
+  }
 }

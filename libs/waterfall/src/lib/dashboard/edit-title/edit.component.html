@@ -8,7 +8,7 @@
   <a mat-icon-button routerLink="..">
     <mat-icon svgIcon="arrow_back"></mat-icon>
   </a>
-  <h1>{{ createMode ? 'Create' : 'Edit' }} Movie</h1>
+  <h1>{{ createMode ? 'Create' : 'Edit' }} Movie</h1>  <!-- TODO #9699 i18n -->
     <waterfall-title-form
       [movieId]="movieId"
       [movieForm]="movieForm"
@@ -21,7 +21,7 @@
       </ng-container>
       <ng-template #editInfo>
         <button mat-flat-button color="primary" (click)="update()" [disabled]="(invalidMovie$ | async) || movieForm.disabled">
-          <span>{{ createMode ? 'Create' : 'Edit' }} Movie</span>
+          <span>{{ createMode ? 'Create' : 'Edit' }} Movie</span> <!-- TODO #9699 i18n -->
           <mat-icon svgIcon="arrow_forward"></mat-icon>
         </button>
       </ng-template>

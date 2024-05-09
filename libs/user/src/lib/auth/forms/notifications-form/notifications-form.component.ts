@@ -15,54 +15,54 @@ import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-
 interface NotificationSetting { text: string, tooltip: boolean };
 
 const titleType: Partial<Record<NotificationTypes, NotificationSetting>> = {
-  movieAccepted: { text: 'A title is successfully published on the marketplace.', tooltip: false },
-  movieSubmitted: { text: 'A title is successfully submitted to the Archipel Content team.', tooltip: false },
-  movieAskingPriceRequested: { text: `A user requests the asking price for a title.`, tooltip: true },
-  movieAskingPriceRequestSent: { text: `Your request for the asking price has been sent.`, tooltip: false },
-  requestFromUserToJoinOrgCreate: { text: 'A user requests to join your organization.', tooltip: true },
-  requestFromUserToJoinOrgDeclined: { text: 'A user\'s request to join your organization was declined. ', tooltip: false }, // TODO 8026
-  orgMemberUpdated: { text: 'A user joins or leaves your organization.', tooltip: false },
-  requestToAttendEventSent: { text: 'Your request to join an event is successfully sent.', tooltip: false },
-  eventIsAboutToStart: { text: 'REMINDER - An event you\'re attending will start in 1 hour. (RECOMMENDED)', tooltip: false },
-  oneDayReminder: { text: 'REMINDER - An event you\'re attending will start in 24 hours. (RECOMMENDED)', tooltip: false },
-  invitationToAttendEventUpdated: { text: 'A user answers your invitation to an event you\'re organizing.', tooltip: false },
-  requestToAttendEventUpdated: { text: 'Your request to join an event gets accepted or declined.', tooltip: false },
-  requestToAttendEventCreated: { text: 'A user wants to join an event you\'re organizing. (RECOMMENDED)', tooltip: true },
-  invitationToAttendMeetingCreated: { text: 'You are invited to a meeting. (RECOMMENDED)', tooltip: true },
-  invitationToAttendScreeningCreated: { text: 'You are invited to a screening. (RECOMMENDED)', tooltip: true },
-  invitationToAttendSlateCreated: { text: 'You are invited to a slate presentation. (RECOMMENDED)', tooltip: true },
-  screeningRequested: { text: 'A screening has been requested. (RECOMMENDED)', tooltip: true },
-  screeningRequestSent: { text: 'Your screening request was successfully sent', tooltip: false },
-  screenerRequested: { text: 'A screener has been requested. (RECOMMENDED)', tooltip: true },
-  screenerRequestSent: { text: 'Your screener request was successfully sent', tooltip: false },
-  offerCreatedConfirmation: { text: 'Your offer is successfully sent', tooltip: false },
-  contractCreated: { text: 'An offer has been made on one of your titles. (RECOMMENDED)', tooltip: true },
-  createdCounterOffer: { text: 'Your counter-offer is submitted.', tooltip: true },
-  receivedCounterOffer: { text: 'You receive a counter offer. (RECOMMENDED)', tooltip: true },
-  myOrgAcceptedAContract: { text: 'You accept an offer. (RECOMMENDED)', tooltip: true },
-  myContractWasAccepted: { text: 'Your offer gets accepted. (RECOMMENDED)', tooltip: true },
-  myOrgDeclinedAContract: { text: 'You decline an offer. (RECOMMENDED)', tooltip: true },
-  myContractWasDeclined: { text: 'Your offer gets declined. (RECOMMENDED)', tooltip: true },
-  invitationToJoinWaterfallCreated: { text: 'You are invited to join a Waterfall. (RECOMMENDED)', tooltip: true },
-  invitationToJoinWaterfallUpdated: { text: 'A user answers your invitation to join your Waterfall.', tooltip: false },
-  userRequestedDocumentCertification: { text: 'A user requested a document certification.', tooltip: false },
-  requestForStatementReviewCreated: { text: 'Your request to review a statement is being processed.', tooltip: false },
-  requestForStatementReviewApproved: { text: 'Your statement has been approved.', tooltip: false },
-  requestForStatementReviewDeclined: { text: 'Your statement has been declined.', tooltip: false },
-  userRequestedStatementReview: { text: 'A user requested a statement review.', tooltip: false },
-  documentSharedWithOrg: { text: 'A document has been shared with your organization.', tooltip: false },
+  movieAccepted: { text: $localize`A title is successfully published on the marketplace.`, tooltip: false },
+  movieSubmitted: { text: $localize`A title is successfully submitted to the Archipel Content team.`, tooltip: false },
+  movieAskingPriceRequested: { text: $localize`A user requests the asking price for a title.`, tooltip: true },
+  movieAskingPriceRequestSent: { text: $localize`Your request for the asking price has been sent.`, tooltip: false },
+  requestFromUserToJoinOrgCreate: { text: $localize`A user requests to join your organization.`, tooltip: true },
+  requestFromUserToJoinOrgDeclined: { text: $localize`A user\'s request to join your organization was declined. `, tooltip: false }, // TODO 8026
+  orgMemberUpdated: { text: $localize`A user joins or leaves your organization.`, tooltip: false },
+  requestToAttendEventSent: { text: $localize`Your request to join an event is successfully sent.`, tooltip: false },
+  eventIsAboutToStart: { text: $localize`REMINDER - An event you\'re attending will start in 1 hour. (RECOMMENDED)`, tooltip: false },
+  oneDayReminder: { text: $localize`REMINDER - An event you\'re attending will start in 24 hours. (RECOMMENDED)`, tooltip: false },
+  invitationToAttendEventUpdated: { text: $localize`A user answers your invitation to an event you\'re organizing.`, tooltip: false },
+  requestToAttendEventUpdated: { text: $localize`Your request to join an event gets accepted or declined.`, tooltip: false },
+  requestToAttendEventCreated: { text: $localize`A user wants to join an event you\'re organizing. (RECOMMENDED)`, tooltip: true },
+  invitationToAttendMeetingCreated: { text: $localize`You are invited to a meeting. (RECOMMENDED)`, tooltip: true },
+  invitationToAttendScreeningCreated: { text: $localize`You are invited to a screening. (RECOMMENDED)`, tooltip: true },
+  invitationToAttendSlateCreated: { text: $localize`You are invited to a slate presentation. (RECOMMENDED)`, tooltip: true },
+  screeningRequested: { text: $localize`A screening has been requested. (RECOMMENDED)`, tooltip: true },
+  screeningRequestSent: { text: $localize`Your screening request was successfully sent`, tooltip: false },
+  screenerRequested: { text: $localize`A screener has been requested. (RECOMMENDED)`, tooltip: true },
+  screenerRequestSent: { text: $localize`Your screener request was successfully sent`, tooltip: false },
+  offerCreatedConfirmation: { text: $localize`Your offer is successfully sent`, tooltip: false },
+  contractCreated: { text: $localize`An offer has been made on one of your titles. (RECOMMENDED)`, tooltip: true },
+  createdCounterOffer: { text: $localize`Your counter-offer is submitted.`, tooltip: true },
+  receivedCounterOffer: { text: $localize`You receive a counter offer. (RECOMMENDED)`, tooltip: true },
+  myOrgAcceptedAContract: { text: $localize`You accept an offer. (RECOMMENDED)`, tooltip: true },
+  myContractWasAccepted: { text: $localize`Your offer gets accepted. (RECOMMENDED)`, tooltip: true },
+  myOrgDeclinedAContract: { text: $localize`You decline an offer. (RECOMMENDED)`, tooltip: true },
+  myContractWasDeclined: { text: $localize`Your offer gets declined. (RECOMMENDED)`, tooltip: true },
+  invitationToJoinWaterfallCreated: { text: $localize`You are invited to join a Waterfall. (RECOMMENDED)`, tooltip: true },
+  invitationToJoinWaterfallUpdated: { text: $localize`A user answers your invitation to join your Waterfall.`, tooltip: false },
+  userRequestedDocumentCertification: { text: $localize`A user requested a document certification.`, tooltip: false },
+  requestForStatementReviewCreated: { text: $localize`Your request to review a statement is being processed.`, tooltip: false },
+  requestForStatementReviewApproved: { text: $localize`Your statement has been approved.`, tooltip: false },
+  requestForStatementReviewDeclined: { text: $localize`Your statement has been declined.`, tooltip: false },
+  userRequestedStatementReview: { text: $localize`A user requested a statement review.`, tooltip: false },
+  documentSharedWithOrg: { text: $localize`A document has been shared with your organization.`, tooltip: false },
   // #7946 this may be reactivated later
   // underSignature: { text: 'Your offer is now under signature or validated by all parties. (RECOMMENDED)', tooltip: true },
 };
 
 const tables: { title: string, types: NotificationTypes[], appAuthorized: App[] }[] = [
   {
-    title: 'Company Management',
+    title: $localize`Company Management`,
     types: ['requestFromUserToJoinOrgCreate', 'orgMemberUpdated'],
     appAuthorized: ['catalog', 'festival', 'financiers']
   },
   {
-    title: 'Content Management',
+    title: $localize`Content Management`,
     types: [
       'movieAccepted',
       'movieSubmitted',
@@ -74,7 +74,7 @@ const tables: { title: string, types: NotificationTypes[], appAuthorized: App[] 
     appAuthorized: ['catalog']
   },
   {
-    title: 'Content Management',
+    title: $localize`Content Management`,
     types: [
       'movieAccepted',
     ],
@@ -90,7 +90,7 @@ const tables: { title: string, types: NotificationTypes[], appAuthorized: App[] 
     appAuthorized: ['festival']
   },
   {
-    title: 'Event Management',
+    title: $localize`Event Management`,
     types: [
       'invitationToAttendScreeningCreated',
       'invitationToAttendSlateCreated',
@@ -107,7 +107,7 @@ const tables: { title: string, types: NotificationTypes[], appAuthorized: App[] 
     appAuthorized: ['festival']
   },
   {
-    title: 'Offer Management',
+    title: $localize`Offer Management`,
     types: [
       'offerCreatedConfirmation',
       'contractCreated',
@@ -117,7 +117,7 @@ const tables: { title: string, types: NotificationTypes[], appAuthorized: App[] 
     appAuthorized: ['catalog']
   },
   {
-    title: 'Negotiation Management',
+    title: $localize`Negotiation Management`,
     types: [
       'myContractWasAccepted',
       'myOrgAcceptedAContract',
@@ -129,7 +129,7 @@ const tables: { title: string, types: NotificationTypes[], appAuthorized: App[] 
     appAuthorized: ['catalog']
   },
   {
-    title: 'Waterfall Management',
+    title: $localize`Waterfall Management`,
     types: [
       'invitationToJoinWaterfallCreated',
       'invitationToJoinWaterfallUpdated',
@@ -185,7 +185,7 @@ export class NotificationsFormComponent {
       const notifications = this.form.getRawValue();
       const uid = this.authService.uid;
       await this.authService.update({ uid, settings: { notifications } });
-      this.snackBar.open('Notification Settings updated. ', 'close', { duration: 4000 });
+      this.snackBar.open($localize`Notification Settings updated. `, 'close', { duration: 4000 });
     } catch (err) {
       this.snackBar.openFromComponent(SnackbarErrorComponent, { duration: 5000 });
     }

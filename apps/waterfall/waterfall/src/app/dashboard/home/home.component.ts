@@ -23,8 +23,8 @@ export class HomeComponent {
     switchMap(waterfalls => this.movieService.valueChanges(waterfalls.map(w => w.id))),
     tap(titles => {
       titles.length
-        ? this.dynTitle.setPageTitle('Dashboard')
-        : this.dynTitle.setPageTitle('Dashboard', 'Empty');
+        ? this.dynTitle.setPageTitle($localize`Dashboard`)
+        : this.dynTitle.setPageTitle($localize`Dashboard`, $localize`Empty`);
     })
   );
 

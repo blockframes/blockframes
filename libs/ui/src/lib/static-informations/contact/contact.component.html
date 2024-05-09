@@ -1,23 +1,23 @@
 <header>
-  <h1>Contact us</h1>
-  <span class="mat-caption">Mon - Fri 10:00 AM - 8:00 PM CET</span>
-  <p>Send us a message and we’ll quickly get back to you:</p>
+  <h1 i18n>Contact us</h1>
+  <span class="mat-caption" i18n>Mon - Fri 10:00 AM - 8:00 PM CET</span>
+  <p i18n>Send us a message and we’ll quickly get back to you:</p>
 </header>
 <section fxLayout="row" fxLayoutGap="32px">
   <article>
     <form [formGroup]="form" fxLayout="column">
       <mat-form-field appearance="outline">
-        <mat-label>Subject</mat-label>
+        <mat-label i18n>Subject</mat-label>
         <input formControlName="subject" matInput placeholder="Subject" required>
-        <mat-error *ngIf="form.get('subject').hasError('required')">
+        <mat-error *ngIf="form.get('subject').hasError('required')" i18n>
           Subject is <strong>required</strong>
         </mat-error>
       </mat-form-field>
       <mat-form-field class="textarea" appearance="outline">
-        <mat-label>Message</mat-label>
+        <mat-label i18n>Message</mat-label>
         <textarea formControlName="message" matInput placeholder="Message" cdkTextareaAutosize
         cdkAutosizeMinRows="6" required></textarea>
-        <mat-error *ngIf="form.get('message').hasError('required')">
+        <mat-error *ngIf="form.get('message').hasError('required')" i18n>
           Message is <strong>required</strong>
         </mat-error>
       </mat-form-field>
@@ -25,12 +25,12 @@
     <div fxLayout="row" fxLayoutAlign="center">
       <button (click)="sendMessage()" type="submit" color="primary" mat-stroked-button>
         <mat-icon svgIcon="mail"></mat-icon>
-        <span>Send a message</span>
+        <span i18n>Send a message</span>
       </button>
     </div>
   </article>
   <article>
-    <p class="text-margin">Our offices are located at 59-61, Passage Choiseul, 75002, Paris</p>
+    <p class="text-margin" i18n>Our offices are located at 59-61, Passage Choiseul, 75002, Paris</p>
     <google-map height="366px" width="556px" [center]="center" [zoom]="14">
       <map-marker [position]="center" [label]="markerLabel">
       </map-marker>

@@ -1,32 +1,32 @@
 <section class="surface" *ngIf="rows$ | async as rows; else loading">
   <article>
-    <h2>World Sales Summary</h2>
+    <h2 i18n>World Sales Summary</h2>
     <aside>
       <button [disabled]="!rows.length" mat-button color="primary" (click)="downloadCsv(rows)">
-        <span>Export in .CSV</span>
+        <span i18n>Export in .CSV</span>
       </button>
     </aside>
   </article>
   <bf-table *ngIf="rows.length else noFile" [source]="rows" pagination="50">
-    <ng-template colRef="contract.sellerId" label="Licensor" let-sellerId>
+    <ng-template colRef="contract.sellerId" label="Licensor" let-sellerId i18n-label>
       {{ sellerId | rightholderName: waterfall }}
     </ng-template>
-    <ng-template colRef="contract.buyerId" label="Licensee" let-buyerId>
+    <ng-template colRef="contract.buyerId" label="Licensee" let-buyerId i18n-label>
       {{ buyerId | rightholderName: waterfall }}
     </ng-template>
-    <ng-template colRef="territories" label="Territories" let-territories>
+    <ng-template colRef="territories" label="Territories" let-territories i18n-label>
       <span class="group-label" (click)="openDetails(territories, 'territories')">
         <p class="ellipsis">
           {{ territories | toGroupLabel:'territories':'World' | join }}
         </p>
       </span>
     </ng-template>
-    <ng-template colRef="medias" label="Rights" let-medias>
+    <ng-template colRef="medias" label="Rights" let-medias i18n-label>
       <span class="group-label" (click)="openDetails(medias, 'medias')">
         {{ medias | toGroupLabel:'medias':'All'| join }}
       </span>
     </ng-template>
-    <ng-template colRef="amount" label="Amount" let-amount sort [sort]="sorts.byPriceCurrency">
+    <ng-template colRef="amount" label="Amount" let-amount sort [sort]="sorts.byPriceCurrency" i18n-label>
       <price-per-currency [price]="amount"></price-per-currency>
     </ng-template>
   </bf-table>
@@ -41,6 +41,6 @@
 <ng-template #noFile>
   <div>
     <img asset="empty-contracts.svg" alt="Image, you have no contracts yet">
-    <p class="mat-body-1">No incomes yet</p>
+    <p class="mat-body-1" i18n>No incomes yet</p>
   </div>
 </ng-template>

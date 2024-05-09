@@ -1,6 +1,6 @@
 <global-modal>
   <ng-container *ngIf="data.mode === 'view' else edit">
-    <h2>Comments for {{ data.right.name }}</h2>
+    <h2 i18n>Comments for {{ data.right.name }}</h2>
 
     <ng-container *ngFor="let override of data.overrides">
       <ng-container *ngIf="getConfig(override.incomeId) as config">
@@ -16,13 +16,13 @@
           </span>
         </section>
         
-        <p class="mat-body-2">Value for <strong>{{ data.right.name }}</strong> was changed from  
+        <p class="mat-body-2" i18n>Value for <strong>{{ data.right.name }}</strong> was changed from  
           <strong><price-per-currency [price]="override.initial | formatPair" default="€ 0"></price-per-currency></strong>
           to 
           <strong><price-per-currency [price]="config.current | formatPair" default="€ 0"></price-per-currency></strong>
         </p>
 
-        <strong>Comment</strong>
+        <strong i18n>Comment</strong>
         
         <p class="mat-body-2">{{ override.comment }}</p>
         
@@ -32,13 +32,13 @@
 
     <mat-dialog-actions>
       <button mat-flat-button color="primary" (click)="close()">
-        <span>Close comments</span>
+        <span i18n>Close comments</span>
       </button>
     </mat-dialog-actions>
   </ng-container>
 
   <ng-template #edit>
-    <h2>Save Changes of the {{ data.right.name }}</h2>
+    <h2 i18n>Save Changes of the {{ data.right.name }}</h2>
 
     <ng-container *ngFor="let override of form.get('overrides').controls; let i = index">
       <ng-container *ngIf="getConfig(override.get('incomeId').value) as config">
@@ -58,7 +58,7 @@
           <article *ngIf="warning.directSales?.length">
             <section>
               <span><mat-icon color="warn" svgIcon="warning"></mat-icon></span>
-              <p>
+              <p i18n>
                 Changing this value might impact the following {{ 'directSales' | toLabel: 'statementType' }} statements: 
               </p>
             </section>
@@ -67,7 +67,7 @@
                 <span>
                   <h3>{{ stm.senderId | rightholderName: data.waterfall }} {{ stm.duration.from | date }} -  {{ stm.duration.to | date }}</h3>
                   <a mat-icon-button [routerLink]="['/c/o/dashboard/title', stm.waterfallId, 'statement', stm.id]" target="_blank">
-                    <mat-icon svgIcon="document" matTooltip="View Statement"></mat-icon>
+                    <mat-icon svgIcon="document" matTooltip="View Statement" i18n-matTooltip></mat-icon>
                   </a>
                 </span>
               </li>
@@ -76,8 +76,8 @@
           <article *ngIf="warning.outgoing?.length">
             <section>
               <span><mat-icon color="warn" svgIcon="warning"></mat-icon></span>
-              <p>
-                Changing this value might create a payment <strong matTooltip="Distributed amount could be higher than available amount, resulting in a negative balance">overflow</strong> 
+              <p i18n>
+                Changing this value might create a payment <strong matTooltip="Distributed amount could be higher than available amount, resulting in a negative balance" i18n-matTooltip>overflow</strong> 
                 between current statement and the following {{ 'producer' | toLabel: 'statementType' }} statements:
               </p>
             </section>
@@ -86,7 +86,7 @@
                 <span>
                   <h3>{{ stm.senderId | rightholderName: data.waterfall }} {{ stm.duration.from | date }} -  {{ stm.duration.to | date }}</h3>
                   <a mat-icon-button [routerLink]="['/c/o/dashboard/title', stm.waterfallId, 'statement', stm.id]" target="_blank">
-                    <mat-icon svgIcon="document" matTooltip="View Statement"></mat-icon>
+                    <mat-icon svgIcon="document" matTooltip="View Statement" i18n-matTooltip></mat-icon>
                   </a>
                 </span>
               </li>
@@ -96,40 +96,40 @@
         
         <section>
           <mat-form-field appearance="outline">
-            <mat-label>Amount</mat-label>
+            <mat-label i18n>Amount</mat-label>
             <mat-icon [svgIcon]="mainCurrency" matPrefix></mat-icon>
             <input matInput type="number" min="0" [max]="config.max" [formControl]="override.get('amount')" required />
-            <mat-error>Please fill in a value between 0 and {{ config.max }}. Note that the receipt share cannot exceed the income received.</mat-error>
+            <mat-error i18n>Please fill in a value between 0 and {{ config.max }}. Note that the receipt share cannot exceed the income received.</mat-error>
           </mat-form-field>
     
-          <button mat-icon-button (click)="restore(i)" matTooltip="Restore to initial value">
+          <button mat-icon-button (click)="restore(i)" matTooltip="Restore to initial value" i18n-matTooltip>
             <mat-icon svgIcon="restore"></mat-icon>
           </button>
         </section>
         
-        <p class="mat-body-2">Before applying the changes, please tell us the main reason of the changes in the comment below.</p>
+        <p class="mat-body-2" i18n>Before applying the changes, please tell us the main reason of the changes in the comment below.</p>
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Comment</mat-label>
+          <mat-label i18n>Comment</mat-label>
           <textarea matInput [formControl]="override.get('comment')" placeholder="Comment" type="string" cdkTextareaAutosize cdkAutosizeMinRows="6" required ></textarea>
-          <mat-error>Please tell us the main reason of the changes in the comment section.</mat-error>
+          <mat-error i18n>Please tell us the main reason of the changes in the comment section.</mat-error>
         </mat-form-field>
         
       </ng-container>
 
     </ng-container>
 
-    <p class="mat-body-2">To confirm the changes, please type "SAVE"</p>
+    <p class="mat-body-2" i18n>To confirm the changes, please type "SAVE"</p>
     <mat-form-field appearance="outline">
-      <mat-label>Changes confirmation</mat-label>
+      <mat-label i18n>Changes confirmation</mat-label>
       <input matInput [formControl]="form.get('confirm')" required />
     </mat-form-field>
     
     <mat-dialog-actions>
       <button mat-flat-button color="primary" [disabled]="form.invalid || form.get('confirm').value !== 'SAVE'" (click)="confirm()">
-        <span>Confirm Changes</span>
+        <span i18n>Confirm Changes</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
       </button>
-      <button mat-button (click)="close()">
+      <button mat-button (click)="close()" i18n>
         Close window
       </button>
     </mat-dialog-actions>

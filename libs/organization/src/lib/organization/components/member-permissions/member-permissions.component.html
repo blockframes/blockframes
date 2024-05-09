@@ -2,22 +2,22 @@
   <mat-icon [svgIcon]="icon"></mat-icon>
 </button>
 <mat-menu #menu>
-  <button mat-menu-item [matMenuTriggerFor]="subMenu">
+  <button mat-menu-item [matMenuTriggerFor]="subMenu" i18n>
     Grant Permissions
   </button>
   <button mat-menu-item (click)="memberRemoved.emit(uid)">
     <mat-icon color="warn" svgIcon="remove_member"></mat-icon>
-    <span>Remove from Company</span>
+    <span i18n>Remove from Company</span>
   </button>
 </mat-menu>
 <mat-menu #subMenu>
-  <button mat-menu-item (click)="updatedToSuperAdmin.emit(uid)">
+  <button mat-menu-item (click)="updatedToSuperAdmin.emit(uid)" i18n>
     Super Admin
   </button>
-  <button mat-menu-item (click)="updatedToAdmin.emit(uid)">
+  <button mat-menu-item (click)="updatedToAdmin.emit(uid)" i18n>
     Admin
   </button>
-  <button mat-menu-item (click)="updatedToMember.emit(uid)">
+  <button mat-menu-item (click)="updatedToMember.emit(uid)" i18n>
     Member
   </button>
 </mat-menu>

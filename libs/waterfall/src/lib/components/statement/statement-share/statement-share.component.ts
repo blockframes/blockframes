@@ -38,7 +38,7 @@ export class StatementShareComponent {
       const emails: string[] = this.emailForm.value.split(',');
       const invalid = emails.filter(value => Validators.email({ value } as FormControl));
       if (invalid.length) {
-        this.error = `The following emails are invalid: ${invalid.join(', ')}.`;
+        this.error = $localize`The following emails are invalid: ${invalid.join(', ')}.`;
       } else {
         for (const email of emails) {
           if (!this.form.value.includes(email)) {
