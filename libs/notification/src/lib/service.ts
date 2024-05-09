@@ -78,6 +78,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
   private async appendNotificationData(notification: Notification): Promise<Notification> {
     const displayUserName = notification.user ? displayName(notification.user) : 'Someone';
     const module = this.moduleGuard.currentModule;
+    // TODO #9699 localize notifications
     switch (notification.type) {
       case 'organizationAcceptedByArchipelContent':
         return {
