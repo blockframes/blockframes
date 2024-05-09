@@ -10,6 +10,7 @@
         [selected]="selected === member.id || selected === '*'"
         (handleSelect)="select(member.id)"
         monetizationLabel='Revenue'
+        i18n-monetizationLabel='@:waterfall.graph.revenue'
       ></waterfall-graph-right>
     </ng-container>
     <ng-template #level>
