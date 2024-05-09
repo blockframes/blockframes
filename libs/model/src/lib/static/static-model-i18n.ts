@@ -1,4 +1,4 @@
-const rightholderRoles = {
+const rightholderRoles = { // TODO #9699 remove comment
   salesAgent: 'Sales Agent',
   mainDistributor: 'Main Distributor',
   localDistributor: 'Local Distributor',
