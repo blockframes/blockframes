@@ -48,7 +48,7 @@
 
 <bf-card-modal [ngStyle]="{ display: showEditPanel ? 'block' : 'none' }">
   <ng-container *ngIf="selected$ | async as selected; else noSelection">
-    <ng-container *ngIf="!readonly else infoPanel">
+    <ng-container *ngIf="!readonly else nodeDetails">
       <ng-container *ngIf="isSourceSelected; else notSource">
         <header>
           <h2>
@@ -203,7 +203,7 @@
         </mat-tab-group>
       </ng-template>
     </ng-container>
-    <ng-template #infoPanel>
+    <ng-template #nodeDetails>
       <header>
         <h2>
           <span>{{ selected }} </span>
@@ -212,6 +212,7 @@
           <mat-icon svgIcon="close"></mat-icon>
         </button>
       </header>
+      <waterfall-graph-node-details></waterfall-graph-node-details>
     </ng-template>
   </ng-container>
   <ng-template #noSelection>

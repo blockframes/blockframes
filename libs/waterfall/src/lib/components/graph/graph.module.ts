@@ -19,6 +19,7 @@ import { WaterfallGraphLabelModule } from './label/label.module';
 import { WaterfallPoolListModule } from './pool-list/pool-list.module';
 import { WaterfallRightListModule } from './right-list/right-list.module';
 import { WaterfallConditionsModule } from './conditions/conditions.module';
+import { WaterfallGraphNodeDetailsModule } from './node-details/node-details.module';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 import { CanAddChildPipeModule } from '../../pipes/can-add-child.pipe';
 
@@ -49,6 +50,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     WaterfallRightListModule,
     WaterfallGraphLabelModule,
     WaterfallConditionsModule,
+    WaterfallGraphNodeDetailsModule,
     ConfirmModule,
     ImageModule,
     CanAddChildPipeModule,
