@@ -1,10 +1,10 @@
 ﻿<ng-container *ngIf="notifications$ | async as notifications; else loading">
   <ng-container *ngIf="notifications.length; else empty">
     <header fxLayout="row" fxLayoutAlign="space-between start">
-      <h1>Notifications</h1>
+      <h1 i18n>Notifications</h1>
       <button mat-button (click)="markAll()">
         <mat-icon svgIcon="done_all"></mat-icon>
-        <span>Mark all as read</span>
+        <span i18n>Mark all as read</span>
       </button>
     </header>
     <notification-list [notifications]="notifications" class="surface"></notification-list>
@@ -17,8 +17,8 @@
 </ng-template>
 <ng-template #empty>
   <section fxLayout="column" fxLayoutAlign="center center">
-    <h1>You have no notification yet.</h1>
-    <p>You haven't received any notifications at this time.</p>
+    <h1 i18n>You have no notification yet.</h1>
+    <p i18n>You haven't received any notifications at this time.</p>
     <img asset="empty_notification.svg" alt="No title image">
     <button mat-flat-button color="accent" (click)="leadToHomepage()">Back to Homepage</button>
   </section>
