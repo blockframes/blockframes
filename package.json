@@ -57,7 +57,8 @@
     "pwm": "pwmetrics --config",
     "postinstall": "ngcc --properties es2015 browser module main && node ./decorate-angular-cli.js",
     "prerender:festival": "nx build festival --prod && nx run festival:server --configuration production && angular-prerender --browser-target festival:build --server-target festival:server",
-    "backend-ops": "ts-node -P tools/tsconfig.tools.json apps/backend-ops/src/main.ts"
+    "backend-ops": "ts-node -P tools/tsconfig.tools.json apps/backend-ops/src/main.ts",
+    "i18n:waterfall": "nx run waterfall:extract-i18n --format=json --output-path=./apps/waterfall/waterfall/src/assets"
   },
   "private": true,
   "dependencies": {

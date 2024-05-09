@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Location } from '@angular/common';
-import { preferredLanguage } from "@blockframes/model";
+import { preferredLanguage } from '@blockframes/model';
 
 @Component({
   selector: 'bf-security',

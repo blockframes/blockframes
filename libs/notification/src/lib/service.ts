@@ -30,6 +30,7 @@ import { getReviewer } from '@blockframes/contract/negotiation/utils';
 import { where } from 'firebase/firestore';
 import { SentryService } from '@blockframes/utils/sentry.service';
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
+import '@angular/localize/init'; // TODO #9699 why is this needed here?
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService extends BlockframesCollection<Notification> {
@@ -78,14 +79,15 @@ export class NotificationService extends BlockframesCollection<Notification> {
   private async appendNotificationData(notification: Notification): Promise<Notification> {
     const displayUserName = notification.user ? displayName(notification.user) : 'Someone';
     const module = this.moduleGuard.currentModule;
+
     switch (notification.type) {
       case 'organizationAcceptedByArchipelContent':
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
-          message: `Your organization was accepted by the ${this.appName} team.`,
+          message: $localize`Your organization was accepted by the ${this.appName} team.`,
           imgRef: notification.organization?.logo,
-          actionText: "See Organization",
+          actionText: $localize`See Organization`,
           placeholderUrl: 'empty_organization.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id
             }/view/org`,
@@ -95,7 +97,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
-          message: `${displayUserName}'s request to join your organization was refused.`,
+          message: $localize`${displayUserName}'s request to join your organization was refused.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id
@@ -104,8 +106,8 @@ export class NotificationService extends BlockframesCollection<Notification> {
       case 'orgMemberUpdated': {
         const org = await this.orgService.load(notification.organization.id);
         const message = org.userIds.includes(notification.user.uid)
-          ? `${displayUserName} is now part of your organization.`
-          : `${displayUserName} has been removed from your organization.`;
+          ? $localize`${displayUserName} is now part of your organization.`
+          : $localize`${displayUserName} has been removed from your organization.`;
 
         return {
           ...notification,
@@ -113,7 +115,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           message,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
-          actionText: 'See Members',
+          actionText: $localize`See Members`,
           url: `${applicationUrl[this.app]}/c/o/organization/${notification.organization.id
             }/view/members`,
         };
@@ -122,7 +124,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
       case 'requestToAttendEventUpdated': {
         const event = await this.eventService.load(notification.docId);
         const subject = await this.notificationSubject(notification, event);
-        const message = `${subject} has ${notification.invitation.status} your ${notification.invitation.mode} to attend ${eventTypes[event.type]} "<a href="/event/${event.id}" target="_blank">${event.title}</a>".`;
+        const message = $localize`${subject} has ${notification.invitation.status} your ${notification.invitation.mode} to attend ${eventTypes[event.type]} "<a href="/event/${event.id}" target="_blank">${event.title}</a>".`;
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
@@ -137,7 +139,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
       }
       case 'requestToAttendEventSent': {
         const event = await this.eventService.load(notification.docId);
-        const message = `Your request to attend "<a href="/event/${event.id}" target="_blank">${event.title}</a>" has been sent.`;
+        const message = $localize`Your request to attend "<a href="/event/${event.id}" target="_blank">${event.title}</a>" has been sent.`;
         const url = `${applicationUrl['festival']}${module === 'marketplace'
           ? `/event/${notification.docId}/r/i/`
           : `/c/o/${module}/event/${notification.docId}`
@@ -154,14 +156,14 @@ export class NotificationService extends BlockframesCollection<Notification> {
       case 'movieSubmitted': {
         const movie = await this.loadMovie(notification.docId);
         const imgRef = this.getPoster(movie);
-        const message = `<a href="/c/o/dashboard/title/${movie.id}" target="_blank">${movie.title.international}</a> was successfully submitted to the ${appName[notification._meta.createdFrom]} team.`;
+        const message = $localize`<a href="/c/o/dashboard/title/${movie.id}" target="_blank">${movie.title.international}</a> was successfully submitted to the ${appName[notification._meta.createdFrom]} team.`;
 
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message,
           imgRef,
-          actionText: 'See Title',
+          actionText: $localize`See Title`,
           placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl[notification._meta.createdFrom]}/c/o/dashboard/title/${notification.docId}/main`,
         };
@@ -169,14 +171,14 @@ export class NotificationService extends BlockframesCollection<Notification> {
       case 'movieAskingPriceRequestSent': {
         const movie = await this.loadMovie(notification.docId);
         const imgRef = this.getPoster(movie);
-        const message = `Your request for ${movie.title.international}'s asking price was successfully sent.`;
+        const message = $localize`Your request for ${movie.title.international}'s asking price was successfully sent.`;
 
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message,
           imgRef,
-          actionText: 'See Title',
+          actionText: $localize`See Title`,
           placeholderUrl: 'empty_poster.svg',
           url: `/c/o/marketplace/title/${notification.docId}/main`,
         };
@@ -187,14 +189,14 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const movie = await this.loadMovie(titleId);
         const imgRef = this.getPoster(movie);
         const org = await this.orgService.load(event.ownerOrgId);
-        const message = `REMINDER - ${org.name}'s ${eventTypes[event.type]} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" is about to start.`;
+        const message = $localize`REMINDER - ${org.name}'s ${eventTypes[event.type]} "<a href="/event/${event.id}" target="_blank">${event.title}</a>" is about to start.`;
 
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           imgRef,
           message,
-          actionText: `Go to ${toLabel(event.type, 'eventTypes')}`,
+          actionText: $localize`Go to ${toLabel(event.type, 'eventTypes')}`,
           placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl['festival']}/event/${notification.docId}/r/i`,
         };
@@ -205,7 +207,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const movie = await this.loadMovie(titleId);
         const imgRef = this.getPoster(movie);
         const org = await this.orgService.load(event.ownerOrgId);
-        const message = `REMINDER - ${org.name}'s ${eventTypes[event.type]} "<a href="/event/${event.id
+        const message = $localize`REMINDER - ${org.name}'s ${eventTypes[event.type]} "<a href="/event/${event.id
           }" target="_blank">${event.title}</a>" will start tomorrow at ${format(
             event.start,
             'h:mm a'
@@ -217,7 +219,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           imgRef,
           message,
           placeholderUrl: 'empty_poster.svg',
-          actionText: `Go to ${toLabel(event.type, 'eventTypes')}`,
+          actionText: $localize`Go to ${toLabel(event.type, 'eventTypes')}`,
           url: `${applicationUrl['festival']}/event/${notification.docId}/r/i`,
         };
       }
@@ -231,7 +233,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message,
           imgRef,
-          actionText: 'See Title',
+          actionText: $localize`See Title`,
           placeholderUrl: 'empty_poster.svg',
           url: `${applicationUrl[notification._meta.createdFrom]}/c/o/dashboard/title/${notification.docId}/main`,
         };
@@ -241,7 +243,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const isFestival = notification._meta.createdFrom === 'festival';
 
         const buyerName = isFestival ? displayName(notification.user) : 'Someone';
-        const message = `${buyerName} requested an asking price for ${movie.title.international}. Please check your emails for details.`;
+        const message = $localize`${buyerName} requested an asking price for ${movie.title.international}. Please check your emails for details.`;
         const url = isFestival
           ? `mailto:${notification.user.email}?subject=Interest in ${movie.title.international} via Archipel Market`
           : `${applicationUrl[notification._meta.createdFrom]}/c/o/dashboard/avails/${notification.docId}/map/`;
@@ -253,12 +255,12 @@ export class NotificationService extends BlockframesCollection<Notification> {
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
           url,
-          actionText: isFestival ? 'Start Discussions' : 'See Title',
+          actionText: isFestival ? $localize`Start Discussions` : $localize`See Title`,
         };
       }
       case 'screeningRequested': {
         const movie = await this.loadMovie(notification.docId);
-        const message = `<a href="mailto:${notification.user.email}">${displayName(notification.user)}</a> requested a screening for <a href="/c/o/dashboard/title/${movie.id}">${movie.title.international}</a>.`;
+        const message = $localize`<a href="mailto:${notification.user.email}">${displayName(notification.user)}</a> requested a screening for <a href="/c/o/dashboard/title/${movie.id}">${movie.title.international}</a>.`;
 
         return {
           ...notification,
@@ -267,12 +269,12 @@ export class NotificationService extends BlockframesCollection<Notification> {
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
           url: `${applicationUrl['festival']}/c/o/dashboard/event/new/edit?titleId=${notification.docId}&requestor=${encodeURIComponent(notification.user.email)}`,
-          actionText: 'Organize Screening',
+          actionText: $localize`Organize Screening`,
         };
       }
       case 'screeningRequestSent': {
         const movie = await this.loadMovie(notification.docId);
-        const message = `Your screening request for ${movie.title.international} was successfully sent.`;
+        const message = $localize`Your screening request for ${movie.title.international} was successfully sent.`;
 
         return {
           ...notification,
@@ -280,7 +282,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           message,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
-          actionText: 'See Title',
+          actionText: $localize`See Title`,
           url: `${applicationUrl['festival']}/c/o/marketplace/title/${notification.docId}`,
         };
       }
@@ -296,12 +298,12 @@ export class NotificationService extends BlockframesCollection<Notification> {
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
           url: `/c/o/dashboard/tunnel/movie/${notification.docId}/media-screener`,
-          actionText: 'Upload a Screener',
+          actionText: $localize`Upload a Screener`,
         };
       }
       case 'screenerRequestSent': {
         const movie = await this.loadMovie(notification.docId);
-        const message = `Your screener request for ${movie.title.international} was successfully sent.`;
+        const message = $localize`Your screener request for ${movie.title.international} was successfully sent.`;
 
         return {
           ...notification,
@@ -309,7 +311,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
           message,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.svg',
-          actionText: 'See Title',
+          actionText: $localize`See Title`,
           url: `/c/o/marketplace/title/${notification.docId}`,
         };
       }
@@ -317,9 +319,9 @@ export class NotificationService extends BlockframesCollection<Notification> {
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
-          message: `Your offer ${notification.docId} was successfully sent.`,
+          message: $localize`Your offer ${notification.docId} was successfully sent.`,
           placeholderUrl: 'profil_user.svg',
-          actionText: 'See Offer',
+          actionText: $localize`See Offer`,
           url: `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.docId}`
         }
       case 'contractCreated': {
@@ -327,14 +329,14 @@ export class NotificationService extends BlockframesCollection<Notification> {
         if (!contract) return this.contractFailback(notification);
         const movie = await this.loadMovie(contract.titleId);
         const org = await this.orgService.load(contract.buyerId);
-        const message = `${org.name} sent an offer for ${movie.title.international}.`;
+        const message = $localize`${org.name} sent an offer for ${movie.title.international}.`;
 
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message,
           placeholderUrl: 'list_offer.svg',
-          actionText: 'See Offer',
+          actionText: $localize`See Offer`,
           url: `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}`
         }
       }
@@ -346,13 +348,13 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const negotiation = await this.negotiationService.load(notification.docPath);
         const { name } = await this.orgService.load(getReviewer(negotiation));
         const movie = await this.loadMovie(contract.titleId);
-        const message = `Your counter-offer for ${movie.title.international} was successfully sent to ${name}.`;
+        const message = $localize`Your counter-offer for ${movie.title.international} was successfully sent to ${name}.`;
 
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message,
-          actionText: 'See Offer',
+          actionText: $localize`See Offer`,
           placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
@@ -365,13 +367,13 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const movie = await this.loadMovie(contract.titleId);
         const negotiation = await this.negotiationService.load(notification.docPath);
         const { name } = await this.orgService.load(negotiation.createdByOrg);
-        const message = `${name} sent a counter-offer for ${movie.title.international}.`;
+        const message = $localize`${name} sent a counter-offer for ${movie.title.international}.`;
 
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message,
-          actionText: 'See Offer',
+          actionText: $localize`See Offer`,
           placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
@@ -384,9 +386,9 @@ export class NotificationService extends BlockframesCollection<Notification> {
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
-          message: `Your offer ${contract.offerId} was accepted. The ${this.appName} team will contact you shortly.`,
+          message: $localize`Your offer ${contract.offerId} was accepted. The ${this.appName} team will contact you shortly.`,
           placeholderUrl: 'list_offer.svg',
-          actionText: 'See Offer',
+          actionText: $localize`See Offer`,
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
       }
@@ -414,13 +416,13 @@ export class NotificationService extends BlockframesCollection<Notification> {
       case 'myOrgAcceptedAContract': {
         const marketplaceUrl = `${applicationUrl['catalog']}/c/o/marketplace/offer/${notification.offerId}/${notification.docId}`;
         const dashboardUrl = `${applicationUrl['catalog']}/c/o/dashboard/sales/${notification.docId}/view`;
-        const message = `Congrats for accepting the offer ${notification.offerId}. The agreement will now be drafted offline.`;
+        const message = $localize`Congrats for accepting the offer ${notification.offerId}. The agreement will now be drafted offline.`;
 
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message,
-          actionText: 'See Offer',
+          actionText: $localize`See Offer`,
           placeholderUrl: 'list_offer.svg',
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
@@ -435,9 +437,9 @@ export class NotificationService extends BlockframesCollection<Notification> {
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
-          message: `Your offer for ${movie.title.international} was declined.`,
+          message: $localize`Your offer for ${movie.title.international} was declined.`,
           placeholderUrl: 'list_offer.svg',
-          actionText: 'See Offer',
+          actionText: $localize`See Offer`,
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
       }
@@ -451,21 +453,21 @@ export class NotificationService extends BlockframesCollection<Notification> {
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
-          message: `The offer for ${movie.title.international} was successfully declined.`,
+          message: $localize`The offer for ${movie.title.international} was successfully declined.`,
           placeholderUrl: 'list_offer.svg',
-          actionText: 'See Offer',
+          actionText: $localize`See Offer`,
           url: module === 'marketplace' ? marketplaceUrl : dashboardUrl,
         };
       }
       case 'orgAppAccessChanged': {
         const message = notification.appAccess
-          ? `Your organization now has access to ${appName[notification.appAccess]}.`
-          : "Your organization's app access have changed.";
+          ? $localize`Your organization now has access to ${appName[notification.appAccess]}.`
+          : $localize`Your organization's app access have changed.`;
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
           message,
-          actionText: 'Access App',
+          actionText: $localize`Access App`,
           placeholderUrl: `empty_organization.svg`,
           imgRef: notification.organization?.logo,
           url: `${applicationUrl[notification.appAccess]}`,
@@ -474,7 +476,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
       case 'invitationToJoinWaterfallUpdated': {
         const movie = await this.loadMovie(notification.docId);
         const subject = await this.notificationSubject(notification);
-        const message = `${subject} has ${notification.invitation.status} your ${notification.invitation.mode} to join ${movie.title.international}'s Waterfall.`;
+        const message = $localize`${subject} has ${notification.invitation.status} your ${notification.invitation.mode} to join ${movie.title.international}'s Waterfall.`;
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
@@ -487,9 +489,9 @@ export class NotificationService extends BlockframesCollection<Notification> {
       case 'userRequestedDocumentCertification': {
         const movie = await this.loadMovie(notification.docId);
         const imgRef = this.getPoster(movie);
-        let message = 'Your request to certify a document is being processed.';
+        let message = $localize`Your request to certify a document is being processed.`;
         if (notification.statementId) {
-          message = `Your request to certify a <a href="/c/o/dashboard/title/${movie.id}/statement/${notification.statementId}" target="_blank">statement</a> for ${movie.title.international}'s Waterfall is being processed.`;
+          message = $localize`Your request to certify a <a href="/c/o/dashboard/title/${movie.id}/statement/${notification.statementId}" target="_blank">statement</a> for ${movie.title.international}'s Waterfall is being processed.`;
         }
         return {
           ...notification,
@@ -503,9 +505,9 @@ export class NotificationService extends BlockframesCollection<Notification> {
       case 'requestForStatementReviewCreated': {
         const movie = await this.loadMovie(notification.docId);
         const imgRef = this.getPoster(movie);
-        let message = `Your request to review a statement is being processed by the ${toLabel('producer', 'rightholderRoles')}.`;
+        let message = $localize`Your request to review a statement is being processed by the ${toLabel('producer', 'rightholderRoles')}.`;
         if (notification.statementId) {
-          message = `Your request to review a <a href="/c/o/dashboard/title/${movie.id}/statement/${notification.statementId}" target="_blank">statement</a> for ${movie.title.international}'s Waterfall is being processed.`;
+          message = $localize`Your request to review a <a href="/c/o/dashboard/title/${movie.id}/statement/${notification.statementId}" target="_blank">statement</a> for ${movie.title.international}'s Waterfall is being processed.`;
         }
         return {
           ...notification,
@@ -519,9 +521,9 @@ export class NotificationService extends BlockframesCollection<Notification> {
       case 'requestForStatementReviewApproved': {
         const movie = await this.loadMovie(notification.docId);
         const imgRef = this.getPoster(movie);
-        let message = `Your statement has been approved by the ${toLabel('producer', 'rightholderRoles')}.`;
+        let message = $localize`Your statement has been approved by the ${toLabel('producer', 'rightholderRoles')}.`;
         if (notification.statementId) {
-          message = `Your <a href="/c/o/dashboard/title/${movie.id}/statement/${notification.statementId}" target="_blank">statement</a> for ${movie.title.international}'s Waterfall has been approved.`;
+          message = $localize`Your <a href="/c/o/dashboard/title/${movie.id}/statement/${notification.statementId}" target="_blank">statement</a> for ${movie.title.international}'s Waterfall has been approved.`;
         }
         return {
           ...notification,
@@ -535,9 +537,9 @@ export class NotificationService extends BlockframesCollection<Notification> {
       case 'requestForStatementReviewDeclined': {
         const movie = await this.loadMovie(notification.docId);
         const imgRef = this.getPoster(movie);
-        let message = `Your statement has been declined by the ${toLabel('producer', 'rightholderRoles')}.`;
+        let message = $localize`Your statement has been declined by the ${toLabel('producer', 'rightholderRoles')}.`;
         if (notification.statementId) {
-          message = `Your <a href="/c/o/dashboard/title/${movie.id}/statement/${notification.statementId}/edit" target="_blank">statement</a> for ${movie.title.international}'s Waterfall has been declined.`;
+          message = $localize`Your <a href="/c/o/dashboard/title/${movie.id}/statement/${notification.statementId}/edit" target="_blank">statement</a> for ${movie.title.international}'s Waterfall has been declined.`;
         }
         return {
           ...notification,
@@ -551,9 +553,9 @@ export class NotificationService extends BlockframesCollection<Notification> {
       case 'userRequestedStatementReview': {
         const movie = await this.loadMovie(notification.docId);
         const subject = await this.notificationSubject(notification);
-        let message = `${subject} has requested a review for a statement.`;
+        let message = $localize`${subject} has requested a review for a statement.`;
         if (notification.statementId) {
-          message = `New request to review a <a href="/c/o/dashboard/title/${movie.id}/statement/${notification.statementId}" target="_blank">statement</a> for ${movie.title.international}'s Waterfall.`;
+          message = $localize`New request to review a <a href="/c/o/dashboard/title/${movie.id}/statement/${notification.statementId}" target="_blank">statement</a> for ${movie.title.international}'s Waterfall.`;
         }
         return {
           ...notification,
@@ -568,11 +570,11 @@ export class NotificationService extends BlockframesCollection<Notification> {
         const movie = await this.loadMovie(notification.docId);
         const imgRef = this.getPoster(movie);
         let url = `${applicationUrl[notification._meta.createdFrom]}/c/o/dashboard/title/${notification.docId}/documents`;
-        let message = `A new <a href="/c/o/dashboard/title/${movie.id}/documents" target="_blank">document</a> was shared with your organization on ${movie.title.international}'s Waterfall.`;
+        let message = $localize`A new <a href="/c/o/dashboard/title/${movie.id}/documents" target="_blank">document</a> was shared with your organization on ${movie.title.international}'s Waterfall.`;
         if (notification.documentId) {
           const doc = await this.documentService.load(notification.documentId, { waterfallId: notification.docId });
           if (doc?.type === 'contract') {
-            message = `A new <a href="/c/o/dashboard/title/${movie.id}/document/${doc.id}" target="_blank">document</a> was shared with your organization on ${movie.title.international}'s Waterfall.`;
+            message = $localize`A new <a href="/c/o/dashboard/title/${movie.id}/document/${doc.id}" target="_blank">document</a> was shared with your organization on ${movie.title.international}'s Waterfall.`;
             url = `${applicationUrl[notification._meta.createdFrom]}/c/o/dashboard/title/${notification.docId}/document/${doc.id}`;
           }
         }
@@ -588,7 +590,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
       default:
         return {
           ...notification,
-          message: 'Error while displaying notification.',
+          message: $localize`Error while displaying notification.`,
         };
     }
   }
@@ -634,16 +636,16 @@ export class NotificationService extends BlockframesCollection<Notification> {
    */
   private loadMovie(id: string) {
     return this.movieService.load(id).catch(_ => {
-      this.sentryService.triggerError({ message: `Failed to load movie ${id}`, bugType: 'firebase-error', location: 'notification-service' });
-      return createMovie({ id, title: createTitle({ international: 'missing title' }) });
+      this.sentryService.triggerError({ message: $localize`Failed to load movie ${id}`, bugType: 'firebase-error', location: 'notification-service' });
+      return createMovie({ id, title: createTitle({ international: $localize`missing title` }) });
     });
   }
 
   private contractFailback(notification: Notification) {
-    this.sentryService.triggerError({ message: `Failed to load contract for ${notification.docId} (${notification.type})`, bugType: 'firebase-error', location: 'notification-service' });
+    this.sentryService.triggerError({ message: $localize`Failed to load contract for ${notification.docId} (${notification.type})`, bugType: 'firebase-error', location: 'notification-service' });
     return {
       ...notification,
-      message: 'Error while displaying notification.',
+      message: $localize`Error while displaying notification.`,
       placeholderUrl: 'list_offer.svg',
     };
   }

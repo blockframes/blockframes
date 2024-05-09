@@ -1,5 +1,5 @@
 <section class="surface" *ngIf="invitations?.length">
-  <h1  i18n>Pending Right Holders ({{ invitations.length }})</h1>
+  <h1 i18n>Pending Right Holders ({{ invitations.length }})</h1>
   <bf-table *ngIf="invitations.length" [source]="invitations" pagination="10" useFilter>
     <ng-template colRef="toUser" label="NAME" let-user sort  [filter]="filters.displayName" i18n-label>
       <span *ngIf="user.firstName && user.lastName else notRegistered">{{ user | displayName }}</span>

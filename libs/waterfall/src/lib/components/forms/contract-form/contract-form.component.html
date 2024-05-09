@@ -42,7 +42,7 @@
   <mat-label i18n>Signature Date</mat-label>
   <time-picker [formControl]="form.get('signatureDate')" allDay small></time-picker>
   <mat-error *ngIf="form.get('signatureDate').hasError('signatureOverStart')" i18n>
-    Start date must not be later than start date
+    Signature date must not be later than start date
   </mat-error>
   <mat-error *ngIf="form.get('endDate').hasError('signatureOverEnd')" i18n>
     Signature date must not be later than end date
