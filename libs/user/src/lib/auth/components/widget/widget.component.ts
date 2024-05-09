@@ -20,7 +20,7 @@ export class AuthWidgetComponent implements OnInit, OnDestroy {
   theme$ = this.themeService.theme$;
   canSwitchTheme = true;
   canSwitchLanguage = false;
-  defaultLang = (preferredLanguage() || 'en') as SupportedLanguages;
+  defaultLang: SupportedLanguages = preferredLanguage();
   langControl = new FormControl<SupportedLanguages>(this.defaultLang);
   supportedLanguages = supportedLanguages;
   private sub: Subscription;

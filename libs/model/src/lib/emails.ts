@@ -4,10 +4,10 @@ import { Offer } from './offer';
 import { Negotiation } from './negociation';
 import { Movie } from './movie';
 import { Organization } from './organisation';
-import { toLabel, toLanguageVersionString } from './utils';
+import { SupportedLanguages, toLabel, toLanguageVersionString } from './utils';
 import { eventTypes, movieCurrenciesSymbols, staticModel } from './static/static-model';
 import { Bucket, BucketContract } from './bucket';
-import { AccessibilityTypes, App, EventTypesValue } from './static/types';
+import { AccessibilityTypes, App, EventTypesValue, TerritoryISOA2Value } from './static/types';
 import { EventMeta, Event, createIcsFromEvent, toIcsFile } from './event';
 import { differenceInDays, differenceInHours, differenceInMinutes, format, millisecondsInHour } from 'date-fns';
 import { Statement, Waterfall } from './waterfall';
@@ -40,6 +40,10 @@ export interface UserEmailData {
   email: string;
   password?: string;
   isRegistered?: boolean;
+  preferredLanguage: {
+    language: SupportedLanguages;
+    isoA2: TerritoryISOA2Value;
+  };
 }
 
 interface OfferEmailData {
@@ -169,6 +173,10 @@ export function getUserEmailData(user: Partial<User>, password?: string): UserEm
     email: user.email || '',
     password,
     isRegistered: !!user.orgId,
+    preferredLanguage: {
+      language: user.settings?.preferredLanguage?.language || 'en',
+      isoA2: user.settings?.preferredLanguage?.isoA2 || 'GB'
+    }
   };
 }
 

@@ -34,12 +34,14 @@ export interface LegalTerms {
   ip: string;
 }
 
+export interface PreferredLanguage {
+  language: SupportedLanguages;
+  isoA2: TerritoryISOA2Value;
+};
+
 interface UserSettings {
   notifications?: NotificationSettings;
-  preferredLanguage?: {
-    language: SupportedLanguages;
-    isoA2: TerritoryISOA2Value;
-  };
+  preferredLanguage?: PreferredLanguage;
 }
 
 export interface NotificationSettingsTemplate {

@@ -14,7 +14,8 @@ import {
   supportedLocaleIds,
   TerritoryISOA2Value,
   preferredIsoA2,
-  SupportedLocaleIds
+  SupportedLocaleIds,
+  PreferredLanguage
 } from '@blockframes/model';
 import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
@@ -210,9 +211,10 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
     _meta: DocumentMeta,
     privacyPolicy: LegalTerms,
     hideEmail: boolean,
-    termsAndConditions: Partial<Record<App, LegalTerms>>
+    termsAndConditions: Partial<Record<App, LegalTerms>>,
+    preferredLanguage: PreferredLanguage
   }) {
-    return {
+    const profile = {
       _meta: createDocumentMeta({ emailVerified: false, ...ctx._meta }),
       uid: user.uid,
       email: user.email,
@@ -222,6 +224,8 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
       hideEmail: ctx.hideEmail,
       termsAndConditions: ctx.termsAndConditions
     };
+    if (ctx.preferredLanguage?.language) profile['settings'] = { preferredLanguage: ctx.preferredLanguage };
+    return profile;
   }
 
   /**
@@ -252,10 +256,10 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
     this.ngIntercom?.update(getIntercomOptions(user));
   }
 
-  public async updatePreferredLanguage(preferredLanguage: SupportedLanguages, isoA2: TerritoryISOA2Value, reload = true): Promise<SupportedLocaleIds> {
+  public async updatePreferredLanguage(preferredLanguage: SupportedLanguages, isoA2?: TerritoryISOA2Value, reload = true): Promise<SupportedLocaleIds> {
     if (!preferredLanguage) return;
     const user = this.profile;
-    if (!user.settings) user.settings = {};
+    if (!user?.settings) user.settings = {};
 
     const defaultIsoA2: TerritoryISOA2Value = preferredLanguage === 'fr' ? 'FR' : 'GB';
 
@@ -267,7 +271,7 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
     user.settings.preferredLanguage = { language: preferredLanguage, isoA2 };
     localStorage.setItem('locale.lang', user.settings.preferredLanguage.language);
     localStorage.setItem('locale.isoA2', user.settings.preferredLanguage.isoA2);
-    await this.update(user);
+    await this.update({ settings: user.settings });
     if (reload) window.location.reload();
 
     return `${user.settings.preferredLanguage.language}-${user.settings.preferredLanguage.isoA2}` as SupportedLocaleIds;

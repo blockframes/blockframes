@@ -6,7 +6,18 @@ import { InvitationService } from '@blockframes/invitation/service';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
 import { OrganizationLiteForm } from '@blockframes/organization/forms/organization-lite.form';
 import { IdentityForm, IdentityFormControl } from '@blockframes/auth/forms/identity.form';
-import { createPublicUser, PublicUser, User, createOrganization, createDocumentMeta, AlgoliaOrganization, App, hasDisplayName } from '@blockframes/model';
+import {
+  createPublicUser,
+  PublicUser,
+  User,
+  createOrganization,
+  createDocumentMeta,
+  AlgoliaOrganization,
+  App,
+  hasDisplayName,
+  preferredLanguage,
+  preferredIsoA2
+} from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { Intercom } from 'ng-intercom';
 import { createLocation } from '@blockframes/model';
@@ -189,6 +200,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   private async create() {
     if (this.existingOrgId) {
       // Create user
+      // TODO #9699 const org = await this.orgService.getValue(this.existingOrgId); & check that "full" "en-GB" is logical (see updatePreferredLanguage)
       this.publicUser = await this.createUser(this.form.value);
       // Request to join existing org
       await this.invitationService.request(this.existingOrgId, this.publicUser).to('joinOrganization');
@@ -210,6 +222,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       }
 
       // Create user
+      // TODO #9699 check orgFrom country  & check that "full" "en-GB" is logical (see updatePreferredLanguage)
       this.publicUser = await this.createUserFromAnonymous(this.form.value);
 
       // Create the org
@@ -242,6 +255,10 @@ export class IdentityComponent implements OnInit, OnDestroy {
       privacyPolicy,
       termsAndConditions
     };
+
+    if (this.app === 'waterfall') { // TODO #9699 only on waterfall app for now
+      ctx['preferredLanguage'] = { language: preferredLanguage(), isoA2: preferredIsoA2() };
+    }
     const credentials = await this.authService.signup(user.email.trim(), user.password, { ctx });
     return createPublicUser({
       firstName: user.firstName,
@@ -272,6 +289,10 @@ export class IdentityComponent implements OnInit, OnDestroy {
       privacyPolicy,
       termsAndConditions
     };
+
+    if (this.app === 'waterfall') { // TODO #9699 only on waterfall app for now
+      ctx['preferredLanguage'] = { language: preferredLanguage(), isoA2: preferredIsoA2() };
+    }
     const credentials = await this.authService.signupFromAnonymous(user.email.trim(), user.password, { ctx });
     return createPublicUser({
       firstName: user.firstName,
@@ -315,7 +336,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
         firstName,
         lastName,
         privacyPolicy,
-        termsAndConditions
+        termsAndConditions,
+        // TODO #9699 preferred language
       });
     }
 

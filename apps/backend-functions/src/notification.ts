@@ -68,7 +68,7 @@ import {
   // offerUnderSignature,
   // offerAcceptedOrDeclined,
 } from './templates/mail';
-import { templateIds, groupIds } from '@blockframes/utils/emails/ids';
+import { templateIds, groupIds, getTemplateId } from '@blockframes/utils/emails/ids';
 import { applicationUrl, getMailSender, sendgridEmailsFrom } from '@blockframes/utils/apps';
 import { logger } from 'firebase-functions';
 import { appUrl } from './environments/environment';
@@ -984,14 +984,14 @@ async function sendRequestForStatementReviewEmail(recipient: User, notification:
   const statementData = getStatementData(statement, waterfall);
   const urlToUse = applicationUrl[waterfallAppKey];
   let link = '';
-  let templateId = templateIds.statement.review.requested;
+  let templateId = getTemplateId('statement.review.requested', recipient.settings?.preferredLanguage?.language);
   switch (notification.type) {
     case 'requestForStatementReviewApproved':
-      templateId = templateIds.statement.review.approved;
+      templateId = getTemplateId('statement.review.approved', recipient.settings?.preferredLanguage?.language);
       link = `c/o/dashboard/title/${movie.id}/statement/${notification.statementId}`;
       break;
     case 'requestForStatementReviewDeclined':
-      templateId = templateIds.statement.review.declined;
+      templateId = getTemplateId('statement.review.declined', recipient.settings?.preferredLanguage?.language);
       link = `c/o/dashboard/title/${movie.id}/statement/${notification.statementId}/edit`;
       break;
   }
