@@ -48,158 +48,170 @@
 
 <bf-card-modal [ngStyle]="{ display: showEditPanel ? 'block' : 'none' }">
   <ng-container *ngIf="selected$ | async as selected; else noSelection">
-    <ng-container *ngIf="isSourceSelected; else notSource">
-      <header>
-        <h2>
-          <span>Receipt Source</span>
-          <mat-icon *ngIf="nonEditableNodeIds$.value.includes(selected)" matTooltip="This cannot be edited anymore" svgIcon="lock" i18n-matTooltip></mat-icon>
-        </h2>
-        <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'">
-          <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
-        </button>
-        <button mat-icon-button matTooltip="Save changes" (click)="updateSource()" [disabled]="nonEditableNodeIds$.value.includes(selected)" i18n-matTooltip>
-          <mat-icon svgIcon="save"></mat-icon>
-        </button>
-        <button mat-icon-button matTooltip="Delete Source" (click)="delete()" [disabled]="nonEditableNodeIds$.value.includes(selected)" i18n-matTooltip>
-          <mat-icon svgIcon="delete"></mat-icon>
-        </button>
-        <button mat-icon-button matTooltip="Close" (click)="select('')" i18n-matTooltip>
-          <mat-icon svgIcon="close"></mat-icon>
-        </button>
-      </header>
-      <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-        <group-multiselect
-          scope="medias"
-          selectIcon="play_arrow"
-          label="Choose Medias"
-          i18n-label
-          i18n-filterPlaceholder
-          i18n-displayAll
-          displayAll="All Medias"
-          filterPlaceholder="Specify territories to filter"
-          [control]="sourceForm.get('medias')"
-        ></group-multiselect>
-        <group-multiselect
-          scope="territories"
-          label="Choose Territories"
-          displayAll="World"
-          i18n-label
-          i18n-filterPlaceholder
-          i18n-displayAll
-          filterPlaceholder="Specify territories to filter"
-          [control]="sourceForm.get('territories')"
-        ></group-multiselect>
-        <mat-form-field appearance="outline">
-          <mat-label i18n>Receipt Source Name</mat-label>
-          <input matInput type="text" placeholder="Receipt Source Name" [formControl]="sourceForm.get('name')" />
-        </mat-form-field>
-      </section>
-    </ng-container>
-    <ng-template #notSource>
-      <header>
-        <h2>
-          <span i18n>Receipt Share</span>
-          <mat-icon *ngIf="nonEditableNodeIds$.value.includes(selected)" matTooltip="This cannot be edited anymore" svgIcon="lock" i18n-matTooltip></mat-icon>
-        </h2>
-        <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'"><!-- TODO #9699 i18n -->
-          <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
-        </button>
-        <button mat-icon-button matTooltip="Save changes" (click)="updateRight()" i18n-matTooltip>
-          <mat-icon svgIcon="save"></mat-icon>
-        </button>
-        <button mat-icon-button matTooltip="Delete Right" (click)="delete()" [disabled]="nonEditableNodeIds$.value.includes(selected)" i18n-matTooltip>
-          <mat-icon svgIcon="delete"></mat-icon>
-        </button>
-        <button mat-icon-button matTooltip="Close" (click)="select('')" i18n-matTooltip>
-          <mat-icon svgIcon="close"></mat-icon>
-        </button>
-      </header>
-      <mat-tab-group>
-        <mat-tab [label]="(rightForm.get('type').value | isHorizontal) ? 'Group Details' : 'Receipts Shares'">
-          <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <p *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)" i18n>Fill the following fields to define the Receipt Share.</p>
-            <p *ngIf="(rightForm.get('type').value | isHorizontal)" i18n>Fill the following fields to define the Group Details.</p>
-            <p *ngIf="(selected$.value | isStep : rights)" i18n>Fill the following fields to define the Step Details.</p>
-
-            <ng-container *ngIf="!(selected$.value | isStep : rights)">
-              <static-select *ngIf="!(rightForm.get('type').value | isHorizontal)" [control]="rightForm.get('type')" scope="rightTypes" [withoutValues]="['horizontal','vertical']" bfi18n>
-                <mat-label>Type</mat-label>
-              </static-select>
-
-              <bf-autocomplete
-                required 
-                [label]="(rightForm.get('type').value | isHorizontal) ? 'Responsible of the Group' : 'Right Holder Name'"
-                [error]="(rightForm.get('type').value | isHorizontal) ? 'Please select a Right Holder. Most likely the Producer.' : 'To select a Right Holder, first add a contract with them.'"
-                [hint]="(rightForm.get('type').value | isHorizontal) ? 'Responsible of the Group is most likely the Producer.' : ''"
-                [options]="rightholderNames$"
-                placeholder="Choose Right Holder"
-                [form]="rightholderControl"
-              ></bf-autocomplete><!-- TODO #9699 i18n -->
-
-              <mat-form-field *ngIf="!(rightForm.get('type').value | isHorizontal) && (relevantContracts$ | async).length" appearance="outline">
-                <mat-label i18n>Contract</mat-label>
-                <mat-select [formControl]="rightForm.get('contract')">
-                  <mat-option *ngFor="let contract of (relevantContracts$ | async)" [value]="contract.id">{{contract.name}}</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </ng-container>
-    
-            <mat-form-field appearance="outline">
-              <mat-label *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)" i18n>Receipt Share Name</mat-label>
-              <mat-label *ngIf="(rightForm.get('type').value | isHorizontal)">Group Name</mat-label>
-              <mat-label *ngIf="(selected$.value | isStep : rights)">Step Name</mat-label>
-              <input matInput type="text" [placeholder]="(rightForm.get('type').value | isHorizontal) ? 'Group Name' : 'Receipt Share Name'" [formControl]="rightForm.get('name')" />
-            </mat-form-field>
-    
-            <mat-form-field appearance="outline">
-              <mat-label i18n>Percentage</mat-label>
-              <mat-icon svgIcon="percent" matPrefix></mat-icon>
-              <input matInput type="number" min="0" max="100" [formControl]="rightForm.get('percent')" />
-            </mat-form-field>
-    
-            <ng-container *ngIf="!(selected$.value | isStep : rights)">
-              <p i18n>Parent Revenue Element(s)</p>
+    <ng-container *ngIf="!readonly else infoPanel">
+      <ng-container *ngIf="isSourceSelected; else notSource">
+        <header>
+          <h2>
+            <span i18n>Receipt Source</span>
+            <mat-icon *ngIf="nonEditableNodeIds$.value.includes(selected)" matTooltip="This cannot be edited anymore" svgIcon="lock" i18n-matTooltip></mat-icon>
+          </h2>
+          <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'">
+            <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Save changes" (click)="updateSource()" [disabled]="nonEditableNodeIds$.value.includes(selected)" i18n-matTooltip>
+            <mat-icon svgIcon="save"></mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Delete Source" (click)="delete()" [disabled]="nonEditableNodeIds$.value.includes(selected)" i18n-matTooltip>
+            <mat-icon svgIcon="delete"></mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Close" (click)="select('')" i18n-matTooltip>
+            <mat-icon svgIcon="close"></mat-icon>
+          </button>
+        </header>
+        <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
+          <group-multiselect
+            scope="medias"
+            selectIcon="play_arrow"
+            label="Choose Medias"
+            i18n-label
+            i18n-filterPlaceholder
+            i18n-displayAll
+            displayAll="All Medias"
+            filterPlaceholder="Specify territories to filter"
+            [control]="sourceForm.get('medias')"
+          ></group-multiselect>
+          <group-multiselect
+            scope="territories"
+            label="Choose Territories"
+            displayAll="World"
+            i18n-label
+            i18n-filterPlaceholder
+            i18n-displayAll
+            filterPlaceholder="Specify territories to filter"
+            [control]="sourceForm.get('territories')"
+          ></group-multiselect>
+          <mat-form-field appearance="outline">
+            <mat-label i18n>Receipt Source Name</mat-label>
+            <input matInput type="text" placeholder="Receipt Source Name" [formControl]="sourceForm.get('name')" />
+          </mat-form-field>
+        </section>
+      </ng-container>
+      <ng-template #notSource>
+        <header>
+          <h2>
+            <span i18n>Receipt Share</span>
+            <mat-icon *ngIf="nonEditableNodeIds$.value.includes(selected)" matTooltip="This cannot be edited anymore" svgIcon="lock" i18n-matTooltip></mat-icon>
+          </h2>
+          <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'"><!-- TODO #9699 i18n -->
+            <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Save changes" (click)="updateRight()" i18n-matTooltip>
+            <mat-icon svgIcon="save"></mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Delete Right" (click)="delete()" [disabled]="nonEditableNodeIds$.value.includes(selected)" i18n-matTooltip>
+            <mat-icon svgIcon="delete"></mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Close" (click)="select('')" i18n-matTooltip>
+            <mat-icon svgIcon="close"></mat-icon>
+          </button>
+        </header>
+        <mat-tab-group>
+          <mat-tab [label]="(rightForm.get('type').value | isHorizontal) ? 'Group Details' : 'Receipts Shares'">
+            <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
+              <p *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)" i18n>Fill the following fields to define the Receipt Share.</p>
+              <p *ngIf="(rightForm.get('type').value | isHorizontal)" i18n>Fill the following fields to define the Group Details.</p>
+              <p *ngIf="(selected$.value | isStep : rights)" i18n>Fill the following fields to define the Step Details.</p>
+  
+              <ng-container *ngIf="!(selected$.value | isStep : rights)">
+                <static-select *ngIf="!(rightForm.get('type').value | isHorizontal)" [control]="rightForm.get('type')" scope="rightTypes" [withoutValues]="['horizontal','vertical']" bfi18n>
+                  <mat-label>Type</mat-label>
+                </static-select>
+  
+                <bf-autocomplete
+                  required 
+                  [label]="(rightForm.get('type').value | isHorizontal) ? 'Responsible of the Group' : 'Right Holder Name'"
+                  [error]="(rightForm.get('type').value | isHorizontal) ? 'Please select a Right Holder. Most likely the Producer.' : 'To select a Right Holder, first add a contract with them.'"
+                  [hint]="(rightForm.get('type').value | isHorizontal) ? 'Responsible of the Group is most likely the Producer.' : ''"
+                  [options]="rightholderNames$"
+                  placeholder="Choose Right Holder"
+                  [form]="rightholderControl"
+                ></bf-autocomplete><!-- TODO #9699 i18n -->
+  
+                <mat-form-field *ngIf="!(rightForm.get('type').value | isHorizontal) && (relevantContracts$ | async).length" appearance="outline">
+                  <mat-label i18n>Contract</mat-label>
+                  <mat-select [formControl]="rightForm.get('contract')">
+                    <mat-option *ngFor="let contract of (relevantContracts$ | async)" [value]="contract.id">{{contract.name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </ng-container>
+      
               <mat-form-field appearance="outline">
-                <mat-label i18n>Parent Name(s)</mat-label>
-                <mat-select multiple [formControl]="rightForm.get('parents')">
-                  <mat-option [matTooltip]="node.name" *ngFor="let node of (availableNodes$ | async)" [disabled]="node.disabled" [value]="node.id">{{ node.name }}</mat-option>
-                </mat-select>
-                <mat-hint i18n>Choose parent revenue elements from which this Receipt Share draw funds. You can add as many parents as you want.</mat-hint>
+                <mat-label *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)" i18n>Receipt Share Name</mat-label>
+                <mat-label *ngIf="(rightForm.get('type').value | isHorizontal)">Group Name</mat-label>
+                <mat-label *ngIf="(selected$.value | isStep : rights)">Step Name</mat-label>
+                <input matInput type="text" [placeholder]="(rightForm.get('type').value | isHorizontal) ? 'Group Name' : 'Receipt Share Name'" [formControl]="rightForm.get('name')" />
               </mat-form-field>
-            </ng-container>
-    
-            <div class="info" *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)">
-              <mat-icon svgIcon="info"></mat-icon>
-              <p i18n>If you have multiple steps, you can set them up later inside conditions.</p>
-            </div>
-    
-            <div class="add-next" *ngIf="!(selected$.value | isStep : rights)">
-              <hr/>
-              <p class="mat-caption" i18n>Add Next Receipt Share</p>
-              <button 
-                *ngIf="nodes$ | async as nodes"
-                mat-mini-fab color="primary" 
-                (click)="addChild(selected)"
-                [disabled]="!((selected | getNode : nodes) | canAddChild : (selected | getGroup : nodes) : nonEditableNodeIds$.value)">
-                <mat-icon svgIcon="add"></mat-icon>
-              </button>
-            </div>
-          </section>
-        </mat-tab>
-        <mat-tab label="Conditions" *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)" i18n-label>
-          <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-conditions 
-              [canUpdate]="!nonPartiallyEditableNodeIds$.value.includes(selected)"
-              [rightForm]="rightForm"
-              [rightId]="selected"
-              (createStep)="createNewStep()"
-              (deleteStep)="deleteStep($event)"
-              (validCondition)="addCondition($event)"
-              (conditionFormPristine)="conditionFormPristine$.next($event)">
-            </waterfall-conditions>
-          </section>
-        </mat-tab>
-      </mat-tab-group>
+      
+              <mat-form-field appearance="outline">
+                <mat-label i18n>Percentage</mat-label>
+                <mat-icon svgIcon="percent" matPrefix></mat-icon>
+                <input matInput type="number" min="0" max="100" [formControl]="rightForm.get('percent')" />
+              </mat-form-field>
+      
+              <ng-container *ngIf="!(selected$.value | isStep : rights)">
+                <p i18n>Parent Revenue Element(s)</p>
+                <mat-form-field appearance="outline">
+                  <mat-label i18n>Parent Name(s)</mat-label>
+                  <mat-select multiple [formControl]="rightForm.get('parents')">
+                    <mat-option [matTooltip]="node.name" *ngFor="let node of (availableNodes$ | async)" [disabled]="node.disabled" [value]="node.id">{{ node.name }}</mat-option>
+                  </mat-select>
+                  <mat-hint i18n>Choose parent revenue elements from which this Receipt Share draw funds. You can add as many parents as you want.</mat-hint>
+                </mat-form-field>
+              </ng-container>
+      
+              <div class="info" *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)">
+                <mat-icon svgIcon="info"></mat-icon>
+                <p i18n>If you have multiple steps, you can set them up later inside conditions.</p>
+              </div>
+      
+              <div class="add-next" *ngIf="!(selected$.value | isStep : rights)">
+                <hr/>
+                <p class="mat-caption" i18n>Add Next Receipt Share</p>
+                <button 
+                  *ngIf="nodes$ | async as nodes"
+                  mat-mini-fab color="primary" 
+                  (click)="addChild(selected)"
+                  [disabled]="!((selected | getNode : nodes) | canAddChild : (selected | getGroup : nodes) : nonEditableNodeIds$.value)">
+                  <mat-icon svgIcon="add"></mat-icon>
+                </button>
+              </div>
+            </section>
+          </mat-tab>
+          <mat-tab label="Conditions" *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)" i18n-label>
+            <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
+              <waterfall-conditions 
+                [canUpdate]="!nonPartiallyEditableNodeIds$.value.includes(selected)"
+                [rightForm]="rightForm"
+                [rightId]="selected"
+                (createStep)="createNewStep()"
+                (deleteStep)="deleteStep($event)"
+                (validCondition)="addCondition($event)"
+                (conditionFormPristine)="conditionFormPristine$.next($event)">
+              </waterfall-conditions>
+            </section>
+          </mat-tab>
+        </mat-tab-group>
+      </ng-template>
+    </ng-container>
+    <ng-template #infoPanel>
+      <header>
+        <h2>
+          <span>{{ selected }} </span>
+        </h2>
+        <button mat-icon-button matTooltip="Close" (click)="select('')" i18n-matTooltip>
+          <mat-icon svgIcon="close"></mat-icon>
+        </button>
+      </header>
     </ng-template>
   </ng-container>
   <ng-template #noSelection>

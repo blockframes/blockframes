@@ -266,6 +266,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   select(id: string) {
     if (id == this.selected$.value) return;
     if (this.cardModal.isOpened) this.cardModal.toggle();
+    if (this.readonly) this.showEditPanel = id !== '';
     const allPristine = this.rightForm.pristine && this.sourceForm.pristine && this.conditionFormPristine$.value;
     if (allPristine) return this._select(id);
 
