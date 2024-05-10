@@ -580,7 +580,7 @@
     "4013574508605803202": "La durée des termes est de{$PH} {$PH_1}",
     "985029053186973510": "Contrat {$PH} est {$PH_1}",
     "7830348573256415121": "Le montant du contrat est de{$PH} {$PH_1}",
-    "8793953183281023929": "Org {$PH}'s revenue is {$PH_1} {$PH_2}",
+    "8793953183281023929": "Org {$PH}'s revenue is {$PH_1} {$PH_2}", << ICI
     "1223253965965955361": "Org {$PH}'s turnover is {$PH_1} {$PH_2}",
     "82954052980481082": "Right {$PH}'s revenue is {$PH_1} {$PH_2}",
     "7037847912317960103": "Right {$PH}'s turnover is {$PH_1} {$PH_2}",
