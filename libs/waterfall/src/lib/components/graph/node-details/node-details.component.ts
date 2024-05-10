@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { RightForm, RightFormValue } from '../../../form/right.form';
-import { BehaviorSubject, Observable, combineLatest, map, startWith } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest, map, startWith, tap } from 'rxjs';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import {
   MgStatus,
@@ -13,6 +13,7 @@ import {
   mainCurrency,
   sortStatements
 } from '@blockframes/model';
+import { MatTabGroup } from '@angular/material/tabs';
 
 interface Information {
   org: number;
@@ -36,7 +37,8 @@ export class WaterfallGraphNodeDetailsComponent implements OnInit {
   private rightId$ = new BehaviorSubject<string>(null);
   public rights$ = this.shell.rights$;
   public right$ = combineLatest([this.rightId$, this.rights$]).pipe(
-    map(([id, rights]) => rights.find(r => r.id === id))
+    map(([id, rights]) => rights.find(r => r.id === id)),
+    tap(r => { if (this.tabs && r?.type === 'vertical') this.tabs.selectedIndex = 1; })
   );
   public formValue$: Observable<RightFormValue>;
   public information$: Observable<Information>;
@@ -45,6 +47,8 @@ export class WaterfallGraphNodeDetailsComponent implements OnInit {
     map(statements => statements.filter(s => s.status === 'reported' && (!s.reviewStatus || s.reviewStatus === 'accepted'))),
     map(statements => sortStatements(statements))
   );
+
+  @ViewChild('tabs', { static: true }) tabs?: MatTabGroup;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
