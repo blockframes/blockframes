@@ -8,7 +8,7 @@
     <ng-container *ngIf="shell.canBypassRules">
       <article class="description">
         <p i18n>Please provide us with all the required documents.</p>
-        <p class="mat-body-2">All your data is secured on our platform. To learn more, you can read our <a [routerLink]="['/c/o/dashboard', 'security']">Data Security Policy</a>.</p>
+        <p class="mat-body-2" i18n>All your data is secured on our platform. To learn more, you can read our <a [routerLink]="['/c/o/dashboard', 'security']">Data Security Policy</a>.</p>
       </article>
       <div>
         <waterfall-financing-plan-form *ngIf="(loading$ | async) === false else loading" [waterfall]="waterfall" [form]="form" (addedFile)="addedFile($event)"></waterfall-financing-plan-form>

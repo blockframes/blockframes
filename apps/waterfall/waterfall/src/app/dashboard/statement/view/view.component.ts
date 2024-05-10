@@ -173,7 +173,11 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
       }
     };
 
-    if (!this.shell.canBypassRules) statement.reviewStatus = 'pending';
+    if (!this.shell.canBypassRules) {
+      statement.reviewStatus = 'pending';
+    } else if (statement.reviewStatus) {
+      statement.reviewStatus = 'accepted';
+    }
 
     await this.statementService.update(statement, { params: { waterfallId: this.waterfall.id } });
 
