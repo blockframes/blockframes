@@ -1,13 +1,13 @@
 
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Components
-import { GetGroupPipe, GetNodePipe, IsHorizontalPipe, IsStepPipe, WaterfallGraphComponent } from './graph.component';
+import { GetGroupPipe, GetNodePipe, WaterfallGraphComponent } from './graph.component';
 
 // Blockframes
+import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 import { BlockframesGraphModule } from '@blockframes/ui/graph/graph.module';
 import { CardModalModule } from '@blockframes/ui/card-modal/card-modal.module';
 import { AutocompleteModule } from '@blockframes/ui/autocomplete/autocomplete.module';
@@ -21,7 +21,7 @@ import { WaterfallRightListModule } from './right-list/right-list.module';
 import { WaterfallConditionsModule } from './conditions/conditions.module';
 import { WaterfallGraphNodeDetailsModule } from './node-details/node-details.module';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
-import { CanAddChildPipeModule } from '../../pipes/can-add-child.pipe';
+import { GraphNodePipeModule } from '../../pipes/graph-node-pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -34,10 +34,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
-  declarations: [WaterfallGraphComponent, IsHorizontalPipe, IsStepPipe, GetNodePipe, GetGroupPipe],
+  declarations: [WaterfallGraphComponent, GetNodePipe, GetGroupPipe],
   imports: [
     ReactiveFormsModule,
-    CommonModule,
+    BfCommonModule,
     RouterModule,
 
     CardModalModule,
@@ -53,7 +53,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     WaterfallGraphNodeDetailsModule,
     ConfirmModule,
     ImageModule,
-    CanAddChildPipeModule,
+    GraphNodePipeModule,
 
     MatIconModule,
     MatTabsModule,

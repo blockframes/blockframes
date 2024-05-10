@@ -736,7 +736,7 @@ export interface ProducerBreakdownRow {
   maxPerIncome?: MaxPerIncome[];
 }
 
-interface MgStatus {
+export interface MgStatus {
   investments: PricePerCurrency,
   stillToBeRecouped: PricePerCurrency
 }

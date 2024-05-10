@@ -17,9 +17,9 @@
         </section>
         
         <p class="mat-body-2" i18n>Value for <strong>{{ data.right.name }}</strong> was changed from  
-          <strong><price-per-currency [price]="override.initial | formatPair" default="€ 0"></price-per-currency></strong>
+          <strong><price-per-currency [price]="override.initial | formatPair" default="€ 0" i18n-default></price-per-currency></strong>
           to 
-          <strong><price-per-currency [price]="config.current | formatPair" default="€ 0"></price-per-currency></strong>
+          <strong><price-per-currency [price]="config.current | formatPair" default="€ 0" i18n-default></price-per-currency></strong>
         </p>
 
         <strong i18n>Comment</strong>

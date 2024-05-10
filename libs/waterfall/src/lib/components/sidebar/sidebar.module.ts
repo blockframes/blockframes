@@ -8,6 +8,7 @@ import { WaterfallSidebarComponent } from './sidebar.component';
 
 // Blockframes
 import { BfCommonModule } from '@blockframes/utils/bf-common.module';
+import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -19,11 +20,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
-  declarations: [ WaterfallSidebarComponent ],
+  declarations: [WaterfallSidebarComponent],
   imports: [
     BfCommonModule,
     ReactiveFormsModule,
     RouterModule,
+
+    PricePerCurrencyModule,
 
     MatIconModule,
     MatInputModule,
@@ -33,6 +36,6 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     MatFormFieldModule,
     MatButtonToggleModule,
   ],
-  exports: [ WaterfallSidebarComponent ],
+  exports: [WaterfallSidebarComponent],
 })
-export class WaterfallSidebarModule {}
+export class WaterfallSidebarModule { }

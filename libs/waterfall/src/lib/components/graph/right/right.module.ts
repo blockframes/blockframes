@@ -9,7 +9,7 @@ import { WaterfallGraphRightComponent } from './right.component';
 import { NumberPipeModule } from '@blockframes/utils/pipes';
 import { RightHolderNamePipeModule } from '../../../pipes/rightholder-name.pipe';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
-import { CanAddChildPipeModule } from '../../../pipes/can-add-child.pipe';
+import { GraphNodePipeModule } from '../../../pipes/graph-node-pipe';
 
 // Material
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -24,7 +24,7 @@ import { MatButtonModule } from '@angular/material/button';
 
     PricePerCurrencyModule,
     RightHolderNamePipeModule,
-    CanAddChildPipeModule,
+    GraphNodePipeModule,
 
     MatIconModule,
     MatButtonModule,
