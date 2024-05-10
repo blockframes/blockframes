@@ -15,6 +15,10 @@
   <hr />
 </ng-container>
 
+<ng-container *ngIf="readOnly && rightForm.controls.steps.value[0].length === 0">
+  <p i18n class="no-conditions">There are no conditions for this receipt share.</p>
+</ng-container>
+
 <ng-container *ngFor="let step of rightForm.controls.steps.value; let stepIndex = index">
   <ng-container *ngIf="selectedStep$.value === stepIndex; else item">
     <p class="step" *ngIf="canUpdate || step.length" i18n>Step {{stepIndex + 1}}</p>
