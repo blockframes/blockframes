@@ -108,7 +108,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     if (!this.canBypassRules) return;
     statement.reviewStatus = reviewStatus;
     if (reviewStatus === 'accepted') {
-      const snackbarRef = this.snackBar.open('Please wait, statement is being accepted...');
+      const snackbarRef = this.snackBar.open($localize`Please wait, statement is being accepted...`);
       await this.statementService.update(statement, { params: { waterfallId: this.waterfall.id } });
       await this.shell.refreshAllWaterfalls();
       snackbarRef.dismiss();
@@ -117,12 +117,12 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
       await this.statementService.update(statement, { params: { waterfallId: this.waterfall.id } });
     }
 
-    this.snackBar.open(`Statement ${reviewStatus}`, 'close', { duration: 5000 });
+    this.snackBar.open($localize`Statement ${reviewStatus}`, 'close', { duration: 5000 });
   }
 
   public async save(statement: Statement, reported = false) {
     if (this.form.invalid) {
-      this.snackBar.open('Information not valid', 'close', { duration: 5000 });
+      this.snackBar.open($localize`Information not valid`, 'close', { duration: 5000 });
       return;
     }
 
@@ -181,7 +181,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
     await this.shell.simulateWaterfall();
 
     if (reported) {
-      const snackbarRef = this.snackBar.open('Please wait, statement is being reported...');
+      const snackbarRef = this.snackBar.open($localize`Please wait, statement is being reported...`);
 
       if (isProducerStatement(statement) && !isStandaloneVersion(this.shell.waterfall, statement.versionId)) {
         if (statement.versionId !== getDefaultVersionId(this.shell.waterfall)) {
@@ -195,7 +195,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
       if (this.shell.canBypassRules) {
         await this.shell.refreshAllWaterfalls();
         snackbarRef.dismiss();
-        this.snackBar.open('Statement reported', 'close', { duration: 5000 });
+        this.snackBar.open($localize`Statement reported`, 'close', { duration: 5000 });
         this.router.navigate(['/c/o/dashboard/title', this.shell.waterfall.id, 'statements']);
       } else {
         // If user is not admin, create a notification to producer to review and refresh the waterfall to commit the statement
@@ -204,13 +204,13 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
         if (!output) {
           this.snackBar.open('An error occurred, please try again.', 'close', { duration: 5000 });
         } else {
-          this.snackBar.open(`Statement reported. A request to review the Statement has been sent to the ${toLabel('producer', 'rightholderRoles')}.`, 'close', { duration: 5000 });
+          this.snackBar.open($localize`Statement reported. A request to review the Statement has been sent to the ${toLabel('producer', 'rightholderRoles')}.`, 'close', { duration: 5000 });
           this.router.navigate(['/c/o/dashboard/title', this.shell.waterfall.id, 'statements']);
         }
       }
 
     } else {
-      this.snackBar.open('Statement updated', 'close', { duration: 5000 });
+      this.snackBar.open($localize`Statement updated`, 'close', { duration: 5000 });
       this.router.navigate(['/c/o/dashboard/title', this.shell.waterfall.id, 'statements']);
     }
 

@@ -269,7 +269,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     if (this.readonly) {
       if (id) {
         const right = this.rights.find(right => right.id === id);
-        this.showEditPanel = !!right;
+        this.showEditPanel = !!right && right.type !== 'horizontal';
       } else {
         this.showEditPanel = false;
       }

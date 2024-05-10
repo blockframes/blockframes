@@ -1,10 +1,17 @@
-<ng-container *ngIf="right$ | async as right">
-  <h3>{{ right.org }}</h3>
-  <mat-tab-group>
-    <mat-tab label="Information" i18n-label>
-    info
+<ng-container *ngIf="formValue$ | async as formValue">
+  <h3>{{ formValue.org }}</h3>
+  <mat-tab-group *ngIf="rights$ | async as rights">
+    <mat-tab label="Information" i18n-label *ngIf="information$ | async as information">
+      <section>
+        <ul>
+          <li><strong i18n>Total Organization Revenue :</strong> {{ information.org | currency: 'EUR' }}</li>
+          <li><strong i18n>Receipt Share Revenue :</strong> {{ information.right | currency: 'EUR' }}</li>
+          <li *ngIf="information.expenses"><strong i18n>Expenses :</strong> {{ information.expenses | currency: 'EUR' }}</li>
+          <li *ngIf="(right$ | async)?.type !== 'vertical'"><strong i18n>Percentage :</strong> {{ (formValue.percent ?? 0) / 100 | percent: '1.0-4' }}</li>
+        </ul>
+      </section>
     </mat-tab>
-    <mat-tab label="Conditions" *ngIf="!(right.type | isHorizontal) && !(rightId | isStep : (rights$ | async))" i18n-label>
+    <mat-tab label="Conditions" *ngIf="!(formValue.type | isHorizontal) && !(rightId | isStep : rights)" i18n-label>
       <section>
         <waterfall-conditions 
           canUpdate="false"
