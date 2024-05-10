@@ -33,7 +33,7 @@
               <span *ngIf="item.type === 'right'" [class]="item.type">{{ item.percent }} %</span>
             </ng-template>
             <ng-template colRef="" label="Net Receipts" let-item i18n-label>
-              <price-per-currency [class]="item.type" [price]="item.taken | formatPair" default="€ 0"></price-per-currency>
+              <price-per-currency [class]="item.type" [price]="item.taken | formatPair" default="€ 0" i18n-default></price-per-currency>
             </ng-template>
             <ng-template colRef="" label="" let-item>
               <ng-container *ngIf="item.type === 'right'">
@@ -83,7 +83,7 @@
               {{ to }}
             </ng-template>
             <ng-template colRef="" label="" let-item let-index="index">
-              <price-per-currency [price]="item.amount | formatPair" default="€ 0"></price-per-currency>
+              <price-per-currency [price]="item.amount | formatPair" default="€ 0" i18n-default></price-per-currency>
               <ng-container *ngIf="index === 0">
                 <button mat-icon-button 
                   [disabled]="!canEditIncome(item.fromId, statement)"
@@ -99,7 +99,7 @@
             </ng-template>
             <ng-template colRef="taken" label="Taken" let-taken>
               <strong>
-                <price-per-currency [price]="taken | formatPair" default="€ 0"></price-per-currency>
+                <price-per-currency [price]="taken | formatPair" default="€ 0" i18n-default></price-per-currency>
               </strong>
             </ng-template>
           </bf-table>
@@ -206,19 +206,19 @@
       <div class="surface">
         <section>
           <span i18n>Cost of the film to amortize</span>
-          <price-per-currency [price]="amortizationDetails.filmCost | formatPair" default="€ 0"></price-per-currency>
+          <price-per-currency [price]="amortizationDetails.filmCost | formatPair" default="€ 0" i18n-default></price-per-currency>
         </section>
       </div>
       <div class="surface">
         <section>
           <span i18n>Financing</span>
-          <price-per-currency [price]="amortizationDetails.financing | formatPair" default="€ 0"></price-per-currency>
+          <price-per-currency [price]="amortizationDetails.financing | formatPair" default="€ 0" i18n-default></price-per-currency>
         </section>
       </div>
       <div class="surface">
         <section>
           <span i18n>Producer's Net Participation</span>
-          <price-per-currency [price]="amortizationDetails.currentValue | formatPair" default="€ 0"></price-per-currency>
+          <price-per-currency [price]="amortizationDetails.currentValue | formatPair" default="€ 0" i18n-default></price-per-currency>
         </section>
       </div>
       <waterfall-statement-participation class="restToBeAmortized"  [price]="amortizationDetails.restToBeAmortized | formatPair" label="Rest To Be Amortized"></waterfall-statement-participation>

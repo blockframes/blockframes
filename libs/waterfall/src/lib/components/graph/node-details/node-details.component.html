@@ -1,31 +1,31 @@
-<ng-container *ngIf="formValue$ | async as formValue">
-  <h3>{{ formValue.org }}</h3>
-  <mat-tab-group *ngIf="rights$ | async as rights">
-    <mat-tab label="Information" i18n-label *ngIf="information$ | async as information">
-      <section>
-        <ul>
-          <li><strong i18n>Total Organization Revenue :</strong> <price-per-currency [price]="information.org | formatPair" default="€ 0"></price-per-currency></li>
-          <li><strong i18n>Receipt Share Revenue :</strong> <price-per-currency [price]="information.right | formatPair" default="€ 0"></price-per-currency></li>
-          <li *ngIf="information.expenses">
-            <strong i18n>Expenses :</strong> <price-per-currency [price]="information.expenses | formatPair" default="€ 0"></price-per-currency>
-            <ng-container *ngIf="information.cappedExpenses"> (<span i18n>Capped : </span><price-per-currency [price]="information.cappedExpenses | formatPair" default="€ 0"></price-per-currency>)</ng-container>
-          </li>
-          <li *ngIf="information.expensesToBeRecouped !== undefined"><strong i18n>Expenses to be recouped :</strong> <price-per-currency [price]="information.expensesToBeRecouped" default="€ 0"></price-per-currency></li>
-          <li *ngIf="information.mgStatus"><strong i18n>MG before recoupment :</strong> <price-per-currency [price]="information.mgStatus.investments" default="€ 0"></price-per-currency></li>
-          <li *ngIf="information.mgStatus"><strong i18n>Still to be recouped :</strong> <price-per-currency [price]="information.mgStatus.stillToBeRecouped" default="€ 0"></price-per-currency></li>
-          <li *ngIf="(right$ | async)?.type !== 'vertical'"><strong i18n>Percentage :</strong> {{ (formValue.percent ?? 0) / 100 | percent: '1.0-4' }}</li>
-        </ul>
-      </section>
-    </mat-tab>
-    <mat-tab label="Conditions" *ngIf="!(formValue.type | isHorizontal) && !(rightId | isStep : rights)" i18n-label>
-      <section>
-        <waterfall-conditions 
-          canUpdate="false"
-          readOnly="true"
-          [rightForm]="rightForm"
-          [rightId]="rightId">
-        </waterfall-conditions>
-      </section>
-    </mat-tab>
-  </mat-tab-group>
-</ng-container>
+<h3>{{ (formValue$ | async)?.org }}</h3>
+<mat-tab-group #tabs >
+  <mat-tab label="Information" i18n-label>
+    <section *ngIf="information$ | async as information">
+      <ul>
+        <li><strong i18n>Total Organization Revenue :</strong> <price-per-currency [price]="information.org | formatPair" default="€ 0" i18n-default></price-per-currency></li>
+        <li><strong i18n>Receipt Share Revenue :</strong> <price-per-currency [price]="information.right | formatPair" default="€ 0" i18n-default></price-per-currency></li>
+        <li *ngIf="information.expenses">
+          <strong i18n>Expenses :</strong> <price-per-currency [price]="information.expenses | formatPair" default="€ 0" i18n-default></price-per-currency>
+          <ng-container *ngIf="information.cappedExpenses"> (<span i18n>Capped : </span><price-per-currency [price]="information.cappedExpenses | formatPair" default="€ 0" i18n-default></price-per-currency>)</ng-container>
+        </li>
+        <li *ngIf="information.expensesToBeRecouped !== undefined"><strong i18n>Expenses to be recouped :</strong> <price-per-currency [price]="information.expensesToBeRecouped" default="€ 0" i18n-default></price-per-currency></li>
+        <li *ngIf="information.mgStatus"><strong i18n>MG before recoupment :</strong> <price-per-currency [price]="information.mgStatus.investments" default="€ 0" i18n-default></price-per-currency></li>
+        <li *ngIf="information.mgStatus"><strong i18n>Still to be recouped :</strong> <price-per-currency [price]="information.mgStatus.stillToBeRecouped" default="€ 0" i18n-default></price-per-currency></li>
+        <ng-container *ngIf="right$ | async as right">
+          <li *ngIf="right.type !== 'vertical'"><strong i18n>Percentage :</strong> {{ (right.percent ?? 0) / 100 | percent: '1.0-4' }}</li>
+        </ng-container>
+      </ul>
+    </section>
+  </mat-tab>
+  <mat-tab label="Conditions" *ngIf="!((formValue$ | async)?.type | isHorizontal) && !(rightId | isStep : (rights$ | async))" i18n-label>
+    <section>
+      <waterfall-conditions 
+        canUpdate="false"
+        readOnly="true"
+        [rightForm]="rightForm"
+        [rightId]="rightId">
+      </waterfall-conditions>
+    </section>
+  </mat-tab>
+</mat-tab-group>

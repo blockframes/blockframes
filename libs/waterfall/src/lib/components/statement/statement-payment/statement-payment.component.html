@@ -4,7 +4,7 @@
   <waterfall-statement-main-info [movie]="data.movie" [statement]="data.statement" [waterfall]="data.waterfall" lite></waterfall-statement-main-info>
 
   <div *ngIf="data.statement.payments.rightholder as payment" i18n>
-    <mat-icon color="primary" svgIcon="payment"></mat-icon> Amount Due : <price-per-currency [price]="payment.price | formatPair: payment.currency" default="€ 0"></price-per-currency>
+    <mat-icon color="primary" svgIcon="payment"></mat-icon> Amount Due : <price-per-currency [price]="payment.price | formatPair: payment.currency" default="€ 0" i18n-default></price-per-currency>
   </div>
 
   <p class="mat-body-1" i18n>You can verify the <a target="_blank" [routerLink]="['/c/o/dashboard/title', data.movie.id, 'statement', data.statement.id]">Declared Statement Details here</a>.</p>

@@ -17,7 +17,7 @@
           <mat-expansion-panel-header>
             <mat-panel-title>
               <span>{{ item.name }}</span>
-              <price-per-currency [price]="item.net" default="€ 0"></price-per-currency>
+              <price-per-currency [price]="item.net" default="€ 0" i18n-default></price-per-currency>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <bf-table [source]="item.rows">
@@ -25,13 +25,13 @@
               <span [class]="item.type">{{ item.section }}</span>
             </ng-template>
             <ng-template colRef="" label="Prior Period" let-item i18n-label>
-              <price-per-currency [class]="item.type" [price]="item.previous" default="€ 0"></price-per-currency>
+              <price-per-currency [class]="item.type" [price]="item.previous" default="€ 0" i18n-default></price-per-currency>
             </ng-template>
             <ng-template colRef="" label="Current Period" let-item i18n-label>
-              <price-per-currency [class]="item.type" [price]="item.current" default="€ 0"></price-per-currency>
+              <price-per-currency [class]="item.type" [price]="item.current" default="€ 0" i18n-default></price-per-currency>
             </ng-template>
             <ng-template colRef="" label="Cumulative" let-item i18n-label>
-              <price-per-currency [class]="item.type" [price]="item.cumulated" default="€ 0"></price-per-currency>
+              <price-per-currency [class]="item.type" [price]="item.cumulated" default="€ 0" i18n-default></price-per-currency>
             </ng-template>
             <ng-template colRef="" label="" let-item>
               <ng-container *ngIf="item.type === 'right'">
@@ -58,16 +58,16 @@
           </bf-table>
           <div class="to-be-recouped" *ngIf="item.stillToBeRecouped" i18n>
             Still to be recouped:
-            <price-per-currency [price]="item.stillToBeRecouped" default="€ 0"></price-per-currency>
+            <price-per-currency [price]="item.stillToBeRecouped" default="€ 0" i18n-default></price-per-currency>
           </div>
           <div class="to-be-recouped" *ngIf="item.mgStatus">
             <span i18n>
               Before recoupment:
-            <price-per-currency [price]="item.mgStatus.investments" default="€ 0"></price-per-currency>
+            <price-per-currency [price]="item.mgStatus.investments" default="€ 0" i18n-default></price-per-currency>
             </span>
             <span i18n>
               Still to be recouped:
-              <price-per-currency [price]="item.mgStatus.stillToBeRecouped" default="€ 0"></price-per-currency>
+              <price-per-currency [price]="item.mgStatus.stillToBeRecouped" default="€ 0" i18n-default></price-per-currency>
             </span>
           </div>
         </mat-expansion-panel>
@@ -76,7 +76,7 @@
 
     <div class="total-net" i18n>
       Total Net Receipts:
-      <price-per-currency *ngIf="totalNetReceipt$ | async as totalNet" [price]="totalNet" default="€ 0"></price-per-currency>
+      <price-per-currency *ngIf="totalNetReceipt$ | async as totalNet" [price]="totalNet" default="€ 0" i18n-default></price-per-currency>
     </div>
 
     <ng-container *ngIf="rightsBreakdown$ | async as breakdown">
@@ -86,7 +86,7 @@
           <mat-expansion-panel-header>
             <mat-panel-title>
               <span>{{ item.name }}</span>
-              <span>(<price-per-currency [price]="item.total" default="€ 0"></price-per-currency>)</span>
+              <span>(<price-per-currency [price]="item.total" default="€ 0" i18n-default></price-per-currency>)</span>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <bf-table [source]="item.rows">
@@ -94,13 +94,13 @@
               <span [class]="item.type">{{ item.section }}</span>
             </ng-template>
             <ng-template colRef="" label="Prior Period" let-item i18n-label>
-              <price-per-currency [class]="item.type" [price]="item.previous" default="€ 0"></price-per-currency>
+              <price-per-currency [class]="item.type" [price]="item.previous" default="€ 0" i18n-default></price-per-currency>
             </ng-template>
             <ng-template colRef="" label="Current Period" let-item i18n-label>
-              <price-per-currency [class]="item.type" [price]="item.current" default="€ 0"></price-per-currency>
+              <price-per-currency [class]="item.type" [price]="item.current" default="€ 0" i18n-default></price-per-currency>
             </ng-template>
             <ng-template colRef="" label="Cumulative" let-item i18n-label>
-              <price-per-currency [class]="item.type" [price]="item.cumulated" default="€ 0"></price-per-currency>
+              <price-per-currency [class]="item.type" [price]="item.cumulated" default="€ 0" i18n-default></price-per-currency>
             </ng-template>
             <ng-template colRef="" label="" let-item>
               <ng-container *ngIf="item.type === 'right'">
@@ -127,16 +127,16 @@
           </bf-table>
           <div class="to-be-recouped" *ngIf="item.stillToBeRecouped" i18n>
             Still to be recouped:
-            <price-per-currency [price]="item.stillToBeRecouped" default="€ 0"></price-per-currency>
+            <price-per-currency [price]="item.stillToBeRecouped" default="€ 0" i18n-default></price-per-currency>
           </div>
           <div class="to-be-recouped" *ngIf="item.mgStatus">
             <span i18n>
               Before recoupment:
-            <price-per-currency [price]="item.mgStatus.investments" default="€ 0"></price-per-currency>
+            <price-per-currency [price]="item.mgStatus.investments" default="€ 0" i18n-default></price-per-currency>
             </span>
             <span i18n>
               Still to be recouped:
-              <price-per-currency [price]="item.mgStatus.stillToBeRecouped" default="€ 0"></price-per-currency>
+              <price-per-currency [price]="item.mgStatus.stillToBeRecouped" default="€ 0" i18n-default></price-per-currency>
             </span>
           </div>
         </mat-expansion-panel>
