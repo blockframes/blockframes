@@ -25,13 +25,13 @@
     <div class="surface">
       <section>
         <span i18n>Film Cost</span>
-        <price-per-currency [price]="amortization.filmCost | formatPair" default="€ 0"></price-per-currency>
+        <price-per-currency [price]="amortization.filmCost | formatPair" default="€ 0" i18n-default></price-per-currency>
       </section>
     </div>
     <div class="surface">
       <section>
         <span i18n>Financing</span>
-        <price-per-currency [price]="amortization.financing | formatPair" default="€ 0"></price-per-currency>
+        <price-per-currency [price]="amortization.financing | formatPair" default="€ 0" i18n-default></price-per-currency>
       </section>
     </div>
     <div class="surface" *ngIf="rights$ | async as rights">

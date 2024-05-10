@@ -4,15 +4,15 @@
     <mat-tab label="Information" i18n-label *ngIf="information$ | async as information">
       <section>
         <ul>
-          <li><strong i18n>Total Organization Revenue :</strong> <price-per-currency [price]="information.org | formatPair" default="€ 0"></price-per-currency></li>
-          <li><strong i18n>Receipt Share Revenue :</strong> <price-per-currency [price]="information.right | formatPair" default="€ 0"></price-per-currency></li>
+          <li><strong i18n>Total Organization Revenue :</strong> <price-per-currency [price]="information.org | formatPair" default="€ 0" i18n-default></price-per-currency></li>
+          <li><strong i18n>Receipt Share Revenue :</strong> <price-per-currency [price]="information.right | formatPair" default="€ 0" i18n-default></price-per-currency></li>
           <li *ngIf="information.expenses">
-            <strong i18n>Expenses :</strong> <price-per-currency [price]="information.expenses | formatPair" default="€ 0"></price-per-currency>
-            <ng-container *ngIf="information.cappedExpenses"> (<span i18n>Capped : </span><price-per-currency [price]="information.cappedExpenses | formatPair" default="€ 0"></price-per-currency>)</ng-container>
+            <strong i18n>Expenses :</strong> <price-per-currency [price]="information.expenses | formatPair" default="€ 0" i18n-default></price-per-currency>
+            <ng-container *ngIf="information.cappedExpenses"> (<span i18n>Capped : </span><price-per-currency [price]="information.cappedExpenses | formatPair" default="€ 0" i18n-default></price-per-currency>)</ng-container>
           </li>
-          <li *ngIf="information.expensesToBeRecouped !== undefined"><strong i18n>Expenses to be recouped :</strong> <price-per-currency [price]="information.expensesToBeRecouped" default="€ 0"></price-per-currency></li>
-          <li *ngIf="information.mgStatus"><strong i18n>MG before recoupment :</strong> <price-per-currency [price]="information.mgStatus.investments" default="€ 0"></price-per-currency></li>
-          <li *ngIf="information.mgStatus"><strong i18n>Still to be recouped :</strong> <price-per-currency [price]="information.mgStatus.stillToBeRecouped" default="€ 0"></price-per-currency></li>
+          <li *ngIf="information.expensesToBeRecouped !== undefined"><strong i18n>Expenses to be recouped :</strong> <price-per-currency [price]="information.expensesToBeRecouped" default="€ 0" i18n-default></price-per-currency></li>
+          <li *ngIf="information.mgStatus"><strong i18n>MG before recoupment :</strong> <price-per-currency [price]="information.mgStatus.investments" default="€ 0" i18n-default></price-per-currency></li>
+          <li *ngIf="information.mgStatus"><strong i18n>Still to be recouped :</strong> <price-per-currency [price]="information.mgStatus.stillToBeRecouped" default="€ 0" i18n-default></price-per-currency></li>
           <li *ngIf="(right$ | async)?.type !== 'vertical'"><strong i18n>Percentage :</strong> {{ (formValue.percent ?? 0) / 100 | percent: '1.0-4' }}</li>
         </ul>
       </section>
