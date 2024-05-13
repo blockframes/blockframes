@@ -26,6 +26,8 @@ export class VersionSelectorComponent implements OnInit {
   public canInitWaterfall$ = this.shell.canInitWaterfall$;
   public versionId: string;
   public lockedVersionId = this.shell.lockedVersionId;
+  public defaultVersion = $localize`(default)`;
+  public standaloneVersion = $localize`(standalone)`;
   @Input() @boolean simulator = false;
   @Input() @boolean hideStandalone = false;
   @Input() set initialVersion(value: string) { if (value) this.switchToVersion(value); }
