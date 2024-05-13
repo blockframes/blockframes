@@ -433,7 +433,7 @@
     "1594759333575537652": "Ajout du contrat...",
     "1375820619528031584": "{$INTERPOLATION} contrat{$INTERPOLATION_1}",
     "8114246667475623617": "Ajouter un contrat",
-    "3012505149840661077": "{$INTERPOLATION} Contrat",
+    "3012505149840661077": "Contrat {$INTERPOLATION}",
     "5087747292744381535": "Télécharger le document",
     "897746787901929922": "Supprimer le contrat",
     "1298466878186194894": "Calcul en cours...",
