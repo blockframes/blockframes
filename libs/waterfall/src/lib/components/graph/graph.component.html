@@ -12,7 +12,7 @@
           matTooltip="You are editing the default version of this Waterfall. Except already overwritten receipt share percentage and conditions, changes performed on this version will be applied to all not standalone versions."
         ></mat-icon>
       </h2>
-      <button mat-icon-button [matTooltip]="(showEditPanel ? 'Hide' : 'Show') + ' Edit Panel'" (click)="toggleEditPanel()"><!-- TODO #9699 i18n -->
+      <button mat-icon-button [matTooltip]="(showEditPanel ? i18nStrings.hide : i18nStrings.show) + i18nStrings.editPanel" (click)="toggleEditPanel()">
         <mat-icon [svgIcon]="showEditPanel ? 'chevron_right' : 'chevron_left'"></mat-icon>
       </button>
     </div>
@@ -55,7 +55,7 @@
             <span i18n>Receipt Source</span>
             <mat-icon *ngIf="nonEditableNodeIds$.value.includes(selected)" matTooltip="This cannot be edited anymore" svgIcon="lock" i18n-matTooltip></mat-icon>
           </h2>
-          <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'">
+          <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? i18nStrings.shrink : i18nStrings.enlarge">
             <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
           </button>
           <button mat-icon-button matTooltip="Save changes" (click)="updateSource()" [disabled]="nonEditableNodeIds$.value.includes(selected)" i18n-matTooltip>
@@ -102,7 +102,7 @@
             <span i18n>Receipt Share</span>
             <mat-icon *ngIf="nonEditableNodeIds$.value.includes(selected)" matTooltip="This cannot be edited anymore" svgIcon="lock" i18n-matTooltip></mat-icon>
           </h2>
-          <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'"><!-- TODO #9699 i18n -->
+          <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? i18nStrings.shrink : i18nStrings.enlarge">
             <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
           </button>
           <button mat-icon-button matTooltip="Save changes" (click)="updateRight()" i18n-matTooltip>
@@ -233,7 +233,7 @@
     <ng-container *ngIf="(nodes$ | async).length; else emptyGraph">
       <header>
         <h2 i18n>Receipt Share List</h2>
-        <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'" i18n-malTooltip>
+        <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? i18nStrings.shrink : i18nStrings.enlarge" i18n-malTooltip>
           <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
         </button>
       </header>

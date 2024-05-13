@@ -43,7 +43,7 @@ import {
 } from '@blockframes/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { GraphService } from '@blockframes/ui/graph/graph.service';
-import { CardModalComponent } from '@blockframes/ui/card-modal/card-modal.component';
+import { CardModalComponent, cardModalI18nStrings } from '@blockframes/ui/card-modal/card-modal.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { RightService } from '../../right.service';
@@ -111,6 +111,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   public relevantContracts$ = new BehaviorSubject<WaterfallContract[]>([]);
   public rights: Right[];
   public conditionFormPristine$ = new BehaviorSubject<boolean>(true);
+  public i18nStrings = cardModalI18nStrings;
 
   private waterfallId = this.shell.waterfall.id;
   private sources: WaterfallSource[];
