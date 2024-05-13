@@ -23,11 +23,11 @@ import { unique } from '@blockframes/utils/helpers';
 
 function getDateDifference(a: Date, b: Date) {
   const yearDiff = differenceInYears(a, b);
-  if (yearDiff > 0) return { value: yearDiff, label: yearDiff === 1 ? 'year' : 'years' };
+  if (yearDiff > 0) return { value: yearDiff, label: yearDiff === 1 ? $localize`year` : $localize`years` };
   const monthDiff = differenceInMonths(a, b);
-  if (monthDiff > 0) return { value: monthDiff, label: monthDiff === 1 ? 'month' : 'months' };
+  if (monthDiff > 0) return { value: monthDiff, label: monthDiff === 1 ? $localize`month` : $localize`months` };
   const dayDiff = differenceInDays(a, b);
-  if (dayDiff > 0) return { value: dayDiff, label: dayDiff === 1 ? 'day' : 'days' };
+  if (dayDiff > 0) return { value: dayDiff, label: dayDiff === 1 ? $localize`day` : $localize`days` };
 }
 
 export interface SalesMapData {
@@ -79,7 +79,7 @@ export class SalesMapComponent implements OnInit {
     const res = filterContractsByTitle(this.data.waterfall.id, [], [], sales, salesTerms);
     this.territoriesSold = territoriesSold([...res.sales.filter(s => s.terms)]);
     this.empty = false;
-    if(this.territoriesSold.all.length === 0 && this.territoriesSold.tv.length === 0 && this.territoriesSold.vod.length === 0 && this.territoriesSold.other.length === 0) { 
+    if (this.territoriesSold.all.length === 0 && this.territoriesSold.tv.length === 0 && this.territoriesSold.vod.length === 0 && this.territoriesSold.other.length === 0) {
       this.empty = true;
     }
     this.cdr.markForCheck();
