@@ -1866,6 +1866,13 @@ export const movieSearchableElements = {
   keywords: 'Keywords',
 } as const;
 
+export const periods = {
+  days: 'Days',
+  weeks: 'Weeks',
+  months: 'Months',
+  years: 'Years',
+} as const;
+
 export type MovieSearchableElements = keyof typeof movieSearchableElements;
 
 export const staticModel = {
@@ -1926,7 +1933,8 @@ export const staticModel = {
   amortizationStatus,
   statementType,
   statementParty,
-  conditionOwnerLabels
+  conditionOwnerLabels,
+  periods
 };
 
 export const emailErrorCode = ['E01-unauthorized', 'E02-general-error', 'E03-missing-api-key', 'E04-no-template-available'] as const;

@@ -40,6 +40,7 @@ import {
   smartJoin,
   trimString,
   getNonEditableNodeIds,
+  preferredLanguage,
 } from '@blockframes/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { GraphService } from '@blockframes/ui/graph/graph.service';
@@ -111,7 +112,13 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   public relevantContracts$ = new BehaviorSubject<WaterfallContract[]>([]);
   public rights: Right[];
   public conditionFormPristine$ = new BehaviorSubject<boolean>(true);
-  public i18nStrings = cardModalI18nStrings;
+  public i18nStrings = {
+    ...cardModalI18nStrings,
+    groupName: $localize`Group Name`,
+    receiptShareName: $localize`Receipt Share Name`,
+    groupDetais: $localize`Group Details`,
+    receiptsShare: $localize`Receipts Shares`,
+  };
 
   private waterfallId = this.shell.waterfall.id;
   private sources: WaterfallSource[];
@@ -136,15 +143,16 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    const lang = preferredLanguage();
     if (this.readonly) this.showEditPanel = false;
     if (!this.producer) {
-      this.snackBar.open(`${toLabel('producer', 'rightholderRoles')} is not defined.`, this.shell.canBypassRules ? 'WATERFALL MANAGEMENT' : 'ASK FOR HELP', { duration: 5000 })
+      this.snackBar.open(`${toLabel('producer', 'rightholderRoles', undefined, undefined, lang)} is not defined.`, this.shell.canBypassRules ? 'WATERFALL MANAGEMENT' : 'ASK FOR HELP', { duration: 5000 })
         .onAction()
         .subscribe(() => {
           if (this.shell.canBypassRules) {
             this.router.navigate(['c/o/dashboard/title', this.waterfallId, 'init']);
           } else {
-            this.intercom.show(`${toLabel('producer', 'rightholderRoles')} is not defined in the waterfall "${this.shell.movie.title.international}"`);
+            this.intercom.show(`${toLabel('producer', 'rightholderRoles', undefined, undefined, lang)} is not defined in the waterfall "${this.shell.movie.title.international}"`);
           }
         });
     }
@@ -241,7 +249,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     const t = rightTypes[type ?? right.type];
     if (!t || !o) return;
     if (`${o} - ${t}` === right.name) return;
-    if (!right.name || right.name === 'New right' || right.name.includes(' - ')) {
+    if (!right.name || right.name === $localize`New right` || right.name.includes(' - ')) {
       this.rightForm.controls.name.setValue(`${o} - ${t}`);
     }
   }
@@ -255,7 +263,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     const territories = trimString(smartJoin(groupedTerritories, ', ', ' and '), maxLength, true);
     if (!medias || !territories) return;
     if (`${medias} - ${territories}` === source.name) return;
-    if (!source.name || source.name === 'New source' || source.name.includes(' - ')) {
+    if (!source.name || source.name === $localize`New source` || source.name.includes(' - ')) {
       this.sourceForm.controls.name.setValue(`${medias} - ${territories}`);
     }
   }
@@ -582,7 +590,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     }
     const newSource = createWaterfallSource({
       id: this.waterfallService.createId(),
-      name: 'New source',
+      name: $localize`New source`,
     });
 
     if (this.version?.standalone) {
@@ -599,7 +607,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       return;
     }
     const newRight = createRight({
-      name: 'New right',
+      name: $localize`New right`,
       percent: 0,
     });
 
@@ -621,7 +629,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     const id = rightId ?? this.selected$.getValue();
     const right = this.rights.find(right => right.id === id);
 
-    const subject = right ? 'Receipt Share' : 'Source';
+    const subject = right ? $localize`Receipt Share` : $localize`Source`;
 
     this.dialog.open(ConfirmComponent, {
       data: createModalData({
@@ -692,7 +700,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
           vMembers.splice(indexToRemove, 1);
           vMembers.forEach((r, index) => {
             r.order = index;
-            r.name = `Step ${index + 1}`;
+            r.name = $localize`Step ${index + 1}`;
           });
 
           const write = this.waterfallService.batch();

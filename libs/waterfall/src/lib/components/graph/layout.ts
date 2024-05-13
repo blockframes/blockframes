@@ -500,6 +500,10 @@ function getArrow(parent: Node, child: Node) {
 
 const createNodeId = (str: string) => `${str}-${Math.random().toString(36).slice(2, 11)}`;
 
+const newRightDefaultName = $localize`New right`;
+const newGroupDefaultName = $localize`New group`;
+const newSourceDefaultName = $localize`New source`;
+
 export function updateParents(nodeId: string, newParentIds: string[], graph: Node[], producerId: string) {
   const parentIndex: Record<string, string[]> = {};
   graph.forEach(node => {
@@ -629,7 +633,7 @@ export function updateParents(nodeId: string, newParentIds: string[], graph: Nod
       // create a new group and add it to the graph
       const group = createHorizontalNode({
         id: createNodeId('z-group'),
-        name: 'New group',
+        name: newGroupDefaultName,
         width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
         children: [...childrenIds],
         members: [sibling as RightNode | VerticalNode, current as RightNode | VerticalNode],
@@ -663,7 +667,7 @@ export function createSibling(olderSiblingId: string, graph: Node[], producerId:
   if (olderSibling.type === 'source') {
     const source = createSourceNode({
       id: createNodeId('z-source'),
-      name: 'New source',
+      name: newSourceDefaultName,
     });
     graph.push(source);
     return;
@@ -671,7 +675,7 @@ export function createSibling(olderSiblingId: string, graph: Node[], producerId:
   } else if (olderSibling.type === 'horizontal') {
     const right = createRightNode({
       id: createNodeId('z-right'),
-      name: 'New right',
+      name: newRightDefaultName,
     });
     olderSibling.members.push(right);
     return;
@@ -689,7 +693,7 @@ export function createSibling(olderSiblingId: string, graph: Node[], producerId:
     // create a new right
     const right = createRightNode({
       id: createNodeId('z-right'),
-      name: 'New right',
+      name: newRightDefaultName,
     });
 
     if (parents.length === 0) { // simply create a right
@@ -701,7 +705,7 @@ export function createSibling(olderSiblingId: string, graph: Node[], producerId:
     // the children of this new group is the whole children of the siblings
     const group = createHorizontalNode({
       id: createNodeId('z-group'),
-      name: 'New group',
+      name: newGroupDefaultName,
       width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
       children: [...children],
       members: [olderSibling, right],
@@ -721,7 +725,7 @@ export function createChild(parentId: string, graph: Node[], producerId: string)
   if (parent.children.length === 0) { // simply create a right
     const right = createRightNode({
       id: createNodeId('z-right'),
-      name: 'New right',
+      name: newRightDefaultName,
     });
     parent.children.push(right.id);
     graph.push(right);
@@ -734,14 +738,14 @@ export function createChild(parentId: string, graph: Node[], producerId: string)
      * @see pipe canAddChild
      * libs/waterfall/src/lib/pipes/can-add-child.pipe.ts
      */
-    if (siblings.length > 1) throw new Error('Cannot add child to a node that already have many children.');
+    if (siblings.length > 1) throw new Error($localize`Cannot add child to a node that already have many children.`);
 
     const sibling = siblings[0];
 
     // create a new right
     const right = createRightNode({
       id: createNodeId('z-right'),
-      name: 'New right',
+      name: newRightDefaultName,
     });
 
     if (sibling.type === 'horizontal') { // add new right to existing group
@@ -756,7 +760,7 @@ export function createChild(parentId: string, graph: Node[], producerId: string)
       // the children of this new group is the whole children of the sibling
       const group = createHorizontalNode({
         id: createNodeId('z-group'),
-        name: 'New group',
+        name: newGroupDefaultName,
         width: RIGHT_WIDTH, height: RIGHT_HEIGHT,
         children: [...children],
         members: [sibling as RightNode | VerticalNode, right],
@@ -790,13 +794,13 @@ export function createStep(nodeId: string, graph: Node[]) {
 
     // update current node
     const children = [...node.children];
-    node.name = `Step 1`;
+    node.name = $localize`Step 1`;
     node.children = [];
 
     // create a new step right
     const right1 = createRightNode({
       id: createNodeId('z-right'),
-      name: `Step 2`,
+      name: $localize`Step 2`,
       rightHolderId: node.rightHolderId ?? '',
       version: node.version,
     });
@@ -805,7 +809,7 @@ export function createStep(nodeId: string, graph: Node[]) {
     const members = [node, right1];
     const verticalNode = createVerticalNode({
       id: createNodeId('z-group'),
-      name: 'New group',
+      name: newGroupDefaultName,
       members,
       children,
       height: RIGHT_HEIGHT + (LEVEL_HEIGHT * (members.length - 1)) + (SPACING * (members.length + 1)),
@@ -828,7 +832,7 @@ export function createStep(nodeId: string, graph: Node[]) {
   } else if (node.type === 'vertical') {
     const right = createRightNode({
       id: createNodeId('z-right'),
-      name: `Step ${node.members.length + 1}`,
+      name: $localize`Step ${node.members.length + 1}`,
       rightHolderId: node.members[0].rightHolderId ?? '',
       version: node.version,
     });
@@ -852,7 +856,7 @@ export function deleteStep(groupId: string, stepIndex: number, graph: Node[]) {
   vGroup.members.splice(stepIndex, 1);
 
   vGroup.members.forEach((member, index) => {
-    member.name = `Step ${index + 1}`;
+    member.name = $localize`Step ${index + 1}`;
   });
 
   // if the group has only one member left, remove the group
