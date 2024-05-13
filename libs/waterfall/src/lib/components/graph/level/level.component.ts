@@ -19,7 +19,7 @@ export class WaterfallGraphLevelComponent implements OnChanges {
   @Input() right: RightNode;
   @Input() selected: boolean;
   @Input() @boolean hideAmount: boolean;
-
+  @Input() public monetizationLabel = $localize`Revenue`;
   @Output() handleSelect = new EventEmitter();
 
   @HostBinding('class.nodrag') nodrag = true;
