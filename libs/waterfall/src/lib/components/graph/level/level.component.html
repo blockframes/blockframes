@@ -10,7 +10,7 @@
     </div>
     <div class="nodrag total">
       <mat-icon svgIcon="monetization"></mat-icon>
-      <p class="nodrag">Revenue: <price-per-currency [price]="amount$ | async | formatPair" default="0€"></price-per-currency></p>
+      <p class="nodrag">{{ monetizationLabel }}: <price-per-currency [price]="amount$ | async | formatPair" default="0€"></price-per-currency></p>
     </div>
   </div>
 </ng-container>
