@@ -1,5 +1,13 @@
 import { AfterViewInit, Component, ElementRef, HostBinding, ViewChild } from '@angular/core';
 
+export const cardModalI18nStrings = {
+  shrink: $localize`Shrink`,
+  enlarge: $localize`Enlarge`,
+  hide: $localize`Hide`,
+  show: $localize`Show`,
+  editPanel: $localize` Edit Panel`,
+}
+
 @Component({
   selector: 'bf-card-modal',
   templateUrl: './card-modal.component.html',

@@ -4,7 +4,7 @@
 
 <span class="spacer"></span>
 
-<button mat-icon-button (click)="editStep.emit()" [matTooltip]="canUpdate ? 'Edit Step Conditions' : 'View Step Conditions'"> <!-- TODO #9699 tooltip-->
+<button mat-icon-button (click)="editStep.emit()" [matTooltip]="tooltip">
   <mat-icon [svgIcon]="canUpdate ? 'edit' : 'visibility'"></mat-icon>
 </button>
 

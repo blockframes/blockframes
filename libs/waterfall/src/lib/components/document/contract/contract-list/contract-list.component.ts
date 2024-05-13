@@ -5,7 +5,7 @@ import { Component, ChangeDetectionStrategy, ViewChild, Input, ChangeDetectorRef
 import { WaterfallService } from '../../../../waterfall.service';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 import { WaterfallContractForm } from '../../../../form/contract.form';
-import { CardModalComponent } from '@blockframes/ui/card-modal/card-modal.component';
+import { CardModalComponent, cardModalI18nStrings } from '@blockframes/ui/card-modal/card-modal.component';
 import { WaterfallDocumentsService } from '../../../../documents.service';
 import {
   RightholderRole,
@@ -79,6 +79,7 @@ export class ContractListComponent {
   public toggleTermsControl = new FormControl(true);
   public currentOrgId = this.orgService.org.id;
   public computing$ = new BehaviorSubject<boolean>(false);
+  public i18nStrings = cardModalI18nStrings;
 
   constructor(
     private waterfallService: WaterfallService,

@@ -31,7 +31,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent, OnInit, OnDestroy {
 
   @ViewChild('stepper') stepper?: MatStepper;
-
+  public missingData = $localize`Missing data to publish Waterfall. Make sure to have Contracts and Receipt Shares`;
   public contractForm = new WaterfallContractForm({ id: '' });
   public rightholdersForm = FormList.factory<WaterfallRightholderFormValue, WaterfallRightholderForm>([], rightholder => new WaterfallRightholderForm(rightholder));
   public updating$ = new BehaviorSubject(false);

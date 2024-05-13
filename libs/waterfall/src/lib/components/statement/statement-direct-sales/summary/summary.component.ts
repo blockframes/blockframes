@@ -264,6 +264,7 @@ export class StatementDirectSalesSummaryComponent {
   );
 
   public waterfall = this.shell.waterfall;
+  public i18nStrings = { yes: $localize`Yes`, no: $localize`No` };
 
   constructor(
     private shell: DashboardWaterfallShellComponent,

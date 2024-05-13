@@ -33,7 +33,7 @@ export class EmptyWaterfallComponent {
       data: createModalData({
         mode: 'init',
         isDefaultVersion: true,
-        version: createVersion({ id: this.waterfallService.createId(), name: 'First version' }),
+        version: createVersion({ id: this.waterfallService.createId(), name: $localize`First version` }),
         rightholders: this.shell.waterfall.rightholders,
         onConfirm: async (_version: Version) => {
           const version = await this.waterfallService.addVersion(this.shell.waterfall, _version);

@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, OnChanges } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnChanges, OnInit } from '@angular/core';
 
 import { ExpenseType, createExpenseType } from '@blockframes/model';
 import { FormList } from '@blockframes/utils/form';
@@ -12,13 +12,20 @@ import { ExpenseTypeForm } from '../../../form/contract.form';
   styleUrls: ['./expense-types.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExpenseTypesComponent implements OnChanges {
+export class ExpenseTypesComponent implements OnInit, OnChanges {
   @Input() form: FormList<ExpenseType, ExpenseTypeForm>;
   @Input() versionId = 'default';
+  public addExpenseType = $localize`Add Expense Type`;
+  public deleteExpenseType = $localize`Delete Expense Type`;
 
   constructor(
     private documentService: WaterfallDocumentsService,
   ) { }
+
+  ngOnInit() {
+    this.addExpenseType = this.versionId === 'default' ? $localize`Add Expense Type` : $localize`Not permitted`;
+    this.deleteExpenseType = this.versionId === 'default' ? $localize`Delete Expense Type` : $localize`Not permitted`;
+  }
 
   ngOnChanges() {
     if (this.versionId === 'default') {

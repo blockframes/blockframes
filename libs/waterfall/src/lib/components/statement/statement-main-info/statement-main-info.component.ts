@@ -18,5 +18,5 @@ export class StatementMainInfoComponent {
   @Input() sources: WaterfallSource[];
   @Input() @boolean showLink = false;
   @Input() @boolean lite = false;
-
+  public noSources = $localize`Receipt sources not specified`;
 }

@@ -163,7 +163,7 @@
               <price-per-currency [price]="cumulated"></price-per-currency>
             </ng-template>
             <ng-template colRef="capped" label="Capped" let-capped>
-              {{ capped ? 'Yes' : 'No' }} <!-- TODO #9699 -->
+              {{ capped ? i18nStrings.yes : i18nStrings.no }}
             </ng-template>
           </bf-table>
         </mat-expansion-panel>
