@@ -696,6 +696,7 @@
     "5278627882107105833": "Access",
     "3742657416068781599": "Editor",
     "6239936537351977310": "Viewer",
+    "6218398734161806083": "Choose Access",
     "8977745967902543283": "Enter emails separated by a comma",
     "1183850304541856725": "Enter guest email",
     "3463797202358605584": "Invite",
@@ -706,6 +707,7 @@
     "9019729657549817746": "Remove Right Holder",
     "8958007499282871351": " Editor ",
     "1477277023016990611": " Viewer ",
+    "2515762870065939442": "(default)",
     "542230146417448534": "Waterfall Organization",
     "1407240513479418995": "Representative Organization",
     "3594320553500910732": "Waterfall Version",
@@ -897,7 +899,6 @@
     "8744750738404790272": "You are about to leave the {$PH}",
     "4058575476871566236": "Published",
     "7239750919884229270": "Updated",
-    "4126547754925407239": "Create Waterfall",
-    "2515762870065939442": "(default)"
+    "4126547754925407239": "Create Waterfall"
   }
 }

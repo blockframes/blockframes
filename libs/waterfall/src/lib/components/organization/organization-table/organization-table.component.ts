@@ -22,7 +22,7 @@ export class OrganizationTableComponent {
   public permissions$ = this.shell.permissions$.pipe(
     map(permissions => permissions.map(permission => {
       const rightholder = this.waterfall.rightholders.find(r => r.id === permission.rightholderIds[0]);
-      return { ...permission, rightholder }
+      return { ...permission, rightholder };
     }))
   );
   public versions = this.shell.waterfall.versions;

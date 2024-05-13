@@ -696,6 +696,7 @@
     "5278627882107105833": "Accès",
     "3742657416068781599": "Éditeur",
     "6239936537351977310": "Lecteur",
+    "6218398734161806083": "Choisissez le niveau d'accès",
     "8977745967902543283": "Saisissez les adresses e-mail séparées par une virgule.",
     "1183850304541856725": "Entrez l'adresse e-mail de l'invité",
     "3463797202358605584": "Inviter",
@@ -706,6 +707,7 @@
     "9019729657549817746": "Supprimer l'ayant droits",
     "8958007499282871351": " Éditeur ",
     "1477277023016990611": " Lecteur ",
+    "2515762870065939442": "(par défaut)",
     "542230146417448534": "Dociété dans le waterfall",
     "1407240513479418995": "Société representative",
     "3594320553500910732": "Version du waterfall",
@@ -897,7 +899,6 @@
     "8744750738404790272": "Vous êtes sur le point de quitter le {$PH}",
     "4058575476871566236": "Publié",
     "7239750919884229270": "Mis à jour",
-    "4126547754925407239": "Créer waterfall",
-    "2515762870065939442": "(défaut)"
+    "4126547754925407239": "Créer waterfall"
   }
 }
