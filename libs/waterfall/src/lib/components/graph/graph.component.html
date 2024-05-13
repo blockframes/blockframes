@@ -116,7 +116,7 @@
           </button>
         </header>
         <mat-tab-group>
-          <mat-tab [label]="(rightForm.get('type').value | isHorizontal) ? 'Group Details' : 'Receipts Shares'">
+          <mat-tab [label]="(rightForm.get('type').value | isHorizontal) ? i18nStrings.groupDetais : i18nStrings.receiptsShare">
             <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
               <p *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)" i18n>Fill the following fields to define the Receipt Share.</p>
               <p *ngIf="(rightForm.get('type').value | isHorizontal)" i18n>Fill the following fields to define the Group Details.</p>
@@ -137,6 +137,7 @@
                   i18n-hint
                   [options]="rightholderNames$"
                   placeholder="Choose Right Holder"
+                  i18n-placeholder
                   [form]="rightholderControl"
                 ></bf-autocomplete>
 
@@ -148,6 +149,7 @@
                   i18n-error
                   [options]="rightholderNames$"
                   placeholder="Choose Right Holder"
+                  i18n-placeholder
                   [form]="rightholderControl"
                 ></bf-autocomplete>
   
@@ -161,9 +163,9 @@
       
               <mat-form-field appearance="outline">
                 <mat-label *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)" i18n>Receipt Share Name</mat-label>
-                <mat-label *ngIf="(rightForm.get('type').value | isHorizontal)">Group Name</mat-label>
-                <mat-label *ngIf="(selected$.value | isStep : rights)">Step Name</mat-label>
-                <input matInput type="text" [placeholder]="(rightForm.get('type').value | isHorizontal) ? 'Group Name' : 'Receipt Share Name'" [formControl]="rightForm.get('name')" />
+                <mat-label *ngIf="(rightForm.get('type').value | isHorizontal)" i18n>Group Name</mat-label>
+                <mat-label *ngIf="(selected$.value | isStep : rights)" i18n>Step Name</mat-label>
+                <input matInput type="text" [placeholder]="(rightForm.get('type').value | isHorizontal) ? i18nStrings.groupName : i18nStrings.receiptShareName" [formControl]="rightForm.get('name')" />
               </mat-form-field>
       
               <mat-form-field appearance="outline">
@@ -249,12 +251,12 @@
       </section>
       <p class="description" i18n><strong>Pool</strong> is needed when several Receipts Shares come from different sources, but should be used in the same condition.</p>
       <mat-tab-group>
-        <mat-tab label="Receipts Shares">
+        <mat-tab label="Receipts Shares" i18n-label>
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
             <waterfall-right-list (deleteRight)="delete($event)" (selectRight)="select($event)" [nonEditableNodeIds]="nonEditableNodeIds$.value" [canCreatePool]="!isDuplicateVersion"></waterfall-right-list>
           </section>
         </mat-tab>
-        <mat-tab label="Pools Only">
+        <mat-tab label="Pools Only" i18n-label>
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
             <waterfall-pool-list [nonEditableNodeIds]="nonEditableNodeIds$.value"></waterfall-pool-list>
           </section>
