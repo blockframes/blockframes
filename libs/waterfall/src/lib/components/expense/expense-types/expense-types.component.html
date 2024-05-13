@@ -14,7 +14,7 @@
   </static-select>
 
   <ng-container *ngIf="!last; else isLast">
-    <button mat-icon-button class="delete" (click)="remove(index)" [matTooltip]="" [disabled]="versionId !== 'default'">
+    <button mat-icon-button class="delete" (click)="remove(index)" [matTooltip]="deleteExpenseType" [disabled]="versionId !== 'default'">
       <mat-icon svgIcon="delete"></mat-icon>
     </button>
   </ng-container>
