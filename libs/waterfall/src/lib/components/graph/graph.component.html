@@ -206,13 +206,13 @@
     <ng-template #nodeDetails>
       <header>
         <h2>
-          <span>{{ selected }} </span>
+          <span>{{ rightForm.get('name').value | maxLength : 38 }} </span>
         </h2>
         <button mat-icon-button matTooltip="Close" (click)="select('')" i18n-matTooltip>
           <mat-icon svgIcon="close"></mat-icon>
         </button>
       </header>
-      <waterfall-graph-node-details></waterfall-graph-node-details>
+      <waterfall-graph-node-details [rightForm]="rightForm" [rightId]="selected"></waterfall-graph-node-details>
     </ng-template>
   </ng-container>
   <ng-template #noSelection>

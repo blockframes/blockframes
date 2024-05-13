@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { Subscription } from 'rxjs';
 import { Node } from '../layout';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
-import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
   selector: 'waterfall-graph-node',

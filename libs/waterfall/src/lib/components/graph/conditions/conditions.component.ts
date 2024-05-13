@@ -15,6 +15,7 @@ export class WaterfallConditionsComponent implements OnInit, OnDestroy {
 
   @Input() public rightForm: RightForm;
   @Input() @boolean public canUpdate = true;
+  @Input() @boolean public readOnly = false;
   @Input() public set rightId(id: string) {
     this.conditionForm.reset();
     if (this.canUpdate) {

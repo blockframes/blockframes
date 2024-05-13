@@ -7,9 +7,9 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 import { StatementForm } from '../../../form/statement.form';
 
 const incomeColumns = {
-  medias: 'Medias',
-  territories: 'Territories',
-  '': 'Amount',
+  medias: $localize`Medias`,
+  territories: $localize`Territories`,
+  '': $localize`Amount`,
 }
 
 @Component({

@@ -266,15 +266,15 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   select(id: string) {
     if (id == this.selected$.value) return;
     if (this.cardModal.isOpened) this.cardModal.toggle();
-    /*if (this.readonly) {
+    if (this.readonly) {
       if (id) {
         const right = this.rights.find(right => right.id === id);
-        this.showEditPanel = !!right;
+        this.showEditPanel = !!right && right.type !== 'horizontal';
       } else {
         this.showEditPanel = false;
       }
       return this._select(id);
-    }*/
+    }
     const allPristine = this.rightForm.pristine && this.sourceForm.pristine && this.conditionFormPristine$.value;
     if (allPristine) return this._select(id);
 
@@ -758,21 +758,6 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       const waterfallSources = this.version?.id ? this.shell.waterfall.sources.filter(s => !s.version || !s.version[this.version.id]) : [];
       return this.waterfallService.update(this.waterfallId, { id: this.waterfallId, sources: [...sources, ...waterfallSources] }, { write });
     }
-  }
-}
-
-@Pipe({ name: 'isHorizontal' })
-export class IsHorizontalPipe implements PipeTransform {
-  transform(type: RightType) {
-    return type === 'horizontal';
-  }
-}
-
-@Pipe({ name: 'isStep' })
-export class IsStepPipe implements PipeTransform {
-  transform(id: string, rights: Right[]) {
-    const groupId = rights.find(r => r.id === id)?.groupId;
-    return rights.find(r => r.id === groupId)?.type === 'vertical';
   }
 }
 

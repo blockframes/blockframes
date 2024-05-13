@@ -8,7 +8,8 @@ import {
   filterStatements,
   getChilds,
   getStatementNumber,
-  rightholderKey
+  rightholderKey,
+  sortStatements
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 import { unique } from '@blockframes/utils/helpers';
@@ -52,7 +53,7 @@ export class WaterfallSidebarComponent implements OnInit, OnDestroy {
       map(statements => statements.filter(s => s.status === 'reported' && (!s.reviewStatus || s.reviewStatus === 'accepted')))
     );
     this.subs.push(statements$.subscribe(statements => {
-      const sorted = statements.sort((a, b) => b.duration.to.getTime() - a.duration.to.getTime());
+      const sorted = sortStatements(statements);
       const years = new Set<number>();
       const grouped: StatementEnhanced = {};
       sorted.forEach(statement => {

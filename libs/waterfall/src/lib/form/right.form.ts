@@ -2,6 +2,16 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { Condition, Right, RightType } from '@blockframes/model';
 
+export interface RightFormValue {
+  type: RightType;
+  org: string;
+  contract: string;
+  name: string;
+  percent: number;
+  parents: string[];
+  steps: Condition[][];
+}
+
 export type RightForm = FormGroup<{
   type: FormControl<RightType>;
   org: FormControl<string>;
