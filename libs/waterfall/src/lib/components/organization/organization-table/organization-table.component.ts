@@ -26,6 +26,7 @@ export class OrganizationTableComponent {
     }))
   );
   public versions = this.shell.waterfall.versions;
+  public defaultVersion = $localize`(default)`;
 
   @Input() baseUrl: string;
   @Input() columns: Record<string, string> = {

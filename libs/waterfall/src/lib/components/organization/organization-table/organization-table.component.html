@@ -57,7 +57,7 @@
       </mat-menu>
       <mat-menu #versionMenu>
         <button mat-menu-item *ngFor="let version of versions" (click)="changeVersion(item.rightholder.id, version.id)">
-          {{ version.name }} {{ version.default ? '(default)' : '' }} <!-- TODO #9699 i18n-->
+          {{ version.name }} {{ version.default ? defaultVersion : '' }}
         </button>
       </mat-menu>
     </ng-template>
