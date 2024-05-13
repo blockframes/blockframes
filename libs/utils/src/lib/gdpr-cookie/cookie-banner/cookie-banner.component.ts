@@ -10,7 +10,7 @@ import { CookieDialogComponent } from '../cookie-dialog/cookie-dialog.component'
 import { GDPRService } from '../gdpr-service/gdpr.service'
 import { AuthService } from '@blockframes/auth/service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { APP } from '@blockframes/utils/routes/utils';
+import { APP } from '../../routes/utils';
 import { App } from '@blockframes/model';
 
 @Component({
