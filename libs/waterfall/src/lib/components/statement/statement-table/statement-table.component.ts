@@ -66,6 +66,14 @@ export class StatementTableComponent {
   public incomes$ = this.shell.incomes$;
   public sorts = sorts;
   public canBypassRules = this.shell.canBypassRules;
+  public i18nStrings = {
+    certifAsked: $localize`Certification already asked`,
+    certifyDoc: $localize`Certify Document`,
+    declarePayment: $localize`Declare Payment`,
+    pendingPayment: $localize`Pending Payment`,
+    reviewRequired: $localize`A review is required`,
+    reviewPending: $localize`A review is pending`
+  };
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
