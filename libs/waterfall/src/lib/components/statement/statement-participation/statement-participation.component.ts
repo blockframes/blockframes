@@ -11,5 +11,5 @@ import { MovieCurrency, PricePerCurrency } from '@blockframes/model';
 export class StatementParticipationComponent {
   @Input() payment: { price: number, currency: MovieCurrency };
   @Input() price: PricePerCurrency;
-  @Input() label = 'Producer’s net participation';
+  @Input() label = $localize`Producer's net participation`;
 }

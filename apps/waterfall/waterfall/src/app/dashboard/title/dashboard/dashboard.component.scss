@@ -1,3 +1,5 @@
+@import "@angular/flex-layout/mq";
+
 header {
   display: flex;
   padding: 24px;
@@ -86,4 +88,17 @@ a.surface {
 .spinner {
   display: flex;
   justify-content: center;
+}
+
+@include layout-bp(lt-lg) {
+  a.surface {
+    margin-top: 12px;
+    width: 210px;
+    img {
+      margin-bottom: 12px;
+    }
+    button {
+      font-size: 12px;
+    }
+  }
 }

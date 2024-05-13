@@ -38,11 +38,35 @@ const amortizationStatus = {
   applied: 'Appliqué',
 } as const;
 
+const periods = {
+  days: 'Jours',
+  weeks: 'Semaines',
+  months: 'Mois',
+  years: 'Années',
+} as const;
+
+const statementType = {
+  salesAgent: 'Agent de vente',
+  mainDistributor: 'Distributeur',
+  producer: 'Sortant',
+  directSales: 'Ventes directes',
+} as const;
+
+const statementStatus = {
+  draft: 'Brouillon',
+  pending: 'En attente',
+  reported: 'Reporté',
+  rejected: 'Rejeté'
+} as const;
+
 export const staticModeli18n = {
   fr: {
     rightholderRoles,
     rightTypes,
     statementParty,
-    amortizationStatus
+    amortizationStatus,
+    periods,
+    statementType,
+    statementStatus
   }
 };
