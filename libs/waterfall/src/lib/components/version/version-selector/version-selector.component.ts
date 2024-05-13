@@ -83,7 +83,7 @@ export class VersionSelectorComponent implements OnInit {
       data: createModalData({
         mode: 'create',
         isDefaultVersion: false,
-        version: createVersion({ id: this.waterfallService.createId(), name: 'New version' }),
+        version: createVersion({ id: this.waterfallService.createId(), name: $localize`New version` }),
         rightholders: this.shell.waterfall.rightholders,
         onConfirm: async (_version: Version, rightholderIds: string[] = []) => {
 
@@ -104,7 +104,7 @@ export class VersionSelectorComponent implements OnInit {
       data: createModalData({
         mode: 'init',
         isDefaultVersion: true,
-        version: createVersion({ id: this.waterfallService.createId(), name: 'First version' }),
+        version: createVersion({ id: this.waterfallService.createId(), name: $localize`First version` }),
         rightholders: this.shell.waterfall.rightholders,
         onConfirm: async (_version: Version, rightholderIds: string[] = []) => {
           const version = await this.waterfallService.addVersion(this.shell.waterfall, _version);
