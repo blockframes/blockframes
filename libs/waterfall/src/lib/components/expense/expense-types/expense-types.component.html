@@ -13,13 +13,13 @@
     <mat-label i18n>Currency</mat-label>
   </static-select>
 
-  <ng-container *ngIf="!last; else isLast"> <!-- TODO #9699 tooltip -->
-    <button mat-icon-button class="delete" (click)="remove(index)" [matTooltip]="versionId === 'default' ? 'Delete Expense Type' : 'Not permitted'" [disabled]="versionId !== 'default'">
+  <ng-container *ngIf="!last; else isLast">
+    <button mat-icon-button class="delete" (click)="remove(index)" [matTooltip]="" [disabled]="versionId !== 'default'">
       <mat-icon svgIcon="delete"></mat-icon>
     </button>
   </ng-container>
-  <ng-template #isLast> <!-- TODO #9699 tooltip -->
-    <button mat-mini-fab color="primary" (click)="add()" [matTooltip]="versionId === 'default' ? 'Add Expense Type' : 'Not permitted'" [disabled]="versionId !== 'default'">
+  <ng-template #isLast>
+    <button mat-mini-fab color="primary" (click)="add()" [matTooltip]="addExpenseType" [disabled]="versionId !== 'default'">
       <mat-icon svgIcon="add"></mat-icon>
     </button>
   </ng-template>
