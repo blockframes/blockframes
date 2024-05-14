@@ -8,22 +8,22 @@
           <pdf-viewer [ref]="file" showControls></pdf-viewer>
         </ng-container>
         <ng-container *ngSwitchDefault>
-          <p>Sorry, we don't know how to display this file.</p>
-          <p>Currently PDF files are supported.</p>
+          <p i18n>Sorry, we don't know how to display this file.</p>
+          <p i18n>Currently only PDF files are supported.</p>
         </ng-container>
       </ng-container>  
     </section>
     <div>
-      <a mat-flat-button color="primary" *ngIf="contract.id | getFile: waterfall as file" [href]="file | getUrl | async"  target="_blank" matTooltip="Download Document">
+      <a mat-flat-button color="primary" *ngIf="contract.id | getFile: waterfall as file" [href]="file | getUrl | async"  target="_blank" matTooltip="Download Document" i18n-matTooltip>
         <mat-icon svgIcon="cloud_download"></mat-icon>
-        <span>Download Document</span>
+        <span i18n>Download Document</span>
       </a>
     </div>
   </ng-container>
   <ng-template #noFile>
     <div>
       <img asset="empty-contracts.svg" alt="Image, you have no contracts yet">
-      <p class="mat-body-1">No file found for this contract</p>
+      <p class="mat-body-1" i18n>No file found for this contract</p>
     </div>
   </ng-template>
 </ng-container>

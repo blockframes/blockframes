@@ -6,3 +6,12 @@ h3 {
 section {
   padding: 12px;
 }
+
+li {
+  span.bonus {
+    color: green;
+  }
+  span.penalty {
+    color: var(--warn);
+  }
+}

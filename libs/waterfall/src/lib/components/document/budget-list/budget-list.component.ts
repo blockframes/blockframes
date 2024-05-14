@@ -61,7 +61,7 @@ export class BudgetListComponent implements OnInit {
     this.uploaderService.upload();
     this.uploaderService.clearQueue();
     this.disabled = true;
-    this.snackBar.open('Document saved', 'close', { duration: 3000 });
+    this.snackBar.open($localize`Document saved`, 'close', { duration: 3000 });
 
     this.form = new WaterfallBudgetForm({ id: this.documentService.createId() });
 
@@ -74,7 +74,7 @@ export class BudgetListComponent implements OnInit {
 
   async delete(documentId: string) {
     await this.documentService.remove(documentId, { params: { waterfallId: this.shell.waterfall.id } });
-    this.snackBar.open('Document deleted', 'close', { duration: 3000 });
+    this.snackBar.open($localize`Document deleted`, 'close', { duration: 3000 });
   }
 
   share(documentId: string, waterfallId: string, organizations: Organization[]) {

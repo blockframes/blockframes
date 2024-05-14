@@ -5,9 +5,9 @@ import { StatementForm } from '../../../form/statement.form';
 import { Observable, combineLatest, map } from 'rxjs';
 
 const expenseColumns = {
-  nature: 'Expenses name',
-  '': 'Amount',
-  capped: 'Capped',
+  nature: $localize`Expenses name`,
+  '': $localize`Amount`,
+  capped: $localize`Capped`,
 }
 
 @Component({
@@ -25,7 +25,8 @@ export class ExpenseFormComponent implements OnInit {
   public expenseTypes$: Observable<ExpenseType[]>;
   public expenseColumns = expenseColumns;
   public realTimeExpenses$: Observable<Record<string, PricePerCurrency>>;
-
+  public i18nStrings = { yes: $localize`Yes`, no: $localize`No` };
+  
   constructor(private shell: DashboardWaterfallShellComponent) { }
 
   ngOnInit() {
@@ -59,7 +60,7 @@ export class ExpenseFormComponent implements OnInit {
   }
 
   public defaultExpenseValue(expenseType: ExpenseType): Partial<Expense> {
-    return { nature: 'Expenses name', capped: expenseType.cap.default > 0 };
+    return { nature: $localize`Expenses name`, capped: expenseType.cap.default > 0 };
   }
 
 }

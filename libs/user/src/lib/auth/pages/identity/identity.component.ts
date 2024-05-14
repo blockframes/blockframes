@@ -15,8 +15,10 @@ import {
   AlgoliaOrganization,
   App,
   hasDisplayName,
-  preferredLanguage,
-  preferredIsoA2
+  getUserLocaleId,
+  PreferredLanguage,
+  SupportedLanguages,
+  TerritoryISOA2Value
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { Intercom } from 'ng-intercom';
@@ -55,6 +57,11 @@ export class IdentityComponent implements OnInit, OnDestroy {
   private subs: Subscription[] = [];
   private isAnonymous = false;
   private publicUser: PublicUser;
+  private defaultLocale = getUserLocaleId();
+  private preferredLanguage: PreferredLanguage = {
+    language: this.defaultLocale.split('-')[0] as SupportedLanguages,
+    isoA2: this.defaultLocale.split('-')[1] as TerritoryISOA2Value
+  }
 
   constructor(
     private authService: AuthService,
@@ -154,7 +161,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
   public async signUp() {
     if (this.creating) return;
     if (this.form.invalid) {
-      this.snackBar.open('Please enter valid name and surname', 'close', { duration: 2000 });
+      this.snackBar.open($localize`Please enter valid name and surname`, 'close', { duration: 2000 });
       return;
     }
 
@@ -174,7 +181,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
         case 'auth/email-already-in-use':
           this.snackBar.openFromComponent(SnackbarLinkComponent, {
             data: {
-              message: 'User account already exists for this email.',
+              message: $localize`User account already exists for this email.`,
               link: ['/auth/connexion'],
               linkName: 'LOG IN',
               testId: 'existing-email'
@@ -183,10 +190,10 @@ export class IdentityComponent implements OnInit, OnDestroy {
           });
           break;
         case 'auth/invalid-email':
-          this.snackBar.open('Incorrect email address, please enter: text@example.com', 'close', { duration: 5000 });
+          this.snackBar.open($localize`Incorrect email address, please enter: text@example.com`, 'close', { duration: 5000 });
           break;
         case 'auth/wrong-password':
-          this.snackBar.open('Incorrect Invitation Pass. Please check your invitation email.', 'close', { duration: 8000 });
+          this.snackBar.open($localize`Incorrect Invitation Pass. Please check your invitation email.`, 'close', { duration: 8000 });
           break;
         default:
           console.error(err); // let the devs see what happened
@@ -200,11 +207,10 @@ export class IdentityComponent implements OnInit, OnDestroy {
   private async create() {
     if (this.existingOrgId) {
       // Create user
-      // TODO #9699 const org = await this.orgService.getValue(this.existingOrgId); & check that "full" "en-GB" is logical (see updatePreferredLanguage)
       this.publicUser = await this.createUser(this.form.value);
       // Request to join existing org
       await this.invitationService.request(this.existingOrgId, this.publicUser).to('joinOrganization');
-      this.snackBar.open('Your account has been created and request to join org sent ! ', 'close', { duration: 8000 });
+      this.snackBar.open($localize`Your account has been created and request to join org sent ! `, 'close', { duration: 8000 });
       return this.router.navigate(['c/organization/join-congratulations']);
     } else {
       const { name, addresses, activity, appAccess } = this.orgForm.value;
@@ -215,14 +221,13 @@ export class IdentityComponent implements OnInit, OnDestroy {
       const orgId = await this.algoliaService.getOrgIdFromName(name);
       if (orgId) {
         this.orgForm.get('name').setErrors({ notUnique: true });
-        this.snackBar.open('This organization\'s name already exists.', 'close', { duration: 2000 });
+        this.snackBar.open($localize`This organization's name already exists.`, 'close', { duration: 2000 });
         this.creating = false;
         this.cdr.markForCheck();
         return;
       }
 
       // Create user
-      // TODO #9699 check orgFrom country  & check that "full" "en-GB" is logical (see updatePreferredLanguage)
       this.publicUser = await this.createUserFromAnonymous(this.form.value);
 
       // Create the org
@@ -230,7 +235,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       org.appAccess[this.app][appAccess] = true;
       await this.orgService.addOrganization(org, this.app, this.publicUser);
 
-      this.snackBar.open('Your User Account was successfully created. Please wait for our team to check your Company Information. ', 'close', { duration: 8000 });
+      this.snackBar.open($localize`Your User Account was successfully created. Please wait for our team to check your Company Information.`, 'close', { duration: 8000 });
       return this.router.navigate(['c/organization/create-congratulations']);
     }
   }
@@ -256,8 +261,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
       termsAndConditions
     };
 
-    if (this.app === 'waterfall') { // TODO #9699 only on waterfall app for now
-      ctx['preferredLanguage'] = { language: preferredLanguage(), isoA2: preferredIsoA2() };
+    if (this.app === 'waterfall') { /** @dev i18n is only on waterfall app for now #9699 */
+      ctx['preferredLanguage'] = this.preferredLanguage;
     }
     const credentials = await this.authService.signup(user.email.trim(), user.password, { ctx });
     return createPublicUser({
@@ -290,8 +295,8 @@ export class IdentityComponent implements OnInit, OnDestroy {
       termsAndConditions
     };
 
-    if (this.app === 'waterfall') { // TODO #9699 only on waterfall app for now
-      ctx['preferredLanguage'] = { language: preferredLanguage(), isoA2: preferredIsoA2() };
+    if (this.app === 'waterfall') { /** @dev i18n is only on waterfall app for now #9699 */
+      ctx['preferredLanguage'] = this.preferredLanguage;
     }
     const credentials = await this.authService.signupFromAnonymous(user.email.trim(), user.password, { ctx });
     return createPublicUser({
@@ -303,10 +308,9 @@ export class IdentityComponent implements OnInit, OnDestroy {
     });
   }
 
-
   private async update() {
     if (this.form.get('generatedPassword').enabled && this.form.get('password').enabled && this.form.get('generatedPassword').value === this.form.get('password').value) {
-      this.snackBar.open('Your new password has to be different than the invitation pass.', 'close', { duration: 5000 });
+      this.snackBar.open($localize`Your new password has to be different than the invitation pass.`, 'close', { duration: 5000 });
       this.creating = false;
       this.cdr.markForCheck();
       return;
@@ -337,7 +341,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
         lastName,
         privacyPolicy,
         termsAndConditions,
-        // TODO #9699 preferred language
+        // TODO #9699 check if we need to populate preferred language for next emails
       });
     }
 
@@ -358,7 +362,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     } else if (this.existingOrgId) {
       // User selected an existing org, make a request to be accepted and is redirected to waiting room
       await this.invitationService.request(this.existingOrgId, this.authService.profile).to('joinOrganization');
-      this.snackBar.open('Your account have been created and request to join org sent ! ', 'close', { duration: 8000 });
+      this.snackBar.open($localize`Your account has been created and request to join org sent ! `, 'close', { duration: 8000 });
       return this.router.navigate(['c/organization/join-congratulations']);
     } else {
       // User decided to create his own org and is redirected to waiting room
@@ -368,7 +372,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       const orgId = await this.algoliaService.getOrgIdFromName(name);
       if (orgId) {
         this.orgForm.get('name').setErrors({ notUnique: true });
-        this.snackBar.open('This organization\'s name already exists.', 'close', { duration: 2000 });
+        this.snackBar.open($localize`This organization's name already exists.`, 'close', { duration: 2000 });
         this.creating = false;
         this.cdr.markForCheck();
         return;
@@ -379,7 +383,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       org.appAccess[this.app][appAccess] = true;
       await this.orgService.addOrganization(org, this.app, this.authService.profile);
 
-      this.snackBar.open('Your User Account was successfully created. Please wait for our team to check your Company Information.', 'close', { duration: 8000 });
+      this.snackBar.open($localize`Your User Account was successfully created. Please wait for our team to check your Company Information.`, 'close', { duration: 8000 });
       return this.router.navigate(['c/organization/create-congratulations']);
     }
   }

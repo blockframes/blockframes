@@ -131,7 +131,6 @@ export const getOrInviteUserByMail = async (
  * @param email
  */
 export const createUserFromEmail = async (email: string, createdFrom: App = 'festival'): Promise<{ user: PublicUser, password: string }> => {
-  // TODO #9699 preferred language (when created via CRM or when invited)
   const password = generatePassword();
 
   // User does not exists, we create it with a generated password
@@ -148,6 +147,7 @@ export const createUserFromEmail = async (email: string, createdFrom: App = 'fes
 
   // We don't have the time to wait for the trigger onUserCreate,
   // So we create it here first.
+  // TODO #9699 include preferred language (when set via CRM or when invited)
   const userDb = { uid: user.uid, email, _meta: createInternalDocumentMeta({ createdFrom, emailVerified: true }) };
   await db.collection('users').doc(userDb.uid).set(userDb);
 

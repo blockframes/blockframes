@@ -17,6 +17,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 
 interface Information {
   org: number;
+  bonus?: number;
   right: number;
   expenses?: number;
   cappedExpenses?: number;
@@ -84,6 +85,7 @@ export class WaterfallGraphNodeDetailsComponent implements OnInit {
         const cappedExpenses = getExpensesValue(state.waterfall.state, expenseState);
 
         const data: Information = { org: orgRevenue, right: rightRevenue };
+        if (revenueMode === 'calculated') data.bonus = orgState.bonus;
 
         // Get last statement about this right
         const stateDate = new Date(state.waterfall.state.date);
@@ -96,16 +98,17 @@ export class WaterfallGraphNodeDetailsComponent implements OnInit {
         if (statement?.reportedData && statement.type !== 'producer') {
           const { distributorExpenses, sourcesBreakdown, rightsBreakdown } = statement.reportedData;
 
-          const expensesByType = distributorExpenses.map(e => e.rows)?.flat();
-          const statementExpenses = expensesByType?.map(r => ({ price: convertCurrenciesTo(r.cumulated, mainCurrency)[mainCurrency], currency: mainCurrency }));
-          data.expenses = getTotalPerCurrency(statementExpenses)[mainCurrency];
-          if (data.expenses && data.expenses !== cappedExpenses) data.cappedExpenses = cappedExpenses;
-
           const hasRight = (b: SourcesBreakdown | RightsBreakdown) => b.rows.some(r => r.right?.id === right.id);
           const breakdown = sourcesBreakdown.find(hasRight) || rightsBreakdown.find(hasRight);
-
-          if (breakdown.stillToBeRecouped) data.expensesToBeRecouped = breakdown.stillToBeRecouped;
-          if (breakdown.mgStatus) data.mgStatus = breakdown.mgStatus;
+          if (right.type === 'expenses') {
+            const expensesByType = distributorExpenses.map(e => e.rows)?.flat();
+            const statementExpenses = expensesByType?.map(r => ({ price: convertCurrenciesTo(r.cumulated, mainCurrency)[mainCurrency], currency: mainCurrency }));
+            data.expenses = getTotalPerCurrency(statementExpenses)[mainCurrency];
+            if (data.expenses && data.expenses !== cappedExpenses) data.cappedExpenses = cappedExpenses;
+            if (breakdown.stillToBeRecouped) data.expensesToBeRecouped = breakdown.stillToBeRecouped;
+          } else if (right.type === 'mg' && breakdown.mgStatus) {
+            data.mgStatus = breakdown.mgStatus;
+          }
         }
 
         return data;
