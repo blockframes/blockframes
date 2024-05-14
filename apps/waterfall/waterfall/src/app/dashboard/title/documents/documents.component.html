@@ -2,41 +2,41 @@
   <header *ngIf="crumbs$ | async as crumbs">
     <div>
       <ng-container *ngIf="crumbs.length === 1">
-        <p>{{ crumbs[0] }}</p>
+        <p>{{ crumbs[0] | toLabel : 'documentPaths' : true }}</p>
       </ng-container>
       <ng-container *ngIf="crumbs.length === 2">
-        <button mat-button color="primary" (click)="navigate(['Documents'])">{{ crumbs[0] }}</button>
+        <button mat-button color="primary" (click)="navigate(['documents'])">{{ crumbs[0] | toLabel : 'documentPaths' : true }}</button>
         <span>></span>
-        <p>{{ crumbs[1] }}</p>
+        <p>{{ crumbs[1] | toLabel : 'documentPaths' : true }}</p>
       </ng-container>
     </div>
   </header>
   <mat-divider></mat-divider>
   <ng-container *ngIf="currentPath$ | async as currentPath">
     <ng-container [ngSwitch]="currentPath" *ngIf="(shell.canBypassRules || (shell.rightholderDocuments$ | async)?.length) else empty">
-      <ng-container *ngSwitchCase="'Documents'">
+      <ng-container *ngSwitchCase="'documents'">
         <mat-action-list>
-          <button mat-list-item (click)="navigate(['Documents', 'Financing Plan'])" *ngIf="shell.canBypassRules || (shell.rightholderFinancingPlans$ | async)?.length">
+          <button mat-list-item (click)="navigate(['documents', 'financingPlan'])" *ngIf="shell.canBypassRules || (shell.rightholderFinancingPlans$ | async)?.length">
             <mat-icon mat-list-icon svgIcon="folder_open"></mat-icon>
             <span mat-line i18n>Financing Plan</span>
           </button>
-          <button mat-list-item (click)="navigate(['Documents', 'Budget'])" *ngIf="shell.canBypassRules || (shell.rightholderBudgets$ | async)?.length">
+          <button mat-list-item (click)="navigate(['documents', 'budget'])" *ngIf="shell.canBypassRules || (shell.rightholderBudgets$ | async)?.length">
             <mat-icon mat-list-icon svgIcon="folder_open"></mat-icon>
             <span mat-line i18n>Budget</span>
           </button>
-          <button mat-list-item (click)="navigate(['Documents', 'Contracts'])" *ngIf="shell.canBypassRules || (shell.rightholderContracts$ | async)?.length">
+          <button mat-list-item (click)="navigate(['documents', 'contracts'])" *ngIf="shell.canBypassRules || (shell.rightholderContracts$ | async)?.length">
             <mat-icon mat-list-icon svgIcon="folder_open"></mat-icon>
             <span mat-line i18n>Contracts</span>
           </button>
         </mat-action-list>
       </ng-container>
-      <article *ngSwitchCase="'Financing Plan'">
+      <article *ngSwitchCase="'financingPlan'">
         <waterfall-financing-plan-list [form]="financingPlanForm"></waterfall-financing-plan-list>
       </article>
-      <article *ngSwitchCase="'Budget'">
+      <article *ngSwitchCase="'budget'">
         <waterfall-budget-list [form]="budgetForm"></waterfall-budget-list>
       </article>
-      <article *ngSwitchCase="'Contracts'">
+      <article *ngSwitchCase="'contracts'">
         <waterfall-contract-list [contractForm]="contractForm"></waterfall-contract-list>
       </article>
     </ng-container>

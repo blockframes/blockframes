@@ -256,7 +256,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       termsAndConditions
     };
 
-    if (this.app === 'waterfall') { // TODO #9699 only on waterfall app for now
+    if (this.app === 'waterfall') { // i18n is only on waterfall app for now #9699
       ctx['preferredLanguage'] = { language: preferredLanguage(), isoA2: preferredIsoA2() };
     }
     const credentials = await this.authService.signup(user.email.trim(), user.password, { ctx });
@@ -290,7 +290,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       termsAndConditions
     };
 
-    if (this.app === 'waterfall') { // TODO #9699 only on waterfall app for now
+    if (this.app === 'waterfall') { // i18n is only on waterfall app for now #9699
       ctx['preferredLanguage'] = { language: preferredLanguage(), isoA2: preferredIsoA2() };
     }
     const credentials = await this.authService.signupFromAnonymous(user.email.trim(), user.password, { ctx });

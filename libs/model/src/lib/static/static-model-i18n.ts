@@ -59,6 +59,13 @@ const statementStatus = {
   rejected: 'Rejeté'
 } as const;
 
+const documentPaths = {
+  documents: 'Documents',
+  contracts: 'Contrats',
+  financingPlan: 'Plan de financement',
+  budget: 'Budget'
+} as const;
+
 export const staticModeli18n = {
   fr: {
     rightholderRoles,
@@ -67,6 +74,7 @@ export const staticModeli18n = {
     amortizationStatus,
     periods,
     statementType,
-    statementStatus
+    statementStatus,
+    documentPaths
   }
 };
