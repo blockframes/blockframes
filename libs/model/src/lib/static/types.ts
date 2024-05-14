@@ -57,7 +57,8 @@ import {
   statementStatus,
   statementType,
   conditionOwnerLabels,
-  amortizationStatus
+  amortizationStatus,
+  periods,
 } from './static-model';
 
 export type App = typeof app[number];
@@ -193,6 +194,8 @@ export type PaymentStatus = keyof typeof paymentStatus;
 export type StatementStatus = keyof typeof statementStatus;
 
 export type AmortizationStatus = keyof typeof amortizationStatus;
+
+export type Period = keyof typeof periods;
 
 export type StatementType = keyof typeof statementType;
 export type StatementTypeValue = typeof statementType[StatementType];

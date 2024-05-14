@@ -26,6 +26,8 @@ export class VersionSelectorComponent implements OnInit {
   public canInitWaterfall$ = this.shell.canInitWaterfall$;
   public versionId: string;
   public lockedVersionId = this.shell.lockedVersionId;
+  public defaultVersion = $localize`(default)`;
+  public standaloneVersion = $localize`(standalone)`;
   @Input() @boolean simulator = false;
   @Input() @boolean hideStandalone = false;
   @Input() set initialVersion(value: string) { if (value) this.switchToVersion(value); }
@@ -81,7 +83,7 @@ export class VersionSelectorComponent implements OnInit {
       data: createModalData({
         mode: 'create',
         isDefaultVersion: false,
-        version: createVersion({ id: this.waterfallService.createId(), name: 'New version' }),
+        version: createVersion({ id: this.waterfallService.createId(), name: $localize`New version` }),
         rightholders: this.shell.waterfall.rightholders,
         onConfirm: async (_version: Version, rightholderIds: string[] = []) => {
 
@@ -102,7 +104,7 @@ export class VersionSelectorComponent implements OnInit {
       data: createModalData({
         mode: 'init',
         isDefaultVersion: true,
-        version: createVersion({ id: this.waterfallService.createId(), name: 'First version' }),
+        version: createVersion({ id: this.waterfallService.createId(), name: $localize`First version` }),
         rightholders: this.shell.waterfall.rightholders,
         onConfirm: async (_version: Version, rightholderIds: string[] = []) => {
           const version = await this.waterfallService.addVersion(this.shell.waterfall, _version);

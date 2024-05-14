@@ -1,24 +1,24 @@
 <header>
-  <h1>Film Amortization</h1>
-  <mat-icon svgIcon="movie"></mat-icon><span matLine><strong>Title: </strong>{{ movie.title.international }}</span>
+  <h1 i18n>Film Amortization</h1>
+  <mat-icon svgIcon="movie"></mat-icon><span matLine><strong i18n>Title: </strong>{{ movie.title.international }}</span>
 </header>
 
 <div class="surface organization">
-  <h2>Organization</h2>
-  <p>The amortization of the film cost will be added to their reports.</p>
+  <h2 i18n>Organization</h2>
+  <p i18n>The amortization of the film cost will be added to their reports.</p>
 
   <section>
     <mat-form-field *ngIf="contracts$ | async as contracts" appearance="outline">
-      <mat-label>Choose Contracts concerned</mat-label>
+      <mat-label i18n>Choose Contracts concerned</mat-label>
       <mat-select [formControl]="amortizationForm.get('contractIds')" multiple required>
         <ng-container *ngFor="let contract of contracts">
-          <mat-option [value]="contract.id">{{ contract.rightholder.name }} ({{ contract.type | toLabel : 'rightholderRoles' }})</mat-option>
+          <mat-option [value]="contract.id">{{ contract.rightholder.name }} ({{ contract.type | toLabel : 'rightholderRoles' : true }})</mat-option>
         </ng-container>
       </mat-select>
     </mat-form-field>
   
     <mat-form-field appearance="outline">
-      <mat-label>Give name to Calculation</mat-label>
+      <mat-label i18n>Give name to Calculation</mat-label>
       <input matInput [formControl]="amortizationForm.get('name')" required />
     </mat-form-field>
   </section>
@@ -34,13 +34,13 @@
   </ng-template>
 
   <mat-step>
-    <ng-template matStepLabel>Film Cost</ng-template>
+    <ng-template matStepLabel i18n>Film Cost</ng-template>
     <ng-template matStepContent>
       <div class="surface">
-        <h2>Film Cost</h2>
-        <p>Please provide us with the following information so we can calculate the film amortization.</p>
+        <h2 i18n>Film Cost</h2>
+        <p i18n>Please provide us with the following information so we can calculate the film amortization.</p>
         <mat-form-field appearance="outline">
-          <mat-label>Effective Film Cost (Total Amount)</mat-label>
+          <mat-label i18n>Effective Film Cost (Total Amount)</mat-label>
           <mat-icon svgIcon="EUR" matSuffix></mat-icon>
           <input matInput type="number" [formControl]="amortizationForm.get('filmCost')" required />
         </mat-form-field>
@@ -51,12 +51,12 @@
         </ng-container>
         <ng-template #editCosts>
           <button mat-flat-button color="primary" (click)="next()">
-            <span>Continue</span>
+            <span i18n>Continue</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </button>
           <button mat-button class="save" (click)="exit()" [disabled]="!amortizationForm.get('filmCost').value">
             <mat-icon svgIcon="save"></mat-icon>
-            <span>Save & Come back later</span>
+            <span i18n>Save & Come back later</span>
           </button>
         </ng-template>
       </article>
@@ -64,12 +64,12 @@
   </mat-step>
 
   <mat-step completed>
-    <ng-template matStepLabel>Financing</ng-template>
+    <ng-template matStepLabel i18n>Financing</ng-template>
     <div class="surface">
-      <h2>Financing</h2>
-      <p>Please take into account all the financing sources that need to be considered when calculating the amortization of the film's costs.</p>
+      <h2 i18n>Financing</h2>
+      <p i18n>Please take into account all the financing sources that need to be considered when calculating the amortization of the film's costs.</p>
       <mat-form-field appearance="outline">
-        <mat-label>Total Financing Amount</mat-label>
+        <mat-label i18n>Total Financing Amount</mat-label>
         <mat-icon svgIcon="EUR" matSuffix></mat-icon>
         <input matInput type="number" [formControl]="amortizationForm.get('financing')" required />
       </mat-form-field>
@@ -82,26 +82,26 @@
         <section>
           <button mat-button color="primary" (click)="previous()">
             <mat-icon svgIcon="arrow_back"></mat-icon>
-            <span>Back</span>
+            <span i18n>Back</span>
           </button>
           <button mat-flat-button color="primary" (click)="next()">
-            <span>Continue</span>
+            <span i18n>Continue</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </button>
         </section>
         <button mat-button class="save" (click)="exit()" [disabled]="amortizationForm.get('financing').value === null">
           <mat-icon svgIcon="save"></mat-icon>
-          <span>Save & Come back later</span>
+          <span i18n>Save & Come back later</span>
         </button>
       </ng-template>
     </article>
   </mat-step>
 
   <mat-step>
-    <ng-template matStepLabel>Net Revenue Producer Shares</ng-template>
+    <ng-template matStepLabel i18n>Net Revenue Producer Shares</ng-template>
     <div class="surface">
-      <h2>Producer's Net Participation Definition</h2>
-      <p>
+      <h2 i18n>Producer's Net Participation Definition</h2>
+      <p i18n>
         Please choose the receipts that will be summed to amortized the film cost.<br/>
         You can modify them in the <a [routerLink]="['/c/o/dashboard/title/', movie.id, 'init']" target="_blank">Waterfall Management</a> section.
       </p>
@@ -115,16 +115,16 @@
         <section>
           <button mat-button color="primary" (click)="previous()">
             <mat-icon svgIcon="arrow_back"></mat-icon>
-            <span>Back</span>
+            <span i18n>Back</span>
           </button>
-          <button mat-flat-button color="primary" matTooltip="Save" (click)="exit(true)" [disabled]="amortizationForm.invalid">
-            <span>Continue</span>
+          <button mat-flat-button color="primary" matTooltip="Save" (click)="exit(true)" [disabled]="amortizationForm.invalid" i18n-matTooltip>
+            <span i18n>Continue</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </button>
         </section>
         <button mat-button class="save" (click)="exit()">
           <mat-icon svgIcon="save"></mat-icon>
-          <span>Save & Come back later</span>
+          <span i18n>Save & Come back later</span>
         </button>
       </ng-template>
     </article>

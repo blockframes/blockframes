@@ -50,7 +50,8 @@
 
   <mat-dialog-actions>
     <button mat-flat-button color="primary" (click)="confirm()">
-      <span>{{ data.mode === 'edit' ? 'Edit version' : 'Create version' }}</span><!-- TODO #9699 -->
+      <span *ngIf="data.mode === 'edit'" i18n>Edit version</span>
+      <span *ngIf="data.mode !== 'edit'" i18n>Create version</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>
     <button mat-button (click)="close()" i18n>

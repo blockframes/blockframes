@@ -12,7 +12,7 @@
           matTooltip="You are editing the default version of this Waterfall. Except already overwritten receipt share percentage and conditions, changes performed on this version will be applied to all not standalone versions."
         ></mat-icon>
       </h2>
-      <button mat-icon-button [matTooltip]="(showEditPanel ? 'Hide' : 'Show') + ' Edit Panel'" (click)="toggleEditPanel()"><!-- TODO #9699 i18n -->
+      <button mat-icon-button [matTooltip]="(showEditPanel ? i18nStrings.hide : i18nStrings.show) + i18nStrings.editPanel" (click)="toggleEditPanel()">
         <mat-icon [svgIcon]="showEditPanel ? 'chevron_right' : 'chevron_left'"></mat-icon>
       </button>
     </div>
@@ -55,7 +55,7 @@
             <span i18n>Receipt Source</span>
             <mat-icon *ngIf="nonEditableNodeIds$.value.includes(selected)" matTooltip="This cannot be edited anymore" svgIcon="lock" i18n-matTooltip></mat-icon>
           </h2>
-          <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'">
+          <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? i18nStrings.shrink : i18nStrings.enlarge">
             <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
           </button>
           <button mat-icon-button matTooltip="Save changes" (click)="updateSource()" [disabled]="nonEditableNodeIds$.value.includes(selected)" i18n-matTooltip>
@@ -102,7 +102,7 @@
             <span i18n>Receipt Share</span>
             <mat-icon *ngIf="nonEditableNodeIds$.value.includes(selected)" matTooltip="This cannot be edited anymore" svgIcon="lock" i18n-matTooltip></mat-icon>
           </h2>
-          <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'"><!-- TODO #9699 i18n -->
+          <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? i18nStrings.shrink : i18nStrings.enlarge">
             <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
           </button>
           <button mat-icon-button matTooltip="Save changes" (click)="updateRight()" i18n-matTooltip>
@@ -116,7 +116,7 @@
           </button>
         </header>
         <mat-tab-group>
-          <mat-tab [label]="(rightForm.get('type').value | isHorizontal) ? 'Group Details' : 'Receipts Shares'">
+          <mat-tab [label]="(rightForm.get('type').value | isHorizontal) ? i18nStrings.groupDetais : i18nStrings.receiptsShare">
             <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
               <p *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)" i18n>Fill the following fields to define the Receipt Share.</p>
               <p *ngIf="(rightForm.get('type').value | isHorizontal)" i18n>Fill the following fields to define the Group Details.</p>
@@ -127,15 +127,31 @@
                   <mat-label>Type</mat-label>
                 </static-select>
   
-                <bf-autocomplete
+                <bf-autocomplete *ngIf="(rightForm.get('type').value | isHorizontal)"
                   required 
-                  [label]="(rightForm.get('type').value | isHorizontal) ? 'Responsible of the Group' : 'Right Holder Name'"
-                  [error]="(rightForm.get('type').value | isHorizontal) ? 'Please select a Right Holder. Most likely the Producer.' : 'To select a Right Holder, first add a contract with them.'"
-                  [hint]="(rightForm.get('type').value | isHorizontal) ? 'Responsible of the Group is most likely the Producer.' : ''"
+                  label="Responsible of the Group"
+                  i18n-label
+                  error="Please select a Right Holder. Most likely the Producer."
+                  i18n-error
+                  hint="Responsible of the Group is most likely the Producer."
+                  i18n-hint
                   [options]="rightholderNames$"
                   placeholder="Choose Right Holder"
+                  i18n-placeholder
                   [form]="rightholderControl"
-                ></bf-autocomplete><!-- TODO #9699 i18n -->
+                ></bf-autocomplete>
+
+                <bf-autocomplete *ngIf="!(rightForm.get('type').value | isHorizontal)"
+                  required 
+                  label="Right Holder Name"
+                  i18n-label
+                  error="To select a Right Holder, first add a contract with them."
+                  i18n-error
+                  [options]="rightholderNames$"
+                  placeholder="Choose Right Holder"
+                  i18n-placeholder
+                  [form]="rightholderControl"
+                ></bf-autocomplete>
   
                 <mat-form-field *ngIf="!(rightForm.get('type').value | isHorizontal) && (relevantContracts$ | async).length" appearance="outline">
                   <mat-label i18n>Contract</mat-label>
@@ -147,9 +163,9 @@
       
               <mat-form-field appearance="outline">
                 <mat-label *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)" i18n>Receipt Share Name</mat-label>
-                <mat-label *ngIf="(rightForm.get('type').value | isHorizontal)">Group Name</mat-label>
-                <mat-label *ngIf="(selected$.value | isStep : rights)">Step Name</mat-label>
-                <input matInput type="text" [placeholder]="(rightForm.get('type').value | isHorizontal) ? 'Group Name' : 'Receipt Share Name'" [formControl]="rightForm.get('name')" />
+                <mat-label *ngIf="(rightForm.get('type').value | isHorizontal)" i18n>Group Name</mat-label>
+                <mat-label *ngIf="(selected$.value | isStep : rights)" i18n>Step Name</mat-label>
+                <input matInput type="text" [placeholder]="(rightForm.get('type').value | isHorizontal) ? i18nStrings.groupName : i18nStrings.receiptShareName" [formControl]="rightForm.get('name')" />
               </mat-form-field>
       
               <mat-form-field appearance="outline">
@@ -219,7 +235,7 @@
     <ng-container *ngIf="(nodes$ | async).length; else emptyGraph">
       <header>
         <h2 i18n>Receipt Share List</h2>
-        <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'" i18n-malTooltip>
+        <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? i18nStrings.shrink : i18nStrings.enlarge" i18n-malTooltip>
           <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
         </button>
       </header>
@@ -235,12 +251,12 @@
       </section>
       <p class="description" i18n><strong>Pool</strong> is needed when several Receipts Shares come from different sources, but should be used in the same condition.</p>
       <mat-tab-group>
-        <mat-tab label="Receipts Shares">
+        <mat-tab label="Receipts Shares" i18n-label>
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
             <waterfall-right-list (deleteRight)="delete($event)" (selectRight)="select($event)" [nonEditableNodeIds]="nonEditableNodeIds$.value" [canCreatePool]="!isDuplicateVersion"></waterfall-right-list>
           </section>
         </mat-tab>
-        <mat-tab label="Pools Only">
+        <mat-tab label="Pools Only" i18n-label>
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
             <waterfall-pool-list [nonEditableNodeIds]="nonEditableNodeIds$.value"></waterfall-pool-list>
           </section>

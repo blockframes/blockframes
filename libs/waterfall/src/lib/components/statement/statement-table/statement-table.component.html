@@ -6,7 +6,7 @@
     {{ id }}
   </ng-template>
   <ng-template *ngIf="columns.type" colRef="type" [label]="columns.type" let-type sort>
-    {{ type | toLabel: 'statementType' }}
+    {{ type | toLabel: 'statementType' : true }}
   </ng-template>
   <ng-template *ngIf="columns.versionId" colRef="versionId" [label]="columns.versionId" let-versionId sort>
     {{ versionId | versionName: waterfall }}
@@ -41,50 +41,50 @@
     </ng-container>
   </ng-template>
   <ng-template *ngIf="columns.status" colRef="status" [label]="columns.status" let-status sort>
-    <bf-tag [ngClass]="status === 'draft'? 'active' : ''">{{ status | toLabel: 'statementStatus' }}</bf-tag>
+    <bf-tag [ngClass]="status === 'draft'? 'active' : ''">{{ status | toLabel: 'statementStatus' : true }}</bf-tag>
   </ng-template>
   <ng-template *ngIf="columns.sources" colRef="incomeIds" [label]="columns.sources" let-incomeIds>
     {{ incomeIds | incomesSources: (incomes$ | async) : waterfall | join:'name' | maxLength:75 }}
   </ng-template>
   <ng-template *ngIf="columns.actions" colRef="" label="Actions" let-statement sticky>
     <a *ngIf="actions.crm" mat-icon-button [routerLink]="['/c/o/dashboard/crm/waterfall', statement.waterfallId, 'statements', statement.id]" (click)="$event.stopPropagation()">
-      <mat-icon svgIcon="visibility" matTooltip="View Statement"></mat-icon>
+      <mat-icon svgIcon="visibility" matTooltip="View Statement" i18n-matTooltip></mat-icon>
     </a>
     <button *ngIf="actions.delete" mat-icon-button (click)="delete.emit(statement)">
-      <mat-icon svgIcon="delete" matTooltip="Delete Statement"></mat-icon>
+      <mat-icon svgIcon="delete" matTooltip="Delete Statement" i18n-matTooltip></mat-icon>
     </button>
     <a *ngIf="actions.crm && statement.reviewStatus === 'pending'" mat-icon-button [routerLink]="['/c/o/dashboard/crm/waterfall', statement.waterfallId, 'statements', statement.id]" (click)="$event.stopPropagation()">
-      <mat-icon color="warn" svgIcon="update" matTooltip="A review is required"></mat-icon>
+      <mat-icon color="warn" svgIcon="update" matTooltip="A review is required" i18n-matTooltip></mat-icon>
     </a>
     <ng-container *ngIf="statement.status === 'draft'">
       <a *ngIf="actions.edit" mat-icon-button [routerLink]="['..', 'statement', statement.id, 'edit']">
-        <mat-icon svgIcon="edit" matTooltip="Edit Statement"></mat-icon>
+        <mat-icon svgIcon="edit" matTooltip="Edit Statement" i18n-matTooltip></mat-icon>
       </a>
     </ng-container>
         <button *ngIf="actions.deleteDraft && statement.status === 'draft'" mat-icon-button (click)="delete.emit(statement)">
-      <mat-icon svgIcon="delete" matTooltip="Delete Statement"></mat-icon>
+      <mat-icon svgIcon="delete" matTooltip="Delete Statement" i18n-matTooltip></mat-icon>
     </button>
     <ng-container *ngIf="statement.status === 'reported'">
       <button *ngIf="actions.download" mat-icon-button>
-        <mat-icon svgIcon="cloud_download" matTooltip="Download Statement" (click)="download(statement)"></mat-icon>
+        <mat-icon svgIcon="cloud_download" matTooltip="Download Statement" (click)="download(statement)" i18n-matTooltip></mat-icon>
       </button>
       <a *ngIf="actions.view" mat-icon-button [routerLink]="['..', 'statement', statement.id]">
-        <mat-icon svgIcon="visibility" matTooltip="View Statement"></mat-icon>
+        <mat-icon svgIcon="visibility" matTooltip="View Statement" i18n-matTooltip></mat-icon>
       </a>
       <button *ngIf="actions.share" mat-icon-button>
-        <mat-icon svgIcon="share" matTooltip="Share Statement" (click)="share(statement)"></mat-icon>
+        <mat-icon svgIcon="share" matTooltip="Share Statement" (click)="share(statement)" i18n-matTooltip></mat-icon>
       </button>
       <button *ngIf="actions.certify" mat-icon-button [disabled]="statement.hash.requested">
-        <mat-icon svgIcon="certify" [matTooltip]="statement.hash.requested ? 'Certification already asked' : 'Certify Document'" (click)="certify(statement)"></mat-icon>
+        <mat-icon svgIcon="certify" [matTooltip]="statement.hash.requested ? i18nStrings.certifAsked : i18nStrings.certifyDoc" (click)="certify(statement)"></mat-icon>
       </button>
       <ng-container *ngIf="!!statement.payments.rightholder && statement.payments.rightholder.status !== 'received' && (!statement.reviewStatus || statement.reviewStatus === 'accepted')">
         <button *ngIf="actions.payment" mat-icon-button [disabled]="!canBypassRules" (click)="payment(statement)">
-          <mat-icon color="primary" svgIcon="payment" [matTooltip]="canBypassRules ? 'Declare Payment' : 'Pending Payment'"></mat-icon>
+          <mat-icon color="primary" svgIcon="payment" [matTooltip]="canBypassRules ? i18nStrings.declarePayment : i18nStrings.pendingPayment"></mat-icon>
         </button>
       </ng-container>
       <ng-container *ngIf="statement.reviewStatus === 'pending'">
         <a *ngIf="actions.review" mat-icon-button [routerLink]="['..', 'statement', statement.id]">
-          <mat-icon color="warn" svgIcon="update" [matTooltip]="canBypassRules ? 'A review is required' : 'A review is pending'"></mat-icon>
+          <mat-icon color="warn" svgIcon="update" [matTooltip]="canBypassRules ? i18nStrings.reviewRequired : i18nStrings.reviewPending"></mat-icon>
         </a>
       </ng-container>
     </ng-container>

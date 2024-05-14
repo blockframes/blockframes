@@ -1,13 +1,17 @@
 import { Component, ChangeDetectionStrategy, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+
 // Material
 import { MatDialog } from '@angular/material/dialog';
+
 // Blockframes
 import { CookieDialogComponent } from '../cookie-dialog/cookie-dialog.component';
 import { GDPRService } from '../gdpr-service/gdpr.service'
 import { AuthService } from '@blockframes/auth/service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { APP } from '../../routes/utils';
+import { App } from '@blockframes/model';
 
 @Component({
   selector: 'cookie-banner',
@@ -23,12 +27,18 @@ export class CookieBannerComponent implements OnInit {
     intercom: new UntypedFormControl(true),
   });
 
+  private appFamily = this.app === 'waterfall' ? 'Blockframes' : 'Archipel';
+  public essentialCookies = $localize`Essential cookies are necessary for ${this.appFamily} products to function as intended.`;
+  public analyticsCookies = $localize`Analytical cookies help us to improve ${this.appFamily} products by collecting and reporting information on their usage.`;
+  public chatCookies = $localize`Chat cookies are used to allow the ${this.appFamily} team to communicate with its users through the chatbot tool.`;
+
   constructor(
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
     private gdpr: GDPRService,
     private authService: AuthService,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(APP) private app: App
   ) { }
 
   ngOnInit() {
