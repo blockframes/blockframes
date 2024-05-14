@@ -93,7 +93,7 @@
             >
               <mat-hint i18n>You'll find your Invitation Pass in your invitation email.</mat-hint>
             </password-input>
-            <button mat-mini-fab color="primary" i18n-matTooltip matTooltip="Contact us to get help" (click)="openIntercom()">?</button>
+            <button mat-mini-fab color="primary" matTooltip="Contact us to get help" (click)="openIntercom()" i18n-matTooltip >?</button>
           </div>
         </ng-container>
 
@@ -124,6 +124,7 @@
           [control]="form.get('confirm')"
           [errorStateMatcher]="passwordsMatcher"
           placeholder="New Password Confirmation"
+          i18n-placeholder
           label="Password Confirmation"
           i18n-label
           test-id="password-confirm"
