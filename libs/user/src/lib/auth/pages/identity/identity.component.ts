@@ -230,7 +230,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       org.appAccess[this.app][appAccess] = true;
       await this.orgService.addOrganization(org, this.app, this.publicUser);
 
-      this.snackBar.open($localize`Your User Account was successfully created. Please wait for our team to check your Company Information. `, 'close', { duration: 8000 });
+      this.snackBar.open($localize`Your User Account was successfully created. Please wait for our team to check your Company Information.`, 'close', { duration: 8000 });
       return this.router.navigate(['c/organization/create-congratulations']);
     }
   }
@@ -358,7 +358,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
     } else if (this.existingOrgId) {
       // User selected an existing org, make a request to be accepted and is redirected to waiting room
       await this.invitationService.request(this.existingOrgId, this.authService.profile).to('joinOrganization');
-      this.snackBar.open($localize`Your account have been created and request to join org sent ! `, 'close', { duration: 8000 });
+      this.snackBar.open($localize`Your account has been created and request to join org sent ! `, 'close', { duration: 8000 });
       return this.router.navigate(['c/organization/join-congratulations']);
     } else {
       // User decided to create his own org and is redirected to waiting room
