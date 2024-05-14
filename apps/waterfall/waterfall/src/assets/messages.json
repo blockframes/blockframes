@@ -1,6 +1,10 @@
 {
   "locale": "en-US",
   "translations": {
+    "7239323752519140752": "Sorry, we don't know how to display this file.",
+    "6281877243623735151": "Currently only PDF files are supported.",
+    "5087747292744381535": "Download Document",
+    "4338486615251853219": "No file found for this contract",
     "2557636838397827495": "My Movies",
     "9216548238264778039": "Add Title",
     "914828652303147085": "Add Movie",
@@ -462,7 +466,6 @@
     "7819314041543176992": "Close",
     "7948244662995995465": "Share Contract",
     "2577902235104301461": "Edit Contract",
-    "5087747292744381535": "Download Document",
     "5858191852151203699": "View Document",
     "897746787901929922": "Delete Contract",
     "1298466878186194894": "Computing...",

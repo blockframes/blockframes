@@ -1,6 +1,10 @@
 {
   "locale": "fr-FR",
   "translations": {
+    "7239323752519140752": "Désolé, nous ne savons pas comment afficher ce fichier.",
+    "6281877243623735151": "Seuls les fichiers au format PDF sont supportés.",
+    "5087747292744381535": "Télécharger le document",
+    "4338486615251853219": "Aucun fichier à afficher.",
     "2557636838397827495": "Mes films",
     "9216548238264778039": "Ajouter un titre",
     "914828652303147085": "Ajouter un film",
@@ -462,7 +466,6 @@
     "7819314041543176992": "Fermer",
     "7948244662995995465": "Partager le contrat",
     "2577902235104301461": "Editer le contrat",
-    "5087747292744381535": "Télécharger le document",
     "5858191852151203699": "Voir le document",
     "897746787901929922": "Supprimer le contrat",
     "1298466878186194894": "Calcul en cours...",
