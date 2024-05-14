@@ -162,7 +162,7 @@
             <ng-template colRef="cumulated" label="Cumulated" let-cumulated i18n-label>
               <price-per-currency [price]="cumulated"></price-per-currency>
             </ng-template>
-            <ng-template colRef="capped" label="Capped" let-capped>
+            <ng-template colRef="capped" label="Capped" let-capped i18n-label>
               {{ capped ? i18nStrings.yes : i18nStrings.no }}
             </ng-template>
           </bf-table>
@@ -192,7 +192,7 @@
               <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
             </ng-template>
             <ng-template colRef="capped" label="Capped" let-capped sort i18n-label>
-              {{ capped ? 'Yes' : 'No' }}
+              {{ capped ? i18nStrings.yes : i18nStrings.no }}
             </ng-template>
           </bf-table>
         </mat-expansion-panel>

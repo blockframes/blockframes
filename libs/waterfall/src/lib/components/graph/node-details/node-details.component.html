@@ -3,7 +3,13 @@
   <mat-tab label="Information" i18n-label>
     <section *ngIf="information$ | async as information">
       <ul>
-        <li><strong i18n>Total Organization Revenue :</strong> <price-per-currency [price]="information.org | formatPair" default="€ 0" i18n-default></price-per-currency></li>
+        <li><strong i18n>Total Organization Revenue :</strong> 
+          <price-per-currency [price]="information.org | formatPair" default="€ 0" i18n-default></price-per-currency>
+          <ng-container *ngIf="information.bonus"> 
+            <span class="penalty" *ngIf="information.bonus < 0"> (<span i18n>Penalty : </span><price-per-currency [price]="information.bonus | formatPair" default="€ 0" i18n-default></price-per-currency>)</span>
+            <span class="bonus" *ngIf="information.bonus > 0"> (<span i18n>Bonus : </span><price-per-currency [price]="information.bonus | formatPair" default="€ 0" i18n-default></price-per-currency>)</span>
+          </ng-container>
+        </li>
         <li><strong i18n>Receipt Share Revenue :</strong> <price-per-currency [price]="information.right | formatPair" default="€ 0" i18n-default></price-per-currency></li>
         <li *ngIf="information.expenses">
           <strong i18n>Expenses :</strong> <price-per-currency [price]="information.expenses | formatPair" default="€ 0" i18n-default></price-per-currency>

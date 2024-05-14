@@ -17,6 +17,7 @@ import { MatTabGroup } from '@angular/material/tabs';
 
 interface Information {
   org: number;
+  bonus?: number;
   right: number;
   expenses?: number;
   cappedExpenses?: number;
@@ -84,6 +85,7 @@ export class WaterfallGraphNodeDetailsComponent implements OnInit {
         const cappedExpenses = getExpensesValue(state.waterfall.state, expenseState);
 
         const data: Information = { org: orgRevenue, right: rightRevenue };
+        if (revenueMode === 'calculated') data.bonus = orgState.bonus;
 
         // Get last statement about this right
         const stateDate = new Date(state.waterfall.state.date);

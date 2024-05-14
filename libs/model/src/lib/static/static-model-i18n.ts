@@ -66,6 +66,11 @@ const documentPaths = {
   budget: 'Budget'
 } as const;
 
+const statementSection = {
+  grossReceipts: 'Recettes Brutes',
+  netReceipts: 'Recettes Nettes',
+} as const;
+
 export const staticModeli18n = {
   fr: {
     rightholderRoles,
@@ -75,6 +80,7 @@ export const staticModeli18n = {
     periods,
     statementType,
     statementStatus,
-    documentPaths
+    documentPaths,
+    statementSection
   }
 };

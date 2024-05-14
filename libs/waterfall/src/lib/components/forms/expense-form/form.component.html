@@ -3,50 +3,50 @@
   <div>
     <ng-container *ngIf="expenseType.cap.default > 0 else uncapped">
       <ng-container *ngIf="(realTimeExpenses$ | async) as realTimeExpenses">
-        <strong>Total capped expenses declared:</strong> 
+        <strong i18n>Total capped expenses declared:</strong> 
         <price-per-currency [convertTo]="mainCurrency" [price]="realTimeExpenses[expenseType.id]"></price-per-currency> 
-        <span [class]="realTimeExpenses[expenseType.id] | expenseTypeStatus: (expenseType.cap.default | formatPair: expenseType.currency)"> ( CAP <price-per-currency [price]="expenseType.cap.default | formatPair: expenseType.currency"></price-per-currency>)</span>
+        <span i18n [class]="realTimeExpenses[expenseType.id] | expenseTypeStatus: (expenseType.cap.default | formatPair: expenseType.currency)"> ( CAP <price-per-currency [price]="expenseType.cap.default | formatPair: expenseType.currency"></price-per-currency>)</span>
       </ng-container>
     </ng-container>
     <ng-template #uncapped>
-      <p class="mat-body-1">Uncapped</p>
+      <p class="mat-body-1" i18n>Uncapped</p>
     </ng-template>
   </div>
   <bf-form-table *ngIf="form.getExpenseType(expenseType.id)" [columns]="expenseColumns" [form]="form.getExpenseType(expenseType.id)" showEmptyForm="false" [defaultFormValue]="defaultExpenseValue(expenseType)" (itemSaved)="form.markAsDirty()">
     <!-- Columns -->
-    <ng-template colRef="" label="Amount" let-item>
+    <ng-template colRef="" label="Amount" let-item i18n-label>
       <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
     </ng-template>
-    <ng-template colRef="nature" label="Expenses name" let-nature>
+    <ng-template colRef="nature" label="Expenses name" let-nature i18n-label>
       {{ nature }}
     </ng-template>
-    <ng-template colRef="capped" label="Capped" let-capped>
-      {{ capped ? 'Yes' : 'No' }}
+    <ng-template colRef="capped" label="Capped" let-capped i18n-label>
+      {{ capped ? i18nStrings.yes : i18nStrings.no }}
     </ng-template>
     <!-- Local Form -->
     <ng-template formView let-expenseForm>
       <form [formGroup]="expenseForm" class="group">
         <mat-form-field appearance="outline">
-          <mat-label>Expenses name</mat-label>
+          <mat-label i18n>Expenses name</mat-label>
           <input matInput [formControl]="expenseForm.get('nature')" required/>
         </mat-form-field>
 
         <static-select [control]="expenseForm.get('currency')" [only]="['USD', 'EUR']" required scope="movieCurrencies">
-          <mat-label>Currency</mat-label>
+          <mat-label i18n>Currency</mat-label>
         </static-select>
 
         <mat-form-field appearance="outline">
-          <mat-label>Amount</mat-label>
+          <mat-label i18n>Amount</mat-label>
           <input type="number" matInput [formControl]="expenseForm.get('price')" required/>
           <mat-icon matPrefix *ngIf="expenseForm.get('currency').value" [svgIcon]="expenseForm.get('currency').value"></mat-icon>
         </mat-form-field>
 
-        <mat-slide-toggle *ngIf="expenseType.cap.default > 0" [formControl]="expenseForm.get('capped')" color="primary">Is capped?</mat-slide-toggle>
+        <mat-slide-toggle *ngIf="expenseType.cap.default > 0" [formControl]="expenseForm.get('capped')" color="primary" i18n>Is capped?</mat-slide-toggle>
       </form>
 
     </ng-template>
 
-    <ng-template saveButtonText>Save Expense</ng-template>
-    <ng-template addButtonText>Add Expense</ng-template>
+    <ng-template saveButtonText i18n>Save Expense</ng-template>
+    <ng-template addButtonText i18n>Add Expense</ng-template>
   </bf-form-table>
 </section>
