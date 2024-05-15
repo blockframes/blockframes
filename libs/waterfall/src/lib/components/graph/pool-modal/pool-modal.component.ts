@@ -23,6 +23,10 @@ export class WaterfallPoolModalComponent {
 
   poolRightsControl = new FormControl<string[]>([]);
   poolNameControl = new FormControl('');
+  public i18nStrings = {
+    update: $localize`Update`,
+    create: $localize`Create`,
+  };
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: PoolModalData,

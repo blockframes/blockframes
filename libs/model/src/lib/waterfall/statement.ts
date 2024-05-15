@@ -1,7 +1,7 @@
 import { DocumentMeta } from '../meta';
 import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups, statementsRolesMapping, NegotiationStatus, RightType } from '../static';
 import { Duration, createDuration } from '../terms';
-import { PricePerCurrency, convertCurrenciesTo, getTotalPerCurrency, sortByDate, sum, toLabel } from '../utils';
+import { PricePerCurrency, SupportedLanguages, convertCurrenciesTo, getTotalPerCurrency, sortByDate, sum, toLabel } from '../utils';
 import { TitleState, TransferState } from './state';
 import { Version, Waterfall, WaterfallContract, WaterfallRightholder, WaterfallSource, getIncomesSources } from './waterfall';
 import { Right, RightOverride, createRightOverride, getChilds, getRightCondition, skipGroups } from './right';
@@ -795,6 +795,7 @@ export interface DistributorExpenses {
  * @param _history 
  * @param rights 
  * @param state 
+ * @param lang
  * @param displayedRightTypes
  * @returns 
  */
@@ -807,6 +808,7 @@ export function getSourcesBreakdown(
   _history: (Statement & { number: number })[],
   rights: Right[],
   state: TitleState,
+  lang: SupportedLanguages = 'en',
   displayedRightTypes: RightType[] = []): SourcesBreakdown[] {
   const indexOfCurrent = _history.findIndex(s => s.id === current.id || s.id === current.duplicatedFrom);
   _history[indexOfCurrent] = { ...current, number: _history[indexOfCurrent].number };
@@ -824,7 +826,7 @@ export function getSourcesBreakdown(
     const currentSourcePayments = current.payments.income.filter(income => incomes.find(i => i.id === income.incomeId).sourceId === source.id);
     const cumulatedSourcePayments = history.map(s => s.payments.income).flat().filter(income => incomes.find(i => i.id === income.incomeId).sourceId === source.id);
     rows.push({
-      section: 'Gross Receipts',
+      section: `${toLabel('grossReceipts', 'statementSection', undefined, undefined, lang)}`,
       previous: getTotalPerCurrency(previousSourcePayments),
       current: getTotalPerCurrency(currentSourcePayments),
       cumulated: getTotalPerCurrency(cumulatedSourcePayments)
@@ -844,7 +846,7 @@ export function getSourcesBreakdown(
     const expensesToBeRecouped: { price: number, currency: MovieCurrency }[] = [];
     const mgStatus: { investments: number, stillToBeRecouped: number } = { investments: 0, stillToBeRecouped: 0 };
     for (const right of rights) {
-      const section = right.type ? `${right.name} (${toLabel(right.type, 'rightTypes')} - ${right.percent}%)` : `${right.name} (${right.percent}%)`;
+      const section = right.type ? `${right.name} (${toLabel(right.type, 'rightTypes', undefined, undefined, lang)} - ${right.percent}%)` : `${right.name} (${right.percent}%)`;
       const previousRightPayment = previous.map(s => s.payments.right).flat().filter(p => p.to === right.id);
       previousSum.push(...previousRightPayment.map(r => ({ ...r, price: -r.price })));
       const currentRightPayment = current.payments.right.filter(p => p.to === right.id);
@@ -880,7 +882,7 @@ export function getSourcesBreakdown(
     // Net receipts
     const currentNet = getTotalPerCurrency([...currentSourcePayments, ...currentSum]);
     rows.push({
-      section: `${source.name} (Net Receipts)`,
+      section: `${source.name} (${toLabel('netReceipts', 'statementSection', undefined, undefined, lang)})`,
       type: 'net',
       previous: getTotalPerCurrency([...previousSourcePayments, ...previousSum]),
       current: currentNet,
@@ -907,6 +909,7 @@ export function getSourcesBreakdown(
  * @param rights 
  * @param state 
  * @param _declaredSources used to skip rights belonging to sender or receiver but that is not linked to current declared sources
+ * @param lang 
  * @param displayedRightTypes
  * @returns 
  */
@@ -919,6 +922,7 @@ export function getRightsBreakdown(
   rights: Right[],
   state: TitleState,
   _declaredSources: WaterfallSource[],
+  lang: SupportedLanguages = 'en',
   displayedRightTypes: RightType[] = []): RightsBreakdown[] {
   const declaredSources = skipSourcesWithAllHiddenIncomes(current, _declaredSources, incomes);
 
@@ -986,7 +990,7 @@ export function getRightsBreakdown(
     }, {});
 
     return {
-      name: toLabel(type, 'rightTypes'),
+      name: toLabel(type, 'rightTypes', undefined, undefined, lang),
       rows,
       total,
       stillToBeRecouped: expensesToBeRecouped.length ? getTotalPerCurrency(expensesToBeRecouped) : undefined,

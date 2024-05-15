@@ -12,7 +12,6 @@ import {
   RightholderRole,
   Statement,
   StatementType,
-  StatementTypeValue,
   WaterfallContract,
   WaterfallRightholder,
   canCreateStatement,
@@ -27,7 +26,6 @@ import {
   preferredLanguage,
   rightholderKey,
   sortStatements,
-  statementType,
   statementsRolesMapping,
   toLabel
 } from '@blockframes/model';
@@ -52,7 +50,7 @@ interface StatementChipConfig {
   divider: boolean;
   selected: boolean;
   key: StatementType;
-  value: StatementTypeValue | 'Financiers / Co-Producers / Authors...';
+  value: string;
 }
 
 function initStatementChips(statements: Statement[]): StatementChipConfig[] {
@@ -61,7 +59,7 @@ function initStatementChips(statements: Statement[]): StatementChipConfig[] {
     {
       selected: false,
       key,
-      value: key === 'producer' ? 'Financiers / Co-Producers / Authors...' : statementType[key], // TODO #9699  lang
+      value: key === 'producer' ? $localize`Financiers / Co-Producers / Authors...` : toLabel(key, 'statementType', undefined, undefined, preferredLanguage()),
       ...value,
       // producer statements are visible only if there are reported statements from distributors or direct sales
       visible: key === 'producer' ? hasDistribOrDirectSalesReportedStatements : value.visible,

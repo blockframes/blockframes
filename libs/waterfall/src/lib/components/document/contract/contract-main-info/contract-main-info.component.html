@@ -1,24 +1,24 @@
 <article>
   <mat-icon svgIcon="document"></mat-icon>
-  <h2>{{contract.type | toLabel: 'rightholderRoles'}} Contract <ng-container *ngIf="contract.name"> : {{ contract.name }}</ng-container></h2>
+  <h2 i18n>{{contract.type | toLabel: 'rightholderRoles'}} Contract <ng-container *ngIf="contract.name"> : {{ contract.name }}</ng-container></h2>
 </article>
 <div>
   <section>
     <span>
       <mat-icon svgIcon="movie"></mat-icon>
-      <span matLine><strong>Movie:</strong> {{ movie.title.international }}</span>
+      <span matLine><strong i18n>Movie:</strong> {{ movie.title.international }}</span>
     </span>
     <span>
       <mat-icon [svgIcon]="contract.currency"></mat-icon>
-      <span matLine><strong>Price: </strong><price-per-currency [price]="contract | contractPrice"></price-per-currency></span>
+      <span matLine><strong i18n>Price: </strong><price-per-currency [price]="contract | contractPrice"></price-per-currency></span>
     </span>
     <span>
       <mat-icon svgIcon="sellers"></mat-icon>
-      <span matLine><strong>Licensor: </strong>{{ contract.sellerId | rightholderName: waterfall }}</span>
+      <span matLine><strong i18n>Licensor: </strong>{{ contract.sellerId | rightholderName: waterfall }}</span>
     </span>
     <span>
       <mat-icon svgIcon="calendar_today"></mat-icon>
-      <span matLine><strong>Covered Period: </strong>{{ contract.duration.from | date }} -  {{ contract.duration.to | date }}</span>
+      <span matLine><strong i18n>Covered Period: </strong>{{ contract.duration.from | date }} -  {{ contract.duration.to | date }}</span>
     </span>
   </section>
   <section>
@@ -26,28 +26,28 @@
     <span></span>
     <span>
       <mat-icon svgIcon="sellers"></mat-icon>
-      <span matLine><strong>Licensee: </strong>{{ contract.buyerId | rightholderName: waterfall }}</span>
+      <span matLine><strong i18n>Licensee: </strong>{{ contract.buyerId | rightholderName: waterfall }}</span>
     </span>
     <span>
       <mat-icon svgIcon="contract"></mat-icon>
-      <span matLine><strong>Signature date: </strong>{{ contract.signatureDate | date }}</span>
+      <span matLine><strong i18n>Signature date: </strong>{{ contract.signatureDate | date }}</span>
     </span>
   </section>
 </div>
 <ng-container *ngIf="contract.terms as terms">
   <div *ngIf="terms.length">
     <section>
-      <span matLine><strong>Rights assigned : </strong></span>
+      <span matLine><strong i18n>Rights assigned : </strong></span>
       <span class="group-label" *ngFor="let term of terms" (click)="openDetails(term.medias, 'medias')">
         <mat-icon svgIcon="play_arrow"></mat-icon>
-        <span matLine><strong>Medias: </strong>{{ term.medias | toGroupLabel : 'medias' : 'All Medias' | join | maxLength : 30 }}</span>
+        <span matLine><strong i18n>Medias: </strong>{{ term.medias | toGroupLabel : 'medias' : 'All Medias' | join | maxLength : 30 }}</span>
       </span>
     </section>
     <section>
       <span></span>
       <span class="group-label" *ngFor="let term of terms" (click)="openDetails(term.territories, 'territories')">
         <mat-icon svgIcon="world"></mat-icon>
-        <span matLine><strong>Territories: </strong>{{ term.territories | toGroupLabel : 'territories' : 'World' | join  | maxLength : 30 }}</span>
+        <span matLine><strong i18n>Territories: </strong>{{ term.territories | toGroupLabel : 'territories' : 'World' | join  | maxLength : 30 }}</span>
       </span>
     </section>
   </div>

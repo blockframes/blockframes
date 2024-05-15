@@ -41,7 +41,7 @@ export class DocumentShareComponent implements OnInit {
     this.document.sharedWith = this.control.value;
 
     await this.documentService.update<WaterfallDocument>(this.document, { params: { waterfallId } });
-    this.snackBar.open('Document shared', 'close', { duration: 3000 });
+    this.snackBar.open($localize`Document shared`, 'close', { duration: 3000 });
     this.dialogRef.close(true);
   }
 

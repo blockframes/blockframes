@@ -27,6 +27,7 @@ import {
   isDistributorStatement,
   isProducerStatement,
   isStandaloneVersion,
+  preferredLanguage,
   sortStatements,
   toLabel
 } from '@blockframes/model';
@@ -72,6 +73,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
   public form: StatementForm;
   public canBypassRules = this.shell.canBypassRules;
   private sub: Subscription;
+  private lang = preferredLanguage();
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
@@ -272,6 +274,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
         history,
         _rights,
         simulation.waterfall.state,
+        this.lang,
         displayedRightTypes
       );
 
@@ -284,6 +287,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
         _rights,
         simulation.waterfall.state,
         declaredSources,
+        this.lang,
         displayedRightTypes
       );
 
@@ -374,6 +378,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
         history,
         _rights,
         simulation.waterfall.state,
+        this.lang,
         displayedRightTypes
       );
 
@@ -386,6 +391,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
         _rights,
         simulation.waterfall.state,
         declaredSources,
+        this.lang,
         displayedRightTypes
       );
 

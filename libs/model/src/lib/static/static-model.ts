@@ -1815,6 +1815,18 @@ export const statementParty = {
   directSales: 'Direct Sales',
 } as const;
 
+export const statementSection = {
+  grossReceipts: 'Gross Receipts',
+  netReceipts: 'Net Receipts',
+} as const;
+
+export const documentPaths = {
+  documents: 'Documents',
+  contracts: 'Contracts',
+  financingPlan: 'Financing Plan',
+  budget: 'Budget'
+} as const;
+
 /**
  * https://docs.google.com/spreadsheets/d/1z4FFNABgDyRGgD5AQZf-ebWbA_m-7hlueFMCVUuk2fI/edit#gid=279324582
  */
@@ -1934,7 +1946,9 @@ export const staticModel = {
   statementType,
   statementParty,
   conditionOwnerLabels,
-  periods
+  periods,
+  documentPaths,
+  statementSection
 };
 
 export const emailErrorCode = ['E01-unauthorized', 'E02-general-error', 'E03-missing-api-key', 'E04-no-template-available'] as const;

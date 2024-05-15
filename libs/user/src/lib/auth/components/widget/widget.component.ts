@@ -4,7 +4,15 @@ import { ThemeService } from '@blockframes/ui/theme';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { OrganizationService } from '@blockframes/organization/service';
 import { APP } from '@blockframes/utils/routes/utils';
-import { App, SupportedLanguages, getISO3166TerritoryFromSlug, getUserLocaleId, preferredLanguage, supportedLanguages } from '@blockframes/model';
+import {
+  App,
+  SupportedLanguages,
+  getISO3166TerritoryFromSlug,
+  getUserLocaleId,
+  preferredLanguage,
+  supportedLanguages,
+  supportedLocaleIds
+} from '@blockframes/model';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
@@ -44,19 +52,18 @@ export class AuthWidgetComponent implements OnInit, OnDestroy {
       const iso3166 = territory ? getISO3166TerritoryFromSlug(territory) : undefined;
 
       // save default language in user settings
+      /** @dev i18n is only on waterfall app for now #9699 */
       const user = this.authService.profile;
-      if (!user.settings?.preferredLanguage && this.defaultLang) {
-        const defaultLocaleId = getUserLocaleId();
+      if (!user.settings?.preferredLanguage) {
+        const previousLocaleId = getUserLocaleId();
         const userLocaleId = await this.authService.updatePreferredLanguage(this.defaultLang, iso3166?.iso_a2, false);
-        if (defaultLocaleId !== userLocaleId) window.location.reload();
+        if (previousLocaleId !== userLocaleId) return window.location.reload();
       } else if (user.settings?.preferredLanguage) {
-        const dbSettings = user.settings.preferredLanguage;
-        const localSettings = `${localStorage.getItem('locale.lang')}-${localStorage.getItem('locale.isoA2')}`
-        if (localSettings !== `${dbSettings.language}-${dbSettings.isoA2}`) {
-          localStorage.setItem('locale.lang', dbSettings.language);
-          localStorage.setItem('locale.isoA2', dbSettings.isoA2);
-          window.location.reload();
-        }
+        const { language, isoA2 } = user.settings.preferredLanguage;
+        const dbLocaleId = `${language}-${isoA2}`;
+        if (!supportedLocaleIds[dbLocaleId]) return this.authService.updatePreferredLanguage(this.defaultLang, iso3166?.iso_a2);
+        const localStorageSettings = `${localStorage.getItem('locale.lang')}-${localStorage.getItem('locale.isoA2')}`;
+        if (localStorageSettings !== dbLocaleId) return this.authService.updatePreferredLanguage(this.defaultLang, iso3166?.iso_a2);
       }
 
       // update user language

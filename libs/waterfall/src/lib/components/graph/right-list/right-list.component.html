@@ -2,7 +2,7 @@
 <section class="pool">
   <button mat-button color="primary" [disabled]="selected.size === 0 || !canCreatePool" (click)="poolModal()">
     <mat-icon svgIcon="add"></mat-icon>
-    <span>Group Right Share</span>
+    <span i18n>Group Right Share</span>
   </button>
 </section>
 
@@ -24,7 +24,7 @@
     [indeterminate]="selected.size !== 0 && selected.size !== rights.length"
   ></mat-checkbox>
   <mat-form-field>
-    <input matInput placeholder="Specify Right Share or Group" [formControl]="searchControl" />
+    <input matInput placeholder="Specify Right Share or Group" [formControl]="searchControl" i18n-placeholder/>
   </mat-form-field>
 </section>
 
@@ -52,7 +52,7 @@
         mat-icon-button
         [disabled]="nonEditableNodeIds.includes(right.id)"
         (click)="edit(right.id)"
-        [matTooltip]="right.type === 'vertical' || right.type === 'horizontal' ? 'Edit Group' : 'Edit Receipt Share'"
+        [matTooltip]="right.type === 'vertical' || right.type === 'horizontal' ? i18nStrings.editGroup : i18nStrings.editShare"
       >
         <mat-icon svgIcon="edit"></mat-icon>
       </button>
@@ -62,6 +62,7 @@
         [disabled]="nonEditableNodeIds.includes(right.id)"
         (click)="remove(right.id)"
         matTooltip="Delete Receipt Share"
+        i18n-matTooltip
       >
         <mat-icon svgIcon="delete"></mat-icon>
       </button>
@@ -90,7 +91,7 @@
             mat-icon-button
             [disabled]="nonEditableNodeIds.includes(member.id)"
             (click)="edit(member.id)"
-            [matTooltip]="member.type === 'vertical' || member.type === 'horizontal' ? 'Edit Group' : 'Edit Receipt Share'"
+            [matTooltip]="member.type === 'vertical' || member.type === 'horizontal' ? i18nStrings.editGroup : i18nStrings.editShare"
           >
             <mat-icon svgIcon="edit"></mat-icon>
           </button>
@@ -100,6 +101,7 @@
             [disabled]="nonEditableNodeIds.includes(member.id)"
             (click)="remove(member.id)"
             matTooltip="Delete Receipt Share"
+            i18n-matTooltip
           >
             <mat-icon svgIcon="delete"></mat-icon>
           </button>
@@ -123,10 +125,10 @@
                   </mat-chip>
                 </mat-chip-list>
               </ng-container>
-              <button *ngIf="!readonly" mat-icon-button matTooltip="Edit Receipt Share" (click)="edit(subMember.id)" [disabled]="nonEditableNodeIds.includes(subMember.id)">
+              <button *ngIf="!readonly" mat-icon-button matTooltip="Edit Receipt Share" (click)="edit(subMember.id)" [disabled]="nonEditableNodeIds.includes(subMember.id)" i18n-matTooltip>
                 <mat-icon svgIcon="edit"></mat-icon>
               </button>
-              <button *ngIf="!readonly" mat-icon-button matTooltip="Delete Receipt Share" (click)="remove(subMember.id)" [disabled]="nonEditableNodeIds.includes(subMember.id)">
+              <button *ngIf="!readonly" mat-icon-button matTooltip="Delete Receipt Share" (click)="remove(subMember.id)" [disabled]="nonEditableNodeIds.includes(subMember.id)" i18n-matTooltip>
                 <mat-icon svgIcon="delete"></mat-icon>
               </button>
             </section>
@@ -153,10 +155,10 @@
               </mat-chip>
             </mat-chip-list>
           </ng-container>
-          <button *ngIf="!readonly" mat-icon-button matTooltip="Edit Receipt Share" (click)="edit(member.id)" [disabled]="nonEditableNodeIds.includes(member.id)">
+          <button *ngIf="!readonly" mat-icon-button matTooltip="Edit Receipt Share" (click)="edit(member.id)" [disabled]="nonEditableNodeIds.includes(member.id)" i18n-matTooltip>
             <mat-icon svgIcon="edit"></mat-icon>
           </button>
-          <button *ngIf="!readonly" mat-icon-button matTooltip="Delete Receipt Share" (click)="remove(member.id)" [disabled]="nonEditableNodeIds.includes(member.id)">
+          <button *ngIf="!readonly" mat-icon-button matTooltip="Delete Receipt Share" (click)="remove(member.id)" [disabled]="nonEditableNodeIds.includes(member.id)" i18n-matTooltip>
             <mat-icon svgIcon="delete"></mat-icon>
           </button>
         </section>
