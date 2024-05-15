@@ -1,5 +1,6 @@
 
-<h1>{{ createMode ? 'Create' : 'Edit' }} Waterfall for {{ shell.movie.title.international }}</h1> <!-- TODO #9699 i18n -->
+<h1 *ngIf="createMode" i18n>Create Waterfall for {{ shell.movie.title.international }}</h1>
+<h1 *ngIf="!createMode" i18n>Edit Waterfall for {{ shell.movie.title.international }}</h1>
 
 <mat-stepper #stepper (click)="onStepClicked($event)" linear>
   <!-- override default stepper icons for the "edit" & "done" steps -->
@@ -99,9 +100,10 @@
             mat-flat-button 
             color="primary"
             [disabled]="(shell.canInitWaterfall$ | async) === false"
-            [matTooltip]="(shell.canInitWaterfall$ | async) === false  ? 'Missing data to publish Waterfall. Make sure to have Contracts and Receipt Shares' : ''"
-            (click)="publishWaterfall()"> <!-- TODO #9699 tooltip & span-->
-            <span>{{ createMode ? 'Publish' : 'Update' }} Waterfall</span>
+            [matTooltip]="(shell.canInitWaterfall$ | async) === false  ? missingData : ''"
+            (click)="publishWaterfall()">
+            <span *ngIf="createMode" i18n>Publish Waterfall</span>
+            <span *ngIf="!createMode" i18n>Update Waterfall</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </button>
         </section>

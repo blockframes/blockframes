@@ -48,16 +48,16 @@
         <header>
           <mat-icon svgIcon="document"></mat-icon>
           <h2 i18n>{{ selected | toLabel: 'rightholderRoles' : true }} Contract</h2>
-          <button *ngIf="canUseAI()" color="warn" mat-icon-button [disabled]="computing$ | async" matTooltip="Ask AI to fill contract information" (click)="askAI()">
+          <button *ngIf="canUseAI()" color="warn" mat-icon-button [disabled]="computing$ | async" matTooltip="Ask AI to fill contract information" (click)="askAI()" i18n-matTooltip>
             <mat-icon svgIcon="ai"></mat-icon>
           </button>
-          <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? 'Shrink' : 'Enlarge'">
+          <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? i18nStrings.shrink : i18nStrings.enlarge">
             <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
           </button>
-          <button *ngIf="shell.canBypassRules" mat-icon-button matTooltip="Save changes" (click)="save(waterfall, documents)">
+          <button *ngIf="shell.canBypassRules" mat-icon-button matTooltip="Save changes" (click)="save(waterfall, documents)" i18n-matTooltip>
             <mat-icon svgIcon="save"></mat-icon>
           </button>
-          <button mat-icon-button matTooltip="Close" (click)="close()">
+          <button mat-icon-button matTooltip="Close" (click)="close()" i18n-matTooltip>
             <mat-icon svgIcon="close"></mat-icon>
           </button>
         </header>
@@ -70,12 +70,12 @@
             <!-- <p class="amendment">1 amendment - 30/06/2023</p> -->
 
             <ng-container *ngIf="organizations$ | async as organizations">
-              <button mat-icon-button *ngIf="shell.canBypassRules" matTooltip="Share Contract" (click)="share(contract.id, waterfall.id, organizations)">
+              <button mat-icon-button *ngIf="shell.canBypassRules" matTooltip="Share Contract" (click)="share(contract.id, waterfall.id, organizations)" i18n-matTooltip>
                 <mat-icon svgIcon="person_add"></mat-icon>
               </button>
             </ng-container>
   
-            <button mat-icon-button *ngIf="shell.canBypassRules" matTooltip="Edit Contract" (click)="edit(contract, waterfall)">
+            <button mat-icon-button *ngIf="shell.canBypassRules" matTooltip="Edit Contract" (click)="edit(contract, waterfall)" i18n-matTooltip>
               <mat-icon svgIcon="edit"></mat-icon>
             </button>
             <a mat-icon-button *ngIf="contract.id | getFile: waterfall as file" 
@@ -86,7 +86,7 @@
             >
               <mat-icon svgIcon="cloud_download"></mat-icon>
             </a>
-            <a mat-icon-button [routerLink]="['..', 'document', contract.id]" target="_blank" matTooltip="View Document">
+            <a mat-icon-button [routerLink]="['..', 'document', contract.id]" target="_blank" matTooltip="View Document" i18n-matTooltip>
               <mat-icon svgIcon="visibility"></mat-icon>
             </a>
             <!-- TODO #9436 hidden for now -->

@@ -16,7 +16,6 @@
     "@sendgrid/eventwebhook": "^7.4.5",
     "@sentry/browser": "^7.16.0",
     "@sentry/node": "^7.16.0",
-    "@types/date-fns": "^2.6.0",
     "@types/sendgrid": "^4.3.0",
     "algoliasearch": "^4.13.0",
     "core-js": "^3.21.1",

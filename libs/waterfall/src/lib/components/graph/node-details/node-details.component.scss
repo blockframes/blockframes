@@ -1,0 +1,17 @@
+h3 {
+  color: var(--foreground-text);
+  padding: 16px 16px 0 16px;
+}
+
+section {
+  padding: 12px;
+}
+
+li {
+  span.bonus {
+    color: green;
+  }
+  span.penalty {
+    color: var(--warn);
+  }
+}

@@ -282,7 +282,7 @@ export function toTargetValue(state: TitleState, target: TargetValue) {
   }
 }
 
-function getExpensesValue(state: TitleState, expenses: ExpenseState[]) {
+export function getExpensesValue(state: TitleState, expenses: ExpenseState[]) {
   const expenseTypes = Object.values(state.expenseTypes).filter(e => expenses.some(o => o.typeId === e.id));
 
   const expensesByType = expenseTypes.map(t => {

@@ -14,6 +14,7 @@ export class ItemComponent {
 
   @Input() notification: Notification;
   public xs$ = this.breakpointsService.xs;
+  public defaultActionText = $localize`More Details`;
 
   constructor(private service: NotificationService, private breakpointsService: BreakpointsService) { }
 

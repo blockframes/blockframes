@@ -138,6 +138,14 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
   private statementDuplicates: Statement[] = [];
   private readonly = canOnlyReadStatements(this.shell.currentRightholder, this.shell.canBypassRules);
   private devMode = false;
+  public i18nStrings = {
+    cannotEdit: $localize`This cannot be edited.`,
+    changeIncome: $localize`Change Income value`,
+    changeExpense: $localize`Change Expense value`,
+    changeCurrent: $localize`Change current value`,
+    yes: $localize`Yes`,
+    no: $localize`No`
+  };
 
   private sources$ = combineLatest([this.incomeIds$, this.shell.incomes$, this.shell.rights$, this.shell.simulation$]).pipe(
     map(([incomeIds, incomes, rights, simulation]) => getStatementSources({ ...this.statement, incomeIds }, this.waterfall.sources, incomes, rights, simulation.waterfall.state)),
@@ -506,7 +514,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
 
           // Refresh simulation
           await this.shell.simulateWaterfall();
-          this.snackbar.open('changes applied', 'close', { duration: 5000 });
+          this.snackbar.open($localize`changes applied`, 'close', { duration: 5000 });
         }
       })
     });
@@ -524,7 +532,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
 
           // Refresh simulation
           await this.shell.simulateWaterfall();
-          this.snackbar.open('changes applied', 'close', { duration: 5000 });
+          this.snackbar.open($localize`changes applied`, 'close', { duration: 5000 });
         }
       })
     });
@@ -542,7 +550,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
 
           // Refresh simulation
           await this.shell.simulateWaterfall();
-          this.snackbar.open('changes applied', 'close', { duration: 5000 });
+          this.snackbar.open($localize`changes applied`, 'close', { duration: 5000 });
         }
       })
     });

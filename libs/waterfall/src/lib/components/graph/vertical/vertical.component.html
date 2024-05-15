@@ -10,6 +10,7 @@
         [selected]="selected === member.id || selected === '*'"
         (handleSelect)="select(member.id)"
         monetizationLabel='Revenue'
+        i18n-monetizationLabel
       ></waterfall-graph-right>
     </ng-container>
     <ng-template #level>
@@ -28,10 +29,10 @@
   <price-per-currency class="amount" [price]="amount$ | async | formatPair" default="0€"></price-per-currency>
 
   <ng-container *ngIf="selected === '*' && !nonEditableNodeIds.includes(vertical.id)">
-    <button mat-mini-fab color="primary" class="right" matTooltip="Add new Receipt Share" (click)="handleAddSibling($event)">
+    <button mat-mini-fab color="primary" class="right" matTooltip="Add new Receipt Share" (click)="handleAddSibling($event)" i18n-matTooltip>
       <mat-icon svgIcon="add"></mat-icon>
     </button>
-    <button *ngIf="vertical | canAddChild : group : nonEditableNodeIds" mat-mini-fab color="primary" class="bottom" matTooltip="Add new Receipt Share" (click)="handleAddChild($event)">
+    <button *ngIf="vertical | canAddChild : group : nonEditableNodeIds" mat-mini-fab color="primary" class="bottom" matTooltip="Add new Receipt Share" (click)="handleAddChild($event)" i18n-matTooltip>
       <mat-icon svgIcon="add"></mat-icon>
     </button>
   </ng-container>

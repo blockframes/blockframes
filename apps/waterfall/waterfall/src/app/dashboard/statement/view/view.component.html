@@ -7,15 +7,16 @@
   <footer *ngIf="statement.status === 'draft'">
     <a mat-flat-button routerLink="edit" *ngIf="statement.type !== 'producer'">
       <mat-icon svgIcon="arrow_back"></mat-icon>
-      <span>Back</span>
+      <span i18n>Back</span>
     </a>
     <button mat-flat-button 
       color="primary"
       [disabled]="form.invalid"
       (click)="report(statement)"
       matTooltip="Report Statement"
+      i18n-matTooltip
     >
-      <span>Report Statement</span>
+      <span i18n>Report Statement</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>
   </footer>
@@ -25,9 +26,10 @@
       (click)="save(statement)"
       [disabled]="form.invalid"
       matTooltip="Save & Come back later"
+      i18n-matTooltip
     >
       <mat-icon svgIcon="save"></mat-icon>
-      <span>Save & Come back later</span>
+      <span i18n>Save & Come back later</span>
     </button>
   </footer>
 
@@ -36,16 +38,18 @@
       color="warn"
       (click)="reviewStatement(statement, 'declined')"
       matTooltip="Mark Statement as reviewed"
+      i18n-matTooltip
     >
-      <span>Reject Statement</span>
+      <span i18n>Reject Statement</span>
       <mat-icon svgIcon="refuse"></mat-icon>
     </button>
     <button mat-flat-button 
       color="primary"
       (click)="reviewStatement(statement, 'accepted')"
       matTooltip="Mark Statement as reviewed"
+      i18n-matTooltip
     >
-      <span>Approve Statement</span>
+      <span i18n>Approve Statement</span>
       <mat-icon svgIcon="update"></mat-icon>
     </button>
   </footer>

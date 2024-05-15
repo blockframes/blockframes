@@ -4,6 +4,6 @@
   </article>
   <price-per-currency *ngIf="price[mainCurrency] > 0 else default" [price]="price"></price-per-currency>
   <ng-template #default>
-    <span class="default">No revenue declared yet</span>
+    <span class="default" i18n>No revenue declared yet</span>
   </ng-template>
 </section>

@@ -1815,6 +1815,18 @@ export const statementParty = {
   directSales: 'Direct Sales',
 } as const;
 
+export const statementSection = {
+  grossReceipts: 'Gross Receipts',
+  netReceipts: 'Net Receipts',
+} as const;
+
+export const documentPaths = {
+  documents: 'Documents',
+  contracts: 'Contracts',
+  financingPlan: 'Financing Plan',
+  budget: 'Budget'
+} as const;
+
 /**
  * https://docs.google.com/spreadsheets/d/1z4FFNABgDyRGgD5AQZf-ebWbA_m-7hlueFMCVUuk2fI/edit#gid=279324582
  */
@@ -1864,6 +1876,13 @@ export const movieSearchableElements = {
   'title.original': 'Original Title',
   directors: 'Director',
   keywords: 'Keywords',
+} as const;
+
+export const periods = {
+  days: 'Days',
+  weeks: 'Weeks',
+  months: 'Months',
+  years: 'Years',
 } as const;
 
 export type MovieSearchableElements = keyof typeof movieSearchableElements;
@@ -1926,7 +1945,10 @@ export const staticModel = {
   amortizationStatus,
   statementType,
   statementParty,
-  conditionOwnerLabels
+  conditionOwnerLabels,
+  periods,
+  documentPaths,
+  statementSection
 };
 
 export const emailErrorCode = ['E01-unauthorized', 'E02-general-error', 'E03-missing-api-key', 'E04-no-template-available'] as const;

@@ -14,6 +14,7 @@ import {
   getSourcesBreakdown,
   getStatementRights,
   getStatementSources,
+  preferredLanguage,
   skipSourcesWithAllHiddenIncomes,
   sortStatements
 } from '@blockframes/model';
@@ -39,6 +40,7 @@ export class StatementDistributorSummaryComponent {
   @Input() public statement: Statement;
   private readonly = canOnlyReadStatements(this.shell.currentRightholder, this.shell.canBypassRules);
   private devMode = false;
+  private lang = preferredLanguage();
 
   private sources$ = combineLatest([this.shell.incomes$, this.shell.rights$, this.shell.simulation$]).pipe(
     map(([incomes, rights, simulation]) => getStatementSources(this.statement, this.waterfall.sources, incomes, rights, simulation.waterfall.state)),
@@ -117,7 +119,8 @@ export class StatementDistributorSummaryComponent {
           expenses,
           history,
           rights,
-          simulation.waterfall.state
+          simulation.waterfall.state,
+          this.lang
         );
       } catch (error) {
         if (error.message) this.snackbar.open(error.message, 'close', { duration: 5000 });
@@ -161,7 +164,8 @@ export class StatementDistributorSummaryComponent {
           history,
           rights,
           simulation.waterfall.state,
-          declaredSources
+          declaredSources,
+          this.lang
         );
       } catch (error) {
         if (error.message) this.snackbar.open(error.message, 'close', { duration: 5000 });
@@ -219,6 +223,7 @@ export class StatementDistributorSummaryComponent {
   );
 
   public waterfall = this.shell.waterfall;
+  public i18nStrings = { yes: $localize`Yes`, no: $localize`No` };
 
   constructor(
     private shell: DashboardWaterfallShellComponent,

@@ -60,6 +60,6 @@
 
   <div class="rightholder" *ngFor="let rightHolder of (filteredRightHolders$ | async)">
     <h6>{{rightHolder.name}}</h6>
-    <span class="mat-label">{{rightHolder.revenue | currency: 'EUR'}}</span>
+    <span class="mat-label"><price-per-currency [price]="rightHolder.revenue | formatPair" default="€ 0" i18n-default></price-per-currency></span>
   </div>
 </ng-container>

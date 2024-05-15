@@ -1,12 +1,12 @@
 const rightholderRoles = {
-  salesAgent: 'Sales Agent',
-  mainDistributor: 'Main Distributor',
-  localDistributor: 'Local Distributor',
-  sale: 'Broadcaster',
-  producer: 'Producer',
-  author: 'Author',
+  salesAgent: 'Agent de vente',
+  mainDistributor: 'Distributeur principal',
+  localDistributor: 'Distributeur local',
+  sale: 'Diffuseur',
+  producer: 'Producteur',
+  author: 'Auteur',
   agent: 'Agent',
-  coProducer: 'Co-Producer',
+  coProducer: 'Co-producteur',
   financier: 'Financier',
   institution: 'Institution',
   performer: 'Cast',
@@ -15,27 +15,60 @@ const rightholderRoles = {
 
 const rightTypes = {
   commission: 'Commission',
-  expenses: 'Expenses Recoupment',
-  mg: 'MG Recoupment',
-  horizontal: 'Horizontal Group',
-  vertical: 'Vertical Group',
-  rnpp: 'Producer\'s Net Participation',
-  investments: 'Investment Recoupment',
+  expenses: 'Récupération des frais',
+  mg: 'Récupération MG',
+  horizontal: 'Groupe horizontal',
+  vertical: 'Groupe vertical',
+  rnpp: 'RNPP',
+  investments: 'Récupération de l\'investissement',
   residuals: 'Residuals',
   royalties: 'Royalties',
   unknown: 'Autre'
 } as const
 
 const statementParty = {
-  salesAgent: 'Sales Agent',
-  mainDistributor: 'Distributor',
-  producer: 'Beneficiary',
-  directSales: 'Direct Sales',
+  salesAgent: 'Agent de vente',
+  mainDistributor: 'Distributeur',
+  producer: 'Bénéficiaire',
+  directSales: 'Ventes directes',
 } as const;
 
 const amortizationStatus = {
-  draft: 'Draft',
-  applied: 'Applied',
+  draft: 'Brouillon',
+  applied: 'Appliqué',
+} as const;
+
+const periods = {
+  days: 'Jours',
+  weeks: 'Semaines',
+  months: 'Mois',
+  years: 'Années',
+} as const;
+
+const statementType = {
+  salesAgent: 'Agent de vente',
+  mainDistributor: 'Distributeur',
+  producer: 'Sortant',
+  directSales: 'Ventes directes',
+} as const;
+
+const statementStatus = {
+  draft: 'Brouillon',
+  pending: 'En attente',
+  reported: 'Reporté',
+  rejected: 'Rejeté'
+} as const;
+
+const documentPaths = {
+  documents: 'Documents',
+  contracts: 'Contrats',
+  financingPlan: 'Plan de financement',
+  budget: 'Budget'
+} as const;
+
+const statementSection = {
+  grossReceipts: 'Recettes Brutes',
+  netReceipts: 'Recettes Nettes',
 } as const;
 
 export const staticModeli18n = {
@@ -43,6 +76,11 @@ export const staticModeli18n = {
     rightholderRoles,
     rightTypes,
     statementParty,
-    amortizationStatus
+    amortizationStatus,
+    periods,
+    statementType,
+    statementStatus,
+    documentPaths,
+    statementSection
   }
 };

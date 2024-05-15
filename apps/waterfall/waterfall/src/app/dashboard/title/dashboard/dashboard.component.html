@@ -146,16 +146,16 @@
               {{ name }}
             </ng-template>
             <ng-template colRef="investment" i18n-label label="Investment" let-investment [sort]="sorts.byPriceCurrency">
-              <price-per-currency [price]="investment" default="€ 0"></price-per-currency>
+              <price-per-currency [price]="investment" default="€ 0" i18n-default></price-per-currency>
             </ng-template>
             <ng-template colRef="expense" i18n-label label="Expenses" let-expense sort [sort]="sorts.byPriceCurrency">
-              <price-per-currency [price]="expense" default="€ 0"></price-per-currency>
+              <price-per-currency [price]="expense" default="€ 0" i18n-default></price-per-currency>
             </ng-template>
             <ng-template colRef="turnover" i18n-label label="Cash Flow" let-turnover sort [sort]="sorts.byPriceCurrency">
-              <price-per-currency [price]="turnover" default="€ 0"></price-per-currency>
+              <price-per-currency [price]="turnover" default="€ 0" i18n-default></price-per-currency>
             </ng-template>
             <ng-template colRef="revenue" i18n-label label="Net Revenue" let-revenue sort [sort]="sorts.byPriceCurrency">
-              <price-per-currency [price]="revenue" default="€ 0"></price-per-currency>
+              <price-per-currency [price]="revenue" default="€ 0" i18n-default></price-per-currency>
             </ng-template>
             <ng-template colRef="gross" i18n-label label="% Gross" let-gross sort>
               {{ gross }} %

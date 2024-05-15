@@ -1,7 +1,7 @@
 import { addYears, subYears } from 'date-fns';
 import { Person } from './identity';
 import { LanguageRecord } from './movie';
-import { App, MovieCurrency, Scope, TerritoryISOA2Value, staticModel, staticModeli18n, territoriesISOA2 } from './static';
+import { App, MovieCurrency, Scope, TerritoryISOA2Value, staticModel, staticModeli18n } from './static';
 import { mainCurrency } from './waterfall';
 
 export interface ErrorResultResponse {

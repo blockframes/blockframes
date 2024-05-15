@@ -1,13 +1,13 @@
 
 // Angular
 import { FormControl } from '@angular/forms';
-import { add, Duration } from 'date-fns';
+import { add } from 'date-fns';
 import { BehaviorSubject, Subscription, combineLatest } from 'rxjs';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy, Output, EventEmitter, OnChanges } from '@angular/core';
 
 // Blockframes
-import { rightholderGroups, RightholderRole, Waterfall } from '@blockframes/model';
+import { Period, rightholderGroups, RightholderRole, Waterfall } from '@blockframes/model';
 import { BucketTermForm, createBucketTermControl } from '@blockframes/contract/bucket/form';
 import {
   createExpenseTypeControl,
@@ -39,8 +39,7 @@ export class WaterfallContractFormComponent implements OnInit, OnChanges, OnDest
   public dateInputFormat = dateInputFormat;
   public durationControl = new FormControl<number | undefined>(undefined);
 
-  public periods: (keyof Duration)[] = ['days', 'weeks', 'months', 'years']; // TODO #9699 add i18n
-  public periodControl = new FormControl<keyof Duration | undefined>(undefined);
+  public periodControl = new FormControl<Period | undefined>(undefined);
 
   public licensee$ = new BehaviorSubject<string[]>([]); // buyer
   public licensor$ = new BehaviorSubject<string[]>([]); // seller

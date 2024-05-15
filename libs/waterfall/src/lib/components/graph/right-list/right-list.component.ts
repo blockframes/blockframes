@@ -41,6 +41,10 @@ export class WaterfallRightListComponent implements OnInit, OnDestroy {
   public existingPools = new Set<string>();
   public selected = new Set<string>();
   public poolsFilter = new Set<string>();
+  public i18nStrings = {
+    editGroup: $localize`Edit Group`,
+    editShare: $localize`Edit Receipt Share`,
+  };
 
   private subs: Subscription[] = [];
 

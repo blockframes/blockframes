@@ -69,13 +69,13 @@ export class DashboardComponent {
   public currentRightholder$ = this.shell.currentRightholder$.pipe(
     tap(rightholder => {
       if (!rightholder && this.waterfall.versions.length > 0) {
-        this.snackbar.open(`Organization "${this.orgService.org.name}" is not associated to any rightholders.`, this.shell.canBypassRules ? 'EDIT RIGHT HOLDERS' : 'ASK FOR HELP', { duration: 5000 })
+        this.snackbar.open($localize`Organization "${this.orgService.org.name}" is not associated to any rightholders.`, this.shell.canBypassRules ? $localize`EDIT RIGHT HOLDERS` : $localize`ASK FOR HELP`, { duration: 5000 })
           .onAction()
           .subscribe(() => {
             if (this.shell.canBypassRules) {
               this.router.navigate(['c/o/dashboard/title', this.shell.waterfall.id, 'right-holders']);
             } else {
-              this.intercom.show(`My organization "${this.orgService.org.name}" is not associated to any rightholders in the waterfall "${this.shell.movie.title.international}"`);
+              this.intercom.show($localize`My organization "${this.orgService.org.name}" is not associated to any rightholders in the waterfall "${this.shell.movie.title.international}"`);
             }
           });
         return;

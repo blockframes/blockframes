@@ -15,8 +15,7 @@
         <span i18n>Essential</span>
         <mat-icon
           svgIcon="info"
-          i18n-matTooltip
-          matTooltip="Essential cookies are necessary for Archipel products to function as intended.">
+          [matTooltip]="essentialCookies">
         </mat-icon>
       </label>
       <mat-checkbox disabled [checked]="true"></mat-checkbox>
@@ -26,8 +25,7 @@
         <span i18n>Behavioral analytics</span>
         <mat-icon
           svgIcon="info"
-          i18n-matTooltip
-          matTooltip="Analytical cookies help us to improve Archipel products by collecting and reporting information on their usage.">
+          [matTooltip]="analyticsCookies">
         </mat-icon>
       </label>
       <mat-checkbox color="primary" formControlName="hotjar"></mat-checkbox>
@@ -37,8 +35,7 @@
         <span i18n>Chat</span>
         <mat-icon
           svgIcon="info"
-          i18n-matTooltip
-          matTooltip="Chat cookies are used to allow the Archipel team to communicate with its users through the chatbot tool.">
+          [matTooltip]="chatCookies">
         </mat-icon>
       </label>
       <mat-checkbox color="primary" formControlName="intercom"></mat-checkbox>

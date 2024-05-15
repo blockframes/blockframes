@@ -46,7 +46,7 @@ export class RightHoldersComponent {
     private organizationService: OrganizationService,
     private invitationService: InvitationService,
   ) {
-    this.dynTitle.setPageTitle($localize`Right Holders`);
+    this.dynTitle.setPageTitle(this.shell.movie.title.international, $localize`Right Holders`);
   }
 
 }

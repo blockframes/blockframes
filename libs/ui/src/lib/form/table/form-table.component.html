@@ -17,10 +17,10 @@
 
       <ng-template colRef="action" let-index="index" label="Actions" let-item="item" sticky>
         <div class="action-buttons">
-          <button type="button" mat-icon-button (click)="edit(index)" matTooltip="Edit">
+          <button type="button" mat-icon-button (click)="edit(index)" matTooltip="Edit" i18n-matTooltip>
             <mat-icon svgIcon="edit"></mat-icon>
           </button>
-          <button type="button" mat-icon-button *ngIf="!disableDelete || !item.id" (click)="remove(index)" matTooltip="Delete">
+          <button type="button" mat-icon-button *ngIf="!disableDelete || !item.id" (click)="remove(index)" matTooltip="Delete" i18n-matTooltip>
             <mat-icon svgIcon="delete"></mat-icon>
           </button>
         </div>
@@ -37,7 +37,7 @@
     <ng-container *ngIf="form.controls.length; else empty">
       <div fxLayout="row" fxLayoutAlign="space-between start">
         <button type="button" test-id="row-cancel" mat-stroked-button (click)="cancel()">
-          <mat-icon svgIcon="close"></mat-icon><span>Cancel</span>
+          <mat-icon svgIcon="close"></mat-icon><span i18n>Cancel</span>
         </button>
         <button type="button" test-id="row-save" mat-stroked-button [disabled]="formItem.invalid" (click)="save()">
           <mat-icon svgIcon="save"></mat-icon>

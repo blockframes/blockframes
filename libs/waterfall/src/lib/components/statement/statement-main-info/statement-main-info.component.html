@@ -37,7 +37,7 @@
   
     <section *ngIf="contract">
       <span>
-        <mat-icon svgIcon="document"></mat-icon><span matLine><strong i18n>Contract: </strong>{{ contract.name }} <ng-container *ngIf="sources">({{ sources.length ? (sources | join:'name') : 'Receipt sources not specified' }})</ng-container></span>
+        <mat-icon svgIcon="document"></mat-icon><span matLine><strong i18n>Contract: </strong>{{ contract.name }} <ng-container *ngIf="sources">({{ sources.length ? (sources | join:'name') : noSources }})</ng-container></span>
       </span>
       <span *ngIf="statement.status === 'reported' && !!statement.reported" i18n>
         Statement Reported: {{ statement.reported | date }}
@@ -46,7 +46,7 @@
   
     <section *ngIf="statement.type === 'directSales' && sources">
       <span>
-        <mat-icon svgIcon="document"></mat-icon><span matLine><strong i18n>Sources: </strong> {{ sources.length ? (sources | join:'name') : 'Receipt sources not specified' }}</span><!-- TODO #9699 -->
+        <mat-icon svgIcon="document"></mat-icon><span matLine><strong i18n>Sources: </strong> {{ sources.length ? (sources | join:'name') : noSources }}</span>
       </span>
       <span *ngIf="statement.status === 'reported' && !!statement.reported" i18n>
         Statement Reported: {{ statement.reported | date }}

@@ -12,7 +12,6 @@ import {
   RightholderRole,
   Statement,
   StatementType,
-  StatementTypeValue,
   WaterfallContract,
   WaterfallRightholder,
   canCreateStatement,
@@ -24,9 +23,9 @@ import {
   initStatementDuration,
   isProducerStatement,
   isStandaloneVersion,
+  preferredLanguage,
   rightholderKey,
   sortStatements,
-  statementType,
   statementsRolesMapping,
   toLabel
 } from '@blockframes/model';
@@ -51,7 +50,7 @@ interface StatementChipConfig {
   divider: boolean;
   selected: boolean;
   key: StatementType;
-  value: StatementTypeValue | 'Financiers / Co-Producers / Authors...';
+  value: string;
 }
 
 function initStatementChips(statements: Statement[]): StatementChipConfig[] {
@@ -60,7 +59,7 @@ function initStatementChips(statements: Statement[]): StatementChipConfig[] {
     {
       selected: false,
       key,
-      value: key === 'producer' ? 'Financiers / Co-Producers / Authors...' : statementType[key], // TODO #9699  lang
+      value: key === 'producer' ? $localize`Financiers / Co-Producers / Authors...` : toLabel(key, 'statementType', undefined, undefined, preferredLanguage()),
       ...value,
       // producer statements are visible only if there are reported statements from distributors or direct sales
       visible: key === 'producer' ? hasDistribOrDirectSalesReportedStatements : value.visible,
@@ -154,7 +153,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-
+    const lang = preferredLanguage();
     if (!this.shell.currentRightholder) {
       this.snackbar.open($localize`Organization "${this.orgService.org.name}" is not associated to any rightholders.`, this.shell.canBypassRules ? $localize`EDIT RIGHT HOLDERS` : $localize`ASK FOR HELP`, { duration: 5000 })
         .onAction()
@@ -169,13 +168,13 @@ export class StatementsComponent implements OnInit, OnDestroy {
     }
 
     if (!this.producer) {
-      this.snackbar.open(`${toLabel('producer', 'rightholderRoles')} is not defined.`, this.shell.canBypassRules ? $localize`WATERFALL MANAGEMENT` : $localize`ASK FOR HELP`, { duration: 5000 }) // TODO #9699 tolabel lang
+      this.snackbar.open($localize`${toLabel('producer', 'rightholderRoles', undefined, undefined, lang)} is not defined.`, this.shell.canBypassRules ? $localize`WATERFALL MANAGEMENT` : $localize`ASK FOR HELP`, { duration: 5000 })
         .onAction()
         .subscribe(() => {
           if (this.shell.canBypassRules) {
             this.router.navigate(['c/o/dashboard/title', this.shell.waterfall.id, 'init']);
           } else {
-            this.intercom.show(`${toLabel('producer', 'rightholderRoles')} is not defined in the waterfall "${this.shell.movie.title.international}"`); // TODO #9699 tolabel lang
+            this.intercom.show($localize`${toLabel('producer', 'rightholderRoles', undefined, undefined, lang)} is not defined in the waterfall "${this.shell.movie.title.international}"`);
           }
         });
       return;
@@ -183,13 +182,13 @@ export class StatementsComponent implements OnInit, OnDestroy {
 
     const rightsSub = this.shell.rights$.subscribe(async rights => {
       if (!rights.find(r => r.rightholderId === this.producer.id)) {
-        this.snackbar.open(`${toLabel('producer', 'rightholderRoles')} should have at least one receipt share in the waterfall.`, this.shell.canBypassRules ? $localize`WATERFALL MANAGEMENT` : $localize`ASK FOR HELP`, { duration: 5000 }) // TODO #9699 tolabel lang
+        this.snackbar.open($localize`${toLabel('producer', 'rightholderRoles', undefined, undefined, lang)} should have at least one receipt share in the waterfall.`, this.shell.canBypassRules ? $localize`WATERFALL MANAGEMENT` : $localize`ASK FOR HELP`, { duration: 5000 })
           .onAction()
           .subscribe(() => {
             if (this.shell.canBypassRules) {
               this.router.navigate(['c/o/dashboard/title', this.shell.waterfall.id, 'init']);
             } else {
-              this.intercom.show(`${toLabel('producer', 'rightholderRoles')} is not defined in the waterfall "${this.shell.movie.title.international}"`); // TODO #9699 tolabel lang
+              this.intercom.show($localize`${toLabel('producer', 'rightholderRoles', undefined, undefined, lang)} is not defined in the waterfall "${this.shell.movie.title.international}"`);
             }
           });
       } else if (!canOnlyReadStatements(this.shell.currentRightholder, this.shell.canBypassRules) && !rights.find(r => r.rightholderId === this.shell.currentRightholder.id)) {
@@ -199,7 +198,7 @@ export class StatementsComponent implements OnInit, OnDestroy {
             if (this.shell.canBypassRules) {
               this.router.navigate(['c/o/dashboard/title', this.shell.waterfall.id, 'init']);
             } else {
-              this.intercom.show(`${toLabel('producer', 'rightholderRoles')} is not defined in the waterfall "${this.shell.movie.title.international}"`); // TODO #9699 tolabel lang
+              this.intercom.show($localize`${toLabel('producer', 'rightholderRoles', undefined, undefined, lang)} is not defined in the waterfall "${this.shell.movie.title.international}"`);
             }
           });
       }
