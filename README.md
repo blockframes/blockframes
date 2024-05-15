@@ -7,6 +7,7 @@ List of current apps:
 ### Media Financiers
 ### Archipel Festival
 ### Archipel Content
+### Blockframes (waterfall  app)
 
 ## Getting started
 List of things that a new member needs to do in order to spin up his environment.
