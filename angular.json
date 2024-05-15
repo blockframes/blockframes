@@ -1,21 +1,21 @@
 {
-  "version": 2,
+  "version": 1,
   "projects": {
     "admin": {
       "projectType": "library",
       "root": "libs/admin",
       "sourceRoot": "libs/admin/src",
       "prefix": "admin",
-      "targets": {
+      "architect": {
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/admin/jest.config.js",
             "passWithNoTests": true
           }
         },
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/admin/src/**/*.ts", "libs/admin/src/**/*.html"]
           },
@@ -29,9 +29,9 @@
       "root": "libs/analytics",
       "sourceRoot": "libs/analytics/src",
       "prefix": "analytics",
-      "targets": {
+      "architect": {
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "outputs": ["coverage/libs/analytics"],
           "options": {
             "jestConfig": "libs/analytics/jest.config.js",
@@ -39,7 +39,7 @@
           }
         },
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/analytics/src/**/*.ts", "libs/analytics/src/**/*.html"]
           },
@@ -53,10 +53,10 @@
       "sourceRoot": "apps/backend-functions/src",
       "projectType": "application",
       "prefix": "backend-functions",
-      "generators": {},
-      "targets": {
+      "schematics": {},
+      "architect": {
         "build": {
-          "executor": "@nrwl/node:webpack",
+          "builder": "@nrwl/node:webpack",
           "options": {
             "outputPath": "dist/apps/backend-functions",
             "main": "apps/backend-functions/src/main.ts",
@@ -88,7 +88,7 @@
           }
         },
         "serve": {
-          "executor": "@nrwl/workspace:run-commands",
+          "builder": "@nrwl/workspace:run-commands",
           "options": {
             "envFile": ".env",
             "commands": [
@@ -104,14 +104,14 @@
           }
         },
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/backend-functions/src/**/*.ts"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/backend-functions/jest.config.js",
             "passWithNoTests": true,
@@ -119,7 +119,7 @@
           }
         },
         "deploy": {
-          "executor": "@nrwl/workspace:run-commands",
+          "builder": "@nrwl/workspace:run-commands",
           "options": {
             "envFile": ".env",
             "commands": [
@@ -140,10 +140,10 @@
       "sourceRoot": "apps/backend-ops/src",
       "projectType": "application",
       "prefix": "backend-ops",
-      "generators": {},
-      "targets": {
+      "schematics": {},
+      "architect": {
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/backend-ops/src/**/*.ts", "apps/backend-ops/src/**/*.html"]
           },
@@ -157,16 +157,16 @@
       "root": "libs/campaign",
       "sourceRoot": "libs/campaign/src",
       "prefix": "campaign",
-      "targets": {
+      "architect": {
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/campaign/src/**/*.ts", "libs/campaign/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/campaign/jest.config.js",
             "passWithNoTests": true,
@@ -181,9 +181,9 @@
       "root": "apps/catalog/catalog",
       "sourceRoot": "apps/catalog/catalog/src",
       "prefix": "catalog",
-      "targets": {
+      "architect": {
         "build": {
-          "executor": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/apps/catalog",
             "index": "apps/catalog/catalog/src/index.html",
@@ -247,7 +247,7 @@
           }
         },
         "serve": {
-          "executor": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "catalog:build"
           },
@@ -258,27 +258,27 @@
           }
         },
         "extract-i18n": {
-          "executor": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "browserTarget": "catalog:build"
           }
         },
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/catalog/catalog/src/**/*.ts", "apps/catalog/catalog/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/catalog/catalog/jest.config.js",
             "passWithNoTests": true
           }
         },
         "deploy": {
-          "executor": "@nrwl/workspace:run-commands",
+          "builder": "@nrwl/workspace:run-commands",
           "options": {
             "envFile": ".env",
             "commands": [
@@ -296,9 +296,9 @@
       "root": "apps/catalog/catalog-e2e",
       "sourceRoot": "apps/catalog/catalog-e2e/src",
       "projectType": "application",
-      "targets": {
+      "architect": {
         "serve": {
-          "executor": "@nrwl/cypress:cypress",
+          "builder": "@nrwl/cypress:cypress",
           "options": {
             "cypressConfig": "apps/catalog/catalog-e2e/cypress.config.js",
             "tsConfig": "apps/catalog/catalog-e2e/tsconfig.e2e.json",
@@ -321,7 +321,7 @@
           }
         },
         "e2e": {
-          "executor": "@nrwl/cypress:cypress",
+          "builder": "@nrwl/cypress:cypress",
           "options": {
             "cypressConfig": "apps/catalog/catalog-e2e/cypress.config.js",
             "tsConfig": "apps/catalog/catalog-e2e/tsconfig.e2e.json",
@@ -348,7 +348,7 @@
           }
         },
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/catalog/catalog-e2e/src/**/*.ts", "apps/catalog/catalog-e2e/src/**/*.html"]
           },
@@ -363,9 +363,9 @@
       "root": "apps/cms",
       "sourceRoot": "apps/cms/src",
       "prefix": "cms",
-      "targets": {
+      "architect": {
         "build": {
-          "executor": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/apps/cms",
             "index": "apps/cms/src/index.html",
@@ -424,7 +424,7 @@
           }
         },
         "serve": {
-          "executor": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "cms:build"
           },
@@ -435,20 +435,20 @@
           }
         },
         "extract-i18n": {
-          "executor": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "browserTarget": "cms:build"
           }
         },
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/cms/src/**/*.ts", "apps/cms/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "deploy": {
-          "executor": "@nrwl/workspace:run-commands",
+          "builder": "@nrwl/workspace:run-commands",
           "options": {
             "envFile": ".env",
             "commands": [
@@ -466,9 +466,9 @@
       "root": "apps/cms/cms-e2e",
       "sourceRoot": "apps/cms/cms-e2e/src",
       "projectType": "application",
-      "targets": {
+      "architect": {
         "serve": {
-          "executor": "@nrwl/cypress:cypress",
+          "builder": "@nrwl/cypress:cypress",
           "options": {
             "cypressConfig": "apps/cms/cms-e2e/cypress.config.js",
             "tsConfig": "apps/cms/cms-e2e/tsconfig.e2e.json",
@@ -491,7 +491,7 @@
           }
         },
         "e2e": {
-          "executor": "@nrwl/cypress:cypress",
+          "builder": "@nrwl/cypress:cypress",
           "options": {
             "cypressConfig": "apps/cms/cms-e2e/cypress.config.js",
             "tsConfig": "apps/cms/cms-e2e/tsconfig.e2e.json",
@@ -518,7 +518,7 @@
           }
         },
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/cms/cms-e2e/src/**/*.ts", "apps/cms/cms-e2e/src/**/*.html"]
           },
@@ -533,16 +533,16 @@
       "root": "libs/consents",
       "sourceRoot": "libs/consents/src",
       "prefix": "blockframes",
-      "targets": {
+      "architect": {
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/consents/src/**/*.ts", "libs/consents/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/consents/jest.config.js",
             "passWithNoTests": true,
@@ -557,16 +557,16 @@
       "root": "libs/contract",
       "sourceRoot": "libs/contract/src",
       "prefix": "contract",
-      "targets": {
+      "architect": {
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/contract/jest.config.js",
             "passWithNoTests": true
           }
         },
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/contract/src/**/*.ts", "libs/contract/src/**/*.html"]
           },
@@ -580,9 +580,9 @@
       "root": "apps/crm/crm",
       "sourceRoot": "apps/crm/crm/src",
       "prefix": "crm",
-      "targets": {
+      "architect": {
         "build": {
-          "executor": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/apps/crm",
             "index": "apps/crm/crm/src/index.html",
@@ -643,7 +643,7 @@
           }
         },
         "serve": {
-          "executor": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "crm:build"
           },
@@ -654,27 +654,27 @@
           }
         },
         "extract-i18n": {
-          "executor": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "browserTarget": "crm:build"
           }
         },
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/crm/crm/src/**/*.ts", "apps/crm/crm/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/crm/crm/jest.config.js",
             "passWithNoTests": true
           }
         },
         "deploy": {
-          "executor": "@nrwl/workspace:run-commands",
+          "builder": "@nrwl/workspace:run-commands",
           "options": {
             "envFile": ".env",
             "commands": [
@@ -692,9 +692,9 @@
       "root": "apps/crm/crm-e2e",
       "sourceRoot": "apps/crm/crm-e2e/src",
       "projectType": "application",
-      "targets": {
+      "architect": {
         "serve": {
-          "executor": "@nrwl/cypress:cypress",
+          "builder": "@nrwl/cypress:cypress",
           "options": {
             "cypressConfig": "apps/crm/crm-e2e/cypress.config.js",
             "tsConfig": "apps/crm/crm-e2e/tsconfig.e2e.json",
@@ -717,7 +717,7 @@
           }
         },
         "e2e": {
-          "executor": "@nrwl/cypress:cypress",
+          "builder": "@nrwl/cypress:cypress",
           "options": {
             "cypressConfig": "apps/crm/crm-e2e/cypress.config.js",
             "tsConfig": "apps/crm/crm-e2e/tsconfig.e2e.json",
@@ -744,7 +744,7 @@
           }
         },
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/crm/crm-e2e/src/**/*.ts", "apps/crm/crm-e2e/src/**/*.html"]
           },
@@ -758,16 +758,16 @@
       "root": "libs/devops",
       "sourceRoot": "libs/devops/src",
       "projectType": "library",
-      "targets": {
+      "architect": {
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "outputs": ["{options.outputFile}"],
           "options": {
             "lintFilePatterns": ["libs/devops/**/*.ts"]
           }
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "outputs": ["coverage/libs/devops"],
           "options": {
             "jestConfig": "libs/devops/jest.config.js",
@@ -783,16 +783,16 @@
       "root": "libs/event",
       "sourceRoot": "libs/event/src",
       "prefix": "event",
-      "targets": {
+      "architect": {
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/event/src/**/*.ts", "libs/event/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/event/jest.config.js",
             "passWithNoTests": true
@@ -806,9 +806,9 @@
       "root": "apps/festival/festival",
       "sourceRoot": "apps/festival/festival/src",
       "prefix": "festival",
-      "targets": {
+      "architect": {
         "build": {
-          "executor": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/apps/festival/browser",
             "index": "apps/festival/festival/src/index.html",
@@ -881,7 +881,7 @@
           }
         },
         "serve": {
-          "executor": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "festival:build"
           },
@@ -892,27 +892,27 @@
           }
         },
         "extract-i18n": {
-          "executor": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "browserTarget": "festival:build"
           }
         },
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/festival/festival/src/**/*.ts", "apps/festival/festival/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/festival/festival/jest.config.js",
             "passWithNoTests": true
           }
         },
         "deploy": {
-          "executor": "@nrwl/workspace:run-commands",
+          "builder": "@nrwl/workspace:run-commands",
           "options": {
             "envFile": ".env",
             "commands": [
@@ -930,9 +930,9 @@
       "root": "apps/festival/festival-e2e",
       "sourceRoot": "apps/festival/festival-e2e/src",
       "projectType": "application",
-      "targets": {
+      "architect": {
         "serve": {
-          "executor": "@nrwl/cypress:cypress",
+          "builder": "@nrwl/cypress:cypress",
           "options": {
             "cypressConfig": "apps/festival/festival-e2e/cypress.config.js",
             "tsConfig": "apps/festival/festival-e2e/tsconfig.e2e.json",
@@ -958,7 +958,7 @@
           }
         },
         "e2e": {
-          "executor": "@nrwl/cypress:cypress",
+          "builder": "@nrwl/cypress:cypress",
           "options": {
             "cypressConfig": "apps/festival/festival-e2e/cypress.config.js",
             "tsConfig": "apps/festival/festival-e2e/tsconfig.e2e.json",
@@ -985,7 +985,7 @@
           }
         },
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/festival/festival-e2e/src/**/*.ts", "apps/festival/festival-e2e/src/**/*.html"]
           },
@@ -1000,9 +1000,9 @@
       "root": "apps/financiers/financiers",
       "sourceRoot": "apps/financiers/financiers/src",
       "prefix": "financiers",
-      "targets": {
+      "architect": {
         "build": {
-          "executor": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/apps/financiers",
             "index": "apps/financiers/financiers/src/index.html",
@@ -1052,7 +1052,7 @@
           }
         },
         "serve": {
-          "executor": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "financiers:build"
           },
@@ -1063,20 +1063,20 @@
           }
         },
         "extract-i18n": {
-          "executor": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "browserTarget": "financiers:build"
           }
         },
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/financiers/financiers/src/**/*.ts", "apps/financiers/financiers/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/financiers/financiers/jest.config.js",
             "passWithNoTests": true,
@@ -1084,7 +1084,7 @@
           }
         },
         "deploy": {
-          "executor": "@nrwl/workspace:run-commands",
+          "builder": "@nrwl/workspace:run-commands",
           "options": {
             "envFile": ".env",
             "commands": [
@@ -1102,9 +1102,9 @@
       "root": "apps/financiers/financiers-e2e",
       "sourceRoot": "apps/financiers/financiers-e2e/src",
       "projectType": "application",
-      "targets": {
+      "architect": {
         "serve": {
-          "executor": "@nrwl/cypress:cypress",
+          "builder": "@nrwl/cypress:cypress",
           "options": {
             "cypressConfig": "apps/financiers/financiers-e2e/cypress.config.js",
             "tsConfig": "apps/financiers/financiers-e2e/tsconfig.e2e.json",
@@ -1127,7 +1127,7 @@
           }
         },
         "e2e": {
-          "executor": "@nrwl/cypress:cypress",
+          "builder": "@nrwl/cypress:cypress",
           "options": {
             "cypressConfig": "apps/financiers/financiers-e2e/cypress.config.js",
             "tsConfig": "apps/financiers/financiers-e2e/tsconfig.e2e.json",
@@ -1154,7 +1154,7 @@
           }
         },
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/financiers/financiers-e2e/src/**/*.ts", "apps/financiers/financiers-e2e/src/**/*.html"]
           },
@@ -1168,17 +1168,17 @@
       "root": "libs/firebase-utils",
       "sourceRoot": "libs/firebase-utils/src",
       "projectType": "library",
-      "generators": {},
-      "targets": {
+      "schematics": {},
+      "architect": {
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/firebase-utils/src/**/*.ts", "libs/firebase-utils/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/firebase-utils/jest.config.js",
             "passWithNoTests": true
@@ -1192,16 +1192,16 @@
       "root": "libs/import",
       "sourceRoot": "libs/import/src",
       "prefix": "blockframes",
-      "targets": {
+      "architect": {
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/import/src/**/*.ts", "libs/import/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/import/jest.config.js",
             "passWithNoTests": true
@@ -1215,16 +1215,16 @@
       "root": "libs/invitation",
       "sourceRoot": "libs/invitation/src",
       "prefix": "blockframes",
-      "targets": {
+      "architect": {
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/invitation/src/**/*.ts", "libs/invitation/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/invitation/jest.config.js",
             "passWithNoTests": true,
@@ -1239,16 +1239,16 @@
       "root": "libs/landing",
       "sourceRoot": "libs/landing/src",
       "prefix": "blockframes",
-      "targets": {
+      "architect": {
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/landing/src/**/*.ts", "libs/landing/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/landing/jest.config.js",
             "passWithNoTests": true
@@ -1262,16 +1262,16 @@
       "root": "libs/media",
       "sourceRoot": "libs/media/src",
       "prefix": "blockframes",
-      "targets": {
+      "architect": {
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/media/src/**/*.ts", "libs/media/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/media/jest.config.js",
             "passWithNoTests": true
@@ -1284,16 +1284,16 @@
       "root": "libs/model",
       "sourceRoot": "libs/model/src",
       "projectType": "library",
-      "targets": {
+      "architect": {
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/model/**/*.ts"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "outputs": ["coverage/libs/model"],
           "options": {
             "jestConfig": "libs/model/jest.config.js",
@@ -1308,16 +1308,16 @@
       "sourceRoot": "libs/movie/src",
       "projectType": "library",
       "prefix": "movie",
-      "targets": {
+      "architect": {
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/movie/src/**/*.ts", "libs/movie/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/movie/jest.config.js",
             "passWithNoTests": true
@@ -1331,23 +1331,23 @@
       "sourceRoot": "libs/notification/src",
       "projectType": "library",
       "prefix": "notification",
-      "targets": {
+      "architect": {
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/notification/jest.config.js",
             "passWithNoTests": true
           }
         },
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/notification/src/**/*.ts", "libs/notification/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
         }
       },
-      "generators": {},
+      "schematics": {},
       "tags": ["browser"]
     },
     "organization": {
@@ -1355,23 +1355,23 @@
       "sourceRoot": "libs/organization/src",
       "projectType": "library",
       "prefix": "org",
-      "targets": {
+      "architect": {
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/organization/src/**/*.ts", "libs/organization/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/organization/jest.config.js",
             "passWithNoTests": true
           }
         }
       },
-      "generators": {
+      "schematics": {
         "@nrwl/schematics:component": {
           "styleext": "scss"
         }
@@ -1383,23 +1383,23 @@
       "sourceRoot": "apps/rules/src",
       "projectType": "application",
       "prefix": "rules",
-      "generators": {},
-      "targets": {
+      "schematics": {},
+      "architect": {
         "serve": {
-          "executor": "@nrwl/node:node",
+          "builder": "@nrwl/node:node",
           "options": {
             "buildTarget": "rules:build"
           }
         },
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/rules/src/**/*.ts", "apps/rules/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/rules/jest.config.js",
             "passWithNoTests": true,
@@ -1413,16 +1413,16 @@
       "root": "libs/testing/cypress/browser",
       "sourceRoot": "libs/testing/cypress/browser/src",
       "projectType": "library",
-      "targets": {
+      "architect": {
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/testing/cypress/browser/**/*.ts"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "outputs": ["coverage/libs/testing/cypress/browser"],
           "options": {
             "jestConfig": "libs/testing/cypress/browser/jest.config.js",
@@ -1436,16 +1436,16 @@
       "root": "libs/testing/cypress/node",
       "sourceRoot": "libs/testing/cypress/node/src",
       "projectType": "library",
-      "targets": {
+      "architect": {
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/testing/cypress/node/**/*.ts"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "outputs": ["coverage/libs/testing/cypress/node"],
           "options": {
             "jestConfig": "libs/testing/cypress/node/jest.config.js",
@@ -1459,17 +1459,17 @@
       "root": "libs/testing/unit-tests",
       "sourceRoot": "libs/testing/unit-tests/src",
       "projectType": "library",
-      "generators": {},
-      "targets": {
+      "schematics": {},
+      "architect": {
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/testing/unit-tests/src/**/*.ts", "libs/testing/unit-tests/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/testing/unit-tests/jest.config.js",
             "passWithNoTests": true
@@ -1483,16 +1483,16 @@
       "sourceRoot": "libs/ui/src",
       "projectType": "library",
       "prefix": "blockframes",
-      "targets": {
+      "architect": {
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/ui/src/**/*.ts", "libs/ui/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/ui/jest.config.js",
             "passWithNoTests": true
@@ -1506,16 +1506,16 @@
       "root": "libs/user",
       "sourceRoot": "libs/user/src",
       "prefix": "blockframes",
-      "targets": {
+      "architect": {
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/user/src/**/*.ts", "libs/user/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/user/jest.config.js",
             "passWithNoTests": true
@@ -1529,23 +1529,23 @@
       "sourceRoot": "libs/utils/src",
       "projectType": "library",
       "prefix": "utils",
-      "targets": {
+      "architect": {
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/utils/src/**/*.ts", "libs/utils/src/**/*.html"]
           },
           "outputs": ["{options.outputFile}"]
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/utils/jest.config.js",
             "passWithNoTests": true
           }
         }
       },
-      "generators": {
+      "schematics": {
         "@nrwl/schematics:component": {
           "styleext": "scss"
         }
@@ -1557,9 +1557,9 @@
       "root": "apps/waterfall/waterfall",
       "sourceRoot": "apps/waterfall/waterfall/src",
       "prefix": "waterfall",
-      "targets": {
+      "architect": {
         "build": {
-          "executor": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:browser",
           "outputs": ["{options.outputPath}"],
           "options": {
             "outputPath": "dist/apps/waterfall",
@@ -1633,7 +1633,7 @@
           }
         },
         "serve": {
-          "executor": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "waterfall:build"
           },
@@ -1644,19 +1644,19 @@
           }
         },
         "extract-i18n": {
-          "executor": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "browserTarget": "waterfall:build"
           }
         },
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/waterfall/waterfall/src/**/*.ts", "apps/waterfall/waterfall/src/**/*.html"]
           }
         },
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "outputs": ["coverage/apps/waterfall/waterfall"],
           "options": {
             "jestConfig": "apps/waterfall/waterfall/jest.config.js",
@@ -1664,7 +1664,7 @@
           }
         },
         "deploy": {
-          "executor": "@nrwl/workspace:run-commands",
+          "builder": "@nrwl/workspace:run-commands",
           "options": {
             "envFile": ".env",
             "commands": [
@@ -1682,9 +1682,9 @@
       "root": "apps/waterfall/waterfall-e2e",
       "sourceRoot": "apps/waterfall/waterfall-e2e/src",
       "projectType": "application",
-      "targets": {
+      "architect": {
         "serve": {
-          "executor": "@nrwl/cypress:cypress",
+          "builder": "@nrwl/cypress:cypress",
           "options": {
             "cypressConfig": "apps/waterfall/waterfall-e2e/cypress.config.js",
             "tsConfig": "apps/waterfall/waterfall-e2e/tsconfig.e2e.json",
@@ -1710,7 +1710,7 @@
           }
         },
         "e2e": {
-          "executor": "@nrwl/cypress:cypress",
+          "builder": "@nrwl/cypress:cypress",
           "options": {
             "cypressConfig": "apps/waterfall/waterfall-e2e/cypress.config.js",
             "tsConfig": "apps/waterfall/waterfall-e2e/tsconfig.e2e.json",
@@ -1737,7 +1737,7 @@
           }
         },
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/waterfall/waterfall-e2e/src/**/*.ts", "apps/waterfall/waterfall-e2e/src/**/*.html"]
           },
@@ -1752,9 +1752,9 @@
       "root": "libs/waterfall",
       "sourceRoot": "libs/waterfall/src",
       "prefix": "blockframes",
-      "targets": {
+      "architect": {
         "test": {
-          "executor": "@nrwl/jest:jest",
+          "builder": "@nrwl/jest:jest",
           "outputs": ["coverage/libs/waterfall"],
           "options": {
             "jestConfig": "libs/waterfall/jest.config.js",
@@ -1762,7 +1762,7 @@
           }
         },
         "lint": {
-          "executor": "@nrwl/linter:eslint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/waterfall/src/**/*.ts", "libs/waterfall/src/**/*.html"]
           }
