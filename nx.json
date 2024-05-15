@@ -14,30 +14,16 @@
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
-        "cacheableOperations": [
-          "build",
-          "lint",
-          "test",
-          "e2e"
-        ],
+        "cacheableOperations": ["build", "lint", "test", "e2e"],
         "cacheDirectory": ".cache/nx",
         "parallel": 1
       }
     }
   },
-  "targetDependencies": {
-    "build": [
-      {
-        "target": "build",
-        "projects": "dependencies"
-      }
-    ]
-  },
   "cli": {
     "warnings": {
       "versionMismatch": false
     },
-    "defaultCollection": "@nrwl/angular",
     "analytics": "af619e50-5007-4476-b488-ccf1b32d3440"
   },
   "generators": {
@@ -67,5 +53,11 @@
       "style": "scss"
     }
   },
-  "defaultProject": "festival"
+  "defaultProject": "festival",
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"]
+    }
+  }
 }
