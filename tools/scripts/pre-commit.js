@@ -19,11 +19,12 @@ for (const key of forbiddenKeys) {
   }
 }
 
+/* TODO #9702 tmp
 const i18nCmd = 'npm run i18n:waterfall';
 console.log(`Running i18n command: ${i18nCmd}`);
 const i18nOutput = childProcess.execSync(`${i18nCmd} > /dev/null`).toString();
 if (!i18nOutput) console.log('i18n command ended.');
-
+*/
 if (errors) {
   console.log('Your commit contains forbidden entries, please update your files before trying again.');
   process.exit(1);
