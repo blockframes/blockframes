@@ -157,7 +157,7 @@
     "@types/leaflet": "^1.5.8",
     "@types/line-reader": "0.0.28",
     "@types/lodash": "^4.14.150",
-    "@types/node": "16.11.7",
+    "@types/node": "20.12.2",
     "@types/offscreencanvas": "^2019.7.0",
     "@types/pdfmake": "^0.1.13",
     "@types/sendgrid": "^4.3.0",
