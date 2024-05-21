@@ -13,7 +13,7 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/testing/cypress/browser"],
+      "outputs": ["{workspaceRoot}/coverage/libs/testing/cypress/browser"],
       "options": {
         "jestConfig": "libs/testing/cypress/browser/jest.config.js",
         "passWithNoTests": true

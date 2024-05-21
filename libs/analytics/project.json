@@ -7,7 +7,7 @@
   "targets": {
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/analytics"],
+      "outputs": ["{workspaceRoot}/coverage/libs/analytics"],
       "options": {
         "jestConfig": "libs/analytics/jest.config.js",
         "passWithNoTests": true

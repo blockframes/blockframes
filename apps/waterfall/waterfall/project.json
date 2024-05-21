@@ -104,7 +104,7 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/waterfall/waterfall"],
+      "outputs": ["{workspaceRoot}/coverage/apps/waterfall/waterfall"],
       "options": {
         "jestConfig": "apps/waterfall/waterfall/jest.config.js",
         "passWithNoTests": true
