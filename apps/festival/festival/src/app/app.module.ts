@@ -18,7 +18,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { AppComponent } from './app.component';
 
 // Material
-iimport { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule } from '@angular/material/core';
 // Blockframes
 import { SentryModule } from '@blockframes/utils/sentry.module';
 // #7936 this may be reactivated later

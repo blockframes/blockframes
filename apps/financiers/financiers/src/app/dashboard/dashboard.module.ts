@@ -26,7 +26,7 @@ import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
 
 // Material
-import { MMatLegacyListModule as MatListModule} from '@@angular/material/legacy-list;
+import { MatLegacyListModule as MatListModule} from '@angular/material/legacy-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDividerModule } from '@angular/material/divider';

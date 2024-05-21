@@ -1,6 +1,6 @@
 ﻿import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { MMatLegacyDialog as MatDialog} from '@@angular/material/legacy-dialog;
+import { MatLegacyDialog as MatDialog} from '@angular/material/legacy-dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CampaignService } from '@blockframes/campaign/service';
 import { Movie, MovieCurrency, Organization } from '@blockframes/model';

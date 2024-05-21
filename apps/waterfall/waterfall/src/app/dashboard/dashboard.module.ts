@@ -16,7 +16,7 @@ import { WaterfallAdminGuard } from '@blockframes/waterfall/guards/waterfall-adm
 import { WaterfallActiveGuard } from '@blockframes/waterfall/guards/waterfall-active.guard';
 
 // Material
-import { MMatLegacyListModule as MatListModule} from '@@angular/material/legacy-list;
+import { MatLegacyListModule as MatListModule} from '@angular/material/legacy-list';
 import { MatIconModule } from '@angular/material/icon';
 
 // Component

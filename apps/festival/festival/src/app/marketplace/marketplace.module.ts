@@ -13,8 +13,8 @@ import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MMatLegacyButtonModule as MatButtonModule} from '@@angular/material/legacy-button;
-import { MMatLegacyTooltipModule as MatTooltipModule} from '@@angular/material/legacy-tooltip;
+import { MatLegacyButtonModule as MatButtonModule} from '@angular/material/legacy-button';
+import { MatLegacyTooltipModule as MatTooltipModule} from '@angular/material/legacy-tooltip';
 
 const routes: Routes = [{
   path: '',
