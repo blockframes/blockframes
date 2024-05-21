@@ -12,7 +12,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AppPipeModule } from '@blockframes/utils/pipes';
 
 // Material
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 @NgModule({
   declarations: [EmptyMovieComponent],

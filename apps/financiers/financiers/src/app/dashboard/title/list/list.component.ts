@@ -7,7 +7,7 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { DownloadSettings, PdfService } from '@blockframes/utils/pdf.service';
 
 type Filters = 'all' | 'draft' | 'ongoing' | 'achieved' | 'archived';

@@ -3,7 +3,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { startWith, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { algolia } from '@env';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { getGuest, Invitation, InvitationStatus } from '@blockframes/model';
 
 function filterGuest(invitation: Invitation, search: string) {

@@ -7,7 +7,7 @@ import { MovieService } from '@blockframes/movie/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { DownloadSettings, PdfService } from '@blockframes/utils/pdf.service';
 import { OrganizationService } from '@blockframes/organization/service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 
 @Component({
   selector: 'festival-dashboard-title-list',

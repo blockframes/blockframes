@@ -11,9 +11,9 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { JoinPipeModule, MaxLengthModule } from '@blockframes/utils/pipes';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 
 @NgModule({
   declarations: [MoviesComponent],

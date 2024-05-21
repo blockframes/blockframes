@@ -10,7 +10,7 @@ import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 import { InterestTableComponent } from './interest-table.component';
 
 // Material
-import { MatTooltipModule } from '@angular/material/tooltip';;
+import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';;
 
 @NgModule({
   declarations: [InterestTableComponent],

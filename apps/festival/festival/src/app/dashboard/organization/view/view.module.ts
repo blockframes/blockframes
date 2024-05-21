@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ViewComponent } from './view.component';
 
 import { OrganizationViewModule as OrganizationLayoutModule } from '@blockframes/organization/layout/view/view.module';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 const routes = [{
   path: '',

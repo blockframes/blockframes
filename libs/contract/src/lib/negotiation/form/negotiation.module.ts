@@ -6,9 +6,9 @@ import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.m
 import { LanguagesFormModule } from '@blockframes/movie/form/languages/languages.module';
 import { ToLabelModule, VersionPipeModule, JoinPipeModule, ToGroupLabelPipeModule } from '@blockframes/utils/pipes';
 import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { MaxLengthModule } from '@blockframes/utils/pipes';
 
 

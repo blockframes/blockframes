@@ -1,6 +1,6 @@
 import { Component, Input, Inject, ChangeDetectorRef, ChangeDetectionStrategy, ContentChild } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 

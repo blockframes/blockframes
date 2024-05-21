@@ -21,9 +21,9 @@ import { RequestAskingPriceModule } from '@blockframes/movie/components/request-
 import { CarouselModule } from '@blockframes/ui/carousel/carousel.module';
 import { MovieCardModule } from '@blockframes/movie/components/card/card.module';
 
-import { MatButtonModule} from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule} from '@angular/material/legacy-button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 
 @NgModule({
   declarations: [EventViewComponent],

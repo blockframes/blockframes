@@ -4,7 +4,7 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { createMovieVideo, Movie, Privacy, ScreenerType } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
 import { MovieVideosForm } from '@blockframes/movie/form/movie.form';

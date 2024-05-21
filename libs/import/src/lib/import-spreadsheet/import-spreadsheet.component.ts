@@ -1,6 +1,6 @@
 
 import { Component, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 
 
 import { getMimeType } from '@blockframes/utils/file-sanitizer';

@@ -6,10 +6,10 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet'
 import { DoorbellBottomSheetComponent } from '@blockframes/event/components/doorbell/doorbell.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { TwilioService } from '@blockframes/utils/twilio';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { getFileExtension } from '@blockframes/utils/file-sanitizer';
 import { createScreeningAttendee, ErrorResultResponse, extensionToType, isMeeting } from '@blockframes/model';
 import { MediaService } from '@blockframes/media/service';

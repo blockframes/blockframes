@@ -2,7 +2,7 @@ import { NgModule, ChangeDetectionStrategy, Component, Input, OnInit } from '@an
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
+import { MatLegacyRadioChange as MatRadioChange, MatLegacyRadioModule as MatRadioModule } from '@angular/material/legacy-radio';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 import { OrganizationService } from '@blockframes/organization/service';
 import { TextFormModule, matText } from '../../forms/text';

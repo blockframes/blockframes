@@ -3,7 +3,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { map, pluck, shareReplay, switchMap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { orderBy, startAt, where } from 'firebase/firestore';
 
 // Blockframes
@@ -15,7 +15,7 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { RequestAskingPriceComponent } from '../request-asking-price/request-asking-price.component';
 import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 @Component({

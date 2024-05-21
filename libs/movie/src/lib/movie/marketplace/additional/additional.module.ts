@@ -9,7 +9,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Material
 import { MatDividerModule } from '@angular/material/divider';
-import { MatChipsModule } from '@angular/material/chips';
+import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips';
 
 @NgModule({
   declarations: [AdditionalComponent],

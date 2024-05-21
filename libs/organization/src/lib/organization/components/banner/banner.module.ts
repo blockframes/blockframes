@@ -13,7 +13,7 @@ import { OrgMoviesModule } from '@blockframes/organization/pipes/org-movies.pipe
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 @NgModule({
   imports: [

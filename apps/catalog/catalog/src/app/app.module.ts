@@ -62,8 +62,7 @@ import { VersionModule } from '@blockframes/utils/version/version.module';
       anchorScrolling: 'enabled',
       onSameUrlNavigation: 'reload',
       paramsInheritanceStrategy: 'always',
-      relativeLinkResolution: 'corrected',
-      scrollPositionRestoration: 'enabled',
+      scrollPositionRestoration: 'enabled'
     }),
     MatNativeDateModule,
 

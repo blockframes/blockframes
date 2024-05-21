@@ -10,8 +10,8 @@ import { MovieFormAvailableMaterialsComponent } from './available-materials.comp
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 
 // Material
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatIconModule } from '@angular/material/icon';
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 

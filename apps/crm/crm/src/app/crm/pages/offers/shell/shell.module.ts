@@ -3,16 +3,16 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { MatCardModule } from '@angular/material/card';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 
 import { TotalPipeModule } from '@blockframes/utils/pipes';
 import { OfferShellComponent } from './shell.component';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 
 const routes: Routes = [{
   path: '',

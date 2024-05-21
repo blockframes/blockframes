@@ -9,9 +9,9 @@ import { CampaignFormPerksComponent } from './perks.component';
 import { PerksPipeModule } from '../../pipes/perks.pipe';
 
 import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
 import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({

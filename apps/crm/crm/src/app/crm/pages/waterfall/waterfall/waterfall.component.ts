@@ -1,11 +1,11 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { BehaviorSubject } from 'rxjs';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { rightholderName } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { Version } from '@blockframes/model';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 

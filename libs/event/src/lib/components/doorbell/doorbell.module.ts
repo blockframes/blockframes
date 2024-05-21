@@ -5,7 +5,7 @@ import { DoorbellBottomSheetComponent } from './doorbell.component';
 import { DisplayUserModule } from '@blockframes/utils/pipes/display-user.pipe';
 
 // Material
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 
 @NgModule({

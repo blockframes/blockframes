@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 // Modules 
 import { GoToAppModule } from '@blockframes/admin/crm/pipes/go-to.pipe';

@@ -6,7 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { BreadCrumbModule } from '../../components/bread-crumb/bread-crumb.module';
 
 import { CrmImportComponent } from './import.component';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatIconModule } from '@angular/material/icon';
 
 const routes: Routes = [{

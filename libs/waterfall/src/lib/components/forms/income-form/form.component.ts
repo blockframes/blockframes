@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Statement, Territory, WaterfallSource } from '@blockframes/model';
 import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';

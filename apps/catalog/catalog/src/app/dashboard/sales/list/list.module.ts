@@ -16,9 +16,9 @@ import { InternalSalesListModule } from '@blockframes/contract/contract/list/int
 import { IntercomModule } from 'ng-intercom';
 
 // Material
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
 
 @NgModule({
   declarations: [SaleListComponent],

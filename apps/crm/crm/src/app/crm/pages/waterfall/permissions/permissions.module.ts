@@ -13,9 +13,9 @@ import { RightholderSelectModule } from '@blockframes/waterfall/components/right
 import { OrganizationTableModule } from '@blockframes/waterfall/components/organization/organization-table/organization-table.module';
 
 // Material
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
 
 @NgModule({
   declarations: [PermissionsComponent],

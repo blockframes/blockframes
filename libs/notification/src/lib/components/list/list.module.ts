@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ListComponent } from './list.component';
 import { NotificationItemModule } from '../item/item.module';
 
-import { MatListModule } from '@angular/material/list';
+import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
 
 import { FilterByDateModule } from '@blockframes/utils/pipes/filter-by-date.pipe';
 

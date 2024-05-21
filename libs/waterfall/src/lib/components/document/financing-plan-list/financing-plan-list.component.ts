@@ -4,10 +4,10 @@ import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell
 import { Organization, WaterfallDocument, WaterfallFinancingPlan, WaterfallPermissions, createWaterfallDocument, createWaterfallFinancingPlan } from '@blockframes/model';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 import { WaterfallDocumentsService } from '../../../documents.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { OrganizationService } from '@blockframes/organization/service';
 import { BehaviorSubject, Observable, map, of, switchMap } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { DocumentShareComponent } from '../document-share/document-share.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 

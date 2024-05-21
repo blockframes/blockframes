@@ -8,7 +8,7 @@ import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 import { fadeList } from '@blockframes/utils/animations/fade';
 import { APP } from '@blockframes/utils/routes/utils';
 import { filters } from '@blockframes/ui/list/table/filters';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.component';
 import { displayPerson } from '@blockframes/utils/pipes';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';

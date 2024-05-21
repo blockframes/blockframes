@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { SidenavAuthComponent } from './sidenav-auth.component';
 
 // Material
-import { MatListModule } from '@angular/material/list';
+import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { RouterModule } from '@angular/router';

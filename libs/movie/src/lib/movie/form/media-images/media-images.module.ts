@@ -6,9 +6,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatCardModule } from '@angular/material/card';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 
 // Blockframes UI
 import { TunnelPageModule } from '@blockframes/ui/tunnel';

@@ -13,7 +13,7 @@ import { MovieImageModule } from './movie-image.pipe';
 import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe'
 
 // Material
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatRippleModule } from '@angular/material/core';
 
 @NgModule({

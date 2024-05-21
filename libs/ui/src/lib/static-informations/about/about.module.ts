@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 import { AboutComponent } from './about.component';
 
 // Material
-import { MatCardModule } from '@angular/material/card';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({

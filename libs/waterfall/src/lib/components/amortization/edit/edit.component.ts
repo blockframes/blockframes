@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatStepper } from '@angular/material/stepper';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { BehaviorSubject, Observable, combineLatest, map } from 'rxjs';
 import { AmortizationFormGuardedComponent } from '../../../guards/amortization-form-guard';
 import { AmortizationService } from '../../../amortization.service';

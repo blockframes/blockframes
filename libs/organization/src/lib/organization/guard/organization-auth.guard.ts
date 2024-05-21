@@ -7,7 +7,7 @@ import { firstValueFrom, Subscription } from 'rxjs';
 import { hasDisplayName } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 
 @Injectable({
   providedIn: 'root'

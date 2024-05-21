@@ -6,7 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HideEmailComponent } from './hide-email.component';
 
 // Material
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/material/legacy-slide-toggle';
 
 @NgModule({
   declarations: [HideEmailComponent],

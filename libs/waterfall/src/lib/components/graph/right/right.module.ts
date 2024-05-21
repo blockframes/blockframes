@@ -12,9 +12,9 @@ import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price
 import { GraphNodePipeModule } from '../../../pipes/graph-node-pipe';
 
 // Material
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 @NgModule({
   declarations: [WaterfallGraphRightComponent],
