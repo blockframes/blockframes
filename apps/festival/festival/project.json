@@ -1,0 +1,126 @@
+{
+  "name": "festival",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/festival/festival/src",
+  "prefix": "festival",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "options": {
+        "outputPath": "dist/apps/festival/browser",
+        "index": "apps/festival/festival/src/index.html",
+        "main": "apps/festival/festival/src/main.ts",
+        "polyfills": "apps/festival/festival/src/polyfills.ts",
+        "tsConfig": "apps/festival/festival/tsconfig.app.json",
+        "sourceMap": true,
+        "stylePreprocessorOptions": {
+          "includePaths": ["styles"]
+        },
+        "assets": [
+          "apps/festival/festival/src/favicon.ico",
+          "apps/festival/festival/src/assets",
+          "apps/festival/festival/src/robots.txt",
+          {
+            "glob": "**/*",
+            "input": "./assets",
+            "output": "./assets"
+          }
+        ],
+        "styles": ["node_modules/angular-calendar/css/angular-calendar.css", "apps/festival/festival/src/styles.scss"],
+        "scripts": [],
+        "vendorChunk": true,
+        "extractLicenses": false,
+        "buildOptimizer": false,
+        "optimization": false,
+        "namedChunks": true
+      },
+      "configurations": {
+        "emulator": {
+          "buildOptimizer": false,
+          "optimization": {
+            "scripts": false,
+            "styles": false,
+            "fonts": false
+          },
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": false,
+          "namedChunks": true,
+          "fileReplacements": [
+            {
+              "replace": "apps/festival/festival/src/environment/environment.ts",
+              "with": "apps/festival/festival/src/environment/environment.emulator.ts"
+            }
+          ]
+        },
+        "production": {
+          "optimization": true,
+          "outputHashing": "all",
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "buildOptimizer": true,
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "2mb",
+              "maximumError": "5mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "6kb",
+              "maximumError": "10kb"
+            }
+          ],
+          "serviceWorker": true,
+          "ngswConfigPath": "ngsw-config.json"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "browserTarget": "festival:build"
+      },
+      "configurations": {
+        "emulator": {
+          "browserTarget": "festival:build:emulator"
+        }
+      }
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "festival:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/festival/festival/src/**/*.ts", "apps/festival/festival/src/**/*.html"]
+      },
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "apps/festival/festival/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "deploy": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "envFile": ".env",
+        "commands": [
+          "npx cross-env nx build festival --configuration=$NG_CONFIG",
+          "npx cross-env firebase deploy --project=$PROJECT_ID --only hosting:festival"
+        ],
+        "parallel": false,
+        "color": true
+      }
+    }
+  },
+  "tags": ["browser"]
+}

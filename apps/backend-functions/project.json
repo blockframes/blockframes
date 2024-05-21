@@ -1,0 +1,88 @@
+{
+  "name": "backend-functions",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/backend-functions/src",
+  "projectType": "application",
+  "prefix": "backend-functions",
+  "generators": {},
+  "targets": {
+    "build": {
+      "executor": "@nrwl/node:webpack",
+      "options": {
+        "outputPath": "dist/apps/backend-functions",
+        "main": "apps/backend-functions/src/main.ts",
+        "tsConfig": "apps/backend-functions/tsconfig.app.json",
+        "assets": ["apps/backend-functions/src/assets", "apps/backend-functions/src/package.json"],
+        "maxWorkers": 6,
+        "buildLibsFromSource": true
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/backend-functions/src/environments/environment.ts",
+              "with": "apps/backend-functions/src/environments/environment.prod.ts"
+            }
+          ]
+        },
+        "e2e": {
+          "fileReplacements": [
+            {
+              "replace": "apps/backend-functions/src/environments/environment.ts",
+              "with": "apps/backend-functions/src/environments/environment.e2e.ts"
+            }
+          ]
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "envFile": ".env",
+        "commands": [
+          {
+            "command": "npx nx build backend-functions --watch"
+          },
+          {
+            "command": "npm run backend-ops startEmulators"
+          }
+        ],
+        "parallel": true,
+        "color": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/backend-functions/src/**/*.ts"]
+      },
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "apps/backend-functions/jest.config.js",
+        "passWithNoTests": true,
+        "runInBand": true
+      }
+    },
+    "deploy": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "envFile": ".env",
+        "commands": [
+          "npx cross-env nx build backend-functions --configuration=$NG_CONFIG",
+          "npx cross-env npm run deploy:functions:config $PROJECT_ID",
+          "npx cross-env SKIP_PREDEPLOY_HOOKS=true firebase deploy --project=$PROJECT_ID --force --only functions || exit 0",
+          "npx cross-env SKIP_PREDEPLOY_HOOKS=true firebase deploy --project=$PROJECT_ID --force --only functions"
+        ],
+        "parallel": false,
+        "color": true
+      }
+    }
+  },
+  "tags": ["node", "cloud"]
+}

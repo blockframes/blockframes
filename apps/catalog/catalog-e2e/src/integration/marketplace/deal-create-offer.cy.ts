@@ -280,7 +280,12 @@ function fillInputs({
 
 function selectAllAvailable() {
   assertAvailableCountries(69);
-  cy.get('[fill="#7795ff"]') //each available country is a 'path' filled with this color
+  /**
+* TODO(@nrwl/cypress): Nesting Cypress commands in a should assertion now throws.
+* You should use .then() to chain commands instead.
+* More Info: https://docs.cypress.io/guides/references/migration-guide#-should
+**/
+cy.get('[fill="#7795ff"]') //each available country is a 'path' filled with this color
     .should('have.length', 69)
     .each(territory => cy.wrap(territory).click({ force: true }));
 }

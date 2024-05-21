@@ -1,0 +1,24 @@
+{
+  "name": "event",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/event/src",
+  "prefix": "event",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/event/src/**/*.ts", "libs/event/src/**/*.html"]
+      },
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/event/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": ["browser"]
+}
