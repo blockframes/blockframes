@@ -28,7 +28,7 @@ p, span, td {
   }
 }
 
-a:not(.mat-mdc-button-base):not(.mat-menu-item) {
+a:not(.mat-mdc-button-base):not(.mat-mdc-menu-item) {
   &[href^="assets"], &[href^="mailto"] {
     font-weight: bold;
   }
