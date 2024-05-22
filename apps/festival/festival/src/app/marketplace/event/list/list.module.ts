@@ -17,7 +17,7 @@ import { FilterByDateModule } from '@blockframes/utils/pipes/filter-by-date.pipe
 import { MatDividerModule } from '@angular/material/divider'
 import { MatIconModule } from '@angular/material/icon';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [ListComponent],

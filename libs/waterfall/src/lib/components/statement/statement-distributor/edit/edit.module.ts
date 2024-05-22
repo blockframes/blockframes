@@ -12,7 +12,7 @@ import { IncomeFormModule } from '../../../forms/income-form/form.module';
 import { StatementDistributorEditComponent } from './edit.component';
 
 // Material
-import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [StatementDistributorEditComponent],

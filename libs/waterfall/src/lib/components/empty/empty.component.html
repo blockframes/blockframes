@@ -8,7 +8,7 @@
   <h1 i18n>Waterfall not initialized.</h1>
 
   <ng-container *ngIf="shell.canBypassRules else notAdmin">
-    <p class="mat-body-1" i18n>
+    <p class="mat-body-2" i18n>
       Please initialize a first version that you're going to work with.
     </p>
 
@@ -66,7 +66,7 @@
 </ng-template>
 
 <ng-template #notAdmin>
-  <p class="mat-body-1" i18n>
+  <p class="mat-body-2" i18n>
     You are not authorized to initialize waterfall.
   </p>
   <a class="surface">

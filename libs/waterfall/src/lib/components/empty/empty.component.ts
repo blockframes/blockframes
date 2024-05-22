@@ -1,7 +1,7 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 // Blockframes
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';

@@ -21,11 +21,11 @@ import { RequestAskingPriceModule } from '@blockframes/movie/components/request-
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 
 // Materials
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [SessionComponent],

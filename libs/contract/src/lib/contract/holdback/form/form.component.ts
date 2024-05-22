@@ -5,7 +5,7 @@ import {
   Input,
   Output
 } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Holdback, Movie } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { SelectionModalComponent } from '../selection-modal/selection-modal.component';

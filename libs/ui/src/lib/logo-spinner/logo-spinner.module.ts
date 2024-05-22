@@ -6,7 +6,7 @@ import { LogoSpinnerComponent } from './logo-spinner.component';
 import { RiveModule, RIVE_VERSION } from 'ng-rive';
 
 // Material
-import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [LogoSpinnerComponent],

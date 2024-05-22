@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
-import { MatLegacyRadioChange as MatRadioChange, MatLegacyRadioModule as MatRadioModule } from '@angular/material/legacy-radio';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
 import { Movie, sortingOptions, TitlesSection, TemplateParams } from '@blockframes/model';

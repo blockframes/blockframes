@@ -12,7 +12,7 @@
         <button mat-flat-button color="warn" (click)="deleteOrg()">Delete this org</button>
       </article>
 
-      <mat-card *ngIf="orgForm" fxFlex fxLayoutGap="40px">
+      <mat-card appearance="outlined" *ngIf="orgForm" fxFlex fxLayoutGap="40px">
         <crm-organization-form [form]="orgForm" [orgId]="org.id"></crm-organization-form>
 
         <form [formGroup]="orgForm" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
@@ -57,7 +57,7 @@
 
     <member-add [org]="org"></member-add>
 
-    <mat-card fxFlex>
+    <mat-card appearance="outlined" fxFlex>
       <h2>Movies</h2>
       <bf-table [source]="movies" pagination="50" useFilter clickable (rowClick)="goToMovieEdit($event)">
         <ng-template colRef="poster" label="Poster" let-posters>
@@ -92,7 +92,7 @@
       </bf-table>
     </mat-card>
 
-    <mat-card class="file-explorer">
+    <mat-card appearance="outlined" class="file-explorer">
       <mat-card-title>Organization's resources</mat-card-title>
       <mat-card-content>
         <file-explorer [org]="org"></file-explorer>

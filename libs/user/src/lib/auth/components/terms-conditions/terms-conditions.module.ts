@@ -7,13 +7,13 @@ import { RouterModule } from '@angular/router';
 import { TermsConditionsComponent } from './terms-conditions.component';
 
 // Material
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
+import { MatCardModule } from '@angular/material/card';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
 import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [TermsConditionsComponent],

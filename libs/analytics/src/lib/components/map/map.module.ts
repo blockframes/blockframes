@@ -11,10 +11,10 @@ import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatListModule } from '@angular/material/list';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip'; 
+import { MatTooltipModule } from '@angular/material/tooltip'; 
 
 @NgModule({
   imports: [

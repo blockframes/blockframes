@@ -12,8 +12,8 @@ import {
 } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatLegacyChipInputEvent as MatChipInputEvent, MatLegacyChipList as MatChipList } from '@angular/material/legacy-chips';
-import { MatLegacyAutocompleteSelectedEvent as MatAutocompleteSelectedEvent } from '@angular/material/legacy-autocomplete';
+import { MatChipInputEvent, MatChipGrid } from '@angular/material/chips';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 // RxJs
 import { Observable, Subscription } from 'rxjs';
@@ -69,7 +69,7 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   private items: string[];
   @ViewChild('inputEl') inputEl: ElementRef<HTMLInputElement>;
-  @ViewChild('chipList') chipList: MatChipList;
+  @ViewChild('chipList') chipList: MatChipGrid;
 
   ngOnInit() {
     this.items = this.withoutValues.length

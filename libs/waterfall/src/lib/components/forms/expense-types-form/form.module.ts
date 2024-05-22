@@ -10,9 +10,9 @@ import { ExpenseTypesModule } from '../../expense/expense-types/expense-types.mo
 import { ExpenseTypesFormComponent } from './form.component';
 
 // Material
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [ExpenseTypesFormComponent],

@@ -5,8 +5,8 @@ import { Movie, Bucket, Holdback, movieCurrencies, createBucket } from '@blockfr
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable, Subject, merge } from 'rxjs';
 import { map, mapTo, tap } from 'rxjs/operators';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { SpecificTermsComponent } from './specific-terms/specific-terms.component';
 import { OrganizationService } from '@blockframes/organization/service';
 import { UntypedFormControl } from '@angular/forms';

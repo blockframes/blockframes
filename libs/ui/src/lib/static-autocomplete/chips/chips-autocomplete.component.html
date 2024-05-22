@@ -3,17 +3,17 @@
     <ng-content select="mat-label"></ng-content>
     {{ required ? ' *' : '' }}
   </mat-label>
-  <mat-chip-list #chipList>
+  <mat-chip-grid #chipList>
     <ng-container *ngFor="let value of values$ | async; let i = index">
-      <mat-chip *ngIf="value" [selectable]="selectable" [removable]="removable" (removed)="remove(i)">
+      <mat-chip-row *ngIf="value"  [removable]="removable" (removed)="remove(i)">
         {{ value | toLabel: scope }}
         <mat-icon matChipRemove svgIcon="cancel" *ngIf="removable"></mat-icon>
-      </mat-chip>
+      </mat-chip-row>
     </ng-container>
     <input #inputEl [placeholder]="placeholder" [formControl]="ctrl" [matAutocomplete]="auto" [disabled]="disabled"
       [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
       (matChipInputTokenEnd)="add($event)" />
-  </mat-chip-list>
+  </mat-chip-grid>
   <mat-hint>
     <ng-content select="mat-hint"></ng-content>
   </mat-hint>

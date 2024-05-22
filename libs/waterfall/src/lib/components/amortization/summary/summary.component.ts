@@ -6,7 +6,7 @@ import { AmortizationService } from '../../../amortization.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, map, pluck, switchMap } from 'rxjs';
 import { Amortization } from '@blockframes/model';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'waterfall-summary-amortization',
