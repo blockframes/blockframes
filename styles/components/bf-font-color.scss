@@ -9,6 +9,7 @@
   $foreground: map.get($config, 'foreground');
   $color-font: map.get($config, 'font');
 
+  // TODO #9702 update typography
   .mat-display-4 {
     color: map.get($color-font, 'display-4');
   }

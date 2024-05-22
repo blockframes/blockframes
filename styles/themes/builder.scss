@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
-@use "../typography" as typography;
+@use '../typography' as typography;
 @use '../components/anchor' as anchor;
 @use '../components/bf-calendar' as calendar;
 @use '../components/bf-font-color' as fontColor;
@@ -35,9 +35,12 @@
 @include mat.core();
 // While density is private we need to set it here to avoid duplicated themes
 @include mat.all-component-themes((
-  density: maximum  // options: minimum, default, maximum
+  density: maximum,  // options: minimum, default, maximum
+  typography: typography.$bf-typography
 ));
 
+// Include the typography hierarchy
+@include mat.typography-hierarchy(typography.$bf-typography);
 
 // THEME
 
