@@ -6,6 +6,7 @@
   $foreground: map.get($config, 'foreground');
   $background: map.get($config, 'background');
   $primary: map.get($config, 'primary');
+  $primary-contrast: map.get($config, 'primary', 'contrast');
   $accent: map.get($config, 'accent');
   $warn: map.get($config, 'warn');
 
@@ -16,7 +17,7 @@
   // No background
 
   .mat-stroked-button,
-  .mat-button,
+  .mat-mdc-button,
   .mat-icon-button {
     color: mat.get-color-from-palette($foreground, text);
     &.mat-primary {
@@ -49,12 +50,16 @@
         fill: mat.get-color-from-palette($foreground, disabled-text);
       }
     }
+
+    &.mat-unthemed {
+      color: inherit;
+    }
   }
 
   // With background
 
   .mat-raised-button,
-  .mat-flat-button,
+  .mat-mdc-unelevated-button,
   .mat-fab,
   .mat-mini-fab {
     &.mat-primary {
@@ -76,6 +81,7 @@
       &:hover {
         background-color: mat.get-color-from-palette($accent, 800);
       }
+      color: mat.get-color-from-palette($primary-contrast, 200);
     }
     &.mat-warn {
       svg g,
@@ -111,11 +117,11 @@
     }
   }
 
-  .mat-button,
-  .mat-flat-button,
+  .mat-mdc-button,
+  .mat-mdc-unelevated-button,
   .mat-raised-button,
   .mat-stroked-button {
-    padding: 14px 24px;
+    padding: 27px 24px;
   }
 
   .mat-button.mat-button-disabled {
@@ -160,7 +166,7 @@
     }
   }
 
-  .mat-flat-button {
+  .mat-mdc-unelevated-button {
     border-radius: 26px;
   }
 
@@ -191,10 +197,10 @@
   $config: mat.get-typography-config($theme);
 
   // note: mat-icon-button is not here on purpose
-  .mat-button,
+  .mat-mdc-button,
   .mat-raised-button,
   .mat-stroked-button,
-  .mat-flat-button,
+  .mat-mdc-unelevated-button,
   .mat-fab,
   .mat-mini-fab {
     letter-spacing: mat.letter-spacing($config, button);

@@ -127,10 +127,10 @@
   // FONT //
   //////////
   $font: (
-    display-4: map.get($foreground, 700),
-    display-3: map.get($foreground, 700),
-    display-2: map.get($foreground, 700),
-    display-1: map.get($foreground, 700),
+    headline-1: map.get($foreground, 700),
+    headline-2: map.get($foreground, 700),
+    headline-3: map.get($foreground, 700),
+    headline-4: map.get($foreground, 700),
     h1: map.get($foreground, 800),
     h2: map.get($foreground, 800),
     h3: map.get($foreground, 800),
