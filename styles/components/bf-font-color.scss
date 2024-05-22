@@ -9,38 +9,37 @@
   $foreground: map.get($config, 'foreground');
   $color-font: map.get($config, 'font');
 
-  // TODO #9702 update typography
-  .mat-display-4 {
-    color: map.get($color-font, 'display-4');
+  .mat-headline-1 {
+    color: map.get($color-font, 'headline-1');
   }
-  .mat-display-3 {
-    color: map.get($color-font, 'display-3');
+  .mat-headline-2 {
+    color: map.get($color-font, 'headline-2');
   }
-  .mat-display-2 {
-    color: map.get($color-font, 'display-2');
+  .mat-headline-3 {
+    color: map.get($color-font, 'headline-3');
     margin: unset;
   }
-  .mat-display-1 {
-    color: map.get($color-font, 'display-1');
+  .mat-headline-4 {
+    color: map.get($color-font, 'headline-4');
   }
   h1,
   .mat-h1,
-  .mat-headline {
+  .mat-headline-5 {
     color: map.get($color-font, 'h1');
   }
   h2,
   .mat-h2,
-  .mat-title {
+  .mat-headline-6 {
     color: map.get($color-font, 'h2');
   }
   h3,
   .mat-h3,
-  .mat-subheading-2 {
+  .mat-subtitle-1 {
     color: map.get($color-font, 'h3');
   }
   h4,
   .mat-h4,
-  .mat-subheading-1 {
+  .mat-body-1 {
     color: map.get($color-font, 'h4');
   }
   h5 {
@@ -60,13 +59,13 @@
   }
   p,
   bf-tag,
-  .mat-body-1,
-  .mat-body {
-    color: map.get($color-font, 'mat-body-1');
-  }
   .mat-body-2,
-  .mat-body-strong {
+  .mat-body {
     color: map.get($color-font, 'mat-body-2');
+  }
+  .mat-subtitle-2,
+  .mat-body-strong {
+    color: map.get($color-font, 'subtitle-2');
   }
   .mat-caption,
   .mat-small {
