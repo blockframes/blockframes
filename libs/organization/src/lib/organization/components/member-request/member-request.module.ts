@@ -7,9 +7,9 @@ import { CommonModule } from '@angular/common';
 import { MemberRequestComponent } from './member-request.component';
 
 // Material
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from '@angular/material/card';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 
 @NgModule({

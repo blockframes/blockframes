@@ -5,16 +5,16 @@ import { RouterModule, Routes } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Material
-import { MatCardModule } from '@angular/material/card';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
+import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { LanguagesFormModule } from '@blockframes/movie/form/languages/languages.module';
 import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-error.module';

@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/service';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 
 @Component({
   selector: 'festival-organization-email',

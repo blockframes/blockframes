@@ -12,14 +12,14 @@ import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.mod
 // Material
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyProgressBarModule as MatProgressBarModule } from '@angular/material/legacy-progress-bar';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatListModule } from '@angular/material/list';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
+import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
+import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 
 @NgModule({
   declarations: [FilePickerComponent],

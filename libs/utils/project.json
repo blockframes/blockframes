@@ -1,0 +1,29 @@
+{
+  "name": "utils",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/utils/src",
+  "projectType": "library",
+  "prefix": "utils",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/utils/src/**/*.ts", "libs/utils/src/**/*.html"]
+      },
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/utils/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "generators": {
+    "@nrwl/schematics:component": {
+      "styleext": "scss"
+    }
+  },
+  "tags": ["browser", "deprecated"]
+}

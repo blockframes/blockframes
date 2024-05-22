@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Directive, HostBinding, Input, OnDestroy, ViewEncapsulation, ChangeDetectorRef, Inject } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { createDemoRequestInformations, RequestDemoInformations } from '@blockframes/utils/request-demo';
-import { MatSnackBar } from '@angular/material/snack-bar'
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar'
 import { RequestDemoRole } from '@blockframes/utils/request-demo';
 import { ThemeService } from '@blockframes/ui/theme';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';

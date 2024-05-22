@@ -12,8 +12,8 @@ import { ConfirmDeclineComponentModule } from '@blockframes/contract/contract/co
 import { ExternalSaleComponent } from './external.component';
 
 // Material
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatSelectModule } from '@angular/material/select';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
+import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
 
 @NgModule({
   declarations: [ExternalSaleComponent],

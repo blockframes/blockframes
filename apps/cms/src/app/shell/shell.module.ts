@@ -6,7 +6,7 @@ import { ShellComponent } from './shell.component';
 import { BlockframesAdminGuard } from '@blockframes/admin/guard/blockframes-admin.guard';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 const children: Route[] = [{
   path: '',

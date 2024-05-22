@@ -8,10 +8,10 @@ import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.mod
 import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 
 // Material
-import { MatMenuModule } from '@angular/material/menu';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 
 // Component
 import { StateReaderComponent, StateDialogComponent } from './state-reader.component';

@@ -4,10 +4,10 @@ import { AmortizationService } from '@blockframes/waterfall/amortization.service
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Observable, combineLatest, map } from 'rxjs';
 import { Amortization, WaterfallRightholder, sortByDate } from '@blockframes/model';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 
 @Component({
   selector: 'waterfall-title-amortization',

@@ -47,12 +47,11 @@ const routes = createRoutes({
   imports: [
     IdlePreloadModule.forRoot(),
     RouterModule.forRoot(routes, {
-      initialNavigation: 'enabledBlocking',
-      anchorScrolling: 'enabled',
-      onSameUrlNavigation: 'reload',
-      paramsInheritanceStrategy: 'always',
-      relativeLinkResolution: 'corrected',
-      preloadingStrategy: IdlePreload
-    })],
+    initialNavigation: 'enabledBlocking',
+    anchorScrolling: 'enabled',
+    onSameUrlNavigation: 'reload',
+    paramsInheritanceStrategy: 'always',
+    preloadingStrategy: IdlePreload
+})],
 })
 export class FestivalModule { }

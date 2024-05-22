@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
-@import '~angular-calendar/scss/angular-calendar.scss';
+/*@import '~angular-calendar/scss/angular-calendar.scss';*/
 
 @mixin color($theme) {
   $config: mat.get-color-config($theme);
@@ -10,7 +10,7 @@
   $accent: map.get($config, 'accent');
 
 
-  @include cal-theme(
+  /*@include cal-theme(
     (
       weekend-color: mat.get-color-from-palette($primary),
       bg-primary: map.get($background, 'background'),
@@ -21,7 +21,7 @@
       today-bg: map.get($background, 'hover'),
       event-color-primary: map.get($foreground, 'divider')  // Border on event
     )
-  );
+  );*/
 
   // TOOLTIP
   // Cannot apply style on cal-tooltip because angular-calendar need to find the .cal-tooltip

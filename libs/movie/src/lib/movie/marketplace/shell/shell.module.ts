@@ -22,11 +22,11 @@ import { FileListPreviewModule } from '@blockframes/media/file/preview-list/prev
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatCardModule } from '@angular/material/card';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
+import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips';
+import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 
 @NgModule({
   declarations: [TitleMarketplaceShellComponent],

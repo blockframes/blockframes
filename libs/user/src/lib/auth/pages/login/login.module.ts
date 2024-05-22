@@ -9,7 +9,7 @@ import { SnackbarLinkModule } from '@blockframes/ui/snackbar/link/snackbar-link.
 import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-error.module';
 
 // Material
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
 
 // Component
 import { LoginComponent } from './login.component';

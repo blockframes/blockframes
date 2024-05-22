@@ -1,10 +1,10 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { GroupScope, Scope, StaticGroup, staticGroups, staticModel } from '@blockframes/model';
 import { FormStaticValueArray } from '@blockframes/utils/form';
-import { MatSelect } from '@angular/material/select';
+import { MatLegacySelect as MatSelect } from '@angular/material/legacy-select';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { DetailedGroupComponent } from '../../detail-modal/detailed.component';
 import { getKeyIfExists } from '@blockframes/utils/helpers';

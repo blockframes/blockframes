@@ -6,7 +6,7 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { debounceTime, switchMap, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 

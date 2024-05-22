@@ -24,9 +24,9 @@ import { StatementForm } from '../../../../form/statement.form';
 import { Observable, combineLatest, map, shareReplay, switchMap, tap } from 'rxjs';
 import { StatementService } from '../../../../statement.service';
 import { StatementArbitraryChangeComponent } from '../../statement-arbitrary-change/statement-arbitrary-change.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 
 @Component({
   selector: 'waterfall-statement-distributor-summary',

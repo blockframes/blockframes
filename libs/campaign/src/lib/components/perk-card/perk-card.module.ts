@@ -7,9 +7,9 @@ import { PerkCardComponent } from './perk-card.component';
 import { MaxLengthModule } from '@blockframes/utils/pipes';
 import { PerksPipeModule } from '@blockframes/campaign/pipes/perks.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 
 @NgModule({
   declarations: [PerkCardComponent],

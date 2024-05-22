@@ -15,8 +15,8 @@ import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chi
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 
 @NgModule({
   declarations: [ListComponent],

@@ -1,0 +1,25 @@
+{
+  "name": "analytics",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/analytics/src",
+  "prefix": "analytics",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/analytics"],
+      "options": {
+        "jestConfig": "libs/analytics/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/analytics/src/**/*.ts", "libs/analytics/src/**/*.html"]
+      },
+      "outputs": ["{options.outputFile}"]
+    }
+  },
+  "tags": ["browser"]
+}

@@ -10,7 +10,7 @@ import { getSeller } from '@blockframes/contract/contract/utils';
 import { deletedIdentifier, externalOrgIdentifier, Sale } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { orderBy, where } from 'firebase/firestore';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { supportEmails } from '@env';
 
 function queryConstraints(orgId: string, options: { internal?: boolean }) {

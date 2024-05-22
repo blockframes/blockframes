@@ -1,0 +1,24 @@
+{
+  "name": "waterfall-library",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/waterfall/src",
+  "prefix": "blockframes",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/waterfall"],
+      "options": {
+        "jestConfig": "libs/waterfall/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/waterfall/src/**/*.ts", "libs/waterfall/src/**/*.html"]
+      }
+    }
+  },
+  "tags": ["browser"]
+}

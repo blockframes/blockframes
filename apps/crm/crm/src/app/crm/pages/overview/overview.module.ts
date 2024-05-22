@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Materials
 import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
+import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
 
 // Components
 import { OverviewComponent } from './overview.component';

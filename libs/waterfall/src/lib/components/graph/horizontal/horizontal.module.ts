@@ -10,7 +10,7 @@ import { WaterfallGraphRightModule } from '../right/right.module';
 import { WaterfallGraphVerticalModule } from '../vertical/vertical.module';
 
 // Material
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 @NgModule({
   declarations: [ WaterfallGraphHorizontalComponent ],

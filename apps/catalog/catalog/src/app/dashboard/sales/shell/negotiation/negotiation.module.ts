@@ -7,7 +7,7 @@ import { ConfirmDeclineComponentModule } from '@blockframes/contract/contract/co
 import { NegotiationComponent } from './negotiation.component';
 import { NegotiationGuard } from '@blockframes/contract/negotiation/guard';
 import { NegotiationFormModule } from '@blockframes/contract/negotiation';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({

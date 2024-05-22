@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FormEntity, FormGroupSchema } from 'ng-form-factory';
-import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
+import { MatLegacyRadioChange as MatRadioChange, MatLegacyRadioModule as MatRadioModule } from '@angular/material/legacy-radio';
 import { Organization, Movie, App, OrgTitlesSection } from '@blockframes/model';
 import { FormAutocompleteModule } from '../../forms/autocomplete';
 import { FormChipsAutocompleteModule } from '../../forms/chips-autocomplete';

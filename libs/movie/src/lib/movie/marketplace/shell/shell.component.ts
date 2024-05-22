@@ -13,7 +13,7 @@ import { Movie, App } from '@blockframes/model';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { RouteDescription } from '@blockframes/model';
 import { FileListPreviewComponent } from '@blockframes/media/file/preview-list/preview-list.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { AnalyticsService } from '@blockframes/analytics/service';

@@ -1,0 +1,67 @@
+{
+  "name": "financiers-e2e",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/financiers/financiers-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/financiers/financiers-e2e/cypress.config.js",
+        "tsConfig": "apps/financiers/financiers-e2e/tsconfig.e2e.json",
+        "baseUrl": "http://localhost:4200",
+        "watch": true,
+        "headless": false,
+        "exit": false,
+        "record": false,
+        "browser": "chrome",
+        "devServerTarget": "financiers:serve"
+      },
+      "configurations": {
+        "emulator": {
+          "devServerTarget": "financiers:serve:emulator",
+          "env": {
+            "notice": "Env is being read",
+            "emulator": true
+          }
+        }
+      }
+    },
+    "e2e": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/financiers/financiers-e2e/cypress.config.js",
+        "tsConfig": "apps/financiers/financiers-e2e/tsconfig.e2e.json",
+        "baseUrl": "http://localhost:4200",
+        "browser": "chrome",
+        "devServerTarget": "financiers:serve"
+      },
+      "configurations": {
+        "emulator": {
+          "devServerTarget": "financiers:serve:emulator",
+          "env": {
+            "notice": "Env is being read",
+            "emulator": true
+          }
+        },
+        "emulator-incognito": {
+          "devServerTarget": "financiers:serve:emulator",
+          "env": {
+            "notice": "Env is being read",
+            "emulator": true,
+            "incognito": true
+          }
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/financiers/financiers-e2e/src/**/*.ts", "apps/financiers/financiers-e2e/src/**/*.html"]
+      },
+      "outputs": ["{options.outputFile}"]
+    }
+  },
+  "tags": ["browser", "e2e"],
+  "implicitDependencies": ["financiers"]
+}

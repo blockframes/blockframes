@@ -16,8 +16,8 @@ import { Router } from '@angular/router';
 import { Intercom } from 'ng-intercom';
 import { WriteBatch } from 'firebase/firestore';
 import { BehaviorSubject, Observable, Subscription, combineLatest, map, tap } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import {
   Right,
   Version,

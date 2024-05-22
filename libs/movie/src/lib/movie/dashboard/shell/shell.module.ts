@@ -12,10 +12,10 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 
 // Material
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatMenuModule } from '@angular/material/menu';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
 
 @NgModule({
   declarations: [DashboardTitleShellComponent, MovieCtaDirective],

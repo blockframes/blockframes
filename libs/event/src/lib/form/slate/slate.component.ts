@@ -4,7 +4,7 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { switchMap, map } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { EventFormShellComponent } from '../shell/shell.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 
 @Component({
   selector: 'event-slate',

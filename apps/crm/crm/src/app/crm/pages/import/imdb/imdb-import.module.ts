@@ -8,10 +8,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ImdbImportComponent } from './imdb-import.component';
 
 // Material 
-import { MatButtonModule } from '@angular/material/button';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
 
 const routes = [{
   path: '',

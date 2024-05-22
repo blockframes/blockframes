@@ -4,13 +4,13 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
+import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
+import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
 
 import { WaterfallRightListComponent } from './right-list.component';
 import { WaterfallPoolModalModule } from '../pool-modal/pool-modal.module';

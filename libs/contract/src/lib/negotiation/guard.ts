@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { CanActivate, ActivatedRouteSnapshot, Router, CanDeactivate } from '@angular/router';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { NegotiationForm } from '@blockframes/contract/negotiation';

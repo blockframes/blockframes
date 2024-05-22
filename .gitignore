@@ -66,6 +66,7 @@ tools/scripts/token.json
 
 # cache
 .cache
+.nx/cache
 
 # Report
 report.*.json

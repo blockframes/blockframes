@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { MatSnackBarRef, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
+import { MatLegacySnackBarRef as MatSnackBarRef, MAT_LEGACY_SNACK_BAR_DATA as MAT_SNACK_BAR_DATA } from '@angular/material/legacy-snack-bar';
 
 @Component({
   selector: 'snackbar-error',

@@ -12,11 +12,11 @@ import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
 import { ButtonTextModule } from '@blockframes/utils/directives/button-text.directive';
 
 // Material
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatLegacyPaginatorModule as MatPaginatorModule } from '@angular/material/legacy-paginator';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 
 import { TableModule } from '../../list/table/table.module';
 

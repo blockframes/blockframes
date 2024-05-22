@@ -4,9 +4,9 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { MatIconModule } from '@angular/material/icon';
-import { MatSliderModule } from '@angular/material/slider';
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatLegacySliderModule as MatSliderModule } from '@angular/material/legacy-slider';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 

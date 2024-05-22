@@ -51,7 +51,7 @@ import { DashboardWaterfallShellComponent } from '../../../../dashboard/shell/sh
 import { StatementForm } from '../../../../form/statement.form';
 import { BehaviorSubject, Observable, Subscription, combineLatest, debounceTime, map, shareReplay, tap } from 'rxjs';
 import { unique } from '@blockframes/utils/helpers';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { StatementArbitraryChangeComponent } from '../../statement-arbitrary-change/statement-arbitrary-change.component';
 import { StatementService } from '../../../../statement.service';
@@ -59,7 +59,7 @@ import { StatementIncomeEditComponent } from '../../statement-income-edit/statem
 import { IncomeService } from '@blockframes/contract/income/service';
 import { StatementExpenseEditComponent } from '../../statement-expense-edit/statement-expense-edit.component';
 import { ExpenseService } from '@blockframes/contract/expense/service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 
 function getRightTurnover(incomeIds: string[], state: TitleState, right: Right, sources: WaterfallSource[], statementIncomes: Income[], statementStatus: StatementStatus, versionId: string): BreakdownRow[] {
   const sourceIds = getSources(state, right.id).map(i => i.id);

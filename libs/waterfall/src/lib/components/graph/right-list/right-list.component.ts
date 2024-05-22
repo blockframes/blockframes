@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
 import { Right } from '@blockframes/model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { RightService } from '../../../right.service';

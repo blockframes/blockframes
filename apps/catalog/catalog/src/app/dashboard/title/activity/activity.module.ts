@@ -8,7 +8,7 @@ import { MovieAnalyticsChartModule } from '@blockframes/analytics/components/mov
 import { TitleActivityComponent } from './activity.component';
 
 // Material
-import { MatCardModule } from '@angular/material/card';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({

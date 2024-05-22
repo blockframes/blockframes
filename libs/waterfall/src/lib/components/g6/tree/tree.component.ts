@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, Input } from '@angul
 
 import { TreeGraph, TreeGraphData } from '@antv/g6';
 import { setupTreeGraph } from './../utils';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { sha1 } from 'object-hash';
 import { Block, Version, Waterfall } from '@blockframes/model';
 import { BlockService } from '../../../block.service';

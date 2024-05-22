@@ -9,7 +9,7 @@ import { PreferencesFormModule } from '@blockframes/auth/forms/preferences/prefe
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 
 // Material
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatIconModule } from '@angular/material/icon';
 
 

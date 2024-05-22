@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/service';
 import { InvitationService } from '@blockframes/invitation/service';

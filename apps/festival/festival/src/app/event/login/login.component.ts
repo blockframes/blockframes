@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit, HostListener, OnDestroy } f
 import { AuthService } from '@blockframes/auth/service';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 

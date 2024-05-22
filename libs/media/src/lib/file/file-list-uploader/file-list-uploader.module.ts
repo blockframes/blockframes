@@ -3,13 +3,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
+import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FileNameModule } from '@blockframes/utils/pipes';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
+import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
 
 import { OpenPreviewModule } from '@blockframes/ui/open-preview/open-preview.module'
 

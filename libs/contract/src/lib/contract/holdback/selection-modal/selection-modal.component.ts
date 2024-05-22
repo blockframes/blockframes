@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef, MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Holdback, Movie, Scope, waterfallMediaGroups } from '@blockframes/model';
 import { FormList } from '@blockframes/utils/form';
 import { HoldbackForm } from '../form';

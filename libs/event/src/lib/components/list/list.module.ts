@@ -4,7 +4,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ListComponent } from './list.component';
 import { FilterByDateModule } from '@blockframes/utils/pipes/filter-by-date.pipe';
 
-import { MatListModule } from '@angular/material/list';
+import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
 
 @NgModule({
   declarations: [ListComponent],

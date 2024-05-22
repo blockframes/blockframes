@@ -8,8 +8,8 @@ import { ExternalSaleListModule } from '@blockframes/contract/contract/list/exte
 import { MandatesListModule } from '@blockframes/contract/contract/list/mandates/mandates.module'
 
 // Material
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({

@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { EventService } from '@blockframes/event/service';
 import { EventForm } from '@blockframes/event/form/event.form';
 import { OrganizationService } from '@blockframes/organization/service';

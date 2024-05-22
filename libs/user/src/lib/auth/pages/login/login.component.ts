@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { SigninForm } from '../../forms/signin.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';

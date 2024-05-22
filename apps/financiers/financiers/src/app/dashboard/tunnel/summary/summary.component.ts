@@ -1,12 +1,12 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ConsentsService } from '@blockframes/consents/service';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component';
 import { map, pluck, switchMap } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { MovieService } from '@blockframes/movie/service';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';

@@ -10,7 +10,7 @@ import {
 import { fromOrg, MovieService } from '@blockframes/movie/service';
 import { StorageFile, recursivelyListFiles, Movie } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { Subscription } from 'rxjs';
 import { FilePreviewComponent } from '../preview/preview.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';

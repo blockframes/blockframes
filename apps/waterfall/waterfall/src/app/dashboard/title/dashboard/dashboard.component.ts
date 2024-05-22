@@ -25,7 +25,7 @@ import { sorts } from '@blockframes/ui/list/table/sorts';
 import { FormControl } from '@angular/forms';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { Intercom } from 'ng-intercom';
 import { Router } from '@angular/router';

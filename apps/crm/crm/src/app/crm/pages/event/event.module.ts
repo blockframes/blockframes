@@ -6,9 +6,9 @@ import { InvitationFormUserModule } from '@blockframes/invitation/form/user/user
 import { ClipboardModule } from '@angular/cdk/clipboard';
 
 // Material
-import { MatCardModule } from '@angular/material/card';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 // Modules
 import { EventInfoModule } from '../../components/event-info/event-info.module';

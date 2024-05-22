@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { OrganizationService } from '@blockframes/organization/service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';

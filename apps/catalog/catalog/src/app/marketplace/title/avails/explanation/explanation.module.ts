@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 import { ExplanationComponent } from './explanation.component';
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 
-import { MatButtonModule } from '@angular/material/button';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
 
 @NgModule({
   imports: [

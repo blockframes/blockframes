@@ -14,10 +14,10 @@ import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.mod
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 
 @NgModule({
   declarations: [InvitationComponent],

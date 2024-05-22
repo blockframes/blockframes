@@ -1,0 +1,114 @@
+{
+  "name": "crm",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/crm/crm/src",
+  "prefix": "crm",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "options": {
+        "outputPath": "dist/apps/crm",
+        "index": "apps/crm/crm/src/index.html",
+        "main": "apps/crm/crm/src/main.ts",
+        "polyfills": "apps/crm/crm/src/polyfills.ts",
+        "tsConfig": "apps/crm/crm/tsconfig.app.json",
+        "stylePreprocessorOptions": {
+          "includePaths": ["styles"]
+        },
+        "assets": [
+          "apps/crm/crm/src/favicon.ico",
+          "apps/crm/crm/src/assets",
+          "apps/crm/crm/src/robots.txt",
+          {
+            "glob": "**/*",
+            "input": "./assets",
+            "output": "./assets"
+          }
+        ],
+        "styles": ["apps/crm/crm/src/styles.scss"],
+        "scripts": [],
+        "vendorChunk": true,
+        "extractLicenses": false,
+        "buildOptimizer": false,
+        "sourceMap": true,
+        "optimization": false,
+        "namedChunks": true
+      },
+      "configurations": {
+        "emulator": {
+          "fileReplacements": [
+            {
+              "replace": "apps/crm/crm/src/environment/environment.ts",
+              "with": "apps/crm/crm/src/environment/environment.emulator.ts"
+            }
+          ]
+        },
+        "production": {
+          "optimization": true,
+          "outputHashing": "all",
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "buildOptimizer": true,
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "2mb",
+              "maximumError": "5mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "6kb",
+              "maximumError": "10kb"
+            }
+          ]
+        }
+      }
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "browserTarget": "crm:build"
+      },
+      "configurations": {
+        "emulator": {
+          "browserTarget": "crm:build:emulator"
+        }
+      }
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "crm:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/crm/crm/src/**/*.ts", "apps/crm/crm/src/**/*.html"]
+      },
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "apps/crm/crm/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "deploy": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "envFile": ".env",
+        "commands": [
+          "npx cross-env nx build crm --configuration=$NG_CONFIG",
+          "npx cross-env firebase deploy --project=$PROJECT_ID --only hosting:crm"
+        ],
+        "parallel": false,
+        "color": true
+      }
+    }
+  },
+  "tags": ["browser"]
+}

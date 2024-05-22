@@ -12,12 +12,12 @@ import { Subscription, Observable } from 'rxjs';
 import { startWith, distinctUntilChanged } from 'rxjs/operators';
 
 // Material
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { maxYear } from '@blockframes/utils/form/validators/validators';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { Filmography } from '@blockframes/model';
 import { displayFilmographies } from '@blockframes/movie/pipes/filmography.pipe';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';

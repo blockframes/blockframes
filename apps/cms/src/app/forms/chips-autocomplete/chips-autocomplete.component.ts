@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatLegacyAutocompleteSelectedEvent as MatAutocompleteSelectedEvent } from '@angular/material/legacy-autocomplete';
 import { FormList } from 'ng-form-factory';
 import { MatMultiSelectSchema } from '../select';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';

@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Material
-import { MatCardModule } from '@angular/material/card';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 import { GuestTableModule } from '../guest-table/guest-table.module';
 import { MatIconModule } from '@angular/material/icon';
 

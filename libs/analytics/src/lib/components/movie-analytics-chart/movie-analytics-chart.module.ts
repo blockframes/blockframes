@@ -7,9 +7,9 @@ import { MovieAnalyticsChartComponent } from './movie-analytics-chart.component'
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Material
-import { MatCardModule } from '@angular/material/card';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 @NgModule({
   declarations: [MovieAnalyticsChartComponent],

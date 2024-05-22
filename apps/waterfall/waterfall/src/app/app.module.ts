@@ -19,7 +19,6 @@ import { AppComponent } from './app.component';
 
 // Material
 import { DateAdapter, MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
-
 // Blockframes
 import { SentryModule } from '@blockframes/utils/sentry.module';
 // #7936 this may be reactivated later

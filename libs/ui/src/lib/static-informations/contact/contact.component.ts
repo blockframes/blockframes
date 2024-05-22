@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/model';

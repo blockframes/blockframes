@@ -12,9 +12,9 @@ import { AppBridgeBannerModule } from '@blockframes/landing/appBridgeBanner/app-
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
+import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
 
 @NgModule({
   declarations: [LandingComponent],

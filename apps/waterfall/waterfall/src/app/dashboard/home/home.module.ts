@@ -10,8 +10,8 @@ import { MovieTableGridModule } from '@blockframes/movie/dashboard/table-grid/ta
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 
 // Pages
 import { HomeComponent } from './home.component';
