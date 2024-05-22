@@ -1,5 +1,6 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
+@use '../typography' as typography;
 
 @mixin color($theme) {
   $config: mat.get-color-config($theme);
@@ -86,3 +87,14 @@
     }
   }
 }
+
+// TYPOGRAPHY
+@mixin typography($theme) {
+  $config: mat.get-typography-config($theme);
+
+  .mat-mdc-form-field,
+  .mat-mdc-floating-label {
+    @include mat.typography-level(typography.$bf-typography, 'input');
+  }
+}
+
