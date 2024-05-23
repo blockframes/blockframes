@@ -9,23 +9,16 @@
   $foreground: map.get($config, 'foreground');
 
 
-  .mat-form-field {
-    &.ng-valid, &.ng-invalid, &.mat-form-field-type-mat-chip-list {
-      .mat-form-field-wrapper {
-        padding-bottom: 0.6em;
-      } 
-    }
+  .mat-mdc-form-field {
+    margin-top: 0.40em;
 
     &-underline {
       position: static;
     }
 
-    &-subscript-wrapper {
-      position: static;
-    }
 
     &[no-underline] {
-      .mat-form-field-underline {
+      .mat-mdc-form-field-underline {
         display: none;
       }
     }
@@ -58,16 +51,55 @@
         line-height: 20px;
       }
     }
+    .mat-icon {
+      margin-left: 0px;
+    }
 
-    mat-icon[matPrefix] {
+    mat-icon[matPrefix],
+    .mat-mdc-form-field-icon-suffix {
       margin-left: 10px;
       margin-right: 10px;
     }
+
+    .mdc-text-field,
+    .mdc-text-field:hover,
+    .mat-mdc-form-field-focus-overlay {
+      background-color: transparent;
+      .mdc-line-ripple::before {
+        border-bottom-color: mat.get-color-from-palette($foreground, divider);
+      }
+    }
+
+    .mdc-text-field:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid) .mdc-floating-label,
+    .mat-mdc-form-field-hint {
+      color: mat.get-color-from-palette($foreground, border-color);
+    }
+
   }
 
   // OUTLINE
   .mat-form-field-appearance-outline {
-    .mat-form-field-outline {
+    /* Change the border color */
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid) .mdc-notched-outline__leading,
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid) .mdc-notched-outline__notch,
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid) .mdc-notched-outline__trailing {
+      border-color: mat.get-color-from-palette($foreground, divider);
+    }
+
+    /* Change the border hover color */
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover
+    .mdc-notched-outline
+    .mdc-notched-outline__leading,
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover
+    .mdc-notched-outline
+    .mdc-notched-outline__notch,
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover
+    .mdc-notched-outline
+    .mdc-notched-outline__trailing {
+      border-color: var(--primary);
+    }
+
+    .mdc-text-field--outlined {
       color: mat.get-color-from-palette($foreground, divider);
     }
     // This one is when mat-form-field is hovered
@@ -90,8 +122,6 @@
 
 // TYPOGRAPHY
 @mixin typography($theme) {
-  $config: mat.get-typography-config($theme);
-
   .mat-mdc-form-field,
   .mat-mdc-floating-label {
     @include mat.typography-level(typography.$bf-typography, 'input');

@@ -43,7 +43,7 @@ $bf-typography: map.merge(mat.define-typography-config(
     $button: mat.define-typography-level(16px, 24px, 600, $letter-spacing: 1.25px),
   ),
   (
-    input: mat.define-typography-level(inherit, 1.125, 400)
+    input: mat.define-typography-level(inherit, 1.925, 400)
   )
 );
 
