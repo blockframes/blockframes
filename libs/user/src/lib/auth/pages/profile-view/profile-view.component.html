@@ -15,7 +15,7 @@
       </a>
   </header>
   <section>
-    <nav mat-tab-nav-bar>
+    <nav mat-tab-nav-bar [tabPanel]="tabPanel">
       <a mat-tab-link
         *ngFor="let link of navLinks"
         [routerLink]="link.path"
@@ -26,7 +26,7 @@
     </nav>
   </section>
 </ng-container>
-<section>
+<section #tabPanel>
   <router-outlet></router-outlet>
 </section>
 
