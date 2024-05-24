@@ -26,20 +26,20 @@
         <mat-list>
           <ng-container *ngFor="let budget of budgets; let index = index">
             <mat-list-item *ngIf="budget.id | getFile: waterfall as file">
-              <mat-icon mat-list-icon [svgIcon]="file.storagePath | fileTypeImage: 'icon'"></mat-icon>
-              <span mat-line [matTooltip]="file.storagePath | fileName">
+              <mat-icon matListItemIcon [svgIcon]="file.storagePath | fileTypeImage: 'icon'"></mat-icon>
+              <span matListItemLine [matTooltip]="file.storagePath | fileName">
                 {{file.storagePath | fileName}}
               </span>
-              <bf-preview-modal color="" [ref]="file" showControls></bf-preview-modal>
-              <a mat-icon-button [href]="file | getUrl | async" target="_blank" matTooltip="Download Document">
+              <bf-preview-modal matListItemMeta color="" [ref]="file" showControls></bf-preview-modal>
+              <a matListItemMeta mat-icon-button [href]="file | getUrl | async" target="_blank" matTooltip="Download Document">
                 <mat-icon svgIcon="cloud_download"></mat-icon>
               </a>
-              <ng-container *ngIf="organizations$ | async as organizations">
+              <span matListItemMeta *ngIf="organizations$ | async as organizations">
                 <button mat-icon-button *ngIf="shell.canBypassRules" matTooltip="Share Document" (click)="share(budget.id, waterfall.id, organizations)" i18n-matTooltip>
                   <mat-icon svgIcon="person_add"></mat-icon>
                 </button>
-              </ng-container>
-              <button mat-icon-button *ngIf="shell.canBypassRules" matTooltip="Delete File" (click)="delete(file.id)" i18n-matTooltip>
+              </span>
+              <button matListItemMeta mat-icon-button *ngIf="shell.canBypassRules" matTooltip="Delete File" (click)="delete(file.id)" i18n-matTooltip>
                 <mat-icon svgIcon="delete"></mat-icon>
               </button>
             </mat-list-item>

@@ -1,9 +1,9 @@
-﻿<mat-list-item *ngIf="!!_invitation">
-  <img matListAvatar *ngIf="_invitation.fromUser" asset="profil_user.svg" [ref]="_invitation.fromUser.avatar"
+﻿﻿<mat-list-item *ngIf="!!_invitation">
+  <img matListItemAvatar *ngIf="_invitation.fromUser" asset="profil_user.svg" [ref]="_invitation.fromUser.avatar"
   alt="Profile picture">
-  <img matListAvatar *ngIf="_invitation.fromOrg" asset="profil_user.svg" [ref]="_invitation.fromOrg.logo"
+  <img matListItemAvatar *ngIf="_invitation.fromOrg" asset="profil_user.svg" [ref]="_invitation.fromOrg.logo"
   alt="Organization logo">
-  <div matLine>
+  <div matListItemLine>
     <ng-container [ngSwitch]="_invitation.type">
       <ng-container *ngSwitchCase="'attendEvent'">
         <ng-container *ngIf="_invitation | eventFromInvitation | async as event">
@@ -12,7 +12,7 @@
             <ng-container *ngIf="event.type === 'meeting'; else inviteScreening">
 
               <ng-container *ngIf="fromUser">
-                <p matLine fxLayout="row wrap" fxLayoutGap="6px">
+                <p fxLayout="row wrap" fxLayoutGap="6px">
                   <a [href]="'mailto:' + fromUser.email">{{ fromUser | displayUser | async }}</a>
                   <span>
                     invited you to {{ event.type | toLabel:'eventTypes' }}
@@ -24,7 +24,7 @@
 
             </ng-container>
             <ng-template #inviteScreening>
-              <p matLine fxLayout="row wrap" fxLayoutGap="6px">
+              <p fxLayout="row wrap" fxLayoutGap="6px">
                 <a [routerLink]="['/c/o/marketplace/organization', _invitation.fromOrg.id]">{{ _invitation.fromOrg.name }}</a>
                 <span>
                   invited you to
@@ -39,7 +39,7 @@
             <ng-container *ngIf="event.type === 'meeting'; else requestScreening">
 
               <ng-container *ngIf="fromUser">
-                <p matLine fxLayout="row wrap" fxLayoutGap="6px">
+                <p  fxLayout="row wrap" fxLayoutGap="6px">
                   <a [href]="'mailto:' + fromUser.email">{{ fromUser | displayUser | async }}</a>
                   <span>
                     would like to attend {{ event.type | toLabel:'eventTypes' }}
@@ -51,7 +51,7 @@
 
             </ng-container>
             <ng-template #requestScreening>
-              <p matLine fxLayout="row wrap" fxLayoutGap="6px">
+              <p  fxLayout="row wrap" fxLayoutGap="6px">
                 <a [href]="'mailto:' + _invitation.fromUser.email">{{ _invitation.fromUser | displayUser | async }}</a>
                 <span>
                   would like to attend {{ event.type | toLabel:'eventTypes' }}
@@ -75,15 +75,19 @@
       </ng-container>
     </ng-container>
   </div>
-  <span matLine>
+  <span matListItemLine>
     <small class="mat-caption">
       {{ _invitation.date | timesince }} ago
     </small>
   </span>
-  <invitation-action [invitation]="_invitation" fxLayoutAlign="end" small></invitation-action>
-  <button mat-icon-button test-id="more" [matMenuTriggerFor]="menu" aria-label="Trigger for a menu" matTooltip="More actions">
-    <mat-icon svgIcon="more_vert"></mat-icon>
-  </button>
+  <span matListItemMeta>
+    <invitation-action [invitation]="_invitation" fxLayoutAlign="end" small></invitation-action>
+  </span>
+  <span matListItemMeta>
+    <button mat-icon-button test-id="more" [matMenuTriggerFor]="menu" aria-label="Trigger for a menu" matTooltip="More actions">
+      <mat-icon svgIcon="more_vert"></mat-icon>
+    </button>
+  </span>
 </mat-list-item>
 <mat-menu #menu="matMenu">
   <ng-container *ngIf="_invitation.status === 'pending'">
