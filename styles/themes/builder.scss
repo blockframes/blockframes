@@ -177,6 +177,7 @@
   @include form-field.typography($theme);
   @include table.typography($theme);
   @include menu.typography($theme);
+  @include chips.typography($theme);
 
   // Colors
   @include mat.core-color($theme);

@@ -196,6 +196,11 @@
   button.translucent, a.translucent {
     background: rgba(mat.get-color-from-palette($primary), .16);
   }
+
+  a.mat-mdc-button.main-dashboard-cta,
+  button.mat-mdc-button.main-dashboard-cta {
+    background-color: var(--dashboard-cta);
+  }
 }
 
 // TYPOGRAPHY
