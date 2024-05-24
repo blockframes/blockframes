@@ -81,7 +81,7 @@ world-map {
     background-color: #ffffff;
     color: #434773;
     @include mat.elevation(1);
-
+    /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version. */
     mat-list-item {
       height: 32px;
     }
@@ -94,9 +94,11 @@ world-map {
   }
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card {
   margin-bottom: 24px;
-
+  /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
   mat-card-subtitle {
     margin-top: 20px;
   }
@@ -104,7 +106,7 @@ mat-card {
   mat-form-field {
     width: 100%;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
   mat-card-content {
     margin-top: 20px;
   }

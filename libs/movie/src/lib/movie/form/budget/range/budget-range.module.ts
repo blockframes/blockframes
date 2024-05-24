@@ -9,8 +9,8 @@ import { MovieFormBudgetRangeComponent } from './budget-range.component';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
-import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   imports: [

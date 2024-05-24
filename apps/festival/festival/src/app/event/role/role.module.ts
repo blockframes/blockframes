@@ -4,8 +4,8 @@ import { EventRoleComponent } from './role.component';
 import { RouterModule } from '@angular/router';
 
 // Material
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 
 // Blockframes
 import { ImageModule } from '@blockframes/media/image/directives/image.module';

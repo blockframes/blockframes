@@ -11,12 +11,12 @@ import { FileCarouselComponent } from './carousel.component';
 import { ImageModule } from '../../image/directives/image.module';
 import { CarouselModule } from '@blockframes/ui/carousel/carousel.module';
 
-import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
-import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [ FileCarouselComponent ],

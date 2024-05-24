@@ -1,8 +1,8 @@
 <section>
   <h1 i18n>CASCADE8, publisher of {{ app | appName | uppercase }}</h1>
-  <p class="mat-body-1" i18n>We value your privacy.</p>
+  <p class="mat-body-2" i18n>We value your privacy.</p>
 
-  <p class="mat-body-1" i18n>You can set your consent preferences and determine how you want your data to be used based on the purposes below.
+  <p class="mat-body-2" i18n>You can set your consent preferences and determine how you want your data to be used based on the purposes below.
     You may set your preferences for us independently from those of third-party partners.
     Each purpose has a description so that you know how your data are used.</p>
 </section>
@@ -13,18 +13,18 @@
 
 <section>
   <h2 i18n>Essential cookies</h2>
-  <p class="mat-body-1" i18n>These are essential to the operation of the platform's services.</p>
+  <p class="mat-body-2" i18n>These are essential to the operation of the platform's services.</p>
 
   <h3>CASCADE8</h3>
   <div fxLayout fxLayoutAlign="space-between">
     <mat-slide-toggle checked disabled></mat-slide-toggle>
   </div>
-  <p class="mat-body-1" i18n>The storage of information, such as images, content or credentials for better performances and
+  <p class="mat-body-2" i18n>The storage of information, such as images, content or credentials for better performances and
     automatic log in.</p>
 
   <h3>GOOGLE</h3>
   <div fxLayout fxLayoutAlign="space-between">
-    <p class="mat-body-1" i18n>Google Tag Manager and Google Analytics are used to monitor users’ behavior on our services,
+    <p class="mat-body-2" i18n>Google Tag Manager and Google Analytics are used to monitor users’ behavior on our services,
       which include giving accurate statistics to sales agents based on that cookie.</p>
     <mat-slide-toggle checked disabled></mat-slide-toggle>
   </div>
@@ -36,7 +36,7 @@
 
 <section>
   <h2 i18n>Optional cookies</h2>
-  <p class="mat-body-1" i18n>These are optional but very useful for us to provide you with optimal services.</p>
+  <p class="mat-body-2" i18n>These are optional but very useful for us to provide you with optimal services.</p>
 
   
   <h3 i18n>THIRD PARTY PARTNERS</h3>
@@ -48,14 +48,14 @@
 
   <h3>INTERCOM</h3>
   <div fxLayout fxLayoutAlign="space-between">
-    <p class="mat-body-1" i18n>Intercom is used as a communication service to enable users to discuss directly with the Cascade8 team.</p>
+    <p class="mat-body-2" i18n>Intercom is used as a communication service to enable users to discuss directly with the Cascade8 team.</p>
     <mat-slide-toggle [checked]="form.get('intercom').value" name="intercom" (change)="toggleCookie($event)">
     </mat-slide-toggle>
   </div>
 
   <h3>HOTJAR</h3>
   <div fxLayout fxLayoutAlign="space-between">
-    <p class="mat-body-1" i18n>Audience analysis to design better experience.</p>
+    <p class="mat-body-2" i18n>Audience analysis to design better experience.</p>
     <mat-slide-toggle [checked]="form.get('hotjar').value" name="hotjar" (change)="toggleCookie($event)">
     </mat-slide-toggle>
   </div>

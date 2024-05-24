@@ -10,9 +10,9 @@ import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-u
 import { FundingsPipeModule } from '../../pipes/fundings.pipe';
 import { BudgetPipeModule } from '../../pipes/budget.pipe';
 
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
-import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 

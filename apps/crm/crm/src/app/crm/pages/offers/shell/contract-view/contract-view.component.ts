@@ -1,9 +1,9 @@
 
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, Pipe, PipeTransform } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { filter, map, pluck } from 'rxjs/operators';
 import { combineLatest, Subscription } from 'rxjs';
 import { ContractService } from '@blockframes/contract/contract/service';

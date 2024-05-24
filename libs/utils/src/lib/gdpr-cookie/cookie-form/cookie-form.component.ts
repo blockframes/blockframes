@@ -8,8 +8,8 @@ import { APP } from './../../routes/utils';
 import { App } from '@blockframes/model';
 
 // Material
-import { MatLegacySlideToggleChange as MatSlideToggleChange } from '@angular/material/legacy-slide-toggle';
-import { MatLegacyRadioChange as MatRadioChange } from '@angular/material/legacy-radio';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatRadioChange } from '@angular/material/radio';
 
 @Component({
   selector: '[form] cookie-form',

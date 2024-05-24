@@ -19,7 +19,7 @@
         <span>{{ event.accessibility | toLabel:'accessibility' }} {{ event.type | toLabel:'eventTypes' }}</span>
         <event-agenda-export [event]="event"></event-agenda-export>
       </h5>
-      <pre class="mat-body-1">{{ event | eventRange }}</pre>
+      <pre class="mat-body-2">{{ event | eventRange }}</pre>
       <ng-container *ngIf="event.ownerOrgId | getOrg | async as org">
         <org-chip @fade [org]="org"></org-chip>
       </ng-container>

@@ -9,7 +9,7 @@
       </ng-container>
     </ng-container>
     <ng-template #uncapped>
-      <p class="mat-body-1" i18n>Uncapped</p>
+      <p class="mat-body-2" i18n>Uncapped</p>
     </ng-template>
   </div>
   <bf-form-table *ngIf="form.getExpenseType(expenseType.id)" [columns]="expenseColumns" [form]="form.getExpenseType(expenseType.id)" showEmptyForm="false" [defaultFormValue]="defaultExpenseValue(expenseType)" (itemSaved)="form.markAsDirty()">

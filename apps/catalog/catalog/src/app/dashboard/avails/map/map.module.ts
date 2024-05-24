@@ -14,9 +14,9 @@ import { MaxLengthModule } from '@blockframes/utils/pipes';
 import { DashboardAvailsMapComponent } from './map.component';
 
 // Material
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [

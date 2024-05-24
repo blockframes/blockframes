@@ -10,7 +10,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [WaterfallPoolListComponent, CanUpdatePoolPipe],

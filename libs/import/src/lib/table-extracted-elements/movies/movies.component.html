@@ -1,4 +1,4 @@
-﻿<p test-id="record-length">Found <strong>{{ rows.data.length }}</strong> movie(s).</p>
+﻿﻿<p test-id="record-length">Found <strong>{{ rows.data.length }}</strong> movie(s).</p>
 <ng-container *ngIf="mode === 'create'; else updatemode">
   <p>For selection ({{ selection.selected.length }} items selected) :
     <button test-id="submit-records" mat-stroked-button color="primary" [disabled]="!selection.selected.length || !!processing"

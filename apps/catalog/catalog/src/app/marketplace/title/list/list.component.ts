@@ -7,7 +7,7 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { where } from 'firebase/firestore';
 
 // RxJs

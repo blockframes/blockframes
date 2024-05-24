@@ -5,12 +5,12 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Material
 import { MatDividerModule } from '@angular/material/divider';
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 // Components
 import { OrganizationFormDescriptionComponent } from './organization-form-description.component';
-import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   imports: [

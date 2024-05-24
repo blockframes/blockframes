@@ -8,7 +8,7 @@ import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '@blockf
 import { FormList } from '@blockframes/utils/form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieService } from '@blockframes/movie/service';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'waterfall-right-holders-management',

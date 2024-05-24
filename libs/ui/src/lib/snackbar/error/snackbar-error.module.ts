@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SnackbarErrorComponent } from './snackbar-error.component';
 
 // Material
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [SnackbarErrorComponent],

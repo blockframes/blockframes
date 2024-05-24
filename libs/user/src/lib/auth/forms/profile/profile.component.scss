@@ -2,6 +2,7 @@
   display: block;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card {
   margin-bottom: 24px;
 }
@@ -25,7 +26,7 @@ drop-cropper {
 }
 
 drop-cropper {
-  h3, p.mat-body-2 {
+  h3, p.mat-subtitle-2 {
     margin-bottom: 4px;
   }
   p.mat-caption {

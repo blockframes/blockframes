@@ -18,7 +18,7 @@ import { NegotiationService } from '@blockframes/contract/negotiation/service';
 import { NegotiationForm } from '@blockframes/contract/negotiation/form';
 
 // Material
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'contract-form',

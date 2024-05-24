@@ -10,7 +10,7 @@ import { InvitationItemModule } from '../../components/item/item.module';
 import { FilterByDateModule } from '@blockframes/utils/pipes/filter-by-date.pipe';
 
 // Material
-import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
+import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({

@@ -1,5 +1,5 @@
 <h2>Informations</h2>
-<mat-card fxLayout fxLayoutAlign="space-between start">
+<mat-card appearance="outlined" fxLayout fxLayoutAlign="space-between start">
   <section>
     <h5>Access</h5>
     <span>{{ event.id }}</span>
@@ -18,11 +18,11 @@
 </mat-card>
 
 <h2>Details</h2>
-<mat-card>
+<mat-card appearance="outlined">
   <h5>Event Title</h5>
   <p>{{ event.title }}</p>
   <h5>Accessibility</h5>
   <p>{{ event.accessibility | toLabel:'accessibility' }}</p>
   <h5>Date & Time</h5>
-  <pre class="mat-body-1">{{ event | eventRange }}</pre>
+  <pre class="mat-body-2">{{ event | eventRange }}</pre>
 </mat-card>

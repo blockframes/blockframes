@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 
 import { CongratulationsComponent } from './congratulations.component';
 

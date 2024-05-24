@@ -4,7 +4,7 @@ import { App, getOrgModuleAccess, Organization, hasDisplayName } from '@blockfra
 import { BehaviorSubject } from 'rxjs';
 import { Intercom } from 'ng-intercom';
 import { delay, hasName } from '@blockframes/utils/helpers';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
 import { CallableFunctions } from 'ngfire';
 

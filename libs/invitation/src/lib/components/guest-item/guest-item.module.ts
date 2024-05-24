@@ -7,7 +7,7 @@ import { GuestPipeModule } from '../../pipes/guest.pipe';
 import { DisplayUserModule } from '@blockframes/utils/pipes/display-user.pipe';
 
 // Material
-import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
+import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({

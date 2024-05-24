@@ -44,8 +44,11 @@ landing-content {
 
   .landing-presentation {
     padding: 80px;
+    /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
+    /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
     mat-tab-group {
       padding-inline: 80px;
+      /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
       mat-tab-header {
         position: sticky;
         top: 0;
@@ -129,7 +132,7 @@ landing-detail {
     width: 30%;
     cursor: pointer;
     transition: box-shadow 0.3s ease-in-out;
-
+    /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
     mat-card {
       width: 100%;
     }
@@ -157,6 +160,7 @@ landing-app-link {
 
 @include layout-bp(lt-md) {
   landing-content {
+    /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
     mat-tab-group {
       padding-inline: 40px;
     }
@@ -206,12 +210,14 @@ landing-app-link {
     }
     .landing-presentation {
       padding: 16px;
+      /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
+      /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
       mat-tab-group {
         padding-inline: 0;
         
         header {
           padding: 0;
-          img, .mat-title {
+          img, .mat-headline-6 {
             display: none;
           }
         }
