@@ -176,6 +176,7 @@
   @include tooltip.typography($theme);
   @include form-field.typography($theme);
   @include table.typography($theme);
+  @include menu.typography($theme);
 
   // Colors
   @include mat.core-color($theme);

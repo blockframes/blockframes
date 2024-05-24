@@ -16,7 +16,7 @@
 
   // No background
 
-  .mat-stroked-button,
+  .mdc-button--outlined,
   .mat-mdc-button,
   .mat-icon-button {
     color: mat.get-color-from-palette($foreground, text);
@@ -66,8 +66,8 @@
 
   .mat-raised-button,
   .mat-mdc-unelevated-button,
-  .mat-fab,
-  .mat-mini-fab {
+  .mdc-fab,
+  .mdc-fab--mini {
     &.mat-primary {
       svg g,
       svg polygon,
@@ -126,7 +126,7 @@
   .mat-mdc-button,
   .mat-mdc-unelevated-button,
   .mat-raised-button,
-  .mat-stroked-button {
+  .mdc-button--outlined {
     padding: 27px 24px;
   }
 
@@ -139,7 +139,7 @@
     padding: 0 20px;
   }
 
-  .mat-stroked-button:not(.mat-button-disabled) {
+  .mdc-button--outlined:not(.mat-button-disabled) {
     border-radius: 26px;
     border-color: mat.get-color-from-palette($foreground, divider);
     &.mat-primary {
@@ -162,7 +162,7 @@
     }
   }
 
-  .mat-stroked-button {
+  .mdc-button--outlined {
     border-radius: 26px;
     border-width: 1.5px;
     &:hover {
@@ -205,7 +205,7 @@
   // note: mat-icon-button is not here on purpose
   .mat-mdc-button,
   .mat-raised-button,
-  .mat-stroked-button,
+  .mdc-button--outlined,
   .mat-mdc-unelevated-button,
   .mat-fab,
   .mat-mini-fab {

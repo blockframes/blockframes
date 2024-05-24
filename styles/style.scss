@@ -53,10 +53,12 @@ ul.grid {
   text-overflow: ellipsis;
 }
 
-// Apply space of 8px between span & icon everywhere
-.mat-icon + span,
-span + .mat-icon {
-  margin-left: 8px;
+// Apply space of 8px between span & icon everywhere except for mat-icon-buttons
+*:not(.mdc-icon-button) > {
+  .mat-icon + span,
+  span + .mat-icon {
+    margin-left: 8px;
+  }
 }
 
 // Apply space of 4px between span & spinner inside a or button

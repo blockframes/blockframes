@@ -19,12 +19,6 @@
     padding-bottom: 0;
   }
 
-  // Removed as it create weird behaviour with mat-selection-list (21/01/2020)
-  // If you need that somewhere please specify the type of list you want to apply this style on
-  // .mat-list-base .mat-list-item .mat-list-item-content {
-  //   padding: 0 0 0 20px;
-  // }
-
   // Use to let active link in color in mat-nav-list, used with routerLinkActive
   .mat-mdc-nav-list a.active {
     color: mat.get-color-from-palette($primary, 500);
@@ -71,34 +65,18 @@
     }
   }
 
-  .mat-mdc-list-base .mdc-list-item.mdc-list-item .mat-mdc-list-item-meta {
-    .mat-icon + span, span + .mat-icon {
-      margin-left: 0px;
-    }
-  }
-
   .mat-mdc-list-base .mdc-list-item.mdc-list-item--with-two-lines {
-    .mat-mdc-list-item-avatar {
-      margin-top: 8px;
-    }
-    .mat-mdc-list-item-line {
-      margin: 0;
-    }
-
+    .mat-mdc-list-item-avatar {  margin-top: 8px; }
+    .mat-mdc-list-item-line { margin: 0; }
     .mat-mdc-list-item-meta {
-      &.mat-mdc-icon-button {
-        margin-top: 6px;
-      }
-      * {
-        align-items: center;
-      }
+      &.mat-mdc-icon-button { margin-top: 6px; }
+      * { align-items: center; }
     }
 
-    .mat-mdc-list-item-meta::before {
-      height: 12px;
-    }
+    .mat-mdc-list-item-meta::before { height: 12px; }
   }
 
+  .cdk-overlay-pane:has(.mat-mdc-select-panel) { min-width: fit-content; }
 }
 
 @mixin typography($theme) {
@@ -106,5 +84,9 @@
   .mat-mdc-list-base .mat-mdc-list-item .mat-mdc-list-option,
   .mat-mdc-list-base .mat-mdc-list-item .mat-mdc-list-item-unscoped-content .mat-mdc-select-value {
     @include mat.typography-level(typography.$bf-typography, 'subtitle-2');
+  }
+
+  .mat-mdc-select .mat-mdc-select-value, .mat-mdc-option .mdc-list-item__primary-text {
+    @include mat.typography-level(typography.$bf-typography, 'body-2');
   }
 }
