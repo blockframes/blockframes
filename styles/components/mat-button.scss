@@ -130,7 +130,8 @@
     padding: 27px 24px;
   }
 
-  .mat-button.mat-button-disabled {
+  .mat-mdc-button.mat-button-disabled,
+  .mat-mdc-button:disabled {
     background-color: mat.get-color-from-palette($background, disabled-button);
   }
 

@@ -84,6 +84,7 @@
 
 @mixin typography($theme) {
   .mat-mdc-list-base .mat-mdc-list-item .mat-mdc-list-item-unscoped-content,
+  .mat-mdc-list-base .mat-mdc-list-item .mdc-list-item__secondary-text,
   .mat-mdc-list-base .mat-mdc-list-item .mat-mdc-list-option,
   .mat-mdc-list-base .mat-mdc-list-item .mat-mdc-list-item-unscoped-content .mat-mdc-select-value {
     @include mat.typography-level(typography.$bf-typography, 'subtitle-2');
