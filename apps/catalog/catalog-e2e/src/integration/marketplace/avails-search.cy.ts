@@ -117,7 +117,8 @@ describe('Marketplace avails search', () => {
     context('Failing dates', () => {
       it('Buyer cannot find an avail with wrong starting date', () => {
         const oneDayTooEarly = sub(seller.term1.duration.from, { days: 1 });
-        get('dateFrom').clear();
+        // force click because the input is hidden by mat-label since angular 15 migration
+        get('dateFrom').clear({ force: true });
         waitForUpdate();
         get('dateFrom').type(dateToMMDDYYYY(oneDayTooEarly));
         get('save-filter').click();
@@ -126,7 +127,8 @@ describe('Marketplace avails search', () => {
 
       it('Buyer cannot find an avail with wrong ending date', () => {
         const oneDayTooLate = add(seller.term1.duration.to, { days: 1 });
-        get('dateTo').clear();
+        // force click because the input is hidden by mat-label since angular 15 migration
+        get('dateTo').clear({ force: true });
         waitForUpdate();
         get('dateTo').type(dateToMMDDYYYY(oneDayTooLate));
         get('save-filter').click();

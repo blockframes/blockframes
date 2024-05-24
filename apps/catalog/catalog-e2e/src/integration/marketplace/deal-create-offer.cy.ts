@@ -113,7 +113,8 @@ describe('Deal negociation', () => {
         .type(dateToMMDDYYYY(add(seller.term.duration.from, { days: -1 })));
       assertAvailableCountries(0);
 
-      get('dateFrom').clear().type(dateToMMDDYYYY(seller.term.duration.from)); //back to 69 available
+      // force click because the input is hidden by mat-label since angular 15 migration
+      get('dateFrom').clear({ force: true }).type(dateToMMDDYYYY(seller.term.duration.from)); //back to 69 available
       assertAvailableCountries(69);
       //with a end after end term
       get('dateTo')
@@ -121,7 +122,8 @@ describe('Deal negociation', () => {
         .type(dateToMMDDYYYY(add(seller.term.duration.to, { days: 1 })));
       assertAvailableCountries(0);
 
-      get('dateTo').clear().type(dateToMMDDYYYY(seller.term.duration.to)); //back to 69 available
+      // force click because the input is hidden by mat-label since angular 15 migration
+      get('dateTo').clear({ force: true }).type(dateToMMDDYYYY(seller.term.duration.to)); //back to 69 available
       assertAvailableCountries(69);
 
       //with wrong rights (VOD)
