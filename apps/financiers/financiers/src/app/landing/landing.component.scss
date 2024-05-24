@@ -69,6 +69,7 @@ landing-content {
       max-width: 635px;
       max-height: 440px;
     }
+    /* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version.*/
     mat-card {
       width: 49%;
       min-height: 400px;
@@ -93,7 +94,7 @@ landing-content {
   p {
     margin-bottom: 24px;
   }
-  a.mat-flat-button {
+  a.mat-mdc-unelevated-button {
     margin-bottom: 36px;
   }
   h3 {

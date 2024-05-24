@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Media, PricePerCurrency, Scope, Term, Territory, WaterfallSale, getContractAndAmendments, getDeclaredAmount, getLatestContract, toLabel } from '@blockframes/model';
 import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';

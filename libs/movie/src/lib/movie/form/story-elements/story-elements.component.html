@@ -55,14 +55,14 @@
       <h3>Keywords</h3>
       <mat-form-field appearance="outline">
         <mat-label>Keywords</mat-label>
-        <mat-chip-list #chipList>
+        <mat-chip-grid #chipList>
           <ng-container *ngFor="let value of values$ | async; let i = index">
-            <mat-chip removable="true" (removed)="remove(i)">
+            <mat-chip-row removable="true" (removed)="remove(i)">
               <span>{{ value }}</span>
               <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
-            </mat-chip>
+            </mat-chip-row>
           </ng-container>
-        </mat-chip-list>
+        </mat-chip-grid>
         <input test-id="keyword" matInput [formControl]="keyword" [matChipInputFor]="chipList"
           [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event)"
           placeholder="e.g. Ship, Shipwreck, Disaster, Iceberg, Young Love, Forbidden Love, Social Class" />

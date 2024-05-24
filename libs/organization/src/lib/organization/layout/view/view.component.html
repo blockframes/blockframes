@@ -29,9 +29,9 @@
       <img [ref]="org.logo" asset="empty_organization.svg" alt="organization logo">
       <article fxFlex fxLayout="column" fxLayoutAlign="start start" fxLayoutAlign.xs="start center">
         <h4>{{ org.activity | toLabel: 'orgActivity' }}</h4>
-        <h1 class="mat-display-2">{{ org.name }}</h1>
+        <h1 class="mat-headline-3">{{ org.name }}</h1>
         <h2>{{ org | orgAddress }}</h2>
-        <p class="mat-body-2">{{ org.description }}</p>
+        <p class="mat-subtitle-2">{{ org.description }}</p>
         <ng-content></ng-content>
       </article>
     </div>

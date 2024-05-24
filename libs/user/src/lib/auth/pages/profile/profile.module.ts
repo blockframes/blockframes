@@ -11,7 +11,7 @@ import { ChangePasswordModule } from '@blockframes/auth/forms/password/change-pa
 import { ProfileComponent } from './profile.component';
 
 // Material
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({

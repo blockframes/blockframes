@@ -37,7 +37,7 @@ section {
   p {
     margin-bottom: 16px;
     text-align: center;
-    &.mat-body-2 {
+    &.mat-subtitle-2 {
       margin-bottom: 24px;
     }
   }
@@ -54,10 +54,10 @@ section {
     }
 
     button {
-      &.mat-mini-fab {
+      &.mat-mdc-mini-fab {
         margin-top: 16px;
       }
-      &.mat-flat-button {
+      &.mat-mdc-unelevated-button {
         margin-top: 40px;
       }
     }

@@ -5,7 +5,7 @@
 </div>
 <ul>
   <li *ngFor="let card of cards">
-    <button (click)="toggleSelect(card.title)" class="surface mat-body-2" [ngClass]="{ 'selected': card.selected, 'selectable': selectable }">
+    <button (click)="toggleSelect(card.title)" class="surface mat-subtitle-2" [ngClass]="{ 'selected': card.selected, 'selectable': selectable }">
       <header>
         <mat-icon [svgIcon]="card.icon"></mat-icon>
       </header>

@@ -6,17 +6,17 @@
       <ng-container *ngIf="getConfig(override.incomeId) as config">
         <section>
           <h3>{{ config.source.name }} : </h3>
-          <mat-chip-list *ngIf="config.income.medias.length" aria-label="Medias">
-            <mat-chip disableRipple *ngFor="let media of config.income.medias | toGroupLabel:'medias':'All'">
+          <mat-chip-listbox *ngIf="config.income.medias.length" aria-label="Medias">
+            <mat-chip-option disableRipple *ngFor="let media of config.income.medias | toGroupLabel:'medias':'All'">
               {{ media }}
-            </mat-chip>
-          </mat-chip-list>
+            </mat-chip-option>
+          </mat-chip-listbox>
           <span *ngIf="config.income.territories.length" class="group-label">
             {{ config.income.territories | toGroupLabel:'territories':'World' | join | maxLength:30 }}
           </span>
         </section>
         
-        <p class="mat-body-2" i18n>Value for <strong>{{ data.right.name }}</strong> was changed from  
+        <p class="mat-subtitle-2" i18n>Value for <strong>{{ data.right.name }}</strong> was changed from  
           <strong><price-per-currency [price]="override.initial | formatPair" default="€ 0" i18n-default></price-per-currency></strong>
           to 
           <strong><price-per-currency [price]="config.current | formatPair" default="€ 0" i18n-default></price-per-currency></strong>
@@ -24,7 +24,7 @@
 
         <strong i18n>Comment</strong>
         
-        <p class="mat-body-2">{{ override.comment }}</p>
+        <p class="mat-subtitle-2">{{ override.comment }}</p>
         
       </ng-container>
 
@@ -44,11 +44,11 @@
       <ng-container *ngIf="getConfig(override.get('incomeId').value) as config">
         <section>
           <h3>{{ config.source.name }} : </h3>
-          <mat-chip-list *ngIf="config.income.medias.length" aria-label="Medias">
-            <mat-chip disableRipple *ngFor="let media of config.income.medias | toGroupLabel:'medias':'All'">
+          <mat-chip-listbox *ngIf="config.income.medias.length" aria-label="Medias">
+            <mat-chip-option disableRipple *ngFor="let media of config.income.medias | toGroupLabel:'medias':'All'">
               {{ media }}
-            </mat-chip>
-          </mat-chip-list>
+            </mat-chip-option>
+          </mat-chip-listbox>
           <span *ngIf="config.income.territories.length" class="group-label">
             {{ config.income.territories | toGroupLabel:'territories':'World' | join | maxLength:30 }}
           </span>
@@ -107,7 +107,7 @@
           </button>
         </section>
         
-        <p class="mat-body-2" i18n>Before applying the changes, please tell us the main reason of the changes in the comment below.</p>
+        <p class="mat-subtitle-2" i18n>Before applying the changes, please tell us the main reason of the changes in the comment below.</p>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label i18n>Comment</mat-label>
           <textarea matInput [formControl]="override.get('comment')" placeholder="Comment" type="string" cdkTextareaAutosize cdkAutosizeMinRows="6" required ></textarea>
@@ -118,7 +118,7 @@
 
     </ng-container>
 
-    <p class="mat-body-2" i18n>To confirm the changes, please type "SAVE"</p>
+    <p class="mat-subtitle-2" i18n>To confirm the changes, please type "SAVE"</p>
     <mat-form-field appearance="outline">
       <mat-label i18n>Changes confirmation</mat-label>
       <input matInput [formControl]="form.get('confirm')" required />

@@ -9,7 +9,7 @@ import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chi
 import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 
 // Material
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 
 @NgModule({

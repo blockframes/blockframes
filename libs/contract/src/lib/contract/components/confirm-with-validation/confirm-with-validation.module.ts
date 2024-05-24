@@ -7,9 +7,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ConfirmWithValidationComponent } from './confirm-with-validation.component';
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
 
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 @NgModule({
   imports: [
     CommonModule,

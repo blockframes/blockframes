@@ -32,12 +32,15 @@ catalog-landing {
     // TODO issue #6523
     .landing-presentation {
       padding: 72px 80px;
-      .mat-display-1 {
+      .mat-headline-4 {
         margin-bottom: 32px;
       }
+      /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
+      /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
       mat-tab-group {
         max-width: 970px;
         margin-left: 80px;
+        /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
         mat-tab-header {
           position: sticky;
           top: 0;
@@ -142,6 +145,7 @@ landing-app-link {
   catalog-landing {
     landing-content {
       .landing-presentation {
+        /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
         mat-tab-group {
           .surface {
             padding: 32px;
@@ -185,6 +189,7 @@ landing-app-link {
     }
     landing-content {
       .landing-presentation {
+        /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
         mat-tab-group {
           .features {
             grid-template-columns: 1fr;

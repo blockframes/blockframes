@@ -13,7 +13,7 @@ import {
   mainCurrency,
   sortStatements
 } from '@blockframes/model';
-import { MatLegacyTabGroup as MatTabGroup } from '@angular/material/legacy-tabs';
+import { MatTabGroup } from '@angular/material/tabs';
 
 interface Information {
   org: number;

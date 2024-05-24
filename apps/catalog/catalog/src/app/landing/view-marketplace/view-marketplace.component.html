@@ -2,7 +2,7 @@
   <div class="video-container">
     <iframe [src]="url" [width]="videoWidth$ | async" [height]="videoHeight$ | async" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
     <div [ngClass]="cover ? 'cover' : 'show'">
-      <p class="mat-display-1">What is Archipel Content?</p>
+      <p class="mat-headline-4">What is Archipel Content?</p>
       <button mat-flat-button color="accent" (click)="play()">
         <mat-icon svgIcon="play_arrow"></mat-icon><span>Play Video</span>
       </button>

@@ -1,6 +1,6 @@
 <section class="surface">
   <h3 i18n>Statement Period</h3>
-  <p class="mat-body-1" i18n>Please indicate the period covered by this report.</p>
+  <p class="mat-body-2" i18n>Please indicate the period covered by this report.</p>
 
   <form [formGroup]="form">
     <article>
@@ -54,7 +54,7 @@
       </ng-template>
     </article>
     <div>
-      <p class="mat-body-1" i18n>You can modify the issue date, which is particularly useful for older films.</p>
+      <p class="mat-body-2" i18n>You can modify the issue date, which is particularly useful for older films.</p>
       <mat-form-field appearance="outline">
         <mat-label i18n>Reported on</mat-label>
         <input [disabled]="statement.status === 'reported'" matInput [formControl]="form.get('reported')" [matDatepicker]="datePickerReported" required [placeholder]="dateInputFormat">

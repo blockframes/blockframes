@@ -10,7 +10,7 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { AppPipeModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { GoToAppModule } from '@blockframes/admin/crm/pipes/go-to.pipe';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 
 

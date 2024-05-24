@@ -1,4 +1,4 @@
-﻿<ng-container *ngIf="notifications$ | async as notifications; else loading">
+﻿﻿<ng-container *ngIf="notifications$ | async as notifications; else loading">
   <ng-container *ngIf="notifications.length; else empty">
     <header fxLayout="row" fxLayoutAlign="space-between start">
       <h1 i18n>Notifications</h1>

@@ -3,7 +3,7 @@ import { DOCUMENT } from '@angular/common';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 // Material
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 // Blockframes
 import { CookieDialogComponent } from '../cookie-dialog/cookie-dialog.component';

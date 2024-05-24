@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output, Pipe, PipeTransform, ChangeDetectorRef } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 import {
   Income,
@@ -16,7 +16,7 @@ import { StatementPaymentComponent } from '../statement-payment/statement-paymen
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { StatementService } from '../../../statement.service';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { sorts } from '@blockframes/ui/list/table/sorts';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { DownloadStatementSettings, PdfService } from '@blockframes/utils/pdf.service';

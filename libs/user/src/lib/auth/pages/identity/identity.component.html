@@ -4,7 +4,7 @@
     <h1 i18n>Create your account</h1>
     <p i18n>Please fill in the form below to join the {{ app | appName }} platform.</p>
     <ng-container *ngIf="(user$ | async) === undefined">
-      <p class="mat-body-2 text-primary" i18n>
+      <p class="mat-subtitle-2 text-primary" i18n>
         Already have an account? <a routerLink="/auth/connexion">Log in here.</a>
       </p>
     </ng-container>

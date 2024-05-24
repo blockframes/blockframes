@@ -8,7 +8,7 @@ import {
   EventEmitter,
   ChangeDetectorRef
 } from '@angular/core';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { AuthService } from '@blockframes/auth/service';
@@ -63,7 +63,7 @@ export class ListFilterButtonsComponent implements OnDestroy, OnInit {
     savedSearches[this.app] = JSON.stringify(routeParams);
     await this.authService.update({ savedSearches });
     this.setButtonsState();
-    this.snackbar.open('Research successfully saved.', 'close', { duration: 5000 });
+    this.snackbar.open('Research successfully saved.', 'close', { duration: 500000 });
     this.analyticsService.addSavedOrLoadedSearch({ search: createMovieSearch(routeParams.search), avails: createAvailsSearch(routeParams.avails) }, 'marketplace', 'savedFilters');
   }
 

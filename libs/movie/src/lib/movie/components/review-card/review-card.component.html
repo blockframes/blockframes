@@ -1,8 +1,8 @@
-<mat-card class="container" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px">
+<mat-card appearance="outlined" class="container" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px">
   <img asset="empty_news.svg" alt="News brand logo">
   <h5>{{ review.journalName }}</h5>
   <div class="reviewCritic">
-    <p class="mat-body-1" *ngIf="!!review.criticQuote">"{{ review.criticQuote | maxLength: 80 }}"</p>
+    <p class="mat-body-2" *ngIf="!!review.criticQuote">"{{ review.criticQuote | maxLength: 80 }}"</p>
   </div>
   <caption class="mat-caption">{{ review.criticName }}</caption>
 
@@ -19,7 +19,7 @@
   <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px">
     <img asset="empty_news.svg" alt="News brand logo">
     <h5>{{ review.journalName }}</h5>
-    <p class="mat-body-2">"{{ review.criticQuote }}"</p>
+    <p class="mat-subtitle-2">"{{ review.criticQuote }}"</p>
     <caption class="mat-caption">{{ review.criticName }}</caption>
   </div>
 </ng-template>

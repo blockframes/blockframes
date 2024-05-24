@@ -17,9 +17,11 @@
     width: 100%;
     height: calc(100% - 50px);
     min-height: calc(50vh - 40px);
-
+    /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
+    /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
     mat-tab-group {
       width: 60%;
+      /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
       mat-list {
         margin-left: 12px;
 
@@ -53,12 +55,14 @@
       h4 {
         margin-top: 16px;
       }
-
+      /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
+      /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
       mat-list {
         // this is needed in order to have a scrollable
         // list of selected files
         overflow-y: auto;
         margin-bottom: 16px;
+        /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
         mat-list-item {
           button {
             mat-icon {

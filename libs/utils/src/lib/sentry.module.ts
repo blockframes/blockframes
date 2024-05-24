@@ -1,7 +1,7 @@
 import { ErrorHandler, Injectable, NgModule } from '@angular/core';
 import { sentryDsn, sentryEnv } from '@env';
 import * as Sentry from '@sentry/browser';
-import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SentryService } from './sentry.service';
 import { appVersion } from './constants';
 import { FireAuth, FirestoreService, fromRef } from 'ngfire';

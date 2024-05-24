@@ -5,7 +5,7 @@ import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blo
 import { EventService } from '@blockframes/event/service';
 import { map, pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MovieService } from '@blockframes/movie/service';
 import { ActivatedRoute } from '@angular/router';
 import { AnalyticsService } from '@blockframes/analytics/service';

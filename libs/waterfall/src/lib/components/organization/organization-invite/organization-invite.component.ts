@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService } from '@blockframes/invitation/service';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
 import { Invitation, Waterfall } from '@blockframes/model';
