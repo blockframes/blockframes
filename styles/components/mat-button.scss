@@ -51,7 +51,7 @@
       }
     }
 
-    &.mat-unthemed {
+    &.mat-unthemed:not(.bf-accent):not(.bf-primary) {
       color: inherit;
     }
 
