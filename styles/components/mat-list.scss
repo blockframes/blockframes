@@ -53,7 +53,7 @@
     height: 56px;
     .mat-mdc-list-item-unscoped-content,
     .mat-mdc-list-item-unscoped-content .mat-mdc-select-value {
-      color: mat.get-color-from-palette($foreground, 700);
+      color: mat.get-color-from-palette($foreground, 'text');
       mat-icon {
         margin-left: 8px;
         margin-bottom: -6px;
@@ -64,6 +64,9 @@
       width: 90%;
     }
   }
+
+  .mat-mdc-optgroup .mdc-list-item__primary-text { width: 100%; }
+  .mat-mdc-optgroup .group label { font-weight: bold; }
 
   .mat-mdc-list-base .mdc-list-item.mdc-list-item--with-two-lines {
     .mat-mdc-list-item-avatar {  margin-top: 8px; }

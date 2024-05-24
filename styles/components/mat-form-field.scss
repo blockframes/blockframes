@@ -118,12 +118,18 @@
       }
     }
   }
+
+  .mat-mdc-select:not(.mat-mdc-select-disabled) .mat-mdc-select-value,
+  .mdc-form-field:not(.mat-form-field-disabled) > label,
+  .mat-mdc-option:not(.mdc-list-item--selected):not(.mdc-list-item--disabled) .mdc-list-item__primary-text,
+  .mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-input-element { color: mat.get-color-from-palette($foreground, text); }
 }
 
 // TYPOGRAPHY
 @mixin typography($theme) {
   .mat-mdc-form-field,
-  .mat-mdc-floating-label {
+  .mat-mdc-floating-label,
+  .mat-mdc-select-panel {
     @include mat.typography-level(typography.$bf-typography, 'input');
   }
 }
