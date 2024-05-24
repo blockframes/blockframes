@@ -51,10 +51,6 @@
       }
     }
 
-    &.mat-unthemed:not(.bf-accent):not(.bf-primary) {
-      color: inherit;
-    }
-
     .mat-icon {
       margin-right: 0px;
       height: 24px;
@@ -133,6 +129,10 @@
   .mat-mdc-button.mat-button-disabled,
   .mat-mdc-button:disabled {
     background-color: mat.get-color-from-palette($background, disabled-button);
+  }
+
+  .mat-mdc-button:not(:disabled) {
+    color: mat.get-color-from-palette($foreground, text);
   }
 
   // Center close button

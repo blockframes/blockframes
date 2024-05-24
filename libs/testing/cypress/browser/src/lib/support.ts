@@ -29,7 +29,7 @@ export function get(selector: string) {
 }
 
 export function snackbarShould(verb: 'not.exist' | 'contain', value?: string) {
-  !value ? cy.get('snack-bar-container').should(verb) : cy.get('snack-bar-container').should(verb, value);
+  !value ? cy.get('mat-snack-bar-container').should(verb) : cy.get('mat-snack-bar-container').should(verb, value);
 }
 
 export function getByClass(selector: string) {
