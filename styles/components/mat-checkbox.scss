@@ -4,15 +4,8 @@
 @mixin color($theme) {
   .bf-checkbox {
     width: 100%;
-    .mat-checkbox-layout {
-      display: flex;
-
-      .mat-checkbox-inner-container {
-        margin-left: 12px;
-      }
-    }
-    
-    .mat-checkbox-label {
+    .mdc-form-field,
+    .mdc-form-field label {
       width: 100%;
     }
   }
