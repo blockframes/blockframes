@@ -37,14 +37,14 @@
     </div>
   </header>
   <div #main>
-    <nav id="nav" mat-tab-nav-bar>
+    <nav id="nav" mat-tab-nav-bar [tabPanel]="tabPanel">
       <a mat-tab-link *ngFor="let link of navLinks" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
         [active]="rla.isActive" (click)="navClicked = true">
         {{link.label}}
       </a>
     </nav>
   </div>
-  <section [@routeAnimation]="animationOutlet(outlet)">
+  <section #tabPanel [@routeAnimation]="animationOutlet(outlet)">
     <router-outlet #outlet="outlet" (activate)="scrollIntoView()"></router-outlet>
   </section>
 </ng-container>
