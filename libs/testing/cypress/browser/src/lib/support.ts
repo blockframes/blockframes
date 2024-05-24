@@ -198,8 +198,9 @@ export function selectMedias(mediaGroup: MediaGroup) {
 export function selectDates(from: Date, to: Date) {
   get('dateFrom').should('be.enabled');
   get('dateTo').should('be.enabled');
-  get('dateFrom').clear().type(dateToMMDDYYYY(from));
-  get('dateTo').clear().type(dateToMMDDYYYY(to));
+  // force click because the input is hidden by mat-label since angular 15 migration
+  get('dateFrom').clear({ force: true }).type(dateToMMDDYYYY(from));
+  get('dateTo').clear({ force: true }).type(dateToMMDDYYYY(to));
 }
 
 export function selectNonExclusive() {
