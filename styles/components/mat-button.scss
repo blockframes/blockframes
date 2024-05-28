@@ -131,7 +131,7 @@
     background-color: mat.get-color-from-palette($background, disabled-button);
   }
 
-  .mat-mdc-button:not(:disabled) {
+  .mat-mdc-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn) {
     color: mat.get-color-from-palette($foreground, text);
   }
 

@@ -54,9 +54,9 @@ ul.grid {
 }
 
 // Apply space of 8px between span & icon everywhere except for mat-icon-buttons
-*:not(.mdc-icon-button) > {
+*:not(.mdc-icon-button):not(.mat-mdc-fab):not(.mat-mdc-mini-fab) > {
   .mat-icon + span,
-  span + .mat-icon {
+  span:not(.mat-mdc-button-persistent-ripple) + .mat-icon {
     margin-left: 8px;
   }
 }

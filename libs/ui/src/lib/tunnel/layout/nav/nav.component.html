@@ -2,8 +2,8 @@
   <!-- if step has only one route, use a mat list -->
   <mat-nav-list *ngIf="step.routes.length === 1; else multipleLinks">
     <a mat-list-item [routerLink]="step.routes[0].path" routerLinkActive="active">
-      <mat-icon [svgIcon]="step.icon"></mat-icon>
-      <span class="mat-expansion-panel-header-title">{{ step.title }}</span>
+      <mat-icon matListItemIcon [svgIcon]="step.icon"></mat-icon>
+      <span matListItemLine class="mat-expansion-panel-header-title">{{ step.title }}</span>
     </a>
   </mat-nav-list>
   <mat-divider *ngIf="!isLast"></mat-divider>

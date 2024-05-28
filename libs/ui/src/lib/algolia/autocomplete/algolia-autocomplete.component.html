@@ -20,9 +20,11 @@
   <mat-icon matSuffix svgIcon="close" *ngIf="clearable && control.value" (click)="control.reset()"></mat-icon>
   <mat-icon matPrefix [svgIcon]="prefixIcon" *ngIf="!!prefixIcon?.trim()" class="pointer"></mat-icon>
   <mat-hint>
+    <ng-content select="[bf-mat-hint]"></ng-content>
     <ng-content select="mat-hint"></ng-content>
   </mat-hint>
   <mat-error>
+    <ng-content select="[bf-mat-error]"></ng-content>
     <ng-content select="mat-error"></ng-content>
   </mat-error>
 </mat-form-field>
