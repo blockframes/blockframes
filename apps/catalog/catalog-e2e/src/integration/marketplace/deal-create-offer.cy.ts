@@ -95,7 +95,8 @@ describe('Deal negociation', () => {
         dateTo: new Date(seller.term.duration.to),
         exclusive: false,
       });
-      get('select-all').click();
+      // force click because the input is hidden by mat-label since angular 15 migration
+      get('select-all').click({ force: true });
       assertMultipleTexts('selected-territories', ['Europe', 'Latin America', territories['nepal']]);
     });
 
@@ -214,7 +215,8 @@ describe('Deal negociation', () => {
       });
       selectCell({ row: 2, column: 1 });
       selectCell({ row: 2, column: 4 });
-      get('add-to-selection').click();
+      // force click because the input is hidden by mat-label since angular 15 migration
+      get('add-to-selection').click({ force: true });
       assertUrlIncludes('c/o/marketplace/selection');
       assertSelectionTableData();
       get('price').type('10000');
@@ -301,7 +303,8 @@ function assertModalTerritories() {
     if (territory !== 'holy-see') modal.should('contain', `${territories[territory]}`);
   }
   modal.should('contain', 'Europe').and('contain', 'Latin America').and('contain', 'Asia');
-  get('close').click();
+  // force click because the input is hidden by mat-label since angular 15 migration
+  get('close').click({ force: true });
 }
 
 function assertAvailableCountries(number: number) {
