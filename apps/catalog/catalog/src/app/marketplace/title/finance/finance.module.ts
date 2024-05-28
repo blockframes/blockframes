@@ -5,7 +5,7 @@ import { MarketplaceMovieFinanceComponent } from './finance.component';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [MarketplaceMovieFinanceComponent],

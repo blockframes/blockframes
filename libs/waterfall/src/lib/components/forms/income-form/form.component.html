@@ -1,17 +1,17 @@
 <section *ngFor="let source of sources" class="surface">
   <h3>{{ source.name }}</h3>
-  <p class="mat-body-1" i18n>Please declare below the gross receipts that will be used for waterfall calculation.</p>
+  <p class="mat-body-2" i18n>Please declare below the gross receipts that will be used for waterfall calculation.</p>
   <bf-form-table *ngIf="form.getSource(source.id)" [columns]="incomeColumns" [form]="form.getSource(source.id)" showEmptyForm="false" [defaultFormValue]="defaultIncomeValue(source)" (itemSaved)="form.markAsDirty()">
     <!-- Columns -->
     <ng-template colRef="" label="Gross Receipts" let-item i18n-label>
       <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
     </ng-template>
     <ng-template colRef="medias" label="Medias" let-medias i18n-label>
-      <mat-chip-list *ngIf="medias.length else noMedias" aria-label="Medias">
-        <mat-chip disableRipple *ngFor="let media of medias  | toGroupLabel:'medias':'All'">
+      <mat-chip-listbox *ngIf="medias.length else noMedias" aria-label="Medias">
+        <mat-chip-option disableRipple *ngFor="let media of medias  | toGroupLabel:'medias':'All'">
           {{ media }}
-        </mat-chip>
-      </mat-chip-list>
+        </mat-chip-option>
+      </mat-chip-listbox>
       <ng-template #noMedias>--</ng-template>
     </ng-template>
     <ng-template colRef="territories" label="Territories" let-territories i18n-label>

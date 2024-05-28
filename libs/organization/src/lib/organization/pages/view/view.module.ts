@@ -12,8 +12,8 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 import { OrganizationViewComponent } from './view.component';
 
 // Material
-import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 const routes: Routes = [{

@@ -4,7 +4,7 @@ import { SnackbarLinkComponent } from './snackbar-link.component';
 import { RouterModule } from '@angular/router';
 
 // Material
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [SnackbarLinkComponent],

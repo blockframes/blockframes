@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { RouteDescription } from '@blockframes/model';
-import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CrossFieldErrorMatcher } from '@blockframes/utils/form/matchers';
 import { DashboardTitleShellComponent } from '@blockframes/movie/dashboard/shell/shell.component';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { pluck, switchMap } from 'rxjs/operators';
 import { OrganizationService } from '@blockframes/organization/service';
 import { MovieService } from '@blockframes/movie/service';

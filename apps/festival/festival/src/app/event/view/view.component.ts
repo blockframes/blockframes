@@ -8,7 +8,7 @@ import { Location } from '@angular/common';
 import { fade } from '@blockframes/utils/animations/fade';
 import { AuthService } from '@blockframes/auth/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
 import { Event, Invitation } from '@blockframes/model';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';

@@ -3,7 +3,7 @@ import { MeetingForm } from '@blockframes/event/form/event.form';
 import { EventFormShellComponent } from '../shell/shell.component';
 import { take } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { FilePickerComponent } from '@blockframes/media/file/picker/picker.component';
 import { FilePreviewComponent } from '@blockframes/media/file/preview/preview.component';
 import { StorageFile } from '@blockframes/model';

@@ -8,8 +8,8 @@ import { ContractService } from '@blockframes/contract/contract/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmDeclineComponent, ConfirmDeclineData } from '@blockframes/contract/contract/components/confirm-decline/confirm-decline.component';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { filter, pluck } from 'rxjs/operators'
 import { Negotiation } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';

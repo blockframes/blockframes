@@ -3,7 +3,7 @@ import { MovieFormShellComponent } from '../shell/shell.component';
 import { Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { UntypedFormControl } from '@angular/forms';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 

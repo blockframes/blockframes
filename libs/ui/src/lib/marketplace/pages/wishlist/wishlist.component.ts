@@ -7,8 +7,8 @@ import {
   Inject,
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie, App } from '@blockframes/model';
 import { switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';

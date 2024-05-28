@@ -4,7 +4,7 @@ import { BehaviorSubject, map, Subscription } from 'rxjs';
 import { MediaService } from '../../service';
 import { sanitizeFileName, getMimeType } from '@blockframes/utils/file-sanitizer';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { FileMetaData, createStorageFile, allowedFiles, fileSizeToString, StorageFile, CollectionHoldingFile } from '@blockframes/model';
 import { FileLabel, getFileMetadata, getFileStoragePath } from '../../utils';
 import { FileUploaderService } from '../../file-uploader.service';

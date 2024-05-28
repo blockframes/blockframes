@@ -1,4 +1,4 @@
-﻿<list-page [isLoading]="isLoading" [items]="movies$ | async">
+﻿﻿<list-page [isLoading]="isLoading" [items]="movies$ | async">
 
   <!-- App Bar Search -->
   <list-page-app-bar>
@@ -9,7 +9,7 @@
   </list-page-app-bar>
 
   <list-page-title>
-    <h1 class="mat-display-2 page-title">Library</h1>
+    <h1 class="mat-headline-3 page-title">Library</h1>
   </list-page-title>
 
   <!-- SEARCH BAR -->
@@ -96,7 +96,7 @@
 
   <!-- TITLE COUNT (ng-content)-->
   <list-page-description *ngIf="nbHits" test-id="titles-count">
-    <span i18n  class="mat-body-2">
+    <span i18n  class="mat-subtitle-2">
       There {nbHits, plural, =1 {is} other {are}} {{ nbHits }} title{nbHits, plural, =1 {} other {s}}
       available.
     </span>

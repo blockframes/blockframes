@@ -2,7 +2,7 @@
   class="dark-contrast-theme" fxFlex="100%">
 
   <h4>Welcome to Media Financiers</h4>
-  <h1 class="mat-display-2">The professional financing hub <br />for films and TV series</h1>
+  <h1 class="mat-headline-3">The professional financing hub <br />for films and TV series</h1>
   <p>
     Media Financiers enables private investors to co-produce exclusive films and TV series in the same conditions as top
     professional content financiers.
@@ -72,10 +72,10 @@
     <bf-carousel [columns]="{ gtMd: 2, ltLg: 1 }">
       <ng-container *ngFor="let benefit of benefits">
         <ng-template carouselItem>
-          <mat-card>
+          <mat-card appearance="outlined">
             <img [asset]="benefit.imgAsset" alt="benefit feature image" loading="eager">
             <h3>{{ benefit.title }}</h3>
-            <p class="mat-body-1 benefits">{{ benefit.description }}</p>
+            <p class="mat-body-2 benefits">{{ benefit.description }}</p>
             <a *ngIf="benefit?.link?.href" [href]="benefit.link.href" target="_blank">
               {{ benefit.link.text }}
             </a>

@@ -19,6 +19,7 @@ section {
   width: min-content;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of option that may no longer apply for the MDC version. */
 mat-option {
   text-transform: capitalize;
 }

@@ -11,10 +11,10 @@ import { EmptyMovieModule } from '@blockframes/ui/dashboard/components/empty-mov
 import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
-import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [

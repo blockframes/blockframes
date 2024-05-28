@@ -3,14 +3,14 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, HostBinding, OnInit,
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { DocumentReference } from 'firebase/firestore';
 import { distinctUntilChanged, map } from 'rxjs/operators';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '@blockframes/auth/service';
 import { OrganizationService, } from '@blockframes/organization/service';
 import { createPreferences, canHavePreferences, CmsPage } from '@blockframes/model';
 import { PreferencesComponent } from '@blockframes/auth/pages/preferences/modal/preferences.component';
 import { FirestoreService, fromRef } from 'ngfire';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
 
 @Component({

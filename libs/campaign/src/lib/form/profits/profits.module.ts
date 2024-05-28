@@ -8,8 +8,8 @@ import { CampaignFormProfitsComponent } from './profits.component';
 
 import { FileUploaderModule } from '@blockframes/media/file/file-uploader/file-uploader.module';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 

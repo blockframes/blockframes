@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, Optional, OnDestroy, Inject } from '@angular/core';
 import { AuthService } from '../../service';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '@blockframes/invitation/service';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';

@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { SaleShellComponent } from '../shell.component';
 import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmWithValidationComponent } from '@blockframes/contract/contract/components/confirm-with-validation/confirm-with-validation.component';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie } from '@blockframes/model';
 import { NegotiationService } from '@blockframes/contract/negotiation/service';
 import { AuthService } from '@blockframes/auth/service';

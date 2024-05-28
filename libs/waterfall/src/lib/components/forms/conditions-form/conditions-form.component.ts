@@ -23,10 +23,10 @@ import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell
 
 import { ConditionForm } from '../../../form/condition.form';
 import { FormControl } from '@angular/forms';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ExpenseTypesModalComponent } from '../../expense/expense-types-modal/expense-types-modal.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormList } from '@blockframes/utils/form';
 import { ExpenseTypeForm } from '../../../form/contract.form';
 import { WaterfallService } from '../../../waterfall.service';

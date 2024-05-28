@@ -14,7 +14,7 @@
 
 <ng-container *ngIf="(terms$ | async)?.length">
   <h2 id="rights">Preselected Terms</h2>
-  <mat-card *ngFor="let control of terms$ | async | reverse; index as i;" [attr.data-scroll-to-view-id]="i">
+  <mat-card appearance="outlined" *ngFor="let control of terms$ | async | reverse; index as i;" [attr.data-scroll-to-view-id]="i">
     <form [formGroup]="control" *ngIf="control.value as term">
       <mat-card-header fxLayout fxLayoutAlign="space-between center">
         <mat-card-title>
@@ -52,10 +52,10 @@
               <ng-container *ngIf="(term.territories | toGroupLabel:'territories':'world') as territories">
 
                 <ng-container *ngIf="excludedTerritories(term.territories).length === 0; else excluding">
-                  <mat-chip disableRipple>
+                  <mat-chip-option disableRipple>
                     <mat-icon svgIcon="world"></mat-icon>
                     <span>World</span>
-                  </mat-chip>
+                  </mat-chip-option>
                 </ng-container>
 
                 <ng-template #excluding>
@@ -64,16 +64,16 @@
                       <ul fxFlexAlign="start">
                         <li fxLayout="column" gdColumns="90px auto" fxLayoutAlign="center" gdAlignRows="start" fxLayoutGap="8px">
                           <div>Including :</div>
-                          <mat-chip disableRipple>
+                          <mat-chip-option disableRipple>
                             <mat-icon svgIcon="world"></mat-icon>
                             <span>World</span>
-                          </mat-chip>
+                          </mat-chip-option>
                         </li>
                         <li class="excluded-territories" fxLayout="column" gdColumns="90px auto" fxLayoutAlign="center" gdAlignRows="start" fxLayoutGap="8px">
                           <div>Excluding :</div>
-                          <mat-chip-list aria-label="Territories">
-                            <mat-chip disableRipple *ngFor="let territory of excludedTerritories(term.territories)">{{ territory }}</mat-chip>
-                          </mat-chip-list>
+                          <mat-chip-listbox aria-label="Territories">
+                            <mat-chip-option disableRipple *ngFor="let territory of excludedTerritories(term.territories)">{{ territory }}</mat-chip-option>
+                          </mat-chip-listbox>
                         </li>
                       </ul>
                       <button fxFlexAlign="end" mat-button class="spacing" (click)="openTerritoryModal(term)">
@@ -84,18 +84,18 @@
                 </ng-template>
 
                 <ng-template #default>
-                  <mat-chip-list aria-label="Territories" *ngIf="territories.length <= maxTerritories; else moreTerritories" test-id="selected-territories">
-                    <mat-chip disableRipple *ngFor="let territory of territories">{{ territory }}</mat-chip>
-                  </mat-chip-list>
+                  <mat-chip-listbox aria-label="Territories" *ngIf="territories.length <= maxTerritories; else moreTerritories" test-id="selected-territories">
+                    <mat-chip-option disableRipple *ngFor="let territory of territories">{{ territory }}</mat-chip-option>
+                  </mat-chip-listbox>
                 </ng-template>
 
                 <ng-template #moreTerritories>
                   <div fxFlex fxLayout="column" fxLayoutAlign="start end">
-                    <mat-chip-list aria-label="Territories">
+                    <mat-chip-listbox aria-label="Territories">
                       <ng-container *ngFor="let territory of territories | slice:0:maxTerritories">
-                        <mat-chip disableRipple>{{ territory }}</mat-chip>
+                        <mat-chip-option disableRipple>{{ territory }}</mat-chip-option>
                       </ng-container>
-                    </mat-chip-list>
+                    </mat-chip-listbox>
                     <button mat-button class="spacing" (click)="openTerritoryModal(term)" test-id="see-more">
                       ...See {{ territories.length - maxTerritories }} More
                     </button>
@@ -114,11 +114,11 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <article class="expansion-panel-content">
-              <mat-chip-list aria-label="Medias">
-                <mat-chip disableRipple *ngFor="let media of term.medias  | toGroupLabel:'medias':'All'">
+              <mat-chip-listbox aria-label="Medias">
+                <mat-chip-option disableRipple *ngFor="let media of term.medias  | toGroupLabel:'medias':'All'">
                   {{ media }}
-                </mat-chip>
-              </mat-chip-list>
+                </mat-chip-option>
+              </mat-chip-listbox>
             </article>
           </mat-expansion-panel>
 
@@ -127,7 +127,7 @@
             <mat-expansion-panel-header>
               <mat-panel-title>
                 Versions
-                <span class="mat-body-2">&nbsp;(Non Mandatory)</span>
+                <span class="mat-subtitle-2">&nbsp;(Non Mandatory)</span>
               </mat-panel-title>
             </mat-expansion-panel-header>
             <article class="expansion-panel-content">
@@ -143,10 +143,10 @@
     </form>
   </mat-card>
   <section fxLayout fxLayoutAlign="space-between">
-    <button mat-stroked-button color="primary" class="mat-body-2" (click)="clear()">
+    <button mat-stroked-button color="primary" class="mat-subtitle-2" (click)="clear()">
       Search for new Terms and Rights
     </button>
-    <button mat-flat-button color="primary" class="mat-body-2" (click)="addToSelection()" [disabled]="bucketForm.invalid" test-id="add-to-selection">
+    <button mat-flat-button color="primary" class="mat-subtitle-2" (click)="addToSelection()" [disabled]="bucketForm.invalid" test-id="add-to-selection">
       <span>Add to Selection</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>

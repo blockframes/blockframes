@@ -12,7 +12,7 @@ import { graphOptions } from './../utils';
 import { GraphComponent } from './graph.component';
 
 // Material
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 // Blockframes

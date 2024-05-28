@@ -4,7 +4,7 @@ import { Invitation, ScreeningEvent } from '@blockframes/model';
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { fade } from '@blockframes/utils/animations/fade';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { RequestAskingPriceComponent } from '@blockframes/movie/components/request-asking-price/request-asking-price.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
