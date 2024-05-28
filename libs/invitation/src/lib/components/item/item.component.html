@@ -3,7 +3,7 @@
   alt="Profile picture">
   <img matListItemAvatar *ngIf="_invitation.fromOrg" asset="profil_user.svg" [ref]="_invitation.fromOrg.logo"
   alt="Organization logo">
-  <div matListItemLine>
+  <div matListItemLine class="mat-subtitle-2">
     <ng-container [ngSwitch]="_invitation.type">
       <ng-container *ngSwitchCase="'attendEvent'">
         <ng-container *ngIf="_invitation | eventFromInvitation | async as event">

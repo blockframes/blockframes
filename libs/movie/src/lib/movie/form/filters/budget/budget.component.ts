@@ -29,6 +29,7 @@ export class BudgetFilterComponent implements OnInit, OnDestroy {
   }
 
   formatLabel(value: number) {
+    // TODO #9702 The 'invert' property no longer exists
     const minBudget = this.max - value;
     if (minBudget >= 1000 && minBudget < 1000000) {
       return Math.round(minBudget / 1000) + 'k';

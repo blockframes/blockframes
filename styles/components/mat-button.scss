@@ -131,6 +131,10 @@
     background-color: mat.get-color-from-palette($background, disabled-button);
   }
 
+  header[mat-tab-nav-bar] .mat-mdc-button:disabled {
+    background-color: transparent;
+  }
+
   .mat-mdc-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn) {
     color: mat.get-color-from-palette($foreground, text);
   }

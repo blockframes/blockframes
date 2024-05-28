@@ -123,6 +123,13 @@
   .mdc-form-field:not(.mat-form-field-disabled) > label,
   .mat-mdc-option:not(.mdc-list-item--selected):not(.mdc-list-item--disabled) .mdc-list-item__primary-text,
   .mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-input-element { color: mat.get-color-from-palette($foreground, text); }
+
+  .mdc-menu-surface.mat-mdc-select-panel {
+    padding: 0px;
+  }
+
+  scope-multiselect .mat-mdc-form-field label:not(.mdc-floating-label--float-above),
+  group-multiselect .mat-mdc-form-field label:not(.mdc-floating-label--float-above) { margin-left: 58px; }
 }
 
 // TYPOGRAPHY

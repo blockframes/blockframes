@@ -32,6 +32,13 @@
     }
   }
 
+  .mat-mdc-list-base a.mat-mdc-list-item.active:not(.mdc-list-item.mdc-list-item--with-two-lines) .mat-mdc-list-item-unscoped-content {
+    color: mat.get-color-from-palette($primary, 500);
+    mat-icon {
+      color: mat.get-color-from-palette($primary, 500);
+    }
+  }
+
   // Every nav-list in a sidenav won't get border
   .mat-mdc-sidenav .mat-mdc-nav-list, .mat-mdc-list-base {
     border: none;
