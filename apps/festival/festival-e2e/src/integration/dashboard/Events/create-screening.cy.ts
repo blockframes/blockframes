@@ -284,7 +284,7 @@ function getEventSlot({ day, hours, minutes }: EventSlot) {
 function fillDashboardCalendarPopin({ type, title, allDay }: { type: EventTypes; title: string; allDay?: boolean }) {
   get('event-type').click();
   get(`option_${type}`).click();
-  if (allDay) get('all-day').click();
+  if (allDay) get('all-day').find('button').click();
   get('event-title-modal').clear().type(title);
   get('more-details').click();
 }
