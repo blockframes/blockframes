@@ -123,14 +123,16 @@ describe('Dashboard avails search', () => {
         firstMovieFilters();
         get('dateFrom')
           .clear()
-          .type(dateToMMDDYYYY(sub(terms[0].duration.from, { days: 1 })));
+          // force click because the input is hidden by mat-label since angular 15 migration
+          .type(dateToMMDDYYYY(sub(terms[0].duration.from, { days: 1 })), { force: true });
         get('empty').should('exist');
       });
       it('To date', () => {
         firstMovieFilters();
         get('dateTo')
           .clear()
-          .type(dateToMMDDYYYY(add(terms[0].duration.to, { days: 1 })));
+          // force click because the input is hidden by mat-label since angular 15 migration
+          .type(dateToMMDDYYYY(add(terms[0].duration.to, { days: 1 })), { force: true });
         get('empty').should('exist');
       });
       it('Exclusivity', () => {

@@ -140,8 +140,8 @@ describe('Deal negotiation', () => {
     get('price').clear().type('15000');
     //adding one month before and after
     // force click because the input is hidden by mat-label since angular 15 migration
-    get('dateFrom').clear({ force: true }).type(dateToMMDDYYYY(seller.term.duration.from));
-    get('dateTo').clear({ force: true }).type(dateToMMDDYYYY(seller.term.duration.to));
+    get('dateFrom').clear({ force: true }).type(dateToMMDDYYYY(seller.term.duration.from), { force: true });
+    get('dateTo').clear({ force: true }).type(dateToMMDDYYYY(seller.term.duration.to), { force: true });
     //adding Latin America
     get('territories').should('contain', 'Europe');
     get('territories').click();

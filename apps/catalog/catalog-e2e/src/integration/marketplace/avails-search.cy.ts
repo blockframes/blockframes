@@ -120,7 +120,7 @@ describe('Marketplace avails search', () => {
         // force click because the input is hidden by mat-label since angular 15 migration
         get('dateFrom').clear({ force: true });
         waitForUpdate();
-        get('dateFrom').type(dateToMMDDYYYY(oneDayTooEarly));
+        get('dateFrom').type(dateToMMDDYYYY(oneDayTooEarly), { force: true });
         get('save-filter').click();
         get('empty').should('exist');
       });
@@ -130,7 +130,7 @@ describe('Marketplace avails search', () => {
         // force click because the input is hidden by mat-label since angular 15 migration
         get('dateTo').clear({ force: true });
         waitForUpdate();
-        get('dateTo').type(dateToMMDDYYYY(oneDayTooLate));
+        get('dateTo').type(dateToMMDDYYYY(oneDayTooLate), { force: true });
         get('save-filter').click();
         get('empty').should('exist');
       });
@@ -160,7 +160,7 @@ describe('Marketplace avails search', () => {
         get('select-all').click();
         assertMediaOverlapTerms();
       });
-      
+
       it('in single territory', () => {
         searchAvailsMediaOverlap();
         get(`movie-card_${seller.movie.id}`).click();

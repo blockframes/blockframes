@@ -199,8 +199,8 @@ export function selectDates(from: Date, to: Date) {
   get('dateFrom').should('be.enabled');
   get('dateTo').should('be.enabled');
   // force click because the input is hidden by mat-label since angular 15 migration
-  get('dateFrom').clear({ force: true }).type(dateToMMDDYYYY(from));
-  get('dateTo').clear({ force: true }).type(dateToMMDDYYYY(to));
+  get('dateFrom').clear({ force: true }).type(dateToMMDDYYYY(from), { force: true });
+  get('dateTo').clear({ force: true }).type(dateToMMDDYYYY(to), { force: true });
 }
 
 export function selectNonExclusive() {
