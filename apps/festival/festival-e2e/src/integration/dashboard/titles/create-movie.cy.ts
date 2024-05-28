@@ -267,11 +267,11 @@ describe('Movie tunnel', () => {
     get('next').click();
 
     //shooting information
-    get('shooting-completed').click();
+    get('shooting-completed').find('input').click();
     get('date-completed').type(format(addDays(new Date(), 365), 'dd/MM/yyyy'));
-    get('shooting-progress').click();
+    get('shooting-progress').find('input').click();
     get('date-progress').type(format(subDays(new Date(), 365), 'dd/MM/yyyy'));
-    get('shooting-planned').click();
+    get('shooting-planned').find('input').click();
     get('start-period').click();
     get(`option_${movie.shooting.dates.planned.from.period}`).click();
     get('start-month').click();
