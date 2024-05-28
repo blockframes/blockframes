@@ -306,5 +306,5 @@ describe('Movie tunnel', () => {
 });
 
 function removeChip(selector: string, order: number) {
-  return get(selector).find('mat-chip').eq(order).find('.mat-chip-remove').click();
+  return get(selector).find('mat-chip-row').eq(order).find('.mat-mdc-chip-remove').click();
 }
