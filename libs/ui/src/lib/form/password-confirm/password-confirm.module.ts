@@ -6,10 +6,10 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { PasswordConfirmComponent } from './password-confirm.component';
 
 // Material
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
-import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips';
-import { MatLegacyAutocompleteModule as MatAutocompleteModule } from '@angular/material/legacy-autocomplete';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
 
 // Blockframes
 import { PasswordInputModule } from '@blockframes/ui/form/password-input/password-input.module';

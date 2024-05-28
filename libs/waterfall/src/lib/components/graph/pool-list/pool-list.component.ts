@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, Pipe, PipeTransform } from '@angular/core';
 import { map, tap } from 'rxjs';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Right } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { RightService } from '../../../right.service';

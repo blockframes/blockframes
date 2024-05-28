@@ -3,8 +3,8 @@
   <landing-header test-id="landing-financiers">
     <header class="max-width">
       <h4>Welcome to Media Financiers</h4>
-      <p class="mat-display-2 p-margin">The professional financing hub <br /> for films and TV series</p>
-      <p class="mat-body-1 p-width">Media Financiers enables private investors to co-produce exclusive films and TV series
+      <p class="mat-headline-3 p-margin">The professional financing hub <br /> for films and TV series</p>
+      <p class="mat-body-2 p-width">Media Financiers enables private investors to co-produce exclusive films and TV series
         on the same conditions as top professional content financiers.</p>
       <a mat-flat-button color="accent" routerLink="/auth/identity">
         <span>Join now</span>
@@ -20,22 +20,22 @@
   </landing-header>
 
   <landing-content class="max-width">
-    <h1 class="mat-display-1">How it works</h1>
+    <h1 class="mat-headline-4">How it works</h1>
     <mat-tab-group animationDuration="1000ms" selectedIndex="0">
       <mat-tab [label]="tabNames[0]">
         <article fxLayout="row" fxLayoutGap="24px" fxLayout.lt-lg="column" class="tab-margin">
           <img fxHide.xs [asset]="tabTitle[0].imgAsset" alt="seller image">
           <div fxLayout="column">
             <h3>{{ tabTitle[0].title }}</h3>
-            <p class="mat-body-1">{{ tabTitle[0].description }}</p>
+            <p class="mat-body-2">{{ tabTitle[0].description }}</p>
           </div>
         </article>
         <h5>Benefits</h5>
         <article fxLayout="row wrap" fxLayoutAlign="space-between">
-          <mat-card *ngFor="let feature of sellerFeatures">
+          <mat-card appearance="outlined" *ngFor="let feature of sellerFeatures">
             <img [asset]="feature.imgAsset" alt="seller feature image">
             <h3>{{ feature.title }}</h3>
-            <p class="mat-body-1">{{ feature.description }}
+            <p class="mat-body-2">{{ feature.description }}
             </p>
             <a *ngIf="feature?.link?.href" [href]="feature.link.href" target="_blank">
               {{ feature.link.text }}
@@ -48,21 +48,21 @@
           <img fxHide.xs [asset]="tabTitle[1].imgAsset" alt="buyer image">
           <div fxLayout="column">
             <h3>{{ tabTitle[1].title }}</h3>
-            <p class="mat-body-1">{{ tabTitle[1].description }}</p>
+            <p class="mat-body-2">{{ tabTitle[1].description }}</p>
           </div>
         </article>
         <h5>Benefits</h5>
         <article fxLayout="row wrap" fxLayoutAlign="space-between">
-          <mat-card *ngFor="let feature of financierFeatures" class="buyer-card">
+          <mat-card appearance="outlined" *ngFor="let feature of financierFeatures" class="buyer-card">
             <img [asset]="feature.imgAsset" alt="financiers feature image">
             <h3>{{ feature.title }}</h3>
-            <p class="mat-body-1">{{ feature.description }}</p>
+            <p class="mat-body-2">{{ feature.description }}</p>
           </mat-card>
         </article>
       </mat-tab>
     </mat-tab-group>
     <section fxLayout="column" fxLayoutAlign="start center" class="join">
-      <p class="mat-display-2">Interested? Join now!</p>
+      <p class="mat-headline-3">Interested? Join now!</p>
       <a mat-flat-button color="accent" routerLink="/auth/identity">
         <span>Sign up</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>

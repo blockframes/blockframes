@@ -9,7 +9,7 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [ListComponent],

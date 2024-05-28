@@ -4,12 +4,12 @@ import { routeAnimation } from '@blockframes/utils/animations/router-animations'
 import { EventForm, ScreeningForm, SlateForm } from '../../form/event.form';
 import { EventService } from '../../service';
 import { MovieService } from '@blockframes/movie/service';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { applicationUrl } from '@blockframes/utils/apps';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, pluck, switchMap, startWith, catchError } from 'rxjs/operators';
 import { NavTabs, TabConfig } from '@blockframes/utils/event';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';

@@ -10,21 +10,21 @@
       <ng-container *ngIf="!!groups.length; else default">
         <ng-container *ngFor="let group of groups">
           <article *ngIf="group.items.length">
-            <p class="mat-body-2">{{ group.label }}</p>
-            <mat-chip-list>
-              <mat-chip disableRipple *ngFor="let item of group.items">
+            <p class="mat-subtitle-2">{{ group.label }}</p>
+            <mat-chip-listbox>
+              <mat-chip-option disableRipple *ngFor="let item of group.items">
                 {{ item | toLabel: data.scope }}
-              </mat-chip>
-            </mat-chip-list>
+              </mat-chip-option>
+            </mat-chip-listbox>
           </article>
         </ng-container>
       </ng-container>
       <ng-template #default>
-        <mat-chip-list>
-          <mat-chip disableRipple *ngFor="let item of data.items">
+        <mat-chip-listbox>
+          <mat-chip-option disableRipple *ngFor="let item of data.items">
             {{ item | toLabel: data.scope }}
-          </mat-chip>
-        </mat-chip-list>
+          </mat-chip-option>
+        </mat-chip-listbox>
       </ng-template>
     </section>
   </ng-container>

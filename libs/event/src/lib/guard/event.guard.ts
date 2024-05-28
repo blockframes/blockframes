@@ -4,7 +4,7 @@ import { InvitationService } from '@blockframes/invitation/service';
 import { firstValueFrom, Observable } from 'rxjs';
 import { EventService } from '../service';
 import { eventTime } from '../pipes/event-time.pipe';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { AuthService } from '@blockframes/auth/service';
 import { Event, Meeting } from '@blockframes/model';

@@ -10,8 +10,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 // Material
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
-import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [MovieFormTechnicalInfoComponent],

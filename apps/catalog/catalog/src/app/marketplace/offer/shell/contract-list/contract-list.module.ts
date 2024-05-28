@@ -10,7 +10,7 @@ import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 
-import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip'
+import { MatTooltipModule } from '@angular/material/tooltip'
 import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({

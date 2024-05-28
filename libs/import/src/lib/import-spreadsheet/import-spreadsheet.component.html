@@ -1,15 +1,15 @@
-﻿
+﻿﻿
 <input #filePicker type="file" [accept]="allowedExtensions" (change)="importSpreadsheet($event.target.files)" />
 
 <ng-container *ngIf="file; else noFile">
 
-  <mat-chip-list>
-    <mat-chip removable (removed)="remove()">
+  <mat-chip-listbox>
+    <mat-chip-option removable (removed)="remove()">
       <span>{{file.name}}</span>
       <span class="mat-caption">{{ file.size | fileSize }}</span>
       <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
-    </mat-chip>
-  </mat-chip-list>
+    </mat-chip-option>
+  </mat-chip-listbox>
 
 </ng-container>
 <ng-template #noFile>

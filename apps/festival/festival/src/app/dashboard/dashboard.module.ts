@@ -32,7 +32,7 @@ import { EventEditGuard } from '@blockframes/event/guard/event-edit.guard';
 import { EventTypeGuard } from '@blockframes/event/guard/event-type.guard';
 
 // Material
-import { MatLegacyListModule as MatListModule} from '@angular/material/legacy-list';
+import { MatListModule} from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDividerModule } from '@angular/material/divider';

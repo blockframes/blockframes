@@ -94,7 +94,7 @@
 
       <article>
         <h6>Film Poster</h6>
-        <p class="mat-body-2">
+        <p class="mat-subtitle-2">
           The poster image will be used as the main image to represent your film on the marketplace, and, more
           generally, for all film components requiring vertical formats on the marketplace.
         </p>
@@ -115,7 +115,7 @@
 
       <article>
         <h6>Film Banner</h6>
-        <p class="mat-body-2">
+        <p class="mat-subtitle-2">
           The banner image will be used as a cover picture on your project page on the marketplace, and, more generally,
           for all film components requiring horizontal formats on the marketplace.
         </p>
@@ -198,14 +198,14 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Other Genre(s)</mat-label>
-        <mat-chip-list #chipList>
+        <mat-chip-grid #chipList>
           <ng-container *ngFor="let value of valuesCustomGenres$ | async; let i = index">
-            <mat-chip removable (removed)="removeCustomGenre(i)">
+            <mat-chip-row removable (removed)="removeCustomGenre(i)">
               <span>{{ value }}</span>
               <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
-            </mat-chip>
+            </mat-chip-row>
           </ng-container>
-        </mat-chip-list>
+        </mat-chip-grid>
         <input test-id="other-genres" matInput [formControl]="customGenreCtrl" [matChipInputFor]="chipList"
           [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addCustomGenre($event)"
           placeholder="Please specify if you did not find any genre above." />

@@ -1,6 +1,6 @@
 <ng-container *ngIf="(movie$ | async) as movie;" test-id="content">
 
-  <mat-card *ngIf="hasBudget(movie)">
+  <mat-card appearance="outlined" *ngIf="hasBudget(movie)">
     <mat-card-header>
       <h3>Budget, Quota & Critics</h3>
     </mat-card-header>

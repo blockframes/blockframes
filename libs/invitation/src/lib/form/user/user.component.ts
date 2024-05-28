@@ -7,7 +7,7 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { EventFormShellComponent } from '@blockframes/event/form/shell/shell.component';
 import { Invitation } from '@blockframes/model';
 import { ActivatedRoute } from '@angular/router';

@@ -16,7 +16,7 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
 // Material
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { MovieFormMediaNotesComponent } from './notes.component';
 

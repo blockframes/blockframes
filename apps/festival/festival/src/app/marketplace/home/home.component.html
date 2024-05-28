@@ -9,7 +9,7 @@
   <header class="banner dark-contrast-theme" [bgRef]="section.background" bgAsset="banner.png">
     <div class="banner-details">
       <h4 *ngIf="section.subtitle">{{ section.subtitle }}</h4>
-      <h1 class="mat-display-2" *ngIf="section.title">{{ section.title }}</h1>
+      <h1 class="mat-headline-3" *ngIf="section.title">{{ section.title }}</h1>
       <p *ngIf="section.description">{{ section.description }}</p>
       <div class="links">
         <ng-container *ngFor="let link of section.links">

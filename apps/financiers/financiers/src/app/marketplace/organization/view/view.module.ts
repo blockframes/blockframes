@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ViewComponent } from './view.component';
 
 import { OrganizationViewModule as OrganizationLayoutModule } from '@blockframes/organization/layout/view/view.module';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 

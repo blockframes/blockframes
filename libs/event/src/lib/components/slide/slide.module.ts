@@ -13,7 +13,7 @@ import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 import { InvitationActionModule } from '@blockframes/invitation/components/action/action.module';
 
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   imports: [

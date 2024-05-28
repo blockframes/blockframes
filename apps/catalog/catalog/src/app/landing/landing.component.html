@@ -4,7 +4,7 @@
   <landing-header test-id="landing-catalog">
     <header id="header-to-scroll" class="max-width">
       <h4>Welcome to Archipel Content</h4>
-      <h1 class="mat-display-2">The matchmaker<br/>for content licensing</h1>
+      <h1 class="mat-headline-3">The matchmaker<br/>for content licensing</h1>
       <h2>Specialized in TV, VOD and ancillary rights</h2>
       <a mat-flat-button color="accent" routerLink="/auth/identity">
         <span>Join now</span>
@@ -15,14 +15,14 @@
 
   <landing-content>
     <section class="landing-presentation max-width">
-      <h3 class="mat-display-1">Deals made easy</h3>
+      <h3 class="mat-headline-4">Deals made easy</h3>
       <mat-tab-group animationDuration="1000ms" selectedIndex="0" (selectedTabChange)="onTabChanged($event)">
         <mat-tab [label]="tabNames[0]">
           <header fxLayout fxLayout.lt-lg="column" fxLayoutGap="32px">
             <video #sellerVideo [muted]="true" autoplay loop src="assets/videos/sellerLP.mp4" type="video/mp4"></video>
             <div>
               <h2>{{ tabTitle[0].title }}</h2>
-              <p class="mat-body-1">{{ tabTitle[0].description }}</p>
+              <p class="mat-body-2">{{ tabTitle[0].description }}</p>
             </div>
           </header>
 
@@ -31,7 +31,7 @@
             <div class="surface" *ngFor="let feature of sellerFeatures">
               <img [asset]="feature.imgAsset" alt="seller feature image">
               <h3>{{ feature.title }}</h3>
-              <p class="mat-body-1">{{ feature.description }}</p>
+              <p class="mat-body-2">{{ feature.description }}</p>
             </div>
           </article>
           <h2>User Benefits</h2>
@@ -41,7 +41,7 @@
                 <img [asset]="benefit.imgAsset" alt="seller benefit image">
                 <div fxLayout="column">
                   <h3>{{ benefit.title }}</h3>
-                  <p class="mat-body-1">{{ benefit.description }}</p>
+                  <p class="mat-body-2">{{ benefit.description }}</p>
                 </div>
               </div>
             </ng-container>
@@ -53,7 +53,7 @@
             <video #buyerVideo [muted]="true" autoplay loop src="assets/videos/buyerLP.mp4" type="video/mp4"></video>
             <div>
               <h2>{{ tabTitle[1].title }}</h2>
-              <p class="mat-body-1">{{ tabTitle[1].description }}</p>
+              <p class="mat-body-2">{{ tabTitle[1].description }}</p>
             </div>
           </header>
 
@@ -62,7 +62,7 @@
             <div class="surface" *ngFor="let feature of buyerFeatures">
               <img [asset]="feature.imgAsset" alt="seller feature image">
               <h3>{{ feature.title }}</h3>
-              <p class="mat-body-1">{{ feature.description }}</p>
+              <p class="mat-body-2">{{ feature.description }}</p>
             </div>
           </article>
           <h2>User Benefits</h2>
@@ -72,7 +72,7 @@
                 <img [asset]="benefit.imgAsset" alt="seller benefit image">
                 <div fxLayout="column">
                   <h3>{{ benefit.title }}</h3>
-                  <p class="mat-body-1">{{ benefit.description }}</p>
+                  <p class="mat-body-2">{{ benefit.description }}</p>
                 </div>
               </div>
             </ng-container>
@@ -82,7 +82,7 @@
     </section>
 
     <section fxLayout="column" fxLayoutAlign="start center" class="dark-contrast-theme join" fxLayoutGap="40px">
-      <h2 class="mat-display-2">Subscribe for free!</h2>
+      <h2 class="mat-headline-3">Subscribe for free!</h2>
       <a mat-flat-button color="accent" routerLink="/auth/identity">
         <span>Join now</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
@@ -90,19 +90,19 @@
     </section>
 
     <section class="expertise max-width">
-      <h3 class="mat-display-1">Our expertise</h3>
+      <h3 class="mat-headline-4">Our expertise</h3>
       <div>
         <img [asset]="'content_our_expertise.svg'" alt="expertise img">
       </div>
       <article>
         <span>The Company</span>
-        <p class="mat-body-1"><a href="https://cascade8.com/" target="_blank" rel="noreferrer noopener">Cascade8</a>  is the tech branch of the media company <a href="http://logicalpictures.com/" target="_blank" rel="noreferrer noopener">Logical Pictures Group</a>. It develops a technological ecosystem to digitize, streamline and optimize the activities of financing, selling and acquiring audiovisual content.</p>
+        <p class="mat-body-2"><a href="https://cascade8.com/" target="_blank" rel="noreferrer noopener">Cascade8</a>  is the tech branch of the media company <a href="http://logicalpictures.com/" target="_blank" rel="noreferrer noopener">Logical Pictures Group</a>. It develops a technological ecosystem to digitize, streamline and optimize the activities of financing, selling and acquiring audiovisual content.</p>
         <span>The Applications</span>
-        <p class="mat-body-1">This Cascade8 ecosystem is composed of various applications, each of which aims at solving a specific bottleneck in the audiovisual value chain (<a href="https://www.archipelmarket.com/" target="_blank" rel="noreferrer noopener">Archipel Market</a> , <a href="https://archipelcontent.com/" target="_blank" rel="noreferrer noopener">Archipel Content</a> , <a href="https://www.mediafinanciers.com/" target="_blank" rel="noreferrer noopener">Media Financiers</a> )
+        <p class="mat-body-2">This Cascade8 ecosystem is composed of various applications, each of which aims at solving a specific bottleneck in the audiovisual value chain (<a href="https://www.archipelmarket.com/" target="_blank" rel="noreferrer noopener">Archipel Market</a> , <a href="https://archipelcontent.com/" target="_blank" rel="noreferrer noopener">Archipel Content</a> , <a href="https://www.mediafinanciers.com/" target="_blank" rel="noreferrer noopener">Media Financiers</a> )
           <br>These applications are linked to one another to simplify user access and data reusability between the different services.
         </p>
         <span>Blockchain Projects</span>
-        <p class="mat-body-1">To enrich web and software projects, <a href="https://cascade8.com/" target="_blank" rel="noreferrer noopener">Cascade8</a> and the <a href="http://logicalpictures.com/" target="_blank" rel="noreferrer noopener">Logical Pictures Group</a> are spearheads in the application of blockchain technology in the content industry, from rights & revenue management (Blockframes) and NFTs (<a href="https://www.filmseriesnft.com/" target="_blank" rel="noreferrer noopener">FilmSeriesNFT.com</a>) to STOs (through its tokenized investment fund <a href="https://www.logicalcontentventures.com/" target="_blank" rel="noreferrer noopener">Logical Content Ventures</a>).</p>
+        <p class="mat-body-2">To enrich web and software projects, <a href="https://cascade8.com/" target="_blank" rel="noreferrer noopener">Cascade8</a> and the <a href="http://logicalpictures.com/" target="_blank" rel="noreferrer noopener">Logical Pictures Group</a> are spearheads in the application of blockchain technology in the content industry, from rights & revenue management (Blockframes) and NFTs (<a href="https://www.filmseriesnft.com/" target="_blank" rel="noreferrer noopener">FilmSeriesNFT.com</a>) to STOs (through its tokenized investment fund <a href="https://www.logicalcontentventures.com/" target="_blank" rel="noreferrer noopener">Logical Content Ventures</a>).</p>
       </article>
     </section>
   </landing-content>
@@ -110,7 +110,7 @@
     <section class="max-width" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px">
       <app-logo app="festival"></app-logo>
       <h3>Looking to discover exclusive line-up titles?</h3>
-      <p class="mat-body-1">Check out Archipel Market, the ongoing film market!</p>
+      <p class="mat-body-2">Check out Archipel Market, the ongoing film market!</p>
       <a mat-flat-button color="primary" [href]="applicationUrl.festival" target="_blank">
         Switch to Archipel Market
       </a>
