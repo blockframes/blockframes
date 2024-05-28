@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Filmography } from '@blockframes/model';
 import { displayFilmographies } from '@blockframes/movie/pipes/filmography.pipe';
 import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.component';

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild, TemplateRef } from '@angular/core';
-import { MatLegacyDialog as MatDialog, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { StorageFile } from '@blockframes/model';
 import { createModalData } from '../global-modal/global-modal.component';
 import { PreviewFileModalComponent } from '../preview-file-modal/preview-file-modal.component';

@@ -8,7 +8,7 @@ import { Bucket, CrmOffer, crmOffersToExport, bucketsToCrmBuckets, crmBucketsToE
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { OrganizationService } from '@blockframes/organization/service';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'crm-offer-list',

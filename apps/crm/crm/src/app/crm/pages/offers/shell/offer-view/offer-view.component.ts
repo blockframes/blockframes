@@ -2,11 +2,11 @@ import { Component, ChangeDetectionStrategy, OnDestroy, OnInit } from '@angular/
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { OfferShellComponent } from '../shell.component';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { OfferService } from '@blockframes/contract/offer/service';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { NegotiationService } from '@blockframes/contract/negotiation/service';
 import { Contract, staticModel } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';

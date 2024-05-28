@@ -11,9 +11,9 @@
       </a>
 
       <div fxFlex fxLayout="column">
-        <p class="mat-body-1">{{ title.directors | displayName }}</p>
+        <p class="mat-body-2">{{ title.directors | displayName }}</p>
         <div fxLayout fxLayoutAlign="space-between">
-          <h1 class="mat-display-1">{{ title.title.international }}</h1>
+          <h1 class="mat-headline-4">{{ title.title.international }}</h1>
           <a mat-button [routerLink]="['/c/o/dashboard/title/', title.id]" class="film-page-button">See Film Page</a>
         </div>
         <h6>{{ title.genres | toLabel: 'genres' }}</h6>
@@ -28,7 +28,7 @@
       <span>Interested Users</span>
       <mat-icon svgIcon="info" matTooltip="This data only includes Buyers and excludes all Sellers from Archipel Market."></mat-icon>
     </h3>
-    <p class="mat-body-1">See how many users interacted with your movie (viewed your title, added to wishlist, requested
+    <p class="mat-body-2">See how many users interacted with your movie (viewed your title, added to wishlist, requested
       a screening, etc).</p>
   </article>
 
@@ -96,7 +96,7 @@
       <span>Title Performance</span>
       <mat-icon svgIcon="info" matTooltip="This data only includes Buyers and excludes all Sellers from Archipel Market."></mat-icon>
     </h3>
-    <p class="mat-body-1">Check the overall metrics of your title performance.</p>
+    <p class="mat-body-2">Check the overall metrics of your title performance.</p>
   </article>
 
   <article class="surface title_performance">
@@ -123,7 +123,7 @@
   </header>
   <ng-container *ngIf="endedOrOngoingScreenings$ | async as endedOrOngoingScreenings; else loading">
     <ng-container *ngIf="endedOrOngoingScreenings.length else noScreenings">
-      <p class="mat-body-1">Check the cumulative statistics of this title's Screenings.</p>
+      <p class="mat-body-2">Check the cumulative statistics of this title's Screenings.</p>
       <article class="surface" *ngIf="aggregatedScreeningCards$ | async; else loading">
         <p>"0s" means the user watched less than a minute.</p>
         <analytics-metric-card-list [cards]="aggregatedScreeningCards$ | async"></analytics-metric-card-list>
@@ -182,7 +182,7 @@
   </ng-container>
   <ng-template #noScreenings>
     <article class="no-analytics surface">
-      <p class="mat-body-2">Statistics about your last screening session will appear once the session is over.</p>
+      <p class="mat-subtitle-2">Statistics about your last screening session will appear once the session is over.</p>
       <article>
         <img asset="no_screenings.svg" alt="no-screenings">
         <a *ngIf="title$ | async as title" class="create-screening" 

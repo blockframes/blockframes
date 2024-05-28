@@ -5,7 +5,7 @@
  * This ErrorLoggerHandler is a hack to make sure we are actually logging the error.
  */
 import { ErrorHandler, Injectable, NgModule } from '@angular/core';
-import { MatLegacySnackBar as MatSnackBar, MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Injectable()
 export class ErrorLoggerHandler implements ErrorHandler {

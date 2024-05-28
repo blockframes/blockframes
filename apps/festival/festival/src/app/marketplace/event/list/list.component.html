@@ -1,6 +1,6 @@
 <list-page [items]="events$ | async | eventsToTimeFrame">
   <list-page-title>
-    <h1 class="mat-display-2 page-title">Screening List</h1>
+    <h1 class="mat-headline-3 page-title">Screening List</h1>
   </list-page-title>
 
   <!-- TODO : #8383-->
@@ -14,7 +14,7 @@
 
   <!-- EVENTS COUNT (ng-content)-->
   <list-page-description *ngIf="events$ | async as events">
-    <span i18n  class="mat-body-2">
+    <span i18n  class="mat-subtitle-2">
       There {events.length, plural, =1 {is} other {are}} {{ events.length }} event{events.length, plural, =1 {} other {s}}
       available.
     </span>

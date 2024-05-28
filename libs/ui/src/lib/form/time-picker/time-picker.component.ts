@@ -3,7 +3,7 @@ import { UntypedFormGroup, UntypedFormControl, NgControl, ControlValueAccessor, 
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Subject } from 'rxjs';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { MatLegacyFormFieldControl as MatFormFieldControl } from '@angular/material/legacy-form-field';
+import { MatFormFieldControl } from '@angular/material/form-field';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { DOCUMENT } from '@angular/common';
 

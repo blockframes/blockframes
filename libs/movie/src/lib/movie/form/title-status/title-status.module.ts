@@ -14,8 +14,8 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
 
 // Material
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
-import { MatLegacyRadioModule as MatRadioModule } from '@angular/material/legacy-radio';
+import { MatCardModule } from '@angular/material/card';
+import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   imports: [

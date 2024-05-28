@@ -7,7 +7,7 @@
       <img class="add-files-icon" asset="add_files.svg" alt="upload image">
     </button>
     <ng-content select="[title]"></ng-content>
-    <p class="mat-body-2">{{ cropDimensions }}</p>
+    <p class="mat-subtitle-2">{{ cropDimensions }}</p>
     <p class="mat-caption" i18n>Accepted Formats: {{ accept.join(', ') }}<br/>
     Max file size: {{ maxSize | fileSize }}</p>
     <p class="mat-caption" i18n>Drag and drop a file here or</p>

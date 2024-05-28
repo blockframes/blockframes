@@ -6,16 +6,16 @@
   </button>
 </section>
 
-<mat-chip-list>
-  <mat-chip
+<mat-chip-listbox>
+  <mat-chip-option
     *ngFor="let pool of existingPools"
     color="primary"
     [selected]="poolsFilter.has(pool)"
     (click)="selectFilterPool(pool)"
   >
     {{pool}}
-  </mat-chip>
-</mat-chip-list>
+  </mat-chip-option>
+</mat-chip-listbox>
 
 <section>
   <mat-checkbox
@@ -41,11 +41,11 @@
         {{right.name}}
       </mat-checkbox>
       <ng-container *ngIf="right.pools.length">
-        <mat-chip-list>
-          <mat-chip *ngFor="let pool of right.pools" color="primary">
+        <mat-chip-listbox>
+          <mat-chip-option *ngFor="let pool of right.pools" color="primary">
             {{pool}}
-          </mat-chip>
-        </mat-chip-list>
+          </mat-chip-option>
+        </mat-chip-listbox>
       </ng-container>
       <button
         *ngIf="!readonly"
@@ -80,11 +80,11 @@
             {{member.name}}
           </mat-checkbox>
           <ng-container *ngIf="member.pools.length">
-            <mat-chip-list>
-              <mat-chip *ngFor="let pool of member.pools" color="primary">
+            <mat-chip-listbox>
+              <mat-chip-option *ngFor="let pool of member.pools" color="primary">
                 {{pool}}
-              </mat-chip>
-            </mat-chip-list>
+              </mat-chip-option>
+            </mat-chip-listbox>
           </ng-container>
           <button
             *ngIf="!readonly"
@@ -119,11 +119,11 @@
                 {{subMember.name}}
               </mat-checkbox>
               <ng-container *ngIf="subMember.pools.length">
-                <mat-chip-list>
-                  <mat-chip *ngFor="let pool of subMember.pools" color="primary">
+                <mat-chip-listbox>
+                  <mat-chip-option *ngFor="let pool of subMember.pools" color="primary">
                     {{pool}}
-                  </mat-chip>
-                </mat-chip-list>
+                  </mat-chip-option>
+                </mat-chip-listbox>
               </ng-container>
               <button *ngIf="!readonly" mat-icon-button matTooltip="Edit Receipt Share" (click)="edit(subMember.id)" [disabled]="nonEditableNodeIds.includes(subMember.id)" i18n-matTooltip>
                 <mat-icon svgIcon="edit"></mat-icon>
@@ -149,11 +149,11 @@
             {{member.name}}
           </mat-checkbox>
           <ng-container *ngIf="member.pools.length">
-            <mat-chip-list>
-              <mat-chip *ngFor="let pool of member.pools" color="primary">
+            <mat-chip-listbox>
+              <mat-chip-option *ngFor="let pool of member.pools" color="primary">
                 {{pool}}
-              </mat-chip>
-            </mat-chip-list>
+              </mat-chip-option>
+            </mat-chip-listbox>
           </ng-container>
           <button *ngIf="!readonly" mat-icon-button matTooltip="Edit Receipt Share" (click)="edit(member.id)" [disabled]="nonEditableNodeIds.includes(member.id)" i18n-matTooltip>
             <mat-icon svgIcon="edit"></mat-icon>

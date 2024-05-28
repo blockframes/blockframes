@@ -5,7 +5,7 @@
         <mat-icon svgIcon="arrow_back"></mat-icon>
       </button>
       <section fxLayout="column" fxLayoutAlign="center center">
-        <h1 class="mat-display-2">{{ event.title }}</h1>
+        <h1 class="mat-headline-3">{{ event.title }}</h1>
         <ng-container [ngSwitch]="event | eventTime">
   
           <ng-container *ngSwitchCase="'early'">
@@ -13,8 +13,8 @@
               <span>{{ event.accessibility | toLabel:'accessibility' }} {{ event.type | toLabel: 'eventTypes' }}</span>
               <event-agenda-export [event]="event" color="primary"></event-agenda-export>
             </h6>
-            <pre class="mat-body-1" matTooltip="Your Greenwich Mean Time" >{{ event | eventRange }}</pre>
-            <p class="mat-body-2">{{ event.meta.description }}</p>
+            <pre class="mat-body-2" matTooltip="Your Greenwich Mean Time" >{{ event | eventRange }}</pre>
+            <p class="mat-subtitle-2">{{ event.meta.description }}</p>
             <countdown-timer [title]="'Event will start in:'" [date]="event.start" [timeUnits]="['days', 'hours', 'minutes']" (timerEnded)="timerEnded = $event"></countdown-timer>
             <ng-container *ngIf="event.isOwner; else notOwner">
               <h5>You are the owner of this event.</h5>
@@ -37,8 +37,8 @@
               <span>{{ event.accessibility | toLabel:'accessibility' }} {{ event.type | toLabel: 'eventTypes' }}</span>
               <event-agenda-export [event]="event"></event-agenda-export>
             </h6>
-            <pre class="mat-body-1">{{ event | eventRange }}</pre>
-            <p class="mat-body-2">{{ event.meta.description }}</p>
+            <pre class="mat-body-2">{{ event | eventRange }}</pre>
+            <p class="mat-subtitle-2">{{ event.meta.description }}</p>
             <p *ngIf="(invitation$ | async) === null">This event has already started.</p>
             <ng-container *ngIf="event.isOwner; else notOwner">
               <h3>You are the owner of this event.</h3>
@@ -64,7 +64,7 @@
   
           <ng-container *ngSwitchCase="'late'">
             <h6>{{ event.type | toLabel: 'eventTypes' }} session closed</h6>
-            <pre class="mat-body-1">{{ event | eventRange }}</pre>
+            <pre class="mat-body-2">{{ event | eventRange }}</pre>
             
             <ng-container *ngIf="event.type === 'screening' && event.accessibility === 'private' && event.meta.titleId">
               <event-request-screening [movieId]="event.meta.titleId"></event-request-screening>
@@ -81,7 +81,7 @@
       <section class="screening" *ngSwitchCase="'screening'">
         <movie-header *ngIf="event.movie" [movie]="event.movie" [showBackArrow]="false">
           <movie-header-preferences>
-            <p class="mat-body-1">{{ event.movie.synopsis }}</p>
+            <p class="mat-body-2">{{ event.movie.synopsis }}</p>
             <org-chip [org]="event.org"></org-chip>
           </movie-header-preferences>
           <movie-header-cta>

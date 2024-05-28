@@ -35,7 +35,7 @@
                           <mat-icon svgIcon="document" matTooltip="View Statement"  i18n-matTooltip></mat-icon>
                         </a>
                       </span>
-                      <p class="mat-body-1" i18n>Payment Date:  {{ stm.payments.rightholder.date | date }}
+                      <p class="mat-body-2" i18n>Payment Date:  {{ stm.payments.rightholder.date | date }}
                       </p>
                     </div>
                     <div class="statement-price">
@@ -62,7 +62,7 @@
                           <mat-icon svgIcon="document" matTooltip="View Statement" i18n-matTooltip></mat-icon>
                         </a>
                       </span>
-                      <p class="mat-body-1" i18n>
+                      <p class="mat-body-2" i18n>
                         Payment Date: 
                         <ng-container *ngIf="stm.payments.right[0] as payment">
                           {{ payment.date | date }}

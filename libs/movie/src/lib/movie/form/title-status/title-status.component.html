@@ -3,7 +3,7 @@
     <section id="title-status">
       <h3>Select your project's production status</h3>
       <ng-container *ngIf="currentApp !== 'catalog'; else onlyReleasedStatus">
-        <p class="mat-body-2">Your project's production status will define the form that will follow.
+        <p class="mat-subtitle-2">Your project's production status will define the form that will follow.
           <br>
           - If you are creating a new project, please select the right production status to start filling the form.
           <br>
@@ -12,7 +12,7 @@
         </p>
       </ng-container>
       <ng-template #onlyReleasedStatus>
-        <p class="mat-body-2">
+        <p class="mat-subtitle-2">
           {{ currentApp | appName }} only accepts released projects.<br/>
           Please make sure that your project is released before filling the following form.
         </p>
@@ -21,7 +21,7 @@
       <mat-radio-group [formControl]="form.get('productionStatus')" fxLayout="wrap row" fxLayoutGap="16px">
 
         <ng-container *ngFor="let status of status">
-          <mat-card [ngClass]="{ disabled: status.disabled }">
+          <mat-card appearance="outlined" [ngClass]="{ disabled: status.disabled }">
             <img (click)="setValue(status.key, status.disabled)" [asset]="status.image" />
             <mat-radio-button [value]="status.key" color="primary" [disabled]="status.disabled" [attr.test-id]="'status_' + status.key">
               {{status.value}}

@@ -7,7 +7,7 @@ import { getTotalFundings } from '@blockframes/campaign/pipes/fundings.pipe';
 import { ThemeService } from '@blockframes/ui/theme';
 import { ConsentsService } from '@blockframes/consents/service';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Access, StorageFile, Budget, Campaign, Funding } from '@blockframes/model';
 import { ActivatedRoute } from '@angular/router';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';

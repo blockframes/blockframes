@@ -5,7 +5,7 @@
 }
 
 @include layout-bp(xs) {
-  .mat-button {
+  .mat-mdc-button {
     padding: 0;
   }
   .status span {

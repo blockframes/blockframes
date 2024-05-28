@@ -11,7 +11,7 @@ import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { LanguagesFormModule } from '../languages/languages.module';
 
 // Material
-import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/material/legacy-slide-toggle';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   imports: [

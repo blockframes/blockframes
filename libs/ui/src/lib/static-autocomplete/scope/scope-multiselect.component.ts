@@ -1,7 +1,7 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 // Blockframes
 import { Scope, staticModel } from '@blockframes/model';

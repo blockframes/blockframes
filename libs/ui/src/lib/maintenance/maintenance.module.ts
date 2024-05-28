@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { MaintenanceComponent } from './maintenance.component';
 
 // Material
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({

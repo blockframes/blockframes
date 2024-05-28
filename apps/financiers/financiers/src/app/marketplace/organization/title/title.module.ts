@@ -6,7 +6,7 @@ import { MovieCardModule } from '@blockframes/movie/components/card/card.module'
 import { CampaignPipeModule } from '@blockframes/campaign/pipes';
 
 import { MatRippleModule } from '@angular/material/core';
-import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 

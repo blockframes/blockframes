@@ -13,9 +13,9 @@ import { ContractItemModule } from '@blockframes/contract/contract/components/it
 import { HoldbackListModule } from '@blockframes/contract/contract/holdback/list/list.module';
 
 // Materials
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [

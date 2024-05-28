@@ -10,7 +10,7 @@
 
         <!-- Shooting completed -->
         <article fxLayout="column">
-          <mat-radio-button class="mat-body-2" color="primary" value="completed" test-id="shooting-completed">
+          <mat-radio-button class="mat-subtitle-2" color="primary" value="completed" test-id="shooting-completed">
             Shooting completed :
           </mat-radio-button>
           <mat-form-field appearance="outline" fxFlex>
@@ -26,7 +26,7 @@
 
         <!-- Shooting in progress -->
         <article fxLayout="column">
-          <mat-radio-button class="mat-body-2" color="primary" value="progress" test-id="shooting-progress">
+          <mat-radio-button class="mat-subtitle-2" color="primary" value="progress" test-id="shooting-progress">
             Shooting in progress :
           </mat-radio-button>
           <mat-form-field appearance="outline" fxFlex>
@@ -42,13 +42,13 @@
 
         <!-- Shooting planned -->
         <article fxLayout="column">
-          <mat-radio-button class="mat-body-2" color="primary" value="planned" test-id="shooting-planned">
+          <mat-radio-button class="mat-subtitle-2" color="primary" value="planned" test-id="shooting-planned">
             Shooting planned :
           </mat-radio-button>
           <div fxLayout="row wrap" fxFlex fxLayoutGap="24px">
 
             <div fxLayout="column" fxFlex>
-              <span class="mat-body-2">From :</span>
+              <span class="mat-subtitle-2">From :</span>
               <div fxLayout="row" fxLayoutGap="8px" fxFlex>
                 <mat-form-field appearance="outline" fxFlex>
                   <mat-label>Period</mat-label>
@@ -75,7 +75,7 @@
             </div>
 
             <div fxLayout="column" fxFlex>
-              <span class="mat-body-2">To :</span>
+              <span class="mat-subtitle-2">To :</span>
               <div fxLayout="row" fxLayoutGap="8px" fxFlex>
                 <mat-form-field appearance="outline" fxFlex>
                   <mat-label>Period</mat-label>
@@ -123,14 +123,14 @@
 
             <mat-form-field appearance="outline">
               <mat-label>Cities</mat-label>
-              <mat-chip-list #chipList>
+              <mat-chip-grid #chipList>
                 <ng-container *ngFor="let city of locationForm.get('cities').value; let i = index">
-                  <mat-chip removable="true" (removed)="remove(i, locationForm.get('cities'))">
+                  <mat-chip-row removable="true" (removed)="remove(i, locationForm.get('cities'))">
                     <span>{{ city | titlecase }}</span>
                     <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
-                  </mat-chip>
+                  </mat-chip-row>
                 </ng-container>
-              </mat-chip-list>
+              </mat-chip-grid>
               <input matInput formArrayName="cities" [matChipInputFor]="chipList"
                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                 (matChipInputTokenEnd)="add($event, locationForm.get('cities'))" test-id="cities"/>

@@ -26,8 +26,8 @@
     </ng-container>
     <article fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="16px">
       <div fxLayout="column" fxLayoutAlign.xs="start center">
-        <div class="mat-headline" [ngStyle]="{'text-align': (ltSm$ | async) ? 'center' : 'start'}"><a [routerLink]="['/event', event.id, 'r', 'i']">{{ event.title }}</a></div>
-        <pre class="mat-body-1">{{ event | eventRange }}</pre>
+        <div class="mat-headline-5" [ngStyle]="{'text-align': (ltSm$ | async) ? 'center' : 'start'}"><a [routerLink]="['/event', event.id, 'r', 'i']">{{ event.title }}</a></div>
+        <pre class="mat-body-2">{{ event | eventRange }}</pre>
         <ng-container *ngIf="event.ownerOrgId | getOrg | async as org">
           <org-chip @fade [org]="org"></org-chip>
         </ng-container>
