@@ -5,8 +5,8 @@ import { combineLatest, firstValueFrom } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
 import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmWithValidationComponent } from '@blockframes/contract/contract/components/confirm-with-validation/confirm-with-validation.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { NegotiationService } from '@blockframes/contract/negotiation/service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 

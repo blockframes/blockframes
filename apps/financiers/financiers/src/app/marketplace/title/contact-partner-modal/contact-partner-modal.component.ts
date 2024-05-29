@@ -1,8 +1,8 @@
 import { getCurrencySymbol } from '@angular/common';
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { AuthService } from '@blockframes/auth/service';
 import { Campaign, Movie, MovieCurrency, Organization } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';

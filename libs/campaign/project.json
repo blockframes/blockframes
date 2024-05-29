@@ -1,0 +1,25 @@
+{
+  "name": "campaign",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/campaign/src",
+  "prefix": "campaign",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/campaign/src/**/*.ts", "libs/campaign/src/**/*.html"]
+      },
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/campaign/jest.config.js",
+        "passWithNoTests": true,
+        "setupFile": "libs/campaign/src/test-setup.ts"
+      }
+    }
+  },
+  "tags": ["browser"]
+}

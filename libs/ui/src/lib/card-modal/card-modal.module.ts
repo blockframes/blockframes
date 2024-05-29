@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { CardModalComponent } from './card-modal.component';
 
 // Material
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 
 @NgModule({

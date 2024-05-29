@@ -2,9 +2,9 @@ import { Component, ChangeDetectionStrategy, Pipe, PipeTransform } from '@angula
 import { Territory, WaterfallSource, Right } from '@blockframes/model';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 
 @Component({

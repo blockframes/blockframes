@@ -14,7 +14,7 @@ import { VersionSelectorModule } from '@blockframes/waterfall/components/version
 import { WaterfallComponent } from './waterfall.component';
 
 // Material
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 @NgModule({
   declarations: [WaterfallComponent],

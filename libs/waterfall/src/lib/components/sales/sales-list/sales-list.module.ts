@@ -15,7 +15,7 @@ import { DetailedGroupModule } from '@blockframes/ui/detail-modal/detailed.modul
 import { SalesListComponent } from './sales-list.component';
 
 // Material
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 @NgModule({
   declarations: [SalesListComponent],

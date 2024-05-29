@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, Optional 
 import { combineLatest, firstValueFrom, Subscription } from 'rxjs';
 import { debounceTime, map, shareReplay } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-encoder';
 import { MarketplaceMovieAvailsComponent } from '../avails.component';

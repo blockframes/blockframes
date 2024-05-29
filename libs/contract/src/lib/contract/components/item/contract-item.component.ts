@@ -1,7 +1,7 @@
 import {
   Component, Input, TemplateRef, ContentChild, ChangeDetectionStrategy
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { HoldbackModalComponent } from '../../holdback/modal/holdback-modal.component';
 import { OrganizationService } from '@blockframes/organization/service';
 import { BucketContract, Holdback, Sale, Scope, mediaGroup, territoriesGroup } from '@blockframes/model';

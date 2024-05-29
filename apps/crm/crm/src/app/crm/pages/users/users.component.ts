@@ -10,7 +10,7 @@ import { sorts } from '@blockframes/ui/list/table/sorts';
 import { PermissionsService } from '@blockframes/permissions/service';
 import { MovieService } from '@blockframes/movie/service';
 import { where } from 'firebase/firestore';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import {
   CrmUser,
   Organization,

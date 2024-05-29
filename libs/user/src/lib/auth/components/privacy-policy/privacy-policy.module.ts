@@ -6,10 +6,10 @@ import { CommonModule } from '@angular/common';
 import { PrivacyPolicyComponent } from './privacy-policy.component';
 
 // Material
-import { MatCardModule } from '@angular/material/card';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 // Blockframes
 import { PrivacyPolicyTextModule } from '../privacy-policy-text/privacy-policy-text.module';

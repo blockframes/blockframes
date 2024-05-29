@@ -12,7 +12,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import {
   getMimeType,
   sanitizeFileName,

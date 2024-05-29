@@ -24,7 +24,7 @@ import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 
 // Material
-import { MatListModule } from '@angular/material/list';
+import { MatLegacyListModule as MatListModule} from '@angular/material/legacy-list';
 import { MatIconModule } from '@angular/material/icon';
 
 // Tunnel routes

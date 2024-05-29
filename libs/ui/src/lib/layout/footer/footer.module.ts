@@ -11,7 +11,7 @@ import { FooterComponent } from './footer.component';
 import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
 
 // Material
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({

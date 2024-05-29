@@ -1,6 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnInit, ViewEncapsulation } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 
 // Blockframes
 import { boolean } from '@blockframes/utils/decorators/decorators';

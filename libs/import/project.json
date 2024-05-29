@@ -1,0 +1,24 @@
+{
+  "name": "import",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/import/src",
+  "prefix": "blockframes",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/import/src/**/*.ts", "libs/import/src/**/*.html"]
+      },
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/import/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": ["browser"]
+}

@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
-@import '~angular-calendar/scss/angular-calendar.scss';
+@import 'angular-calendar/scss/angular-calendar.scss';
 
 @mixin color($theme) {
   $config: mat.get-color-config($theme);
@@ -8,7 +8,6 @@
   $foreground: map.get($config, 'foreground');
   $primary: map.get($config, 'primary');
   $accent: map.get($config, 'accent');
-
 
   @include cal-theme(
     (

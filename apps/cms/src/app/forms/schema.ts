@@ -1,4 +1,4 @@
-import { MatFormFieldAppearance, FloatLabelType } from '@angular/material/form-field';
+import { MatLegacyFormFieldAppearance as MatFormFieldAppearance, LegacyFloatLabelType as FloatLabelType } from '@angular/material/legacy-form-field';
 
 export interface MatFormFieldSchema {
   type?: 'text' | 'number' | 'date';

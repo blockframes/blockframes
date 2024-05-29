@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { InvitationService } from '@blockframes/invitation/service';
 import { BehaviorSubject } from 'rxjs';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';

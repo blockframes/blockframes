@@ -1,0 +1,24 @@
+{
+  "name": "testing-cypress-browser",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/testing/cypress/browser/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/testing/cypress/browser/**/*.ts"]
+      },
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/testing/cypress/browser"],
+      "options": {
+        "jestConfig": "libs/testing/cypress/browser/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": ["browser", "e2e"]
+}

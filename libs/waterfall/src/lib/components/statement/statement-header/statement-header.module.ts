@@ -11,7 +11,7 @@ import { StatementMainInfoModule } from '../statement-main-info/statement-main-i
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 
 @NgModule({
   declarations: [StatementHeaderComponent],

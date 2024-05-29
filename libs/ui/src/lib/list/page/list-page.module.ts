@@ -6,8 +6,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyProgressBarModule as MatProgressBarModule } from '@angular/material/legacy-progress-bar';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatRippleModule } from '@angular/material/core';
 
 // Blockframes

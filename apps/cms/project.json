@@ -1,0 +1,105 @@
+{
+  "name": "cms",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/cms/src",
+  "prefix": "cms",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "options": {
+        "outputPath": "dist/apps/cms",
+        "index": "apps/cms/src/index.html",
+        "main": "apps/cms/src/main.ts",
+        "polyfills": "apps/cms/src/polyfills.ts",
+        "tsConfig": "apps/cms/tsconfig.app.json",
+        "assets": [
+          "apps/cms/src/favicon.ico",
+          "apps/cms/src/assets",
+          "apps/cms/src/robots.txt",
+          {
+            "glob": "**/*",
+            "input": "./assets",
+            "output": "./assets"
+          }
+        ],
+        "styles": ["apps/cms/src/styles.scss"],
+        "scripts": [],
+        "vendorChunk": true,
+        "extractLicenses": false,
+        "buildOptimizer": false,
+        "sourceMap": true,
+        "optimization": false,
+        "namedChunks": true
+      },
+      "configurations": {
+        "emulator": {
+          "fileReplacements": [
+            {
+              "replace": "apps/cms/src/environment/environment.ts",
+              "with": "apps/cms/src/environment/environment.emulator.ts"
+            }
+          ]
+        },
+        "production": {
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "buildOptimizer": true,
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "2mb",
+              "maximumError": "5mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "6kb",
+              "maximumError": "10kb"
+            }
+          ]
+        }
+      }
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "browserTarget": "cms:build"
+      },
+      "configurations": {
+        "emulator": {
+          "browserTarget": "cms:build:emulator"
+        }
+      }
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "cms:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/cms/src/**/*.ts", "apps/cms/src/**/*.html"]
+      },
+      "outputs": ["{options.outputFile}"]
+    },
+    "deploy": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "envFile": ".env",
+        "commands": [
+          "npx cross-env nx build cms --configuration=$NG_CONFIG",
+          "npx cross-env firebase deploy --project=$PROJECT_ID --only hosting:cms"
+        ],
+        "parallel": false,
+        "color": true
+      }
+    }
+  },
+  "tags": ["browser"]
+}

@@ -57,7 +57,7 @@ import { unique } from '@blockframes/utils/helpers';
 import { APP } from '@blockframes/utils/routes/utils';
 import { WaterfallPermissionsService } from '../../permissions.service';
 import { AuthService } from '@blockframes/auth/service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { AmortizationService } from '../../amortization.service';
 

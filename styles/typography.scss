@@ -26,8 +26,18 @@ mat.define-typography-level(
   }
 }
 
-$bf-typography: mat.define-typography-config(
+$bf-typography: mat.define-legacy-typography-config(
   $font-family: 'Montserrat, Helvetica Neue, sans-serif',
+  /*
+  TODO #9702
+  body-2 => subtitle-2
+  body-1 => body-2
+  display-1 => headline-4 apps/catalog/catalog/src/app/landing/landing.component.html
+  display-2 => headline-3 apps/catalog/catalog/src/app/marketplace/home/home.component.html
+  headline => headline-5 libs/event/src/lib/components/slide/slide.component.html
+  subheading-1 => body-1 apps/festival/festival/src/app/landing/landing.component.html
+  mat-title => headline-6		apps/festival/festival/src/app/landing/landing.component.html
+  */
   $display-4: mat.define-typography-level(96px, 113px, 500, $letter-spacing: -1.5px),
   $display-3: mat.define-typography-level(80px, 100px, 700, $letter-spacing: -0.5px),
   $display-2: mat.define-typography-level(var(--display-2-size), var(--display-2-lineHeight), 800),
@@ -45,7 +55,7 @@ $bf-typography: mat.define-typography-config(
 
 pre {
   font-family: mat.font-family($bf-typography);
-  font-size: mat.font-size($bf-typography, 'body-1'); // Get size of body-1
+  font-size: mat.font-size($bf-typography, 'body-1'); // Get size of body-1 TODO #9702
 }
 
 // TODO : Create a builder for typography with two polices

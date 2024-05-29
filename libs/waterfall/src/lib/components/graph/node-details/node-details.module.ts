@@ -11,7 +11,7 @@ import { WaterfallConditionsModule } from '../conditions/conditions.module';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 
 // Material
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
 
 @NgModule({
   declarations: [WaterfallGraphNodeDetailsComponent],

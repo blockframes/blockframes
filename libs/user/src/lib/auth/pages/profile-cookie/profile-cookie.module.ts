@@ -10,9 +10,9 @@ import { ProfileCookieComponent } from './profile-cookie.component';
 import { CookieFormModule } from '@blockframes/utils/gdpr-cookie/cookie-form/cookie-form.module';
 
 // Material
-import { MatCardModule } from '@angular/material/card';
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 @NgModule({
   imports: [

@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
 // Blockframes
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';

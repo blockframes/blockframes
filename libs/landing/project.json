@@ -1,0 +1,24 @@
+{
+  "name": "landing",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/landing/src",
+  "prefix": "blockframes",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/landing/src/**/*.ts", "libs/landing/src/**/*.html"]
+      },
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/landing/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": ["browser"]
+}

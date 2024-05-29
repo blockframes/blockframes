@@ -1,7 +1,7 @@
 
 import { Component, ChangeDetectionStrategy, OnInit, Input, Inject } from '@angular/core';
 
-import { MatTableDataSource } from '@angular/material/table';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { UserService } from '@blockframes/user/service';

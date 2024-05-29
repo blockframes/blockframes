@@ -7,8 +7,8 @@ import { MovieFormStartTunnelComponent } from './start-tunnel.component';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Material
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
 
 @NgModule({
   declarations: [MovieFormStartTunnelComponent],

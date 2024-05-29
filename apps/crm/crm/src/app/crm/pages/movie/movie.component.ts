@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { MovieCrmForm } from '@blockframes/admin/crm/forms/movie-crm.form';
 import {
   Movie,
@@ -16,7 +16,7 @@ import {
   deletedIdentifier
 } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { EventService } from '@blockframes/event/service';
@@ -33,7 +33,7 @@ import { aggregatePerUser } from '@blockframes/analytics/utils';
 import { joinWith } from 'ngfire';
 import { UserService } from '@blockframes/user/service';
 import { UntypedFormControl } from '@angular/forms';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 

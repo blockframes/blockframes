@@ -26,10 +26,10 @@ import {
 } from '@blockframes/model';
 import { TermService } from '@blockframes/contract/term/service';
 import { OrganizationService } from '@blockframes/organization/service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { FormControl } from '@angular/forms';
 import { DashboardWaterfallShellComponent } from '../../../../dashboard/shell/shell.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { DocumentShareComponent } from '../../document-share/document-share.component';

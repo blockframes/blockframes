@@ -6,10 +6,10 @@ import { CookieFormComponent } from './cookie-form.component';
 import { AppPipeModule } from './../../pipes/app.pipe';
 
 // Material
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatRadioModule } from '@angular/material/radio';
+import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/material/legacy-slide-toggle';
+import { MatLegacyRadioModule as MatRadioModule } from '@angular/material/legacy-radio';
 
 @NgModule({
   imports: [

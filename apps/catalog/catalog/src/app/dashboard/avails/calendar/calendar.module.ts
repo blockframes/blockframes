@@ -12,9 +12,9 @@ import { AvailsCalendarModule } from '@blockframes/contract/avails/calendar/cale
 import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.module';
 
 // Material
-import { MatButtonModule } from '@angular/material/button';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
+import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-list';
 
 @NgModule({
   declarations: [

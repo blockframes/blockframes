@@ -6,9 +6,9 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { StaticCheckBoxesComponent } from './check-boxes.component';
 
 // Material
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import {MatListModule} from '@angular/material/list';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import {MatLegacyListModule as MatListModule} from '@angular/material/legacy-list';
 
 @NgModule({
   imports: [

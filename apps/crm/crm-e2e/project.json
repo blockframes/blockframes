@@ -1,0 +1,67 @@
+{
+  "name": "crm-e2e",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/crm/crm-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/crm/crm-e2e/cypress.config.js",
+        "tsConfig": "apps/crm/crm-e2e/tsconfig.e2e.json",
+        "baseUrl": "http://localhost:4200",
+        "watch": true,
+        "headless": false,
+        "exit": false,
+        "record": false,
+        "browser": "chrome",
+        "devServerTarget": "crm:serve"
+      },
+      "configurations": {
+        "emulator": {
+          "devServerTarget": "crm:serve:emulator",
+          "env": {
+            "notice": "Env is being read",
+            "emulator": true
+          }
+        }
+      }
+    },
+    "e2e": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/crm/crm-e2e/cypress.config.js",
+        "tsConfig": "apps/crm/crm-e2e/tsconfig.e2e.json",
+        "baseUrl": "http://localhost:4200",
+        "browser": "chrome",
+        "devServerTarget": "crm:serve"
+      },
+      "configurations": {
+        "emulator": {
+          "devServerTarget": "crm:serve:emulator",
+          "env": {
+            "notice": "Env is being read",
+            "emulator": true
+          }
+        },
+        "emulator-incognito": {
+          "devServerTarget": "crm:serve:emulator",
+          "env": {
+            "notice": "Env is being read",
+            "emulator": true,
+            "incognito": true
+          }
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/crm/crm-e2e/src/**/*.ts", "apps/crm/crm-e2e/src/**/*.html"]
+      },
+      "outputs": ["{options.outputFile}"]
+    }
+  },
+  "tags": ["browser", "e2e"],
+  "implicitDependencies": ["crm"]
+}

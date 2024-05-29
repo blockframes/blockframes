@@ -6,7 +6,7 @@ import { shootingPeriod, months } from '@blockframes/model';
 import { hasValue } from '@blockframes/utils/pipes/has-keys.pipe';
 import { Subscription } from 'rxjs';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatLegacyChipInputEvent as MatChipInputEvent } from '@angular/material/legacy-chips';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
