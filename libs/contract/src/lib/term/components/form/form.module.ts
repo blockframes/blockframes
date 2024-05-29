@@ -13,10 +13,10 @@ import { JoinPipeModule, MaxLengthModule, ToGroupLabelPipeModule, ToLabelModule,
 import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
 
 // Material
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
-import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [

@@ -11,8 +11,8 @@ import { DashboardActionsShellModule } from '@blockframes/movie/dashboard/action
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
 
 // Modules
 import { OrgAccessModule } from '@blockframes/organization/pipes';

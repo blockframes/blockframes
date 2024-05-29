@@ -10,7 +10,7 @@ import { FormList } from '@blockframes/utils/form';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { WaterfallService } from '../../../waterfall.service';
 
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: '[contractId] waterfall-expense-types-form',

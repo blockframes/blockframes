@@ -1,7 +1,7 @@
 import { NgModule, ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatLegacyRadioChange as MatRadioChange, MatLegacyRadioModule as MatRadioModule } from '@angular/material/legacy-radio';
+import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { FormEntity } from 'ng-form-factory';
 import { EventsSliderSchema } from './events-slider.schema';
 import { TextFormModule } from '../../forms/text';

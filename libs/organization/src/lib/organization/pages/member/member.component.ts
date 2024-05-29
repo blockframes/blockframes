@@ -1,12 +1,12 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService } from '@blockframes/invitation/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { OrganizationMember, Organization, Invitation, UserRole } from '@blockframes/model';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
 import { PermissionsService } from '@blockframes/permissions/service';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 

@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { EventService } from '@blockframes/event/service';
 import { InvitationDetailed, Movie, Event, isScreening, getGuest } from '@blockframes/model';
 import { MovieService } from '@blockframes/movie/service';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { InvitationService } from '@blockframes/invitation/service';
 import { switchMap } from 'rxjs/operators';

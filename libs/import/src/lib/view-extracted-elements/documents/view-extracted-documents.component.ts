@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { AuthService } from '@blockframes/auth/service';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { MovieService } from '@blockframes/movie/service';

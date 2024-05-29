@@ -16,8 +16,8 @@ import { DownloadPipeModule } from '@blockframes/media/file/pipes/download.pipe'
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [ContractViewComponent],

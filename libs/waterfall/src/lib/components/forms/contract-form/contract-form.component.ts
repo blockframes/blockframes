@@ -3,7 +3,7 @@
 import { FormControl } from '@angular/forms';
 import { add } from 'date-fns';
 import { BehaviorSubject, Subscription, combineLatest } from 'rxjs';
-import { MatLegacySlideToggleChange as MatSlideToggleChange } from '@angular/material/legacy-slide-toggle';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy, Output, EventEmitter, OnChanges } from '@angular/core';
 
 // Blockframes

@@ -7,7 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { SaleViewComponent } from './view.component';
 
 // Blockframes
-import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ContractItemModule } from '@blockframes/contract/contract/components/item/contract-item.module';
 import { HoldbackListModule } from '@blockframes/contract/contract/holdback/list/list.module';
 import { NegotiationPipeModule } from '@blockframes/contract/negotiation/pipe';
@@ -16,9 +16,9 @@ import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.mod
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
-import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [SaleViewComponent],

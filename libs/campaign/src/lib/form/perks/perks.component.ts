@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MatLegacyCheckboxChange as MatCheckboxChange } from '@angular/material/legacy-checkbox';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { Perk } from '@blockframes/model';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';

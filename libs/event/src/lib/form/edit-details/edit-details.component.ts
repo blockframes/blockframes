@@ -3,7 +3,7 @@ import { EventForm } from '../event.form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { InvitationService } from '@blockframes/invitation/service';
 import { Intercom } from 'ng-intercom';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { EventService } from '@blockframes/event/service';
 import { where } from 'firebase/firestore';

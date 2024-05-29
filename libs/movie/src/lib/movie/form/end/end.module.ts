@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { MovieFormEndComponent } from './end.component';
 
 // Materials
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 import { AppPipeModule } from '@blockframes/utils/pipes';

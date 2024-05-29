@@ -7,7 +7,7 @@ import { OfferShellComponent } from './shell.component';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { ToLabelModule, TotalPipeModule } from '@blockframes/utils/pipes';
 
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
 

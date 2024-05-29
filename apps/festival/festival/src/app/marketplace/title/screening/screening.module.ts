@@ -14,7 +14,7 @@ import { UpcomingScreeningsModule } from '@blockframes/movie/components/upcoming
 
 // Material 
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [ScreeningComponent],

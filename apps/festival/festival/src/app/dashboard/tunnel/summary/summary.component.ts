@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { findInvalidControls } from '@blockframes/ui/tunnel/layout/layout.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';

@@ -9,8 +9,8 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 import { StorageFileModule } from '@blockframes/media/pipes/storageFile.pipe'
 
 // Material
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
-import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
+import { MatCardModule } from '@angular/material/card';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
 import { OrgMoviesModule } from '@blockframes/organization/pipes/org-movies.pipe';

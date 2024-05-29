@@ -9,7 +9,7 @@ import { PreferencesComponent } from './preferences.component';
 import { PreferencesFormModule } from '@blockframes/auth/forms/preferences/preferences.module';
 
 // Material
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 

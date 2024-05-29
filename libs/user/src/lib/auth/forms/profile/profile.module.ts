@@ -8,10 +8,10 @@ import { ProfileFormComponent } from './profile.component';
 import { HideEmailModule } from '@blockframes/auth/components/hide-email/hide-email.module';
 
 // Material
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [ProfileFormComponent],

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../../service';
 import { ThemeService } from '@blockframes/ui/theme';
-import { MatLegacySlideToggleChange as MatSlideToggleChange } from '@angular/material/legacy-slide-toggle';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { OrganizationService } from '@blockframes/organization/service';
 import { APP } from '@blockframes/utils/routes/utils';
 import {

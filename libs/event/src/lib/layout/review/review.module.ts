@@ -7,9 +7,9 @@ import { EventRangeModule } from '../../pipes/event-range.pipe';
 import { AppBarModule } from '@blockframes/ui/app-bar';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 // Material
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
+import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
+import { MatTabsModule } from '@angular/material/tabs';
 @NgModule({
   declarations: [ReviewComponent],
   exports: [ReviewComponent],
