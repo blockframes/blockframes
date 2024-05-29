@@ -13,10 +13,9 @@
     [min]="0"
     [step]="1"
     [max]="control.duration"
-    [value]="control.position"
-    (input)="seekPosition($event)"
-    (change)="seekPosition($event)"
-  ></mat-slider>
+    #ngSlider>
+      <input matSliderThumb [value]="control.position" (input)="seekPosition({source: ngSliderThumb, parent: ngSlider, value: ngSliderThumb.value})" #ngSliderThumb="matSliderThumb" (change)="seekPosition({source: ngSliderThumb, parent: ngSlider, value: ngSliderThumb.value})" />
+  </mat-slider>
   <span>{{ control.duration | timecode }}</span>
 </ng-container>
 

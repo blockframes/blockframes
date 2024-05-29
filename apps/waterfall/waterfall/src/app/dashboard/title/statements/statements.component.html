@@ -10,16 +10,16 @@
 <ng-template #statementPage>
   <header>
     <article>
-      <mat-chip-list aria-label="Statement type" i18n-aria-label>
+      <mat-chip-listbox aria-label="Statement type" i18n-aria-label>
         <ng-container *ngFor="let chip of statementChips">
           <mat-divider *ngIf="chip.divider && chip.visible" [vertical]="true"></mat-divider>
-          <mat-chip
+          <mat-chip-option
           *ngIf="chip.visible"
           [selected]="chip.selected"
           [class]="chip.color"
-          (click)="changeType(chip.key)">{{ chip.value }}</mat-chip>
+          (click)="changeType(chip.key)">{{ chip.value }}</mat-chip-option>
         </ng-container>
-      </mat-chip-list>
+      </mat-chip-listbox>
       <waterfall-version-selector></waterfall-version-selector>
     </article>
     <section *ngIf="accessibleDocumentIds$ | async as accessibleDocumentIds">

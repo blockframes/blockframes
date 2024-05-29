@@ -1,8 +1,8 @@
 <global-modal>
   <h2 *ngIf="data.title"> {{ data.title }} </h2>
-  <p *ngIf="data.subtitle" [innerHTML]="data.subtitle" class="mat-body-1"></p>
+  <p *ngIf="data.subtitle" [innerHTML]="data.subtitle" class="mat-body-2"></p>
   <span *ngIf="data.text">{{ data.text }}</span>
-  <span *ngIf="data.warning" class="mat-body-2 text-warn">{{ data.warning }}</span>
+  <span *ngIf="data.warning" class="mat-subtitle-2 text-warn">{{ data.warning }}</span>
 
   <ng-container *ngIf="data.simulation?.length">
     <strong>Simulation : </strong>

@@ -5,7 +5,7 @@
     <crm-event-info fxFlex [event]="event"></crm-event-info>
     <section fxFlex>
       <h2>Invite people</h2>
-      <mat-card>
+      <mat-card appearance="outlined">
         <mat-card-content fxLayout="column">
           <invitation-form-user [eventId]="eventId" [ownerOrgId]="event.ownerOrgId"></invitation-form-user>
         </mat-card-content>
@@ -13,7 +13,7 @@
 
       <ng-container *ngIf="event.type === 'screening' && movie">
         <h2>Screening information</h2>
-        <mat-card>
+        <mat-card appearance="outlined">
           <mat-card-title-group>
             <mat-card-title>
               Event for : {{ movie.title.international }} {{ movie.internalRef ? '(' + movie.internalRef + ')' : '' }}
@@ -36,7 +36,7 @@
   </article>
 
   <h2>Invitations</h2>
-  <mat-card *ngIf="invitations$ | async as invitations">
+  <mat-card appearance="outlined" *ngIf="invitations$ | async as invitations">
     <invitation-guest-table [invitations]="invitations"></invitation-guest-table>
   </mat-card>
 </main>

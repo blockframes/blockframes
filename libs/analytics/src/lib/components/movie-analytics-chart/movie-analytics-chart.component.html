@@ -1,8 +1,8 @@
 <article fxLayout="row wrap" fxLayoutAlign="space-between center" fxLayoutGap="24px">
   <ng-container *ngFor="let info of chartData">
-    <mat-card #chart class="chart">
+    <mat-card appearance="outlined" #chart class="chart">
       <div fxLayout="row" fxLayoutAlign="space-between center">
-        <div fxLayout="row" fxLayoutAlign="start center" class="mat-body-2">
+        <div fxLayout="row" fxLayoutAlign="start center" class="mat-subtitle-2">
           <mat-icon [svgIcon]="info.icon"></mat-icon>
           <span>{{ info.title }}</span>
         </div>

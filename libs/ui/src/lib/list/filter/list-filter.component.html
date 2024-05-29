@@ -1,10 +1,10 @@
 <section>
   <ng-container *ngFor="let filter of filters">
-    <button class="filter mat-body-2" mat-ripple [widgetTarget]="filterWidget" [ngClass]="filter.color$ | async" id="filterButton">
+    <button class="filter mat-subtitle-2" mat-ripple [widgetTarget]="filterWidget" [ngClass]="filter.color$ | async" id="filterButton">
       {{filter.label}}
     </button>
     <overlay-widget #filterWidget (openedChanged)="filter.active = $event" overflow="auto">
-      <mat-card>
+      <mat-card appearance="outlined">
         <mat-card-content>
           <ng-template [ngTemplateOutlet]="filter?.template"></ng-template>
         </mat-card-content>
