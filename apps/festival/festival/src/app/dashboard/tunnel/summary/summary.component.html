@@ -120,7 +120,7 @@
       <button id="publish" test-id="publish" mat-flat-button color="accent" (click)="submit()"
         [disabled]="(isPublished$ | async) || (uploadService.finalizedUpload | async)">
         <span>Publish to Marketplace</span>
-        <mat-icon svgIcon="arrow_forward"></mat-icon>
+        <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
       </button>
     </span>
     <p *ngIf="isPublished$ | async" class="submit mat-caption" >Already published!</p>

@@ -43,7 +43,7 @@
       <h2>{{ section.title }}</h2>
       <a mat-button [routerLink]="section.link | getLink: '../title'" [queryParams]="section.link | getParams" color="primary" test-id="title-link">
         <span>See all</span>
-        <mat-icon svgIcon="arrow_forward"></mat-icon>
+        <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
       </a>
     </header>
     <ng-container *ngIf="section | queryTitles | async | sortBy:section.sorting as movies">
@@ -67,7 +67,7 @@
       <h2>{{ section.title }}</h2>
       <a mat-button [routerLink]="section.link | getLink: '../organization'" [queryParams]="section.link | getParams" color="primary" test-id="organization-link">
         <span>See all</span>
-        <mat-icon svgIcon="arrow_forward"></mat-icon>
+        <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
       </a>
     </header>
     <article>
@@ -115,7 +115,7 @@
           <h2>{{ section.title }}</h2>
           <a mat-button [routerLink]="section.link || '../event'" test-id="event-link">
             <span>See all</span>
-            <mat-icon svgIcon="arrow_forward"></mat-icon>
+            <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
           </a>
         </header>
         <bf-slider hideIndicators loop class="dark-contrast-theme">
@@ -137,7 +137,7 @@
       <h2>{{ section.title }}</h2>
       <a mat-button [routerLink]="section.link || '../organization'" color="primary" test-id="organization-link">
         <span>See all</span>
-        <mat-icon svgIcon="arrow_forward"></mat-icon>
+        <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
       </a>
     </header>
     <org-banner [org]="section.orgId | getOrg | async" [titles]="section | queryTitles | async">

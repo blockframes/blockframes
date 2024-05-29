@@ -52,7 +52,7 @@
     <button mat-flat-button color="primary" (click)="confirm()">
       <span *ngIf="data.mode === 'edit'" i18n>Edit version</span>
       <span *ngIf="data.mode !== 'edit'" i18n>Create version</span>
-      <mat-icon svgIcon="arrow_forward"></mat-icon>
+      <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
     </button>
     <button mat-button (click)="close()" i18n>
       Close window

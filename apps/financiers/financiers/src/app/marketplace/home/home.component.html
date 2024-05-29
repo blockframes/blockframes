@@ -21,7 +21,7 @@
           <h1>{{ section.title }}</h1>
           <a mat-button routerLink="../title" [queryParams]="section?.queryParams" color="primary">
             <span>See all</span>
-            <mat-icon svgIcon="arrow_forward"></mat-icon>
+            <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
           </a>
         </div>
         <bf-carousel [columns]="{ gtMd: 4, md: 3, ltMd: 2 }">
@@ -52,7 +52,7 @@
       <h1>Professional Financiers</h1>
       <a mat-button routerLink="/c/o/marketplace/organization" color="primary">
         <span>See all</span>
-        <mat-icon svgIcon="arrow_forward"></mat-icon>
+        <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
       </a>
     </div>
     <ng-container *ngIf="(orgs | async)?.hits as hits">

@@ -128,7 +128,7 @@
       <button id="submit" test-id="submit" mat-flat-button color="accent" (click)="submit()"
         [disabled]="(isPublished$ | async) || (uploadService.finalizedUpload | async)">
         <span>Submit for Validation</span>
-        <mat-icon svgIcon="arrow_forward"></mat-icon>
+        <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
       </button>
     </span>
   </ng-container>

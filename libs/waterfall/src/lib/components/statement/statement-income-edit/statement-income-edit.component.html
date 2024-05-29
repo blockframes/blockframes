@@ -39,7 +39,7 @@
   <mat-dialog-actions>
     <button mat-flat-button color="primary" [disabled]="form.invalid || form.get('confirm').value !== 'SAVE'" (click)="confirm()">
       <span>Confirm Changes</span>
-      <mat-icon svgIcon="arrow_forward"></mat-icon>
+      <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
     </button>
     <button mat-button (click)="close()">
       Close window

@@ -23,7 +23,7 @@
   <mat-dialog-actions>
     <button [disabled]="!dateControl.value" mat-flat-button color="primary" (click)="confirm(dateControl.value)">
       <span i18n>Declare Payment</span>
-      <mat-icon svgIcon="arrow_forward"></mat-icon>
+      <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
     </button>
     <button mat-button (click)="close()" i18n>
       Close window
