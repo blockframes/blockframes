@@ -34,7 +34,7 @@ import { decodeUrl, encodeUrl } from '@blockframes/utils/form/form-state-url-enc
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { DownloadSettings, PdfService } from '@blockframes/utils/pdf.service';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 type FullSaleWithIncome = FullSale & { incomes?: Income[] };
 

@@ -86,7 +86,7 @@ world-map {
     background-color: #ffffff;
     color: #434773;
     @include mat.elevation(1);
-
+    /* TODO #9702 (mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version. */
     mat-list-item {
       height: 32px;
     }
@@ -103,7 +103,7 @@ div.empty-map {
   flex-direction: column;
   text-align: center;
   height: 100%;
-  p.mat-body-1 {
+  p.mat-body-2 {
     font-weight: bold;
   }
   img {

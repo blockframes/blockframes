@@ -94,12 +94,12 @@
         <ng-container *ngFor="let language of movie.languages | keyvalue; let i = index">
           <div class="version" fxLayout fxLayoutGap="8px" [attr.test-id]="'languages_' +i">
             <b>{{ language.key | toLabel: 'languages' }}: </b>
-            <mat-chip-list>
+            <mat-chip-listbox>
               <ng-container *ngFor="let version of language.value | keyvalue">
-                <mat-chip disableRipple *ngIf="version.value">{{ version.key | toLabel: 'movieLanguageTypes' }}
-                </mat-chip>
+                <mat-chip-option disableRipple *ngIf="version.value">{{ version.key | toLabel: 'movieLanguageTypes' }}
+                </mat-chip-option>
               </ng-container>
-            </mat-chip-list>
+            </mat-chip-listbox>
           </div>
         </ng-container>
       </ng-container>
@@ -112,19 +112,19 @@
     <h2>Positioning</h2>
     <article *ngIf="movie.audience.targets.length">
       <h5>Target audience</h5>
-      <mat-chip-list fxLayout="row" fxLayoutGap="8px" test-id="target">
+      <mat-chip-listbox fxLayout="row" fxLayoutGap="8px" test-id="target">
         <ng-container *ngFor="let target of movie.audience.targets">
-          <mat-chip disableRipple>{{ target }}</mat-chip>
+          <mat-chip-option disableRipple>{{ target }}</mat-chip-option>
         </ng-container>
-      </mat-chip-list>
+      </mat-chip-listbox>
     </article>
     <article *ngIf="movie.audience.goals.length">
       <h5>Social responsability goals</h5>
-      <mat-chip-list fxLayout="row" fxLayoutGap="8px" test-id="social">
+      <mat-chip-listbox fxLayout="row" fxLayoutGap="8px" test-id="social">
         <ng-container *ngFor="let goal of movie.audience.goals">
-          <mat-chip disableRipple>{{ goal | toLabel: 'socialGoals' }}</mat-chip>
+          <mat-chip-option disableRipple>{{ goal | toLabel: 'socialGoals' }}</mat-chip-option>
         </ng-container>
-      </mat-chip-list>
+      </mat-chip-listbox>
     </article>
   </section>
 </ng-container>

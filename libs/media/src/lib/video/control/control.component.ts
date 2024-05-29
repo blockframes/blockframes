@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { MatLegacySliderChange as MatSliderChange } from '@angular/material/legacy-slider';
+import { MatSliderChange } from '@angular/material/slider';
 import { MeetingVideoControl } from '@blockframes/model';
 
 
@@ -12,7 +12,7 @@ import { MeetingVideoControl } from '@blockframes/model';
 })
 export class VideoControlComponent {
 
-
+  // TODO #9702 check this component
   control$ = new BehaviorSubject<MeetingVideoControl>(undefined);
   @Input() set control(value: MeetingVideoControl) {
     this.control$.next(value);

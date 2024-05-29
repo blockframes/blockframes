@@ -31,5 +31,5 @@
   <a mat-menu-item [target]="targetLink" [href]="notification.url">{{ notification.actionText ?? defaultActionText }}</a>
 </mat-menu>
 <ng-container *ngIf="xs$ | async">
-  <p [ngClass]="{ disabled: notification.app?.isRead }" class="mat-body-1" test-id="notification-message" [innerHtml]="notification.message"></p>
+  <p [ngClass]="{ disabled: notification.app?.isRead }" class="mat-body-2" test-id="notification-message" [innerHtml]="notification.message"></p>
 </ng-container>

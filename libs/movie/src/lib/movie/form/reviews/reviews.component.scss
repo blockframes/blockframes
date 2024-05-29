@@ -26,7 +26,7 @@ mat-divider {
 
 div.toggle-btn {
   margin-bottom: 16px;
-
+  /* TODO #9702 (mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
   mat-button-toggle-group {
     max-width: fit-content;
   }

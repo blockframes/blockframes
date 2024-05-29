@@ -17,8 +17,8 @@ import { RequestScreeningModule } from '@blockframes/event/components/request-sc
 import { RequestAskingPriceModule } from '@blockframes/movie/components/request-asking-price/request-asking-price.module';
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 const routes: Routes = [
   {

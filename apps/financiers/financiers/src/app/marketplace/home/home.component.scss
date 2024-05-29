@@ -45,6 +45,7 @@ header {
   margin-bottom: 80px;
 }
 
+/* TODO #9702 (mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card {
   height: 100%;
   display: flex;

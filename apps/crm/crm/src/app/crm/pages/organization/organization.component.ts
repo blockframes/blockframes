@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
 import { fromOrg, MovieService } from '@blockframes/movie/service';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Organization, Movie, Invitation, UserRole, createOrganizationMember, App, getAllAppsExcept } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { UntypedFormControl } from '@angular/forms';
@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { InvitationService } from '@blockframes/invitation/service';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { EventService } from '@blockframes/event/service';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';

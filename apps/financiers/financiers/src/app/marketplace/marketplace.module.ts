@@ -12,7 +12,7 @@ import { SidenavAuthModule } from '@blockframes/auth/components/sidenav-auth/sid
 import { SidenavWidgetModule } from '@blockframes/auth/components/sidenav-widget/sidenav-widget.module';
 
 // Material
-import { MatLegacyListModule as MatListModule} from '@angular/material/legacy-list';
+import { MatListModule} from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 

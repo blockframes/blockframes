@@ -52,13 +52,13 @@
       </article>
     </ng-template>
     <div *ngIf="(status$ | async) === 'INVALID' && mandates.length" class="overlay" fxLayoutAlign="center center">
-      <article class="mat-body-2" test-id="missing-criteria">
+      <article class="mat-subtitle-2" test-id="missing-criteria">
         Please fill in Avail Search Criteria section to show results on the Calendar.
       </article>
     </div>
 
     <div *ngIf="!mandates.length" class="overlay" fxLayoutAlign="center center">
-      <article class="mat-body-2">
+      <article class="mat-subtitle-2">
         Avails coming soon.
       </article>
     </div>

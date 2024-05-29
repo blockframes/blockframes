@@ -7,7 +7,7 @@ import { WaterfallService } from '../../../waterfall.service';
 import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '../../../form/right-holder.form';
 import { RightholderRole, Waterfall, createWaterfallRightholder } from '@blockframes/model';
 import { Subscription } from 'rxjs';
-import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ConfirmInputComponent } from '@blockframes/ui/confirm-input/confirm-input.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 

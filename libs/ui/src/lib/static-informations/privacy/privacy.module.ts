@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 
 // Pages
 import { PrivacyComponent } from './privacy.component';

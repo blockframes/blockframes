@@ -10,8 +10,8 @@ import { ChangePasswordComponent } from './change-password.component';
 import { PasswordInputModule } from '@blockframes/ui/form/password-input/password-input.module';
 
 // Material
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [ChangePasswordComponent],

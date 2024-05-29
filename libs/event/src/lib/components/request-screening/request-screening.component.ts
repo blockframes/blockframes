@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@blockframes/auth/service';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { boolean } from '@blockframes/utils/decorators/decorators';

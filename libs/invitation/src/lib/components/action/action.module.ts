@@ -6,10 +6,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe'
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { RouterModule } from '@angular/router';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
-import { MatLegacyProgressSpinnerModule as MatProgressSpinnerModule } from '@angular/material/legacy-progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SnackbarErrorModule } from '@blockframes/ui/snackbar/error/snackbar-error.module';
 import { SnackbarLinkModule } from '@blockframes/ui/snackbar/link/snackbar-link.module';
 

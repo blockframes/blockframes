@@ -7,7 +7,7 @@ import { GuestListModule } from '@blockframes/invitation/components/guest-list/g
 import { RouterModule } from '@angular/router';
 
 // Material
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [InvitationComponent],
