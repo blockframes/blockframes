@@ -71,8 +71,9 @@ describe('Create avails', () => {
     get('rental').click();
     escapeKey();
     assertMultipleTexts('medias', ['TV', 'Festivals', 'Rental']);
-    get('dateFrom').clear().type(`01/01/${nextYear}`);
-    get('dateTo').clear().type(`12/12/${nextYear}`);
+    // force click because the input is hidden by mat-label since angular 15 migration
+    get('dateFrom').clear({ force: true }).type(`01/01/${nextYear}`, { force: true });
+    get('dateTo').clear({ force: true }).type(`12/12/${nextYear}`, { force: true });
     get('exclusivity').click();
     get('non-exclusive').click();
     get('add-version').click();

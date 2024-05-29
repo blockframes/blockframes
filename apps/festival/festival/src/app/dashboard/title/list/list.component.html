@@ -2,7 +2,7 @@
   <ng-container *ngIf="titles.length; else empty">
     <dashboard-movie-list-header></dashboard-movie-list-header>
 
-    <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
+    <header mat-tab-nav-bar [tabPanel]="tabPanel" fxLayout="row" fxLayoutAlign="space-between end">
       <button mat-tab-link (click)="resetFilter()" [active]="(filter$ | async) === ('' || null) ">
         <span>All </span>
         <span *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.all }})</span></button>
@@ -27,11 +27,13 @@
       </ng-container>
     </header>
 
-    <movie-table-grid 
-      *ngIf="(result$ | async) as results" 
-      [titles]="results" 
-      [columns]="['poster','title.international','directors','productionStatus','app.festival.status','Actions']">
-    </movie-table-grid>
+    <mat-tab-nav-panel #tabPanel>
+      <movie-table-grid 
+        *ngIf="(result$ | async) as results" 
+        [titles]="results" 
+        [columns]="['poster','title.international','directors','productionStatus','app.festival.status','Actions']">
+      </movie-table-grid>
+    </mat-tab-nav-panel>
 
   </ng-container>
 </ng-container>

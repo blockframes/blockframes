@@ -51,7 +51,7 @@
       <event-details-edit [form]="form" showPrivacy></event-details-edit>
     </mat-card>
     <div>
-      <nav mat-tab-nav-bar>
+      <nav mat-tab-nav-bar [tabPanel]="tabPanel">
         <ng-container *ngFor="let tab of (tabs$ |async)">
           <a mat-tab-link [routerLink]="tab.path" [queryParams]="queryParams$ | async"
           routerLinkActive #rla="routerLinkActive" [active]="rla.isActive" [attr.test-id]="tab.path"
@@ -67,7 +67,7 @@
     </div>
   </form>
 
-  <div class="routerContainer" [@routeAnimation]="animationOutlet(outlet)">
+  <div #tabPanel class="routerContainer" [@routeAnimation]="animationOutlet(outlet)">
     <router-outlet #outlet="outlet"></router-outlet>
   </div>
 

@@ -45,7 +45,6 @@ const fade = trigger('fade', [
       margin-top: 16px;
     }
     .widget-footer .mat-button {
-        padding: 16px;
         width: 100%;
       }
   `],

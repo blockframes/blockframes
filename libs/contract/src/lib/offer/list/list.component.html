@@ -5,7 +5,7 @@
       <h1>Offers & Deals</h1>
     </header>
 
-    <nav mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
+    <nav mat-tab-nav-bar [tabPanel]="tabPanel" fxLayout="row" fxLayoutAlign="space-between end">
       <button mat-tab-link (click)="applyFilter('')" [active]="(filter$ | async) === ''" test-id="all-offers">
         All Offers ({{offers.length}})
       </button>
@@ -26,31 +26,34 @@
       </button>
     </nav>
 
-    <bf-table [source]="offers | filterBy: filterByStatus: filter.value" clickable useFilter pagination="50"
-      (rowClick)="rowClick($event)">
-      <ng-template colRef="id" label="Offer Reference" let-reference sort>
-        <b>{{ reference }}</b>
-      </ng-template>
-      <ng-template colRef="_meta.createdAt" label="Offer created" let-date sort>{{ date| date : 'MM/dd/yyyy'}}
-      </ng-template>
-      <ng-template colRef="contracts.length" label="# Of Titles" let-length sort>{{ length }}</ng-template>
-      <ng-template colRef="contracts" label="Titles" let-contracts>
-        <div>
-          <ng-container *ngFor="let contract of contracts; let last=last;">
-            {{contract.title?.title?.international | maxLength: last? 70: 20 }}{{last? '': ', '}}
-          </ng-container>
-        </div>
-      </ng-template>
-      <ng-template colRef="specificity" label="Specific Terms" let-specificity sort>
-        {{ specificity ? 'YES' : '-' }}
-      </ng-template>
-      <ng-template colRef="incomes" label="Total Package Price" let-incomes let-offer="item">
-        {{ offer.contracts | total: 'negotiation.price' | currency: offer.currency }}
-      </ng-template>
-      <ng-template colRef="status" label="Status" let-status>
-        <bf-tag>{{ status | toLabel: 'offerStatus' }}</bf-tag>
-      </ng-template>
-    </bf-table>
+    <mat-tab-nav-panel #tabPanel>
+      <bf-table [source]="offers | filterBy: filterByStatus: filter.value" clickable useFilter pagination="50"
+        (rowClick)="rowClick($event)">
+        <ng-template colRef="id" label="Offer Reference" let-reference sort>
+          <b>{{ reference }}</b>
+        </ng-template>
+        <ng-template colRef="_meta.createdAt" label="Offer created" let-date sort>{{ date| date : 'MM/dd/yyyy'}}
+        </ng-template>
+        <ng-template colRef="contracts.length" label="# Of Titles" let-length sort>{{ length }}</ng-template>
+        <ng-template colRef="contracts" label="Titles" let-contracts>
+          <div>
+            <ng-container *ngFor="let contract of contracts; let last=last;">
+              {{contract.title?.title?.international | maxLength: last? 70: 20 }}{{last? '': ', '}}
+            </ng-container>
+          </div>
+        </ng-template>
+        <ng-template colRef="specificity" label="Specific Terms" let-specificity sort>
+          {{ specificity ? 'YES' : '-' }}
+        </ng-template>
+        <ng-template colRef="incomes" label="Total Package Price" let-incomes let-offer="item">
+          {{ offer.contracts | total: 'negotiation.price' | currency: offer.currency }}
+        </ng-template>
+        <ng-template colRef="status" label="Status" let-status>
+          <bf-tag>{{ status | toLabel: 'offerStatus' }}</bf-tag>
+        </ng-template>
+      </bf-table>
+    </mat-tab-nav-panel>
+
   </ng-container>
 </ng-container>
 

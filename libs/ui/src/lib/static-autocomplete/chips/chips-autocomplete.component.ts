@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatLegacyChipInputEvent as MatChipInputEvent, MatLegacyChipList as MatChipList } from '@angular/material/legacy-chips';
+import { MatLegacyChipInputEvent as MatChipInputEvent, MatChipGrid } from '@angular/material/legacy-chips';
 import { MatLegacyAutocompleteSelectedEvent as MatAutocompleteSelectedEvent } from '@angular/material/legacy-autocomplete';
 
 // RxJs
@@ -39,7 +39,6 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
    * <chips-autocomplete scope="TERRITORIES" ...
    */
   @Input() scope?: Scope;
-  @Input() selectable = true;
   @Input() removable = true;
   @Input() disabled = false;
   @Input() placeholder = '';
@@ -69,7 +68,7 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   private items: string[];
   @ViewChild('inputEl') inputEl: ElementRef<HTMLInputElement>;
-  @ViewChild('chipList') chipList: MatChipList;
+  @ViewChild('chipList') chipList: MatChipGrid;
 
   ngOnInit() {
     this.items = this.withoutValues.length

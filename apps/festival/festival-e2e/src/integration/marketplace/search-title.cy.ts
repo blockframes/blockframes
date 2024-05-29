@@ -76,8 +76,9 @@ describe('Movie search in marketplace', () => {
     get('title-link').eq(0).click();
     get('titles-count');
     selectFilter('Sales Agent');
-    get('sales-agent').find('input').type(saleOrg.name);
-    getByClass('mat-autocomplete-panel').find('mat-option').should('contain', saleOrg.name).click();
+    // force click because the input is hidden by mat-label since angular 15 migration
+    get('sales-agent').find('input').type(saleOrg.name, { force: true });
+    getByClass('mat-mdc-autocomplete-panel').find('mat-option').should('contain', saleOrg.name).click();
     get('save-filter').click();
     selectFilter('Genre');
     get('filter-select').click();

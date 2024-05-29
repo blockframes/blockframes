@@ -198,15 +198,17 @@ function checkUI(newcomer: Newcomer) {
   assertCheckbox('festival', 'dashboard', org);
   assertCheckbox('catalog', 'marketplace', org);
   assertCheckbox('catalog', 'marketplace', org);
-  get('financiers-dashboard').should('not.have.class', 'mat-checkbox-checked');
-  get('financiers-marketplace').should('not.have.class', 'mat-checkbox-checked');
+  get('financiers-dashboard').should('not.have.class', 'mat-mdc-checkbox-checked');
+  get('financiers-marketplace').should('not.have.class', 'mat-mdc-checkbox-checked');
+  get('waterfall-dashboard').should('not.have.class', 'mat-mdc-checkbox-checked');
+  get('waterfall-marketplace').should('not.have.class', 'mat-mdc-checkbox-checked');
   //table
   get('row_0_col_3').should('contain', user.email);
 }
 
-function assertCheckbox(app: Exclude<App, 'crm' | 'financiers'>, module: Module, org: Organization) {
+function assertCheckbox(app: Exclude<App, 'crm' | 'financiers' | 'waterfall'>, module: Module, org: Organization) {
   return get(`${app}-${module}`).should(
     canAccessModule(module, org, app) ? 'have.class' : 'not.have.class',
-    'mat-checkbox-checked'
+    'mat-mdc-checkbox-checked'
   );
 }

@@ -21,7 +21,7 @@
 
   <!-- Content -->
   <div #main>
-    <nav id="nav" mat-tab-nav-bar>
+    <nav id="nav" mat-tab-nav-bar [tabPanel]="tabPanel">
       <ng-container *ngFor="let link of routes">
         <ng-container *ngIf="movie | hasKeys : (link.requireKeys || [])">
           <a mat-tab-link [routerLink]="link.path" [queryParams]="route.snapshot.queryParams" routerLinkActive #rla="routerLinkActive" [active]="rla.isActive"
@@ -31,7 +31,7 @@
         </ng-container>
       </ng-container>
     </nav>
-    <section [@routeAnimation]="animationOutlet(outlet)" (@routeAnimation.start)="scrollIntoView()">
+    <section #tabPanel [@routeAnimation]="animationOutlet(outlet)" (@routeAnimation.start)="scrollIntoView()">
       <router-outlet #outlet="outlet" (activate)="scrollIntoView()"></router-outlet>
     </section>
   </div>

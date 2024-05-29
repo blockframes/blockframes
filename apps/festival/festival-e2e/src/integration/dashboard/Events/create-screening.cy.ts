@@ -98,7 +98,8 @@ describe('Screenings', () => {
     get('event-save').click();
     get('warning-screener').should('exist');
     get('missing-screener').should('exist');
-    get('arrow-back').click();
+    // force click because the input is hidden by mat-label since angular 15 migration
+    get('arrow-back').click({ force: true });
     getEventSlot(futureSlot).should('contain', noScreenerTitle);
     interceptEmail('subject:A new event has been created').then(mail => gmail.deleteEmail(mail.id));
     connectUser(marketplaceUser.email);
@@ -283,7 +284,7 @@ function getEventSlot({ day, hours, minutes }: EventSlot) {
 function fillDashboardCalendarPopin({ type, title, allDay }: { type: EventTypes; title: string; allDay?: boolean }) {
   get('event-type').click();
   get(`option_${type}`).click();
-  if (allDay) get('all-day').click();
+  if (allDay) get('all-day').find('button').click();
   get('event-title-modal').clear().type(title);
   get('more-details').click();
 }
@@ -304,7 +305,7 @@ function fillDashboardCalendarDetails({
   get('screening-title').click();
   get(`option_${movieId}`).click();
   get('description').type(`Description : ${eventTitle}`);
-  get(accessibility).click();
+  get(accessibility).find('input').check();
   if (secret) check('secret');
   if (invitee) {
     get('invitations').click();

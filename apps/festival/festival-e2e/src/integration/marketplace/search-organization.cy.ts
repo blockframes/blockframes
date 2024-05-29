@@ -85,11 +85,13 @@ describe('Search sale organization in marketplace', () => {
       get(`org-card_${acceptedSaleOrg.id}`).should('exist');
     });
     selectFilter(`Company's Nationality`);
-    get('country').find('input').click();
+    // force click because the input is hidden by mat-label since angular 15 migration
+    get('country').find('input').click({ force: true });
     get('option_kyrgyzstan').click();
     get('empty').should('exist');
     get('clear-filter').click();
-    get('country').find('input').click();
+    // force click because the input is hidden by mat-label since angular 15 migration
+    get('country').find('input').click({ force: true });
     get(`option_${acceptedSaleOrg.addresses.main.country}`).click();
     get('organizations-count').should('contain', 'There is 1 seller available.');
   });

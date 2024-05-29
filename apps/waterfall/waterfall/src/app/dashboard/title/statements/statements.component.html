@@ -15,9 +15,8 @@
           <mat-divider *ngIf="chip.divider && chip.visible" [vertical]="true"></mat-divider>
           <mat-chip
           *ngIf="chip.visible"
-          [color]="chip.color"
           [selected]="chip.selected"
-          [class]="chip.key"
+          [class]="chip.color"
           (click)="changeType(chip.key)">{{ chip.value }}</mat-chip>
         </ng-container>
       </mat-chip-list>
