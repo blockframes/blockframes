@@ -135,7 +135,7 @@
     background-color: transparent;
   }
 
-  .mat-mdc-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn) {
+  .mat-mdc-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn):not(.mat-mdc-snack-bar-action) {
     color: mat.get-color-from-palette($foreground, text);
   }
 

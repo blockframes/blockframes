@@ -15,7 +15,7 @@
     <pre class="mat-body-2">{{ event | eventRange }}</pre>
   </section>
 
-  <nav mat-tab-nav-bar [tabPanel]="tabPanel">
+  <nav mat-tab-nav-bar [tabPanel]="tabPanel" mat-stretch-tabs="false">
     <ng-container *ngFor="let tab of (tabs$ | async)"> 
       <a mat-tab-link 
       [routerLink]="tab.path" 

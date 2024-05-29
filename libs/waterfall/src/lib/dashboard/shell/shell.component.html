@@ -40,7 +40,7 @@
     </section>
   </header>
 
-  <nav mat-tab-nav-bar *ngIf="!lite" [tabPanel]="tabPanel">
+  <nav mat-tab-nav-bar *ngIf="!lite" [tabPanel]="tabPanel" mat-stretch-tabs="false">
     <ng-container *ngFor="let link of routes">
       <a mat-tab-link *ngIf="link | canAccess : (canBypassRules$ | async) : (canInitWaterfall$ | async)" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
         [active]="rla.isActive">

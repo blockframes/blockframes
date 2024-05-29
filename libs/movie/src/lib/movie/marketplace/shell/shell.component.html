@@ -21,7 +21,7 @@
 
   <!-- Content -->
   <div #main>
-    <nav id="nav" mat-tab-nav-bar [tabPanel]="tabPanel">
+    <nav id="nav" mat-tab-nav-bar [tabPanel]="tabPanel" mat-stretch-tabs="false">
       <ng-container *ngFor="let link of routes">
         <ng-container *ngIf="movie | hasKeys : (link.requireKeys || [])">
           <a mat-tab-link [routerLink]="link.path" [queryParams]="route.snapshot.queryParams" routerLinkActive #rla="routerLinkActive" [active]="rla.isActive"

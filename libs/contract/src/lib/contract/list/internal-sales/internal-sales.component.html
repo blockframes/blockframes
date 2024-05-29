@@ -1,5 +1,5 @@
 <ng-container *rxLet="filter$; let filter">
-  <header mat-tab-nav-bar [tabPanel]="tabPanel" fxLayout="row" fxLayoutAlign="space-between end">
+  <header mat-tab-nav-bar [tabPanel]="tabPanel" mat-stretch-tabs="false" fxLayout="row" fxLayoutAlign="space-between end">
     <button mat-tab-link (click)="resetFilter()" [active]="filter === ''" test-id="all">
       All <span *ngIf="(salesCount$ | async) as salesCount">({{ salesCount.all }})</span>
     </button>

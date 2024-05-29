@@ -90,4 +90,8 @@
   .text-disabled {
     color: map.get($foreground, 'disabled');
   }
+
+  .mat-toolbar h6 {
+    margin: 0;
+  }
 }

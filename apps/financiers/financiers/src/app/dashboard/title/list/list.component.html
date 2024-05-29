@@ -2,7 +2,7 @@
   <ng-container *ngIf="(filter.value !== 'all' || titles.length); else empty">
     <dashboard-movie-list-header></dashboard-movie-list-header>
 
-    <header mat-tab-nav-bar [tabPanel]="tabPanel" fxLayout="row" fxLayoutAlign="space-between end">
+    <header mat-tab-nav-bar [tabPanel]="tabPanel" mat-stretch-tabs="false" fxLayout="row" fxLayoutAlign="space-between end">
       <button mat-tab-link (click)="applyFilter('all')" [active]="filter.value === 'all'">All Projects <span
           *ngIf="(titleCount$ | async) as titleCount">({{ titleCount.all }})</span></button>
       <button mat-tab-link (click)="applyFilter('draft')" [active]="filter.value === 'draft'">Draft <span

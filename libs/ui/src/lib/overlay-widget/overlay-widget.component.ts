@@ -45,8 +45,8 @@ const fade = trigger('fade', [
       margin-top: 16px;
     }
     .widget-footer .mat-mdc-button {
-        width: 100%;
-      }
+      width: 100%;
+    }
   `],
   encapsulation: ViewEncapsulation.None,
   animations: [fade]

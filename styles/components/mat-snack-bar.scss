@@ -1,15 +1,5 @@
-@use 'sass:map';
-@use '@angular/material' as mat;
-
 @mixin color($theme) {
-  $config: mat.get-color-config($theme);
-  $foreground: map.get($config, 'foreground');
-
-  .mat-simple-snackbar-action {
-    .mat-button {
-      .mat-button-wrapper {
-        color: mat.get-color-from-palette($foreground, divider);
-      }
-    }
+  .mat-mdc-snack-bar-container .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
+    --mat-mdc-snack-bar-button-color: var(--foreground-divider);
   }
 }
