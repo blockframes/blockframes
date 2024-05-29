@@ -25,14 +25,14 @@
     </section>
   </header>
 
-  <nav mat-tab-nav-bar>
+  <nav mat-tab-nav-bar [tabPanel]="tabPanel">
     <a mat-tab-link *ngFor="let link of routes" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
       [active]="rla.isActive">
       {{link.label}}
     </a>
   </nav>
 
-  <div [@routeAnimation]="animationOutlet(outlet)">
+  <div #tabPanel [@routeAnimation]="animationOutlet(outlet)">
     <router-outlet #outlet="outlet"></router-outlet>
   </div>
 

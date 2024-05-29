@@ -133,12 +133,13 @@ describe('Deal negotiation', () => {
   it('Buyer makes a counter-counter-offer', () => {
     get('negotiate').click();
     get('price').clear().type('20000');
+    // force click because the input is hidden by mat-label since angular 15 migration
     get('dateFrom')
-      .clear()
-      .type(dateToMMDDYYYY(add(seller.term.duration.from, { days: 15 })));
+      .clear({ force: true })
+      .type(dateToMMDDYYYY(add(seller.term.duration.from, { days: 15 })), { force: true });
     get('dateTo')
-      .clear()
-      .type(dateToMMDDYYYY(sub(seller.term.duration.to, { days: 15 })));
+      .clear({ force: true })
+      .type(dateToMMDDYYYY(sub(seller.term.duration.to, { days: 15 })), { force: true });
     get('territories').click();
     get('CIS').click('left');
     escapeKey();

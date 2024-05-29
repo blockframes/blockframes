@@ -91,11 +91,13 @@ describe('Search buyer organizations in dashboard', () => {
       get(`item_${acceptedBuyerOrg.id}`).should('exist');
     });
     selectFilter(`Company's Nationality`);
-    get('country').find('input').click();
+    // force click because the input is hidden by mat-label since angular 15 migration
+    get('country').find('input').click({ force: true });
     get('option_kyrgyzstan').click();
     get('empty').should('exist');
     get('clear-filter').click();
-    get('country').find('input').click();
+    // force click because the input is hidden by mat-label since angular 15 migration
+    get('country').find('input').click({ force: true });
     get(`option_${acceptedBuyerOrg.addresses.main.country}`).click();
     get('organizations-count').should('contain', 'There is 1 buyer available.');
   });

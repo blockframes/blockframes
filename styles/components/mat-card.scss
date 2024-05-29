@@ -6,26 +6,30 @@
   $background: map.get($config, 'background');
   $foreground: map.get($config, 'foreground');
 
-  .mat-card {
+  .mat-mdc-card {
     @include mat.overridable-elevation(0);
     background-color: mat.get-color-from-palette($background, 'card');
     border: 1px solid mat.get-color-from-palette($foreground, 'divider');
     padding: 24px 16px;
-    .mat-card-image:first-child {
+    .mat-mdc-card-image:first-child {
       margin-top: -24px; // Should be the same as padding-top from .mat-card
       border-top-left-radius: 3px;
       border-top-right-radius: 3px;
     }
-    .mat-card-title {
+    .mat-mdc-card-title {
       font-size: 20px;
       color: mat.get-color-from-palette($foreground, 'secondary-text');
       font-weight: bold;
     }
-    .mat-card-subtitle.mat-caption {
+    .mat-mdc-card-subtitle.mat-caption {
       font-size: 13px;
     }
-    .mat-card-header-text {
+    .mat-mdc-card-header-text {
       margin: 0;
+    }
+
+    .mat-mdc-card-content {
+      padding: 0;
     }
   }
 }

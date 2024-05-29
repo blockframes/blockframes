@@ -123,14 +123,16 @@ describe('Dashboard avails search', () => {
         firstMovieFilters();
         get('dateFrom')
           .clear()
-          .type(dateToMMDDYYYY(sub(terms[0].duration.from, { days: 1 })));
+          // force click because the input is hidden by mat-label since angular 15 migration
+          .type(dateToMMDDYYYY(sub(terms[0].duration.from, { days: 1 })), { force: true });
         get('empty').should('exist');
       });
       it('To date', () => {
         firstMovieFilters();
         get('dateTo')
           .clear()
-          .type(dateToMMDDYYYY(add(terms[0].duration.to, { days: 1 })));
+          // force click because the input is hidden by mat-label since angular 15 migration
+          .type(dateToMMDDYYYY(add(terms[0].duration.to, { days: 1 })), { force: true });
         get('empty').should('exist');
       });
       it('Exclusivity', () => {
@@ -144,7 +146,8 @@ describe('Dashboard avails search', () => {
   context('Checking avails links', () => {
     it('can find the available territories in the map component', () => {
       get('row_0_col_0').should('contain', movies[0].title.international);
-      findIn('row_0_col_4', 'map').click();
+      // force click because the input is hidden by another element since angular 15 migration
+      findIn('row_0_col_4', 'map').click({ force: true });
       assertUrlIncludes(`dashboard/avails/${movies[0].id}/map`);
       cy.get('[color="#7795ff"]').should('not.exist');
       selectMedias('TV');

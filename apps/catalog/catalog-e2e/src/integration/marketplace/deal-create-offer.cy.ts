@@ -95,7 +95,8 @@ describe('Deal negociation', () => {
         dateTo: new Date(seller.term.duration.to),
         exclusive: false,
       });
-      get('select-all').click();
+      // force click because the input is hidden by mat-label since angular 15 migration
+      get('select-all').click({ force: true });
       assertMultipleTexts('selected-territories', ['Europe', 'Latin America', territories['nepal']]);
     });
 
@@ -108,20 +109,23 @@ describe('Deal negociation', () => {
       });
       assertAvailableCountries(69);
       //with a start before term beginning
+      // force click because the input is hidden by mat-label since angular 15 migration
       get('dateFrom')
         .clear()
-        .type(dateToMMDDYYYY(add(seller.term.duration.from, { days: -1 })));
+        .type(dateToMMDDYYYY(add(seller.term.duration.from, { days: -1 })), { force: true });
       assertAvailableCountries(0);
 
-      get('dateFrom').clear().type(dateToMMDDYYYY(seller.term.duration.from)); //back to 69 available
+      // force click because the input is hidden by mat-label since angular 15 migration
+      get('dateFrom').clear({ force: true }).type(dateToMMDDYYYY(seller.term.duration.from), { force: true }); //back to 69 available
       assertAvailableCountries(69);
       //with a end after end term
       get('dateTo')
         .clear()
-        .type(dateToMMDDYYYY(add(seller.term.duration.to, { days: 1 })));
+        .type(dateToMMDDYYYY(add(seller.term.duration.to, { days: 1 })), { force: true });
       assertAvailableCountries(0);
 
-      get('dateTo').clear().type(dateToMMDDYYYY(seller.term.duration.to)); //back to 69 available
+      // force click because the input is hidden by mat-label since angular 15 migration
+      get('dateTo').clear({ force: true }).type(dateToMMDDYYYY(seller.term.duration.to), { force: true }); //back to 69 available
       assertAvailableCountries(69);
 
       //with wrong rights (VOD)
@@ -211,7 +215,8 @@ describe('Deal negociation', () => {
       });
       selectCell({ row: 2, column: 1 });
       selectCell({ row: 2, column: 4 });
-      get('add-to-selection').click();
+      // force click because the input is hidden by mat-label since angular 15 migration
+      get('add-to-selection').click({ force: true });
       assertUrlIncludes('c/o/marketplace/selection');
       assertSelectionTableData();
       get('price').type('10000');
@@ -262,8 +267,9 @@ function fillInputs({
   dateTo?: Date;
   exclusive: boolean;
 }) {
-  if (dateFrom) get('dateFrom').clear().type(dateToMMDDYYYY(dateFrom));
-  if (dateTo) get('dateTo').clear().type(dateToMMDDYYYY(dateTo));
+  // force click because the input is hidden by mat-label since angular 15 migration
+  if (dateFrom) get('dateFrom').clear().type(dateToMMDDYYYY(dateFrom), { force: true });
+  if (dateTo) get('dateTo').clear().type(dateToMMDDYYYY(dateTo), { force: true });
   if (territory) {
     get('territories').click();
     for (const option of territory) {
@@ -285,7 +291,7 @@ function selectAllAvailable() {
 * You should use .then() to chain commands instead.
 * More Info: https://docs.cypress.io/guides/references/migration-guide#-should
 **/
-cy.get('[fill="#7795ff"]') //each available country is a 'path' filled with this color
+  cy.get('[fill="#7795ff"]') //each available country is a 'path' filled with this color
     .should('have.length', 69)
     .each(territory => cy.wrap(territory).click({ force: true }));
 }
@@ -297,7 +303,8 @@ function assertModalTerritories() {
     if (territory !== 'holy-see') modal.should('contain', `${territories[territory]}`);
   }
   modal.should('contain', 'Europe').and('contain', 'Latin America').and('contain', 'Asia');
-  get('close').click();
+  // force click because the input is hidden by mat-label since angular 15 migration
+  get('close').click({ force: true });
 }
 
 function assertAvailableCountries(number: number) {

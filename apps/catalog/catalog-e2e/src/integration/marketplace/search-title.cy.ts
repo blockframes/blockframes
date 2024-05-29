@@ -109,12 +109,14 @@ describe('Movie search in marketplace', () => {
     check('Dubs');
     get('save-filter').click();
     selectFilter('Release Year');
-    get('min-input').type('2020');
-    get('max-input').type(movie.release.year.toString());
+    // force click because the input is hidden by mat-label since angular 15 migration
+    get('min-input').type('2020', { force: true });
+    get('max-input').type(movie.release.year.toString(), { force: true });
     get('save-filter').click();
     selectFilter('Running Time');
-    get('min-input').type('90');
-    get('max-input').type('180');
+    // force click because the input is hidden by mat-label since angular 15 migration
+    get('min-input').type('90', { force: true });
+    get('max-input').type('180', { force: true });
     get('save-filter').click();
     selectFilter('Festival Selection');
     get('filter-select').click();
@@ -191,15 +193,17 @@ describe('Movie search in marketplace', () => {
     get(`movie-card_${movie.id}`).should('exist');
     get('titles-count').should('contain', oneTitleSentence);
     selectFilter('Release Year');
-    get('min-input').type('2030');
+    // force click because the input is hidden by mat-label since angular 15 migration
+    get('min-input').type('2030', { force: true });
     get('empty').should('exist');
     get('clear-filter').click();
     get('save-filter').click();
     get(`movie-card_${movie.id}`).should('exist');
     get('titles-count').should('contain', oneTitleSentence);
     selectFilter('Running Time');
-    get('min-input').type('13');
-    get('max-input').type('25');
+    // force click because the input is hidden by mat-label since angular 15 migration
+    get('min-input').type('13', { force: true });
+    get('max-input').type('25', { force: true });
     get('empty').should('exist');
     get(`movie-card_${movie.id}`).should('not.exist');
     get('clear-filter').click();

@@ -5,8 +5,8 @@
   $config: mat.get-color-config($theme);
   $warn: map.get($config, 'warn');
 
-  a:not(.mat-button-base),
-  a:not(.mat-button-base):visited {
+  a:not(.mat-mdc-button-base),
+  a:not(.mat-mdc-button-base):visited {
     color: inherit;
     // Used mainly for the missing-control component
     &.missing-control span {

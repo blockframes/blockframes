@@ -1,5 +1,6 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
+@use '../typography' as typography;
 
 @mixin color($theme) {
   $config: mat.get-color-config($theme);
@@ -7,37 +8,39 @@
   $background: map.get($config, 'background');
   $foreground: map.get($config , 'foreground');
 
-  .mat-nav-list, .mat-list, .mat-selection-list {
+  .mat-mdc-nav-list, .mat-mdc-list, .mat-mdc-selection-list {
     border-radius: 10px;
   }
 
-  .mat-list-base {
+  .mat-mdc-list-base {
     padding-top: 0; // Used to glue several mat-list together
     background-color: mat.get-color-from-palette($background, app-bar);
     border: 1px solid mat.get-color-from-palette($foreground, divider);
+    padding-bottom: 0;
   }
 
-  // Removed as it create weird behaviour with mat-selection-list (21/01/2020)
-  // If you need that somewhere please specify the type of list you want to apply this style on
-  // .mat-list-base .mat-list-item .mat-list-item-content {
-  //   padding: 0 0 0 20px;
-  // }
-
   // Use to let active link in color in mat-nav-list, used with routerLinkActive
-  .mat-nav-list a.active {
+  .mat-mdc-nav-list a.active {
     color: mat.get-color-from-palette($primary, 500);
     background-color: rgba(mat.get-color-from-palette($primary, 500), 0.05);
 
     // Mat icons inside active link should be colored too
-    .mat-list-icon {
+    .mat-mdc-list-icon {
       path, g, polygon {
         fill: mat.get-color-from-palette($primary, 500);
       }
     }
   }
 
+  .mat-mdc-list-base a.mat-mdc-list-item.active:not(.mdc-list-item.mdc-list-item--with-two-lines) .mat-mdc-list-item-unscoped-content {
+    color: mat.get-color-from-palette($primary, 500);
+    mat-icon {
+      color: mat.get-color-from-palette($primary, 500);
+    }
+  }
+
   // Every nav-list in a sidenav won't get border
-  .mat-sidenav .mat-nav-list, .mat-list-base {
+  .mat-mdc-sidenav .mat-mdc-nav-list, .mat-mdc-list-base {
     border: none;
     background: transparent;
   }
@@ -45,29 +48,55 @@
   // Color the tab that is active and set the size of the ink-bar to the text' size
   nav[mat-tab-nav-bar] a[mat-tab-link],
   nav[mat-tab-nav-bar] button[mat-tab-link],
-  .mat-tab-label {
+  .mat-mdc-tab-label {
     opacity: 1;
     min-width: 10px;
-    padding: 32px 16px;
-    &.mat-tab-label-active {
+    &.mat-mdc-tab-label-active {
       color: mat.get-color-from-palette($primary, 500);
     }
   }
+
+  .mat-mdc-list-base .mat-mdc-list-item:not(.mdc-list-item.mdc-list-item--with-two-lines) {
+    height: 56px;
+    .mat-mdc-list-item-unscoped-content,
+    .mat-mdc-list-item-unscoped-content .mat-mdc-select-value {
+      color: mat.get-color-from-palette($foreground, 'text');
+      mat-icon {
+        margin-left: 8px;
+        margin-bottom: -6px;
+        margin-right: 16px;
+      }
+    }
+    .mat-mdc-list-item-unscoped-content .mat-mdc-select-value {
+      width: 90%;
+    }
+  }
+
+  .mat-mdc-optgroup .mdc-list-item__primary-text { width: 100%; }
+  .mat-mdc-optgroup .group label { font-weight: bold; }
+
+  .mat-mdc-list-base .mdc-list-item.mdc-list-item--with-two-lines {
+    .mat-mdc-list-item-avatar {  margin-top: 8px; }
+    .mat-mdc-list-item-line { margin: 0; }
+    .mat-mdc-list-item-meta {
+      &.mat-mdc-icon-button { margin-top: 6px; }
+      * { align-items: center; }
+    }
+
+    .mat-mdc-list-item-meta::before { height: 12px; }
+  }
+
+  .cdk-overlay-pane:has(.mat-mdc-select-panel) { min-width: fit-content; }
 }
 
-
 @mixin typography($theme) {
-  $config: mat.get-typography-config($theme);
-  $font-family: mat.font-family($config);
+  .mat-mdc-list-base .mat-mdc-list-item .mat-mdc-list-item-unscoped-content,
+  .mat-mdc-list-base .mat-mdc-list-item .mat-mdc-list-option,
+  .mat-mdc-list-base .mat-mdc-list-item .mat-mdc-list-item-unscoped-content .mat-mdc-select-value {
+    @include mat.typography-level(typography.$bf-typography, 'subtitle-2');
+  }
 
-  // Default list
-  .mat-list-base {
-    .mat-list-item {
-      font-size: mat.font-size($config, body-2);
-    }
-
-    .mat-list-option {
-      font-size: mat.font-size($config, body-2);
-    }
+  .mat-mdc-select .mat-mdc-select-value, .mat-mdc-option .mdc-list-item__primary-text {
+    @include mat.typography-level(typography.$bf-typography, 'body-2');
   }
 }

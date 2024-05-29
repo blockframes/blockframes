@@ -61,12 +61,12 @@
             </ng-template>
 
             <mat-label i18n>Company Name</mat-label>
-            <mat-hint i18n>
+            <span bf-mat-hint i18n>
               Select an existing company from the list or create a new one.
-            </mat-hint>
-            <mat-error i18n>
+            </span>
+            <span bf-mat-error i18n>
               You have to select a choice from the list.
-            </mat-error>
+            </span>
           </algolia-autocomplete>
         </ng-container>
 
@@ -91,7 +91,7 @@
               label="Invitation Pass"
               test-id="invitation-code"
             >
-              <mat-hint i18n>You'll find your Invitation Pass in your invitation email.</mat-hint>
+              <span bf-mat-hint i18n>You'll find your Invitation Pass in your invitation email.</span>
             </password-input>
             <button mat-mini-fab color="primary" matTooltip="Contact us to get help" (click)="openIntercom()" i18n-matTooltip >?</button>
           </div>
@@ -105,19 +105,19 @@
           test-id="password"
           [errorStateMatcher]="currentPasswordMatch"
         >
-          <mat-hint i18n>Between 6 and 24 characters.</mat-hint>
-          <mat-error *ngIf="form.get('password').hasError('required')" test-id="password-required" i18n>
+          <span bf-mat-hint i18n>Between 6 and 24 characters.</span>
+          <span bf-mat-error *ngIf="form.get('password').hasError('required')" test-id="password-required" i18n>
             New password is <strong>required</strong>.
-          </mat-error>
-          <mat-error *ngIf="form.get('password').hasError('minlength')" test-id="short-password" i18n>
+          </span>
+          <span bf-mat-error *ngIf="form.get('password').hasError('minlength')" test-id="short-password" i18n>
             New password with less than <strong>6</strong> characters.
-          </mat-error>
-          <mat-error *ngIf="form.get('password').hasError('maxlength')" test-id="long-password" i18n>
+          </span>
+          <span bf-mat-error *ngIf="form.get('password').hasError('maxlength')" test-id="long-password" i18n>
             New password with more than <strong>24</strong> characters.
-          </mat-error>
-          <mat-error *ngIf="form.hasError('currentPasswordMatch')" test-id="same-password" i18n>
+          </span>
+          <span bf-mat-error *ngIf="form.hasError('currentPasswordMatch')" test-id="same-password" i18n>
             Your new password has to be <strong>different</strong> than Invitation Pass.
-          </mat-error>
+          </span>
         </password-input>
 
         <password-input *ngIf="form.get('confirm').enabled"
@@ -129,13 +129,13 @@
           i18n-label
           test-id="password-confirm"
         >
-          <mat-hint i18n>Please rewrite your password for confirmation.</mat-hint>
-          <mat-error *ngIf="form.get('confirm').hasError('required')" test-id="password-confirm-required" i18n>
+          <span bf-mat-hint i18n>Please rewrite your password for confirmation.</span>
+          <span bf-mat-error *ngIf="form.get('confirm').hasError('required')" test-id="password-confirm-required" i18n>
             New password confirmation is <strong>required</strong>.
-          </mat-error>
-          <mat-error *ngIf="form.hasError('passwordsNotMatching')" test-id="password-confirm-mismatch" i18n>
+          </span>
+          <span bf-mat-error *ngIf="form.hasError('passwordsNotMatching')" test-id="password-confirm-mismatch" i18n>
             The confirmation password does not <strong>match your password</strong>.
-          </mat-error>
+          </span>
         </password-input>
 
         <!-- TERMS OF USE & PRIVACY POLICY -->
