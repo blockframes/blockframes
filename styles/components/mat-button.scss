@@ -206,6 +206,10 @@
   button.mat-mdc-button.main-dashboard-cta {
     background-color: var(--dashboard-cta);
   }
+
+  .mat-mdc-unelevated-button[disabled][disabled] {
+    --mdc-filled-button-disabled-label-text-color: #FFF;
+  }
 }
 
 // TYPOGRAPHY

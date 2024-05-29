@@ -6,7 +6,8 @@
   }
 
   // Material 15 fix: prevent focus indicator from showing over tooltip 
-  button.mdc-icon-button {
+  button.mdc-icon-button,
+  a.mdc-icon-button {
     .mat-mdc-focus-indicator, .mat-mdc-button-touch-target { display: none; }
   }
 }
