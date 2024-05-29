@@ -23,7 +23,7 @@
     form {
       display: flex;
       flex-direction: column;
-
+      /* TODO #9702 (mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
       mat-checkbox {
         align-self: flex-start;
         text-align: left;

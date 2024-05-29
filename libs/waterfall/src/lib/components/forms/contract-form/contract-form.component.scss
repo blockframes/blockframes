@@ -15,12 +15,12 @@
       flex: 1;
     }
   }
-
+  /* TODO #9702 (mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
   mat-checkbox {
     margin-top: -12px;
     margin-bottom: 12px;
   }
-
+  /* TODO #9702 (mdc-migration): The following rule targets internal classes of slide-toggle that may no longer apply for the MDC version. */
   mat-slide-toggle,
   div.toggle {
     margin-bottom: 22px;

@@ -47,7 +47,7 @@ article {
   padding: 8px;
   border-radius: 4px;
   color: #434773;
-
+  /* TODO #9702 (mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version. */
   mat-list-item {
     height: 32px;
   }

@@ -14,6 +14,7 @@ form-chips-autocomplete {
 }
 
 
+/* TODO #9702 (mdc-migration): The following rule targets internal classes of radio that may no longer apply for the MDC version. */
 mat-radio-button {
   margin-right: 16px;
 }
