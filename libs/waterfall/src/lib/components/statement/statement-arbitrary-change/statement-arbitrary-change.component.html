@@ -7,9 +7,9 @@
         <section>
           <h3>{{ config.source.name }} : </h3>
           <mat-chip-listbox *ngIf="config.income.medias.length" aria-label="Medias">
-            <mat-chip-option disableRipple *ngFor="let media of config.income.medias | toGroupLabel:'medias':'All'">
+            <mat-chip disableRipple *ngFor="let media of config.income.medias | toGroupLabel:'medias':'All'">
               {{ media }}
-            </mat-chip-option>
+            </mat-chip>
           </mat-chip-listbox>
           <span *ngIf="config.income.territories.length" class="group-label">
             {{ config.income.territories | toGroupLabel:'territories':'World' | join | maxLength:30 }}
@@ -45,9 +45,9 @@
         <section>
           <h3>{{ config.source.name }} : </h3>
           <mat-chip-listbox *ngIf="config.income.medias.length" aria-label="Medias">
-            <mat-chip-option disableRipple *ngFor="let media of config.income.medias | toGroupLabel:'medias':'All'">
+            <mat-chip disableRipple *ngFor="let media of config.income.medias | toGroupLabel:'medias':'All'">
               {{ media }}
-            </mat-chip-option>
+            </mat-chip>
           </mat-chip-listbox>
           <span *ngIf="config.income.territories.length" class="group-label">
             {{ config.income.territories | toGroupLabel:'territories':'World' | join | maxLength:30 }}

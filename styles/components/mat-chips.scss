@@ -6,11 +6,13 @@
   $config: mat.get-color-config($theme);
   $foreground: map.get($config, 'foreground');
 
-  chips-autocomplete mat-chip-option.mat-mdc-standard-chip {
+  chips-autocomplete mat-chip-option.mat-mdc-standard-chip,
+  chips-autocomplete mat-chip.mat-mdc-standard-chip {
     margin: -2px 4px;
   }
 
-  mat-chip-option.mat-mdc-standard-chip {
+  mat-chip-option.mat-mdc-standard-chip,
+  mat-chip.mat-mdc-standard-chip {
     color: mat.get-color-from-palette($foreground, icon);
     // Disabled the over animation when the mat chip is only informative
     // that means when we deativate the ripple effect
@@ -22,7 +24,8 @@
   }
 
   // Chip for the movie' status on the movie card
-  mat-chip-option[selected][disableRipple].mat-primary {
+  mat-chip-option[selected][disableRipple].mat-primary,
+  mat-chip[selected][disableRipple].mat-primary {
     &.movie-chip {
       background-color: rgba(0, 0, 0, 0.288);
       color: #FFFFFF;

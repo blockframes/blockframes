@@ -52,10 +52,10 @@
               <ng-container *ngIf="(term.territories | toGroupLabel:'territories':'world') as territories">
 
                 <ng-container *ngIf="excludedTerritories(term.territories).length === 0; else excluding">
-                  <mat-chip-option disableRipple>
+                  <mat-chip disableRipple>
                     <mat-icon svgIcon="world"></mat-icon>
                     <span>World</span>
-                  </mat-chip-option>
+                  </mat-chip>
                 </ng-container>
 
                 <ng-template #excluding>
@@ -64,15 +64,15 @@
                       <ul fxFlexAlign="start">
                         <li fxLayout="column" gdColumns="90px auto" fxLayoutAlign="center" gdAlignRows="start" fxLayoutGap="8px">
                           <div>Including :</div>
-                          <mat-chip-option disableRipple>
+                          <mat-chip disableRipple>
                             <mat-icon svgIcon="world"></mat-icon>
                             <span>World</span>
-                          </mat-chip-option>
+                          </mat-chip>
                         </li>
                         <li class="excluded-territories" fxLayout="column" gdColumns="90px auto" fxLayoutAlign="center" gdAlignRows="start" fxLayoutGap="8px">
                           <div>Excluding :</div>
                           <mat-chip-listbox aria-label="Territories">
-                            <mat-chip-option disableRipple *ngFor="let territory of excludedTerritories(term.territories)">{{ territory }}</mat-chip-option>
+                            <mat-chip disableRipple *ngFor="let territory of excludedTerritories(term.territories)">{{ territory }}</mat-chip>
                           </mat-chip-listbox>
                         </li>
                       </ul>
@@ -85,7 +85,7 @@
 
                 <ng-template #default>
                   <mat-chip-listbox aria-label="Territories" *ngIf="territories.length <= maxTerritories; else moreTerritories" test-id="selected-territories">
-                    <mat-chip-option disableRipple *ngFor="let territory of territories">{{ territory }}</mat-chip-option>
+                    <mat-chip disableRipple *ngFor="let territory of territories">{{ territory }}</mat-chip>
                   </mat-chip-listbox>
                 </ng-template>
 
@@ -93,7 +93,7 @@
                   <div fxFlex fxLayout="column" fxLayoutAlign="start end">
                     <mat-chip-listbox aria-label="Territories">
                       <ng-container *ngFor="let territory of territories | slice:0:maxTerritories">
-                        <mat-chip-option disableRipple>{{ territory }}</mat-chip-option>
+                        <mat-chip disableRipple>{{ territory }}</mat-chip>
                       </ng-container>
                     </mat-chip-listbox>
                     <button mat-button class="spacing" (click)="openTerritoryModal(term)" test-id="see-more">
@@ -115,9 +115,9 @@
             </mat-expansion-panel-header>
             <article class="expansion-panel-content">
               <mat-chip-listbox aria-label="Medias">
-                <mat-chip-option disableRipple *ngFor="let media of term.medias  | toGroupLabel:'medias':'All'">
+                <mat-chip disableRipple *ngFor="let media of term.medias  | toGroupLabel:'medias':'All'">
                   {{ media }}
-                </mat-chip-option>
+                </mat-chip>
               </mat-chip-listbox>
             </article>
           </mat-expansion-panel>
@@ -148,7 +148,7 @@
     </button>
     <button mat-flat-button color="primary" class="mat-subtitle-2" (click)="addToSelection()" [disabled]="bucketForm.invalid" test-id="add-to-selection">
       <span>Add to Selection</span>
-      <mat-icon svgIcon="arrow_forward"></mat-icon>
+      <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
     </button>
   </section>
 </ng-container>
