@@ -128,8 +128,8 @@
     padding: 0px;
   }
 
-  scope-multiselect .mat-mdc-form-field label:not(.mdc-floating-label--float-above),
-  group-multiselect .mat-mdc-form-field label:not(.mdc-floating-label--float-above) { margin-left: 58px; }
+  scope-multiselect:not([selectIcon="none"]) .mat-mdc-form-field label:not(.mdc-floating-label--float-above),
+  group-multiselect:not([selectIcon="none"]) .mat-mdc-form-field label:not(.mdc-floating-label--float-above) { margin-left: 58px; }
 }
 
 // TYPOGRAPHY
