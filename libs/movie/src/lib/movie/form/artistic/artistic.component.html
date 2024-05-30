@@ -114,16 +114,16 @@
               <static-select test-id="crew-role" [control]="crewForm.get('role')" scope="crewRoles" fxFlex
                 [withoutValues]="['']">
                 <mat-label>Role</mat-label>
-                <mat-hint align="start">
+                <span bf-mat-hint align="start">
                   Please specify crew member's role in your project (director of photography, score composer, writer...)
-                </mat-hint>
+                </span>
               </static-select>
 
               <static-select test-id="crew-status" scope="memberStatus" [control]="crewForm.get('status')" fxFlex
                 *ngIf="form | hasStatus: ['development', 'shooting']" [withoutValues]="['']">
                 <mat-label>Status</mat-label>
-                <mat-hint align="start">Please specify if the crew member is confirmed for this project or not.
-                </mat-hint>
+                <span bf-mat-hint align="start">Please specify if the crew member is confirmed for this project or not.
+                </span>
               </static-select>
             </div>
 

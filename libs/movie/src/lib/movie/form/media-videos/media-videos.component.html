@@ -12,7 +12,7 @@
         </mat-form-field>
         <static-select required scope="hostedVideoTypes" [control]="otherVideoForm.get('type')" fxFlex test-id="video-type">
           <mat-label>Video Type</mat-label>
-          <mat-hint>Trailer, Teaser, Clip...</mat-hint>
+          <span bf-mat-hint>Trailer, Teaser, Clip...</span>
         </static-select>
       </span>
       <mat-checkbox [checked]="otherVideoForm.isPublic" (change)="otherVideoForm.togglePrivacy($event.checked)" color="primary" test-id="video-privacy">

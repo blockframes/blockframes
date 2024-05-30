@@ -11,7 +11,7 @@
         <ng-template let-currency>
           <mat-icon [svgIcon]="currency" matPrefix></mat-icon>
           <span>{{ currency | toLabel: 'movieCurrencies' }}</span>
-          <mat-error *ngIf="form.hasError('required', 'currency')">Please provide a currency.</mat-error>
+          <span bf-mat-error *ngIf="form.hasError('required', 'currency')">Please provide a currency.</span>
         </ng-template>
       </static-select>
     </section>
