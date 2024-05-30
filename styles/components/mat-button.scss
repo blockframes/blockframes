@@ -15,11 +15,9 @@
   ///////////////////////
 
   // No background
-
   .mdc-button--outlined,
   .mat-mdc-button,
   .mat-icon-button {
-    color: mat.get-color-from-palette($foreground, text);
     &.mat-primary {
       svg g,
       svg polygon,
@@ -59,7 +57,6 @@
   }
 
   // With background
-
   .mat-raised-button,
   .mat-mdc-unelevated-button,
   .mdc-fab,
@@ -135,8 +132,12 @@
     background-color: transparent;
   }
 
-  .mat-mdc-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn):not(.mat-mdc-snack-bar-action) {
+  .mat-mdc-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn):not(.mat-mdc-snack-bar-action),
+  .mat-mdc-outlined-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn):not(.mat-mdc-snack-bar-action),
+  .mat-mdc-unelevated-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn):not(.mat-mdc-snack-bar-action) {
     color: mat.get-color-from-palette($foreground, text);
+    --mdc-outlined-button-label-text-color: var(--text);
+    --mdc-filled-button-label-text-color: var(--text);
   }
 
   // Center close button

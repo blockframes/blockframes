@@ -128,7 +128,10 @@
   }
 
   scope-multiselect:not([selectIcon="none"]) .mat-mdc-form-field label:not(.mdc-floating-label--float-above),
-  group-multiselect:not([selectIcon="none"]) .mat-mdc-form-field label:not(.mdc-floating-label--float-above) { margin-left: 58px; }
+  group-multiselect:not([selectIcon="none"]) .mat-mdc-form-field label:not(.mdc-floating-label--float-above) { 
+    margin-left: 58px;
+    --mat-mdc-form-field-label-offset-x: -72px;
+  }
 
   .mat-mdc-slide-toggle {
     --mdc-switch-selected-handle-color: var(--primary);

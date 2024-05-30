@@ -65,7 +65,9 @@
 
   // Add padding if tabs are not stretched
   nav[mat-stretch-tabs="false"] a[mat-tab-link],
-  nav[mat-stretch-tabs="false"] button[mat-tab-link] {
+  nav[mat-stretch-tabs="false"] button[mat-tab-link],
+  .mat-mdc-tab-nav-bar[mat-stretch-tabs="false"] button[mat-tab-link], 
+  .mat-mdc-tab-nav-bar[mat-stretch-tabs="false"] a[mat-tab-link]{
     padding: 0 16px;
   }
 
