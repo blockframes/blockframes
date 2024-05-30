@@ -44,11 +44,8 @@ landing-content {
 
   .landing-presentation {
     padding: 80px;
-    /* TODO #9702 (mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
-    /* TODO #9702 (mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
     mat-tab-group {
       padding-inline: 80px;
-      /* TODO #9702 (mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
       mat-tab-header {
         position: sticky;
         top: 0;
@@ -160,7 +157,6 @@ landing-app-link {
 
 @include layout-bp(lt-md) {
   landing-content {
-    /* TODO #9702 (mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
     mat-tab-group {
       padding-inline: 40px;
     }
@@ -210,11 +206,8 @@ landing-app-link {
     }
     .landing-presentation {
       padding: 16px;
-      /* TODO #9702 (mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
-      /* TODO #9702 (mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
       mat-tab-group {
         padding-inline: 0;
-        
         header {
           padding: 0;
           img, .mat-headline-6 {
