@@ -18,7 +18,6 @@ mat-spinner {
   display: inline-block;
 }
 
-/* TODO #9702 (mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
-mat-checkbox{
+mat-checkbox {
   margin-bottom: 24px;
 }
