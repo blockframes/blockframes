@@ -130,7 +130,8 @@
   scope-multiselect:not([selectIcon="none"]) .mat-mdc-form-field label:not(.mdc-floating-label--float-above),
   group-multiselect:not([selectIcon="none"]) .mat-mdc-form-field label:not(.mdc-floating-label--float-above) { 
     margin-left: 58px;
-    --mat-mdc-form-field-label-offset-x: -72px;
+    --mat-mdc-form-field-label-offset-x: 0px;
+    transform: var(--mat-mdc-form-field-label-transform, translateY(-50%) translateX(0%))!important;
   }
 
   .mat-mdc-slide-toggle {
