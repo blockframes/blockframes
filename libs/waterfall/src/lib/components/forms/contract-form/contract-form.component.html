@@ -18,7 +18,7 @@
   ></bf-autocomplete>
   <static-select [control]="form.get('licensorRole')" scope="rightholderRoles" mode="outline" multiple required [disabledValues]="disabledValues.licensors" bfi18n>
     <mat-label i18n>Licensor Waterfall Role</mat-label>
-    <mat-error i18n>This field is mandatory</mat-error>
+    <span bf-mat-error i18n>This field is mandatory</span>
   </static-select>
 </div>
 
@@ -34,7 +34,7 @@
   ></bf-autocomplete>
   <static-select [control]="form.get('licenseeRole')" scope="rightholderRoles" mode="outline" multiple required [disabledValues]="disabledValues.licensees" bfi18n>
     <mat-label i18n>Licensee Waterfall Role</mat-label>
-    <mat-error i18n>This field is mandatory</mat-error>
+    <span bf-mat-error i18n>This field is mandatory</span>
   </static-select>
 </div>
 

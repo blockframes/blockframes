@@ -12,7 +12,6 @@ header {
   }
 }
 
-/* TODO #9702 (mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card {
   margin-top: 24px;
   margin-bottom: 50px;
@@ -27,7 +26,6 @@ mat-card {
   header {
     width: 80%;
   }
-  /* TODO #9702 (mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
   mat-card {
     width: 80%;
     margin-top: 50px;
@@ -38,7 +36,6 @@ mat-card {
   header {
     width: 100%;
   }
-  /* TODO #9702 (mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
   mat-card {
     width: 100%;
     margin-top: 30px;

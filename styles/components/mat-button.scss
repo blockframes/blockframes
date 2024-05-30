@@ -15,11 +15,9 @@
   ///////////////////////
 
   // No background
-
   .mdc-button--outlined,
   .mat-mdc-button,
   .mat-icon-button {
-    color: mat.get-color-from-palette($foreground, text);
     &.mat-primary {
       svg g,
       svg polygon,
@@ -42,7 +40,8 @@
       }
     }
 
-    &.mat-button-disabled {
+    &.mat-button-disabled,
+    &.mat-mdc-button:disabled {
       color: mat.get-color-from-palette($foreground, disabled-text);
       svg g,
       svg polygon,
@@ -59,7 +58,6 @@
   }
 
   // With background
-
   .mat-raised-button,
   .mat-mdc-unelevated-button,
   .mdc-fab,
@@ -105,7 +103,8 @@
       }
     }
 
-    &.mat-button-disabled {
+    &.mat-button-disabled,
+    &.mat-mdc-button:disabled {
       background-color: mat.get-color-from-palette($background, disabled-button);
       // Prevent override from above style
       &:hover {
@@ -135,8 +134,12 @@
     background-color: transparent;
   }
 
-  .mat-mdc-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn) {
+  .mat-mdc-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn):not(.mat-mdc-snack-bar-action),
+  .mat-mdc-outlined-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn):not(.mat-mdc-snack-bar-action),
+  .mat-mdc-unelevated-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn):not(.mat-mdc-snack-bar-action) {
     color: mat.get-color-from-palette($foreground, text);
+    --mdc-outlined-button-label-text-color: var(--text);
+    --mdc-filled-button-label-text-color: var(--text);
   }
 
   // Center close button
@@ -144,7 +147,7 @@
     padding: 0 20px;
   }
 
-  .mdc-button--outlined:not(.mat-button-disabled) {
+  .mdc-button--outlined:not(.mat-button-disabled):not(.mat-mdc-button:disabled) {
     border-radius: 26px;
     border-color: mat.get-color-from-palette($foreground, divider);
     &.mat-primary {
@@ -205,6 +208,10 @@
   a.mat-mdc-button.main-dashboard-cta,
   button.mat-mdc-button.main-dashboard-cta {
     background-color: var(--dashboard-cta);
+  }
+
+  .mat-mdc-unelevated-button[disabled][disabled] {
+    --mdc-filled-button-disabled-label-text-color: #FFF;
   }
 }
 

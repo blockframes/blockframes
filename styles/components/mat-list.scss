@@ -17,6 +17,13 @@
     background-color: mat.get-color-from-palette($background, app-bar);
     border: 1px solid mat.get-color-from-palette($foreground, divider);
     padding-bottom: 0;
+
+    --mdc-list-list-item-focus-state-layer-color: transparent;
+  }
+
+  .mat-mdc-tab-link.mdc-tab {
+    padding: 0;
+    height: 60px;
   }
 
   // Use to let active link in color in mat-nav-list, used with routerLinkActive
@@ -56,6 +63,14 @@
     }
   }
 
+  // Add padding if tabs are not stretched
+  nav[mat-stretch-tabs="false"] a[mat-tab-link],
+  nav[mat-stretch-tabs="false"] button[mat-tab-link],
+  .mat-mdc-tab-nav-bar[mat-stretch-tabs="false"] button[mat-tab-link], 
+  .mat-mdc-tab-nav-bar[mat-stretch-tabs="false"] a[mat-tab-link]{
+    padding: 0 16px;
+  }
+
   .mat-mdc-list-base .mat-mdc-list-item:not(.mdc-list-item.mdc-list-item--with-two-lines) {
     height: 56px;
     .mat-mdc-list-item-unscoped-content,
@@ -66,6 +81,14 @@
         margin-bottom: -6px;
         margin-right: 16px;
       }
+
+      button.mdc-fab--mini mat-icon { margin: 0; }
+
+      mat-icon.mat-badge-overlap {
+        vertical-align: middle;
+        margin-bottom: -9px;
+      }
+
     }
     .mat-mdc-list-item-unscoped-content .mat-mdc-select-value {
       width: 90%;

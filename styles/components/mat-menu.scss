@@ -11,6 +11,8 @@
   }
 
   .cdk-overlay-pane .mat-mdc-menu-panel { max-width: none; }
+
+  .cdk-overlay-pane .mat-mdc-menu-content { padding: 0px; }
 }
 
 @mixin typography($theme) {

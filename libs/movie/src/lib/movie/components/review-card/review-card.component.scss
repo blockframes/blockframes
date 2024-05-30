@@ -12,7 +12,6 @@ p {
   margin-right: 16px;
 }
 
-/* TODO #9702 (mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card {
   text-align: center;
   .reviewCritic {
@@ -29,14 +28,12 @@ a, button {
 }
 
 @include layout-bp(lt-lg) {
-  /* TODO #9702 (mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
   mat-card .reviewCritic {
     height: 200px;
   }
 }
 
 @include layout-bp(lt-md) {
-  /* TODO #9702 (mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
   mat-card .reviewCritic {
     height: 150px;
   }

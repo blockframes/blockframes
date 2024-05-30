@@ -42,7 +42,7 @@
       <ng-container *ngIf="next$ | async as next">
         <a test-id="next" mat-flat-button color="accent" [routerLink]="next.path" fxLayoutAlign="center center">
           <span>Next</span>
-          <mat-icon svgIcon="arrow_forward"></mat-icon>
+          <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
         </a>
       </ng-container>
     </footer>

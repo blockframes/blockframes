@@ -9,7 +9,7 @@
       <h2>One tool for your year-round <br/>B2B promotion & acquisitions</h2>
       <a mat-flat-button color="accent" routerLink="/auth/identity">
         <span>Join now</span>
-        <mat-icon svgIcon="arrow_forward"></mat-icon>
+        <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
       </a>
       <button mat-icon-button (click)="scrollToPartners()">
         <mat-icon svgIcon="arrow_downward"></mat-icon>
@@ -32,7 +32,7 @@
       <h2 class="mat-headline-4">How it works</h2>
       <p class="mat-body-2">Archipel Market is an ongoing film market platform. <br>
         It facilitates interactions between sales agents and buyers all year round. </p>
-      <mat-tab-group animationDuration="1000ms" selectedIndex="0">
+      <mat-tab-group mat-stretch-tabs="false" mat-stretch-tabs="false" animationDuration="1000ms" selectedIndex="0">
         <mat-tab [label]="tabNames[0]">
           <header fxLayout fxLayoutGap="48px" fxLayout.lt-lg="column">
             <img [asset]="tabTitle[0].imgAsset" alt="seller image">
@@ -105,7 +105,7 @@
         <p>Sign up now to explore Archipel Market!</p>
         <a mat-flat-button color="accent" routerLink="/auth/identity">
           <span>Join now</span>
-          <mat-icon svgIcon="arrow_forward"></mat-icon>
+          <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
         </a>
       </article>
     </section>

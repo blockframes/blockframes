@@ -6,7 +6,7 @@
   <form [formGroup]="rightholderForm">
     <static-select [control]="rightholderForm.get('roles')" required multiple scope="rightholderRoles">
       <mat-label>Waterfall Role</mat-label>
-      <mat-error>This field is mandatory</mat-error>
+      <span bf-mat-error>This field is mandatory</span>
     </static-select>
     <mat-form-field appearance="outline">
       <mat-label>Select Locked version</mat-label>

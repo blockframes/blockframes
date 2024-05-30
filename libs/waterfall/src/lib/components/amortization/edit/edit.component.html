@@ -52,7 +52,7 @@
         <ng-template #editCosts>
           <button mat-flat-button color="primary" (click)="next()">
             <span i18n>Continue</span>
-            <mat-icon svgIcon="arrow_forward"></mat-icon>
+            <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
           </button>
           <button mat-button class="save" (click)="exit()" [disabled]="!amortizationForm.get('filmCost').value">
             <mat-icon svgIcon="save"></mat-icon>
@@ -86,7 +86,7 @@
           </button>
           <button mat-flat-button color="primary" (click)="next()">
             <span i18n>Continue</span>
-            <mat-icon svgIcon="arrow_forward"></mat-icon>
+            <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
           </button>
         </section>
         <button mat-button class="save" (click)="exit()" [disabled]="amortizationForm.get('financing').value === null">
@@ -119,7 +119,7 @@
           </button>
           <button mat-flat-button color="primary" matTooltip="Save" (click)="exit(true)" [disabled]="amortizationForm.invalid" i18n-matTooltip>
             <span i18n>Continue</span>
-            <mat-icon svgIcon="arrow_forward"></mat-icon>
+            <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
           </button>
         </section>
         <button mat-button class="save" (click)="exit()">

@@ -3,25 +3,25 @@
   <ng-container *ngIf="users$ | async as users; else loading">
 
     <article>
-      <button [disabled]="exporting" mat-flat-button color="primary" (click)="exportTable(users)">
-        <ng-container *ngIf="exporting else export">
-          <span>Generating CSV...</span>
-        </ng-container>
-        <ng-template #export>
+      <button *ngIf="exporting else export" disabled mat-flat-button color="primary" (click)="exportTable(users)">
+        <span>Generating CSV...</span>
+      </button>
+      <ng-template #export>
+        <button mat-flat-button color="primary" (click)="exportTable(users)">
           <span>Export to CSV</span>
-          <mat-icon svgIcon="arrow_upward"></mat-icon>
-        </ng-template>
-      </button>
-      <button [disabled]="exportingAnalytics" mat-flat-button color="primary" [matMenuTriggerFor]="analyticsExports">
-        <ng-container *ngIf="exportingAnalytics else exportAnalytics">
-          <span>Generating CSV...</span>
-        </ng-container>
-        <ng-template #exportAnalytics>
-          <span>Export Analytics to CSV</span>
-          <mat-icon svgIcon="arrow_upward"></mat-icon>
-        </ng-template>
-      </button>
+          <mat-icon iconPositionEnd svgIcon="arrow_upward"></mat-icon>
+        </button>
+      </ng-template>
 
+      <button *ngIf="exportingAnalytics else exportAnalytics" disabled mat-flat-button color="primary" [matMenuTriggerFor]="analyticsExports">
+        <span>Generating CSV...</span>
+      </button>
+      <ng-template #exportAnalytics>
+        <button mat-flat-button color="primary" [matMenuTriggerFor]="analyticsExports">
+          <span>Export Analytics to CSV</span>
+          <mat-icon iconPositionEnd svgIcon="arrow_upward"></mat-icon>
+        </button>
+      </ng-template>
       <mat-menu #analyticsExports="matMenu">
         <button mat-menu-item (click)="exportTitleAnalytics(users)">
           Title Analytics

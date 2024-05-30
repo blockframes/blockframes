@@ -24,12 +24,10 @@ h1 {
   margin-bottom: 32px;
 }
 
-/* TODO #9702 (mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card-content {
   padding: 32px 72px 10px;
 }
 
-/* TODO #9702 (mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card {
   text-align: center;
 }
@@ -38,7 +36,6 @@ mat-card {
   button[app-logo] {
     margin-bottom: 24px;
   }
-  /* TODO #9702 (mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
   mat-card {
     width: 75%;
   }
@@ -58,7 +55,6 @@ mat-card {
   section {
     margin-top: 48px;
   }
-  /* TODO #9702 (mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
   mat-card {
     width: 100%;
   }

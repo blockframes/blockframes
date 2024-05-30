@@ -65,7 +65,7 @@
         </mat-form-field>
         <static-select scope="hostedVideoTypes" [control]="form.otherVideo.get('type')" fxFlex>
           <mat-label>Video Type</mat-label>
-          <mat-hint>Trailer, Teaser, Clip...</mat-hint>
+          <span bf-mat-hint>Trailer, Teaser, Clip...</span>
         </static-select>
         <mat-checkbox [checked]="form.otherVideo.isPublic" (change)="form.otherVideo.togglePrivacy($event.checked)" color="primary">
           <b>Public</b> (Buyers can see video on Marketplace)
@@ -84,7 +84,7 @@
     <article fxLayout="row" fxLayoutAlign="space-around">
       <button mat-flat-button color="primary" (click)="uploadVideo()">
         <span>Update</span>
-        <mat-icon svgIcon="send"></mat-icon>
+        <mat-icon iconPositionEnd svgIcon="send"></mat-icon>
       </button>
     </article>
 

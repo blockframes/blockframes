@@ -33,9 +33,9 @@
 
         <static-select test-id="content-type" required scope="contentType" [control]="form.contentType" fxFlex>
           <mat-label>Format</mat-label>
-          <mat-error *ngIf="form.contentType.hasError('required')">
+          <span bf-mat-error *ngIf="form.contentType.hasError('required')">
             Please specify your project’s format.
-          </mat-error>
+          </span>
         </static-select>
       </article>
 
@@ -75,12 +75,12 @@
           <static-select test-id="screening-status" scope="screeningStatus" [control]="form.runningTime.get('status')"
             placeholder="To be determined/Estimated/Confirmed" fxFlex required>
             <mat-label>Status</mat-label>
-            <mat-hint>
+            <span bf-mat-hint>
               Please specify if the running time is estimated, confirmed or to be determined.
-            </mat-hint>
-            <mat-error>
+            </span>
+            <span bf-mat-error>
               Please specify if the running time is estimated, confirmed or to be determined.
-            </mat-error>
+            </span>
           </static-select>
         </ng-container>
       </article>
@@ -158,12 +158,12 @@
           <static-select test-id="status" scope="screeningStatus" [control]="form.release.get('status')"
             [withoutValues]="['tobedetermined']" required fxFlex>
             <mat-label>Status</mat-label>
-            <mat-hint>
+            <span bf-mat-hint>
               Please specify if the release date is estimated or confirmed.
-            </mat-hint>
-            <mat-error>
+            </span>
+            <span bf-mat-error>
               Please specify if the release date is estimated or confirmed.
-            </mat-error>
+            </span>
           </static-select>
         </ng-container>
 
@@ -172,28 +172,28 @@
       <chips-autocomplete test-id="country" [form]="form.get('originCountries')" scope="territories"
         placeholder="Enter Country/ies of Origin" [withoutValues]="['world']" uniqueValues>
         <mat-label>Country of Origin *</mat-label>
-        <mat-error>Please specify your project's country of origin.</mat-error>
-        <mat-hint>
+        <span bf-mat-error>Please specify your project's country of origin.</span>
+        <span bf-mat-hint>
           Use commas or press Enter key to separate countries.
-        </mat-hint>
+        </span>
       </chips-autocomplete>
 
       <chips-autocomplete test-id="language" [form]="form.get('originalLanguages')" scope="languages"
         placeholder="Enter Original Language(s)" [withoutValues]="['all']" uniqueValues>
         <mat-label>Original Language(s) *</mat-label>
-        <mat-error>Please specify your project's original language(s).</mat-error>
-        <mat-hint>
+        <span bf-mat-error>Please specify your project's original language(s).</span>
+        <span bf-mat-hint>
           Use commas or press Enter key to separate languages.
-        </mat-hint>
+        </span>
       </chips-autocomplete>
 
       <chips-autocomplete test-id="genres" [form]="form.get('genres')" scope="genres" placeholder="Enter Genre(s)"
         [withoutValues]="['']" uniqueValues>
         <mat-label>Genre(s) *</mat-label>
-        <mat-error>Please specify your project's genre(s).</mat-error>
-        <mat-hint>
+        <span bf-mat-error>Please specify your project's genre(s).</span>
+        <span bf-mat-hint>
           Use commas or press Enter key to separate genres.
-        </mat-hint>
+        </span>
       </chips-autocomplete>
 
       <mat-form-field appearance="outline">
@@ -244,9 +244,9 @@
                 <static-select test-id="director-status" scope="memberStatus" [control]="directorForm.get('status')"
                   [withoutValues]="['']" fxFlex>
                   <mat-label>Director's Status</mat-label>
-                  <mat-hint>
+                  <span bf-mat-hint>
                     Please specify if the director is confirmed for this project or not.
-                  </mat-hint>
+                  </span>
                 </static-select>
               </ng-container>
 
@@ -254,9 +254,9 @@
                 [control]="directorForm.get('category')" placeholder="Director's Category" [withoutValues]="['']"
                 fxFlex>
                 <mat-label>Director's Category</mat-label>
-                <mat-hint>
+                <span bf-mat-hint>
                   Please select the applying category reflecting the director's experience.
-                </mat-hint>
+                </span>
               </static-select>
             </div>
 

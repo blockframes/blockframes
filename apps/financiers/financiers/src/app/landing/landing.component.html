@@ -8,7 +8,7 @@
         on the same conditions as top professional content financiers.</p>
       <a mat-flat-button color="accent" routerLink="/auth/identity">
         <span>Join now</span>
-        <mat-icon svgIcon="arrow_forward"></mat-icon>
+        <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
       </a>
       <a mat-button [href]="pdfLink" target="_blank" class="download-link">
         <mat-icon svgIcon="cloud_download"></mat-icon>
@@ -21,7 +21,7 @@
 
   <landing-content class="max-width">
     <h1 class="mat-headline-4">How it works</h1>
-    <mat-tab-group animationDuration="1000ms" selectedIndex="0">
+    <mat-tab-group mat-stretch-tabs="false" animationDuration="1000ms" selectedIndex="0">
       <mat-tab [label]="tabNames[0]">
         <article fxLayout="row" fxLayoutGap="24px" fxLayout.lt-lg="column" class="tab-margin">
           <img fxHide.xs [asset]="tabTitle[0].imgAsset" alt="seller image">
@@ -65,7 +65,7 @@
       <p class="mat-headline-3">Interested? Join now!</p>
       <a mat-flat-button color="accent" routerLink="/auth/identity">
         <span>Sign up</span>
-        <mat-icon svgIcon="arrow_forward"></mat-icon>
+        <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
       </a>
 
       <h3>Want to know more about investing in the content industry?</h3>

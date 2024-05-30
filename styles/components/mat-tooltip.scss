@@ -1,21 +1,20 @@
-@use 'sass:map';
-@use '@angular/material' as mat;
-
-
 @mixin color($theme) {
-  $config: mat.get-color-config($theme);
-  $background: map.get($config, 'background');
+  .cdk-overlay-container .mat-mdc-tooltip {
+    --mdc-plain-tooltip-container-color: var(--background-tooltip);
+    --mdc-plain-tooltip-supporting-text-color: var(--primary-contrast);
+    --mdc-plain-tooltip-supporting-text-size: 10px;
+  }
 
-  .mat-tooltip {
-    background-color: mat.get-color-from-palette($background, 'tooltip');
-    color: var(--primary-contrast);
+  // Material 15 fix: prevent focus indicator from showing over tooltip 
+  button.mdc-icon-button,
+  a.mdc-icon-button {
+    .mat-mdc-focus-indicator, .mat-mdc-button-touch-target { display: none; }
   }
 }
 
-
 // TYPOGRAPHY
-@mixin typography($theme) { 
-  .mat-tooltip {
-    line-height: 12px;
+@mixin typography($theme) {
+  .cdk-overlay-container .mat-mdc-tooltip {
+    --mdc-plain-tooltip-supporting-text-line-height: 12px;
   }
 }

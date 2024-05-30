@@ -8,7 +8,6 @@
   $warn: map.get($config, 'warn');
   $foreground: map.get($config, 'foreground');
 
-
   .mat-mdc-form-field {
     margin-top: 0.40em;
 
@@ -128,8 +127,25 @@
     padding: 0px;
   }
 
-  scope-multiselect .mat-mdc-form-field label:not(.mdc-floating-label--float-above),
-  group-multiselect .mat-mdc-form-field label:not(.mdc-floating-label--float-above) { margin-left: 58px; }
+  scope-multiselect:not([selectIcon="none"]) .mat-mdc-form-field label:not(.mdc-floating-label--float-above),
+  group-multiselect:not([selectIcon="none"]) .mat-mdc-form-field label:not(.mdc-floating-label--float-above) { 
+    margin-left: 58px;
+    --mat-mdc-form-field-label-offset-x: 0px;
+    transform: var(--mat-mdc-form-field-label-transform, translateY(-50%) translateX(0%))!important;
+  }
+
+  .mat-mdc-slide-toggle {
+    --mdc-switch-selected-handle-color: var(--primary);
+    --mdc-switch-selected-pressed-handle-color: var(--primary);
+    --mdc-switch-selected-pressed-state-layer-color: var(--primary);
+    --mdc-switch-selected-hover-state-layer-color: var(--primary);
+    --mdc-switch-selected-hover-handle-color: var(--primary);
+    --mdc-switch-selected-focus-state-layer-color: var(--primary);
+    --mdc-switch-selected-focus-handle-color: var(--primary);
+  }
+
+  .mat-mdc-radio-button .mdc-radio { --mdc-radio-state-layer-size : 30px }
+  .dark-contrast-theme .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__background { --mdc-checkbox-unselected-icon-color: #FFF; }
 }
 
 // TYPOGRAPHY

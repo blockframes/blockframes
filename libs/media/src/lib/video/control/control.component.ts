@@ -3,7 +3,6 @@ import { BehaviorSubject } from 'rxjs';
 import { MatSliderChange } from '@angular/material/slider';
 import { MeetingVideoControl } from '@blockframes/model';
 
-
 @Component({
   selector: '[control] video-control',
   templateUrl: './control.component.html',
@@ -12,7 +11,6 @@ import { MeetingVideoControl } from '@blockframes/model';
 })
 export class VideoControlComponent {
 
-  // TODO #9702 check this component
   control$ = new BehaviorSubject<MeetingVideoControl>(undefined);
   @Input() set control(value: MeetingVideoControl) {
     this.control$.next(value);

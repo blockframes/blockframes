@@ -25,7 +25,7 @@
           <p *ngIf="invalidDocument$ | async" class="mat-error" i18n>Add at least 1 contract to continue</p>
           <button mat-flat-button color="primary" [disabled]="invalidDocument$ | async" (click)="next()">
             <span i18n>Continue</span>
-            <mat-icon svgIcon="arrow_forward"></mat-icon>
+            <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
           </button>
           <button mat-button class="save" (click)="exit()">
             <mat-icon svgIcon="save"></mat-icon>
@@ -52,7 +52,7 @@
           </button>
           <button mat-flat-button color="primary" (click)="next()" [disabled]="rightholdersForm.invalid || (noProducer$ | async)">
             <span i18n>Continue</span>
-            <mat-icon svgIcon="arrow_forward"></mat-icon>
+            <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
           </button>
         </section>
         <button mat-button class="save" (click)="exit()" [disabled]="rightholdersForm.invalid">
@@ -104,7 +104,7 @@
             (click)="publishWaterfall()">
             <span *ngIf="createMode" i18n>Publish Waterfall</span>
             <span *ngIf="!createMode" i18n>Update Waterfall</span>
-            <mat-icon svgIcon="arrow_forward"></mat-icon>
+            <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
           </button>
         </section>
         <button mat-button class="save" (click)="exit()">

@@ -98,11 +98,12 @@ export class ListPageComponent implements AfterContentInit {
       justify-content: center;
       width: 100%;
     }
-    /* TODO #9702 (mdc-migration): The following rule targets internal classes of progress-bar that may no longer apply for the MDC version. */
+    
     mat-progress-bar {
-        margin: 16px;
-        width: 80%;
-      }`],
+      margin: 16px;
+      width: 80%;
+    }
+    `],
   animations: [slideUp],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

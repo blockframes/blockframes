@@ -22,10 +22,10 @@
           </ng-container>
 
           <mat-chip-listbox *ngSwitchCase="'video'" test-id="warning-video">
-            <mat-chip-option disableRipple>
+            <mat-chip disableRipple>
               <mat-icon svgIcon="warning"></mat-icon>
               <span>Video file missing</span>
-            </mat-chip-option>
+            </mat-chip>
           </mat-chip-listbox>
         </ng-container>
 
@@ -51,7 +51,7 @@
       <event-details-edit [form]="form" showPrivacy></event-details-edit>
     </mat-card>
     <div>
-      <nav mat-tab-nav-bar [tabPanel]="tabPanel">
+      <nav mat-tab-nav-bar [tabPanel]="tabPanel" mat-stretch-tabs="false">
         <ng-container *ngFor="let tab of (tabs$ |async)">
           <a mat-tab-link [routerLink]="tab.path" [queryParams]="queryParams$ | async"
           routerLinkActive #rla="routerLinkActive" [active]="rla.isActive" [attr.test-id]="tab.path"

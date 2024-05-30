@@ -1,5 +1,5 @@
 <h3>{{ (formValue$ | async)?.org }}</h3>
-<mat-tab-group #tabs >
+<mat-tab-group mat-stretch-tabs="false" #tabs >
   <mat-tab label="Information" i18n-label>
     <section *ngIf="information$ | async as information">
       <ul>

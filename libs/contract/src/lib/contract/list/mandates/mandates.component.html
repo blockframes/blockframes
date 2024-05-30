@@ -1,6 +1,6 @@
 <ng-container *rxLet="filter$; let filter">
   <h3>List of Mandates</h3>
-  <header mat-tab-nav-bar [tabPanel]="tabPanel">
+  <header mat-tab-nav-bar [tabPanel]="tabPanel" mat-stretch-tabs="false">
     <ng-container *rxLet="mandateCount$ ; let mandateCount">
       <button mat-tab-link (click)="resetFilter()" [active]="filter === ''">
         All <span>({{ mandateCount.all }})</span>

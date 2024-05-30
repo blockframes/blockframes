@@ -230,6 +230,7 @@
   --warn: #{mat.get-color-from-palette($warn)};
   --warn-contrast: #{mat.get-color-from-palette($warn, 'default-contrast')};
   --active: #5f6e8680;
+  --slider-thumb: #{mat.get-color-from-palette($primary, 500)};
   // Background
   --background-disabled-button: #{mat.get-color-from-palette($background, 'disabled-button')};
   --background-slider: #{mat.get-color-from-palette($foreground, 'slider-min')};

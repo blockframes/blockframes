@@ -15,9 +15,9 @@
     </ng-template>
     <ng-template colRef="medias" label="Medias" let-medias sort>
       <mat-chip-listbox *ngIf="medias.length else noMedias" aria-label="Medias">
-        <mat-chip-option disableRipple *ngFor="let media of medias  | toGroupLabel:'medias':'All'">
+        <mat-chip disableRipple *ngFor="let media of medias  | toGroupLabel:'medias':'All'">
           {{ media }}
-        </mat-chip-option>
+        </mat-chip>
       </mat-chip-listbox>
       <ng-template #noMedias>--</ng-template>
     </ng-template>
