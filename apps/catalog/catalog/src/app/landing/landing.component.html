@@ -16,7 +16,7 @@
   <landing-content>
     <section class="landing-presentation max-width">
       <h3 class="mat-headline-4">Deals made easy</h3>
-      <mat-tab-group animationDuration="1000ms" selectedIndex="0" (selectedTabChange)="onTabChanged($event)">
+      <mat-tab-group mat-stretch-tabs="false" animationDuration="1000ms" selectedIndex="0" (selectedTabChange)="onTabChanged($event)">
         <mat-tab [label]="tabNames[0]">
           <header fxLayout fxLayout.lt-lg="column" fxLayoutGap="32px">
             <video #sellerVideo [muted]="true" autoplay loop src="assets/videos/sellerLP.mp4" type="video/mp4"></video>

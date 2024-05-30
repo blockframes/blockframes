@@ -115,7 +115,7 @@
             <mat-icon svgIcon="close"></mat-icon>
           </button>
         </header>
-        <mat-tab-group>
+        <mat-tab-group mat-stretch-tabs="false">
           <mat-tab [label]="(rightForm.get('type').value | isHorizontal) ? i18nStrings.groupDetais : i18nStrings.receiptsShare">
             <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
               <p *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)" i18n>Fill the following fields to define the Receipt Share.</p>
@@ -250,7 +250,7 @@
         </button>
       </section>
       <p class="description" i18n><strong>Pool</strong> is needed when several Receipts Shares come from different sources, but should be used in the same condition.</p>
-      <mat-tab-group>
+      <mat-tab-group mat-stretch-tabs="false">
         <mat-tab label="Receipts Shares" i18n-label>
           <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
             <waterfall-right-list (deleteRight)="delete($event)" (selectRight)="select($event)" [nonEditableNodeIds]="nonEditableNodeIds$.value" [canCreatePool]="!isDuplicateVersion"></waterfall-right-list>

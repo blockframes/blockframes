@@ -2,7 +2,7 @@
   <waterfall-statement-header *ngIf="sources$ | async as sources" [statement]="statement" [sources]="sources"></waterfall-statement-header>
   <waterfall-statement-period [statement]="statement" [form]="form"></waterfall-statement-period>
 
-  <mat-tab-group class="bf-tabs">
+  <mat-tab-group mat-stretch-tabs="false" class="bf-tabs">
     <mat-tab label="Direct Revenues" i18n-label>
       <ng-template matTabContent>
         <section class="surface">

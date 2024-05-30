@@ -51,7 +51,7 @@
   </header>
 
   <section *ngIf="(isRefreshing$ | async) === false; else loading">
-    <mat-tab-group class="bf-tabs" *ngIf="rightholderContracts.length > 1 else singleContract">
+    <mat-tab-group mat-stretch-tabs="false" class="bf-tabs" *ngIf="rightholderContracts.length > 1 else singleContract">
       <ng-container *ngFor="let rightholderContract of rightholderContracts">
         <mat-tab *ngIf="rightholderContract.statements.length > 0" [label]="rightholderContract.name">
           <ng-template matTabContent>

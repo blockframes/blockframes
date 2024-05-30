@@ -1,6 +1,6 @@
 <section *ngIf="statement$ | async as statement">
   <h3 i18n>Net Receipts Details</h3>
-  <mat-tab-group class="bf-tabs" *ngIf="distributors.length" selectedIndex="0" (selectedTabChange)="onTabChanged($event)">
+  <mat-tab-group mat-stretch-tabs="false" class="bf-tabs" *ngIf="distributors.length" selectedIndex="0" (selectedTabChange)="onTabChanged($event)">
     <mat-tab *ngFor="let distributor of distributors" [label]="distributor.name">
       <span *ngIf="distributorContracts[distributor.id]?.length > 1">
         <mat-form-field appearance="outline">
