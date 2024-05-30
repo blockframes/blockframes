@@ -9,7 +9,6 @@ header {
   text-align: center;
 }
 
-/* TODO #9702 (mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
 mat-card {
   margin-top: 50px;
   margin-bottom: 50px;
@@ -17,7 +16,6 @@ mat-card {
 }
 
 @include layout-bp(lt-lg) {
-  /* TODO #9702 (mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
   mat-card {
     width: 80%;
     margin-top: 50px;
@@ -25,7 +23,6 @@ mat-card {
 }
 
 @include layout-bp(xs) {
-  /* TODO #9702 (mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
   mat-card {
     width: 100%;
     margin-top: 30px;
