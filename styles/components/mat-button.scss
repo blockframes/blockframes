@@ -40,7 +40,8 @@
       }
     }
 
-    &.mat-button-disabled {
+    &.mat-button-disabled,
+    &.mat-mdc-button:disabled {
       color: mat.get-color-from-palette($foreground, disabled-text);
       svg g,
       svg polygon,
@@ -102,7 +103,8 @@
       }
     }
 
-    &.mat-button-disabled {
+    &.mat-button-disabled,
+    &.mat-mdc-button:disabled {
       background-color: mat.get-color-from-palette($background, disabled-button);
       // Prevent override from above style
       &:hover {
@@ -145,7 +147,7 @@
     padding: 0 20px;
   }
 
-  .mdc-button--outlined:not(.mat-button-disabled) {
+  .mdc-button--outlined:not(.mat-button-disabled):not(.mat-mdc-button:disabled) {
     border-radius: 26px;
     border-color: mat.get-color-from-palette($foreground, divider);
     &.mat-primary {
