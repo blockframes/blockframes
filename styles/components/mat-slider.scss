@@ -6,22 +6,26 @@
   $primary: map.get($config, 'primary');
   $foreground: map.get($config, 'foreground');
 
-  .mat-slider-min-value.mat-slider-thumb-label-showing .mat-slider-thumb,
-  .mat-slider-min-value.mat-slider-thumb-label-showing.cdk-focused .mat-slider-thumb-label {
+  .mat-mdc-slider .mdc-slider__value-indicator{
     background-color: mat.get-color-from-palette($primary, 500);
+    .mdc-slider__value-indicator-text { font-size: 11px; }
   }
 
-  .mat-slider-track-background,
-  .mat-slider:hover .mat-slider-track-background {
+  .mat-mdc-slider .mdc-slider__value-indicator::before {
+    border-top-color: mat.get-color-from-palette($primary, 500);
+    --mdc-slider-label-container-color: var(--slider-thumb);
+  }
+
+  .mat-mdc-slider .mdc-slider__track--inactive {
     background-color: mat.get-color-from-palette($foreground, 'divider');
   }
 
-  .mat-slider-thumb-label {
-    width: 37px;
-    height: 37px;
-  }
-
-  .mat-slider-thumb-label-text {
-    font-size: 11px;
+  .mat-mdc-slider.bf-inverted-slider  {
+    .mdc-slider__track--active {
+      background: var(--mdc-slider-active-track-color);
+      .mdc-slider__track--active_fill {
+        border-color: mat.get-color-from-palette($foreground, 'divider');
+      }
+    }
   }
 }
