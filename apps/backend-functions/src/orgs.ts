@@ -9,7 +9,7 @@ import { getAdminIds, getOrganizationsOfMovie } from './data/internals';
 import { cleanOrgMedias } from './media';
 import { EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg, storeSearchableUser } from '@blockframes/firebase-utils/algolia';
-import { CallableContext } from 'firebase-functions/lib/providers/https';
+import { CallableContext } from 'firebase-functions/v1/https';
 import {
   User,
   Notification,

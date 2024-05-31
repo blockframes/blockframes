@@ -22,7 +22,7 @@ export async function getLatestFolderURL(backupBucket: Bucket, prefix?: string) 
  */
 export async function getLatestDirName(backupBucket: Bucket, prefix?: string) {
   const [, , apiResponse] = await backupBucket.getFiles({ autoPaginate: false, delimiter: '/' });
-  const folders = apiResponse.prefixes as string[];
+  const folders = (apiResponse as { prefixes: string[] }).prefixes;
   // ! There is no such thing as a folder - these are GCS prefixes: https://googleapis.dev/nodejs/storage/latest/Bucket.html#getFiles
   const folder = folders
     .map((fName) => {
