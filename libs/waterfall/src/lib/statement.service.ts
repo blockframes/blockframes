@@ -16,6 +16,7 @@ import { BlockframesSubCollection } from '@blockframes/utils/abstract-service';
 import { map } from 'rxjs';
 import { WriteOptions } from 'ngfire';
 import { AuthService } from '@blockframes/auth/service';
+import { Transaction } from 'firebase/firestore';
 
 export interface CreateStatementConfig {
   producerId: string;
@@ -46,14 +47,14 @@ export class StatementService extends BlockframesSubCollection<Statement> {
   onCreate(statement: Statement, { write }: WriteOptions) {
     if (!statement.waterfallId) return;
     const ref = this.getRef(statement.id, { waterfallId: statement.waterfallId });
-    write.update(ref, '_meta.createdBy', this.authService.uid);
-    write.update(ref, '_meta.createdAt', new Date());
+    (write as Transaction).update(ref, '_meta.createdBy', this.authService.uid);
+    (write as Transaction).update(ref, '_meta.createdAt', new Date());
   }
 
   onUpdate(statement: Statement, { write }: WriteOptions) {
     if (!statement.waterfallId) return;
     const statementRef = doc(this.db, `waterfall/${statement.waterfallId}/statements/${statement.id}`);
-    write.update(statementRef,
+    (write as Transaction).update(statementRef,
       '_meta.updatedBy', this.authService.uid,
       '_meta.updatedAt', new Date(),
     );
