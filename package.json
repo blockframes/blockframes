@@ -139,7 +139,7 @@
     "@firebase/rules-unit-testing": "^2.0.2",
     "@google-cloud/local-auth": "^2.1.0",
     "@nrwl/angular": "15.8.0",
-    "@nrwl/cli": "15.8.0",
+    "@nrwl/cli": "15.9.3",
     "@nrwl/cypress": "15.8.0",
     "@nrwl/eslint-plugin-nx": "15.8.0",
     "@nrwl/express": "15.8.0",
