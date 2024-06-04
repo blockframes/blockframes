@@ -6,11 +6,11 @@
       stringifyContentPathRegex: '\\.(html|svg)$',
       tsconfig: '<rootDir>/tsconfig.spec.json',
     },
+    fetch,
   },
   transform: {
     '^.+.(ts|mjs|js|html)$': 'jest-preset-angular'
   },
-  testEnvironment: '<rootDir>/jest-environment.js',
   transformIgnorePatterns: ['node_modules/(?!.*.mjs$)'],
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   coverageDirectory: '../../coverage/libs/consents',
