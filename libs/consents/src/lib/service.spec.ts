@@ -1,9 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { ConsentsService } from './service';
 import { IpService } from '@blockframes/utils/ip';
-import { FIREBASE_CONFIG, FIRESTORE_SETTINGS } from 'ngfire';
-
-const projectIdUT = 'test-consents-ut';
 
 class MockIpService {
   public get(): Promise<string> {
@@ -21,8 +18,6 @@ describe('Consents when user click on the button', () => {
       providers: [
         ConsentsService,
         { provide: IpService, useClass: MockIpService },
-        { provide: FIREBASE_CONFIG, useValue: { options: { projectId: projectIdUT } } },
-        { provide: FIRESTORE_SETTINGS, useValue: { ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true } }
       ],
     });
 

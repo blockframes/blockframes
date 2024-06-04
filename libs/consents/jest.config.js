@@ -6,7 +6,6 @@
       stringifyContentPathRegex: '\\.(html|svg)$',
       tsconfig: '<rootDir>/tsconfig.spec.json',
     },
-    fetch,
   },
   transform: {
     '^.+.(ts|mjs|js|html)$': 'jest-preset-angular'

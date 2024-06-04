@@ -1,11 +1,9 @@
-﻿process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-import { TestBed } from '@angular/core/testing';
+﻿import { TestBed } from '@angular/core/testing';
 import { MediaService } from './service';
-import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { ImageParameters, formatParameters, protectedImgixSuffix } from './image/directives/imgix-helpers';
 import { firebase } from '@env';
 import { createStorageFile, UploadData } from '@blockframes/model';
-import { FIREBASE_CONFIG, FIRESTORE_SETTINGS } from 'ngfire';
+import { FIREBASE_CONFIG } from 'ngfire';
 
 describe('Media Service Test Suite', () => {
   let service: MediaService;
@@ -27,13 +25,10 @@ describe('Media Service Test Suite', () => {
       providers: [
         MediaService,
         { provide: FIREBASE_CONFIG, useValue: { options: { projectId: 'test' } } },
-        { provide: FIRESTORE_SETTINGS, useValue: { ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true } }
       ],
     });
     service = TestBed.inject(MediaService);
   });
-
-  afterEach(() => clearFirestoreData({projectId: 'test'}))
 
   it('Should check media service is created', () => {
     expect(service).toBeTruthy();
