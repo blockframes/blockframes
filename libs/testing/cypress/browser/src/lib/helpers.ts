@@ -1,4 +1,4 @@
-import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
+import { USER_FIXTURES_PASSWORD } from '@blockframes/model';
 import { gmail_v1 } from 'googleapis';
 import faker from '@faker-js/faker';
 import { testDomain, testUsername } from '@blockframes/utils/constants';

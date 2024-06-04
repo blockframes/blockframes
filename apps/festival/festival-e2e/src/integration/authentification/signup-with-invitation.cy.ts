@@ -31,8 +31,7 @@ import {
   meetingEvent,
   meetingDocIndex,
 } from '../../fixtures/authentification/signup-with-invitation';
-import { territories, orgActivity } from '@blockframes/model';
-import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
+import { territories, orgActivity, USER_FIXTURES_PASSWORD } from '@blockframes/model';
 import { e2eSupportEmail } from '@blockframes/utils/constants';
 
 const { org, orgAdmin, permissions } = dashboardData;

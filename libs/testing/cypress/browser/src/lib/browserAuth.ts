@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 import type { AuthService } from '@blockframes/auth/service';
-import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
+import { USER_FIXTURES_PASSWORD } from '@blockframes/model';
 
 export const browserAuth = {
   signinWithEmailAndPassword(email: string) {

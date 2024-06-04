@@ -13,7 +13,7 @@ import {
   ensureInput
 } from '@blockframes/testing/cypress/browser';
 import { user, org, permissions } from '../../fixtures/authentification/login';
-import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
+import { USER_FIXTURES_PASSWORD } from '@blockframes/model';
 
 const injectedData = {
   [`users/${user.uid}`]: user,
