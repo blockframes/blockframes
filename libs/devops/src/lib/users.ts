@@ -11,7 +11,7 @@ import * as env from '@env';
 import { PublicUser, User, USER_FIXTURES_PASSWORD } from '@blockframes/model';
 import { subMonths } from 'date-fns';
 import { getAuth, getDb } from '@blockframes/firebase-utils/initialize';
-import type * as admin from 'firebase-admin';
+import type { Auth as FirebaseAuth, UpdateRequest } from 'firebase-admin/auth';
 
 export const { storageBucket } = env.firebase();
 
@@ -123,7 +123,7 @@ export async function syncUsers({
   withMaintenance = false
 }: {
   db?: FirebaseFirestore.Firestore;
-  auth?: admin.auth.Auth;
+  auth?: FirebaseAuth;
   withMaintenance?: boolean
 } = {}) {
   if (withMaintenance) await startMaintenance(db);
@@ -175,7 +175,7 @@ export async function updateUsersPassword(emailPrefix: string, password: string,
   return !dryRun ? updateUsers(matchingUids, { password }) : undefined;
 }
 
-async function updateUsers(uidsToUpdate: string[], properties: admin.auth.UpdateRequest) {
+async function updateUsers(uidsToUpdate: string[], properties: UpdateRequest) {
   const auth = getAuth();
   console.log('Updating users now...');
   const timeMsg = 'Updating users took';

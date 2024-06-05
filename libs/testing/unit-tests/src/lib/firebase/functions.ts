@@ -1,4 +1,4 @@
-﻿import type * as admin from 'firebase-admin';
+﻿import type { App } from 'firebase-admin/app';
 import firebaseFunctionsTest from 'firebase-functions-test';
 import { getDb, initAdmin, runChunks, SAK_VALUE } from '@blockframes/firebase-utils';
 import { join, resolve } from 'path';
@@ -10,7 +10,7 @@ import type { AppOptions } from 'firebase-admin'; // * Correct Import
 import fs from 'fs';
 
 export interface FirebaseTestConfig extends FeaturesList {
-  firebaseConfig?: { projectId: string, app: admin.app.App };
+  firebaseConfig?: { projectId: string, app: App };
 }
 
 let testIndex = 0;

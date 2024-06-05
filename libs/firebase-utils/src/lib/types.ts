@@ -1,23 +1,24 @@
-import type * as admin from 'firebase-admin';
+import type { Auth as FirebaseAuth, UserRecord as FirebaseUserRecord } from 'firebase-admin/auth';
+import type { Storage as FirebaseStorage } from 'firebase-admin/storage';
 
-export type Auth = admin.auth.Auth;
-export type Firestore = admin.firestore.Firestore;
-export type Storage = admin.storage.Storage;
-export type DocumentReference = admin.firestore.DocumentReference;
-export type QueryDocumentSnapshot = admin.firestore.QueryDocumentSnapshot;
-export type QuerySnapshot = admin.firestore.QuerySnapshot;
-export type Transaction = admin.firestore.Transaction;
-export type UserRecord = admin.auth.UserRecord;
-export type CollectionReference = admin.firestore.CollectionReference;
+export type Auth = FirebaseAuth;
+export type Firestore = FirebaseFirestore.Firestore;
+export type Storage = FirebaseStorage;
+export type DocumentReference = FirebaseFirestore.DocumentReference;
+export type QueryDocumentSnapshot = FirebaseFirestore.QueryDocumentSnapshot;
+export type QuerySnapshot = FirebaseFirestore.QuerySnapshot;
+export type Transaction = FirebaseFirestore.Transaction;
+export type UserRecord = FirebaseUserRecord;
+export type CollectionReference = FirebaseFirestore.CollectionReference;
 
-export interface BlockframesSnapshot<T = admin.firestore.DocumentData> {
+export interface BlockframesSnapshot<T = FirebaseFirestore.DocumentData> {
   id: string,
   exists: boolean,
-  ref: admin.firestore.DocumentReference<T>,
+  ref: FirebaseFirestore.DocumentReference<T>,
   data(): T | undefined,
 }
 
-export interface BlockframesChange<T = admin.firestore.DocumentData> {
+export interface BlockframesChange<T = FirebaseFirestore.DocumentData> {
   before: BlockframesSnapshot<T>,
   after: BlockframesSnapshot<T>,
 }

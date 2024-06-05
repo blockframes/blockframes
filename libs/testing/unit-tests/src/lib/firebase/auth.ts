@@ -1,18 +1,18 @@
 import { runChunks, sleep } from '@blockframes/firebase-utils';
 import * as env from '@env';
-import type * as admin from 'firebase-admin';
+import type { Auth, ListUsersResult, UserImportRecord } from 'firebase-admin/auth';
 
-export async function deleteAllUsers(auth: admin.auth.Auth) {
+export async function deleteAllUsers(auth: Auth) {
   await deletedUsers(auth);
 }
 
-export async function deleteSelectedUsers(auth: admin.auth.Auth, uidToDelete: string[]) {
+export async function deleteSelectedUsers(auth: Auth, uidToDelete: string[]) {
   if (!uidToDelete?.length) return;
   await deletedUsers(auth, uidToDelete);
 }
 
-async function deletedUsers(auth: admin.auth.Auth, uidToDelete: string[] = []) {
-  let result: Partial<admin.auth.ListUsersResult> = { pageToken: undefined };
+async function deletedUsers(auth: Auth, uidToDelete: string[] = []) {
+  let result: Partial<ListUsersResult> = { pageToken: undefined };
 
   console.log('Deleting users now...');
   const timeMsg = 'Deleting users took';
@@ -27,7 +27,7 @@ async function deletedUsers(auth: admin.auth.Auth, uidToDelete: string[] = []) {
   console.timeEnd(timeMsg); // eslint-disable-line no-restricted-syntax
 }
 
-export async function importAllUsers(auth: admin.auth.Auth, users: admin.auth.UserImportRecord[]) {
+export async function importAllUsers(auth: Auth, users: UserImportRecord[]) {
   const timeMsg = `Creating ${users.length} users took`;
   console.time(timeMsg); // eslint-disable-line no-restricted-syntax
   const uniqUsers = removeDuplicateUsers(users);
@@ -39,8 +39,8 @@ export async function importAllUsers(auth: admin.auth.Auth, users: admin.auth.Us
   console.timeEnd(timeMsg); // eslint-disable-line no-restricted-syntax
 }
 
-function removeDuplicateUsers(users: admin.auth.UserImportRecord[]) {
-  const output: admin.auth.UserImportRecord[] = [];
+function removeDuplicateUsers(users: UserImportRecord[]) {
+  const output: UserImportRecord[] = [];
   for (const curUser of users) {
     if (output.some((user) => user.email === curUser.email)) {
       console.log('Duplicate user email found:', curUser.email);

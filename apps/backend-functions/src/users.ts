@@ -1,4 +1,4 @@
-import type * as admin from 'firebase-admin';
+import type { UserRecord as FirebaseUserRecord } from 'firebase-admin/auth';
 import * as functions from 'firebase-functions';
 import { db } from './internals/firebase';
 import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userInvite, userVerifyEmail } from './templates/mail';
@@ -25,7 +25,7 @@ import {
 import { registerToNewsletters, updateMemberTags } from './mailchimp';
 import { getPreferenceTag, MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
 
-type UserRecord = admin.auth.UserRecord;
+type UserRecord = FirebaseUserRecord;
 type CallableContext = functions.https.CallableContext;
 
 interface EmailFlowData { email: string, app: App, publicUser: PublicUser }

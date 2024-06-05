@@ -1,10 +1,11 @@
 import * as plugins from './plugins';
-import type * as admin from 'firebase-admin';
+import type { Auth } from 'firebase-admin/auth';
+import type { Storage } from 'firebase-admin/storage';
 import { getAuth, getAuthEmulator, getDb, getFirestoreEmulator, getStorageEmulator, getStorage } from '@blockframes/firebase-utils/initialize';
 
 export let db: FirebaseFirestore.Firestore;
-export let auth: admin.auth.Auth;
-export let storage: admin.storage.Storage;
+export let auth: Auth;
+export let storage: Storage;
 
 export function testingCypress(config?: Cypress.PluginConfigOptions): Cypress.Tasks {
   console.log(config.env);
