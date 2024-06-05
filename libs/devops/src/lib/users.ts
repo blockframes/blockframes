@@ -8,9 +8,8 @@ import { getCollectionInBatches, sleep, startMaintenance, endMaintenance, Auth, 
 import readline from 'readline';
 import { deleteAllUsers, importAllUsers } from '@blockframes/testing/unit-tests';
 import * as env from '@env';
-import { PublicUser, User } from '@blockframes/model';
+import { PublicUser, User, USER_FIXTURES_PASSWORD } from '@blockframes/model';
 import { subMonths } from 'date-fns';
-import { USER_FIXTURES_PASSWORD } from './firebase-utils/anonymize/util';
 import { getAuth, getDb } from '@blockframes/firebase-utils/initialize';
 import type * as admin from 'firebase-admin';
 

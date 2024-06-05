@@ -1,18 +1,13 @@
-﻿process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-import { TestBed } from '@angular/core/testing';
+﻿import { TestBed } from '@angular/core/testing';
 import { InvitationService } from './service';
 import { AuthService } from '@blockframes/auth/service';
-import { initializeTestEnvironment } from '@firebase/rules-unit-testing';
-import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
-import { readFileSync } from 'fs';
 import { Observable, of } from 'rxjs';
 import { UserService } from '@blockframes/user/service';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { createInvitation, createUser, Invitation } from '@blockframes/model';
 import { ActivatedRoute } from '@angular/router';
 import { APP } from '@blockframes/utils/routes/utils';
-import { FIREBASE_CONFIG, FirestoreService, FIRESTORE_SETTINGS } from 'ngfire';
-import { connectFirestoreEmulator, disableNetwork, doc, Firestore, getDoc, setDoc } from 'firebase/firestore';
+import { FIREBASE_CONFIG } from 'ngfire';
 
 class InjectedAuthService {
   uid = 'userId';
@@ -46,90 +41,76 @@ const invitationParamsUser = {
 
 describe('Invitations Test Suite', () => {
   let service: InvitationService;
-  let db: Firestore;
-
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
       providers: [
         InvitationService,
-        FirestoreService,
         { provide: AuthService, useClass: InjectedAuthService },
         { provide: UserService, useClass: DummyService },
         { provide: AnalyticsService, useClass: DummyService },
         { provide: ActivatedRoute, useValue: { params: of({}) } },
         { provide: APP, useValue: 'festival' },
-        {
-          provide: FIREBASE_CONFIG, useValue:
-          {
-            options: { projectId: 'test' },
-            firestore: (firestore: Firestore) => {
-              if (db) return db;
-              connectFirestoreEmulator(firestore, 'localhost', 8080);
-            }
-          }
-        },
-        { provide: FIRESTORE_SETTINGS, useValue: { ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true } }
+        { provide: FIREBASE_CONFIG, useValue: { options: { projectId: 'test' } } }
       ],
     });
 
     service = TestBed.inject(InvitationService);
-    const firestore = TestBed.inject(FirestoreService);
-    db = firestore.db;
-
-    await initializeTestEnvironment({
-      projectId: 'test',
-      firestore: { rules: readFileSync('./firestore.test.rules', 'utf8') }
-    });
-
+    service.add = jest.fn();
+    service.update = jest.fn();
   });
-
-  afterEach(() => clearFirestoreData({ projectId: 'test' }));
-
-  // To prevent "This usually means that there are asynchronous operations that weren't stopped in your tests. Consider running Jest with `--detectOpenHandles` to troubleshoot this issue."
-  afterAll(() => disableNetwork(db));
 
   it('Should check if invitation service is created', () => {
     expect(service).toBeTruthy();
   })
 
   it('Formats invitation to firestore', () => {
-    const invitationService = TestBed.inject(InvitationService);
 
     //Create an Invitation Document
     const inviteData = { ...invitationParamsOrg, ...invitationParamsUser };
     const inviteParams = { ...inviteData, ...{ message: 'Clean it' } };
     const newInvite = createInvitation(inviteParams);
-    const formattedInvite = invitationService.toFirestore(newInvite);
+    const formattedInvite = service.toFirestore(newInvite);
     expect(formattedInvite.message).toBe(undefined);
   });
 
   it('Should invitation status become accepted', async () => {
-    const ref = doc(db, 'invitations/1');
-    await setDoc(ref, { status: 'pending' });
-    await service.acceptInvitation({
+    const mock = jest.spyOn(service, 'update');
+
+    const invitation: Invitation = {
       id: '1',
       type: 'attendEvent',
       mode: 'invitation',
       status: 'pending',
       date: new Date()
-    });
-    const invitation = await getDoc(ref);
-    expect((invitation.data() as Invitation).status).toBe('accepted');
+    };
+    await service.acceptInvitation(invitation);
+
+    expect(service.update).toHaveBeenCalled();
+    const { id, status } = mock.mock.calls[0][0] as unknown as Invitation;
+
+    expect(id).toBe(invitation.id);
+    expect(status).toBe('accepted');
   });
 
   it('Should invitation status become declined', async () => {
-    const ref = doc(db, 'invitations/2');
-    await setDoc(ref, { status: 'pending' });
-    await service.declineInvitation({
+    const mock = jest.spyOn(service, 'update');
+
+    const invitation: Invitation = {
       id: '2',
       type: 'attendEvent',
       mode: 'invitation',
       status: 'pending',
       date: new Date()
-    });
-    const invitation = await getDoc(ref);
-    expect((invitation.data() as Invitation).status).toBe('declined');
+    };
+
+    await service.declineInvitation(invitation);
+
+    expect(service.update).toHaveBeenCalled();
+    const { id, status } = mock.mock.calls[0][0] as unknown as Invitation;
+
+    expect(id).toBe(invitation.id);
+    expect(status).toBe('declined');
   });
 
   it('Should create invitation request', async () => {
@@ -145,12 +126,11 @@ describe('Invitations Test Suite', () => {
       privacyPolicy: null
     })
 
-    const invitationService = TestBed.inject(InvitationService);
-    const mock = jest.spyOn(invitationService, 'add');
+    const mock = jest.spyOn(service, 'add');
 
-    const requestOutput = invitationService.request('O002', requestBy);
+    const requestOutput = service.request('O002', requestBy);
     await requestOutput.to('attendEvent', 'E001');
-    expect(invitationService.add).toHaveBeenCalled();
+    expect(service.add).toHaveBeenCalled();
     const inviteParam = mock.mock.calls[0][0];
     const expectedParam = {
       type: 'attendEvent',

@@ -1,4 +1,4 @@
-import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
+import { USER_FIXTURES_PASSWORD } from '@blockframes/model';
 import { User } from 'firebase/auth';
 
 export const adminAuth = {

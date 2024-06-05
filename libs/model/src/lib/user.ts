@@ -125,3 +125,5 @@ function fakeIp() {
 }
 
 export const fakeLegalTerms = { date: new Date(), ip: fakeIp() };
+
+export const USER_FIXTURES_PASSWORD = 'blockframes';
