@@ -3,7 +3,7 @@ import { initFirestoreApp, invitationsFixtures } from '@blockframes/testing/unit
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { inviteUsers, acceptOrDeclineInvitationAsAnonymous } from './main';
 import firebaseTest = require('firebase-functions-test');
-import * as admin from 'firebase-admin';
+import { getFirestore } from 'firebase-admin/firestore';
 import * as userOps from './internals/users';
 import { firebase } from '@env';
 import { expect } from '@jest/globals';
@@ -140,7 +140,7 @@ describe('Invitation backend-function unit-tests', () => {
       );
 
       const inviteId = result[0].result;
-      const snap = await admin.firestore().collection('invitations').doc(inviteId).get();
+      const snap = await getFirestore().collection('invitations').doc(inviteId).get();
       const inviteData = snap.data();
       expect(inviteData.id).toEqual(inviteId);
       expect(inviteData.toUser).toEqual(
@@ -275,7 +275,7 @@ describe('Invitation backend-function unit-tests', () => {
       const result = await wrapped(data, context);
       expect(result).toBeTruthy();
 
-      const snap = await admin.firestore().collection('invitations').doc(data.invitationId).get();
+      const snap = await getFirestore().collection('invitations').doc(data.invitationId).get();
       const inviteData = snap.data();
       expect(inviteData).toEqual(
         expect.objectContaining({

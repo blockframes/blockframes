@@ -1,4 +1,3 @@
-import * as admin from 'firebase-admin';
 import { firebase } from '@env';
 import { firebase as firebaseCI } from 'env/env.blockframes-ci';
 import { config } from 'dotenv';
@@ -9,6 +8,9 @@ import { App, Organization } from '@blockframes/model';
 import { toDate } from './firebase-utils';
 import { BlockframesSnapshot } from './types';
 import { camelCase } from 'lodash';
+import { App as FirebaseApp } from 'firebase-admin/app';
+import { Auth } from 'firebase-admin/auth';
+import { Storage } from 'firebase-admin/storage';
 
 /**
  * This function is an iterator that allows you to fetch documents from a collection in chunks
@@ -18,7 +20,7 @@ import { camelCase } from 'lodash';
  * @param orderBy the unique key of the document object to order by
  * @param batchSize how many docs to fetch per iteration
  */
-export async function* getCollectionInBatches<K>(ref: admin.firestore.CollectionReference, orderBy: string, batchSize = 650) {
+export async function* getCollectionInBatches<K>(ref: FirebaseFirestore.CollectionReference, orderBy: string, batchSize = 650) {
   let querySnapshot = await ref.orderBy(orderBy).limit(batchSize).get();
   let lastSnapshot: FirebaseFirestore.QueryDocumentSnapshot | string = '';
 
@@ -77,18 +79,18 @@ export function getKeyName(key: string, projectId: string, demo?: boolean) {
 }
 
 interface AdminServices {
-  auth: admin.auth.Auth;
-  db: admin.firestore.Firestore;
-  storage: admin.storage.Storage;
+  auth: Auth;
+  db: FirebaseFirestore.Firestore;
+  storage: Storage;
   firebaseConfig: ReturnType<typeof firebase>;
-  getCI: () => admin.app.App;
+  getCI: () => FirebaseApp;
 }
 
 export function loadAdminServices(): AdminServices {
   config();
 
   return {
-    getCI: () => initAdmin(firebaseCI(), 'CI-app') ,
+    getCI: () => initAdmin(firebaseCI(), 'CI-app'),
     auth: getAuth(),
     db: getDb(),
     firebaseConfig: firebase(),

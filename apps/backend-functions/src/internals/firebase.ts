@@ -1,5 +1,4 @@
 ﻿import { Change, region, RuntimeOptions } from 'firebase-functions';
-import * as admin from 'firebase-admin';
 import { firebaseRegion, production } from '@env';
 export const functions = (config = defaultConfig) => region(firebaseRegion).runWith(config);
 import { isInMaintenance, maintenanceRef } from '@blockframes/firebase-utils/maintenance';
@@ -43,7 +42,7 @@ maintenanceRef(db)
 // DOCUMENT ON-CHANGES FUNCTIONS //
 ///////////////////////////////////
 
-function createBlockframesSnapshot(snap: admin.firestore.DocumentSnapshot): BlockframesSnapshot {
+function createBlockframesSnapshot(snap: FirebaseFirestore.DocumentSnapshot): BlockframesSnapshot {
   return {
     id: snap.id,
     exists: snap.exists,
@@ -65,7 +64,7 @@ const stateChangeToDate = <T extends (...args: any[]) => any>(f: T): T | ((...ar
 
 const snapshotToDate = <T extends (...args: any[]) => any>(f: T): T | ((...args: Parameters<T>) => Promise<void>) => {
   return async (...args: Parameters<T>) => {
-    const firstArg: admin.firestore.QueryDocumentSnapshot = args.shift();
+    const firstArg: FirebaseFirestore.QueryDocumentSnapshot = args.shift();
     const snapshot = createBlockframesSnapshot(firstArg);
     return f(snapshot, ...args);
   }
