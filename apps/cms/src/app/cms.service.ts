@@ -22,7 +22,7 @@ export class CmsService {
   save(document: CmsTemplate | CmsApp, params: CmsParams) {
     const path = this.getPath(params);
     const ref = this.firestore.getRef(path) as DocumentReference<CmsTemplate | CmsApp>;
-    return updateDoc<CmsTemplate | CmsApp>(ref, document);
+    return updateDoc(ref, { ...document });
   }
 
   collection<T extends CmsTemplate | CmsApp>(params: CmsParams) {

@@ -139,18 +139,17 @@ async function cleanOneNotification(
   notification: Notification,
   db: FirebaseFirestore.Firestore
 ) {
-  const update: Record<string, unknown> = {};
   if (notification.organization) {
     const d = await getDocument<PublicOrganization>(`orgs/${notification.organization.id}`, db);
-    update['organization.logo'] = d?.logo || EMPTY_MEDIA;
+    notification.organization.logo = d?.logo || EMPTY_MEDIA;
   }
 
   if (notification.user) {
     const d = await getDocument<PublicUser>(`users/${notification.user.uid}`, db);
-    update['user.avatar'] = d?.avatar || EMPTY_MEDIA;
+    notification.user.avatar = d?.avatar || EMPTY_MEDIA;
   }
 
-  if (update['organization.logo'] || update['user.avatar']) await doc.ref.update(update);
+  await doc.ref.update({ ...notification });
 }
 
 export function cleanInvitations(
@@ -179,30 +178,29 @@ async function cleanOneInvitation(
   invitation: Invitation,
   db: FirebaseFirestore.Firestore
 ) {
-  const update: Record<string, unknown> = {};
   if (invitation.fromOrg?.id) {
     const d = await getDocument<PublicOrganization>(`orgs/${invitation.fromOrg.id}`, db);
-    update['fromOrg.logo'] = d?.logo || EMPTY_MEDIA;
+    invitation.fromOrg.logo = d?.logo || EMPTY_MEDIA;
   }
 
   if (invitation.toOrg?.id) {
     const d = await getDocument<PublicOrganization>(`orgs/${invitation.toOrg.id}`, db);
-    update['toOrg.logo'] = d?.logo || EMPTY_MEDIA;
+    invitation.toOrg.logo = d?.logo || EMPTY_MEDIA;
   }
 
   if (invitation.fromUser?.uid) {
     const d = await getDocument<PublicUser>(`users/${invitation.fromUser.uid}`, db);
-    update['fromUser.avatar'] = d?.avatar || EMPTY_MEDIA;
-    update['fromUser.watermark'] = admin.firestore.FieldValue.delete();
+    invitation.fromUser.avatar = d?.avatar || EMPTY_MEDIA;
+    delete (invitation.fromUser as any).watermark;
   }
 
   if (invitation.toUser?.uid) {
     const d = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`, db);
-    update['toUser.avatar'] = d?.avatar || EMPTY_MEDIA;
-    update['toUser.watermark'] = admin.firestore.FieldValue.delete();
+    invitation.toUser.avatar = d?.avatar || EMPTY_MEDIA;
+    delete (invitation.toUser as any).watermark;
   }
 
-  if (update['fromOrg.logo'] || update['toOrg.logo'] || update['fromUser.avatar'] || update['toUser.avatar']) await doc.ref.update(update);
+  await doc.ref.update({ ...invitation });
 }
 
 export async function cleanUsers(
