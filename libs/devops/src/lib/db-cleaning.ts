@@ -20,7 +20,7 @@ import {
   toDate,
   getAuth
 } from '@blockframes/firebase-utils';
-import admin from 'firebase-admin';
+import type { Auth as FirebaseAuth } from 'firebase-admin/auth';
 import { DatabaseData, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
 import { deleteSelectedUsers } from '@blockframes/testing/unit-tests';
 import { subDays, subYears } from 'date-fns';
@@ -32,7 +32,7 @@ let verbose = false;
 /** Reusable data cleaning script that can be updated along with data model */
 export async function cleanDeprecatedData(
   db: FirebaseFirestore.Firestore,
-  auth?: admin.auth.Auth,
+  auth?: FirebaseAuth,
   options = { verbose: true }
 ) {
   verbose = options.verbose;
@@ -65,7 +65,7 @@ export async function auditUsers(db: FirebaseFirestore.Firestore, auth = getAuth
   return true;
 }
 
-async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, auth?: admin.auth.Auth) {
+async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, auth?: FirebaseAuth) {
 
   // Getting existing document ids to compare
   const [movieIds, organizationIds, eventIds, invitationIds, offerIds, contractIds, waterfallIds] = [

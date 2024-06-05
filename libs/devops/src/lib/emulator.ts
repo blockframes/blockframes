@@ -19,7 +19,6 @@ import {
 import { ChildProcess } from 'child_process';
 import { join, resolve } from 'path';
 import { backupBucket as prodBackupBucket, firebase as prodFirebase } from 'env/env.blockframes';
-import admin from 'firebase-admin';
 import { backupBucket } from '@env';
 import { migrate } from './migrations';
 import { syncUsers } from './users';
@@ -36,6 +35,7 @@ import {
   CI_ANONYMIZED_DATA
 } from './firebase-utils';
 import { firebase as firebaseCI } from 'env/env.blockframes-ci';
+import { initializeApp, credential } from 'firebase-admin';
 
 interface ImportEmulatorOptions {
   importFrom: string;
@@ -158,11 +158,11 @@ export async function downloadProdDbBackup(localPath?: string) {
   // * This is a firebase bug
   const cert = getServiceAccountObj(process.env[productionGAPKey]) as unknown as string;
 
-  const prodApp = admin.initializeApp(
+  const prodApp = initializeApp(
     {
       storageBucket: prodBackupBucket,
       projectId: prodFirebase().projectId,
-      credential: admin.credential.cert(cert),
+      credential: credential.cert(cert),
     },
     'production'
   );
