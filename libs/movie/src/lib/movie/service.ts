@@ -33,6 +33,7 @@ export class MovieService extends BlockframesCollection<Movie> {
     @Inject(APP) public app: App
   ) {
     super();
+    // test
   }
 
   protected fromFirestore(snapshot: DocumentSnapshot<Movie>) {
