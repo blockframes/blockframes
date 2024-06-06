@@ -5,7 +5,8 @@
       "cypress",
       "node",
       "cypress-wait-until",
-    ]
+    ],
+    "sourceMap": false
   },
   "include": [],
   "files": [],
