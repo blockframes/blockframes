@@ -42,7 +42,7 @@ interface StatementRolesConfig {
   roles: RightholderRole[],
   divider: boolean,
   visible: boolean,
-};
+}
 
 interface StatementChipConfig {
   roles: RightholderRole[];

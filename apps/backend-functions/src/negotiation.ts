@@ -95,7 +95,7 @@ export async function onNegotiationCreated(negotiationSnapshot: BlockframesSnaps
     );
     return Promise.all(promises);
 
-  };
+  }
 
   await updateOfferStatus(contract)
 

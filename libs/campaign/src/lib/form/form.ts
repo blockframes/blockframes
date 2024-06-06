@@ -10,7 +10,7 @@ export function compareMinPledge(form: CampaignForm): ValidationErrors | null {
   return form?.value.cap < form?.value.minPledge
     ? { minPledgeOverflow: true }
     : null
-};
+}
 
 function compareReceived(form: CampaignForm): ValidationErrors | null {
   return form?.value.cap < form?.value.received
@@ -25,7 +25,7 @@ export function comparePerkAmount(form: PerkForm): ValidationErrors | null {
       ? { amountOverflow: true }
       : null
   }
-};
+}
 
 function compareProfits(form: UntypedFormGroup): ValidationErrors | null {
   const { low, medium, high } = form.value;

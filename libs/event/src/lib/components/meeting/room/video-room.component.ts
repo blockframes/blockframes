@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, O
 import { Observable } from 'rxjs';
 import { displayName } from '@blockframes/model'
 import { AuthService } from '@blockframes/auth/service';
-import { Attendee, LocalAttendee, TrackKind, TwilioService } from '@blockframes/utils/twilio';;
+import { Attendee, LocalAttendee, TrackKind, TwilioService } from '@blockframes/utils/twilio';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toggleFullScreen } from '@blockframes/media/file/viewers/utils';
 import { DOCUMENT } from '@angular/common';

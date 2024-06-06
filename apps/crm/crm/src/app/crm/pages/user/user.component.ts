@@ -31,7 +31,7 @@ function aggregatePerTitle(analytics: (Analytics<'title'> & { title: Movie })[])
       aggregator[analytic.title.id] = createAggregatedAnalytic({
         title: analytic.title
       });
-    };
+    }
     aggregator[analytic.title.id][analytic.name]++;
   }
   return Object.values(aggregator);

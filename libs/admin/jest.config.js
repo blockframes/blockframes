@@ -9,5 +9,4 @@
     },
   },
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/libs/admin',
 };

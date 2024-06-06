@@ -113,7 +113,7 @@ export class TableExtractedDocumentsComponent implements AfterViewInit {
           await this.waterfallService.update(waterfallId, { id: waterfallId, rightholders: waterfall.rightholders });
         }
       }
-    };
+    }
 
     if (increment) this.processing++;
     this.cdr.markForCheck();

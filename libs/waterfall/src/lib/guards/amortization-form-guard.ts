@@ -9,7 +9,7 @@ import { AmortizationForm } from '../form/amortization.form';
 
 export interface AmortizationFormGuardedComponent {
   amortizationForm: AmortizationForm;
-};
+}
 
 @Injectable({ providedIn: 'root' })
 export class AmortizationFormGuard<T extends AmortizationFormGuardedComponent> {

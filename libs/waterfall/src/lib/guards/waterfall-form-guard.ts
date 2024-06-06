@@ -14,7 +14,7 @@ export interface WaterfallFormGuardedComponent {
   contractForm: WaterfallContractForm;
   rightholdersForm: FormArray<FormGroup<{ id: FormControl<string>, name: FormControl<string>, roles: FormControl<RightholderRole[]> }>>;
   canLeaveGraphForm: boolean;
-};
+}
 
 @Injectable({ providedIn: 'root' })
 export class WaterfallFormGuard<T extends WaterfallFormGuardedComponent> {

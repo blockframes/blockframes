@@ -166,7 +166,7 @@ export class InvitationService extends BlockframesCollection<Invitation> {
         if (type === 'joinWaterfall') {
           invitation.waterfallId = objectId;
           invitation.data = additionalData;
-        };
+        }
         invitation.fromOrg = createPublicOrganization(fromOrg);
         const recipients = Array.isArray(idOrEmails) ? idOrEmails : [idOrEmails];
 

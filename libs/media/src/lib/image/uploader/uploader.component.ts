@@ -223,7 +223,7 @@ export class ImageUploaderComponent implements OnInit, OnDestroy {
         this.nextStep('show');
       } else {
         this.nextStep('drop');
-      };
+      }
     }
   }
 

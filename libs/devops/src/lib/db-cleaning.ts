@@ -514,7 +514,7 @@ function isUserValid(
       } else {
         return false;
       }
-    };
+    }
   }
 
   return true;

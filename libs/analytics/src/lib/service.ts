@@ -275,7 +275,7 @@ export class AnalyticsService extends BlockframesCollection<Analytics> implement
       }
 
       return;
-    };
+    }
 
     const meta = createOrganizationMeta({
       organizationId: org.id,

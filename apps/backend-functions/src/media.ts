@@ -302,7 +302,7 @@ const deleteMedia = async (file: StorageFile) => {
 
 function needsToBeCleaned(before: StorageFile | undefined, after: StorageFile | undefined) {
   return !!before?.storagePath && before.storagePath !== after?.storagePath;
-};
+}
 
 function needsToCleanScreener(videosBefore: Partial<MovieVideos> = {}, videosAfter: Partial<MovieVideos> = {}, type: ScreenerType) {
   const otherType: ScreenerType = type === 'screener' ? 'publicScreener' : 'screener';
@@ -320,7 +320,7 @@ function checkFileList(before: StorageFile[] | undefined, after: StorageFile[] |
     if (!existsInAfter) filesToClean.push(beforeFile);
   });
   return filesToClean;
-};
+}
 
 export async function cleanUserMedias(before: PublicUser, after?: PublicUser): Promise<unknown> {
   // Updating, check if avatar have been changed/removed

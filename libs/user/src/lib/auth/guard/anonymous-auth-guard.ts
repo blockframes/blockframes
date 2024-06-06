@@ -4,7 +4,7 @@ import { AuthService } from '../service';
 import { FirestoreService } from 'ngfire';
 import { algoliaAnonymousSearchKeyDoc } from '@blockframes/utils/maintenance';
 import { DocumentReference, getDoc } from 'firebase/firestore';
-import { IAlgoliaKeyDoc } from 'libs/model/src/lib/maintenance';
+import { IAlgoliaKeyDoc } from '@blockframes/model';
 import { setSearchKey } from '@blockframes/utils/algolia/helper.utils';
 
 @Injectable({
