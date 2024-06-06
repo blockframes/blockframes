@@ -49,7 +49,7 @@
           <mat-icon svgIcon="document"></mat-icon>
           <h2 i18n>{{ selected | toLabel: 'rightholderRoles' : true }} Contract</h2>
           <button *ngIf="canUseAI()" color="warn" mat-icon-button [disabled]="computing$ | async" matTooltip="Ask AI to fill contract information" (click)="askAI()" i18n-matTooltip>
-            <mat-icon svgIcon="ai"></mat-icon>
+            <mat-icon color="warn" svgIcon="ai"></mat-icon>
           </button>
           <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? i18nStrings.shrink : i18nStrings.enlarge">
             <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
