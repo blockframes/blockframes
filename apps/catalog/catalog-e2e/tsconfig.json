@@ -6,13 +6,9 @@
       "cypress-file-upload",
       "node"
     ],
-    "sourceMap": false
+    "sourceMap": false,
+    "outDir": "../../../dist/out-tsc"
   },
-  "include": [],
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.e2e.json"
-    }
-  ]
+  "include": ["src/**/*.ts"],
+  "files": []
 }

@@ -6,13 +6,9 @@
       "node",
       "cypress-wait-until",
     ],
-    "sourceMap": false
+    "sourceMap": false,
+    "outDir": "../../../dist/out-tsc"
   },
-  "include": [],
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.e2e.json"
-    }
-  ]
+  "include": ["src/**/*.ts", "src/**/*.js"],
+  "files": []
 }

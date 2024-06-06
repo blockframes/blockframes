@@ -10,7 +10,6 @@
       "executor": "@nx/cypress:cypress",
       "options": {
         "cypressConfig": "apps/waterfall/waterfall-e2e/cypress.config.js",
-        "tsConfig": "apps/waterfall/waterfall-e2e/tsconfig.e2e.json",
         "baseUrl": "http://localhost:4200",
         "watch": true,
         "headless": false,
@@ -36,7 +35,6 @@
       "executor": "@nx/cypress:cypress",
       "options": {
         "cypressConfig": "apps/waterfall/waterfall-e2e/cypress.config.js",
-        "tsConfig": "apps/waterfall/waterfall-e2e/tsconfig.e2e.json",
         "baseUrl": "http://localhost:4200",
         "browser": "chrome",
         "devServerTarget": "waterfall:serve"
