@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from '@blockframes/auth/service';
+import { AuthService } from '../service';
 
 import { FirestoreService } from 'ngfire';
 import { algoliaAnonymousSearchKeyDoc } from '@blockframes/utils/maintenance';

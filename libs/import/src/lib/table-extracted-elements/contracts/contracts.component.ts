@@ -13,7 +13,7 @@ import { TermService } from '@blockframes/contract/term/service';
 import { createDocumentMeta, Mandate, Sale } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
-const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
+const hasImportErrors = (importState: ContractsImportState, type = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
 };
 

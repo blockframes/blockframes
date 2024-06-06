@@ -12,7 +12,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 
 // Blockframes
-import { PasswordInputModule } from '@blockframes/ui/form/password-input/password-input.module';
+import { PasswordInputModule } from '../../form/password-input/password-input.module';
 
 @NgModule({
   imports: [

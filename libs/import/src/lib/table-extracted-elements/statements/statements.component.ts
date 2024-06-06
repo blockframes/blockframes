@@ -24,7 +24,7 @@ import { IncomeService } from '@blockframes/contract/income/service';
 import { ExpenseService } from '@blockframes/contract/expense/service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
-const hasImportErrors = (importState: StatementsImportState, type: string = 'error'): boolean => {
+const hasImportErrors = (importState: StatementsImportState, type = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
 };
 

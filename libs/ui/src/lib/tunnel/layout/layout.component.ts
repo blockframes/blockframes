@@ -21,8 +21,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AbstractControl, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import type { ShellConfig } from '@blockframes/movie/form/movie.shell.interfaces';
 import { FORMS_CONFIG } from '@blockframes/movie/form/movie.shell.interfaces';
-import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
-import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { ConfirmComponent } from '../../confirm/confirm.component';
+import { createModalData } from '../../global-modal/global-modal.component';
 
 /**
  * @description returns the next or previous page where the router should go to

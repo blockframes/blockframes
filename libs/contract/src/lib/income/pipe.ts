@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { ContractService } from '@blockframes/contract/contract/service';
-import { IncomeService, incomeQuery } from '@blockframes/contract/income/service';
+import { ContractService } from '../contract/service';
+import { IncomeService, incomeQuery } from '../income/service';
 import { where } from 'firebase/firestore';
 import { of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';

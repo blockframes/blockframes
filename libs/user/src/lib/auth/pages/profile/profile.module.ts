@@ -4,8 +4,8 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
-import { ProfileFormModule } from '@blockframes/auth/forms/profile/profile.module';
-import { ChangePasswordModule } from '@blockframes/auth/forms/password/change-password.module';
+import { ProfileFormModule } from '../../forms/profile/profile.module';
+import { ChangePasswordModule } from '../../forms/password/change-password.module';
 
 // Components
 import { ProfileComponent } from './profile.component';

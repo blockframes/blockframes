@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '@blockframes/invitation/service';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
 import { OrganizationLiteForm } from '@blockframes/organization/forms/organization-lite.form';
-import { IdentityForm, IdentityFormControl } from '@blockframes/auth/forms/identity.form';
+import { IdentityForm, IdentityFormControl } from '../../forms/identity.form';
 import {
   createPublicUser,
   PublicUser,

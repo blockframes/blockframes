@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { switchMap, catchError, filter, tap } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/service';
-import { OrganizationService } from '@blockframes/organization/service';
+import { OrganizationService } from '../service';
 import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { hasDisplayName } from '@blockframes/model';

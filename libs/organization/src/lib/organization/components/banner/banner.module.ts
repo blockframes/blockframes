@@ -8,7 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { OrganizationBannerComponent } from './banner.component';
 import { MovieCardModule } from '@blockframes/movie/components/card/card.module';
-import { OrgMoviesModule } from '@blockframes/organization/pipes/org-movies.pipe';
+import { OrgMoviesModule } from '../../pipes/org-movies.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';

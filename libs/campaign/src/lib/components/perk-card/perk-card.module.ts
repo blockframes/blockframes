@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { PerkCardComponent } from './perk-card.component';
 
 import { MaxLengthModule } from '@blockframes/utils/pipes';
-import { PerksPipeModule } from '@blockframes/campaign/pipes/perks.pipe';
+import { PerksPipeModule } from '../../pipes/perks.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';

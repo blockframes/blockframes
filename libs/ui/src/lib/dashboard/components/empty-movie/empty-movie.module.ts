@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 import { EmptyMovieComponent } from './empty-movie.component';
 
 // Blockframes
-import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
+import { NoTitleModule } from '../../../dashboard/components/no-title/no-title.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { AppPipeModule } from '@blockframes/utils/pipes';
 

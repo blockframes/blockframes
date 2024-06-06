@@ -5,7 +5,7 @@ import { MatSelect } from '@angular/material/select';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { createModalData } from '../../global-modal/global-modal.component';
 import { DetailedGroupComponent } from '../../detail-modal/detailed.component';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
-import { ContractService } from '@blockframes/contract/contract/service';
-import { NegotiationForm } from '@blockframes/contract/negotiation';
+import { ContractService } from '../contract/service';
+import { NegotiationForm } from '../negotiation';
 import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';

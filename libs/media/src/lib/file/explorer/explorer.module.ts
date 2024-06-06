@@ -7,7 +7,7 @@ import { FileExplorerComponent, GetDirPipe } from './explorer.component';
 // Blockframes
 import { MaxLengthModule } from '@blockframes/utils/pipes';
 import { FileUploaderModule } from '../file-uploader/file-uploader.module';
-import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
+import { ImageUploaderModule } from '../../image/uploader/uploader.module';
 import { FileNameModule } from '@blockframes/utils/pipes';
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 import { OpenPreviewModule } from '@blockframes/ui/open-preview/open-preview.module'

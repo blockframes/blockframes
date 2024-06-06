@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
-import { AuthService } from '@blockframes/auth/service';
+import { ProfileForm } from '../../forms/profile-edit.form';
+import { AuthService } from '../../service';
 
 @Component({
   selector: '[form] auth-form-profile',

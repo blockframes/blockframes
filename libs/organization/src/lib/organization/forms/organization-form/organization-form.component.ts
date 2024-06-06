@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 import { OrganizationService } from './../../service';
-import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
+import { OrganizationForm } from '../../forms/organization.form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { AlgoliaService } from '@blockframes/utils/algolia';
 

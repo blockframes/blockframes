@@ -8,7 +8,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 
 // Widgets
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
-import { AppBarModule } from '@blockframes/ui/app-bar';
+import { AppBarModule } from '../../app-bar';
 import { AppLogoModule } from '../app-logo/app-logo.module';
 import { FooterModule } from '../footer/footer.module';
 
