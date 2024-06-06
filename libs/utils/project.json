@@ -20,10 +20,5 @@
       }
     }
   },
-  "generators": {
-    "@nrwl/schematics:component": {
-      "styleext": "scss"
-    }
-  },
   "tags": ["browser", "deprecated"]
 }
