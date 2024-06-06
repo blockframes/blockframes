@@ -21,12 +21,12 @@ import { OpenPreviewModule } from '@blockframes/ui/open-preview/open-preview.mod
 import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { VersionPipeModule } from '@blockframes/utils/pipes/version.pipe';
-import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
+import { HasStatusModule } from '../../pipes/has-status.pipe';
 import { JoinPipeModule } from '@blockframes/utils/pipes/join.pipe';
 
 // Blockframes Movie
-import { FilmographyPipeModule } from '@blockframes/movie/pipes/filmography.pipe';
-import { RunningTimePipeModule } from '@blockframes/movie/pipes/running-time.pipe';
+import { FilmographyPipeModule } from '../../pipes/filmography.pipe';
+import { RunningTimePipeModule } from '../../pipes/running-time.pipe';
 
 // Summary Components
 import { SummaryMainComponent } from './main/main.component';

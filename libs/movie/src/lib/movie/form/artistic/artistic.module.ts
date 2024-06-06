@@ -16,8 +16,8 @@ import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module';
 import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
-import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe'
-import { FilmographyPipeModule} from '@blockframes/movie/pipes/filmography.pipe';
+import { HasStatusModule } from '../../pipes/has-status.pipe'
+import { FilmographyPipeModule} from '../../pipes/filmography.pipe';
 import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { CellModalModule } from '@blockframes/ui/cell-modal/cell-modal.module';
 

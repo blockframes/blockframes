@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { TunnelService } from './tunnel.service';
 import { TunnelRoot } from './tunnel.model';
 import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class TunnelGuard implements CanActivate, CanDeactivate<unknown> {
+export class TunnelGuard {
   constructor(private service: TunnelService) { }
 
   canActivate() {

@@ -11,7 +11,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 
 // Blockframes Movie
-import { MovieFormStoryModule } from '@blockframes/movie/form/story/story.module';
+import { MovieFormStoryModule } from '../../form/story/story.module';
 
 // Blockframes UI
 import { TunnelPageModule } from '@blockframes/ui/tunnel';

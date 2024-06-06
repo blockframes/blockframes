@@ -5,9 +5,9 @@ import {
   contentType,
   getISO3166TerritoryFromSlug,
   languages,
-  genres as staticGenres
+  genres as staticGenres,
+  formatRunningTime
 } from '@blockframes/model';
-import { formatRunningTime } from '@blockframes/movie/pipes/running-time.pipe';
 
 interface TitleFeature {
   view: string;

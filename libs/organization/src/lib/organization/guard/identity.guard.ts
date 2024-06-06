@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/service';
 import { combineLatest, firstValueFrom } from 'rxjs';
@@ -7,7 +7,7 @@ import { hasAnonymousIdentity, hasDisplayName } from '@blockframes/model';
 import { OrganizationService } from '../service';
 
 @Injectable({ providedIn: 'root' })
-export class IdentityGuard implements CanActivate {
+export class IdentityGuard {
 
   constructor(
     private authService: AuthService,

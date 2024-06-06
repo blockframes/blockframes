@@ -84,21 +84,21 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": ["apps/crm/crm/src/**/*.ts", "apps/crm/crm/src/**/*.html"]
       },
       "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "apps/crm/crm/jest.config.js",
         "passWithNoTests": true
       }
     },
     "deploy": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "@nx/workspace:run-commands",
       "options": {
         "envFile": ".env",
         "commands": [

@@ -24,7 +24,7 @@ export class UserService extends BlockframesCollection<User> {
    * @param state
    * @param uid
    */
-  public async setBlockframesAdmin(state: boolean = true, uid: string): Promise<void> {
+  public async setBlockframesAdmin(state = true, uid: string): Promise<void> {
     const ref = doc(this.db, `blockframesAdmin/${uid}`);
     if (state) {
       await updateDoc(ref, {});

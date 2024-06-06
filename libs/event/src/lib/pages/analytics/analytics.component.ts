@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute } from '@angular/router';
-import { EventService } from '@blockframes/event/service';
+import { EventService } from '../../service';
 import { Observable, pluck, switchMap, tap } from 'rxjs';
 import { InvitationService } from '@blockframes/invitation/service';
 import {

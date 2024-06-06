@@ -5,11 +5,11 @@ import { FirestoreService } from 'ngfire';
 // Blockframes
 import { MovieService } from '@blockframes/movie/service';
 import { createStorageFile, Organization, App, getAllAppsExcept } from '@blockframes/model';
-import { FileUploaderService } from '@blockframes/media/file-uploader.service';
-import { getFileMetadata } from '@blockframes/media/utils';
+import { FileUploaderService } from '../../file-uploader.service';
+import { getFileMetadata } from '../../utils';
 import { APP } from '@blockframes/utils/routes/utils';
 import { ActivatedRoute } from "@angular/router";
-import { StorageFileForm } from '@blockframes/media/form/media.form';
+import { StorageFileForm } from '../../form/media.form';
 
 // File Explorer
 import { getDirectories, Directory, FileDirectory } from './explorer.model';

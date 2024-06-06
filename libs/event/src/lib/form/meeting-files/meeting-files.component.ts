@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { MeetingForm } from '@blockframes/event/form/event.form';
+import { MeetingForm } from '../../form/event.form';
 import { EventFormShellComponent } from '../shell/shell.component';
 import { take } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';

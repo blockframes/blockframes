@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { OrganizationService } from '@blockframes/organization/service';
 import { AuthService } from '../service';
 import { switchMap } from 'rxjs/operators';
@@ -8,7 +8,7 @@ import { where } from 'firebase/firestore';
 import { InvitationService } from '@blockframes/invitation/service';
 
 @Injectable({ providedIn: 'root' })
-export class NotFullyVerifiedGuard implements CanActivate {
+export class NotFullyVerifiedGuard {
   constructor(
     private orgService: OrganizationService,
     private invitationService: InvitationService,

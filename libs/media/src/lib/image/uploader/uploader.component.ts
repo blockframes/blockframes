@@ -8,7 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FileMetaData, createStorageFile, allowedFiles, fileSizeToString, StorageFile, CollectionHoldingFile } from '@blockframes/model';
 import { FileLabel, getFileMetadata, getFileStoragePath } from '../../utils';
 import { FileUploaderService } from '../../file-uploader.service';
-import { StorageFileForm } from '@blockframes/media/form/media.form';
+import { StorageFileForm } from '../../form/media.form';
 import { getDeepValue } from '@blockframes/utils/pipes';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { DocumentReference } from 'firebase/firestore';

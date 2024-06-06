@@ -7,14 +7,16 @@
   "generators": {},
   "targets": {
     "build": {
-      "executor": "@nrwl/node:webpack",
+      "executor": "@nx/webpack:webpack",
       "options": {
         "outputPath": "dist/apps/backend-functions",
         "main": "apps/backend-functions/src/main.ts",
         "tsConfig": "apps/backend-functions/tsconfig.app.json",
         "assets": ["apps/backend-functions/src/assets", "apps/backend-functions/src/package.json"],
         "maxWorkers": 6,
-        "buildLibsFromSource": true
+        "buildLibsFromSource": true,
+        "compiler": "tsc",
+        "target": "node"
       },
       "configurations": {
         "production": {
@@ -39,7 +41,7 @@
       }
     },
     "serve": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "@nx/workspace:run-commands",
       "options": {
         "envFile": ".env",
         "commands": [
@@ -55,14 +57,14 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": ["apps/backend-functions/src/**/*.ts"]
       },
       "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "apps/backend-functions/jest.config.js",
         "passWithNoTests": true,
@@ -70,7 +72,7 @@
       }
     },
     "deploy": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "@nx/workspace:run-commands",
       "options": {
         "envFile": ".env",
         "commands": [

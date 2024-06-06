@@ -6,7 +6,7 @@
   "prefix": "analytics",
   "targets": {
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/analytics"],
       "options": {
         "jestConfig": "libs/analytics/jest.config.js",
@@ -14,7 +14,7 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": ["libs/analytics/src/**/*.ts", "libs/analytics/src/**/*.html"]
       },

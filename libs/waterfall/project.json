@@ -6,7 +6,7 @@
   "prefix": "blockframes",
   "targets": {
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/waterfall"],
       "options": {
         "jestConfig": "libs/waterfall/jest.config.js",
@@ -14,7 +14,7 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": ["libs/waterfall/src/**/*.ts", "libs/waterfall/src/**/*.html"]
       }

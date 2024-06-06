@@ -7,7 +7,7 @@
   "generators": {},
   "targets": {
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": ["apps/backend-ops/src/**/*.ts", "apps/backend-ops/src/**/*.html"]
       },

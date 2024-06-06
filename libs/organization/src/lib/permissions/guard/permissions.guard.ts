@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { PermissionsService } from '../service';
-import { CanActivate, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { AuthService } from '@blockframes/auth/service';
 
 @Injectable({ providedIn: 'root' })
-export class PermissionsGuard implements CanActivate {
+export class PermissionsGuard {
   constructor(
     private service: PermissionsService,
     private router: Router,

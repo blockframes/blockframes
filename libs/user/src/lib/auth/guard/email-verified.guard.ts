@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../service';
 import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class EmailVerifiedGuard implements CanActivate  {
-  constructor(private authService: AuthService, private router: Router) {}
+export class EmailVerifiedGuard {
+  constructor(private authService: AuthService, private router: Router) { }
 
   canActivate() {
     return this.authService.user$.pipe(

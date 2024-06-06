@@ -4,12 +4,12 @@ import { switchMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { OrganizationService } from '@blockframes/organization/service';
 import { InvitationService } from '@blockframes/invitation/service';
-import { CanActivate, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { where } from 'firebase/firestore';
 import { hasDisplayName } from '@blockframes/model';
 
 @Injectable({ providedIn: 'root' })
-export class IdentityGuard implements CanActivate {
+export class IdentityGuard {
   constructor(
     private authService: AuthService,
     private orgService: OrganizationService,

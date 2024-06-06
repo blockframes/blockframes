@@ -12,7 +12,7 @@ import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { TagModule } from '@blockframes/ui/tag/tag.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
-import { NegotiationPipeModule } from '@blockframes/contract/negotiation/pipe';
+import { NegotiationPipeModule } from '../../../negotiation/pipe';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';

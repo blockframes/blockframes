@@ -6,14 +6,14 @@
   "prefix": "blockframes",
   "targets": {
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": ["libs/invitation/src/**/*.ts", "libs/invitation/src/**/*.html"]
       },
       "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "libs/invitation/jest.config.js",
         "passWithNoTests": true,

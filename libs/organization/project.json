@@ -6,23 +6,18 @@
   "prefix": "org",
   "targets": {
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": ["libs/organization/src/**/*.ts", "libs/organization/src/**/*.html"]
       },
       "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "libs/organization/jest.config.js",
         "passWithNoTests": true
       }
-    }
-  },
-  "generators": {
-    "@nrwl/schematics:component": {
-      "styleext": "scss"
     }
   },
   "tags": ["browser"]

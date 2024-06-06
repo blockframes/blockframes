@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationService } from '@blockframes/organization/service';
 import { APP } from './utils';
@@ -11,7 +11,7 @@ function currentModule(path: string): Module {
 }
 
 @Injectable({ providedIn: 'root' })
-export class ModuleGuard implements CanActivate {
+export class ModuleGuard {
 
   currentModule: Module;
 

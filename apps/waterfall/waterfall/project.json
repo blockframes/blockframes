@@ -97,13 +97,13 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": ["apps/waterfall/waterfall/src/**/*.ts", "apps/waterfall/waterfall/src/**/*.html"]
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/apps/waterfall/waterfall"],
       "options": {
         "jestConfig": "apps/waterfall/waterfall/jest.config.js",
@@ -111,7 +111,7 @@
       }
     },
     "deploy": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "@nx/workspace:run-commands",
       "options": {
         "envFile": ".env",
         "commands": [

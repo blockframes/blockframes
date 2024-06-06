@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
-import { ActivatedRouteSnapshot, CanActivate, Router } from "@angular/router";
+import { ActivatedRouteSnapshot, Router } from "@angular/router";
 import { map } from "rxjs/operators";
 import { AuthService } from '@blockframes/auth/service';
 import { combineLatest } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
-export class NoEventAuthGuard implements CanActivate {
+export class NoEventAuthGuard {
 
   constructor(
     private authService: AuthService,

@@ -12,7 +12,7 @@ import { MovieService } from '@blockframes/movie/service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
-const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
+const hasImportErrors = (importState: MovieImportState, type = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
 };
 

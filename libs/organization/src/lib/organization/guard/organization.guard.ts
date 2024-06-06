@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { OrganizationService } from '../service';
-import { CanActivate, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { AuthService } from '@blockframes/auth/service';
@@ -11,7 +11,7 @@ import { IAlgoliaKeyDoc } from '@blockframes/model';
 import { setSearchKey } from '@blockframes/utils/algolia';
 
 @Injectable({ providedIn: 'root' })
-export class OrganizationGuard implements CanActivate {
+export class OrganizationGuard {
   constructor(
     private service: OrganizationService,
     private router: Router,

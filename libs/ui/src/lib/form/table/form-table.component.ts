@@ -22,8 +22,8 @@ import { FormList, FormEntity, EntityControl } from '@blockframes/utils/form';
 import { AddButtonTextDirective, SaveButtonTextDirective } from '@blockframes/utils/directives/button-text.directive';
 
 // Material
-import { PageState } from '@blockframes/ui/list/table/paginator';
-import { ColumnDirective } from '@blockframes/ui/list/table/table.component';
+import { PageState } from '../../list/table/paginator';
+import { ColumnDirective } from '../../list/table/table.component';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 

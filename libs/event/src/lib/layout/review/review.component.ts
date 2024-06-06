@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { NavTabs, TabConfig } from '@blockframes/utils/event';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
-import { EventService } from '@blockframes/event/service';
+import { EventService } from '../../service';
 import { map, pluck, switchMap } from 'rxjs/operators';
 
 

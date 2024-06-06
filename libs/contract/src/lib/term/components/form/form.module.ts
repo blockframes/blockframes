@@ -7,7 +7,7 @@ import { TermFormComponent } from './form.component';
 
 // Blockframes
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
-import { AvailsFilterModule } from '@blockframes/contract/avails/filter/filter.module';
+import { AvailsFilterModule } from '../../../avails/filter/filter.module';
 import { LanguagesFormModule } from '@blockframes/movie/form/languages/languages.module';
 import { JoinPipeModule, MaxLengthModule, ToGroupLabelPipeModule, ToLabelModule, VersionPipeModule } from '@blockframes/utils/pipes';
 import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';

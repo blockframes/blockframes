@@ -6,8 +6,8 @@ import {
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { createMovieVideo, Movie, Privacy, ScreenerType } from '@blockframes/model';
-import { MovieService } from '@blockframes/movie/service';
-import { MovieVideosForm } from '@blockframes/movie/form/movie.form';
+import { MovieService } from '../../service';
+import { MovieVideosForm } from '../../form/movie.form';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
 
 @Component({

@@ -6,23 +6,18 @@
   "prefix": "utils",
   "targets": {
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": ["libs/utils/src/**/*.ts", "libs/utils/src/**/*.html"]
       },
       "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "libs/utils/jest.config.js",
         "passWithNoTests": true
       }
-    }
-  },
-  "generators": {
-    "@nrwl/schematics:component": {
-      "styleext": "scss"
     }
   },
   "tags": ["browser", "deprecated"]

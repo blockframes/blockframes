@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, UrlTree, CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Router, UrlTree, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { InvitationService } from '@blockframes/invitation/service';
 import { firstValueFrom, Observable } from 'rxjs';
 import { EventService } from '../service';
@@ -13,7 +13,7 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 
 
 @Injectable({ providedIn: 'root' })
-export class EventGuard implements CanActivate, CanDeactivate<unknown> {
+export class EventGuard {
 
   private event: Event;
 

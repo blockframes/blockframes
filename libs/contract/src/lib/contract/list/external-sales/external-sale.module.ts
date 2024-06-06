@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 import { ExternalSaleListComponent } from './external-sales.component';
 import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
-import { OfferPipeModule } from '@blockframes/contract/offer/pipe';
+import { OfferPipeModule } from '../../../offer/pipe';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 

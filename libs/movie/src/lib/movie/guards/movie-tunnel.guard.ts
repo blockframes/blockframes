@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { firstValueFrom } from 'rxjs';
@@ -7,7 +7,7 @@ import { MovieService } from '../service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
 @Injectable({ providedIn: 'root' })
-export class MovieTunnelGuard implements CanActivate {
+export class MovieTunnelGuard {
   constructor(
     private router: Router,
     private orgService: OrganizationService,
