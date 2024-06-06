@@ -5,7 +5,7 @@
   "npmScope": "blockframes",
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/workspace/tasks-runners/default",
+      "runner": "@nx/workspace/tasks-runners/default",
       "options": {
         "cacheableOperations": ["build", "lint", "test", "e2e"],
         "cacheDirectory": ".cache/nx",
@@ -20,11 +20,11 @@
     "analytics": "af619e50-5007-4476-b488-ccf1b32d3440"
   },
   "generators": {
-    "@nrwl/angular:library": {
+    "@nx/angular:library": {
       "linter": "eslint",
       "unitTestRunner": "jest"
     },
-    "@nrwl/angular:application": {
+    "@nx/angular:application": {
       "style": "scss",
       "linter": "eslint",
       "unitTestRunner": "jest",
@@ -33,17 +33,17 @@
     "@nrwl/schematics:node-application": {
       "framework": "express"
     },
-    "@nrwl/angular": {
-      "convert-tslint-to-eslint": {
-        "ignoreExistingTslintConfig": true,
-        "removeTSLintIfNoMoreTSLintTargets": true
-      }
-    },
-    "@nrwl/angular:component": {
+    "@nx/angular:component": {
       "displayBlock": true,
       "changeDetection": "OnPush",
       "skipTests": true,
       "style": "scss"
+    },
+    "@nx/angular": {
+      "convert-tslint-to-eslint": {
+        "ignoreExistingTslintConfig": true,
+        "removeTSLintIfNoMoreTSLintTargets": true
+      }
     }
   },
   "defaultProject": "festival",
@@ -69,6 +69,6 @@
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "sharedGlobals": ["{workspaceRoot}/angular.json", "{workspaceRoot}/nx.json", "{workspaceRoot}/tsconfig.base.json"],
-    "production": ["default"]
+    "production": ["default", "!{projectRoot}/src/test-setup.[jt]s"]
   }
 }

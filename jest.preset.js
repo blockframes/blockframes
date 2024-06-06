@@ -1,4 +1,4 @@
-﻿const nxPreset = require('@nrwl/jest/preset');
+﻿const nxPreset = require('@nx/jest/preset');
 
 module.exports = {
   ...nxPreset,
@@ -7,11 +7,17 @@ module.exports = {
     '^.+\\.(ts|js|html)$': 'ts-jest',
   },
   testEnvironment: 'jest-environment-jsdom',
-  resolver: '@nrwl/jest/plugins/resolver',
+  resolver: '@nx/jest/plugins/resolver',
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageReporters: ['html'],
-  reporters: ['default', ['jest-junit', {
-    uniqueOutputName: 'true',
-    outputDirectory: 'dist/jest-test-results/'
-  }]],
+  reporters: [
+    'default',
+    [
+      'jest-junit',
+      {
+        uniqueOutputName: 'true',
+        outputDirectory: 'dist/jest-test-results/',
+      },
+    ],
+  ],
 };

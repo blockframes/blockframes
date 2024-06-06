@@ -5,7 +5,7 @@
   "projectType": "application",
   "targets": {
     "serve": {
-      "executor": "@nrwl/cypress:cypress",
+      "executor": "@nx/cypress:cypress",
       "options": {
         "cypressConfig": "apps/catalog/catalog-e2e/cypress.config.js",
         "tsConfig": "apps/catalog/catalog-e2e/tsconfig.e2e.json",
@@ -28,7 +28,7 @@
       }
     },
     "e2e": {
-      "executor": "@nrwl/cypress:cypress",
+      "executor": "@nx/cypress:cypress",
       "options": {
         "cypressConfig": "apps/catalog/catalog-e2e/cypress.config.js",
         "tsConfig": "apps/catalog/catalog-e2e/tsconfig.e2e.json",
@@ -55,7 +55,7 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": ["apps/catalog/catalog-e2e/src/**/*.ts", "apps/catalog/catalog-e2e/src/**/*.html"]
       },
