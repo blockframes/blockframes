@@ -17,7 +17,8 @@
         "maxWorkers": 6,
         "buildLibsFromSource": true,
         "compiler": "tsc",
-        "target": "node"
+        "target": "node",
+        "webpackConfig": "apps/backend-functions/webpack.config.js"
       },
       "configurations": {
         "production": {
