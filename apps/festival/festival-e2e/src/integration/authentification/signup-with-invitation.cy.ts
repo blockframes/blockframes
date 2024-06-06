@@ -20,8 +20,8 @@ import {
   //helpers
   getTextBody,
   getSubject,
-  algolia,
   assertUrl,
+  deleteOrg,
 } from '@blockframes/testing/cypress/browser';
 import {
   userWithJoinOrgInvitation,
@@ -57,7 +57,6 @@ describe('Signup following an invitation', () => {
     cy.visit('');
     maintenance.start();
     firestore.clearTestData();
-    algolia.deleteOrg({ app: 'festival', objectId: userWithEventInvitationOrg.id });
     adminAuth.deleteAllTestUsers();
     browserAuth.clearBrowserAuth();
     adminAuth.createUser({ uid: orgAdmin.uid, email: orgAdmin.email, emailVerified: true });
@@ -155,6 +154,7 @@ describe('Signup following an invitation', () => {
   it('User invited for an event can signup', () => {
     const newUser = userWithEventInvitation;
     const newOrg = userWithEventInvitationOrg;
+    deleteOrg(newOrg.name); // Should delete org from Algolia in case of previous test failure
     cy.visit(`auth/identity?code=${meetingInvitationCode}&email=${encodeURIComponent(newUser.email)}`);
     get('cookies').click();
     get('email').should('be.disabled').invoke('val').should('contain', newUser.email);
