@@ -9,6 +9,6 @@
     "sourceMap": false,
     "outDir": "../../../dist/out-tsc"
   },
-  "include": ["src/**/*.ts"],
+  "include": [],
   "files": []
 }
