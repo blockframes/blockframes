@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MovieForm } from '@blockframes/movie/form/movie.form';
+import { MovieForm } from '../../../form/movie.form';
 
 @Component({
   selector: '[movie][link] movie-summary-available-versions',

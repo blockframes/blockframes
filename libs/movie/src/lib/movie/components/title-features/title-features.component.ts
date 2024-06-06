@@ -7,7 +7,7 @@ import {
   languages,
   genres as staticGenres
 } from '@blockframes/model';
-import { formatRunningTime } from '@blockframes/movie/pipes/running-time.pipe';
+import { formatRunningTime } from '../../pipes/running-time.pipe';
 
 interface TitleFeature {
   view: string;

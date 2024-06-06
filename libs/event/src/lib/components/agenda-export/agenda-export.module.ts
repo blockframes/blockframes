@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { AgendaExportComponent } from './agenda-export.component';
 
 // Modules
-import { ExportToGoogleAgendaModule } from '@blockframes/event/pipes/export-to-google-agenda.pipe';
+import { ExportToGoogleAgendaModule } from '../../pipes/export-to-google-agenda.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';

@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 
 // Components
 import { MovieViewDeliveryComponent } from './delivery.component';
-import { MovieTunnelSummaryModule } from '@blockframes/movie/form/summary/summary.module';
+import { MovieTunnelSummaryModule } from '../../form/summary/summary.module';
 import { GetPathModule } from '@blockframes/utils/pipes/get-path.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { FileNameModule } from '@blockframes/utils/pipes';

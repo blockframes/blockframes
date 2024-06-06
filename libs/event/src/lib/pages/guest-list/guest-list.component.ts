@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { InvitationService } from '@blockframes/invitation/service';
 import { Observable } from 'rxjs';
-import { ReviewComponent } from '@blockframes/event/layout/review/review.component';
+import { ReviewComponent } from '../../layout/review/review.component';
 import { switchMap } from 'rxjs/operators';
 import { where } from 'firebase/firestore';
 import { Invitation } from '@blockframes/model';

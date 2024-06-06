@@ -23,7 +23,7 @@ export class WaterfallPermissionsService extends BlockframesSubCollection<Waterf
     return createWaterfallPermissions(permissions);
   }
 
-  public create(waterfallId: string, write: AtomicWrite, id: string, isAdmin: boolean = false, rightholderIds?: string[]) {
+  public create(waterfallId: string, write: AtomicWrite, id: string, isAdmin = false, rightholderIds?: string[]) {
     const createdBy = this.authService.uid;
     const perm = createWaterfallPermissions({
       _meta: createDocumentMeta({ createdBy }),

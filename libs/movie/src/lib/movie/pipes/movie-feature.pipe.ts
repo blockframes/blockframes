@@ -5,7 +5,7 @@ import {
   languages,
   territoriesISOA2
 } from '@blockframes/model';
-import { formatRunningTime } from '@blockframes/movie/pipes/running-time.pipe';
+import { formatRunningTime } from '../pipes/running-time.pipe';
 
 @Pipe({
   name: 'movieFeature',

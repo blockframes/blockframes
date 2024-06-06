@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { AuthService } from '@blockframes/auth/service';
-import { MovieService } from '@blockframes/movie/service';
+import { MovieService } from '../../service';
 import { FormStaticValueArray } from '@blockframes/utils/form';
 import { CallableFunctions } from 'ngfire';
 import { App, RequestAskingPriceData, smartJoin, waterfallMediaGroups, toGroupLabel } from '@blockframes/model';

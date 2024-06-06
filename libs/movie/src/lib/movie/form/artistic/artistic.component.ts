@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Filmography } from '@blockframes/model';
-import { displayFilmographies } from '@blockframes/movie/pipes/filmography.pipe';
+import { displayFilmographies } from '../../pipes/filmography.pipe';
 import { CellModalComponent } from '@blockframes/ui/cell-modal/cell-modal.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
