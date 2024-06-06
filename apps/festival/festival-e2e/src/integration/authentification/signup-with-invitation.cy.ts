@@ -20,6 +20,8 @@ import {
   //helpers
   getTextBody,
   getSubject,
+  algolia,
+  assertUrl,
 } from '@blockframes/testing/cypress/browser';
 import {
   userWithJoinOrgInvitation,
@@ -55,6 +57,7 @@ describe('Signup following an invitation', () => {
     cy.visit('');
     maintenance.start();
     firestore.clearTestData();
+    algolia.deleteOrg({ app: 'festival', objectId: userWithEventInvitationOrg.id });
     adminAuth.deleteAllTestUsers();
     browserAuth.clearBrowserAuth();
     adminAuth.createUser({ uid: orgAdmin.uid, email: orgAdmin.email, emailVerified: true });
@@ -164,6 +167,7 @@ describe('Signup following an invitation', () => {
       'contain',
       'Your User Account was successfully created. Please wait for our team to check your Company Information.'
     );
+    assertUrl('c/organization/create-congratulations');
     validateOrg(newOrg.name);
     get('org-approval-ok').should('exist');
     get('email-ok').should('exist');
