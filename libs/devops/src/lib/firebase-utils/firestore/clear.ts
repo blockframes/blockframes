@@ -17,13 +17,10 @@ export async function clearDb(db: FirebaseFirestore.Firestore, allowProd = false
     try {
       await runShellCommandExec(cmd);
     } catch (e) {
-      /** @see https://firebase.google.com/docs/firestore/transaction-data-contention?hl=fr#transactions_and_data_contention*/
-      if (e.status === 409) {
-        console.log(`Command "${cmd}" failed with HTTP Error: 409, Too much contention on these documents. Please try again.`);
-      } else {
-        console.error(e);
-      }
-
+      /** 
+       * @dev If command fails, might be a 409 error "Too much contention on these documents"
+       * @see https://firebase.google.com/docs/firestore/transaction-data-contention?hl=fr#transactions_and_data_contention
+       */
       if (retriesLeft === 0) {
         throw new Error(`Command "${cmd}" failed and no more retries left..`);
       } else {
