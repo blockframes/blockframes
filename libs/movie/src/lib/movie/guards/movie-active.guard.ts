@@ -1,18 +1,18 @@
 import { Inject, Injectable } from '@angular/core';
 import { MovieService } from '../service';
-import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Movie, App } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
 
 @Injectable({ providedIn: 'root' })
-export class MovieActiveGuard implements CanActivate {
+export class MovieActiveGuard {
   public movie: Movie;
 
   constructor(
     private movieService: MovieService,
     private router: Router,
     @Inject(APP) private app: App
-  ) {}
+  ) { }
 
   async canActivate(next: ActivatedRouteSnapshot) {
     this.movie = await this.movieService.getValue(next.params.movieId as string);

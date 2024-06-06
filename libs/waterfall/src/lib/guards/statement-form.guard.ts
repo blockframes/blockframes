@@ -1,6 +1,6 @@
 // Angular
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanDeactivate, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { map } from 'rxjs';
 
@@ -15,7 +15,7 @@ export interface StartementFormGuardedComponent {
 };
 
 @Injectable({ providedIn: 'root' })
-export class StatementFormGuard<T extends StartementFormGuardedComponent> implements CanActivate, CanDeactivate<T>{
+export class StatementFormGuard<T extends StartementFormGuardedComponent> {
   constructor(
     private dialog: MatDialog,
     private router: Router,

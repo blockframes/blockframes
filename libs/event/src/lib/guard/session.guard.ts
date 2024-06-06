@@ -1,12 +1,12 @@
 
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, UrlTree } from '@angular/router';
 import { AuthService } from '@blockframes/auth/service';
 import { EventService } from '../service';
 import { Meeting } from '@blockframes/model';
 
 @Injectable({ providedIn: 'root' })
-export class SessionGuard implements CanActivate {
+export class SessionGuard {
 
   constructor(
     private authService: AuthService,

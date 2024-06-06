@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { CanDeactivate } from '@angular/router';
 import { Observable } from 'rxjs';
 
 export interface AvailsRoot {
@@ -7,7 +6,7 @@ export interface AvailsRoot {
 }
 
 @Injectable({ providedIn: 'root' })
-export class AvailsGuard implements CanDeactivate<unknown> {
+export class AvailsGuard {
 
   canDeactivate(component: AvailsRoot) {
     return component.confirmExit();

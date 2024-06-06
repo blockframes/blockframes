@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { WaterfallPermissionsService } from '../permissions.service';
 import { OrganizationService } from '@blockframes/organization/service';
 import { AuthService } from '@blockframes/auth/service';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class WaterfallAdminGuard implements CanActivate {
+export class WaterfallAdminGuard {
 
   constructor(
     private permissionService: WaterfallPermissionsService,

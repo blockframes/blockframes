@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../service';
 import { map, switchMap } from 'rxjs/operators';
 import { App } from '@blockframes/model';
@@ -8,7 +8,7 @@ import { APP } from '@blockframes/utils/routes/utils';
 @Injectable({
   providedIn: 'root'
 })
-export class NoLegalTermsGuard implements CanActivate  {
+export class NoLegalTermsGuard {
 
   constructor(
     private router: Router,
@@ -19,7 +19,7 @@ export class NoLegalTermsGuard implements CanActivate  {
   canActivate() {
     return this.service.profile$.pipe(
       switchMap(() => this.service.getValue()),
-      map(user  => {
+      map(user => {
         if (this.app === 'crm') return this.router.createUrlTree(['/c/o']);
 
         const latestPrivacyPolicy = this.service.privacyPolicyDate;
@@ -29,7 +29,7 @@ export class NoLegalTermsGuard implements CanActivate  {
 
         const invalidPrivacyPolicy = !userPrivacyPolicy || userPrivacyPolicy < latestPrivacyPolicy;
         const invalidTermsAndConditions = !userTermsAndConditions || userTermsAndConditions < latestTermsAndConditions;
-        
+
         if (invalidPrivacyPolicy || invalidTermsAndConditions) return true;
         return this.router.createUrlTree(['/c/o']);
       })

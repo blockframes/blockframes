@@ -4,11 +4,11 @@ import { map, } from 'rxjs/operators';
 import { OrganizationService } from '@blockframes/organization/service';
 import { App, getOrgModuleAccess } from '@blockframes/model';
 import { combineLatest } from 'rxjs';
-import { CanActivate, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { APP } from '@blockframes/utils/routes/utils';
 
 @Injectable({ providedIn: 'root' })
-export class NoAuthGuard implements CanActivate {
+export class NoAuthGuard {
   constructor(
     private authService: AuthService,
     private orgService: OrganizationService,

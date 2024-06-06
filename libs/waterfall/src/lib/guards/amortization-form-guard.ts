@@ -1,6 +1,5 @@
 // Angular
 import { Injectable } from '@angular/core';
-import { CanDeactivate } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
 // Blockframes
@@ -13,7 +12,7 @@ export interface AmortizationFormGuardedComponent {
 };
 
 @Injectable({ providedIn: 'root' })
-export class AmortizationFormGuard<T extends AmortizationFormGuardedComponent> implements CanDeactivate<T> {
+export class AmortizationFormGuard<T extends AmortizationFormGuardedComponent> {
 
   constructor(
     private dialog: MatDialog,
