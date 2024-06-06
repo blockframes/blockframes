@@ -4,22 +4,18 @@
   "projectType": "library",
   "sourceRoot": "libs/campaign/src",
   "prefix": "campaign",
+  "tags": ["browser"],
   "targets": {
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/campaign/src/**/*.ts", "libs/campaign/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     },
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "libs/campaign/jest.config.js",
-        "passWithNoTests": true,
         "setupFile": "libs/campaign/src/test-setup.ts"
       }
     }
-  },
-  "tags": ["browser"]
+  }
 }

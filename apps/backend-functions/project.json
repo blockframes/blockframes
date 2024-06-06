@@ -4,6 +4,7 @@
   "sourceRoot": "apps/backend-functions/src",
   "projectType": "application",
   "prefix": "backend-functions",
+  "tags": ["node", "cloud"],
   "generators": {},
   "targets": {
     "build": {
@@ -57,17 +58,13 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["apps/backend-functions/src/**/*.ts"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     },
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "apps/backend-functions/jest.config.js",
-        "passWithNoTests": true,
         "runInBand": true
       }
     },
@@ -85,6 +82,5 @@
         "color": true
       }
     }
-  },
-  "tags": ["node", "cloud"]
+  }
 }

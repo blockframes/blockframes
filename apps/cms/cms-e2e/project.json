@@ -3,6 +3,8 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/cms/cms-e2e/src",
   "projectType": "application",
+  "tags": ["browser", "e2e"],
+  "implicitDependencies": ["cms"],
   "targets": {
     "serve": {
       "executor": "@nx/cypress:cypress",
@@ -55,13 +57,8 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["apps/cms/cms-e2e/src/**/*.ts", "apps/cms/cms-e2e/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     }
-  },
-  "tags": ["browser", "e2e"],
-  "implicitDependencies": ["cms"]
+  }
 }

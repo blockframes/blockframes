@@ -4,21 +4,17 @@
   "sourceRoot": "libs/utils/src",
   "projectType": "library",
   "prefix": "utils",
+  "tags": ["browser", "deprecated"],
   "targets": {
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/utils/src/**/*.ts", "libs/utils/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     },
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "libs/utils/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/utils/jest.config.js"
       }
     }
-  },
-  "tags": ["browser", "deprecated"]
+  }
 }

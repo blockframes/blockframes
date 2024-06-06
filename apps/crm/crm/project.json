@@ -4,6 +4,7 @@
   "projectType": "application",
   "sourceRoot": "apps/crm/crm/src",
   "prefix": "crm",
+  "tags": ["browser"],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
@@ -69,32 +70,28 @@
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
       "options": {
-        "browserTarget": "crm:build"
+        "buildTarget": "crm:build"
       },
       "configurations": {
         "emulator": {
-          "browserTarget": "crm:build:emulator"
+          "buildTarget": "crm:build:emulator"
         }
       }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "crm:build"
+        "buildTarget": "crm:build"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["apps/crm/crm/src/**/*.ts", "apps/crm/crm/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     },
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "apps/crm/crm/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "apps/crm/crm/jest.config.js"
       }
     },
     "deploy": {
@@ -109,6 +106,5 @@
         "color": true
       }
     }
-  },
-  "tags": ["browser"]
+  }
 }

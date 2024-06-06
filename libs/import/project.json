@@ -4,21 +4,17 @@
   "projectType": "library",
   "sourceRoot": "libs/import/src",
   "prefix": "blockframes",
+  "tags": ["browser"],
   "targets": {
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/import/src/**/*.ts", "libs/import/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     },
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "libs/import/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/import/jest.config.js"
       }
     }
-  },
-  "tags": ["browser"]
+  }
 }

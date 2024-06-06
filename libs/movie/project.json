@@ -4,21 +4,17 @@
   "sourceRoot": "libs/movie/src",
   "projectType": "library",
   "prefix": "movie",
+  "tags": ["browser"],
   "targets": {
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/movie/src/**/*.ts", "libs/movie/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     },
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "libs/movie/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/movie/jest.config.js"
       }
     }
-  },
-  "tags": ["browser"]
+  }
 }

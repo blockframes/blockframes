@@ -4,22 +4,18 @@
   "projectType": "library",
   "sourceRoot": "libs/analytics/src",
   "prefix": "analytics",
+  "tags": ["browser"],
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/analytics"],
       "options": {
-        "jestConfig": "libs/analytics/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/analytics/jest.config.js"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/analytics/src/**/*.ts", "libs/analytics/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     }
-  },
-  "tags": ["browser"]
+  }
 }

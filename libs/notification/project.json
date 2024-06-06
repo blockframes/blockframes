@@ -4,22 +4,18 @@
   "sourceRoot": "libs/notification/src",
   "projectType": "library",
   "prefix": "notification",
+  "tags": ["browser"],
+  "generators": {},
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "libs/notification/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/notification/jest.config.js"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/notification/src/**/*.ts", "libs/notification/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     }
-  },
-  "generators": {},
-  "tags": ["browser"]
+  }
 }

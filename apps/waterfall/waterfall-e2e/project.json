@@ -3,6 +3,8 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/waterfall/waterfall-e2e/src",
   "projectType": "application",
+  "tags": ["browser", "e2e"],
+  "implicitDependencies": ["waterfall"],
   "targets": {
     "serve": {
       "executor": "@nx/cypress:cypress",
@@ -58,13 +60,8 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["apps/waterfall/waterfall-e2e/src/**/*.ts", "apps/waterfall/waterfall-e2e/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     }
-  },
-  "tags": ["browser", "e2e"],
-  "implicitDependencies": ["waterfall"]
+  }
 }
