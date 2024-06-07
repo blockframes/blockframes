@@ -1,12 +1,11 @@
 ﻿import firebaseFunctionsTest from 'firebase-functions-test';
 import { getDb, initAdmin, runChunks, SAK_VALUE } from '@blockframes/firebase-utils';
-import type { FirebaseApp } from '@blockframes/firebase-utils/types';
+import type { FirebaseApp, AppOptions } from '@blockframes/firebase-utils/types';
 import { join, resolve } from 'path';
 import { config } from 'dotenv';
 import { firebase as firebaseEnv } from '@env';
 import { TokenOptions, initializeTestEnvironment, RulesTestEnvironment } from '@firebase/rules-unit-testing';
 import type { FeaturesList } from 'firebase-functions-test/lib/features';
-import type { AppOptions } from 'firebase-admin'; // * Correct Import
 import fs from 'fs';
 
 export interface FirebaseTestConfig extends FeaturesList {

@@ -1,4 +1,3 @@
-import * as admin from 'firebase-admin';
 import * as firebaseConfig from 'firebase.json';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
@@ -7,8 +6,8 @@ import { getFirestore } from 'firebase-admin/firestore';
 import { getStorage as _getStorage } from 'firebase-admin/storage';
 import { getAuth as _getAuth } from 'firebase-admin/auth';
 import type { Auth, Storage, Credential, ServiceAccount, FirebaseApp } from './types';
-import { initializeApp } from 'firebase-admin/app';
-import { credential } from 'firebase-admin/lib/credential';
+import { getApps, initializeApp } from './types';
+import { credential } from 'firebase-admin';
 
 export const SAK_KEY = 'GOOGLE_APPLICATION_CREDENTIALS';
 /**
@@ -35,8 +34,8 @@ interface ServiceAccountKey {
  */
 export function initAdmin(...args: Parameters<typeof initializeApp>): FirebaseApp {
   const [options, name = '[DEFAULT]'] = args;
-  for (const app of admin.apps) if (app?.name === name) return app;
-  return admin.initializeApp({ ...firebase(), credential: getCredentials(), ...options }, name);
+  for (const app of getApps()) if (app?.name === name) return app;
+  return initializeApp({ ...firebase(), credential: getCredentials(), ...options }, name);
 }
 
 function getCredentials(): Credential | undefined {
