@@ -287,7 +287,7 @@ function fillInputs({
 function selectAllAvailable() {
   assertAvailableCountries(69);
   /**
-   * TODO #9702 (@nx/cypress): Nesting Cypress commands in a should assertion now throws.
+   * TODO #9848 (@nx/cypress): Nesting Cypress commands in a should assertion now throws.
    * You should use .then() to chain commands instead.
    * More Info: https://docs.cypress.io/guides/references/migration-guide#-should
    **/
