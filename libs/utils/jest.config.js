@@ -1,12 +1,5 @@
 ﻿module.exports = {
-  name: 'utils',
   preset: '../../jest.preset.js',
-  globals: {
-    'ts-jest': {
-      stringifyContentPathRegex: '\\.(html|svg)$',
-      tsconfig: '<rootDir>/tsconfig.spec.json',
-    },
-  },
   transform: {
     '^.+.(ts|mjs|js|html)$': 'jest-preset-angular'
   },

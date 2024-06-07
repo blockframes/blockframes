@@ -1,11 +1,10 @@
-import type * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { db } from './internals/firebase';
 import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userInvite, userVerifyEmail } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations } from '@blockframes/utils/request-demo';
 import { storeSearchableUser, deleteObject, algolia } from '@blockframes/firebase-utils/algolia';
-import { getCollection, getDocument, getDocumentSnap, BlockframesChange, BlockframesSnapshot, getAuth } from '@blockframes/firebase-utils';
+import { getCollection, getDocument, getDocumentSnap, BlockframesChange, BlockframesSnapshot, getAuth, UserRecord } from '@blockframes/firebase-utils';
 import { getMailSender, applicationUrl } from '@blockframes/utils/apps';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
 import { production } from './environments/environment';
@@ -25,7 +24,6 @@ import {
 import { registerToNewsletters, updateMemberTags } from './mailchimp';
 import { getPreferenceTag, MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
 
-type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
 
 interface EmailFlowData { email: string, app: App, publicUser: PublicUser }

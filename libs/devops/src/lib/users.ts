@@ -4,14 +4,15 @@
  * This module provides functions to trigger a firestore restore and test user creations.
  */
 import { differenceBy } from 'lodash';
-import { getCollectionInBatches, sleep, startMaintenance, endMaintenance, Auth, UserRecord } from '@blockframes/firebase-utils';
 import readline from 'readline';
 import { deleteAllUsers, importAllUsers } from '@blockframes/testing/unit-tests';
 import * as env from '@env';
 import { PublicUser, User, USER_FIXTURES_PASSWORD } from '@blockframes/model';
 import { subMonths } from 'date-fns';
 import { getAuth, getDb } from '@blockframes/firebase-utils/initialize';
-import type * as admin from 'firebase-admin';
+import type { Auth, UpdateRequest, UserRecord } from '@blockframes/firebase-utils/types';
+import { getCollectionInBatches, sleep } from '@blockframes/firebase-utils/util';
+import { endMaintenance, startMaintenance } from '@blockframes/firebase-utils/maintenance';
 
 export const { storageBucket } = env.firebase();
 
@@ -123,7 +124,7 @@ export async function syncUsers({
   withMaintenance = false
 }: {
   db?: FirebaseFirestore.Firestore;
-  auth?: admin.auth.Auth;
+  auth?: Auth;
   withMaintenance?: boolean
 } = {}) {
   if (withMaintenance) await startMaintenance(db);
@@ -175,7 +176,7 @@ export async function updateUsersPassword(emailPrefix: string, password: string,
   return !dryRun ? updateUsers(matchingUids, { password }) : undefined;
 }
 
-async function updateUsers(uidsToUpdate: string[], properties: admin.auth.UpdateRequest) {
+async function updateUsers(uidsToUpdate: string[], properties: UpdateRequest) {
   const auth = getAuth();
   console.log('Updating users now...');
   const timeMsg = 'Updating users took';

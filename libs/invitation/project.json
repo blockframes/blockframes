@@ -13,8 +13,7 @@
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "libs/invitation/jest.config.js",
-        "setupFile": "libs/invitation/src/test-setup.ts"
+        "jestConfig": "libs/invitation/jest.config.js"
       }
     }
   }
