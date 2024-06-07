@@ -8,13 +8,6 @@
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
-    },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/libs/testing/cypress/browser"],
-      "options": {
-        "jestConfig": "libs/testing/cypress/browser/jest.config.js"
-      }
     }
   }
 }

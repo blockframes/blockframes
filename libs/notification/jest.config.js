@@ -1,9 +1,5 @@
 ﻿module.exports = {
-  name: 'notification',
   preset: '../../jest.preset.js',
-  globals: {
-    'ts-jest': { tsconfig: '<rootDir>/tsconfig.spec.json' },
-  },
   transform: {
     '^.+.(ts|mjs|js|html)$': 'jest-preset-angular'
   },

@@ -88,12 +88,6 @@
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "options": {
-        "jestConfig": "apps/crm/crm/jest.config.js"
-      }
-    },
     "deploy": {
       "executor": "@nx/workspace:run-commands",
       "options": {

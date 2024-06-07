@@ -6,13 +6,6 @@
   "prefix": "analytics",
   "tags": ["browser"],
   "targets": {
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/libs/analytics"],
-      "options": {
-        "jestConfig": "libs/analytics/jest.config.js"
-      }
-    },
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]

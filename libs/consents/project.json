@@ -13,8 +13,7 @@
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "libs/consents/jest.config.js",
-        "setupFile": "libs/consents/src/test-setup.ts"
+        "jestConfig": "libs/consents/jest.config.js"
       }
     }
   }

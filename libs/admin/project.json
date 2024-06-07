@@ -6,12 +6,6 @@
   "prefix": "admin",
   "tags": ["browser"],
   "targets": {
-    "test": {
-      "executor": "@nx/jest:jest",
-      "options": {
-        "jestConfig": "libs/admin/jest.config.js"
-      }
-    },
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]

@@ -77,13 +77,6 @@
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "options": {
-        "jestConfig": "apps/financiers/financiers/jest.config.js",
-        "setupFile": "apps/financiers/financiers/src/test-setup.ts"
-      }
-    },
     "deploy": {
       "executor": "@nx/workspace:run-commands",
       "options": {

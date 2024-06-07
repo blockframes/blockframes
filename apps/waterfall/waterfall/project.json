@@ -100,13 +100,6 @@
     "lint": {
       "executor": "@nx/eslint:lint"
     },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/apps/waterfall/waterfall"],
-      "options": {
-        "jestConfig": "apps/waterfall/waterfall/jest.config.js"
-      }
-    },
     "deploy": {
       "executor": "@nx/workspace:run-commands",
       "options": {

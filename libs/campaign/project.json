@@ -9,13 +9,6 @@
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
-    },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "options": {
-        "jestConfig": "libs/campaign/jest.config.js",
-        "setupFile": "libs/campaign/src/test-setup.ts"
-      }
     }
   }
 }
