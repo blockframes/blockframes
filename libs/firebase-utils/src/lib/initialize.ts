@@ -3,6 +3,9 @@ import * as firebaseConfig from 'firebase.json';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { firebase } from '@env';
+import { getFirestore } from 'firebase-admin/firestore';
+import { getStorage as _getStorage } from 'firebase-admin/storage';
+import { getAuth as _getAuth } from 'firebase-admin/auth';
 
 export const SAK_KEY = 'GOOGLE_APPLICATION_CREDENTIALS';
 /**
@@ -81,21 +84,21 @@ export function getAuthEmulator(...args: Parameters<typeof admin.initializeApp>)
  * Makes sure firebase app is initialised and returns Auth service
  */
 export function getAuth(...args: Parameters<typeof admin.initializeApp>): admin.auth.Auth {
-  return admin.auth(initAdmin(...args));
+  return _getAuth(initAdmin(...args));
 }
 
 /**
  * Makes sure Firebase is initialised and returns Firestore object
  */
 export function getDb(...args: Parameters<typeof admin.initializeApp>): FirebaseFirestore.Firestore {
-  return admin.firestore(initAdmin(...args));
+  return getFirestore(initAdmin(...args));
 }
 
 /**
  * Makes sure firebase app is initialised and returns Storage service
  */
 export function getStorage(...args: Parameters<typeof admin.initializeApp>): admin.storage.Storage {
-  return admin.storage(initAdmin(...args));
+  return _getStorage(initAdmin(...args));
 }
 
 /**
@@ -104,5 +107,5 @@ export function getStorage(...args: Parameters<typeof admin.initializeApp>): adm
 export function getStorageEmulator(...args: Parameters<typeof admin.initializeApp>): admin.storage.Storage {
   const port = firebaseConfig?.emulators?.storage?.port ?? 9199;
   process.env['FIREBASE_STORAGE_EMULATOR_HOST'] = `localhost:${port}`;
-  return admin.storage(initAdmin(...args));
+  return _getStorage(initAdmin(...args));
 }

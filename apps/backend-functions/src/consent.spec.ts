@@ -4,10 +4,9 @@ import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firest
 import { createConsent } from './main';
 import { ConsentData } from './consent';
 import firebaseTest = require('firebase-functions-test');
-import * as admin from 'firebase-admin';
 import { firebase } from '@env';
 import { expect } from '@jest/globals';
-import { endMaintenance } from '@blockframes/firebase-utils';
+import { endMaintenance, getDb } from '@blockframes/firebase-utils';
 
 const testEnv = firebaseTest(firebase());
 
@@ -177,7 +176,7 @@ describe('Consent backend-function unit-tests', () => {
       expect(result).toBeTruthy();
 
       //Fetch the updated consents data and compare the result
-      const snap = await admin.firestore().collection('consents').doc(data.docId).get();
+      const snap = await getDb().collection('consents').doc(data.docId).get();
       const consentsData = snap.data();
       expect(consentsData).toEqual(
         expect.objectContaining({
@@ -218,7 +217,7 @@ describe('Consent backend-function unit-tests', () => {
       expect(result).toBeTruthy();
 
       //Fetch the data and compare the result
-      const snap = await admin.firestore().collection('consents').doc(data.docId).get();
+      const snap = await getDb().collection('consents').doc(data.docId).get();
       const consentsData = snap.data();
       expect(consentsData).toEqual(
         expect.objectContaining({
