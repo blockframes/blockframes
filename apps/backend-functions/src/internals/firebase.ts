@@ -1,5 +1,4 @@
 ﻿import { Change, region, RuntimeOptions } from 'firebase-functions';
-import * as admin from 'firebase-admin';
 import { firebaseRegion, production } from '@env';
 export const functions = (config = defaultConfig) => region(firebaseRegion).runWith(config);
 import { isInMaintenance, maintenanceRef } from '@blockframes/firebase-utils/maintenance';
@@ -7,7 +6,12 @@ import { _isInMaintenance } from '@blockframes/utils/maintenance';
 import { IMaintenanceDoc } from '@blockframes/model';
 import { logErrors } from './sentry';
 import { toDate } from '@blockframes/firebase-utils/firebase-utils';
-import { BlockframesChange, BlockframesSnapshot } from '@blockframes/firebase-utils/types';
+import type {
+  BlockframesChange,
+  BlockframesSnapshot,
+  QueryDocumentSnapshot,
+  DocumentSnapshot
+} from '@blockframes/firebase-utils/types';
 import { getAuth, getDb, getStorage } from '@blockframes/firebase-utils';
 
 export const db = getDb();
@@ -43,7 +47,7 @@ maintenanceRef(db)
 // DOCUMENT ON-CHANGES FUNCTIONS //
 ///////////////////////////////////
 
-function createBlockframesSnapshot(snap: admin.firestore.DocumentSnapshot): BlockframesSnapshot {
+function createBlockframesSnapshot(snap: DocumentSnapshot): BlockframesSnapshot {
   return {
     id: snap.id,
     exists: snap.exists,
@@ -65,7 +69,7 @@ const stateChangeToDate = <T extends (...args: any[]) => any>(f: T): T | ((...ar
 
 const snapshotToDate = <T extends (...args: any[]) => any>(f: T): T | ((...args: Parameters<T>) => Promise<void>) => {
   return async (...args: Parameters<T>) => {
-    const firstArg: admin.firestore.QueryDocumentSnapshot = args.shift();
+    const firstArg: QueryDocumentSnapshot = args.shift();
     const snapshot = createBlockframesSnapshot(firstArg);
     return f(snapshot, ...args);
   }

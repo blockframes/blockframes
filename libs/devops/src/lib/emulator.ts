@@ -36,6 +36,7 @@ import {
   CI_ANONYMIZED_DATA
 } from './firebase-utils';
 import { firebase as firebaseCI } from 'env/env.blockframes-ci';
+import { credential } from 'firebase-admin/lib/credential';
 
 interface ImportEmulatorOptions {
   importFrom: string;
@@ -162,7 +163,7 @@ export async function downloadProdDbBackup(localPath?: string) {
     {
       storageBucket: prodBackupBucket,
       projectId: prodFirebase().projectId,
-      credential: admin.credential.cert(cert),
+      credential: credential.cert(cert),
     },
     'production'
   );

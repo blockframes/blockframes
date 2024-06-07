@@ -6,6 +6,9 @@ import { firebase } from '@env';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getStorage as _getStorage } from 'firebase-admin/storage';
 import { getAuth as _getAuth } from 'firebase-admin/auth';
+import type { Auth, Storage, Credential, ServiceAccount, FirebaseApp } from './types';
+import { initializeApp } from 'firebase-admin/app';
+import { credential } from 'firebase-admin/lib/credential';
 
 export const SAK_KEY = 'GOOGLE_APPLICATION_CREDENTIALS';
 /**
@@ -30,18 +33,18 @@ interface ServiceAccountKey {
 /**
  * Will ensure firebase app is initialised only once for a given name
  */
-export function initAdmin(...args: Parameters<typeof admin.initializeApp>) {
+export function initAdmin(...args: Parameters<typeof initializeApp>): FirebaseApp {
   const [options, name = '[DEFAULT]'] = args;
   for (const app of admin.apps) if (app?.name === name) return app;
   return admin.initializeApp({ ...firebase(), credential: getCredentials(), ...options }, name);
 }
 
-function getCredentials(): admin.credential.Credential | undefined {
+function getCredentials(): Credential | undefined {
   try {
-    const serviceAccount = JSON.parse(SAK_VALUE()) as admin.ServiceAccount;
-    return admin.credential.cert(serviceAccount);
+    const serviceAccount = JSON.parse(SAK_VALUE()) as ServiceAccount;
+    return credential.cert(serviceAccount);
   } catch (e) {
-    return admin.credential.applicationDefault();
+    return credential.applicationDefault();
   }
 }
 
@@ -60,7 +63,7 @@ export function getServiceAccountObj(GACValue: string): ServiceAccountKey {
 /**
  * Makes sure Firebase is initialised and returns Firestore object
  */
-export function getFirestoreEmulator(...args: Parameters<typeof admin.initializeApp>): FirebaseFirestore.Firestore {
+export function getFirestoreEmulator(...args: Parameters<typeof initializeApp>): FirebaseFirestore.Firestore {
   const port = firebaseConfig?.emulators?.firestore?.port ?? 8080;
   process.env['FIRESTORE_EMULATOR_HOST'] = `localhost:${port}`;
   const db = getDb(...args);
@@ -74,7 +77,7 @@ export function getFirestoreEmulator(...args: Parameters<typeof admin.initialize
   return db;
 }
 
-export function getAuthEmulator(...args: Parameters<typeof admin.initializeApp>) {
+export function getAuthEmulator(...args: Parameters<typeof initializeApp>) {
   const port = firebaseConfig?.emulators?.auth?.port ?? 9099;
   process.env['FIREBASE_AUTH_EMULATOR_HOST'] = `localhost:${port}`;
   return getAuth(...args);
@@ -83,28 +86,28 @@ export function getAuthEmulator(...args: Parameters<typeof admin.initializeApp>)
 /**
  * Makes sure firebase app is initialised and returns Auth service
  */
-export function getAuth(...args: Parameters<typeof admin.initializeApp>): admin.auth.Auth {
+export function getAuth(...args: Parameters<typeof initializeApp>): Auth {
   return _getAuth(initAdmin(...args));
 }
 
 /**
  * Makes sure Firebase is initialised and returns Firestore object
  */
-export function getDb(...args: Parameters<typeof admin.initializeApp>): FirebaseFirestore.Firestore {
+export function getDb(...args: Parameters<typeof initializeApp>): FirebaseFirestore.Firestore {
   return getFirestore(initAdmin(...args));
 }
 
 /**
  * Makes sure firebase app is initialised and returns Storage service
  */
-export function getStorage(...args: Parameters<typeof admin.initializeApp>): admin.storage.Storage {
+export function getStorage(...args: Parameters<typeof initializeApp>): Storage {
   return _getStorage(initAdmin(...args));
 }
 
 /**
  * Makes sure firebase app is initialised and returns emulated Storage service
  */
-export function getStorageEmulator(...args: Parameters<typeof admin.initializeApp>): admin.storage.Storage {
+export function getStorageEmulator(...args: Parameters<typeof initializeApp>): Storage {
   const port = firebaseConfig?.emulators?.storage?.port ?? 9199;
   process.env['FIREBASE_STORAGE_EMULATOR_HOST'] = `localhost:${port}`;
   return _getStorage(initAdmin(...args));
