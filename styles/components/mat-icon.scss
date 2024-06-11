@@ -9,7 +9,8 @@
   $background: map.get($config, 'background');
   $foreground: map.get($config, 'foreground');
 
-  mat-icon {
+  mat-icon,
+  .mdc-list-item--with-leading-icon mat-icon.mdc-list-item__start {
     color: mat.get-color-from-palette($foreground, icon);
     path, g, polygon {
       fill: currentColor;

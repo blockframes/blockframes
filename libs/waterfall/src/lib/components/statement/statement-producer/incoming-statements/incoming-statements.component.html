@@ -1,6 +1,6 @@
 <section *ngIf="statement$ | async as statement">
   <h3 i18n>Net Receipts Details</h3>
-  <mat-tab-group class="bf-tabs" *ngIf="distributors.length" selectedIndex="0" (selectedTabChange)="onTabChanged($event)">
+  <mat-tab-group mat-stretch-tabs="false" class="bf-tabs" *ngIf="distributors.length" selectedIndex="0" (selectedTabChange)="onTabChanged($event)">
     <mat-tab *ngFor="let distributor of distributors" [label]="distributor.name">
       <span *ngIf="distributorContracts[distributor.id]?.length > 1">
         <mat-form-field appearance="outline">
@@ -35,7 +35,7 @@
                           <mat-icon svgIcon="document" matTooltip="View Statement"  i18n-matTooltip></mat-icon>
                         </a>
                       </span>
-                      <p class="mat-body-1" i18n>Payment Date:  {{ stm.payments.rightholder.date | date }}
+                      <p class="mat-body-2" i18n>Payment Date:  {{ stm.payments.rightholder.date | date }}
                       </p>
                     </div>
                     <div class="statement-price">
@@ -62,7 +62,7 @@
                           <mat-icon svgIcon="document" matTooltip="View Statement" i18n-matTooltip></mat-icon>
                         </a>
                       </span>
-                      <p class="mat-body-1" i18n>
+                      <p class="mat-body-2" i18n>
                         Payment Date: 
                         <ng-container *ngIf="stm.payments.right[0] as payment">
                           {{ payment.date | date }}

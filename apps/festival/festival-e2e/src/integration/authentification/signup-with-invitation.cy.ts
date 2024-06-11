@@ -20,6 +20,8 @@ import {
   //helpers
   getTextBody,
   getSubject,
+  assertUrl,
+  deleteOrg,
 } from '@blockframes/testing/cypress/browser';
 import {
   userWithJoinOrgInvitation,
@@ -31,8 +33,7 @@ import {
   meetingEvent,
   meetingDocIndex,
 } from '../../fixtures/authentification/signup-with-invitation';
-import { territories, orgActivity } from '@blockframes/model';
-import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
+import { territories, orgActivity, USER_FIXTURES_PASSWORD } from '@blockframes/model';
 import { e2eSupportEmail } from '@blockframes/utils/constants';
 
 const { org, orgAdmin, permissions } = dashboardData;
@@ -153,6 +154,7 @@ describe('Signup following an invitation', () => {
   it('User invited for an event can signup', () => {
     const newUser = userWithEventInvitation;
     const newOrg = userWithEventInvitationOrg;
+    deleteOrg(newOrg.name); // Should delete org from Algolia in case of previous test failure
     cy.visit(`auth/identity?code=${meetingInvitationCode}&email=${encodeURIComponent(newUser.email)}`);
     get('cookies').click();
     get('email').should('be.disabled').invoke('val').should('contain', newUser.email);
@@ -165,6 +167,7 @@ describe('Signup following an invitation', () => {
       'contain',
       'Your User Account was successfully created. Please wait for our team to check your Company Information.'
     );
+    assertUrl('c/organization/create-congratulations');
     validateOrg(newOrg.name);
     get('org-approval-ok').should('exist');
     get('email-ok').should('exist');

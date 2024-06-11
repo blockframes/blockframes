@@ -73,7 +73,7 @@ export function aggregatePerUser(analytics: (Analytics<'title'> & { user: User, 
         user: analytic.user,
         org: analytic.org
       });
-    };
+    }
     aggregator[analytic.user.uid][analytic.name]++;
   }
   return Object.values(aggregator);
@@ -90,7 +90,7 @@ export const oneAnalyticsPerUser = (analytics: Analytics<'title' | 'organization
 
   for (const analytic of analytics) {
     if (!aggregator[analytic.meta.uid]) aggregator[analytic.meta.uid] = analytic;
-  };
+  }
 
   return Object.values(aggregator);
 };
@@ -150,7 +150,7 @@ interface VanityMetricEvent {
   name: EventName;
   title: string;
   icon: IconSvg;
-};
+}
 
 export const events: VanityMetricEvent[] = [
   {

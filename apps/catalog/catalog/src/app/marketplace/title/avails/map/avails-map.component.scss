@@ -82,10 +82,6 @@ world-map {
     color: #434773;
     @include mat.elevation(1);
 
-    mat-list-item {
-      height: 32px;
-    }
-
     svg {
       margin-right: 12px;
       width: 16px;
@@ -94,18 +90,3 @@ world-map {
   }
 }
 
-mat-card {
-  margin-bottom: 24px;
-
-  mat-card-subtitle {
-    margin-top: 20px;
-  }
-
-  mat-form-field {
-    width: 100%;
-  }
-
-  mat-card-content {
-    margin-top: 20px;
-  }
-}

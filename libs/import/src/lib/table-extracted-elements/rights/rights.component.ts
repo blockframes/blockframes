@@ -13,7 +13,7 @@ import { RightService } from '@blockframes/waterfall/right.service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { AmortizationService } from '@blockframes/waterfall/amortization.service';
 
-const hasImportErrors = (importState: RightsImportState, type: string = 'error'): boolean => {
+const hasImportErrors = (importState: RightsImportState, type = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
 };
 

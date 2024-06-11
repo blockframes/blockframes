@@ -12,10 +12,10 @@
     <h5>Accessibility</h5>
     <p>{{ event.accessibility | toLabel:'accessibility'}}</p>
     <h5>Date & Time</h5>
-    <pre class="mat-body-1">{{ event | eventRange }}</pre>
+    <pre class="mat-body-2">{{ event | eventRange }}</pre>
   </section>
 
-  <nav mat-tab-nav-bar>
+  <nav mat-tab-nav-bar [tabPanel]="tabPanel" mat-stretch-tabs="false">
     <ng-container *ngFor="let tab of (tabs$ | async)"> 
       <a mat-tab-link 
       [routerLink]="tab.path" 
@@ -27,6 +27,6 @@
   </nav>
 </ng-container>
 
-<div class="routerContainer" [@routeAnimation]="animationOutlet(outlet)">
+<div #tabPanel class="routerContainer" [@routeAnimation]="animationOutlet(outlet)">
   <router-outlet #outlet="outlet"></router-outlet> 
 </div>

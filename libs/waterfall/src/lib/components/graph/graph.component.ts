@@ -669,7 +669,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
           if (parentSource) {
             parentSource.destinationId = members[0].id;
             await this.waterfallService.updateSource(this.waterfallId, parentSource, { write });
-          };
+          }
 
           members[0].groupId = group.groupId ?? '';
           members[0].nextIds = [...group.nextIds];
@@ -682,7 +682,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
               nextIds.push(members[0].id);
               rightsToUpdate.push({ ...r, nextIds });
             }
-          };
+          }
 
           await Promise.all([
             this.rightService.update(rightsToUpdate, { params: { waterfallId: this.waterfallId }, write }),

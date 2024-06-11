@@ -11,7 +11,7 @@
 
   <form [formGroup]="form" (ngSubmit)="validateLogin()">
     <h1>Welcome to Archipel Market!</h1>
-    <p class="mat-body-1">I don't have an account</p>
+    <p class="mat-body-2">I don't have an account</p>
     <a routerLink="/auth/identity">Sign up</a>
 
     <mat-form-field appearance="outline">
@@ -22,15 +22,15 @@
       </mat-error>
     </mat-form-field>
     <password-input [control]="form.get('password')" placeholder="Password" label="Password" test-id="password">
-      <mat-error *ngIf="form.get('password').hasError('required')">
+      <span bf-mat-error *ngIf="form.get('password').hasError('required')">
         Password is <strong>required</strong>
-      </mat-error>
-      <mat-error *ngIf="form.get('password').hasError('minlength')">
+      </span>
+      <span bf-mat-error *ngIf="form.get('password').hasError('minlength')">
         New password with less than <strong>6</strong> characters.
-      </mat-error>
-      <mat-error *ngIf="form.get('password').hasError('maxlength')">
+      </span>
+      <span bf-mat-error *ngIf="form.get('password').hasError('maxlength')">
         New password with more than <strong>24</strong> characters.
-      </mat-error>
+      </span>
       <mat-hint>Between 6 and 24 characters.</mat-hint>
     </password-input>
 

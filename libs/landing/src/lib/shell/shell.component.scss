@@ -107,6 +107,9 @@ landing-shell-page {
           button[app-logo] {
             margin-right: auto;
           }
+          mat-form-field {
+            width: 320px;
+          }
         }
         form {
           display: flex;

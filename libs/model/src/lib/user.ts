@@ -37,7 +37,7 @@ export interface LegalTerms {
 export interface PreferredLanguage {
   language: SupportedLanguages;
   isoA2: TerritoryISOA2Value;
-};
+}
 
 interface UserSettings {
   notifications?: NotificationSettings;
@@ -125,3 +125,5 @@ function fakeIp() {
 }
 
 export const fakeLegalTerms = { date: new Date(), ip: fakeIp() };
+
+export const USER_FIXTURES_PASSWORD = 'blockframes';

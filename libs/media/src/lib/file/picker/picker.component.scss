@@ -17,15 +17,11 @@
     width: 100%;
     height: calc(100% - 50px);
     min-height: calc(50vh - 40px);
-
     mat-tab-group {
       width: 60%;
-      mat-list {
+      mat-action-list {
         margin-left: 12px;
 
-        .clickable {
-          cursor: pointer;
-        }
       }
     }
 
@@ -53,19 +49,11 @@
       h4 {
         margin-top: 16px;
       }
-
       mat-list {
         // this is needed in order to have a scrollable
         // list of selected files
         overflow-y: auto;
         margin-bottom: 16px;
-        mat-list-item {
-          button {
-            mat-icon {
-              width: 16px;
-            }
-          }
-        }
       }
     }
   }

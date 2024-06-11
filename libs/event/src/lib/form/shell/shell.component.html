@@ -1,4 +1,4 @@
-﻿<ng-container *ngIf="form else loading">
+﻿﻿<ng-container *ngIf="form else loading">
   <ng-template pageBar>
     <header fxLayout fxLayoutAlign="space-between center">
       <section>
@@ -21,12 +21,12 @@
             </a>
           </ng-container>
 
-          <mat-chip-list *ngSwitchCase="'video'" test-id="warning-video">
+          <mat-chip-listbox *ngSwitchCase="'video'" test-id="warning-video">
             <mat-chip disableRipple>
               <mat-icon svgIcon="warning"></mat-icon>
               <span>Video file missing</span>
             </mat-chip>
-          </mat-chip-list>
+          </mat-chip-listbox>
         </ng-container>
 
       </section>
@@ -43,7 +43,7 @@
   </ng-template>
 
   <form [formGroup]="form">
-    <mat-card>
+    <mat-card appearance="outlined">
       <section fxLayout fxLayoutAlign="space-between start">
         <h2>Details</h2>
         <event-agenda-export [event]="form.value" text="Export Event"></event-agenda-export>
@@ -51,7 +51,7 @@
       <event-details-edit [form]="form" showPrivacy></event-details-edit>
     </mat-card>
     <div>
-      <nav mat-tab-nav-bar>
+      <nav mat-tab-nav-bar [tabPanel]="tabPanel" mat-stretch-tabs="false">
         <ng-container *ngFor="let tab of (tabs$ |async)">
           <a mat-tab-link [routerLink]="tab.path" [queryParams]="queryParams$ | async"
           routerLinkActive #rla="routerLinkActive" [active]="rla.isActive" [attr.test-id]="tab.path"
@@ -67,7 +67,7 @@
     </div>
   </form>
 
-  <div class="routerContainer" [@routeAnimation]="animationOutlet(outlet)">
+  <div #tabPanel class="routerContainer" [@routeAnimation]="animationOutlet(outlet)">
     <router-outlet #outlet="outlet"></router-outlet>
   </div>
 

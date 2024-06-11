@@ -11,7 +11,7 @@ export interface PoolModalData {
   selected: Set<string>;
   name?: string;
   onConfirm?: (newPool: { name: string, rightIds: string[] }) => void;
-};
+}
 
 @Component({
   selector: 'waterfall-pool-modal',

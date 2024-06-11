@@ -1,0 +1,65 @@
+{
+  "name": "festival-e2e",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/festival/festival-e2e/src",
+  "projectType": "application",
+  "tags": ["browser", "e2e"],
+  "implicitDependencies": ["festival"],
+  "targets": {
+    "serve": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/festival/festival-e2e/cypress.config.js",
+        "baseUrl": "http://localhost:4200",
+        "watch": true,
+        "headless": false,
+        "exit": false,
+        "record": false,
+        "browser": "chrome",
+        "devServerTarget": "festival:serve",
+        "env": {
+          "notice": "Env is being read"
+        }
+      },
+      "configurations": {
+        "emulator": {
+          "devServerTarget": "festival:serve:emulator",
+          "env": {
+            "notice": "Env is being read",
+            "emulator": true
+          }
+        }
+      }
+    },
+    "e2e": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/festival/festival-e2e/cypress.config.js",
+        "baseUrl": "http://localhost:4200",
+        "browser": "chrome",
+        "devServerTarget": "festival:serve"
+      },
+      "configurations": {
+        "emulator": {
+          "devServerTarget": "festival:serve:emulator",
+          "env": {
+            "notice": "Env is being read",
+            "emulator": true
+          }
+        },
+        "emulator-incognito": {
+          "devServerTarget": "festival:serve:emulator",
+          "env": {
+            "notice": "Env is being read",
+            "emulator": true,
+            "incognito": true
+          }
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  }
+}

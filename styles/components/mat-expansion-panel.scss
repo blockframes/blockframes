@@ -43,12 +43,13 @@
   
   .mat-expansion-panel-header-title {
     font: {
-      size: mat.font-size($config, 'body-2');
+      size: mat.font-size($config, 'subtitle-2');
       weight: mat.font-weight($config, 'button');
     }
   }
 
-  .mat-expansion-panel-content {
-    @include mat.typography-level($config, body-2);
+  .mat-expansion-panel-content,
+  .mat-expansion-panel-content .mdc-form-field {
+    @include mat.typography-level($config, subtitle-2);
   }
 }

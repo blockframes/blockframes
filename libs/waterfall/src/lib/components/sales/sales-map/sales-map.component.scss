@@ -87,10 +87,6 @@ world-map {
     color: #434773;
     @include mat.elevation(1);
 
-    mat-list-item {
-      height: 32px;
-    }
-
     svg {
       margin-right: 12px;
       width: 16px;
@@ -103,7 +99,7 @@ div.empty-map {
   flex-direction: column;
   text-align: center;
   height: 100%;
-  p.mat-body-1 {
+  p.mat-body-2 {
     font-weight: bold;
   }
   img {

@@ -1,9 +1,5 @@
 ﻿module.exports = {
-  name: 'backend-functions',
   preset: '../../jest.preset.js',
-  globals: {
-    'ts-jest': { tsconfig: '<rootDir>/tsconfig.spec.json' },
-  },
   transform: {
     '^.+\\.(ts|html)$': 'ts-jest',
   },

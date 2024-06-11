@@ -28,7 +28,7 @@ p, span, td {
   }
 }
 
-a:not(.mat-button-base):not(.mat-menu-item) {
+a:not(.mat-mdc-button-base):not(.mat-mdc-menu-item) {
   &[href^="assets"], &[href^="mailto"] {
     font-weight: bold;
   }
@@ -53,10 +53,12 @@ ul.grid {
   text-overflow: ellipsis;
 }
 
-// Apply space of 8px between span & icon everywhere
-.mat-icon + span,
-span + .mat-icon {
-  margin-left: 8px;
+// Apply space of 8px between span & icon everywhere except for mat-icon-buttons
+*:not(.mdc-icon-button):not(.mat-mdc-fab):not(.mat-mdc-mini-fab) > {
+  .mat-icon + span,
+  span:not(.mat-mdc-button-persistent-ripple) + .mat-icon {
+    margin-left: 8px;
+  }
 }
 
 // Apply space of 4px between span & spinner inside a or button
@@ -122,9 +124,4 @@ body {
   .intercom-lightweight-app, .intercom-namespace {
     z-index: 999; // It needs to be above everything except the cdk-overlay, which has a z-index: 1000
   }
-}
-
-a.mat-button.main-dashboard-cta,
-button.mat-button.main-dashboard-cta {
-  background-color: var(--dashboard-cta);
 }

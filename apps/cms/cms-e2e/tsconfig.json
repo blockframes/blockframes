@@ -1,13 +1,14 @@
 ﻿{
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "types": ["cypress", "node", "cypress-wait-until"]
+    "types": [
+      "cypress",
+      "node",
+      "cypress-wait-until"
+    ],
+    "sourceMap": false,
+    "outDir": "../../../dist/out-tsc"
   },
   "include": [],
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.e2e.json"
-    }
-  ]
+  "files": []
 }

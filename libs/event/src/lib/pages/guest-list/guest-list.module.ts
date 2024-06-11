@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GuestListComponent } from './guest-list.component';
-import { EventFromShellModule } from '@blockframes/event/form/shell/shell.module';
+import { EventFromShellModule } from '../../form/shell/shell.module';
 import { RouterModule } from '@angular/router';
 
 // Material

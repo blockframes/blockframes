@@ -21,7 +21,7 @@ export interface PdfParams {
 export interface PdfRequest {
   method: string,
   body: PdfParams
-};
+}
 
 export interface StatementPdfParams {
   waterfallId: string;
@@ -35,4 +35,4 @@ export interface StatementPdfParams {
 export interface StatementPdfRequest {
   method: string,
   body: StatementPdfParams
-};
+}

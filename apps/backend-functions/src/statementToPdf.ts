@@ -33,7 +33,7 @@ import { format } from 'date-fns';
 import { shareStatement } from './templates/mail';
 import { groupIds } from '@blockframes/utils/emails/ids';
 import { sendMailFromTemplate } from './internals/email';
-import { CallableContext } from 'firebase-functions/lib/common/providers/https';
+import { CallableContext } from 'firebase-functions/v1/https';
 
 const locale = 'en-us';
 

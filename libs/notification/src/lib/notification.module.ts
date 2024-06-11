@@ -8,7 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { NotificationComponent } from './notification.component';
 
 // Material
-import { MatButtonModule } from '@angular/material/button';
+import { MatButtonModule} from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 // Blockframes

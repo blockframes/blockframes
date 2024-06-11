@@ -2,7 +2,7 @@
   <h2 i18n>Right Holder's 1st Statement Settings</h2>
   
   <header>
-    <p class="mat-body-1" i18n>Please verify the information below</p>
+    <p class="mat-body-2" i18n>Please verify the information below</p>
   </header>
 
   <waterfall-rightholder-select [rightholders]="rightholders" [control]="rightholderControl">
@@ -19,8 +19,8 @@
   </mat-form-field>
 
   <section>
-    <p class="mat-body-1" i18n>Can’t find right holder or contract on the list?</p>
-    <p class="mat-body-1" *ngIf="data.canBypassRules" i18n><a [routerLink]="['/c/o/dashboard/title', data.waterfall.id, 'init']" target="_blank" (click)="close()">Please add a new contract</a> before adding a Statement.</p>
+    <p class="mat-body-2" i18n>Can’t find right holder or contract on the list?</p>
+    <p class="mat-body-2" *ngIf="data.canBypassRules" i18n><a [routerLink]="['/c/o/dashboard/title', data.waterfall.id, 'init']" target="_blank" (click)="close()">Please add a new contract</a> before adding a Statement.</p>
     <button mat-button *ngIf="!data.canBypassRules" (click)="openIntercom()">
       <mat-icon svgIcon="help"></mat-icon>
       <span i18n>Ask for Help</span>
@@ -30,7 +30,7 @@
   <mat-dialog-actions>
     <button [disabled]="!contractControl.value" mat-flat-button color="primary" (click)="confirm()">
       <span i18n>Continue</span>
-      <mat-icon svgIcon="arrow_forward"></mat-icon>
+      <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
     </button>
     <button mat-button (click)="close()" i18n>
       Close window

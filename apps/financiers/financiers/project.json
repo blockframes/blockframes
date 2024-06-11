@@ -1,0 +1,93 @@
+{
+  "name": "financiers",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/financiers/financiers/src",
+  "prefix": "financiers",
+  "tags": ["browser"],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "options": {
+        "outputPath": "dist/apps/financiers",
+        "index": "apps/financiers/financiers/src/index.html",
+        "main": "apps/financiers/financiers/src/main.ts",
+        "polyfills": "apps/financiers/financiers/src/polyfills.ts",
+        "tsConfig": "apps/financiers/financiers/tsconfig.app.json",
+        "assets": [
+          "apps/financiers/financiers/src/favicon.ico",
+          "apps/financiers/financiers/src/assets",
+          "apps/financiers/financiers/src/manifest.webmanifest",
+          "apps/financiers/financiers/src/robots.txt",
+          {
+            "glob": "**/*",
+            "input": "./assets",
+            "output": "./assets"
+          }
+        ],
+        "styles": ["apps/financiers/financiers/src/styles.scss"],
+        "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"],
+        "stylePreprocessorOptions": {
+          "includePaths": ["styles"]
+        },
+        "vendorChunk": true,
+        "extractLicenses": false,
+        "buildOptimizer": false,
+        "sourceMap": true,
+        "optimization": false,
+        "namedChunks": true
+      },
+      "configurations": {
+        "emulator": {
+          "fileReplacements": [
+            {
+              "replace": "apps/financiers/financiers/src/environment/environment.ts",
+              "with": "apps/financiers/financiers/src/environment/environment.emulator.ts"
+            }
+          ]
+        },
+        "production": {
+          "optimization": true,
+          "outputHashing": "all",
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "buildOptimizer": true
+        }
+      }
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "buildTarget": "financiers:build"
+      },
+      "configurations": {
+        "emulator": {
+          "buildTarget": "financiers:build:emulator"
+        }
+      }
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "buildTarget": "financiers:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "deploy": {
+      "executor": "@nx/workspace:run-commands",
+      "options": {
+        "envFile": ".env",
+        "commands": [
+          "npx cross-env nx build financiers --configuration=$NG_CONFIG",
+          "npx cross-env firebase deploy --project $PROJECT_ID --only hosting:financiers"
+        ],
+        "parallel": false,
+        "color": true
+      }
+    }
+  }
+}

@@ -1,6 +1,5 @@
 // Angular
 import { Injectable } from '@angular/core';
-import { CanDeactivate } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
@@ -15,10 +14,10 @@ export interface WaterfallFormGuardedComponent {
   contractForm: WaterfallContractForm;
   rightholdersForm: FormArray<FormGroup<{ id: FormControl<string>, name: FormControl<string>, roles: FormControl<RightholderRole[]> }>>;
   canLeaveGraphForm: boolean;
-};
+}
 
 @Injectable({ providedIn: 'root' })
-export class WaterfallFormGuard<T extends WaterfallFormGuardedComponent> implements CanDeactivate<T> {
+export class WaterfallFormGuard<T extends WaterfallFormGuardedComponent> {
 
   constructor(
     private dialog: MatDialog,

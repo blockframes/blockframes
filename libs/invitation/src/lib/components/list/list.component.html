@@ -3,7 +3,7 @@
     <!-- For a time frame -->
     <ng-container *ngIf="(invitations | filterByDate: timeFrame) as invitationList">
 
-      <p class="mat-body-2" *ngIf="invitationList.length">
+      <p class="mat-subtitle-2" *ngIf="invitationList.length">
         {{ timeFrame | labelByDate }}
       </p>
       <mat-divider *ngIf="invitationList.length"></mat-divider>

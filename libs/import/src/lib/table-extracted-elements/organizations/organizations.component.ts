@@ -13,7 +13,7 @@ import { AuthService } from '@blockframes/auth/service';
 import { PublicUser, getOrgAppAccess, OrgEmailData } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
-const hasImportErrors = (importState: OrganizationsImportState, type: string = 'error'): boolean => {
+const hasImportErrors = (importState: OrganizationsImportState, type = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
 };
 

@@ -26,5 +26,5 @@ export class CardComponent {
   @Input()
   set user(user: User) {
     this.userView = createUserView(user);
-  };
+  }
 }

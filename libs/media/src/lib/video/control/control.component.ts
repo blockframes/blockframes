@@ -3,7 +3,6 @@ import { BehaviorSubject } from 'rxjs';
 import { MatSliderChange } from '@angular/material/slider';
 import { MeetingVideoControl } from '@blockframes/model';
 
-
 @Component({
   selector: '[control] video-control',
   templateUrl: './control.component.html',
@@ -11,7 +10,6 @@ import { MeetingVideoControl } from '@blockframes/model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VideoControlComponent {
-
 
   control$ = new BehaviorSubject<MeetingVideoControl>(undefined);
   @Input() set control(value: MeetingVideoControl) {

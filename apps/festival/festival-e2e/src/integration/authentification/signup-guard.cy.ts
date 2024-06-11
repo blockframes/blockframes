@@ -13,7 +13,7 @@ import {
   fillCommonInputs,
 } from '@blockframes/testing/cypress/browser';
 import { newUser, newOrg } from '../../fixtures/authentification/signup';
-import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
+import { USER_FIXTURES_PASSWORD } from '@blockframes/model';
 
 describe('Signup', () => {
   beforeEach(() => {

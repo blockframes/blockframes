@@ -8,11 +8,11 @@ import {
   Territory,
   MediaGroup,
   TerritoryGroup,
+  USER_FIXTURES_PASSWORD
 } from '@blockframes/model';
 import { browserAuth } from './browserAuth';
 import { gmail } from './gmail';
 import { gmail_v1 } from 'googleapis';
-import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { sub } from 'date-fns';
 import { dateToMMDDYYYY } from './helpers';
 
@@ -29,7 +29,7 @@ export function get(selector: string) {
 }
 
 export function snackbarShould(verb: 'not.exist' | 'contain', value?: string) {
-  !value ? cy.get('snack-bar-container').should(verb) : cy.get('snack-bar-container').should(verb, value);
+  !value ? cy.get('mat-snack-bar-container').should(verb) : cy.get('mat-snack-bar-container').should(verb, value);
 }
 
 export function getByClass(selector: string) {
@@ -198,8 +198,9 @@ export function selectMedias(mediaGroup: MediaGroup) {
 export function selectDates(from: Date, to: Date) {
   get('dateFrom').should('be.enabled');
   get('dateTo').should('be.enabled');
-  get('dateFrom').clear().type(dateToMMDDYYYY(from));
-  get('dateTo').clear().type(dateToMMDDYYYY(to));
+  // force click because the input is hidden by mat-label since angular 15 migration
+  get('dateFrom').clear({ force: true }).type(dateToMMDDYYYY(from), { force: true });
+  get('dateTo').clear({ force: true }).type(dateToMMDDYYYY(to), { force: true });
 }
 
 export function selectNonExclusive() {

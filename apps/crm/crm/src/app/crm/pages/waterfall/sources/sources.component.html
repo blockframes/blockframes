@@ -14,11 +14,11 @@
       {{ name }}
     </ng-template>
     <ng-template colRef="medias" label="Medias" let-medias sort>
-      <mat-chip-list *ngIf="medias.length else noMedias" aria-label="Medias">
+      <mat-chip-listbox *ngIf="medias.length else noMedias" aria-label="Medias">
         <mat-chip disableRipple *ngFor="let media of medias  | toGroupLabel:'medias':'All'">
           {{ media }}
         </mat-chip>
-      </mat-chip-list>
+      </mat-chip-listbox>
       <ng-template #noMedias>--</ng-template>
     </ng-template>
     <ng-template colRef="territories" label="Territories" let-territories sort>

@@ -5,7 +5,7 @@
       <div class="org-info">
         <h1>{{ org.name }}</h1>
         <h3>{{ org.activity | toLabel: 'orgActivity' }}</h3>
-        <p class="mat-body-2">{{ org | orgAddress }}</p>
+        <p class="mat-subtitle-2">{{ org | orgAddress }}</p>
       </div>
     </article>
       <a mat-button color="primary" (click)="goBack()" fxLayoutAlign="center center">
@@ -14,7 +14,7 @@
       </a>
   </header>
   <section>
-    <nav mat-tab-nav-bar>
+    <nav mat-tab-nav-bar [tabPanel]="tabPanel" mat-stretch-tabs="false">
       <a mat-tab-link
         *ngFor="let link of navLinks"
         [routerLink]="link.path"
@@ -26,6 +26,6 @@
     </nav>
   </section>
 </ng-container>
-<section>
+<section #tabPanel>
   <router-outlet></router-outlet>
 </section>

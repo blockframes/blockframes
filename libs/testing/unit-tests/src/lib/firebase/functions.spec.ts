@@ -2,7 +2,7 @@
 import { initFunctionsTestMock } from './functions';
 
 describe('firebase testing library', () => {
-  it.skip('should read the doc and get same data', async () => {
+  it('should read the doc and get same data', async () => {
     //Init Mocks and environment
     initFunctionsTestMock();
 

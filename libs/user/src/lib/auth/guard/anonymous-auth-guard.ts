@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from '@blockframes/auth/service';
-import { CanActivate } from '@angular/router';
+import { AuthService } from '../service';
+
 import { FirestoreService } from 'ngfire';
 import { algoliaAnonymousSearchKeyDoc } from '@blockframes/utils/maintenance';
 import { DocumentReference, getDoc } from 'firebase/firestore';
-import { IAlgoliaKeyDoc } from 'libs/model/src/lib/maintenance';
+import { IAlgoliaKeyDoc } from '@blockframes/model';
 import { setSearchKey } from '@blockframes/utils/algolia/helper.utils';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AnonymousAuthGuard implements CanActivate {
+export class AnonymousAuthGuard {
   constructor(
     private authService: AuthService,
     private firestore: FirestoreService,

@@ -4,7 +4,7 @@ import {
   getTestingProjectId,
   populate,
 } from '@blockframes/testing/unit-tests';
-import { loadAdminServices } from '@blockframes/firebase-utils';
+import { loadAdminServices } from './util';
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { getApps, deleteApp } from 'firebase/app';
 

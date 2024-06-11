@@ -3,7 +3,7 @@
 </a>
 <header fxLayout="column">
   <h5>{{ org.name }}</h5>
-  <span class="mat-body-2">{{ (org.activity | toLabel: 'orgActivity') || "-" }}</span>
+  <span class="mat-subtitle-2">{{ (org.activity | toLabel: 'orgActivity') || "-" }}</span>
 </header>
 <div *ngIf="hideTabs">
   <p class="mat-caption">{{ (org.addresses.main.country | toLabel: 'territories') || "-" }}</p>
@@ -13,7 +13,7 @@
     </p>
   </ng-container>
 </div>
-<mat-tab-group *ngIf="!hideTabs" headerPosition="below" mat-align-tabs="center" [disablePagination]="true">
+<mat-tab-group mat-stretch-tabs="false" *ngIf="!hideTabs" headerPosition="below" mat-align-tabs="center" [disablePagination]="true">
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon svgIcon="account_circle"></mat-icon>

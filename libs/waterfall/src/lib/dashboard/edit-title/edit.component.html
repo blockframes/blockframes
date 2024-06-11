@@ -24,7 +24,7 @@
       <button mat-flat-button color="primary" (click)="update()" [disabled]="(invalidMovie$ | async) || movieForm.disabled">
         <span *ngIf="createMode" i18n>Create Movie</span>
         <span *ngIf="!createMode" i18n>Edit Movie</span>
-        <mat-icon svgIcon="arrow_forward"></mat-icon>
+        <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
       </button>
     </ng-template>
   </section>

@@ -1,9 +1,9 @@
 
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { FileUploaderService } from '@blockframes/media/file-uploader.service';
+import { FileUploaderService } from '../../file-uploader.service';
 import { StorageFile, CollectionHoldingFile } from '@blockframes/model';
-import { FileLabel } from '@blockframes/media/utils';
-import { StorageFileForm } from '@blockframes/media/form/media.form';
+import { FileLabel } from '../../utils';
+import { StorageFileForm } from '../../form/media.form';
 import { FormList } from '@blockframes/utils/form';
 import { AllowedFileType } from '@blockframes/model';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';

@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { MaintenanceService } from './service';
 import { map, tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class MaintenanceGuard implements CanActivate {
-  constructor(private service: MaintenanceService, private router: Router) {}
+export class MaintenanceGuard {
+  constructor(private service: MaintenanceService, private router: Router) { }
 
   canActivate(_: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     if (state.url === '/maintenance') {

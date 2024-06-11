@@ -1,0 +1,14 @@
+{
+  "name": "movie",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/movie/src",
+  "projectType": "library",
+  "prefix": "movie",
+  "tags": ["browser"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  }
+}

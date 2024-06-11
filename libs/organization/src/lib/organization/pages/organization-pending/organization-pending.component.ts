@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject, Optional } from '@angular/core';
 import { InvitationService } from '@blockframes/invitation/service';
-import { OrganizationService } from '@blockframes/organization/service';
+import { OrganizationService } from '../../service';
 import { filter, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Intercom } from 'ng-intercom';

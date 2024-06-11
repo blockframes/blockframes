@@ -98,10 +98,12 @@ export class ListPageComponent implements AfterContentInit {
       justify-content: center;
       width: 100%;
     }
+    
     mat-progress-bar {
-        margin: 16px;
-        width: 80%;
-      }`],
+      margin: 16px;
+      width: 80%;
+    }
+    `],
   animations: [slideUp],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

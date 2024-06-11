@@ -1,5 +1,6 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
+@use '../typography' as typography;
 
 @mixin color($theme) {
   $config: mat.get-color-config($theme);
@@ -7,24 +8,16 @@
   $warn: map.get($config, 'warn');
   $foreground: map.get($config, 'foreground');
 
-
-  .mat-form-field {
-    &.ng-valid, &.ng-invalid, &.mat-form-field-type-mat-chip-list {
-      .mat-form-field-wrapper {
-        padding-bottom: 0.6em;
-      } 
-    }
+  .mat-mdc-form-field {
+    margin-top: 0.40em;
 
     &-underline {
       position: static;
     }
 
-    &-subscript-wrapper {
-      position: static;
-    }
 
     &[no-underline] {
-      .mat-form-field-underline {
+      .mat-mdc-form-field-underline {
         display: none;
       }
     }
@@ -57,16 +50,55 @@
         line-height: 20px;
       }
     }
+    .mat-icon {
+      margin-left: 0px;
+    }
 
-    mat-icon[matPrefix] {
+    mat-icon[matPrefix],
+    .mat-mdc-form-field-icon-suffix {
       margin-left: 10px;
       margin-right: 10px;
     }
+
+    .mdc-text-field,
+    .mdc-text-field:hover,
+    .mat-mdc-form-field-focus-overlay {
+      background-color: transparent;
+      .mdc-line-ripple::before {
+        border-bottom-color: mat.get-color-from-palette($foreground, divider);
+      }
+    }
+
+    .mdc-text-field:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid) .mdc-floating-label,
+    .mat-mdc-form-field-hint {
+      color: mat.get-color-from-palette($foreground, border-color);
+    }
+
   }
 
   // OUTLINE
   .mat-form-field-appearance-outline {
-    .mat-form-field-outline {
+    /* Change the border color */
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid) .mdc-notched-outline__leading,
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid) .mdc-notched-outline__notch,
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid) .mdc-notched-outline__trailing {
+      border-color: mat.get-color-from-palette($foreground, divider);
+    }
+
+    /* Change the border hover color */
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover
+    .mdc-notched-outline
+    .mdc-notched-outline__leading,
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover
+    .mdc-notched-outline
+    .mdc-notched-outline__notch,
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover
+    .mdc-notched-outline
+    .mdc-notched-outline__trailing {
+      border-color: var(--primary);
+    }
+
+    .mdc-text-field--outlined {
       color: mat.get-color-from-palette($foreground, divider);
     }
     // This one is when mat-form-field is hovered
@@ -85,4 +117,43 @@
       }
     }
   }
+
+  .mat-mdc-select:not(.mat-mdc-select-disabled) .mat-mdc-select-value,
+  .mdc-form-field:not(.mat-form-field-disabled) > label,
+  .mat-mdc-option:not(.mdc-list-item--selected):not(.mdc-list-item--disabled) .mdc-list-item__primary-text,
+  .mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-input-element { color: mat.get-color-from-palette($foreground, text); }
+
+  .mdc-menu-surface.mat-mdc-select-panel {
+    padding: 0px;
+  }
+
+  scope-multiselect:not([selectIcon="none"]) .mat-mdc-form-field label:not(.mdc-floating-label--float-above),
+  group-multiselect:not([selectIcon="none"]) .mat-mdc-form-field label:not(.mdc-floating-label--float-above) { 
+    margin-left: 58px;
+    --mat-mdc-form-field-label-offset-x: 0px;
+    transform: var(--mat-mdc-form-field-label-transform, translateY(-50%) translateX(0%))!important;
+  }
+
+  .mat-mdc-slide-toggle {
+    --mdc-switch-selected-handle-color: var(--primary);
+    --mdc-switch-selected-pressed-handle-color: var(--primary);
+    --mdc-switch-selected-pressed-state-layer-color: var(--primary);
+    --mdc-switch-selected-hover-state-layer-color: var(--primary);
+    --mdc-switch-selected-hover-handle-color: var(--primary);
+    --mdc-switch-selected-focus-state-layer-color: var(--primary);
+    --mdc-switch-selected-focus-handle-color: var(--primary);
+  }
+
+  .mat-mdc-radio-button .mdc-radio { --mdc-radio-state-layer-size : 30px }
+  .dark-contrast-theme .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__background { --mdc-checkbox-unselected-icon-color: #FFF; }
 }
+
+// TYPOGRAPHY
+@mixin typography($theme) {
+  .mat-mdc-form-field,
+  .mat-mdc-floating-label,
+  .mat-mdc-select-panel {
+    @include mat.typography-level(typography.$bf-typography, 'input');
+  }
+}
+

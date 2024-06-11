@@ -214,7 +214,7 @@ interface ConsistencyError {
     docId: string,
     field: string
   }
-};
+}
 
 function auditConsistency(dbData: DatabaseData, collections: CollectionData[], auditedCollectionName: 'users' | 'orgs') {
   const auditedCollection = dbData[auditedCollectionName];

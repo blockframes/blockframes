@@ -1,0 +1,20 @@
+{
+  "name": "model",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/model/src",
+  "projectType": "library",
+  "tags": ["shared"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/model"],
+      "options": {
+        "jestConfig": "libs/model/jest.config.js"
+      }
+    }
+  }
+}

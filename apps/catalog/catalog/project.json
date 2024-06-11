@@ -1,0 +1,107 @@
+{
+  "name": "catalog",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/catalog/catalog/src",
+  "prefix": "catalog",
+  "tags": ["browser"],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "options": {
+        "outputPath": "dist/apps/catalog",
+        "index": "apps/catalog/catalog/src/index.html",
+        "main": "apps/catalog/catalog/src/main.ts",
+        "polyfills": "apps/catalog/catalog/src/polyfills.ts",
+        "tsConfig": "apps/catalog/catalog/tsconfig.app.json",
+        "stylePreprocessorOptions": {
+          "includePaths": ["styles"]
+        },
+        "assets": [
+          "apps/catalog/catalog/src/favicon.ico",
+          "apps/catalog/catalog/src/assets",
+          "apps/catalog/catalog/src/manifest.webmanifest",
+          "apps/catalog/catalog/src/robots.txt",
+          {
+            "glob": "**/*",
+            "input": "./assets",
+            "output": "./assets"
+          }
+        ],
+        "styles": ["apps/catalog/catalog/src/styles.scss"],
+        "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"],
+        "vendorChunk": true,
+        "extractLicenses": false,
+        "buildOptimizer": false,
+        "sourceMap": true,
+        "optimization": false,
+        "namedChunks": true
+      },
+      "configurations": {
+        "emulator": {
+          "fileReplacements": [
+            {
+              "replace": "apps/catalog/catalog/src/environment/environment.ts",
+              "with": "apps/catalog/catalog/src/environment/environment.emulator.ts"
+            }
+          ]
+        },
+        "production": {
+          "optimization": true,
+          "outputHashing": "all",
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "buildOptimizer": true,
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "2mb",
+              "maximumError": "5mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "6kb",
+              "maximumError": "10kb"
+            }
+          ],
+          "serviceWorker": true,
+          "ngswConfigPath": "ngsw-config.json"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "buildTarget": "catalog:build"
+      },
+      "configurations": {
+        "emulator": {
+          "buildTarget": "catalog:build:emulator"
+        }
+      }
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "buildTarget": "catalog:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "deploy": {
+      "executor": "@nx/workspace:run-commands",
+      "options": {
+        "envFile": ".env",
+        "commands": [
+          "npx cross-env nx build catalog --configuration=$NG_CONFIG",
+          "npx cross-env firebase deploy --project=$PROJECT_ID --only hosting:catalog"
+        ],
+        "parallel": false,
+        "color": true
+      }
+    }
+  }
+}

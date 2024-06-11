@@ -27,6 +27,7 @@ import {
   MovieNoteRole,
   ReleaseMedia,
   ReleaseMediaValue,
+  screeningStatus,
 } from './static';
 import type {
   Producer,
@@ -606,4 +607,23 @@ export function moviesToCrmMovies(movies: Movie[], orgs: Organization[], screeni
     return { ...m, releaseMedias: Array.from(new Set(releaseMedias)), org, screeningCount, mandate, allPrizes }
   })
   return CrmMovies
+}
+
+/**
+ * Format the running time to show 'time min' and the status if needed
+ * @param runningTime Object runningTime
+ * @param isStatusNeeded For some component, like movie-card, we don't want the status at all
+ */
+export function formatRunningTime(runningTime?: MovieRunningTime, isStatusNeeded = true) {
+  const { time, status, episodeCount } = runningTime;
+
+  const timeString = episodeCount ? `${episodeCount} x ${time} min` : `${time} min`;
+
+  if (isStatusNeeded) {
+    if (status === 'tobedetermined' || (!time && status)) return screeningStatus[status];
+    if (time && status && status !== 'confirmed') return `${timeString} (${screeningStatus[runningTime.status]})`;
+    if (time && !status) return timeString;
+  }
+
+  if (time) return status === 'estimated' ? `≈ ${timeString}` : timeString;
 }

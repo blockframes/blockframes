@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { MovieForm, MovieReviewForm } from '@blockframes/movie/form/movie.form';
+import { MovieForm, MovieReviewForm } from '../../../form/movie.form';
 
 @Component({
   selector: '[movie][link] movie-summary-review',

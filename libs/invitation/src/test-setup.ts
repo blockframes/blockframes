@@ -1,6 +1,8 @@
 import 'jest-preset-angular/setup-jest';
 import 'jest';
 
+global.fetch = jest.fn(() => Promise.resolve({ json: () => Promise.resolve([]), }),) as jest.Mock;
+
 import { getTestBed } from '@angular/core/testing';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 

@@ -7,7 +7,7 @@ mat-card {
   margin-bottom: 24px;
 }
 
-.mat-card-header .mat-card-title {
+.mat-mdc-card-header .mat-mdc-card-title {
   margin-bottom: 16px;
   &.title {
     margin-bottom: 4px;
@@ -19,7 +19,7 @@ h5 {
 }
 
 drop-cropper {
-  h3, p.mat-body-2 {
+  h3, p.mat-subtitle-2 {
     margin-bottom: 4px;
   }
   p.mat-caption {

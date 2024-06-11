@@ -38,7 +38,7 @@ import {
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { AuthService } from '@blockframes/auth/service';
-import { doc } from 'firebase/firestore';
+import { Transaction, doc } from 'firebase/firestore';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 import { waterfall as _waterfall } from './main';
 import { BlockService } from './block.service';
@@ -91,7 +91,7 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
 
   onUpdate(waterfall: Waterfall, { write }: WriteOptions) {
     const waterfallRef = doc(this.db, `${this.path}/${waterfall.id}`);
-    write.update(waterfallRef,
+    (write as Transaction).update(waterfallRef,
       '_meta.updatedBy', this.authService.uid,
       '_meta.updatedAt', new Date(),
     );
@@ -114,7 +114,7 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
 
   onCreate(waterfall: Waterfall, { write }: WriteOptions) {
     const ref = this.getRef(waterfall.id);
-    write.update(ref, '_meta.createdAt', new Date());
+    (write as Transaction).update(ref, '_meta.createdAt', new Date());
     for (const orgId of waterfall.orgIds) {
       this.waterfallPermissionsService.create(
         waterfall.id,

@@ -2,8 +2,8 @@
   <section fxLayout="column" fxLayoutAlign="center center">
     <h2>{{ data.title || 'Confirm' }}</h2>
     
-    <p class="mat-body-1">{{ data.question || 'Do you confirm ?' }}</p>
-    <p class="mat-body-1" *ngIf="data.advice">
+    <p class="mat-body-2">{{ data.question || 'Do you confirm ?' }}</p>
+    <p class="mat-body-2" *ngIf="data.advice">
       {{ data.advice }} 
       <ng-container *ngIf="data.additionalData?.length">
         <ul>

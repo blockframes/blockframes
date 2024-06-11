@@ -1,0 +1,20 @@
+{
+  "name": "waterfall-library",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/waterfall/src",
+  "prefix": "blockframes",
+  "tags": ["browser"],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/waterfall"],
+      "options": {
+        "jestConfig": "libs/waterfall/jest.config.js"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

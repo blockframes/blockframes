@@ -1,0 +1,20 @@
+{
+  "name": "organization",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/organization/src",
+  "projectType": "library",
+  "prefix": "org",
+  "tags": ["browser"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "libs/organization/jest.config.js"
+      }
+    }
+  }
+}

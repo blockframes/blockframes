@@ -109,7 +109,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
         const result = this.shell.bucketForm.addTerritory(avails, marker);
         if (result) added = true;
       }
-    };
+    }
     if (added) this.onNewRight();
   }
 
@@ -131,7 +131,7 @@ export class MarketplaceMovieAvailsMapComponent implements AfterViewInit, OnDest
         const result = this.shell.bucketForm.addTerritory(avails, marker);
         if (result) added = true;
       }
-    };
+    }
     if (added) this.onNewRight();
   }
 

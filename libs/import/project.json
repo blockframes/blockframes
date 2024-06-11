@@ -1,0 +1,14 @@
+{
+  "name": "import",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/import/src",
+  "prefix": "blockframes",
+  "tags": ["browser"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  }
+}

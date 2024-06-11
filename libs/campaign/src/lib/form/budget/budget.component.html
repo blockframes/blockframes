@@ -3,7 +3,7 @@
 
     <section id="currency">
       <h3>Currency</h3>
-      <p class="mat-body-2 ">Please choose the currency that will be applied to your project</p>
+      <p class="mat-subtitle-2 ">Please choose the currency that will be applied to your project</p>
 
       <static-select class="currency" scope="movieCurrencies" [only]="['USD', 'EUR', 'GBP']"
         [control]="form.get('currency')" required>
@@ -11,7 +11,7 @@
         <ng-template let-currency>
           <mat-icon [svgIcon]="currency" matPrefix></mat-icon>
           <span>{{ currency | toLabel: 'movieCurrencies' }}</span>
-          <mat-error *ngIf="form.hasError('required', 'currency')">Please provide a currency.</mat-error>
+          <span bf-mat-error *ngIf="form.hasError('required', 'currency')">Please provide a currency.</span>
         </ng-template>
       </static-select>
     </section>
@@ -62,7 +62,7 @@
         <mat-error *ngIf="budget.hasError('min', 'contingency')">Only positive numbers are allowed.</mat-error>
       </mat-form-field>
 
-      <p class="mat-body-2 total">
+      <p class="mat-subtitle-2 total">
         <b>Your total estimated budget is: {{ budget.value | budget: form.getCurrency() }}</b>
       </p>
     </section>

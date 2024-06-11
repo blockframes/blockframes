@@ -28,7 +28,7 @@ type MovieAnalyticsEventName = typeof chartInfo[number]['eventName'];
 type MovieAnalyticsTitle = typeof chartInfo[number]['title'];
 
 /** Generate each past date for chart's x axis, number means how far from today's date */
-function getLastDays(from: number, to: number = 0) {
+function getLastDays(from: number, to = 0) {
   if (from < to) {
     throw new Error('from should be larger than to');
   } else {

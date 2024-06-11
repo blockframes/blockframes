@@ -8,7 +8,7 @@ import { StaticCheckBoxesComponent } from './check-boxes.component';
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import {MatListModule} from '@angular/material/list';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   imports: [

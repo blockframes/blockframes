@@ -67,10 +67,6 @@ world-map {
     color: #434773;
     @include mat.elevation(1);
 
-    mat-list-item {
-      height: 32px;
-    }
-
     svg {
       margin-right: 12px;
       width: 16px;

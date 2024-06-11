@@ -22,7 +22,7 @@ interface BarChartOptions {
   yaxis: ApexYAxis;
   tooltip: ApexTooltip;
   legend: ApexLegend;
-};
+}
 
 @Component({
   selector: 'analytics-bar-chart',

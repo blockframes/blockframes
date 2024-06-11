@@ -1,5 +1,5 @@
 import { getStorage } from '@blockframes/firebase-utils';
-import { CallableContext } from 'firebase-functions/lib/providers/https';
+import { CallableContext } from 'firebase-functions/v1/https';
 import PDFParser from 'pdf2json';
 import 'openai/shims/node';
 import OpenAI from 'openai';

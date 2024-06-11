@@ -1,5 +1,4 @@
 @use '@angular/material' as mat;
-@import '@angular/material/theming';
 
 :host {
   @include mat.elevation(3);
@@ -37,10 +36,6 @@ mat-divider {
 img {
   width: 50px;
   height: 100%;
-}
-
-mat-icon {
-  width: 18px;
 }
 
 .succeeded {

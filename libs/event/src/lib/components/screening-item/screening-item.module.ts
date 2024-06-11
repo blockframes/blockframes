@@ -10,7 +10,7 @@ import { InvitationActionModule } from '@blockframes/invitation/components/actio
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
 import { OngoingButtonModule } from '@blockframes/ui/ongoing-button/ongoing-button.module';
-import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
+import { EventTimeModule } from '../../pipes/event-time.pipe';
 import { AgendaExportModule } from '../agenda-export/agenda-export.module';
 import { RequestAskingPriceModule } from '@blockframes/movie/components/request-asking-price/request-asking-price.module';
 

@@ -1,0 +1,15 @@
+{
+  "name": "backend-ops",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/backend-ops/src",
+  "projectType": "application",
+  "prefix": "backend-ops",
+  "tags": ["node", "local"],
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  }
+}

@@ -6,6 +6,7 @@
   $foreground: map.get($config, 'foreground');
   $background: map.get($config, 'background');
   $primary: map.get($config, 'primary');
+  $primary-contrast: map.get($config, 'primary', 'contrast');
   $accent: map.get($config, 'accent');
   $warn: map.get($config, 'warn');
 
@@ -14,11 +15,9 @@
   ///////////////////////
 
   // No background
-
-  .mat-stroked-button,
-  .mat-button,
+  .mdc-button--outlined,
+  .mat-mdc-button,
   .mat-icon-button {
-    color: mat.get-color-from-palette($foreground, text);
     &.mat-primary {
       svg g,
       svg polygon,
@@ -41,7 +40,8 @@
       }
     }
 
-    &.mat-button-disabled {
+    &.mat-button-disabled,
+    &.mat-mdc-button:disabled {
       color: mat.get-color-from-palette($foreground, disabled-text);
       svg g,
       svg polygon,
@@ -49,14 +49,19 @@
         fill: mat.get-color-from-palette($foreground, disabled-text);
       }
     }
+
+    .mat-icon {
+      margin-right: 0px;
+      height: 24px;
+      width: 24px;
+    }
   }
 
   // With background
-
   .mat-raised-button,
-  .mat-flat-button,
-  .mat-fab,
-  .mat-mini-fab {
+  .mat-mdc-unelevated-button,
+  .mdc-fab,
+  .mdc-fab--mini {
     &.mat-primary {
       svg g,
       svg polygon,
@@ -76,6 +81,7 @@
       &:hover {
         background-color: mat.get-color-from-palette($accent, 800);
       }
+      color: mat.get-color-from-palette($primary-contrast, 200);
     }
     &.mat-warn {
       svg g,
@@ -97,7 +103,8 @@
       }
     }
 
-    &.mat-button-disabled {
+    &.mat-button-disabled,
+    &.mat-mdc-button:disabled {
       background-color: mat.get-color-from-palette($background, disabled-button);
       // Prevent override from above style
       &:hover {
@@ -111,15 +118,29 @@
     }
   }
 
-  .mat-button,
-  .mat-flat-button,
+  .mat-mdc-button,
+  .mat-mdc-button:has(.material-icons, mat-icon, [matButtonIcon]),
+  .mat-mdc-unelevated-button,
   .mat-raised-button,
-  .mat-stroked-button {
-    padding: 14px 24px;
+  .mdc-button--outlined {
+    padding: 27px 24px;
   }
 
-  .mat-button.mat-button-disabled {
+  .mat-mdc-button.mat-button-disabled,
+  .mat-mdc-button:disabled {
     background-color: mat.get-color-from-palette($background, disabled-button);
+  }
+
+  header[mat-tab-nav-bar] .mat-mdc-button:disabled {
+    background-color: transparent;
+  }
+
+  .mat-mdc-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn):not(.mat-mdc-snack-bar-action),
+  .mat-mdc-outlined-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn):not(.mat-mdc-snack-bar-action),
+  .mat-mdc-unelevated-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn):not(.mat-mdc-snack-bar-action) {
+    color: mat.get-color-from-palette($foreground, text);
+    --mdc-outlined-button-label-text-color: var(--text);
+    --mdc-filled-button-label-text-color: var(--text);
   }
 
   // Center close button
@@ -127,7 +148,7 @@
     padding: 0 20px;
   }
 
-  .mat-stroked-button:not(.mat-button-disabled) {
+  .mdc-button--outlined:not(.mat-button-disabled):not(.mat-mdc-button:disabled) {
     border-radius: 26px;
     border-color: mat.get-color-from-palette($foreground, divider);
     &.mat-primary {
@@ -150,7 +171,7 @@
     }
   }
 
-  .mat-stroked-button {
+  .mdc-button--outlined {
     border-radius: 26px;
     border-width: 1.5px;
     &:hover {
@@ -160,7 +181,7 @@
     }
   }
 
-  .mat-flat-button {
+  .mat-mdc-unelevated-button {
     border-radius: 26px;
   }
 
@@ -184,6 +205,15 @@
   button.translucent, a.translucent {
     background: rgba(mat.get-color-from-palette($primary), .16);
   }
+
+  a.mat-mdc-button.main-dashboard-cta,
+  button.mat-mdc-button.main-dashboard-cta {
+    background-color: var(--dashboard-cta);
+  }
+
+  .mat-mdc-unelevated-button[disabled][disabled] {
+    --mdc-filled-button-disabled-label-text-color: #FFF;
+  }
 }
 
 // TYPOGRAPHY
@@ -191,10 +221,10 @@
   $config: mat.get-typography-config($theme);
 
   // note: mat-icon-button is not here on purpose
-  .mat-button,
+  .mat-mdc-button,
   .mat-raised-button,
-  .mat-stroked-button,
-  .mat-flat-button,
+  .mdc-button--outlined,
+  .mat-mdc-unelevated-button,
   .mat-fab,
   .mat-mini-fab {
     letter-spacing: mat.letter-spacing($config, button);

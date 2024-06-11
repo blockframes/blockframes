@@ -10,17 +10,16 @@
 <ng-template #statementPage>
   <header>
     <article>
-      <mat-chip-list aria-label="Statement type" i18n-aria-label>
+      <mat-chip-listbox aria-label="Statement type" i18n-aria-label>
         <ng-container *ngFor="let chip of statementChips">
           <mat-divider *ngIf="chip.divider && chip.visible" [vertical]="true"></mat-divider>
-          <mat-chip
+          <mat-chip-option
           *ngIf="chip.visible"
-          [color]="chip.color"
           [selected]="chip.selected"
-          [class]="chip.key"
-          (click)="changeType(chip.key)">{{ chip.value }}</mat-chip>
+          [class]="chip.color"
+          (click)="changeType(chip.key)">{{ chip.value }}</mat-chip-option>
         </ng-container>
-      </mat-chip-list>
+      </mat-chip-listbox>
       <waterfall-version-selector></waterfall-version-selector>
     </article>
     <section *ngIf="accessibleDocumentIds$ | async as accessibleDocumentIds">
@@ -52,7 +51,7 @@
   </header>
 
   <section *ngIf="(isRefreshing$ | async) === false; else loading">
-    <mat-tab-group class="bf-tabs" *ngIf="rightholderContracts.length > 1 else singleContract">
+    <mat-tab-group mat-stretch-tabs="false" class="bf-tabs" *ngIf="rightholderContracts.length > 1 else singleContract">
       <ng-container *ngFor="let rightholderContract of rightholderContracts">
         <mat-tab *ngIf="rightholderContract.statements.length > 0" [label]="rightholderContract.name">
           <ng-template matTabContent>

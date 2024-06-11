@@ -93,7 +93,7 @@ describe('Movie search in marketplace', () => {
     selectToggle('content_', 'Movie');
     get('save-filter').click();
     selectFilter('Genre');
-    get('filter-select').click();
+    get('filter-select').click({ force: true }); // force click because the input is hidden by mat-label since angular 16 migration
     get(`option_${movie.genres[0]}`).click();
     escapeKey();
     get('save-filter').click();
@@ -103,21 +103,23 @@ describe('Movie search in marketplace', () => {
     escapeKey();
     get('save-filter').click();
     selectFilter('Language & Version');
-    get('filter-select').click();
+    get('filter-select').click({ force: true }); // force click because the input is hidden by mat-label since angular 16 migration
     get(`option_${Object.keys(movie.languages)[0]}`).click();
     escapeKey();
     check('Dubs');
     get('save-filter').click();
     selectFilter('Release Year');
-    get('min-input').type('2020');
-    get('max-input').type(movie.release.year.toString());
+    // force click because the input is hidden by mat-label since angular 15 migration
+    get('min-input').type('2020', { force: true });
+    get('max-input').type(movie.release.year.toString(), { force: true });
     get('save-filter').click();
     selectFilter('Running Time');
-    get('min-input').type('90');
-    get('max-input').type('180');
+    // force click because the input is hidden by mat-label since angular 15 migration
+    get('min-input').type('90', { force: true });
+    get('max-input').type('180', { force: true });
     get('save-filter').click();
     selectFilter('Festival Selection');
-    get('filter-select').click();
+    get('filter-select').click({ force: true }); // force click because the input is hidden by mat-label since angular 16 migration
     get(`option_${movie.prizes[0].name}`).click();
     escapeKey();
     get('save-filter').click();
@@ -153,7 +155,7 @@ describe('Movie search in marketplace', () => {
     get('titles-count').should('contain', oneTitleSentence);
     get(`movie-card_${movie.id}`).should('exist');
     selectFilter('Genre');
-    get('filter-select').click();
+    get('filter-select').click({ force: true }); // force click because the input is hidden by mat-label since angular 16 migration
     get('option_erotic').click();
     escapeKey();
     get('empty').should('exist');
@@ -171,7 +173,7 @@ describe('Movie search in marketplace', () => {
     get(`movie-card_${movie.id}`).should('exist');
     get('titles-count').should('contain', oneTitleSentence);
     selectFilter('Language & Version');
-    get('filter-select').click();
+    get('filter-select').click({ force: true }); // force click because the input is hidden by mat-label since angular 16 migration
     get('option_belarussian').click();
     escapeKey();
     check('Dubs');
@@ -181,7 +183,7 @@ describe('Movie search in marketplace', () => {
     get(`movie-card_${movie.id}`).should('exist');
     get('titles-count').should('contain', oneTitleSentence);
     selectFilter('Language & Version');
-    get('filter-select').click();
+    get('filter-select').click({ force: true }); // force click because the input is hidden by mat-label since angular 16 migration
     get(`option_${Object.keys(movie.languages)[0]}`).click();
     escapeKey();
     check('Subs');
@@ -191,22 +193,24 @@ describe('Movie search in marketplace', () => {
     get(`movie-card_${movie.id}`).should('exist');
     get('titles-count').should('contain', oneTitleSentence);
     selectFilter('Release Year');
-    get('min-input').type('2030');
+    // force click because the input is hidden by mat-label since angular 15 migration
+    get('min-input').type('2030', { force: true });
     get('empty').should('exist');
     get('clear-filter').click();
     get('save-filter').click();
     get(`movie-card_${movie.id}`).should('exist');
     get('titles-count').should('contain', oneTitleSentence);
     selectFilter('Running Time');
-    get('min-input').type('13');
-    get('max-input').type('25');
+    // force click because the input is hidden by mat-label since angular 15 migration
+    get('min-input').type('13', { force: true });
+    get('max-input').type('25', { force: true });
     get('empty').should('exist');
     get(`movie-card_${movie.id}`).should('not.exist');
     get('clear-filter').click();
     get('save-filter').click();
     get(`movie-card_${movie.id}`).should('exist');
     selectFilter('Festival Selection');
-    get('filter-select').click();
+    get('filter-select').click({ force: true }); // force click because the input is hidden by mat-label since angular 16 migration
     get('option_locarno').click();
     escapeKey();
     get('empty').should('exist');

@@ -1,5 +1,6 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
+@use '../typography' as typography;
 
 @mixin color($theme) {
   $config: mat.get-color-config($theme);
@@ -14,6 +15,7 @@
     }
     .mat-cell, .mat-header-cell {
       padding: 0 16px;
+      border-bottom: solid 1px mat.get-color-from-palette($foreground, divider);
     }
     td.mat-cell {
       font-size: 16px;
@@ -44,5 +46,14 @@
     border: solid 1px mat.get-color-from-palette($foreground, divider);
     border-top: none;
     border-radius: 0 0 10px 10px;
+  }
+}
+
+// TYPOGRAPHY
+@mixin typography($theme) {
+  .mat-table {
+    .mat-header-cell {
+      @include mat.typography-level(typography.$bf-typography, 'caption');
+    }
   }
 }

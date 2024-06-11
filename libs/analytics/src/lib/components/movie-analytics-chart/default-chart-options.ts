@@ -26,7 +26,7 @@ export interface ChartOptions {
   tooltip: ApexTooltip;
   fill: ApexFill;
   legend: ApexLegend;
-};
+}
 
 export const lineChartOptions = {
   chart: {

@@ -1,0 +1,62 @@
+{
+  "name": "cms-e2e",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/cms/cms-e2e/src",
+  "projectType": "application",
+  "tags": ["browser", "e2e"],
+  "implicitDependencies": ["cms"],
+  "targets": {
+    "serve": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/cms/cms-e2e/cypress.config.js",
+        "baseUrl": "http://localhost:4200",
+        "watch": true,
+        "headless": false,
+        "exit": false,
+        "record": false,
+        "browser": "chrome",
+        "devServerTarget": "cms:serve"
+      },
+      "configurations": {
+        "emulator": {
+          "devServerTarget": "cms:serve:emulator",
+          "env": {
+            "notice": "Env is being read",
+            "emulator": true
+          }
+        }
+      }
+    },
+    "e2e": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/cms/cms-e2e/cypress.config.js",
+        "baseUrl": "http://localhost:4200",
+        "browser": "chrome",
+        "devServerTarget": "cms:serve"
+      },
+      "configurations": {
+        "emulator": {
+          "devServerTarget": "cms:serve:emulator",
+          "env": {
+            "notice": "Env is being read",
+            "emulator": true
+          }
+        },
+        "emulator-incognito": {
+          "devServerTarget": "cms:serve:emulator",
+          "env": {
+            "notice": "Env is being read",
+            "emulator": true,
+            "incognito": true
+          }
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  }
+}

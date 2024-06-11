@@ -1,4 +1,4 @@
-import { CallableContext } from 'firebase-functions/lib/common/providers/https';
+import { CallableContext } from 'firebase-functions/v1/https';
 import {
   Expense,
   Income,
@@ -72,7 +72,7 @@ export async function onWaterfallUpdate(change: BlockframesChange<Waterfall>) {
     for (const permission of permissions) {
       if (permission.rightholderIds.some(id => rightholderRemovedIds.includes(id))) {
         permission.rightholderIds = permission.rightholderIds.filter(id => !rightholderRemovedIds.includes(id));
-        promises.push(getDocumentSnap(`waterfall/${after.id}/permissions/${permission.id}`).then(p => p.ref.update(permission)));
+        promises.push(getDocumentSnap(`waterfall/${after.id}/permissions/${permission.id}`).then(p => p.ref.update({ rightholderIds: permission.rightholderIds })));
       }
     }
   }

@@ -1,13 +1,13 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { ImportState, SpreadsheetImportError } from '../utils';
 
-export function errorCount(data: ImportState, type: string = 'error') {
+export function errorCount(data: ImportState, type = 'error') {
   return data.errors.filter((error: SpreadsheetImportError) => error.type === type).length;
 }
 
 @Pipe({ name: 'errorCount' })
 export class ErrorCountPipe implements PipeTransform {
-  transform(element: ImportState, type: string = 'error') {
+  transform(element: ImportState, type = 'error') {
     return errorCount(element, type);
   }
 }

@@ -1,4 +1,4 @@
-<mat-card fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px">
+<mat-card appearance="outlined" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px">
 
   <img asset="gift.svg" alt="Privilege illustration">
 
@@ -6,7 +6,7 @@
 
   <span class="mat-caption">{{ perk.minPledge | minPledge }}</span>
 
-  <p class="mat-body-1">{{ perk.description | maxLength: 130 }}</p>
+  <p class="mat-body-2">{{ perk.description | maxLength: 130 }}</p>
   <span class="mat-caption">
     <ng-container *ngIf="perk.amount | isUnlimited; else limited">
       Unlimited
@@ -23,12 +23,12 @@
   <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px">
     <img asset="gift.svg" alt="Privilege illustration">
     <h5>{{ perk.title }}</h5>
-    <span class="mat-body-1">
+    <span class="mat-body-2">
       <ng-container *ngIf="perk.amount | isUnlimited; else limited">
         Unlimited
       </ng-container>
     </span>
     <span class="mat-caption">{{ perk.minPledge | minPledge }}</span>
-    <p class="mat-body-2">{{ perk.description }}</p>
+    <p class="mat-subtitle-2">{{ perk.description }}</p>
   </div>
 </ng-template>

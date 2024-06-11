@@ -9,7 +9,7 @@ file-uploader {
 
 section {
   margin-bottom: 12px;
-  .mat-stroked-button {
+  .mat-mdc-outlined-button {
     margin-right: 24px;
   }
 }
@@ -17,4 +17,8 @@ section {
 p {
   text-align: center;
   margin: 32px 12px;
+}
+
+div {
+  display: flex;
 }

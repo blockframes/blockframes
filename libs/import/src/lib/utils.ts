@@ -322,7 +322,7 @@ export async function getUser(
   return user;
 }
 
-export function getDate(value: string, name: string = 'Date') {
+export function getDate(value: string, name = 'Date') {
   let date = new Date(value);
 
   // some time excel might store the date as a the number of DAYS since 1900/1/1

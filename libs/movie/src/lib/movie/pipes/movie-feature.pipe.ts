@@ -3,9 +3,9 @@ import {
   Movie,
   genres as staticGenres,
   languages,
-  territoriesISOA2
+  territoriesISOA2,
+  formatRunningTime
 } from '@blockframes/model';
-import { formatRunningTime } from '@blockframes/movie/pipes/running-time.pipe';
 
 @Pipe({
   name: 'movieFeature',

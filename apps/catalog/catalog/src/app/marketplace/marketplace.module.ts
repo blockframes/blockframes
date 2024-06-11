@@ -14,11 +14,11 @@ import { SidenavWidgetModule } from '@blockframes/auth/components/sidenav-widget
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 
 // Material
-import { MatListModule } from '@angular/material/list';
+import { MatListModule} from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule} from '@angular/material/button';
+import { MatTooltipModule} from '@angular/material/tooltip';
 
 const routes: Routes = [{
   path: '',

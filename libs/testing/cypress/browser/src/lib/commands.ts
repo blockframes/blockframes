@@ -32,6 +32,7 @@ declare namespace Cypress {
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
+// TODO #9848 this needs to be updated for latest cypress version
 Cypress.Server.defaults({
   delay: 500,
   force404: false,

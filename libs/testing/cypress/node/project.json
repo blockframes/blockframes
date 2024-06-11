@@ -1,0 +1,13 @@
+{
+  "name": "testing-cypress-node",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/testing/cypress/node/src",
+  "projectType": "library",
+  "tags": ["node", "e2e"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  }
+}

@@ -19,7 +19,7 @@ interface PieChartOptions {
   stroke: ApexStroke;
   dataLabels: ApexDataLabels;
   legend: ApexLegend
-};
+}
 
 @Component({
   selector: '[data] analytics-pie-chart',

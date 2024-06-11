@@ -17,10 +17,10 @@ import { HomeComponent } from './home.component';
 // Modules
 import { MovieAnalyticsChartModule } from '@blockframes/analytics/components/movie-analytics-chart/movie-analytics-chart.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
+import { NoTitleModule } from '../../../dashboard/components/no-title/no-title.module';
 import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
 import { HasAppStatusModule } from '@blockframes/movie/pipes/has-app-status.pipe';
-import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
+import { LogoSpinnerModule } from '../../../logo-spinner/logo-spinner.module';
 
 @NgModule({
   declarations: [HomeComponent],

@@ -1,6 +1,6 @@
 <crm-bread-crumb *ngIf="user">{{ user.email }}</crm-bread-crumb>
 <section fxLayout="row" *ngIf="user" fxLayoutAlign="space-around start" fxLayoutGap="40px">
-  <mat-card fxLayout="column" fxLayoutAlign="center" fxFlex>
+  <mat-card appearance="outlined" fxLayout="column" fxLayoutAlign="center" fxFlex>
     <mat-card-header fxLayoutAlign="center center">
       <img mat-card-avatar [ref]="user.avatar" asset="empty_poster.svg" alt="User avatar">
       <h4>{{ user.firstName }} {{ user.lastName }}</h4>
@@ -88,7 +88,7 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-card *ngIf="userForm" fxLayout="column" fxLayoutAlign="center" fxFlex>
+  <mat-card appearance="outlined" *ngIf="userForm" fxLayout="column" fxLayoutAlign="center" fxFlex>
     <form [formGroup]="userForm" fxLayout="column">
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>

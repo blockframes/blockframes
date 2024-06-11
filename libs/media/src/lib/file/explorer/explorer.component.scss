@@ -7,8 +7,7 @@
     .active {
       color: var(--primary);
     }
-
-    mat-list-option {
+    mat-action-list {
       box-sizing: border-box;
     }
   }
@@ -23,7 +22,7 @@
       align-items: start;
       margin: 8px;
 
-      button.mat-icon-button {
+      button.mat-mdc-icon-button {
         margin-right: 8px;
       }
 

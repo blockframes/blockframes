@@ -15,7 +15,7 @@ export interface PublicOrganization {
 export interface OrgMedias {
   notes: StorageFile[],
   videos: StorageVideo[],
-};
+}
 
 /** Document model of an Organization */
 export interface Organization extends PublicOrganization {

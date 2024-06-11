@@ -363,7 +363,7 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
         rightOverrides,
       })
     );
-  };
+  }
 
   return actions;
 }
@@ -387,7 +387,7 @@ export function expensesToActions(expenses: Expense[], statements: Statement[]) 
         date: e.date
       })
     );
-  };
+  }
 
   return actions;
 }
@@ -739,7 +739,7 @@ function createGroupChildren(state: TitleState, children: GroupChild[]) {
       state.rights[child.id] = createRightState(child);
       state.orgs[child.orgId] ||= createOrg({ id: child.orgId });
       for (const pool of child.pools || []) {
-        state.pools[pool] ||= createPoolState({ id: pool });;
+        state.pools[pool] ||= createPoolState({ id: pool });
       }
     }
     if (child.type === 'horizontal') {

@@ -129,7 +129,6 @@ landing-detail {
     width: 30%;
     cursor: pointer;
     transition: box-shadow 0.3s ease-in-out;
-
     mat-card {
       width: 100%;
     }
@@ -208,10 +207,9 @@ landing-app-link {
       padding: 16px;
       mat-tab-group {
         padding-inline: 0;
-        
         header {
           padding: 0;
-          img, .mat-title {
+          img, .mat-headline-6 {
             display: none;
           }
         }

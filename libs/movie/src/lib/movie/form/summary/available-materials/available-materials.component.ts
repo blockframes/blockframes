@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MediaService } from '@blockframes/media/service';
 import { StorageFile } from '@blockframes/model';
-import { MovieForm } from '@blockframes/movie/form/movie.form';
+import { MovieForm } from '../../../form/movie.form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({

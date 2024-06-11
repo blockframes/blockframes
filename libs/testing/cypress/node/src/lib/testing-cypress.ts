@@ -1,15 +1,22 @@
 import * as plugins from './plugins';
-import type * as admin from 'firebase-admin';
-import { getAuth, getAuthEmulator, getDb, getFirestoreEmulator, getStorageEmulator, getStorage } from '@blockframes/firebase-utils/initialize';
+import {
+  getAuth,
+  getAuthEmulator,
+  getDb,
+  getFirestoreEmulator,
+  getStorageEmulator,
+  getStorage
+} from '@blockframes/firebase-utils/initialize';
+import type { Firestore, Auth, Storage } from '@blockframes/firebase-utils/types';
 
-export let db: FirebaseFirestore.Firestore;
-export let auth: admin.auth.Auth;
-export let storage: admin.storage.Storage;
+export let db: Firestore;
+export let auth: Auth;
+export let storage: Storage;
 
 export function testingCypress(config?: Cypress.PluginConfigOptions): Cypress.Tasks {
-  console.log(config.env);
+  console.log(config?.env);
 
-  if ('emulator' in config.env && config.env.emulator) {
+  if (config && 'emulator' in config.env && config.env.emulator) {
     db = getFirestoreEmulator();
     auth = getAuthEmulator();
     storage = getStorageEmulator();

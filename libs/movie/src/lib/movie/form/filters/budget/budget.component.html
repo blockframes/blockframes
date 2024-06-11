@@ -1,10 +1,8 @@
-<mat-slider
-  thumbLabel
+<mat-slider class="bf-inverted-slider"
+  discrete
   [displayWith]="formatLabel"
   min="0"
   [max]="max"
   step="100000"
-  [formControl]="form"
   color="primary"
-  invert
-></mat-slider>
+><input matSliderThumb [formControl]="control"/></mat-slider>

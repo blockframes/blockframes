@@ -6,10 +6,10 @@ import { RouterModule } from '@angular/router';
 
 // Components
 import { MovieViewAdditionalComponent } from './additional.component';
-import { MovieTunnelSummaryModule } from '@blockframes/movie/form/summary/summary.module';
+import { MovieTunnelSummaryModule } from '../../form/summary/summary.module';
 import { GetPathModule } from '@blockframes/utils/pipes/get-path.pipe';
 import { MatDividerModule } from '@angular/material/divider';
-import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
+import { HasStatusModule } from '../../pipes/has-status.pipe';
 
 
 @NgModule({

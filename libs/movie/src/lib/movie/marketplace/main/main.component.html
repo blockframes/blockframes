@@ -22,11 +22,11 @@
 
     <article *ngIf="movie.keywords.length">
       <h5>Keywords</h5>
-      <mat-chip-list fxLayout="row" fxLayoutGap="8px" test-id="keywords">
+      <mat-chip-listbox fxLayout="row" fxLayoutGap="8px" test-id="keywords">
         <ng-container *ngFor="let keyword of movie.keywords">
           <mat-chip disableRipple>{{ keyword | titlecase }}</mat-chip>
         </ng-container>
-      </mat-chip-list>
+      </mat-chip-listbox>
     </article>
     <mat-divider></mat-divider>
   </section>

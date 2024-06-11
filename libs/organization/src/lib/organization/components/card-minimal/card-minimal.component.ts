@@ -26,6 +26,6 @@ export class OrganizationCardMinimalComponent {
   get org() { return this._org }
   @Input() set org(org) {
     this._org = parseOrg(org);
-  };
+  }
 
 }

@@ -44,7 +44,7 @@ export const ascTimeFrames: TimeFrame[] = [
   { type: 'months', from: 3, to: 4, way: 'asc' },
 ];
 
-function filterByDate(value: unknown[], timeFrame: TimeFrame, key: string = 'date', keyFinish?: string) {
+function filterByDate(value: unknown[], timeFrame: TimeFrame, key = 'date', keyFinish?: string) {
   if (!Array.isArray(value)) {
     return value;
   }
@@ -69,7 +69,7 @@ export class FilterByDatePipe implements PipeTransform {
    * @param key The key where to find the date value
    * @param keyFinish The key where to find the end date value. If used, date found at key is used as starting date.
    */
-  transform(value: unknown[], timeFrame: TimeFrame, key: string = 'date', keyFinish?: string) {
+  transform(value: unknown[], timeFrame: TimeFrame, key = 'date', keyFinish?: string) {
     return filterByDate(value, timeFrame, key, keyFinish);
   }
 }

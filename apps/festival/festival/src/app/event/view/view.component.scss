@@ -9,7 +9,7 @@ header {
     cursor: pointer;
   }
 
-  h1.mat-display-2 {
+  h1.mat-headline-3 {
     text-align: center;
     margin-bottom: 24px;
   }
@@ -37,17 +37,17 @@ header {
     margin-bottom: 0px;
   }
   
-  p.mat-body-2 {
+  p.mat-subtitle-2 {
     text-align: center;
     max-width: 800px;
     margin: 24px 0;
   }
   
-  a.mat-flat-button {
+  a.mat-mdc-unelevated-button {
     margin-top: 40px;
   }
 
-  a.mat-stroked-button {
+  a.mat-mdc-outlined-button {
     margin-top: 12px;
   }
 }

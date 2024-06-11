@@ -76,11 +76,12 @@ describe('Movie search in marketplace', () => {
     get('title-link').eq(0).click();
     get('titles-count');
     selectFilter('Sales Agent');
-    get('sales-agent').find('input').type(saleOrg.name);
-    getByClass('mat-autocomplete-panel').find('mat-option').should('contain', saleOrg.name).click();
+    // force click because the input is hidden by mat-label since angular 15 migration
+    get('sales-agent').find('input').type(saleOrg.name, { force: true });
+    getByClass('mat-mdc-autocomplete-panel').find('mat-option').should('contain', saleOrg.name).click();
     get('save-filter').click();
     selectFilter('Genre');
-    get('filter-select').click();
+    get('filter-select').click({ force: true }); // force click because the input is hidden by mat-label since angular 16 migration
     get(`option_${movie.genres[0]}`).click();
     escapeKey();
     get('save-filter').click();
@@ -90,7 +91,7 @@ describe('Movie search in marketplace', () => {
     escapeKey();
     get('save-filter').click();
     selectFilter('Language & Version');
-    get('filter-select').click();
+    get('filter-select').click({ force: true }); // force click because the input is hidden by mat-label since angular 16 migration
     get(`option_${Object.keys(movie.languages)[0]}`).click();
     escapeKey();
     check('Dubs');
@@ -104,7 +105,7 @@ describe('Movie search in marketplace', () => {
     get('max-input').type(movie.release.year.toString());
     get('save-filter').click();
     selectFilter('Festival Selection');
-    get('filter-select').click();
+    get('filter-select').click({ force: true }); // force click because the input is hidden by mat-label since angular 16 migration
     get(`option_${movie.prizes[0].name}`).click();
     escapeKey();
     get('save-filter').click();

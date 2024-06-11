@@ -1,5 +1,6 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
+@use '../typography' as typography;
 
 @mixin color($theme) {
   .bf-menu {
@@ -7,5 +8,15 @@
     .mat-menu-content:not(:empty) {
       padding-bottom: 0px;
     }
+  }
+
+  .cdk-overlay-pane .mat-mdc-menu-panel { max-width: none; }
+
+  .cdk-overlay-pane .mat-mdc-menu-content { padding: 0px; }
+}
+
+@mixin typography($theme) {
+  .mat-mdc-menu-panel .mat-mdc-menu-item .mdc-list-item__primary-text {
+    @include mat.typography-level(typography.$bf-typography, 'body-2');
   }
 }

@@ -10,7 +10,7 @@ import { PdfViewerModule } from '@blockframes/media/pdf/viewer/viewer.module';
 import { VideoViewerModule } from '@blockframes/media/video/viewer/viewer.module';
 import { OpenPreviewComponent } from './open-preview.component';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
-import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
+import { GlobalModalModule } from '../global-modal/global-modal.module';
 import { PreviewFileModalModule } from "../preview-file-modal/preview-file-modal.module"
 
 

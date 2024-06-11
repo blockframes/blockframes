@@ -1,9 +1,6 @@
 import { InjectionToken } from '@angular/core';
-import { Auth, connectAuthEmulator } from 'firebase/auth';
-import { connectFirestoreEmulator, Firestore } from 'firebase/firestore';
-import { connectFunctionsEmulator, Functions } from 'firebase/functions';
-import { connectStorageEmulator, FirebaseStorage } from 'firebase/storage';
 import firebaseSetup from 'firebase.json';
+import { authEmulator, firestoreEmulator, functionsEmulator, storageEmulator } from 'ngfire';
 
 interface EnabledEmulators {
   auth: boolean;
@@ -43,25 +40,9 @@ export const EMULATORS_CONFIG = new InjectionToken<EmulatorsConfig>('Emulators c
 
 export function setupEmulators(emulatorConfig: EmulatorsConfig) {
   return {
-    firestore: (firestore: Firestore) => {
-      if (emulatorConfig.firestore) {
-        connectFirestoreEmulator(firestore, emulatorConfig.firestore.host, emulatorConfig.firestore.port);
-      }
-    },
-    auth: (auth: Auth) => {
-      if (emulatorConfig.auth) {
-        connectAuthEmulator(auth, `http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`, { disableWarnings: true });
-      }
-    },
-    functions: (functions: Functions) => {
-      if (emulatorConfig.functions) {
-        connectFunctionsEmulator(functions, emulatorConfig.functions.host, emulatorConfig.functions.port);
-      }
-    },
-    storage: (storage: FirebaseStorage) => {
-      if (emulatorConfig.storage) {
-        connectStorageEmulator(storage, emulatorConfig.storage.host, emulatorConfig.storage.port);
-      }
-    }
+    firestore: emulatorConfig.firestore ? firestoreEmulator(emulatorConfig.firestore.host, emulatorConfig.firestore.port) : undefined,
+    auth: emulatorConfig.auth ? authEmulator(`http://${emulatorConfig.auth.host}:${emulatorConfig.auth.port}`, { disableWarnings: true }) : undefined,
+    functions: emulatorConfig.functions ? functionsEmulator(emulatorConfig.functions.host, emulatorConfig.functions.port) : undefined,
+    storage: emulatorConfig.storage ? storageEmulator(emulatorConfig.storage.host, emulatorConfig.storage.port) : undefined
   };
 }

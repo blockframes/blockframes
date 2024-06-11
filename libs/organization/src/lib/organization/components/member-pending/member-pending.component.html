@@ -1,11 +1,11 @@
-<mat-card>
+<mat-card appearance="outlined">
   <mat-card-title i18n>Pending Members ({{ invitations.length }})</mat-card-title>
   <mat-list role="list">
     <ng-container *ngIf="invitations.length; else empty">
       <mat-list-item *ngFor="let invitation of invitations; let first = first">
         <mat-divider *ngIf="first" matSubheader></mat-divider>
-        <span matLine>{{ invitation.toUser.email }}</span>
-        <button class="mat-elevation-z0" *ngIf="isAdmin" mat-mini-fab color="warn" (click)="declined.emit(invitation)">
+        <span matListItemLine>{{ invitation.toUser.email }}</span>
+        <button matListItemMeta class="mat-elevation-z0" *ngIf="isAdmin" mat-mini-fab color="warn" (click)="declined.emit(invitation)">
           <mat-icon svgIcon="close"></mat-icon>
         </button>
         <mat-divider></mat-divider>

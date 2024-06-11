@@ -1,6 +1,6 @@
 <section>
   <h1 i18n>Log in</h1>
-  <mat-card>
+  <mat-card appearance="outlined">
     <form [formGroup]="signinForm" (ngSubmit)="submited.emit(signinForm)" fxLayout="column">
       <mat-form-field appearance="outline">
         <mat-label i18n>Email Address</mat-label>
@@ -13,16 +13,16 @@
         </mat-error>
       </mat-form-field>
       <password-input [control]="signinForm.get('password')" placeholder="Password" i18n-label label="Password" test-id="password" >   
-        <mat-hint i18n>Between 6 and 24 characters.</mat-hint>
-        <mat-error *ngIf="signinForm.get('password').hasError('minlength')" i18n>
+        <span bf-mat-hint i18n>Between 6 and 24 characters.</span>
+        <span bf-mat-error *ngIf="signinForm.get('password').hasError('minlength')" i18n>
           Password with less than <strong>6</strong> characters.
-        </mat-error>
-        <mat-error *ngIf="signinForm.get('password').hasError('maxlength')" i18n>
+        </span>
+        <span bf-mat-error *ngIf="signinForm.get('password').hasError('maxlength')" i18n>
           Password with more than <strong>24</strong> characters.
-        </mat-error>
-        <mat-error *ngIf="signinForm.get('password').hasError('required')" i18n>
+        </span>
+        <span bf-mat-error *ngIf="signinForm.get('password').hasError('required')" i18n>
           Password is <strong>required</strong>.
-        </mat-error>
+        </span>
       </password-input>
       <a type="button" mat-button routerLink="../reset-password" class="forgot-password" test-id="reset-password" i18n>Forgot your password?</a>
       <div fxLayout="column" fxLayoutAlign="center center">

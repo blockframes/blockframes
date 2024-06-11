@@ -2,7 +2,7 @@
   <h2 i18n>Save Expense Changes</h2>
 
   <h3>{{ data.expense.rightholderId | rightholderName: data.waterfall }} - {{ data.expense.date | date }}</h3>
-  <p class="mat-body-1">{{ data.expense.nature }} - {{ data.expense.typeId | expenseType : data.expense.contractId : data.waterfall }}</p>
+  <p class="mat-body-2">{{ data.expense.nature }} - {{ data.expense.typeId | expenseType : data.expense.contractId : data.waterfall }}</p>
 
   <section>
     <mat-form-field appearance="outline">
@@ -17,7 +17,7 @@
     </button>
   </section>
 
-  <p class="mat-body-2" i18n>To confirm the changes, please type "SAVE"</p>
+  <p class="mat-subtitle-2" i18n>To confirm the changes, please type "SAVE"</p>
   <mat-form-field appearance="outline">
     <mat-label i18n>Changes confirmation</mat-label>
     <input matInput [formControl]="form.get('confirm')" required />
@@ -26,7 +26,7 @@
   <mat-dialog-actions>
     <button mat-flat-button color="primary" [disabled]="form.invalid || form.get('confirm').value !== 'SAVE'" (click)="confirm()">
       <span i18n>Confirm Changes</span>
-      <mat-icon svgIcon="arrow_forward"></mat-icon>
+      <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
     </button>
     <button mat-button (click)="close()" i18n>
       Close window

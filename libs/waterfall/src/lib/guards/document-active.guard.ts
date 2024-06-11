@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { WaterfallDocument } from '@blockframes/model';
 import { WaterfallDocumentsService } from '../documents.service';
 import { WaterfallPermissionsService } from '../permissions.service';
@@ -8,7 +8,7 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class DocumentActiveGuard implements CanActivate {
+export class DocumentActiveGuard {
   private document: WaterfallDocument;
 
   constructor(

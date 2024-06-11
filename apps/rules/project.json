@@ -1,0 +1,28 @@
+{
+  "name": "rules",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/rules/src",
+  "projectType": "application",
+  "prefix": "rules",
+  "tags": ["local", "node"],
+  "generators": {},
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "rules:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "apps/rules/jest.config.js",
+        "runInBand": true
+      }
+    }
+  }
+}

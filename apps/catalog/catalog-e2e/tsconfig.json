@@ -5,13 +5,10 @@
       "cypress",
       "cypress-file-upload",
       "node"
-     ]
+    ],
+    "sourceMap": false,
+    "outDir": "../../../dist/out-tsc"
   },
   "include": [],
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.e2e.json"
-    }
-  ]
+  "files": []
 }

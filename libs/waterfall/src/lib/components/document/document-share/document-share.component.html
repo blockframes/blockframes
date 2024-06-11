@@ -1,7 +1,7 @@
 <global-modal>
   <h2 i18n>Share document with Company</h2>
   <header>
-    <p class="mat-body-1" i18n>
+    <p class="mat-body-2" i18n>
       Share this document with all users within the organization who are using Blockframes to ensure seamless collaboration and access.
     </p>
   </header>
@@ -13,13 +13,13 @@
         <mat-option *ngFor="let org of data.organizations" [value]="org.id">
           <article>
             <img height="40" width="40" [ref]="org.logo" asset="empty_organization.svg" type="logo" alt="Organization Logo">
-            <span class="mat-body-1"><b>{{ org.name }}</b></span>
+            <span class="mat-body-2"><b>{{ org.name }}</b></span>
           </article>
         </mat-option>
       </mat-select>
     </mat-form-field>
     <div>
-      <p class="mat-body-1" i18n>
+      <p class="mat-body-2" i18n>
         Can't find the right holder's company on the list? <br/>
         <a [routerLink]="['/c/o/dashboard/title/', data.waterfallId, 'right-holders']" (click)="close()">Please invite the right holder's company</a> and then share your document.
       </p>
@@ -29,7 +29,7 @@
   <mat-dialog-actions>
     <button mat-flat-button color="primary" (click)="confirm()">
       <span i18n>Share document</span>
-      <mat-icon svgIcon="arrow_forward"></mat-icon>
+      <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
     </button>
     <button mat-button (click)="close()" i18n>
       Close window

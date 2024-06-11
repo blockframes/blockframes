@@ -4,7 +4,7 @@ import { Organization, App } from '@blockframes/model';
 import { BehaviorSubject } from 'rxjs';
 import { APP } from '@blockframes/utils/routes/utils';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { OrganizationService } from '@blockframes/organization/service';
+import { OrganizationService } from '../../service';
 
 @Component({
   selector: 'org-card',

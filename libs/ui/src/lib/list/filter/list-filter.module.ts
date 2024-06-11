@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { ListFilterComponent, FilterDirective } from './list-filter.component';
-import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widget.module';
+import { OverlayWidgetModule } from '../../overlay-widget/overlay-widget.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';

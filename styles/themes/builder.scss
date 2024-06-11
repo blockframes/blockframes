@@ -1,6 +1,6 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
-@use "../typography" as typography;
+@use '../typography' as typography;
 @use '../components/anchor' as anchor;
 @use '../components/bf-calendar' as calendar;
 @use '../components/bf-font-color' as fontColor;
@@ -32,12 +32,15 @@
 @use '../components/mat-checkbox' as checkbox;
 @use '../components/mat-menu' as menu;
 
-@include mat.core(typography.$bf-typography);
+@include mat.core();
 // While density is private we need to set it here to avoid duplicated themes
 @include mat.all-component-themes((
-  density: maximum  // options: minimum, default, maximum
+  density: maximum,  // options: minimum, default, maximum
+  typography: typography.$bf-typography
 ));
 
+// Include the typography hierarchy
+@include mat.typography-hierarchy(typography.$bf-typography);
 
 // THEME
 
@@ -100,6 +103,7 @@
     disabled-text: map.get($foreground, 600),
     elevation: rgba(#010101, 0.6),
     hint-text: map.get($foreground, 600),
+    border-color: rgba(102, 107, 129, 0.6),
     secondary-text: map.get($foreground, 600),
     icon: map.get($foreground, 700),
     icons: map.get($foreground, 700),
@@ -124,10 +128,10 @@
   // FONT //
   //////////
   $font: (
-    display-4: map.get($foreground, 700),
-    display-3: map.get($foreground, 700),
-    display-2: map.get($foreground, 700),
-    display-1: map.get($foreground, 700),
+    headline-1: map.get($foreground, 700),
+    headline-2: map.get($foreground, 700),
+    headline-3: map.get($foreground, 700),
+    headline-4: map.get($foreground, 700),
     h1: map.get($foreground, 800),
     h2: map.get($foreground, 800),
     h3: map.get($foreground, 800),
@@ -136,6 +140,7 @@
     h6: map.get($foreground, 800),
     mat-body-1: map.get($foreground, 700),
     mat-body-2: map.get($foreground, 700),
+    mat-subtitle-2: map.get($foreground, 700),
     mat-caption: map.get($foreground, 600),
   );
 
@@ -169,6 +174,10 @@
   @include list.typography($theme);
   @include toolbar.typography($theme);
   @include tooltip.typography($theme);
+  @include form-field.typography($theme);
+  @include table.typography($theme);
+  @include menu.typography($theme);
+  @include chips.typography($theme);
 
   // Colors
   @include mat.core-color($theme);
@@ -221,6 +230,7 @@
   --warn: #{mat.get-color-from-palette($warn)};
   --warn-contrast: #{mat.get-color-from-palette($warn, 'default-contrast')};
   --active: #5f6e8680;
+  --slider-thumb: #{mat.get-color-from-palette($primary, 500)};
   // Background
   --background-disabled-button: #{mat.get-color-from-palette($background, 'disabled-button')};
   --background-slider: #{mat.get-color-from-palette($foreground, 'slider-min')};

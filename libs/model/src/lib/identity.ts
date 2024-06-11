@@ -57,7 +57,7 @@ export interface Credit extends Person {
   description?: string,
   filmography?: Filmography[],
   status?: MemberStatus,
-};
+}
 
 export interface Filmography {
   title?: string,
@@ -69,14 +69,14 @@ export interface Filmography {
  */
 export interface Producer extends Credit {
   role: ProducerRole, // overrided role scope from Producer interface
-};
+}
 
 /**
  * @dev interface to represent a director credit
  */
 export interface Director extends Credit {
   category?: DirectorCategory,
-};
+}
 
 /**
  * @dev type to represent a cast credit
@@ -88,7 +88,7 @@ export type Cast = Credit;
  */
 export interface Crew extends Credit {
   role: CrewRole, // overrided role scope from Crew interface
-};
+}
 
 export interface AnonymousCredentials extends Person {
   uid: string;

@@ -35,7 +35,7 @@ interface LineChartOptions {
   grid: ApexGrid;
   stroke: ApexStroke;
   markers: ApexMarkers;
-};
+}
 
 const eventNameLabel: Partial<Record<EventName, string>> = {
   addedToWishlist: 'Added to Wishlist',

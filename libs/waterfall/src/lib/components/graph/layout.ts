@@ -455,7 +455,7 @@ export interface Arrow {
   parentId: string;
   childId: string;
   labelPosition: { x: number, y: number };
-};
+}
 
 function getArrow(parent: Node, child: Node) {
   const startX = parent.x + (parent.width / 2);

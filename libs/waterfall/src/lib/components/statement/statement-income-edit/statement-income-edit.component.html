@@ -5,11 +5,11 @@
     <ng-container *ngIf="getConfig(override.get('id').value) as config">
       <section>
         <h3>{{ config.source.name }} : </h3>
-        <mat-chip-list *ngIf="config.income.medias.length" aria-label="Medias">
+        <mat-chip-listbox *ngIf="config.income.medias.length" aria-label="Medias">
           <mat-chip disableRipple *ngFor="let media of config.income.medias | toGroupLabel:'medias':'All'">
             {{ media }}
           </mat-chip>
-        </mat-chip-list>
+        </mat-chip-listbox>
         <span *ngIf="config.income.territories.length" class="group-label">
           {{ config.income.territories | toGroupLabel:'territories':'World' | join | maxLength:30 }}
         </span>
@@ -30,7 +30,7 @@
     </ng-container>
   </ng-container>
 
-  <p class="mat-body-2">To confirm the changes, please type "SAVE"</p>
+  <p class="mat-subtitle-2">To confirm the changes, please type "SAVE"</p>
   <mat-form-field appearance="outline">
     <mat-label>Changes confirmation</mat-label>
     <input matInput [formControl]="form.get('confirm')" required />
@@ -39,7 +39,7 @@
   <mat-dialog-actions>
     <button mat-flat-button color="primary" [disabled]="form.invalid || form.get('confirm').value !== 'SAVE'" (click)="confirm()">
       <span>Confirm Changes</span>
-      <mat-icon svgIcon="arrow_forward"></mat-icon>
+      <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
     </button>
     <button mat-button (click)="close()">
       Close window

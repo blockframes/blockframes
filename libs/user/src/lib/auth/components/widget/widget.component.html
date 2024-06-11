@@ -3,7 +3,7 @@
     <article fxLayout="row">
       <button class="profile" matRipple [widgetTarget]="menu" test-id="auth-user">
         <div fxLayout="column" fxLayoutAlign="center end">
-          <span class="mat-body-2">{{ user | displayName }}</span>
+          <span class="mat-subtitle-2">{{ user | displayName }}</span>
           <span class="mat-caption">{{ user.position }}</span>
         </div>
         <img asset="profil_user.svg" [ref]="user.avatar" alt="Profile picture">

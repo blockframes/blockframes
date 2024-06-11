@@ -12,8 +12,8 @@ import { MatRippleModule } from '@angular/material/core';
 
 // Blockframes
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { AppBarModule } from '@blockframes/ui/app-bar';
-import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
+import { AppBarModule } from '../../app-bar';
+import { LogoSpinnerModule } from '../../logo-spinner/logo-spinner.module';
 
 // Component and Directives
 import {

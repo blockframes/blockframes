@@ -3,20 +3,13 @@ header {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  mat-chip-list {
+  .mat-mdc-chip-listbox {
     mat-divider {
       height: 32px;
       width: 1px;
       margin: 0 10px;
     }
-    mat-chip {
-      cursor: pointer;
-    }
 
-    mat-chip.producer {
-      background-color: #ffb7b0;
-      color: #FFF;
-    }
   }
 
   article {

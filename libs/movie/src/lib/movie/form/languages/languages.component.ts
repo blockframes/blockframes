@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { createMovieLanguageSpecification, Language } from '@blockframes/model';
-import { MovieVersionInfoForm, VersionSpecificationForm } from '@blockframes/movie/form/movie.form';
+import { MovieVersionInfoForm, VersionSpecificationForm } from '../../form/movie.form';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 
 @Component({

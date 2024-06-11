@@ -15,7 +15,10 @@ article {
     margin-left: 16px;
   }
   button {
-    width: 300px;
+    width: 324px;
+    mat-icon {
+      vertical-align: top;
+    }
   }
 }
 

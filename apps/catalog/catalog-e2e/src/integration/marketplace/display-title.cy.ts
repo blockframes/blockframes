@@ -46,8 +46,8 @@ import {
   releaseMedias,
   socialGoals,
   soundFormat,
+  formatRunningTime
 } from '@blockframes/model';
-import { formatRunningTime } from '@blockframes/movie/pipes/running-time.pipe';
 import { format } from 'date-fns';
 
 const injectedData = {

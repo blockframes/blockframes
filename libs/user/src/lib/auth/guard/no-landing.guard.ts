@@ -3,10 +3,10 @@ import { AuthService } from '../service';
 import { map, } from 'rxjs/operators';
 import { OrganizationService } from '@blockframes/organization/service';
 import { combineLatest } from 'rxjs';
-import { CanActivate, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
-export class NoLandingGuard implements CanActivate {
+export class NoLandingGuard {
   constructor(
     private authService: AuthService,
     private orgService: OrganizationService,

@@ -14,9 +14,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MovieService } from '@blockframes/movie/service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/service';
-import { NegotiationForm } from '@blockframes/contract/negotiation';
-import { ContractService } from '@blockframes/contract/contract/service';
-import { TermService } from '@blockframes/contract/term/service';
+import { NegotiationForm } from '../../../negotiation';
+import { ContractService } from '../../../contract/service';
+import { TermService } from '../../../term/service';
 import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
 import { createMandate, createTerm, Mandate, Scope, Term } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
@@ -173,7 +173,7 @@ export class TermFormComponent implements OnInit {
       this.snackBar.open(message, null, { duration: 6000 });
       this.goBack();
       return;
-    };
+    }
 
     const contractId = mandate?.id || this.contractService.createId();
     const terms = toCreate.map(term => createTerm({

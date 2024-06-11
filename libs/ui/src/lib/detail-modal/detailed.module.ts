@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { DetailedGroupComponent } from './detailed.component';
 import { ToLabelModule } from '@blockframes/utils/pipes';
-import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
+import { GlobalModalModule } from '../global-modal/global-modal.module';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';

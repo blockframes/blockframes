@@ -29,7 +29,7 @@ export function addNewSheetsInWorkbook(worksheets: SheetOptions[], workbook: Wor
  * Calculate the width of columns with the total length of the letters + 5 to add some extra space.
  * Add the max value to each columns.
  */
-export function addWorksheetColumnsWidth(data: unknown[][], worksheet: WorkSheet, defaultSpace: number = 15) {
+export function addWorksheetColumnsWidth(data: unknown[][], worksheet: WorkSheet, defaultSpace = 15) {
   const maxCols = Array(data[0].length).fill(defaultSpace);
   for (let row = 0; row < data.length; row++) {
     for (let col = 0; col < data[row].length; col++) {
@@ -47,7 +47,7 @@ export function createWorkBook(properties: FullProperties) {
   return workbook;
 }
 
-export function exportSpreadsheet(workbook: WorkBook, filename: string = 'SheetJS.xlsx') {
+export function exportSpreadsheet(workbook: WorkBook, filename = 'SheetJS.xlsx') {
   writeFile(workbook, filename);
 }
 

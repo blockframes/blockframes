@@ -1,0 +1,20 @@
+{
+  "name": "testing-unit-tests",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/testing/unit-tests/src",
+  "projectType": "library",
+  "tags": ["node", "local"],
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "libs/testing/unit-tests/jest.config.js"
+      }
+    }
+  }
+}

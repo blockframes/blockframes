@@ -413,7 +413,7 @@ async function sendOrgMemberUpdatedEmail(recipient: User, notification: Notifica
     // const orgData = getOrgEmailData(org);
     // const template = userLeftYourOrganization(toAdmin, userSubject, orgData);
     // await sendMailFromTemplate(template, app, groupIds.unsubscribeAll);
-  };
+  }
   const userSubject = getUserEmailData(notification.user);
   const orgData = getOrgEmailData(org);
 

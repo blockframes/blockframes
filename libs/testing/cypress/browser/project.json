@@ -1,0 +1,13 @@
+{
+  "name": "testing-cypress-browser",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/testing/cypress/browser/src",
+  "projectType": "library",
+  "tags": ["browser", "e2e"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    }
+  }
+}
