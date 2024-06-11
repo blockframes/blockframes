@@ -135,9 +135,9 @@
     background-color: transparent;
   }
 
-  .mat-mdc-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn):not(.mat-mdc-snack-bar-action),
-  .mat-mdc-outlined-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn):not(.mat-mdc-snack-bar-action),
-  .mat-mdc-unelevated-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn):not(.mat-mdc-snack-bar-action) {
+  .mat-mdc-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn):not(.mat-mdc-snack-bar-action):not(.bf-accent),
+  .mat-mdc-outlined-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn):not(.mat-mdc-snack-bar-action):not(.bf-accent),
+  .mat-mdc-unelevated-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn):not(.mat-mdc-snack-bar-action):not(.bf-accent) {
     color: mat.get-color-from-palette($foreground, text);
     --mdc-outlined-button-label-text-color: var(--text);
     --mdc-filled-button-label-text-color: var(--text);

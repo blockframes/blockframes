@@ -18,28 +18,31 @@
   }
 
   .bf-tabs {
-    .mat-tab-header {
+    .mat-mdc-tab-header {
       border-bottom: none;
       padding: 24px;
       justify-content: center;
+      --mdc-secondary-navigation-tab-container-height: 66px;
 
-      .mat-tab-label-container {
+      .mat-mdc-tab-label-container {
         flex-grow: 0;
         padding: 1px;
       }
     }
 
-    .mat-tab-label-active {
+    .mdc-tab--active {
+      --mat-tab-header-active-hover-label-text-color: #ffffff;
+      --mat-tab-header-active-focus-label-text-color: #ffffff;
       background-color: var(--primary);
       border: 1px solid var(--primary);
-      .mat-tab-label-content {
+      .mdc-tab__text-label {
         color: #ffffff;
       }
     }
-    .mat-tab-label:not(.mat-tab-label-active) {
+    .mat-mdc-tab:not(.mdc-tab--active) {
       color: #ffffff;
       border: 1px solid var(--primary);
-      .mat-tab-label-content {
+      .mdc-tab__text-label {
         color: var(--primary);
       }
     }

@@ -27,4 +27,9 @@
     background-color: mat.get-color-from-palette($primary, 800);
     color: mat.get-color-from-palette($primary, default-contrast);
   }
+
+  .mat-button-toggle-standalone.mat-button-toggle-appearance-standard .mat-pseudo-checkbox, 
+  .mat-button-toggle-group-appearance-standard .mat-pseudo-checkbox {
+    --mat-minimal-pseudo-checkbox-selected-checkmark-color: var(--primary-contrast);
+  }
 }
