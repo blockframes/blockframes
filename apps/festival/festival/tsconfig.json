@@ -1,7 +1,7 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "types": ["node", "jest"]
+    "types": ["node"]
   },
   "files": [],
   "include": ["src/environment/environment*.ts"],

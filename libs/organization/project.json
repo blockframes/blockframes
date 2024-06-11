@@ -4,21 +4,17 @@
   "sourceRoot": "libs/organization/src",
   "projectType": "library",
   "prefix": "org",
+  "tags": ["browser"],
   "targets": {
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/organization/src/**/*.ts", "libs/organization/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     },
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "libs/organization/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/organization/jest.config.js"
       }
     }
-  },
-  "tags": ["browser"]
+  }
 }

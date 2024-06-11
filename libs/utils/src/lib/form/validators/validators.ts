@@ -149,7 +149,7 @@ export function isKeyValidator(scope: Scope): ValidatorFn {
       return null;
     } else {
       return isInKeys(scope, control.value) ? null : { invalidValue: true }
-    };
+    }
   };
 }
 

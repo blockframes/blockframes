@@ -8,7 +8,7 @@ interface AppBridge {
   subtitle: string;
   logo: string;
   link: string;
-};
+}
 type BridgeRecord = Partial<Record<App, AppBridge>>;
 
 @Component({

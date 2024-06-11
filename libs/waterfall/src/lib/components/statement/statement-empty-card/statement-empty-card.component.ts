@@ -17,7 +17,7 @@ export class StatementEmptyCardComponent implements OnInit {
 
   @Input() set type(type: StatementType) {
     this.type$.next(type);
-  };
+  }
   @Input() @boolean disabled: boolean;
   @Output() selected = new EventEmitter<boolean>();
 

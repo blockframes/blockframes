@@ -128,7 +128,7 @@ export interface WaterfallRightholder {
   name: string;
   roles: RightholderRole[];
   lockedVersionId?: string;
-};
+}
 
 export interface Waterfall {
   _meta?: DocumentMeta;
@@ -289,13 +289,13 @@ export interface WaterfallBudget {
 export interface WaterfallInvestment {
   value: number;
   date: Date;
-};
+}
 
 export interface WaterfallContract extends BaseContract {
   type: RightholderRole;
   name: string;
   price: WaterfallInvestment[];
-};
+}
 
 export interface WaterfallSale extends WaterfallContract {
   type: keyof typeof rightholderGroups.sales;

@@ -78,7 +78,7 @@ export class ContractFormComponent implements OnInit {
     if (this.form.invalid) {
       this.snackbar.open('Invalid form. Please try again', 'close', { duration: 5000 });
       return;
-    };
+    }
     const { terms, price } = this.form.value;
     const contractId = this.route.snapshot.params.contractId;
     const write = this.contractService.batch(); // create a batch

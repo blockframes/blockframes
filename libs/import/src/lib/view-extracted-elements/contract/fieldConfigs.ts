@@ -244,7 +244,7 @@ export function getContractConfig(option: ContractConfig) {
               message: 'Please edit the corresponding sheet field',
             };
             throw new ImportError(value, option);
-          };
+          }
           return sellerId;
         }
       },

@@ -4,21 +4,17 @@
   "projectType": "library",
   "sourceRoot": "libs/contract/src",
   "prefix": "contract",
+  "tags": ["browser"],
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "libs/contract/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/contract/jest.config.js"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/contract/src/**/*.ts", "libs/contract/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     }
-  },
-  "tags": ["browser"]
+  }
 }

@@ -37,7 +37,7 @@ export interface RequestAskingPriceData {
   medias?: string;
   exclusive?: boolean;
   app: App
-};
+}
 
 /**
  * replaces accented characters with their closes neighbour

@@ -21,7 +21,7 @@ export class AuthDataValidationComponent implements OnInit {
     const isOrgAccepted = org.status === "accepted";
     const orgHaveAccesToAtLeastOneModule = !!getOrgModuleAccess(org, this.app).length;
     this.orgApproval = isOrgAccepted && orgHaveAccesToAtLeastOneModule && isUserInOrg;
-  };
+  }
 
   public profileData = false;
   public orgData = false;

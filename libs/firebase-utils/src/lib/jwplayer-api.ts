@@ -1,7 +1,7 @@
 
 import { sendRequest } from './node-request';
 
-interface VideoResponse { status: string, duration: number, id: string };
+interface VideoResponse { status: string, duration: number, id: string }
 
 export function jwplayerApiV2(propertyId: string, jwplayerApiV2Secret: string) {
   const host = 'api.jwplayer.com';

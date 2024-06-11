@@ -77,11 +77,11 @@ export class GraphComponent implements OnInit, AfterViewInit, OnChanges {
       case 'edge': {
         this.transfer = this.state.transfers[id as `${string}->${string}`];
         break;
-      };
+      }
       case 'node': {
         this.right = this.state.rights[id];
         break;
-      };
+      }
       case 'combo': {
         this.verticalGroup = this.state.verticals[id];
         this.horizontalGroup = this.state.horizontals[id];

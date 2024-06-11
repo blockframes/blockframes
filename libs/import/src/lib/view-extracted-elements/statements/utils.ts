@@ -80,7 +80,7 @@ export async function formatStatement(
       statement.contractId = data.contractId;
     } else {
       statement.receiverId = statement.senderId;
-    };
+    }
 
     const incomes = data.incomes.filter(i => i.price && i.currency).map(i => {
       const { territories_included, territories_excluded } = i;

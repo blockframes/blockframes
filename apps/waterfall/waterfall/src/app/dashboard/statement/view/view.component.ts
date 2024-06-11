@@ -173,7 +173,7 @@ export class StatementViewComponent implements OnInit, OnDestroy, StartementForm
           return { ...e, status: 'received' };
         });
       }
-    };
+    }
 
     if (!this.shell.canBypassRules) {
       statement.reviewStatus = 'pending';

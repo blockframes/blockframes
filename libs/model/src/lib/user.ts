@@ -37,7 +37,7 @@ export interface LegalTerms {
 export interface PreferredLanguage {
   language: SupportedLanguages;
   isoA2: TerritoryISOA2Value;
-};
+}
 
 interface UserSettings {
   notifications?: NotificationSettings;

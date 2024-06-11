@@ -1,9 +1,8 @@
-import * as admin from 'firebase-admin';
 import { chunk } from 'lodash';
 import * as env from '@env';
 import { getDb } from './initialize';
 
-export function toDate<D>(target: admin.firestore.DocumentData): D {
+export function toDate<D>(target: FirebaseFirestore.DocumentData): D {
   if (!target) return;
   if (typeof target !== 'object') return target;
   for (const key in target) {
@@ -27,7 +26,7 @@ export function getDocumentSnap(path: string, db = getDb(), tx?: FirebaseFiresto
   return tx ? tx.get(ref) : db.doc(path).get();
 }
 
-export function getDocument<T>(path: string, db?: admin.firestore.Firestore, tx?: FirebaseFirestore.Transaction): Promise<T> {
+export function getDocument<T>(path: string, db?: FirebaseFirestore.Firestore, tx?: FirebaseFirestore.Transaction): Promise<T> {
   return getDocumentSnap(path, db, tx).then(doc => toDate<T>(doc.data()));
 }
 

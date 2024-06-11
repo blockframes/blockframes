@@ -24,7 +24,7 @@ export class WaterfallRightListComponent implements OnInit, OnDestroy {
     this._defaultPool = pool;
     this.poolsFilter.delete(pool);
     this.selectFilterPool(this._defaultPool);
-  };
+  }
   private _defaultPool: string;
   @Input() @boolean private multiple = true;
   @Input() @boolean readonly = false;

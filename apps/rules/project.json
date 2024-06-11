@@ -4,6 +4,7 @@
   "sourceRoot": "apps/rules/src",
   "projectType": "application",
   "prefix": "rules",
+  "tags": ["local", "node"],
   "generators": {},
   "targets": {
     "serve": {
@@ -13,20 +14,15 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["apps/rules/src/**/*.ts", "apps/rules/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     },
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "apps/rules/jest.config.js",
-        "passWithNoTests": true,
         "runInBand": true
       }
     }
-  },
-  "tags": ["local", "node"]
+  }
 }

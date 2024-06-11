@@ -42,7 +42,7 @@ export class EventAccessGuard {
       if (org.status !== 'accepted') return this.router.createUrlTree(['/c/organization/create-congratulations']);
 
       return true;
-    };
+    }
 
     switch (event.accessibility) {
       case 'protected': {

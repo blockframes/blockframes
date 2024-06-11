@@ -4,6 +4,7 @@
   "projectType": "application",
   "sourceRoot": "apps/financiers/financiers/src",
   "prefix": "financiers",
+  "tags": ["browser"],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
@@ -58,34 +59,23 @@
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
       "options": {
-        "browserTarget": "financiers:build"
+        "buildTarget": "financiers:build"
       },
       "configurations": {
         "emulator": {
-          "browserTarget": "financiers:build:emulator"
+          "buildTarget": "financiers:build:emulator"
         }
       }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "financiers:build"
+        "buildTarget": "financiers:build"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["apps/financiers/financiers/src/**/*.ts", "apps/financiers/financiers/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
-    },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "options": {
-        "jestConfig": "apps/financiers/financiers/jest.config.js",
-        "passWithNoTests": true,
-        "setupFile": "apps/financiers/financiers/src/test-setup.ts"
-      }
     },
     "deploy": {
       "executor": "@nx/workspace:run-commands",
@@ -99,6 +89,5 @@
         "color": true
       }
     }
-  },
-  "tags": ["browser"]
+  }
 }

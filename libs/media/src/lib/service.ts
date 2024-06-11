@@ -32,7 +32,7 @@ export class MediaService {
     }
 
     const urls = parametersSet.map((param, index) => {
-      if (tokens[index]) { param.s = tokens[index] };
+      if (tokens[index]) { param.s = tokens[index] }
       return `${getImgIxResourceUrl(file, param)} ${param.w}w`;
     })
 

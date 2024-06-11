@@ -4,21 +4,11 @@
   "projectType": "library",
   "sourceRoot": "libs/admin/src",
   "prefix": "admin",
+  "tags": ["browser"],
   "targets": {
-    "test": {
-      "executor": "@nx/jest:jest",
-      "options": {
-        "jestConfig": "libs/admin/jest.config.js",
-        "passWithNoTests": true
-      }
-    },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/admin/src/**/*.ts", "libs/admin/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     }
-  },
-  "tags": ["browser"]
+  }
 }

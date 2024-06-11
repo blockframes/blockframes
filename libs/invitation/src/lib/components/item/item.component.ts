@@ -46,7 +46,7 @@ export class ItemComponent {
         })
       }
     }
-  };
+  }
 
   _invitation: Invitation;
 

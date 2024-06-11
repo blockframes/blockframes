@@ -114,7 +114,7 @@ export function createTitleMeta(meta: Partial<MetaTitle>): MetaTitle {
     ownerOrgIds: [],
     ...meta
   };
-};
+}
 
 export function createTitleSearchMeta(meta: Partial<MetaTitleSearch>): MetaTitleSearch {
   return {
@@ -124,7 +124,7 @@ export function createTitleSearchMeta(meta: Partial<MetaTitleSearch>): MetaTitle
     status: true,
     ...meta
   };
-};
+}
 
 export function createOrganizationMeta(meta: Partial<MetaOrganization>): MetaOrganization {
   return {
@@ -133,7 +133,7 @@ export function createOrganizationMeta(meta: Partial<MetaOrganization>): MetaOrg
     ...meta,
     profile: createPublicUser(meta.profile),
   };
-};
+}
 
 export function createAggregatedAnalytic(analytic: Partial<AggregatedAnalytic>): AggregatedAnalytic {
   return {

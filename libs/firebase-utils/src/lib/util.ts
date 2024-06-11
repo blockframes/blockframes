@@ -1,4 +1,3 @@
-import * as admin from 'firebase-admin';
 import { firebase } from '@env';
 import { firebase as firebaseCI } from 'env/env.blockframes-ci';
 import { config } from 'dotenv';
@@ -7,7 +6,16 @@ import { firebase as firebaseProd } from 'env/env.blockframes';
 import { getAuth, getDb, getStorage, initAdmin } from './initialize';
 import { App, Organization } from '@blockframes/model';
 import { toDate } from './firebase-utils';
-import { BlockframesSnapshot } from './types';
+import type { 
+  Auth,
+  BlockframesSnapshot,
+  CollectionReference,
+  Firestore,
+  Storage,
+  FirebaseApp,
+  QueryDocumentSnapshot,
+  QuerySnapshot
+} from './types';
 import { camelCase } from 'lodash';
 
 /**
@@ -18,11 +26,11 @@ import { camelCase } from 'lodash';
  * @param orderBy the unique key of the document object to order by
  * @param batchSize how many docs to fetch per iteration
  */
-export async function* getCollectionInBatches<K>(ref: admin.firestore.CollectionReference, orderBy: string, batchSize = 650) {
+export async function* getCollectionInBatches<K>(ref: CollectionReference, orderBy: string, batchSize = 650) {
   let querySnapshot = await ref.orderBy(orderBy).limit(batchSize).get();
-  let lastSnapshot: FirebaseFirestore.QueryDocumentSnapshot | string = '';
+  let lastSnapshot: QueryDocumentSnapshot | string = '';
 
-  function getDocs(querySnap: FirebaseFirestore.QuerySnapshot) {
+  function getDocs(querySnap: QuerySnapshot) {
     return querySnap.docs.map((snap, i, arr) => {
       if (i === arr.length - 1) lastSnapshot = snap;
       return toDate<K>(snap.data());
@@ -77,18 +85,18 @@ export function getKeyName(key: string, projectId: string, demo?: boolean) {
 }
 
 interface AdminServices {
-  auth: admin.auth.Auth;
-  db: admin.firestore.Firestore;
-  storage: admin.storage.Storage;
+  auth: Auth;
+  db: Firestore;
+  storage: Storage;
   firebaseConfig: ReturnType<typeof firebase>;
-  getCI: () => admin.app.App;
+  getCI: () => FirebaseApp;
 }
 
 export function loadAdminServices(): AdminServices {
   config();
 
   return {
-    getCI: () => initAdmin(firebaseCI(), 'CI-app') ,
+    getCI: () => initAdmin(firebaseCI(), 'CI-app'),
     auth: getAuth(),
     db: getDb(),
     firebaseConfig: firebase(),

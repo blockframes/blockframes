@@ -173,7 +173,7 @@ export class TermFormComponent implements OnInit {
       this.snackBar.open(message, null, { duration: 6000 });
       this.goBack();
       return;
-    };
+    }
 
     const contractId = mandate?.id || this.contractService.createId();
     const terms = toCreate.map(term => createTerm({

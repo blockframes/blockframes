@@ -3,12 +3,13 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/waterfall/waterfall-e2e/src",
   "projectType": "application",
+  "tags": ["browser", "e2e"],
+  "implicitDependencies": ["waterfall"],
   "targets": {
     "serve": {
       "executor": "@nx/cypress:cypress",
       "options": {
         "cypressConfig": "apps/waterfall/waterfall-e2e/cypress.config.js",
-        "tsConfig": "apps/waterfall/waterfall-e2e/tsconfig.e2e.json",
         "baseUrl": "http://localhost:4200",
         "watch": true,
         "headless": false,
@@ -34,7 +35,6 @@
       "executor": "@nx/cypress:cypress",
       "options": {
         "cypressConfig": "apps/waterfall/waterfall-e2e/cypress.config.js",
-        "tsConfig": "apps/waterfall/waterfall-e2e/tsconfig.e2e.json",
         "baseUrl": "http://localhost:4200",
         "browser": "chrome",
         "devServerTarget": "waterfall:serve"
@@ -58,13 +58,8 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["apps/waterfall/waterfall-e2e/src/**/*.ts", "apps/waterfall/waterfall-e2e/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     }
-  },
-  "tags": ["browser", "e2e"],
-  "implicitDependencies": ["waterfall"]
+  }
 }

@@ -4,6 +4,7 @@
   "projectType": "application",
   "sourceRoot": "apps/festival/festival/src",
   "prefix": "festival",
+  "tags": ["browser"],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
@@ -81,33 +82,23 @@
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
       "options": {
-        "browserTarget": "festival:build"
+        "buildTarget": "festival:build"
       },
       "configurations": {
         "emulator": {
-          "browserTarget": "festival:build:emulator"
+          "buildTarget": "festival:build:emulator"
         }
       }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "festival:build"
+        "buildTarget": "festival:build"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["apps/festival/festival/src/**/*.ts", "apps/festival/festival/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
-    },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "options": {
-        "jestConfig": "apps/festival/festival/jest.config.js",
-        "passWithNoTests": true
-      }
     },
     "deploy": {
       "executor": "@nx/workspace:run-commands",
@@ -121,6 +112,5 @@
         "color": true
       }
     }
-  },
-  "tags": ["browser"]
+  }
 }

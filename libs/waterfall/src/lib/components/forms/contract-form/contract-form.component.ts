@@ -146,7 +146,7 @@ export class WaterfallContractFormComponent implements OnInit, OnChanges, OnDest
     this.showExpenseTypes = rightholderGroups.withStatements.includes(this.type);
     if (this.showExpenseTypes && this.form.controls.expenseTypes.length === 0) {
       this.form.controls.expenseTypes.push(ExpenseTypeForm.factory({}, createExpenseTypeControl));
-    };
+    }
 
     const defaultLicensorRoles = this.getDefaultLicensorRoles();
     const licensor = this.waterfall.rightholders.find(r => r.name === this.form.controls.licensorName.value);

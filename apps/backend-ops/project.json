@@ -4,15 +4,12 @@
   "sourceRoot": "apps/backend-ops/src",
   "projectType": "application",
   "prefix": "backend-ops",
+  "tags": ["node", "local"],
   "generators": {},
   "targets": {
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["apps/backend-ops/src/**/*.ts", "apps/backend-ops/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     }
-  },
-  "tags": ["node", "local"]
+  }
 }

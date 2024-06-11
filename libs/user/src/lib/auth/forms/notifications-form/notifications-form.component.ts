@@ -12,7 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
-interface NotificationSetting { text: string, tooltip: boolean };
+interface NotificationSetting { text: string, tooltip: boolean }
 
 const titleType: Partial<Record<NotificationTypes, NotificationSetting>> = {
   movieAccepted: { text: $localize`A title is successfully published on the marketplace.`, tooltip: false },

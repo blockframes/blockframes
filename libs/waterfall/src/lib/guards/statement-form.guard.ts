@@ -12,7 +12,7 @@ import { StatementService } from '../statement.service';
 
 export interface StartementFormGuardedComponent {
   form: StatementForm;
-};
+}
 
 @Injectable({ providedIn: 'root' })
 export class StatementFormGuard<T extends StartementFormGuardedComponent> {

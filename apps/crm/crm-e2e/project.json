@@ -3,12 +3,13 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/crm/crm-e2e/src",
   "projectType": "application",
+  "tags": ["browser", "e2e"],
+  "implicitDependencies": ["crm"],
   "targets": {
     "serve": {
       "executor": "@nx/cypress:cypress",
       "options": {
         "cypressConfig": "apps/crm/crm-e2e/cypress.config.js",
-        "tsConfig": "apps/crm/crm-e2e/tsconfig.e2e.json",
         "baseUrl": "http://localhost:4200",
         "watch": true,
         "headless": false,
@@ -31,7 +32,6 @@
       "executor": "@nx/cypress:cypress",
       "options": {
         "cypressConfig": "apps/crm/crm-e2e/cypress.config.js",
-        "tsConfig": "apps/crm/crm-e2e/tsconfig.e2e.json",
         "baseUrl": "http://localhost:4200",
         "browser": "chrome",
         "devServerTarget": "crm:serve"
@@ -55,13 +55,8 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["apps/crm/crm-e2e/src/**/*.ts", "apps/crm/crm-e2e/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     }
-  },
-  "tags": ["browser", "e2e"],
-  "implicitDependencies": ["crm"]
+  }
 }

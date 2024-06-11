@@ -58,7 +58,7 @@ export interface FileMetaData {
   docId: string;
   field: string;
   [K: string]: string; // extra-data
-};
+}
 
 export function isValidMetadata(meta?: FileMetaData, options?: { uidRequired: boolean }) {
   if (!meta) return false;
