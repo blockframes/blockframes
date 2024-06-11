@@ -14,7 +14,7 @@
               <ng-container *ngIf="fromUser">
                 <p fxLayout="row wrap" fxLayoutGap="6px">
                   <a [href]="'mailto:' + fromUser.email">{{ fromUser | displayUser | async }}</a>
-                  <span>
+                  <span i18n>
                     invited you to {{ event.type | toLabel:'eventTypes' }}
                     <a [target]="targetLink" [href]="[applicationUrl.festival + '/event/' + _invitation.eventId + '/r/i/lobby']" id="link">{{ event.title }}</a>
                   </span>
@@ -26,7 +26,7 @@
             <ng-template #inviteScreening>
               <p fxLayout="row wrap" fxLayoutGap="6px">
                 <a [routerLink]="['/c/o/marketplace/organization', _invitation.fromOrg.id]">{{ _invitation.fromOrg.name }}</a>
-                <span>
+                <span i18n>
                   invited you to
                   <a [target]="targetLink" [href]="[applicationUrl.festival + '/event/' + _invitation.eventId + '/r/i/session']" id="link">{{ event.title }}</a>
                 </span>
@@ -41,7 +41,7 @@
               <ng-container *ngIf="fromUser">
                 <p  fxLayout="row wrap" fxLayoutGap="6px">
                   <a [href]="'mailto:' + fromUser.email">{{ fromUser | displayUser | async }}</a>
-                  <span>
+                  <span i18n>
                     would like to attend {{ event.type | toLabel:'eventTypes' }}
                     <a [target]="targetLink" [href]="[applicationUrl.festival + '/event/' + _invitation.eventId + '/r/i']" id="link">{{ event.title }}</a>
                   </span>
@@ -53,7 +53,7 @@
             <ng-template #requestScreening>
               <p  fxLayout="row wrap" fxLayoutGap="6px">
                 <a [href]="'mailto:' + _invitation.fromUser.email">{{ _invitation.fromUser | displayUser | async }}</a>
-                <span>
+                <span i18n>
                   would like to attend {{ event.type | toLabel:'eventTypes' }}
                   <a [target]="targetLink" [href]="[applicationUrl.festival + '/event/' + _invitation.eventId + '/r/i']" id="link">{{ event.title }}</a>.
                 </span>
@@ -84,26 +84,26 @@
     <invitation-action [invitation]="_invitation" fxLayoutAlign="end" small></invitation-action>
   </span>
   <span matListItemMeta>
-    <button mat-icon-button test-id="more" [matMenuTriggerFor]="menu" aria-label="Trigger for a menu" matTooltip="More actions">
+    <button mat-icon-button test-id="more" [matMenuTriggerFor]="menu" aria-label="Trigger for a menu" matTooltip="More actions" i18n-matTooltip>
       <mat-icon svgIcon="more_vert"></mat-icon>
     </button>
   </span>
 </mat-list-item>
 <mat-menu #menu="matMenu">
   <ng-container *ngIf="_invitation.status === 'pending'">
-    <span test-id="accept-invitation" mat-menu-item (click)="handleInvitation(_invitation, 'acceptInvitation')">
+    <span test-id="accept-invitation" mat-menu-item (click)="handleInvitation(_invitation, 'acceptInvitation')" i18n>
       Accept invitation
     </span>
-    <span test-id="decline-invitation" mat-menu-item (click)="handleInvitation(_invitation, 'declineInvitation')">
+    <span test-id="decline-invitation" mat-menu-item (click)="handleInvitation(_invitation, 'declineInvitation')" i18n>
       Decline invitation
     </span>
   </ng-container>
   <ng-container *ngIf="_invitation.type === 'attendEvent' && _invitation.mode === 'invitation' && _invitation.status !== 'declined'">
     <ng-container *ngIf="_invitation | eventFromInvitation | async as event">
-      <a *ngIf="event | googleAgendaLink as googleLink" mat-menu-item [href]="googleLink" target="_blank">Export to Google Agenda</a>
-      <span mat-menu-item (click)="exportToCalendar(event)">Export to Ical</span>
-      <span mat-menu-item (click)="exportToCalendar(event)">Export to Outlook</span>
+      <a *ngIf="event | googleAgendaLink as googleLink" mat-menu-item [href]="googleLink" target="_blank" i18n>Export to Google Agenda</a>
+      <span mat-menu-item (click)="exportToCalendar(event)" i18n>Export to Ical</span>
+      <span mat-menu-item (click)="exportToCalendar(event)" i18n>Export to Outlook</span>
     </ng-container>
   </ng-container>
-  <a test-id="go-to-event" mat-menu-item [target]="targetLink" [href]="eventLink">More Details</a>
+  <a test-id="go-to-event" mat-menu-item [target]="targetLink" [href]="eventLink" i18n>More Details</a>
 </mat-menu>

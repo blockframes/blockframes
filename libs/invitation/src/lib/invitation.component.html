@@ -1,22 +1,22 @@
 <ng-container *ngIf="invitations$ | async as invitations; else loading">
   <ng-container *ngIf="invitationCount$ | async; else empty">
-    <h1>Invitations</h1>
+    <h1 i18n>Invitations</h1>
     <header fxLayout fxLayout.xs="column">
         <form [formGroup]=form fxLayout fxLayout.xs="column">
           <static-select [control]="form.get('type')" scope="invitationType" multiple="true">
-            <mat-label>Filter by type</mat-label>
+            <mat-label i18n>Filter by type</mat-label>
           </static-select>
           <static-select [control]="form.get('status')" scope="invitationStatus" multiple="true">
-            <mat-label>Filter by status</mat-label>
+            <mat-label i18n>Filter by status</mat-label>
           </static-select>
         </form>
       <section fxLayoutAlign="space-between center" fxFlex>
-        <button mat-button (click)="form.reset()" matTooltip="Clear filters">
+        <button mat-button (click)="form.reset()" matTooltip="Clear filters" i18n-matTooltip>
           <mat-icon svgIcon="refresh_filters"></mat-icon>
         </button>
         <button mat-button fxFlexOffset="auto" test-id="invitation-accept-all" (click)="acceptAll(invitations)">
           <mat-icon svgIcon="check_circle"></mat-icon>
-          <span>Accept All</span>
+          <span i18n>Accept All</span>
         </button>
       </section>
     </header>
@@ -25,11 +25,11 @@
     </ng-container>
     <ng-container *ngIf="!invitations.length">
       <section fxLayout="column" fxLayoutAlign="center center">
-        <p>You have no invitation with this filter.<br>Click on <b>clear filters</b> button to reset.</p>
+        <p i18n>You have no invitation with this filter.<br>Click on <b>clear filters</b> button to reset.</p>
         <img asset="empty_invitation.svg" alt="No invitations">
-        <button mat-flat-button color="accent" (click)="form.reset()" matTooltip="Clear filters">
+        <button mat-flat-button color="accent" (click)="form.reset()" matTooltip="Clear filters" i18n-matTooltip>
           <mat-icon svgIcon="refresh_filters"></mat-icon>
-          <span>Clear filters</span>
+          <span i18n>Clear filters</span>
         </button>
       </section>
     </ng-container>
@@ -43,9 +43,9 @@
 </ng-template>
 <ng-template #empty>
   <section fxLayout="column" fxLayoutAlign="center center">
-    <h1>You have no invitation yet.</h1>
-    <p>You haven't received any invitations at this time.</p>
+    <h1 i18n>You have no invitation yet.</h1>
+    <p i18n>You haven't received any invitations at this time.</p>
     <img asset="empty_invitation.svg" alt="No invitations">
-    <button mat-flat-button color="accent" (click)="leadToHomepage()">Back to Homepage</button>
+    <button mat-flat-button color="accent" (click)="leadToHomepage()" i18n>Back to Homepage</button>
   </section>
 </ng-template>
