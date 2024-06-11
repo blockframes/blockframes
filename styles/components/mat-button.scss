@@ -213,6 +213,7 @@
 
   .mat-mdc-unelevated-button[disabled][disabled] {
     --mdc-filled-button-disabled-label-text-color: #FFF;
+    --mdc-filled-button-disabled-container-color: var(--background-disabled-button);
   }
 }
 
