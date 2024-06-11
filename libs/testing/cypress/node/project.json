@@ -3,22 +3,11 @@
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/testing/cypress/node/src",
   "projectType": "library",
+  "tags": ["node", "e2e"],
   "targets": {
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/testing/cypress/node/**/*.ts"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
-    },
-    "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/libs/testing/cypress/node"],
-      "options": {
-        "jestConfig": "libs/testing/cypress/node/jest.config.js",
-        "passWithNoTests": true
-      }
     }
-  },
-  "tags": ["node", "e2e"]
+  }
 }

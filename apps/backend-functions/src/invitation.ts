@@ -21,7 +21,7 @@ import {
   getWaterfallEmailData,
 } from '@blockframes/model';
 import { getOrInviteUserByMail } from './internals/users';
-import { CallableContext } from 'firebase-functions/lib/providers/https';
+import { CallableContext } from 'firebase-functions/v1/https';
 import { createAlgoliaOrganization } from '@blockframes/firebase-utils/algolia';
 import { BlockframesChange, getDocument } from '@blockframes/firebase-utils';
 import { applicationUrl, sendgridEmailsFrom } from '@blockframes/utils/apps';

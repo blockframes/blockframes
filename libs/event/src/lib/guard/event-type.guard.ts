@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, UrlTree, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { UrlTree, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EventService } from '../service';
 
 @Injectable({ providedIn: 'root' })
-export class EventTypeGuard implements CanActivate {
+export class EventTypeGuard {
 
   constructor(
     private service: EventService,

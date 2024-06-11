@@ -13,7 +13,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
-import { OrgMoviesModule } from '@blockframes/organization/pipes/org-movies.pipe';
+import { OrgMoviesModule } from '../../pipes/org-movies.pipe';
 
 
 @NgModule({

@@ -11,16 +11,13 @@ import {
 } from '@blockframes/model';
 import { removeUnexpectedUsers } from './users';
 import {
-  Auth,
-  QueryDocumentSnapshot,
   getDocument,
   runChunks,
   removeAllSubcollections,
-  UserRecord,
   toDate,
   getAuth
 } from '@blockframes/firebase-utils';
-import admin from 'firebase-admin';
+import type { Auth, DocumentSnapshot, Firestore, QueryDocumentSnapshot, UserRecord } from '@blockframes/firebase-utils/types';
 import { DatabaseData, loadAllCollections, printDatabaseInconsistencies } from './internals/utils';
 import { deleteSelectedUsers } from '@blockframes/testing/unit-tests';
 import { subDays, subYears } from 'date-fns';
@@ -31,8 +28,8 @@ let verbose = false;
 
 /** Reusable data cleaning script that can be updated along with data model */
 export async function cleanDeprecatedData(
-  db: FirebaseFirestore.Firestore,
-  auth?: admin.auth.Auth,
+  db: Firestore,
+  auth?: Auth,
   options = { verbose: true }
 ) {
   verbose = options.verbose;
@@ -65,7 +62,7 @@ export async function auditUsers(db: FirebaseFirestore.Firestore, auth = getAuth
   return true;
 }
 
-async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, auth?: admin.auth.Auth) {
+async function cleanData(dbData: DatabaseData, db: FirebaseFirestore.Firestore, auth?: Auth) {
 
   // Getting existing document ids to compare
   const [movieIds, organizationIds, eventIds, invitationIds, offerIds, contractIds, waterfallIds] = [
@@ -149,7 +146,7 @@ async function cleanOneNotification(
     notification.user.avatar = d?.avatar || EMPTY_MEDIA;
   }
 
-  await doc.ref.update(notification);
+  await doc.ref.update({ ...notification });
 }
 
 export function cleanInvitations(
@@ -200,7 +197,7 @@ async function cleanOneInvitation(
     delete (invitation.toUser as any).watermark;
   }
 
-  await doc.ref.update(invitation);
+  await doc.ref.update({ ...invitation });
 }
 
 export async function cleanUsers(
@@ -216,7 +213,7 @@ export async function cleanUsers(
 
   const authUsersToDelete: string[] = [];
 
-  await runChunks(users.docs, async (userDoc: FirebaseFirestore.DocumentSnapshot) => {
+  await runChunks(users.docs, async (userDoc: DocumentSnapshot) => {
     const user = toDate<PublicUser>(userDoc.data());
 
     // Check if a DB user have a record in Auth.
@@ -514,7 +511,7 @@ function isUserValid(
       } else {
         return false;
       }
-    };
+    }
   }
 
   return true;

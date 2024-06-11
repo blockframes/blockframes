@@ -6,7 +6,7 @@ import { OrganizationService } from '@blockframes/organization/service';
 import { map } from 'rxjs/operators';
 import { AuthService } from '@blockframes/auth/service';
 import { APP } from '@blockframes/utils/routes/utils';
-import { where, doc, DocumentSnapshot } from 'firebase/firestore';
+import { where, doc, DocumentSnapshot, Transaction } from 'firebase/firestore';
 import { WriteOptions } from 'ngfire';
 import { BlockframesCollection } from '@blockframes/utils/abstract-service';
 
@@ -67,7 +67,7 @@ export class MovieService extends BlockframesCollection<Movie> {
 
   onCreate(movie: Movie, { write }: WriteOptions) {
     const ref = this.getRef(movie.id);
-    write.update(ref, '_meta.createdAt', new Date());
+    (write as Transaction).update(ref, '_meta.createdAt', new Date());
     for (const orgId of movie.orgIds) {
       this.permissionsService.addDocumentPermissions(
         movie.id,
@@ -79,7 +79,7 @@ export class MovieService extends BlockframesCollection<Movie> {
 
   onUpdate(movie: Movie, { write }: WriteOptions) {
     const movieRef = doc(this.db, `movies/${movie.id}`);
-    write.update(movieRef,
+    (write as Transaction).update(movieRef,
       '_meta.updatedBy', this.authService.uid,
       '_meta.updatedAt', new Date(),
     );

@@ -23,7 +23,7 @@ interface Information {
   cappedExpenses?: number;
   expensesToBeRecouped?: PricePerCurrency;
   mgStatus?: MgStatus;
-};
+}
 
 @Component({
   selector: 'waterfall-graph-node-details',
@@ -33,7 +33,7 @@ interface Information {
 })
 export class WaterfallGraphNodeDetailsComponent implements OnInit {
   @Input() public rightForm: RightForm;
-  @Input() public set rightId(id: string) { this.rightId$.next(id); };
+  @Input() public set rightId(id: string) { this.rightId$.next(id); }
   public get rightId() { return this.rightId$.value; }
   private rightId$ = new BehaviorSubject<string>(null);
   public rights$ = this.shell.rights$;

@@ -17,15 +17,15 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 // Blockframes Movie
-import { MovieFormStoryModule } from '@blockframes/movie/form/story/story.module';
-import { MovieFormBudgetRangeModule } from '@blockframes/movie/form/budget/range/budget-range.module';
+import { MovieFormStoryModule } from '../../form/story/story.module';
+import { MovieFormBudgetRangeModule } from '../../form/budget/range/budget-range.module';
 
 // Blockframes UI
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module';
-import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
+import { HasStatusModule } from '../../pipes/has-status.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 
 import { MovieFormAdditionalInformationComponent } from './additional-information.component';

@@ -17,7 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { scrollIntoView } from '@blockframes/utils/browser/utils';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { AnalyticsService } from '@blockframes/analytics/service';
-import { MovieService } from '@blockframes/movie/service';
+import { MovieService } from '../../service';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 import { APP } from '@blockframes/utils/routes/utils';

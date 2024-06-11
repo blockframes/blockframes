@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { MetricCard } from '@blockframes/analytics/utils';
+import { MetricCard } from '../../utils';
 
 @Component({
   selector: '[cards] analytics-metric-card-list',

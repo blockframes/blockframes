@@ -74,7 +74,7 @@ interface SearchAvailsConfig<A extends BaseAvailsFilter> {
   mandateFilterFn: (term: Term, avail: A) => boolean,
   saleFilterFn?: (term: Term, avail: A) => boolean,
   breakOnMatch: boolean
-};
+}
 
 function combineAvailResults<A extends CalendarAvailsFilter | AvailsFilter>(results: AvailResult<A>[]) {
   const availableResults = results
@@ -858,7 +858,7 @@ export function getCollidingHoldbacks(holdbacks: Holdback[], terms: BucketTerm[]
 // - continuous = `Range`
 
 
-interface Range { from: number | Date, to: number | Date };
+interface Range { from: number | Date, to: number | Date }
 
 function discreteAllOf(a: string[], optional?: 'optional') {
   return {

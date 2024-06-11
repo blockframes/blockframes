@@ -4,15 +4,11 @@
     "types": [
       "cypress",
       "node",
-      "cypress-wait-until",
-      "cypress-mailosaur"
-    ]
+      "cypress-wait-until"
+    ],
+    "sourceMap": false,
+    "outDir": "../../../dist/out-tsc"
   },
   "include": [],
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.e2e.json"
-    }
-  ]
+  "files": []
 }

@@ -6,7 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module'
+import { AlgoliaAutocompleteModule } from '../../algolia/autocomplete/algolia-autocomplete.module'
 import { UploadWidgetModule } from '@blockframes/media/file/upload-widget/upload-widget.module';
 
 import { DashboardComponent } from './dashboard.component';

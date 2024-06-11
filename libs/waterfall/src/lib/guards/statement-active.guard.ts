@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { StatementService } from '../statement.service';
-import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Statement } from '@blockframes/model';
 
 @Injectable({ providedIn: 'root' })
-export class StatementActiveGuard implements CanActivate {
+export class StatementActiveGuard {
   private statement: Statement;
 
   constructor(

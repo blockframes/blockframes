@@ -1,5 +1,5 @@
 <mat-sidenav-container>
-  <mat-sidenav class="dark-theme" id="dashboard-navbar" role="navigation" [mode]="mode$ | async" [opened]="(mode$ | async) === 'side' && currentApp !== 'waterfall'">
+  <mat-sidenav id="dashboard-navbar" role="navigation" [mode]="mode$ | async" [opened]="(mode$ | async) === 'side' && currentApp !== 'waterfall'">
     <mat-toolbar fxLayout fxLayoutAlign="space-between center">
       <a app-logo routerLink="."></a>
     </mat-toolbar>

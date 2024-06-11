@@ -3,22 +3,18 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/firebase-utils/src",
   "projectType": "library",
+  "tags": ["node", "local"],
   "generators": {},
   "targets": {
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/firebase-utils/src/**/*.ts", "libs/firebase-utils/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "libs/firebase-utils/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/firebase-utils/jest.config.js"
       }
     }
-  },
-  "tags": ["node", "local"]
+  }
 }

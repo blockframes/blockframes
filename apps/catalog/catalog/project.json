@@ -4,6 +4,7 @@
   "projectType": "application",
   "sourceRoot": "apps/catalog/catalog/src",
   "prefix": "catalog",
+  "tags": ["browser"],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
@@ -72,36 +73,26 @@
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
       "options": {
-        "browserTarget": "catalog:build"
+        "buildTarget": "catalog:build"
       },
       "configurations": {
         "emulator": {
-          "browserTarget": "catalog:build:emulator"
+          "buildTarget": "catalog:build:emulator"
         }
       }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "catalog:build"
+        "buildTarget": "catalog:build"
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["apps/catalog/catalog/src/**/*.ts", "apps/catalog/catalog/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     },
-    "test": {
-      "executor": "@nrwl/jest:jest",
-      "options": {
-        "jestConfig": "apps/catalog/catalog/jest.config.js",
-        "passWithNoTests": true
-      }
-    },
     "deploy": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "@nx/workspace:run-commands",
       "options": {
         "envFile": ".env",
         "commands": [
@@ -112,6 +103,5 @@
         "color": true
       }
     }
-  },
-  "tags": ["browser"]
+  }
 }

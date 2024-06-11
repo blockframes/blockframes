@@ -52,7 +52,7 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
   set form(form) {
     this._form = form;
     this.values$ = form.valueChanges.pipe(startWith(this.form.value));
-  };
+  }
   private _form;
 
   @Output() added = new EventEmitter<string>();

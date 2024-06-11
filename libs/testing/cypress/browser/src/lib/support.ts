@@ -8,11 +8,11 @@ import {
   Territory,
   MediaGroup,
   TerritoryGroup,
+  USER_FIXTURES_PASSWORD
 } from '@blockframes/model';
 import { browserAuth } from './browserAuth';
 import { gmail } from './gmail';
 import { gmail_v1 } from 'googleapis';
-import { USER_FIXTURES_PASSWORD } from '@blockframes/devops';
 import { sub } from 'date-fns';
 import { dateToMMDDYYYY } from './helpers';
 

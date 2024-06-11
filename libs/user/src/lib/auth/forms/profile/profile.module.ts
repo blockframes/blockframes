@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { ImageUploaderModule } from '@blockframes/media/image/uploader/uploader.module';
 import { ProfileFormComponent } from './profile.component';
-import { HideEmailModule } from '@blockframes/auth/components/hide-email/hide-email.module';
+import { HideEmailModule } from '../../components/hide-email/hide-email.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';

@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, Optional, Inject } from '@angular/core';
-import { AuthService } from '@blockframes/auth/service';
+import { AuthService } from '../../service';
 import { App, getOrgModuleAccess, Organization, hasDisplayName } from '@blockframes/model';
 import { BehaviorSubject } from 'rxjs';
 import { Intercom } from 'ng-intercom';
@@ -21,7 +21,7 @@ export class AuthDataValidationComponent implements OnInit {
     const isOrgAccepted = org.status === "accepted";
     const orgHaveAccesToAtLeastOneModule = !!getOrgModuleAccess(org, this.app).length;
     this.orgApproval = isOrgAccepted && orgHaveAccesToAtLeastOneModule && isUserInOrg;
-  };
+  }
 
   public profileData = false;
   public orgData = false;

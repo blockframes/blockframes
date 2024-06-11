@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, Pipe, PipeTransform, Inject } from 
 // Blockframes
 import { NotificationsForm } from './notifications.form';
 import { App, notificationTypes, NotificationTypes } from '@blockframes/model';
-import { AuthService } from '@blockframes/auth/service';
+import { AuthService } from '../../service';
 
 // Material
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -12,7 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 
-interface NotificationSetting { text: string, tooltip: boolean };
+interface NotificationSetting { text: string, tooltip: boolean }
 
 const titleType: Partial<Record<NotificationTypes, NotificationSetting>> = {
   movieAccepted: { text: $localize`A title is successfully published on the marketplace.`, tooltip: false },

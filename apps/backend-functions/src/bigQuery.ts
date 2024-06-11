@@ -1,4 +1,4 @@
-import { CallableContext } from "firebase-functions/lib/providers/https";
+import { CallableContext } from 'firebase-functions/v1/https';
 import { BigQuery } from '@google-cloud/bigquery';
 import { bigQueryAnalyticsTable } from "./environments/environment";
 import { db } from './internals/firebase';

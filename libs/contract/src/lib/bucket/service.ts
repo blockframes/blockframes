@@ -27,7 +27,7 @@ interface AddTermConfig {
   orgId: string,
   parentTermId: string,
   avail: AvailsFilter
-};
+}
 
 
 @Injectable({ providedIn: 'root' })

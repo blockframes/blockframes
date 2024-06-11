@@ -17,7 +17,7 @@ describe('Test ORG anonymization function', () => {
       }
     };
 
-    const doc = anonymizeDocument(orgRecord);
+    const doc = anonymizeDocument(orgRecord) as DbRecord;
     expect(doc.content.id).toEqual(orgRecord.content.id);
     expect(doc.content.email).not.toEqual(orgRecord.content.email);
     expect(doc.content.name).not.toEqual(orgRecord.content.name);
@@ -55,7 +55,7 @@ describe('Test USERS anonymization function', () => {
       }
     };
 
-    const doc = anonymizeDocument(userRecord);
+    const doc = anonymizeDocument(userRecord) as DbRecord;
     expect(doc.content.uid).toEqual(userRecord.content.uid);
     expect(doc.content.email).not.toEqual(userRecord.content.email);
     expect(doc.content.firstName).not.toEqual(userRecord.content.firstName);
@@ -92,7 +92,7 @@ describe('Test INVITATIONS anonymization function', () => {
       }
     };
 
-    const doc = anonymizeDocument(invitationRecord);
+    const doc = anonymizeDocument(invitationRecord) as DbRecord;
 
     // Check that ids are not updated
     expect(doc.content.id).toEqual(invitationRecord.content.id);
@@ -131,7 +131,7 @@ describe('Test NOTIFICATIONS anonymization function', () => {
       }
     };
 
-    const doc = anonymizeDocument(notificationRecord);
+    const doc = anonymizeDocument(notificationRecord) as DbRecord;
 
     // Check that ids are not updated
     expect(doc.content.id).toEqual(notificationRecord.content.id);
@@ -181,7 +181,7 @@ describe('Test MOVIES anonymization function', () => {
       }
     }
 
-    const doc = anonymizeDocument(titleRecord);
+    const doc = anonymizeDocument(titleRecord) as DbRecord;
 
     expect(doc.content.id).toEqual(titleRecord.content.id);
     expect(doc.content.title.international).toEqual(titleRecord.content.title.international);
@@ -210,7 +210,7 @@ describe(`Test ${META_COLLECTION_NAME} anonymization function`, () => {
       }
     };
 
-    const doc = anonymizeDocument(titleRecord);
+    const doc = anonymizeDocument(titleRecord) as DbRecord;
     expect(doc.content.startedAt.getTime()).toBeDefined();
     expect(doc.content.endedAt).toBe(null)
   });

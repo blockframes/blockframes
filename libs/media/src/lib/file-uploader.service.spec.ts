@@ -1,11 +1,9 @@
-process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
 import { TestBed } from '@angular/core/testing';
 import { Overlay } from '@angular/cdk/overlay';
-import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { FileUploaderService } from './file-uploader.service';
 import { UploadData } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/service';
-import { FIREBASE_CONFIG, FireStorage, FIRESTORE_SETTINGS } from 'ngfire';
+import { FireStorage } from 'ngfire';
 
 class DummyService { }
 
@@ -42,15 +40,11 @@ describe('Media Service Test Suite', () => {
           })
         },
         { provide: AuthService, useClass: DummyService },
-        { provide: FIREBASE_CONFIG, useValue: { options: { projectId: 'test' } } },
-        { provide: FIRESTORE_SETTINGS, useValue: { ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true } }
       ],
     });
     storage = TestBed.inject(FireStorage);
     service = TestBed.inject(FileUploaderService);
   });
-
-  afterEach(() => clearFirestoreData({ projectId: 'test' }))
 
   it('Should check file uploader service is created', () => {
     expect(service).toBeTruthy();

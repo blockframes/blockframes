@@ -4,21 +4,17 @@
   "projectType": "library",
   "sourceRoot": "libs/waterfall/src",
   "prefix": "blockframes",
+  "tags": ["browser"],
   "targets": {
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/waterfall"],
       "options": {
-        "jestConfig": "libs/waterfall/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/waterfall/jest.config.js"
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/waterfall/src/**/*.ts", "libs/waterfall/src/**/*.html"]
-      }
+      "executor": "@nx/eslint:lint"
     }
-  },
-  "tags": ["browser"]
+  }
 }

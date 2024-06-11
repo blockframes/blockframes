@@ -5,7 +5,7 @@ import { AllowedFileType, App } from '@blockframes/model';
 import { StorageFile, StorageVideo, Movie, MovieVideo, Organization, CollectionHoldingFile } from '@blockframes/model';
 import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 import { FileLabel, getFileMetadata } from '../../utils';
-import { StorageFileForm } from '@blockframes/media/form/media.form';
+import { StorageFileForm } from '../../form/media.form';
 import { FormList } from '@blockframes/utils/form';
 
 interface DirectoryBase {

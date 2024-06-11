@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CanActivate, ActivatedRouteSnapshot, Router, CanDeactivate } from '@angular/router';
-import { ContractService } from '@blockframes/contract/contract/service';
-import { NegotiationForm } from '@blockframes/contract/negotiation';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
+import { ContractService } from '../contract/service';
+import { NegotiationForm } from '../negotiation';
 import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
@@ -13,7 +13,7 @@ export type NegotiationGuardedComponent = {
 }
 
 @Injectable({ providedIn: 'root' })
-export class NegotiationGuard<T extends NegotiationGuardedComponent> implements CanActivate, CanDeactivate<T>{
+export class NegotiationGuard<T extends NegotiationGuardedComponent> {
 
   constructor(
     private router: Router,
@@ -38,7 +38,7 @@ export class NegotiationGuard<T extends NegotiationGuardedComponent> implements 
   }
 
   canDeactivate(component: T) {
-    if (component.form.pristine ) return true;
+    if (component.form.pristine) return true;
     const dialogRef = this.dialog.open(ConfirmComponent, {
       data: createModalData({
         title: `Leave Page?`,

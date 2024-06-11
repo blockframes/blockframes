@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { WaterfallService } from '../waterfall.service';
-import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
-export class WaterfallActiveGuard implements CanActivate {
+export class WaterfallActiveGuard {
 
   constructor(
     private waterfallService: WaterfallService,

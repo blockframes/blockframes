@@ -12,8 +12,24 @@ export async function clearDb(db: FirebaseFirestore.Firestore, allowProd = false
   if (!allowProd) throwOnProduction();
   const collections = (await db.listCollections()).filter((ref) => ref.id !== META_COLLECTION_NAME).map(ref => ref.id);
   const cmds = collections.map(collection => `firebase firestore:delete -P ${firebase().projectId} -r -f ${collection}`);
+  let retriesLeft = 10;
   for (const cmd of cmds) {
-    await runShellCommandExec(cmd);
+    try {
+      await runShellCommandExec(cmd);
+    } catch (e) {
+      /** 
+       * @dev If command fails, might be a 409 error "Too much contention on these documents"
+       * @see https://firebase.google.com/docs/firestore/transaction-data-contention?hl=fr#transactions_and_data_contention
+       */
+      if (retriesLeft === 0) {
+        throw new Error(`Command "${cmd}" failed and no more retries left..`);
+      } else {
+        retriesLeft--;
+        console.log(`Command "${cmd}" failed and will be retryied... ${retriesLeft} retries left`);
+        cmds.push(cmd);
+      }
+    }
+
   }
   await versionRef(db).delete();
   console.log(`Deleted ${dbVersionDoc}`);

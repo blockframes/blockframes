@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanDeactivate, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { OrganizationService } from '@blockframes/organization/service';
 import { EventService } from '../service';
 import { Observable } from 'rxjs';
@@ -8,7 +8,7 @@ interface FormRoot {
   confirmExit: () => Observable<boolean>;
 }
 @Injectable({ providedIn: 'root' })
-export class EventOrganizationGuard implements CanActivate, CanDeactivate<unknown> {
+export class EventOrganizationGuard {
   constructor(
     private service: EventService,
     private router: Router,
@@ -24,7 +24,7 @@ export class EventOrganizationGuard implements CanActivate, CanDeactivate<unknow
     return orgId === event?.ownerOrgId || redirect;
   }
 
-   canDeactivate(
+  canDeactivate(
     component: FormRoot
   ) {
     const navObject = this.router.getCurrentNavigation();
@@ -34,5 +34,4 @@ export class EventOrganizationGuard implements CanActivate, CanDeactivate<unknow
     return component.confirmExit();
   }
 
-   
 }

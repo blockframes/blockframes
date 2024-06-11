@@ -67,7 +67,7 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
   @Input()
   set interval(value: Slider['interval']) {
     this.interval$.next(value)
-  };
+  }
 
   @Input()
   get slideDirection() { return this._slideDirection }

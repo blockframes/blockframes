@@ -1,12 +1,12 @@
 {
   "root": true,
   "ignorePatterns": ["**/*"],
-  "plugins": ["@nrwl/nx"],
+  "plugins": ["@nx"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
-        "@nrwl/nx/enforce-module-boundaries": [ // SEE ISSUE #7929
+        "@nx/enforce-module-boundaries": [
           "warn",
           {
             "enforceBuildableLibDependency": true,
@@ -26,11 +26,11 @@
               },
               {
                 "sourceTag": "local",
-                "onlyDependOnLibsWithTags": ["local","shared"]
+                "onlyDependOnLibsWithTags": ["local", "shared"]
               },
               {
                 "sourceTag": "e2e",
-                "onlyDependOnLibsWithTags": ["e2e","shared"]
+                "onlyDependOnLibsWithTags": ["e2e", "shared"]
               },
               {
                 "sourceTag": "*",
@@ -42,7 +42,15 @@
         ]
       }
     },
-    { "files": ["*.ts", "*.tsx"], "extends": ["plugin:@nrwl/nx/typescript"], "rules": {} },
-    { "files": ["*.js", "*.jsx"], "extends": ["plugin:@nrwl/nx/javascript"], "rules": {} }
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": ["plugin:@nx/typescript"],
+      "rules": {}
+    },
+    {
+      "files": ["*.js", "*.jsx"],
+      "extends": ["plugin:@nx/javascript"],
+      "rules": {}
+    }
   ]
 }

@@ -3,12 +3,13 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/cms/cms-e2e/src",
   "projectType": "application",
+  "tags": ["browser", "e2e"],
+  "implicitDependencies": ["cms"],
   "targets": {
     "serve": {
-      "executor": "@nrwl/cypress:cypress",
+      "executor": "@nx/cypress:cypress",
       "options": {
         "cypressConfig": "apps/cms/cms-e2e/cypress.config.js",
-        "tsConfig": "apps/cms/cms-e2e/tsconfig.e2e.json",
         "baseUrl": "http://localhost:4200",
         "watch": true,
         "headless": false,
@@ -28,10 +29,9 @@
       }
     },
     "e2e": {
-      "executor": "@nrwl/cypress:cypress",
+      "executor": "@nx/cypress:cypress",
       "options": {
         "cypressConfig": "apps/cms/cms-e2e/cypress.config.js",
-        "tsConfig": "apps/cms/cms-e2e/tsconfig.e2e.json",
         "baseUrl": "http://localhost:4200",
         "browser": "chrome",
         "devServerTarget": "cms:serve"
@@ -55,13 +55,8 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["apps/cms/cms-e2e/src/**/*.ts", "apps/cms/cms-e2e/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     }
-  },
-  "tags": ["browser", "e2e"],
-  "implicitDependencies": ["cms"]
+  }
 }

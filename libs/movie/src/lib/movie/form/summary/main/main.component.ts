@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MovieForm } from '@blockframes/movie/form/movie.form';
+import { MovieForm } from '../../../form/movie.form';
 import { Observable } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
 

@@ -4,6 +4,7 @@
   "projectType": "application",
   "sourceRoot": "apps/cms/src",
   "prefix": "cms",
+  "tags": ["browser"],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
@@ -67,29 +68,26 @@
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
       "options": {
-        "browserTarget": "cms:build"
+        "buildTarget": "cms:build"
       },
       "configurations": {
         "emulator": {
-          "browserTarget": "cms:build:emulator"
+          "buildTarget": "cms:build:emulator"
         }
       }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "cms:build"
+        "buildTarget": "cms:build"
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["apps/cms/src/**/*.ts", "apps/cms/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     },
     "deploy": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "@nx/workspace:run-commands",
       "options": {
         "envFile": ".env",
         "commands": [
@@ -100,6 +98,5 @@
         "color": true
       }
     }
-  },
-  "tags": ["browser"]
+  }
 }

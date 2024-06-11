@@ -52,5 +52,5 @@ export async function getOrgAppKey(_org: Organization | string): Promise<App> {
     return getOrgAppAccess(org)[0];
   } else {
     return getOrgAppAccess(_org)[0];
-  };
+  }
 }

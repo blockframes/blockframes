@@ -14,7 +14,7 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 import { WaterfallDocumentsService } from '@blockframes/waterfall/documents.service';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 
-const hasImportErrors = (importState: DocumentsImportState, type: string = 'error'): boolean => {
+const hasImportErrors = (importState: DocumentsImportState, type = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
 };
 
@@ -113,7 +113,7 @@ export class TableExtractedDocumentsComponent implements AfterViewInit {
           await this.waterfallService.update(waterfallId, { id: waterfallId, rightholders: waterfall.rightholders });
         }
       }
-    };
+    }
 
     if (increment) this.processing++;
     this.cdr.markForCheck();

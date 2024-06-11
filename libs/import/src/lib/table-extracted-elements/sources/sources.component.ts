@@ -13,7 +13,7 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { RightService } from '@blockframes/waterfall/right.service';
 
-const hasImportErrors = (importState: SourcesImportState, type: string = 'error'): boolean => {
+const hasImportErrors = (importState: SourcesImportState, type = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
 };
 

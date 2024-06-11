@@ -1,10 +1,10 @@
 import { readFileSync, unlinkSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 import type { Bucket } from '@google-cloud/storage';
-import type { firestore, storage } from 'firebase-admin';
 import { latestAnonDbDir, CI_STORAGE_BACKUP, getBackupBucket, CI_ANONYMIZED_DATA } from './firebase-utils';
 import { getDb, getStorage, initAdmin } from '@blockframes/firebase-utils/initialize';
 import { firebase as firebaseCI } from 'env/env.blockframes-ci';
+import type { Firestore, Storage } from '@blockframes/firebase-utils/types';
 
 export async function healthCheck() {
   const db = getDb();
@@ -43,7 +43,7 @@ export async function healthCheck() {
   console.log(`Firestore Access: ${firestoreAccess ? 'ALLOW' : 'DENY'}`);
 }
 
-async function checkFirestoreAccess(db: firestore.Firestore) {
+async function checkFirestoreAccess(db: Firestore) {
   try {
     await db.listCollections();
     return true;
@@ -52,7 +52,7 @@ async function checkFirestoreAccess(db: firestore.Firestore) {
   }
 }
 
-async function checkCIStorageBackupBucketAccess(gcs: storage.Storage, bucketName: string) {
+async function checkCIStorageBackupBucketAccess(gcs: Storage, bucketName: string) {
   const bucket = gcs.bucket(bucketName);
 
   let list = false;
@@ -77,7 +77,7 @@ async function checkCIStorageBackupBucketAccess(gcs: storage.Storage, bucketName
   return { list, get };
 }
 
-async function checkBackupBucketAccess(gcs: storage.Storage) {
+async function checkBackupBucketAccess(gcs: Storage) {
   let create = false;
   let list = false;
   let del = false;
@@ -131,7 +131,7 @@ function checkDiskWriteAccess() {
   return { read, write };
 }
 
-async function checkCIBucketAccess(gcs: storage.Storage, bucketName: string) {
+async function checkCIBucketAccess(gcs: Storage, bucketName: string) {
   const bucket = gcs.bucket(bucketName);
   let list = false;
   let get = false;

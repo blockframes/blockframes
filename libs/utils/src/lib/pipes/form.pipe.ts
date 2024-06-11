@@ -4,7 +4,7 @@ import { startWith } from 'rxjs/operators';
 
 @Pipe({ name: 'valueChanges' })
 export class ValueChangesPipe implements PipeTransform {
-  transform(control: AbstractControl, path: string = '') {
+  transform(control: AbstractControl, path = '') {
     const form = path ? control.get(path) : control;
     return form.valueChanges.pipe(
       startWith(form.value)

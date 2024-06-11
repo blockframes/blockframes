@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NegotiationService } from '@blockframes/contract/negotiation/service';
+import { NegotiationService } from '../negotiation/service';
 import { map } from 'rxjs/operators';
 import { OrganizationService } from '@blockframes/organization/service';
 import { centralOrgId } from '@env';

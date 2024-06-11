@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 
 // Components
 import { MovieViewArtisticComponent } from './artistic.component';
-import { MovieTunnelSummaryModule } from '@blockframes/movie/form/summary/summary.module';
+import { MovieTunnelSummaryModule } from '../../form/summary/summary.module';
 import { GetPathModule } from '@blockframes/utils/pipes/get-path.pipe';
 
 

@@ -3,22 +3,18 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/model/src",
   "projectType": "library",
+  "tags": ["shared"],
   "targets": {
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["libs/model/**/*.ts"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/model"],
       "options": {
-        "jestConfig": "libs/model/jest.config.js",
-        "passWithNoTests": true
+        "jestConfig": "libs/model/jest.config.js"
       }
     }
-  },
-  "tags": ["shared"]
+  }
 }

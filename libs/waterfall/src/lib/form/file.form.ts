@@ -26,7 +26,7 @@ export class WaterfallFileForm extends FormEntity<WaterfallFileControl> {
     super(control);
   }
 
-  get storagePath() { return this.get('storagePath') };
+  get storagePath() { return this.get('storagePath') }
 
   get isPublic(): boolean {
     return this.get('privacy').value === 'public';

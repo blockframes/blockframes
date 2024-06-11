@@ -3,23 +3,19 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/devops/src",
   "projectType": "library",
+  "tags": ["node", "local"],
   "targets": {
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["libs/devops/**/*.ts"]
-      }
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/devops"],
       "options": {
         "jestConfig": "libs/devops/jest.config.js",
-        "passWithNoTests": true,
         "runInBand": true
       }
     }
-  },
-  "tags": ["node", "local"]
+  }
 }

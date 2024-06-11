@@ -2,7 +2,7 @@ import SendGrid from '@sendgrid/mail';
 import { sendgridAPIKey, projectId } from '../environments/environment';
 import { groupIds } from '@blockframes/utils/emails/ids';
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
-import type { CallableContext } from 'firebase-functions/lib/providers/https';
+import { CallableContext } from 'firebase-functions/v1/https';
 import { getMailSender, appLogo, applicationUrl, AppLogoValue } from '@blockframes/utils/apps';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { logger } from 'firebase-functions';

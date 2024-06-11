@@ -31,8 +31,8 @@ export function yearValidators(): ValidatorFn {
 
 /** Require password and password confirm inputs to be the same */
 export function confirmPasswords(
-  password: string = 'password',
-  confirm: string = 'confirm'
+  password = 'password',
+  confirm = 'confirm'
 ): ValidatorFn {
   return (group: UntypedFormGroup): { [key: string]: boolean } | null => {
     return group.controls[password].value === group.controls[confirm].value
@@ -42,7 +42,7 @@ export function confirmPasswords(
 }
 
 /** Require current and new password to be different */
-export function differentPassword(current: string = 'current', next: string = 'next'): ValidatorFn {
+export function differentPassword(current = 'current', next = 'next'): ValidatorFn {
   return (group: UntypedFormGroup): { [key: string]: boolean } | null => {
     const currentControl = group.controls[current];
     const nextControl = group.controls[next];
@@ -149,7 +149,7 @@ export function isKeyValidator(scope: Scope): ValidatorFn {
       return null;
     } else {
       return isInKeys(scope, control.value) ? null : { invalidValue: true }
-    };
+    }
   };
 }
 

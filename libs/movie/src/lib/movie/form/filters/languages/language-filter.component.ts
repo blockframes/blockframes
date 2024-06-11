@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { LanguageVersionControl } from '@blockframes/movie/form/search.form';
+import { LanguageVersionControl } from '../../../form/search.form';
 import { staticModel } from '@blockframes/model';
 
 @Component({

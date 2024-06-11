@@ -15,6 +15,6 @@
 // TYPOGRAPHY
 @mixin typography($theme) {
   .cdk-overlay-container .mat-mdc-tooltip {
-    --mdc-plain-tooltip-supporting-text-line-height: 12px;
+    --mdc-plain-tooltip-supporting-text-line-height: 15px;
   }
 }

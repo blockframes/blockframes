@@ -4,29 +4,25 @@
   "sourceRoot": "apps/rules/src",
   "projectType": "application",
   "prefix": "rules",
+  "tags": ["local", "node"],
   "generators": {},
   "targets": {
     "serve": {
-      "executor": "@nrwl/node:node",
+      "executor": "@nx/js:node",
       "options": {
         "buildTarget": "rules:build"
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["apps/rules/src/**/*.ts", "apps/rules/src/**/*.html"]
-      },
+      "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"]
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "apps/rules/jest.config.js",
-        "passWithNoTests": true,
         "runInBand": true
       }
     }
-  },
-  "tags": ["local", "node"]
+  }
 }

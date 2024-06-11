@@ -4,6 +4,7 @@
   "projectType": "application",
   "sourceRoot": "apps/waterfall/waterfall/src",
   "prefix": "waterfall",
+  "tags": ["browser"],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
@@ -82,36 +83,25 @@
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
       "options": {
-        "browserTarget": "waterfall:build"
+        "buildTarget": "waterfall:build"
       },
       "configurations": {
         "emulator": {
-          "browserTarget": "waterfall:build:emulator"
+          "buildTarget": "waterfall:build:emulator"
         }
       }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "waterfall:build"
+        "buildTarget": "waterfall:build"
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "options": {
-        "lintFilePatterns": ["apps/waterfall/waterfall/src/**/*.ts", "apps/waterfall/waterfall/src/**/*.html"]
-      }
-    },
-    "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/apps/waterfall/waterfall"],
-      "options": {
-        "jestConfig": "apps/waterfall/waterfall/jest.config.js",
-        "passWithNoTests": true
-      }
+      "executor": "@nx/eslint:lint"
     },
     "deploy": {
-      "executor": "@nrwl/workspace:run-commands",
+      "executor": "@nx/workspace:run-commands",
       "options": {
         "envFile": ".env",
         "commands": [
@@ -122,6 +112,5 @@
         "color": true
       }
     }
-  },
-  "tags": ["browser"]
+  }
 }

@@ -104,7 +104,7 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
     })
   );
 
-  get anonymousOrRegularProfile() { return this.profile || this.anonymousCredentials };
+  get anonymousOrRegularProfile() { return this.profile || this.anonymousCredentials }
 
   constructor(
     private functions: CallableFunctions,

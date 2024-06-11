@@ -38,7 +38,7 @@ import { EventService } from '@blockframes/event/service';
 import { scrollIntoView } from "@blockframes/utils/browser/utils";
 import { formatDate } from '@angular/common';
 
-interface MovieWithAnalytics extends Movie { analytics: Analytics<'title'>[]; };
+interface MovieWithAnalytics extends Movie { analytics: Analytics<'title'>[]; }
 
 function aggregatedToAnalyticData(data: AggregatedAnalytic[]): AnalyticData[] {
   return data.map(({ title, interactions }) => ({

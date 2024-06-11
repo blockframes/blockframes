@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { AuthService } from '@blockframes/auth/service';
+import { AuthService } from '../../service';
 import { OrganizationService } from '@blockframes/organization/service';
 
 @Component({

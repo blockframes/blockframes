@@ -29,9 +29,9 @@ import { CellModalModule } from '@blockframes/ui/cell-modal/cell-modal.module';
 import { MovieFormMainComponent } from './main.component';
 
 // Pipe
-import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
+import { HasStatusModule } from '../../pipes/has-status.pipe';
 import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
-import { FilmographyPipeModule } from '@blockframes/movie/pipes/filmography.pipe';
+import { FilmographyPipeModule } from '../../pipes/filmography.pipe';
 
 @NgModule({
   declarations: [MovieFormMainComponent],

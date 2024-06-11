@@ -8,7 +8,7 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
 // Widgets
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
-import { AppBarModule } from '@blockframes/ui/app-bar';
+import { AppBarModule } from '../../app-bar';
 import { AppLogoModule } from '../app-logo/app-logo.module';
 import { FooterModule } from '../footer/footer.module';
 

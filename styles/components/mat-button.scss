@@ -119,6 +119,7 @@
   }
 
   .mat-mdc-button,
+  .mat-mdc-button:has(.material-icons, mat-icon, [matButtonIcon]),
   .mat-mdc-unelevated-button,
   .mat-raised-button,
   .mdc-button--outlined {

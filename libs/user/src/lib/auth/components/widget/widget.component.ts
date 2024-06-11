@@ -70,7 +70,7 @@ export class AuthWidgetComponent implements OnInit, OnDestroy {
       this.sub = this.langControl.valueChanges.subscribe(async lang => {
         await this.authService.updatePreferredLanguage(lang, iso3166?.iso_a2);
       });
-    };
+    }
   }
 
   ngOnDestroy() {

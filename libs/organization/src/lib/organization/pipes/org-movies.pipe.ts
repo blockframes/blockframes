@@ -2,14 +2,14 @@ import { Pipe, PipeTransform, NgModule, Inject } from '@angular/core';
 import { MovieService } from '@blockframes/movie/service';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/model';
-import { where, limit } from 'firebase/firestore';
+import { where, limit, QueryFieldFilterConstraint, QueryLimitConstraint } from 'firebase/firestore';
 
 @Pipe({ name: 'orgMovies', pure: true })
 export class OrgMoviesPipe implements PipeTransform {
   constructor(@Inject(APP) private app: App, private movieService: MovieService) { }
 
   transform(orgId: string, length?: number) {
-    const query = [
+    const query: (QueryFieldFilterConstraint | QueryLimitConstraint)[] = [
       where(`app.${this.app}.access`, '==', true),
       where(`app.${this.app}.status`, '==', 'accepted'),
       where('orgIds', 'array-contains', orgId)

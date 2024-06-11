@@ -44,7 +44,7 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
   /** Reverse the list order: the last added element will appear at the top */
   @Input() set reverseList(shouldReverse: boolean) {
     this.reverseList$.next(coerceBooleanProperty(shouldReverse));
-  };
+  }
   private reverseList$ = new BehaviorSubject(false);
 
   @Output() removed = new EventEmitter<number>();

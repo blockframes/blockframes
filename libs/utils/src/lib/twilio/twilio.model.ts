@@ -4,12 +4,12 @@ export type Tracks = LocalTracks | RemoteTracks;
 export interface LocalTracks {
   video?: LocalVideoTrack,
   audio?: LocalAudioTrack,
-};
+}
 
 export interface RemoteTracks {
   video?: RemoteVideoTrack,
   audio?: RemoteAudioTrack,
-};
+}
 
 export type TrackKind = keyof Tracks;
 

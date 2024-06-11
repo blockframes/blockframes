@@ -6,7 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { PreferencesComponent } from './preferences.component';
 
 // Blockframes
-import { PreferencesFormModule } from '@blockframes/auth/forms/preferences/preferences.module';
+import { PreferencesFormModule } from '../../../forms/preferences/preferences.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';

@@ -1,5 +1,5 @@
 import { getCollection, queryDocument, queryDocuments, getDb } from '@blockframes/firebase-utils';
-import { CallableContext } from 'firebase-functions/lib/providers/https';
+import { CallableContext } from 'firebase-functions/v1/https';
 import { airtable } from './environments/environment';
 import * as bigQuery from './bigQuery';
 import {

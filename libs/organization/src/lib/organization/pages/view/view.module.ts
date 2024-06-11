@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { OrgAddressModule } from '@blockframes/organization/pipes/org-address.pipe';
+import { OrgAddressModule } from '../../pipes/org-address.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Components

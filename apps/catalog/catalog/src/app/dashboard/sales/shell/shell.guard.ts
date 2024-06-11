@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/service';
 import { ContractService } from '@blockframes/contract/contract/service';
 import { map } from 'rxjs/operators';
 import { centralOrgId } from '@env';
 
 @Injectable({ providedIn: 'root' })
-export class CatalogSaleShellGuard implements CanActivate {
+export class CatalogSaleShellGuard {
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -26,7 +26,7 @@ export class CatalogSaleShellGuard implements CanActivate {
 }
 
 @Injectable({ providedIn: 'root' })
-export class CatalogSaleGuard implements CanActivate {
+export class CatalogSaleGuard {
   constructor(
     private router: Router,
     private contractService: ContractService,

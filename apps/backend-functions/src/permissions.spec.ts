@@ -3,15 +3,14 @@ import { initFirestoreApp, permissionsFixtures } from '@blockframes/testing/unit
 import { clearFirestoreData } from 'firebase-functions-test/lib/providers/firestore';
 import { onDocumentPermissionCreateEvent, onPermissionDeleteEvent } from './main';
 import firebaseTest = require('firebase-functions-test');
-import * as admin from 'firebase-admin';
 import { firebase } from '@env';
 import { expect } from '@jest/globals';
-import { endMaintenance } from '@blockframes/firebase-utils';
+import { endMaintenance, getDb } from '@blockframes/firebase-utils';
 
 const testEnv = firebaseTest(firebase());
 
 describe('Permissions backend-function unit-tests', () => {
-  const db = admin.firestore();
+  const db = getDb();
 
   beforeAll(async () => {
     await initFirestoreApp(firebase().projectId, 'firestore.test.rules', permissionsFixtures);
@@ -35,7 +34,8 @@ describe('Permissions backend-function unit-tests', () => {
       expect(snapBefore.data()).toBeUndefined();
 
       // Call the function
-      await wrapped({}, context); // Only context is used in onDocumentPermissionCreateEvent
+      const snap = testEnv.firestore.makeDocumentSnapshot({}, `docsIndex/${docID}`); // Only context is used in onDocumentPermissionCreateEvent
+      await wrapped(snap, context);
 
       const snapAfter = await db.doc(`docsIndex/${docID}`).get();
       expect(snapAfter.data()).toEqual(
@@ -64,7 +64,8 @@ describe('Permissions backend-function unit-tests', () => {
       );
 
       // Call the function
-      await wrapped(permissionBefore); // Only snapshot is used in onPermissionDeleteEvent
+      const snap = testEnv.firestore.makeDocumentSnapshot(permissionBefore.data(), `permissions/${orgID}`);
+      await wrapped(snap); // Only snapshot is used in onPermissionDeleteEvent
 
       // Check that documentPermissions have been deleted
       const documentPermissionAfter = await db.doc(`permissions/${orgID}/documentPermissions/${docID}`).get();

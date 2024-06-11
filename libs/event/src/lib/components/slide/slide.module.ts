@@ -5,10 +5,10 @@ import { RouterModule } from '@angular/router';
 
 import { EventSlideComponent } from "./slide.component";
 import { OngoingButtonModule } from '@blockframes/ui/ongoing-button/ongoing-button.module';
-import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
+import { EventTimeModule } from '../../pipes/event-time.pipe';
 import { GetTitlePipeModule } from '@blockframes/movie/pipes/get-title.pipe';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
-import { EventRangeModule } from "@blockframes/event/pipes/event-range.pipe";
+import { EventRangeModule } from "../../pipes/event-range.pipe";
 import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 import { InvitationActionModule } from '@blockframes/invitation/components/action/action.module';
