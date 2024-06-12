@@ -20,6 +20,8 @@ export class ActionComponent {
   public invit: Invitation;
   public accepting = false;
   public declining = false;
+  public acceptInvitationStr = $localize`Accept Invitation`;
+  public declineInvitationStr = $localize`Decline Invitation`;
 
   @Input() set invitation(invit: Invitation) {
     this.invit = invit;
