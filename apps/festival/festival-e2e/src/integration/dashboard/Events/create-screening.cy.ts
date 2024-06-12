@@ -304,6 +304,15 @@ function fillDashboardCalendarDetails({
 }) {
   get('screening-title').click();
   get(`option_${movieId}`).click();
+
+  /** 
+   * @dev Try to make tests less flaky by selecting again the movie. 
+   * For some reason, input value can be emptied after first try.
+   * TODO #9848 check if Cypress 13 solves this issue
+   */
+  get('screening-title').click();
+  get(`option_${movieId}`).click();
+
   get('description').type(`Description : ${eventTitle}`);
   get(accessibility).find('input').check();
   if (secret) check('secret');
