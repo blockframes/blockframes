@@ -1,12 +1,13 @@
-import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter, Inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from '@blockframes/auth/service';
-import { Event, Invitation, InvitationStatus } from '@blockframes/model';
+import { App, Event, Invitation, InvitationStatus } from '@blockframes/model';
 import { SnackbarErrorComponent } from '@blockframes/ui/snackbar/error/snackbar-error.component';
 import { SnackbarLinkComponent } from '@blockframes/ui/snackbar/link/snackbar-link.component';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { InvitationService } from '../../service';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'invitation-action',
@@ -22,6 +23,9 @@ export class ActionComponent {
   public declining = false;
   public acceptInvitationStr = $localize`Accept Invitation`;
   public declineInvitationStr = $localize`Decline Invitation`;
+
+  /** @dev i18n is only on waterfall app for now #9699 */
+  public bfi18n = this.app === 'waterfall';
 
   @Input() set invitation(invit: Invitation) {
     this.invit = invit;
@@ -44,6 +48,7 @@ export class ActionComponent {
     private service: InvitationService,
     private snackBar: MatSnackBar,
     private authService: AuthService,
+    @Inject(APP) private app: App
   ) { }
 
   accept(invitation: Invitation) {
