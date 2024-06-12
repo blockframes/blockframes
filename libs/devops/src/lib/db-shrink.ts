@@ -103,7 +103,11 @@ export async function shrinkDb(db: FirebaseFirestore.Firestore) {
   //////////////////
 
   console.log(`Shrinking movies collection to keep a minimum of ${pdfExportLimit} documents per application.`);
-  await shrinkMovieCollection(db, pdfExportLimit).catch(_ => console.log('Error while shrinking movies collection.'));
+  // TODO #9607 keep movies associated to a waterfall
+  await shrinkMovieCollection(db, pdfExportLimit).catch(e => {
+    console.log(e);
+    console.log('Error while shrinking movies collection.');
+  });
   console.log('Movies collection shrinked.');
 
   const { dbData, collectionData } = await loadAllCollections(db);
@@ -217,7 +221,7 @@ async function shrinkMovieCollection(db: FirebaseFirestore.Firestore, keep: numb
 
   const movieIdsToKeep = unique(acceptedMovieIds);
   const refsToDelete = allMovies.filter(doc => !movieIdsToKeep.find(id => id === doc.id));
-  return removeDocuments(db, refsToDelete, 500);
+  return removeDocuments(db, refsToDelete);
 }
 
 async function removeDocuments(db: FirebaseFirestore.Firestore, docs: FirebaseFirestore.QueryDocumentSnapshot[], rowsConcurrency = 200) {
