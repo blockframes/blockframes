@@ -3,10 +3,10 @@
     <h1 i18n>Invitations</h1>
     <header fxLayout fxLayout.xs="column">
         <form [formGroup]=form fxLayout fxLayout.xs="column">
-          <static-select [control]="form.get('type')" scope="invitationType" multiple="true">
+          <static-select [control]="form.get('type')" scope="invitationType" multiple="true" [bfi18n]="bfi18n">
             <mat-label i18n>Filter by type</mat-label>
           </static-select>
-          <static-select [control]="form.get('status')" scope="invitationStatus" multiple="true">
+          <static-select [control]="form.get('status')" scope="invitationStatus" multiple="true" [bfi18n]="bfi18n">
             <mat-label i18n>Filter by status</mat-label>
           </static-select>
         </form>

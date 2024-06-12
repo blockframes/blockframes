@@ -2,7 +2,7 @@
 <!-- Invitations -->
 <a mat-icon-button routerLink="invitations" matTooltip="Invitations">
   <ng-container *ngIf="invitationCount$ | async as count; else noInvitation">
-    <mat-icon svgIcon="invitation" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
+    <mat-icon svgIcon="invitation" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small" aria-hidden="false"></mat-icon>
   </ng-container>
   <ng-template #noInvitation>
     <mat-icon svgIcon="invitation"></mat-icon>
@@ -11,7 +11,7 @@
 <!-- Notifications -->
 <a mat-icon-button routerLink="notifications" matTooltip="Notifications">
   <ng-container *ngIf="notificationCount$ | async as count; else noNotification">
-    <mat-icon svgIcon="notifications" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small">
+    <mat-icon svgIcon="notifications" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small" aria-hidden="false">
     </mat-icon>
   </ng-container>
   <ng-template #noNotification>

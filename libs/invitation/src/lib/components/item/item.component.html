@@ -3,7 +3,7 @@
   alt="Profile picture">
   <img matListItemAvatar *ngIf="_invitation.fromOrg" asset="profil_user.svg" [ref]="_invitation.fromOrg.logo"
   alt="Organization logo">
-  <div matListItemLine class="mat-subtitle-2">
+  <div class="mat-subtitle-2">
     <ng-container [ngSwitch]="_invitation.type">
       <ng-container *ngSwitchCase="'attendEvent'">
         <ng-container *ngIf="_invitation | eventFromInvitation | async as event">
@@ -64,19 +64,19 @@
         </ng-container>
       </ng-container>
       <ng-container *ngSwitchCase="'joinOrganization'">
-        <ng-container *ngIf="_invitation.mode !== 'invitation'">
+        <ng-container *ngIf="_invitation.mode !== 'invitation'" i18n>
           {{ _invitation.fromUser | displayName }} wants to join your organization.
         </ng-container>
       </ng-container>
       <ng-container *ngSwitchCase="'joinWaterfall'">
-        <ng-container *ngIf="_invitation | movieFromWaterfallInvitation | async as movie">
+        <ng-container *ngIf="_invitation | movieFromWaterfallInvitation | async as movie" i18n>
           {{ _invitation.fromOrg.name  }} invited you to join {{ movie.title.international}}'s Waterfall.
         </ng-container>
       </ng-container>
     </ng-container>
   </div>
-  <span matListItemLine>
-    <small class="mat-caption">
+  <span>
+    <small class="mat-caption" i18n>
       {{ _invitation.date | timesince }} ago
     </small>
   </span>
