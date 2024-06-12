@@ -2,7 +2,7 @@ import { waterfall } from '@blockframes/waterfall/main';
 import { Action, action } from './action';
 
 describe('Test standalone actions', () => {
-  it('orgRevenu', () => {
+  it('orgRevenu' , () => {
     const actions: Action[] = [
       action('append', { id: 'seller', date: new Date(), orgId: 'seller', percent: 0.5, previous: [] }),
       action('income', { id: 'income', date: new Date(), amount: 10_000, medias: [], territories: [], from: 'income', to: 'seller' })
