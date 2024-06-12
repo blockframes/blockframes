@@ -1887,6 +1887,51 @@ export const periods = {
 
 export type MovieSearchableElements = keyof typeof movieSearchableElements;
 
+export interface TimeFrame {
+  label?: string;
+  type: 'days' | 'weeks' | 'months' | 'years';
+  from: number;
+  to?: number;
+  way: 'asc' | 'desc';
+}
+
+const descTimeFrames: TimeFrame[] = [
+  { type: 'days', from: 0, to: 1, label: 'Today', way: 'desc' },
+  { type: 'days', from: -1, to: 0, label: 'Yesterday', way: 'desc' },
+  { type: 'days', from: -2, to: -1, way: 'desc' },
+  { type: 'days', from: -3, to: -2, way: 'desc' },
+  { type: 'days', from: -4, to: -3, way: 'desc' },
+  { type: 'days', from: -5, to: -4, way: 'desc' },
+  { type: 'days', from: -6, to: -5, way: 'desc' },
+  { type: 'days', from: -7, to: -6, way: 'desc' },
+  { type: 'weeks', from: -2, to: -1, label: 'Last Week', way: 'desc' },
+  { type: 'weeks', from: -3, to: -2, way: 'desc' },
+  { type: 'weeks', from: -4, to: -3, way: 'desc' },
+  { type: 'months', from: -2, to: -1, label: 'Last Month', way: 'desc' },
+  { type: 'months', from: -4, to: -2, label: 'Older than two months', way: 'desc' },
+];
+
+const ascTimeFrames: TimeFrame[] = [
+  { type: 'days', from: 0, to: 1, label: 'Today', way: 'asc' },
+  { type: 'days', from: 1, to: 2, label: 'Tomorrow', way: 'asc' },
+  { type: 'days', from: 2, to: 3, way: 'asc' },
+  { type: 'days', from: 3, to: 4, way: 'asc' },
+  { type: 'days', from: 4, to: 5, way: 'asc' },
+  { type: 'days', from: 5, to: 6, way: 'asc' },
+  { type: 'days', from: 6, to: 7, way: 'asc' },
+  { type: 'weeks', from: 1, to: 2, label: 'Next Week', way: 'asc' },
+  { type: 'weeks', from: 2, to: 3, way: 'asc' },
+  { type: 'weeks', from: 3, to: 4, way: 'asc' },
+  { type: 'months', from: 1, to: 2, label: 'Next Month', way: 'asc' },
+  { type: 'months', from: 2, to: 3, way: 'asc' },
+  { type: 'months', from: 3, to: 4, way: 'asc' },
+];
+
+export const timeFrames = {
+  asc: ascTimeFrames,
+  desc: descTimeFrames,
+}
+
 export const staticModel = {
   budgetRange,
   contractStatus,

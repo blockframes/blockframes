@@ -1,48 +1,8 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { add, startOfDay } from 'date-fns/fp'
-import { Event } from '@blockframes/model';
+import { Event, TimeFrame, getTimeFrames } from '@blockframes/model';
 import { getValue } from '../helpers';
-
-interface TimeFrame {
-  label?: string;
-  type: 'days' | 'weeks' | 'months' | 'years';
-  from: number;
-  to?: number;
-  way: 'asc' | 'desc';
-}
-
-export const descTimeFrames: TimeFrame[] = [
-  { type: 'days', from: 0, to: 1, label: 'Today', way: 'desc' },
-  { type: 'days', from: -1, to: 0, label: 'Yesterday', way: 'desc' },
-  { type: 'days', from: -2, to: -1, way: 'desc' },
-  { type: 'days', from: -3, to: -2, way: 'desc' },
-  { type: 'days', from: -4, to: -3, way: 'desc' },
-  { type: 'days', from: -5, to: -4, way: 'desc' },
-  { type: 'days', from: -6, to: -5, way: 'desc' },
-  { type: 'days', from: -7, to: -6, way: 'desc' },
-  { type: 'weeks', from: -2, to: -1, label: 'Last Week', way: 'desc' },
-  { type: 'weeks', from: -3, to: -2, way: 'desc' },
-  { type: 'weeks', from: -4, to: -3, way: 'desc' },
-  { type: 'months', from: -2, to: -1, label: 'Last Month', way: 'desc' },
-  { type: 'months', from: -4, to: -2, label: 'Older than two months', way: 'desc' },
-];
-
-export const ascTimeFrames: TimeFrame[] = [
-  { type: 'days', from: 0, to: 1, label: 'Today', way: 'asc' },
-  { type: 'days', from: 1, to: 2, label: 'Tomorrow', way: 'asc' },
-  { type: 'days', from: 2, to: 3, way: 'asc' },
-  { type: 'days', from: 3, to: 4, way: 'asc' },
-  { type: 'days', from: 4, to: 5, way: 'asc' },
-  { type: 'days', from: 5, to: 6, way: 'asc' },
-  { type: 'days', from: 6, to: 7, way: 'asc' },
-  { type: 'weeks', from: 1, to: 2, label: 'Next Week', way: 'asc' },
-  { type: 'weeks', from: 2, to: 3, way: 'asc' },
-  { type: 'weeks', from: 3, to: 4, way: 'asc' },
-  { type: 'months', from: 1, to: 2, label: 'Next Month', way: 'asc' },
-  { type: 'months', from: 2, to: 3, way: 'asc' },
-  { type: 'months', from: 3, to: 4, way: 'asc' },
-];
 
 function filterByDate(value: unknown[], timeFrame: TimeFrame, key = 'date', keyFinish?: string) {
   if (!Array.isArray(value)) {
@@ -95,7 +55,7 @@ export class LabelByDatePipe implements PipeTransform {
 export class EventsToTimeFramePipe implements PipeTransform {
   transform(events: Event[], order: 'asc' | 'desc' = 'asc') {
     if (!events) return;
-    const timeFrames = order === 'asc' ? ascTimeFrames : descTimeFrames;
+    const timeFrames = getTimeFrames(order);
     return timeFrames.map(timeFrame => {
       timeFrame['events'] = filterByDate(events, timeFrame, 'start', 'end');
       return timeFrame;

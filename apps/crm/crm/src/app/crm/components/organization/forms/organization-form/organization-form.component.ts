@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
 // Blockframes
 import { organizationStatus, getAllAppsExcept } from '@blockframes/model';
 import { OrganizationCrmForm } from '@blockframes/admin/crm/forms/organization-crm.form';
@@ -12,7 +12,7 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
   styleUrls: ['./organization-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CrmOrganizationFormComponent {
+export class CrmOrganizationFormComponent implements OnInit {
   @Input() form: OrganizationCrmForm;
 
   @Input() @boolean disableCropper = false;
@@ -26,6 +26,10 @@ export class CrmOrganizationFormComponent {
     private algoliaService: AlgoliaService,
     private cdr: ChangeDetectorRef
   ) { }
+
+  ngOnInit() {
+    this.form.appAccess.get('waterfall').get('marketplace').disable();
+  }
 
   public async uniqueOrgName() {
     if (!this.form.get('name').value) return;

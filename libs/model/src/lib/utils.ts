@@ -1,7 +1,7 @@
 import { addYears, subYears } from 'date-fns';
 import { Person } from './identity';
 import { LanguageRecord } from './movie';
-import { App, MovieCurrency, Scope, TerritoryISOA2Value, staticModel, staticModeli18n } from './static';
+import { App, MovieCurrency, Scope, TerritoryISOA2Value, TimeFrame, staticModel, staticModeli18n, timeFrames, timeFramesi18n } from './static';
 import { mainCurrency } from './waterfall';
 
 export interface ErrorResultResponse {
@@ -301,6 +301,12 @@ export function toLabel(
     if (typeof value === 'string') return value;
     return '';
   }
+}
+
+export function getTimeFrames(order: 'desc' | 'asc', lang?: SupportedLanguages): TimeFrame[] {
+  return (lang && timeFramesi18n[lang] && timeFramesi18n[lang][order]) ?
+    timeFramesi18n[lang][order] :
+    timeFrames[order];
 }
 
 /**

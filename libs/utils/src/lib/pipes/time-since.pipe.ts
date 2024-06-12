@@ -17,17 +17,17 @@ export class TimeSincePipe implements PipeTransform {
     d.setMonth(d.getMonth() - 3);
 
     if (interval > 1) {
-      return Math.floor(interval) + " years";
+      return Math.floor(interval) + $localize` years`;
     }
     interval = Math.floor(seconds / 2592000);
-    if (interval >= 1) return `${interval} ${interval === 1 ? ' month' : 'months'}`;
+    if (interval >= 1) return `${interval} ${interval === 1 ? $localize` month` : $localize` months`}`;
     interval = Math.floor(seconds / 86400);
-    if (interval >= 1) return `${interval} ${interval === 1 ? ' day' : ' days'}`;
+    if (interval >= 1) return `${interval} ${interval === 1 ? $localize` day` : $localize` days`}`;
     interval = Math.floor(seconds / 3600);
-    if (interval >= 1) return `${interval} ${interval === 1 ? ' hour' : ' hours'}`;
+    if (interval >= 1) return `${interval} ${interval === 1 ? $localize` hour` : $localize` hours`}`;
     interval = Math.floor(seconds / 60);
-    if (interval >= 1) return `${interval} ${interval === 1 ? ' minute' : ' minutes'}`;
-    return Math.floor(seconds) + " seconds";
+    if (interval >= 1) return `${interval} ${interval === 1 ? $localize` minute` : $localize` minutes`}`;
+    return Math.floor(seconds) + $localize` seconds`;
   }
 }
 

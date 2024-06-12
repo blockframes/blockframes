@@ -61,6 +61,7 @@ export class IncomingStatementComponent implements OnInit, OnDestroy {
         const reportableStatements = getParentStatements(statements, statement.incomeIds);
         this.computeReportableStatements(statement, reportableStatements, filteredStatements, contracts);
       });
+      this.formArray.disable();
       this.subs.push(statementSub);
     } else {
       const rights = await this.shell.rights(versionId);

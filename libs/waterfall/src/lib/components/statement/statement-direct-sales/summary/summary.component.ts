@@ -57,8 +57,12 @@ export class StatementDirectSalesSummaryComponent {
       const expenses = this.statement.expenseIds.map(id => _expenses.find(e => e.id === id));
 
       if (this.statement.status === 'reported') {
-        const incomes = _incomes.filter(i => this.statement.incomeIds.includes(i.id));
-        this.form.setAllValue({ ...this.statement, incomes, expenses, sources });
+        this.form.setAllValue({
+          ...this.statement,
+          incomes: _incomes.filter(i => this.statement.incomeIds.includes(i.id)),
+          expenses,
+          sources
+        });
         return this.statement;
       }
 
