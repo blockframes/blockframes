@@ -89,26 +89,16 @@
     <td mat-cell *matCellDef="let element">
       <ng-container *ngIf="element.movie.id; else new">
         <button mat-stroked-button color="accent" [disabled]="element | isDisabled: processing : element.imported" (click)="update(element)">
-          <ng-container *ngIf="element.importing">
-            <span>Updating</span>
-            <mat-spinner [diameter]="20" [strokeWidth]="2"></mat-spinner>
-          </ng-container>
-          <ng-container *ngIf="!element.importing">
-            <mat-icon svgIcon="access_time"></mat-icon>
-            <span>Update</span>
-          </ng-container>
+          <span>{{ !element.importing ? 'Update' : 'Updating' }}</span>
+          <mat-icon iconPositionEnd *ngIf="!element.importing" svgIcon="access_time"></mat-icon>
+          <mat-spinner *ngIf="element.importing" [diameter]="20" [strokeWidth]="2"></mat-spinner>
         </button>
       </ng-container>
       <ng-template #new>
         <button mat-stroked-button color="primary" [disabled]="element | isDisabled: processing" (click)="create(element)">
-          <ng-container *ngIf="element.importing">
-            <span>Saving</span>
-            <mat-spinner [diameter]="20" [strokeWidth]="2"></mat-spinner>
-          </ng-container>
-          <ng-container *ngIf="!element.importing">
-            <mat-icon svgIcon="save"></mat-icon>
-            <span>Save</span>
-          </ng-container>
+          <span>{{ !element.importing ? 'Save' : 'Saving' }}</span>
+          <mat-icon iconPositionEnd *ngIf="!element.importing" svgIcon="save"></mat-icon>
+          <mat-spinner *ngIf="element.importing" [diameter]="20" [strokeWidth]="2"></mat-spinner>
         </button>
       </ng-template>
     </td>
