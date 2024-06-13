@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
-import { Pipe, PipeTransform } from "@angular/core";
+import { Pipe, PipeTransform } from '@angular/core';
 import { AuthService } from '@blockframes/auth/service';
-import { Invitation } from "@blockframes/model";
+import { Invitation, preferredLanguage, toLabel } from '@blockframes/model';
 
 @Pipe({ name: 'hasAction', pure: true })
 export class InvitationHasActionPipe implements PipeTransform {
@@ -17,8 +17,9 @@ export class InvitationHasActionPipe implements PipeTransform {
 
 @Pipe({ name: 'invitationStatus', pure: true })
 export class InvitationStatusPipe implements PipeTransform {
-  transform(invitation: Invitation, small: boolean) {
-    const status = invitation.status[0].toUpperCase() + invitation.status.slice(1);
+  transform(invitation: Invitation, small: boolean, i18n?: boolean) {
+    const lang = i18n ? preferredLanguage() : undefined;
+    const status = toLabel(invitation.status, 'invitationStatus', undefined, undefined, lang);
     if (small) return status;
     const prefix = invitation.fromOrg ? 'Invitation' : 'Request';
     return `${prefix} ${status}`;

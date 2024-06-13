@@ -5,6 +5,6 @@
     "declaration": true,
     "types": []
   },
-  "include": [],
-  "exclude": []
+  "exclude": [],
+  "include": ["**/*.ts"]
 }
