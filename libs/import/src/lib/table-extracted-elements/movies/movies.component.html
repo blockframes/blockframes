@@ -3,7 +3,7 @@
   <p>For selection ({{ selection.selected.length }} items selected) :
     <button test-id="submit-records" mat-stroked-button color="primary" [disabled]="!selection.selected.length || !!processing"
       (click)="createSelected()">
-      <ng-container *ngIf="processing === 0 else createinprogress">
+      <ng-container matButtonIcon *ngIf="processing === 0 else createinprogress">
         <mat-icon svgIcon="save"></mat-icon>
         <span>Save & finish later</span>
       </ng-container>
@@ -18,7 +18,7 @@
   <p>For selection ({{ selection.selected.length }} items selected) :
     <button test-id="submit-records" mat-stroked-button color="primary" [disabled]="!selection.selected.length || !!processing"
       (click)="updateSelected()">
-      <ng-container *ngIf="processing === 0 else updateinprogress">
+      <ng-container matButtonIcon *ngIf="processing === 0 else updateinprogress">
         <mat-icon svgIcon="access_time"></mat-icon>
         <span>Update</span>
       </ng-container>

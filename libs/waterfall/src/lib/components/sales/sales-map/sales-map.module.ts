@@ -25,7 +25,6 @@ import { MatDividerModule } from '@angular/material/divider';
     BfCommonModule,
     RouterModule,
     LogoSpinnerModule,
-    FlexLayoutModule,
     MapModule,
     PricePerCurrencyModule,
     ImageModule,
