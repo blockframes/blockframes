@@ -79,9 +79,9 @@
   // OUTLINE
   .mat-form-field-appearance-outline {
     /* Change the border color */
-    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid) .mdc-notched-outline__leading,
-    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid) .mdc-notched-outline__notch,
-    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid) .mdc-notched-outline__trailing {
+    .mdc-text-field--outlined:not(.mdc-text-field--invalid) .mdc-notched-outline__leading,
+    .mdc-text-field--outlined:not(.mdc-text-field--invalid) .mdc-notched-outline__notch,
+    .mdc-text-field--outlined:not(.mdc-text-field--invalid) .mdc-notched-outline__trailing {
       border-color: mat.get-color-from-palette($foreground, divider);
     }
 
@@ -118,10 +118,6 @@
     }
   }
 
-  .mat-mdc-select:not(.mat-mdc-select-disabled) .mat-mdc-select-value,
-  .mdc-form-field:not(.mat-form-field-disabled) > label,
-  .mat-mdc-option:not(.mdc-list-item--selected):not(.mdc-list-item--disabled) .mdc-list-item__primary-text,
-  .mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-input-element { color: mat.get-color-from-palette($foreground, text); }
 
   .mdc-menu-surface.mat-mdc-select-panel {
     padding: 0px;
@@ -155,5 +151,22 @@
   .mat-mdc-select-panel {
     @include mat.typography-level(typography.$bf-typography, 'input');
   }
+
+  .mdc-text-field--outlined.mdc-text-field--disabled .mdc-text-field__input,
+  .mdc-checkbox--disabled,
+  .mat-mdc-select-disabled  {
+    --mdc-outlined-text-field-disabled-input-text-color: var(--foreground-disabled-text);
+    --mat-select-disabled-trigger-text-color: var(--foreground-disabled-text);
+    --mat-checkbox-disabled-label-color: var(--foreground-divider);
+  }
+
+  --mdc-switch-selected-track-color: var(--primary-lighter);
+  --mdc-switch-selected-hover-track-color: var(--primary-lighter);
+  --mdc-switch-selected-pressed-track-color: var(--primary-lighter);
+  --mdc-switch-selected-focus-track-color: var(--primary-lighter);
+  
+  --mat-form-field-subscript-text-line-height: 1.125;
+  --mdc-filled-text-field-label-text-tracking: 0.5px;
+  --mdc-outlined-text-field-label-text-tracking: 0.5px;
 }
 

@@ -49,3 +49,15 @@
     
   }
 }
+
+@mixin typography($theme) {
+  .mat-mdc-tab-link .mdc-tab__text-label,
+  .mat-mdc-tab .mdc-tab__text-label {
+    --mat-tab-header-inactive-label-text-color: var(--foreground-text);
+    --mat-tab-header-inactive-hover-label-text-color: var(--foreground-text);
+  }
+
+  .mat-mdc-tab-link {
+    --mat-tab-header-label-text-tracking: 0.5px;
+  }
+}

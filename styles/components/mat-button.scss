@@ -41,7 +41,8 @@
     }
 
     &.mat-button-disabled,
-    &.mat-mdc-button:disabled {
+    &.mat-mdc-button:disabled,
+    &.mat-mdc-button-disabled {
       color: mat.get-color-from-palette($foreground, disabled-text);
       svg g,
       svg polygon,
@@ -127,7 +128,8 @@
   }
 
   .mat-mdc-button.mat-button-disabled,
-  .mat-mdc-button:disabled {
+  .mat-mdc-button:disabled,
+  .mat-mdc-button.main-dashboard-cta[disabled] {
     background-color: mat.get-color-from-palette($background, disabled-button);
   }
 
