@@ -7,11 +7,9 @@
           <ng-container *ngIf="requestStatus | async as status">
             <span *ngIf="!movie.promotional?.videos?.publicScreener?.jwPlayerId" [matTooltip]="screenerRequest[status]">
               <button mat-button class="translucent" [disabled]="status !== 'available'" (click)="requestScreener(movie.id)">
-                <mat-spinner *ngIf="status === 'sending'; else available" diameter="24"></mat-spinner>
-                <ng-template #available>
-                  <mat-icon svgIcon="ask_screening_2"></mat-icon>
-                </ng-template>
-                {{ screenerRequest[status] }}
+                <mat-spinner *ngIf="status === 'sending'" diameter="24"></mat-spinner>
+                <mat-icon *ngIf="status !== 'sending'" svgIcon="ask_screening_2"></mat-icon>
+                <span>{{ screenerRequest[status] }}</span>
               </button>
             </span>
             <button mat-button class="translucent" [disabled]="requestSent" (click)="requestAskingPrice(movie.id)" matTooltip="Request Asking Price">

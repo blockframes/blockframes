@@ -13,8 +13,11 @@
     }
   }
 
-  .mat-mdc-tab-header {
+  *:not(.mat-mdc-tab-group-inverted-header) > .mat-mdc-tab-header {
     border-bottom: 1px solid mat.get-color-from-palette($foreground, divider);
+  }
+  .mat-mdc-tab-group-inverted-header > .mat-mdc-tab-header {
+    border-top: 1px solid mat.get-color-from-palette($foreground, divider);
   }
 
   .bf-tabs {

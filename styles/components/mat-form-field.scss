@@ -15,7 +15,6 @@
       position: static;
     }
 
-
     &[no-underline] {
       .mat-mdc-form-field-underline {
         display: none;
@@ -139,6 +138,10 @@
 
   .mat-mdc-radio-button .mdc-radio { --mdc-radio-state-layer-size : 30px }
   .dark-contrast-theme .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__background { --mdc-checkbox-unselected-icon-color: #FFF; }
+
+  .mat-mdc-form-field-subscript-wrapper {
+    margin-bottom: 0.6666666667em;
+  }
 }
 
 // TYPOGRAPHY
