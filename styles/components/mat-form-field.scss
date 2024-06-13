@@ -69,21 +69,18 @@
       }
     }
 
-    .mdc-text-field:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid) .mdc-floating-label,
     .mat-mdc-form-field-hint {
       color: mat.get-color-from-palette($foreground, border-color);
+    }
+
+    .mdc-notched-outline--notched .mdc-floating-label--required:not(.mdc-floating-label--hide-required-marker)::after {
+      color: var(--warn);
     }
 
   }
 
   // OUTLINE
   .mat-form-field-appearance-outline {
-    /* Change the border color */
-    .mdc-text-field--outlined:not(.mdc-text-field--invalid) .mdc-notched-outline__leading,
-    .mdc-text-field--outlined:not(.mdc-text-field--invalid) .mdc-notched-outline__notch,
-    .mdc-text-field--outlined:not(.mdc-text-field--invalid) .mdc-notched-outline__trailing {
-      border-color: mat.get-color-from-palette($foreground, divider);
-    }
 
     /* Change the border hover color */
     .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover
@@ -168,5 +165,24 @@
   --mat-form-field-subscript-text-line-height: 1.125;
   --mdc-filled-text-field-label-text-tracking: 0.5px;
   --mdc-outlined-text-field-label-text-tracking: 0.5px;
+
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading, 
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch, 
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+    --mdc-outlined-text-field-outline-color: --foreground-divider;
+  }
+
+  .mdc-text-field--outlined.mdc-text-field--disabled .mdc-notched-outline__leading,
+  .mdc-text-field--outlined.mdc-text-field--disabled .mdc-notched-outline__notch,
+  .mdc-text-field--outlined.mdc-text-field--disabled .mdc-notched-outline__trailing {
+    --mdc-outlined-text-field-disabled-outline-color: --foreground-divider;
+  }
+
+  .dark-contrast-theme .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-floating-label, 
+  .dark-contrast-theme .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-floating-label--float-above {
+    --mdc-outlined-text-field-label-text-color: #FFF;
+    --mdc-outlined-text-field-hover-label-text-color: #FFF;
+  }
+  
 }
 

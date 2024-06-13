@@ -110,6 +110,10 @@
   }
 
   .cdk-overlay-pane:has(.mat-mdc-select-panel) { min-width: fit-content; }
+
+  .mdc-list-item--with-leading-checkbox .mdc-list-item__start {
+    margin-right: 4px;
+  }
 }
 
 @mixin typography($theme) {
