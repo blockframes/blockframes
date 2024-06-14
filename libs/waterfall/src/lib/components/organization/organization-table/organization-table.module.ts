@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 
 // Blockframes
 import { TableModule } from '@blockframes/ui/list/table/table.module';
-import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 import { RightHolderNamePipeModule } from '../../../pipes/rightholder-name.pipe';
 import { VersionNamePipeModule } from '../../../pipes/version-name.pipe';
@@ -27,7 +26,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     CommonModule,
 
     TableModule,
-    GetOrgPipeModule,
     OrgChipModule,
     RightHolderNamePipeModule,
     VersionNamePipeModule,

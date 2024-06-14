@@ -1,9 +1,9 @@
 // Angular
-import { Component, ChangeDetectionStrategy, TemplateRef, ContentChild, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, TemplateRef, ContentChild, Input, Inject } from '@angular/core';
 
 // Blockframes
-import { descTimeFrames } from '@blockframes/utils/pipes/filter-by-date.pipe';
-import { Invitation } from '@blockframes/model';
+import { App, Invitation, getTimeFrames, preferredLanguage } from '@blockframes/model';
+import { APP } from '@blockframes/utils/routes/utils';
 
 @Component({
   selector: 'invitation-list',
@@ -16,7 +16,9 @@ export class ListComponent {
   @Input() invitations: Invitation[];
   @ContentChild(TemplateRef) itemTemplate: TemplateRef<unknown>;
 
-  timeFrames = descTimeFrames;
+  /** @dev i18n is only on waterfall app for now #9699 */
+  timeFrames = getTimeFrames('desc', this.app === 'waterfall' ? preferredLanguage() : undefined);
+  constructor(@Inject(APP) private app: App) { }
 
   trackById = (i: number, doc: { id: string }) => doc.id;
 

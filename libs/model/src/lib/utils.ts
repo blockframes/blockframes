@@ -1,7 +1,7 @@
 import { addYears, subYears } from 'date-fns';
 import { Person } from './identity';
 import { LanguageRecord } from './movie';
-import { App, MovieCurrency, Scope, TerritoryISOA2Value, staticModel, staticModeli18n } from './static';
+import { App, MovieCurrency, Scope, TerritoryISOA2Value, TimeFrame, staticModel, staticModeli18n, timeFrames, timeFramesi18n } from './static';
 import { mainCurrency } from './waterfall';
 
 export interface ErrorResultResponse {
@@ -303,6 +303,12 @@ export function toLabel(
   }
 }
 
+export function getTimeFrames(order: 'desc' | 'asc', lang?: SupportedLanguages): TimeFrame[] {
+  return (lang && timeFramesi18n[lang] && timeFramesi18n[lang][order]) ?
+    timeFramesi18n[lang][order] :
+    timeFrames[order];
+}
+
 /**
  * Example with (['A', 'B', 'C'], ', ', ' & ')
  * output : "A, B & C";
@@ -410,20 +416,25 @@ export function sortByDate<T>(objects: T[], field: string) {
 export const supportedLanguages = {
   en: 'EN',
   fr: 'FR',
+  es: 'ES',
 } as const;
 
 export type SupportedLanguages = keyof typeof supportedLanguages;
+
+export const defaultLocaleId = 'en-GB';
 
 export const supportedLocaleIds = {
   'fr-FR': 'fr-FR',
   'en-US': 'en-US',
   'en-GB': 'en-GB',
+  'es-ES': 'es-ES',
 } as const;
 
 const supportedIsoA2 = {
   'GB': 'GB',
   'FR': 'FR',
   'US': 'US',
+  'ES': 'ES',
 } as const;
 
 export type SupportedLocaleIds = keyof typeof supportedLocaleIds;
@@ -433,32 +444,45 @@ function getNavigatorLanguage(): SupportedLanguages {
     case 'fr':
     case 'fr-FR':
       return 'fr';
+    case 'es':
+    case 'es-ES':
+      return 'es';
     default:
-      return 'en';
+      return defaultLocaleId.split('-')[0] as SupportedLanguages;
   }
 }
 
 function getNavigatorIsoA2(): TerritoryISOA2Value {
   if (Object.keys(supportedLocaleIds).includes(navigator.language)) return navigator.language.split('-')[1] as TerritoryISOA2Value;
-  if (navigator.language === 'fr') return 'FR';
-  return 'GB';
+  return getDefaultIsoA2(navigator.language);
+}
+
+export function getDefaultIsoA2(lang: string) {
+  switch (lang) {
+    case 'fr':
+      return 'FR'
+    case 'es':
+      return 'ES';
+    default:
+      return defaultLocaleId.split('-')[1] as TerritoryISOA2Value;
+  }
 }
 
 // Read locale from local storage or use browser language
 export const preferredLanguage = (): SupportedLanguages => {
   const lang = localStorage.getItem('locale.lang') || getNavigatorLanguage();
-  if (!supportedLanguages[lang]) return 'en';
+  if (!supportedLanguages[lang]) return defaultLocaleId.split('-')[0] as SupportedLanguages;
   return lang as SupportedLanguages;
 };
 
 export const preferredIsoA2 = (): TerritoryISOA2Value => {
   const isoA2 = localStorage.getItem('locale.isoA2') || getNavigatorIsoA2();
-  if (!supportedIsoA2[isoA2]) return 'GB';
+  if (!supportedIsoA2[isoA2]) return defaultLocaleId.split('-')[1] as TerritoryISOA2Value;
   return isoA2 as TerritoryISOA2Value;
 }
 
 export const getUserLocaleId = (): SupportedLocaleIds => {
   const code = `${preferredLanguage()}-${preferredIsoA2()}`;
-  if (!supportedLocaleIds[code]) return 'en-GB';
+  if (!supportedLocaleIds[code]) return defaultLocaleId;
   return code as SupportedLocaleIds;
 }

@@ -439,7 +439,7 @@ export function getStatementSources(statement: Statement, sources: WaterfallSour
       .filter(r => nodeExists(state, r.id));
     const topLevelRights = getTopLevelRights(rightholderRights, state);
     const sourceNodes = getSources(state, topLevelRights.map(r => r.id));
-    const sourceIds = Array.from(sourceNodes.map(node => node.id));
+    const sourceIds = Array.from(new Set(sourceNodes.map(node => node.id)));
     return sourceIds.map(id => sources.find(s => s.id === id));
   }
 }
@@ -484,7 +484,8 @@ function getTopLevelRights(_rights: Right[], state: TitleState) {
 
   const topLevelRights: Right[] = [];
   for (const right of rights) {
-    if (!rights.filter(r => r.id !== right.id).some(r => pathExists(right.id, r.id, state))) {
+    const notBrother = (r: Right) => (!r.groupId || r.groupId !== right.groupId);
+    if (!rights.filter(r => r.id !== right.id && notBrother(r)).some(r => pathExists(right.id, r.id, state))) {
       topLevelRights.push(right);
     }
   }

@@ -110,6 +110,15 @@
   }
 
   .cdk-overlay-pane:has(.mat-mdc-select-panel) { min-width: fit-content; }
+
+  .mdc-list-item--with-leading-checkbox .mdc-list-item__start {
+    margin-right: 4px;
+  }
+
+  .mdc-list-item:hover::before {
+    --mdc-list-list-item-hover-state-layer-color: var(--primary-lighter);
+    --mdc-list-list-item-hover-state-layer-opacity: 0.1;
+  }
 }
 
 @mixin typography($theme) {
