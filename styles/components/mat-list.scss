@@ -117,7 +117,7 @@
 
   .mdc-list-item:hover::before {
     --mdc-list-list-item-hover-state-layer-color: var(--primary-lighter);
-    --mdc-list-list-item-hover-state-layer-opacity: 0.1;
+    --mdc-list-list-item-hover-state-layer-opacity: 0.2;
   }
 }
 
@@ -130,5 +130,9 @@
 
   .mat-mdc-select .mat-mdc-select-value, .mat-mdc-option .mdc-list-item__primary-text {
     @include mat.typography-level(typography.$bf-typography, 'body-2');
+  }
+
+  .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled):not(.mat-mdc-option-multiple) {
+    --mat-option-selected-state-layer-color: #FFF;
   }
 }

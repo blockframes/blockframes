@@ -16,7 +16,7 @@
           <analytics-metric-card-list [cards]="aggregatedScreeningCards"></analytics-metric-card-list>
           <header>
             <button [disabled]="exporting" mat-button color="primary" (click)="exportTable()">
-              <ng-container *ngIf="exporting else export">
+              <ng-container matButtonIcon *ngIf="exporting else export">
                 <span>Generating Excel...</span>
               </ng-container>
               <ng-template #export>

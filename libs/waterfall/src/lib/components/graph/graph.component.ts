@@ -244,6 +244,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   private updateRightName(org?: string, type?: RightType) {
+    if (this.rightForm.pristine) return;
     const right = this.rightForm.value;
     const o = org ?? right.org;
     const t = rightTypes[type ?? right.type];
@@ -255,6 +256,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
 
   private updateSourceName(_medias: Media[], _territories: Territory[]) {
+    if (this.sourceForm.pristine) return;
     const maxLength = 20;
     const source = this.sourceForm.value;
     const groupedMedias = toGroupLabel(_medias || source.medias, 'medias', 'All Medias');
