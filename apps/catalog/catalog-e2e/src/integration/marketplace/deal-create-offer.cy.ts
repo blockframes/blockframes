@@ -1,4 +1,4 @@
-import { territories, MediaGroup, medias, TerritoryGroup, Notification, Contract } from '@blockframes/model';
+import { territories, MediaGroupValue, TerritoryGroupValue, Notification, Contract } from '@blockframes/model';
 import {
   // plugins
   adminAuth,
@@ -261,8 +261,8 @@ function fillInputs({
   dateTo, //multiple territory UI
   exclusive,
 }: {
-  territory?: (TerritoryGroup | keyof typeof territories)[];
-  rights: (MediaGroup | keyof typeof medias)[];
+  territory?: (TerritoryGroupValue)[];
+  rights: (MediaGroupValue)[];
   dateFrom?: Date;
   dateTo?: Date;
   exclusive: boolean;

@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Territory,
-  TerritoryGroup,
+  TerritoryGroupValue,
   territories,
   territoriesGroup,
   territoriesISOA2,
@@ -45,7 +45,7 @@ export function encodeUrl<T>(router: Router, route: ActivatedRoute, data: T) {
   }
 }
 
-type EncodedTerritory = Territory | TerritoryISOA2Value | TerritoryGroup;
+type EncodedTerritory = Territory | TerritoryISOA2Value | TerritoryGroupValue;
 type EncodedLanguageVersion = Omit<LanguageVersion, 'languages'> & { languages: string };
 
 interface MovieAvailsSearchEncoded {
@@ -83,12 +83,12 @@ export function decodeAvailsSearchUrl(route: ActivatedRoute) {
 
 function encodeTerritories(_countries: Territory[] = []): EncodedTerritory[] {
   let countries = _countries;
-  const continents: TerritoryGroup[] = [];
+  const continents: TerritoryGroupValue[] = [];
   const countriesISOA2: TerritoryISOA2Value[] = [];
   for (const continent of territoriesGroup) {
     if (continent.items.every(country => countries.includes(country))) {
-      continents.push(continent.label as TerritoryGroup);
-      countries = countries.filter(country => !continentCountries(continent.label as TerritoryGroup).includes(country));
+      continents.push(continent.label as TerritoryGroupValue);
+      countries = countries.filter(country => !continentCountries(continent.label as TerritoryGroupValue).includes(country));
     }
   }
   for (const country of countries) {
@@ -111,7 +111,7 @@ function decodeTerritories(_territories: EncodedTerritory[] = []): Territory[] {
   return countries as Territory[];
 }
 
-const continentCountries = (continent: TerritoryGroup): Territory[] =>
+const continentCountries = (continent: TerritoryGroupValue): Territory[] =>
   territoriesGroup
     .map(group => group.label === continent && group.items)
     .filter(Boolean)
@@ -123,7 +123,7 @@ const countryISOA2ToTerritory = (countryISOA2: TerritoryISOA2Value) =>
 function extractContinents(territories: EncodedTerritory[]) {
   const continentsList = territoriesGroup.map(group => group.label) as string[];
   const continents = territories.filter(territory => continentsList.includes(territory));
-  return continents as TerritoryGroup[];
+  return continents as TerritoryGroupValue[];
 }
 
 function extractCountriesISOA2(territories: EncodedTerritory[]) {
