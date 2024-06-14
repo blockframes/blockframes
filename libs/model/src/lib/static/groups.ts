@@ -1,37 +1,51 @@
-import { GetKeys, MediaGroup, TerritoryGroup, staticModel } from './static-model';
+import { SupportedLanguages } from '../utils';
+import { GetKeys, staticModel } from './static-model';
+import { staticModeli18n } from './static-model-i18n';
+import { MediaGroup, MediaGroupValue, TerritoryGroup, TerritoryGroupValue } from './types';
 
 export type GroupScope = keyof typeof staticGroups;
 
 export interface StaticGroup<S extends GroupScope = any> {
-  label: MediaGroup | TerritoryGroup;
+  key: MediaGroup | TerritoryGroup;
+  label: MediaGroupValue | TerritoryGroupValue;
   items: Extract<GetKeys<S>, string>[];
 }
 
-export const mediaGroup: StaticGroup<'medias'>[] = [{
+export const mediasGroup: StaticGroup<'medias'>[] = [{
+  key: 'tv',
   label: 'TV',
   items: ['payTv', 'freeTv', 'payPerView'],
 }, {
+  key: 'vod',
   label: 'VOD',
   items: ['est', 'nVod', 'aVod', 'fVod', 'sVod', 'tVod']
 }, {
+  key: 'ancillary',
   label: 'Ancillary Rights',
   items: ['boats', 'inflight', 'hotels', 'educational']
 }, {
+  key: 'homeVideo',
   label: 'Video (DVD, Blu-Ray)',
   items: ['rental', 'through']
 }, {
+  key: 'festivals',
   label: 'Festivals',
   items: ['festival']
 }, {
+  key: 'theatrical',
   label: 'Theatrical Rights',
   items: ['theatrical', 'nonTheatrical']
 }, {
+  key: 'derivative',
   label: 'Derivative Rights',
   items: ['merchandising', 'music', 'remake', 'multimedia', 'multimediaExtract', 'tvExtract']
 }];
 
+export const waterfallMediaGroups: MediaGroup[] = ['theatrical', 'derivative'];
+
 export const territoriesGroup: StaticGroup<'territories'>[] = [
   {
+    key: 'africa',
     label: "Africa",
     items: [
       "algeria",
@@ -94,6 +108,7 @@ export const territoriesGroup: StaticGroup<'territories'>[] = [
   },
 
   {
+    key: 'asia',
     label: "Asia",
     items: [
       "afghanistan",
@@ -129,6 +144,7 @@ export const territoriesGroup: StaticGroup<'territories'>[] = [
   },
 
   {
+    key: 'caribbean',
     label: "Caribbean",
     items: [
       "aruba",
@@ -164,6 +180,7 @@ export const territoriesGroup: StaticGroup<'territories'>[] = [
   },
 
   {
+    key: 'cis',
     label: "CIS",
     items: [
       "armenia",
@@ -181,6 +198,7 @@ export const territoriesGroup: StaticGroup<'territories'>[] = [
   },
 
   {
+    key: 'europe',
     label: "Europe",
     items: [
       "aland-islands",
@@ -235,6 +253,7 @@ export const territoriesGroup: StaticGroup<'territories'>[] = [
   },
 
   {
+    key: 'latinAmerica',
     label: "Latin America",
     items: [
       "argentina",
@@ -261,6 +280,7 @@ export const territoriesGroup: StaticGroup<'territories'>[] = [
   },
 
   {
+    key: 'middleEast',
     label: "Middle East",
     items: [
       "bahrain",
@@ -285,6 +305,7 @@ export const territoriesGroup: StaticGroup<'territories'>[] = [
   },
 
   {
+    key: 'northAmerica',
     label: "North America",
     items: [
       "bermuda",
@@ -296,6 +317,7 @@ export const territoriesGroup: StaticGroup<'territories'>[] = [
   },
 
   {
+    key: 'oceania',
     label: "Oceania",
     items: [
       "american-samoa",
@@ -328,8 +350,16 @@ export const territoriesGroup: StaticGroup<'territories'>[] = [
 ]
 
 export const staticGroups = {
-  medias: mediaGroup,
+  medias: mediasGroup,
   territories: territoriesGroup
+}
+
+export function getStaticGroups(scope: GroupScope, lang?: SupportedLanguages): StaticGroup[] {
+  const group = staticGroups[scope];
+  const scopeLabels = scope === 'medias' ? 'mediaGroup' : 'territoryGroup';
+  const labels = (lang && staticModeli18n[lang] && staticModeli18n[lang][scopeLabels]) ? staticModeli18n[lang][scopeLabels] : undefined;
+
+  return group.map(g => ({ ...g, label: labels ? labels[g.key] : g.label }));
 }
 
 export function toGroupLabel(value: string[], scope: GroupScope, all?: string) {

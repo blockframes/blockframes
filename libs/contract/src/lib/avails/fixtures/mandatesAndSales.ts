@@ -4,7 +4,8 @@ import {
   territories,
   Territory,
   territoriesGroup,
-  medias,mediaGroup,
+  medias,
+  mediasGroup,
   FullMandate,
   FullSale
 } from '@blockframes/model';
@@ -16,9 +17,9 @@ import {
 
 export const allButSouthKorea = Object.keys(territories).filter((territory) => territory !== 'south-korea') as Territory[];
 export const World = Object.keys(territories) as Territory[];
-export const Europe = territoriesGroup.find(({ label }) => label === 'Europe').items;
-export const Asia = territoriesGroup.find(({ label }) => label === 'Asia').items;
-export const Ancillary = mediaGroup.find(({ label }) => label === 'Ancillary Rights').items;
+export const Europe = territoriesGroup.find(({ key }) => key === 'europe').items;
+export const Asia = territoriesGroup.find(({ key }) => key === 'asia').items;
+export const Ancillary = mediasGroup.find(({ key }) => key === 'ancillary').items;
 const Medias = Object.keys(medias);
 
 export const mandateMovie1 = {
