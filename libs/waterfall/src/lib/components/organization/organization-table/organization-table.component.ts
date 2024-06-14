@@ -6,9 +6,10 @@ import { fade } from '@blockframes/utils/animations/fade';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { WaterfallPermissionsService } from '../../../permissions.service';
 import { WaterfallService } from '../../../waterfall.service';
-import { map } from 'rxjs';
+import { switchMap } from 'rxjs';
 import { RightholderSelectModalComponent } from '../../rightholder/rightholder-select-modal/rightholder-select-modal.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { filters } from '@blockframes/ui/list/table/filters';
 
 @Component({
   selector: 'waterfall-organization-table',
@@ -20,13 +21,19 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 export class OrganizationTableComponent {
   public waterfall = this.shell.waterfall;
   public permissions$ = this.shell.permissions$.pipe(
-    map(permissions => permissions.map(permission => {
-      const rightholder = this.waterfall.rightholders.find(r => r.id === permission.rightholderIds[0]);
-      return { ...permission, rightholder };
-    }))
+    switchMap(async permissions => {
+      const orgs = await this.orgService.getValue(permissions.map(p => p.id));
+      return permissions.map(permission => {
+        const rightholder = this.waterfall.rightholders.find(r => r.id === permission.rightholderIds[0]);
+        const org = orgs.find(o => o.id === permission.id);
+        const role = permission.isAdmin ? $localize`Editor` : $localize`Viewer`;
+        return { ...permission, rightholder, org, role };
+      })
+    })
   );
   public versions = this.shell.waterfall.versions;
   public defaultVersion = $localize`(default)`;
+  public filters = filters;
 
   @Input() baseUrl: string;
   @Input() columns: Record<string, string> = {

@@ -4,7 +4,8 @@ import {
   Organization,
   Person,
   Scope,
-  staticModel
+  staticModel,
+  WaterfallRightholder
 } from '@blockframes/model';
 
 function getStaticModelFilter(scope: Scope) {
@@ -29,7 +30,7 @@ export const filters = {
     if (!title) return false;
     return title.toLocaleLowerCase().includes(input);
   },
-  orgName: (input: string, org: Organization) => {
+  orgName: (input: string, org: Organization | WaterfallRightholder) => {
     if (!org?.name) return false;
     return org.name.toLocaleLowerCase().includes(input);
   },

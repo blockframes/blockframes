@@ -3,7 +3,7 @@
     <ng-template *ngIf="columns.id" [label]="columns.id" colRef="id" let-id sort>
       {{ id }}
     </ng-template>
-    <ng-template *ngIf="columns.rightholder" [label]="columns.rightholder" colRef="rightholder" let-rightholder>
+    <ng-template *ngIf="columns.rightholder" [label]="columns.rightholder" colRef="rightholder" let-rightholder [filter]="filters.orgName">
       <ng-container *ngIf="rightholder else noRightholder">
         {{ rightholder.id | rightholderName: waterfall }}
       </ng-container>
@@ -11,13 +11,11 @@
         <span i18n>Not set</span>
       </ng-template>
     </ng-template>
-    <ng-template *ngIf="columns.org" [label]="columns.org" colRef="id" let-id sort>
-      <ng-container *ngIf="id | getOrg | async as org">
-        <org-chip @fade [org]="org" [baseUrl]="baseUrl"></org-chip>
-      </ng-container>
+    <ng-template *ngIf="columns.org" [label]="columns.org" colRef="org" let-org sort [filter]="filters.orgName">
+      <org-chip *ngIf="org" @fade [org]="org" [baseUrl]="baseUrl"></org-chip>
     </ng-template>
-    <ng-template *ngIf="columns.isAdmin" [label]="columns.isAdmin" colRef="isAdmin" let-isAdmin sort>
-      {{ isAdmin ? 'Editor' : 'Viewer' }}
+    <ng-template *ngIf="columns.isAdmin" [label]="columns.isAdmin" colRef="role" let-role sort>
+      {{ role }}
     </ng-template>
     <ng-template *ngIf="columns.lockedVersionId" colRef="rightholder" [label]="columns.lockedVersionId" let-rightholder sort>
       <ng-container *ngIf="rightholder else noRightholder">

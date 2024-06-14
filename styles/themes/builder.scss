@@ -178,6 +178,7 @@
   @include table.typography($theme);
   @include menu.typography($theme);
   @include chips.typography($theme);
+  @include tabs.typography($theme);
 
   // Colors
   @include mat.core-color($theme);

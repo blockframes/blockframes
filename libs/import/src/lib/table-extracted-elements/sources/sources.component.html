@@ -3,7 +3,7 @@
 <p>For selection ({{ selection.selected.length }} items selected) :
   <button test-id="submit-records" mat-stroked-button color="primary" [disabled]="!selection.selected.length || !!processing"
     (click)="createSelected()">
-    <ng-container *ngIf="processing === 0 else createinprogress">
+    <ng-container matButtonIcon *ngIf="processing === 0 else createinprogress">
       <span>Create</span>
       <mat-icon svgIcon="edit"></mat-icon>
     </ng-container>
@@ -82,14 +82,9 @@
     <th mat-header-cell *matHeaderCellDef> Actions </th>
     <td mat-cell *matCellDef="let element">
       <button mat-flat-button color="primary" [disabled]="element | isDisabled: processing : element.imported" (click)="create(element)">
-        <ng-container *ngIf="element.importing">
-          <span>Creating</span>
-          <mat-spinner [diameter]="20" [strokeWidth]="2"></mat-spinner>
-        </ng-container>
-        <ng-container *ngIf="!element.importing">
-          <span>Create</span>
-          <mat-icon svgIcon="edit"></mat-icon>
-        </ng-container>
+        <span>{{ !element.importing ? 'Create' : 'Creating' }}</span>
+        <mat-icon iconPositionEnd *ngIf="!element.importing" svgIcon="edit"></mat-icon>
+        <mat-spinner *ngIf="element.importing" [diameter]="20" [strokeWidth]="2"></mat-spinner>
       </button>
     </td>
   </ng-container>

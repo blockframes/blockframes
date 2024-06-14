@@ -1,6 +1,6 @@
 <ng-container *ngIf="(invitation | guest: 'user') as user">
   <mat-list-item>
-    <div matListAvatar class="avatar-status">
+    <div matListItemAvatar class="avatar-status">
       <ng-container *ngIf="!!user.avatar.storagePath else noProfileUser">
         <img [ref]="user.avatar" asset="profil_user.svg">
       </ng-container>
@@ -9,9 +9,11 @@
       </ng-template>
       <mat-icon [svgIcon]="invitation.status | statusIcon" [color]="invitation.status | statusColor"></mat-icon>
     </div>
-    <span *ngIf="user.firstName" matLine [attr.test-id]="'invitation_' + user.uid">{{ user | displayUser | async }}</span>
-    <span *ngIf="!user.firstName" matLine>{{ user.email }}</span>
-    <span matLine>
+    <div>
+      <span *ngIf="user.firstName" [attr.test-id]="'invitation_' + user.uid">{{ user | displayUser | async }}</span>
+      <span *ngIf="!user.firstName">{{ user.email }}</span>
+    </div>
+    <span>
       <small class="mat-caption">
         {{ invitation.date | date: 'short' }} - {{ invitation.mode === 'request' ? 'Request' : 'Invitation' }}
       </small>
