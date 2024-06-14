@@ -7,132 +7,172 @@
 
 <section>
   <div class="surface">
-    <ng-container *ngIf="appLang === 'fr' else defaultLang">
-      <h2>Données et documents</h2>
-      <p>Deux types de bases de données Firebase sont utilisées pour Blockframes :</p>
-      <ol>
-        <li><strong>Firestore</strong> : base de données NoSQL destinée aux données utilisateurs, sauvegardées quotidiennement sur deux serveurs distincts pour assurer une haute disponibilité et une récupération rapide en cas de panne. Les données peuvent être exportées en format jsonl sur demande, offrant ainsi une flexibilité pour l'analyse et la migration des données.</li>
-        <li><strong>File Storage</strong> : solution de stockage pour documents utilisateurs, tels que des images, des fichiers PDF, Excel, etc. Cette plateforme assure une gestion efficace des fichiers volumineux ou des documents sensibles, facilitant leur partage et leur accès sécurisé.</li>
-      </ol>
+    <ng-container [ngSwitch]="appLang">
+      <ng-container *ngSwitchCase="'fr'">
+        <h2>Données et documents</h2>
+        <p>Deux types de bases de données Firebase sont utilisées pour Blockframes :</p>
+        <ol>
+          <li><strong>Firestore</strong> : base de données NoSQL destinée aux données utilisateurs, sauvegardées quotidiennement sur deux serveurs distincts pour assurer une haute disponibilité et une récupération rapide en cas de panne. Les données peuvent être exportées en format jsonl sur demande, offrant ainsi une flexibilité pour l'analyse et la migration des données.</li>
+          <li><strong>File Storage</strong> : solution de stockage pour documents utilisateurs, tels que des images, des fichiers PDF, Excel, etc. Cette plateforme assure une gestion efficace des fichiers volumineux ou des documents sensibles, facilitant leur partage et leur accès sécurisé.</li>
+        </ol>
+    
+        <h2>Sécurité</h2>
+        <p>La sécurité des données et des documents sur Firebase est notre priorité absolue. Voici les mesures de sécurité clés mises en place :</p>
+        <ul>
+          <li>
+            <strong>Chiffrement des données</strong> : Firestore et File Storage utilisent un chiffrement robuste en transit et au repos. En transit, TLS (Transport Layer Security) assure la sécurité des données lors de leur transfert entre le client et Firebase. Au repos, les données sont chiffrées à l'aide de techniques avancées qui garantissent leur protection contre les accès non autorisés.
+          </li>
+          <li>
+            <strong>Authentification</strong> : L’accès aux bases de données est strictement contrôlé. Par défaut, seuls les utilisateurs authentifiés peuvent accéder aux données, grâce à un système d’authentification par mail et mot de passe. Ce service Firebase assure le chiffrement de bout en bout des mots de passe, empêchant même les administrateurs Cascade8 d'y accéder.
+          </li>
+          <li>
+            <strong>Règles d'accès</strong> : Des règles d'accès détaillées sont définies pour chaque type de document ou de donnée. Ces règles garantissent que seules les personnes autorisées, comme les utilisateurs invités par le propriétaire d'un document ou les administrateurs Cascade8 en cas de maintenance, peuvent accéder aux informations sensibles, telles que les conditions financières d'un projet.
+          </li>
+        </ul>
+    
+        <h2>Certifications ISO de sécurité et de chiffrement</h2>
+        <p>Pour soutenir notre engagement envers la sécurité, Google Cloud Platform, qui héberge Firebase, a obtenu plusieurs certifications ISO clés, renforçant ainsi la confiance dans nos solutions de sécurité et de chiffrement :</p>
+        <ul>
+          <li>
+            <strong>ISO/IEC 27001</strong> : Cette norme est l'une des plus reconnues mondialement pour le système de gestion de la sécurité de l'information (SGSI). Elle certifie que Google Cloud Platform dispose de processus rigoureux pour gérer et protéger les données des utilisateurs.
+          </li>
+          <li>
+            <strong>ISO/IEC 27017</strong> : Spécifique au cloud, cette certification concerne la sécurité des informations et fournit des directives sur les aspects de la sécurité de l'information à gérer par un fournisseur de services cloud.
+          </li>
+          <li>
+            <strong>ISO/IEC 27018</strong> : Axée sur la protection des données personnelles dans le cloud, elle garantit que Google Cloud adhère aux pratiques de confidentialité reconnues internationalement, offrant ainsi une protection supplémentaire pour les données personnelles stockées sur Firebase.
+          </li>
+        </ul>
+        <p>
+          En intégrant ces normes internationales à notre infrastructure et à nos processus, nous assurons une protection maximale des données et des documents de Blockframes, tout en respectant les exigences réglementaires et en renforçant la confiance des utilisateurs dans notre plateforme.
+        </p>
+      </ng-container>
+      <ng-container *ngSwitchCase="'es'">
+        <h2>Datos y documentos</h2>
+        <p>Para Blockframes se utilizan dos tipos de bases de datos de Firebase:</p>
+        <ol>
+          <li><strong>Firestore</strong> : Una base de datos NoSQL diseñada para datos de usuario, respaldada diariamente en dos servidores separados para asegurar alta disponibilidad y recuperación rápida en caso de falla. Los datos pueden ser exportados en formato json bajo solicitud, proporcionando flexibilidad para el análisis y la migración de datos.</li>
+          <li><strong>Almacenamiento de Archivos</strong> : Una solución de almacenamiento para documentos de usuarios, como imágenes, archivos PDF, Excel, etc. Esta plataforma asegura una gestión eficiente de archivos grandes o documentos sensibles, facilitando su compartición y acceso seguro.</li>
+        </ol>
+    
+        <h2>Seguridad</h2>
+        <p>La seguridad de los datos y documentos en Firebase es nuestra máxima prioridad. Aquí están las principales medidas de seguridad implementadas:</p>
+        <ul>
+          <li>
+            <strong>Cifrado de Datos</strong> : Firestore y Almacenamiento de Archivos usan un cifrado robusto tanto en tránsito como en reposo. En tránsito, TLS (Transport Layer Security) asegura la seguridad de los datos durante la transferencia entre el cliente y Firebase. En reposo, los datos están cifrados usando técnicas avanzadas que garantizan la protección contra el acceso no autorizado.
+          </li>
+          <li>
+            <strong>Autenticación</strong> : El acceso a las bases de datos está estrictamente controlado. Por defecto, solo los usuarios autenticados pueden acceder a los datos, utilizando un sistema de autenticación por correo electrónico y contraseña. Este servicio de Firebase asegura el cifrado de extremo a extremo de las contraseñas, evitando que incluso los administradores de Cascade8 puedan acceder a ellas.
+          </li>
+          <li>
+            <strong>Reglas de Acceso</strong> : Se definen reglas de acceso detalladas para cada tipo de documento o dato. Estas reglas aseguran que solo personas autorizadas, como usuarios invitados por el propietario de un documento o administradores de Cascade8 durante el mantenimiento, puedan acceder a información sensible, como los términos financieros de un proyecto.
+          </li>
+        </ul>
+    
+        <h2>Certificaciones ISO de Seguridad y Cifrado</h2>
+        <p>Para respaldar nuestro compromiso con la seguridad, Google Cloud Platform, que hospeda Firebase, ha obtenido varias certificaciones clave ISO, aumentando así la confianza en nuestras soluciones de seguridad y cifrado:</p>
+        <ul>
+          <li>
+            <strong>ISO/IEC 27001</strong> : Este estándar es uno de los más reconocidos globalmente para Sistemas de Gestión de Seguridad de la Información (SGSI). Certifica que Google Cloud Platform tiene procesos rigurosos para gestionar y proteger los datos de los usuarios.
+          </li>
+          <li>
+            <strong>ISO/IEC 27017</strong> : Específico para la nube, esta certificación se enfoca en la seguridad de la información y proporciona directrices sobre los aspectos de seguridad de la información que deben ser gestionados por un proveedor de servicios en la nube.
+          </li>
+          <li>
+            <strong>ISO/IEC 27018</strong> : Centrada en la protección de datos personales en la nube, asegura que Google Cloud adhiera a prácticas de privacidad reconocidas internacionalmente, proporcionando así una protección adicional para los datos personales almacenados en Firebase.
+          </li>
+        </ul>
+        <p>
+          Al integrar estos estándares internacionales en nuestra infraestructura y procesos, garantizamos la máxima protección de los datos y documentos de Blockframes, cumpliendo además con los requisitos regulatorios y mejorando la confianza de los usuarios en nuestra plataforma.
+        </p>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <h2>Data and documents</h2>
+        <p>Two types of Firebase databases are used for Blockframes:</p>
+        <ol>
+          <li><strong>Firestore</strong> : A NoSQL database designed for user data, backed up daily on two separate servers to ensure high availability and quick recovery in case of failure. Data can be exported in json format upon request, providing flexibility for data analysis and migration.</li>
+          <li><strong>File Storage</strong> : A storage solution for user documents, such as images, PDF files, Excel, etc. This platform ensures efficient management of large files or sensitive documents, facilitating their sharing and secure access.</li>
+        </ol>
+    
+        <h2>Security</h2>
+        <p>The security of data and documents on Firebase is our top priority. Here are the key security measures in place:</p>
+        <ul>
+          <li>
+            <strong>Data Encryption</strong> : Firestore and File Storage use robust encryption both in transit and at rest. In transit, TLS (Transport Layer Security) ensures the security of data during transfer between the client and Firebase. At rest, data is encrypted using advanced techniques that ensure protection against unauthorized access.
+          </li>
+          <li>
+            <strong>Authentication</strong> : Access to the databases is strictly controlled. By default, only authenticated users can access the data, using an email and password authentication system. This Firebase service ensures end-to-end encryption of passwords, preventing even Cascade8 administrators from accessing them.
+          </li>
+          <li>
+            <strong>Access Rules</strong> : Detailed access rules are defined for each type of document or data. These rules ensure that only authorized individuals, such as users invited by the owner of a document or Cascade8 administrators during maintenance, can access sensitive information, such as the financial terms of a project.
+          </li>
+        </ul>
+    
+        <h2>Security and Encryption ISO Certifications</h2>
+        <p>To support our commitment to security, Google Cloud Platform, which hosts Firebase, has obtained several key ISO certifications, thereby enhancing confidence in our security and encryption solutions:</p>
+        <ul>
+          <li>
+            <strong>ISO/IEC 27001</strong> : This standard is one of the most globally recognized for Information Security Management Systems (ISMS). It certifies that Google Cloud Platform has rigorous processes in place to manage and protect user data.
+          </li>
+          <li>
+            <strong>ISO/IEC 27017</strong> : Specific to the cloud, this certification focuses on information security and provides guidelines on information security aspects to be managed by a cloud service provider.
+          </li>
+          <li>
+            <strong>ISO/IEC 27018</strong> : Focused on the protection of personal data in the cloud, it ensures that Google Cloud adheres to internationally recognized privacy practices, thus providing additional protection for personal data stored on Firebase.
+          </li>
+        </ul>
+        <p>
+          By integrating these international standards into our infrastructure and processes, we ensure maximum protection of Blockframes' data and documents while also complying with regulatory requirements and enhancing users' trust in our platform.
+        </p>
   
-      <h2>Sécurité</h2>
-      <p>La sécurité des données et des documents sur Firebase est notre priorité absolue. Voici les mesures de sécurité clés mises en place :</p>
-      <ul>
-        <li>
-          <strong>Chiffrement des données</strong> : Firestore et File Storage utilisent un chiffrement robuste en transit et au repos. En transit, TLS (Transport Layer Security) assure la sécurité des données lors de leur transfert entre le client et Firebase. Au repos, les données sont chiffrées à l'aide de techniques avancées qui garantissent leur protection contre les accès non autorisés.
-        </li>
-        <li>
-          <strong>Authentification</strong> : L’accès aux bases de données est strictement contrôlé. Par défaut, seuls les utilisateurs authentifiés peuvent accéder aux données, grâce à un système d’authentification par mail et mot de passe. Ce service Firebase assure le chiffrement de bout en bout des mots de passe, empêchant même les administrateurs Cascade8 d'y accéder.
-        </li>
-        <li>
-          <strong>Règles d'accès</strong> : Des règles d'accès détaillées sont définies pour chaque type de document ou de donnée. Ces règles garantissent que seules les personnes autorisées, comme les utilisateurs invités par le propriétaire d'un document ou les administrateurs Cascade8 en cas de maintenance, peuvent accéder aux informations sensibles, telles que les conditions financières d'un projet.
-        </li>
-      </ul>
-  
-      <h2>Certifications ISO de sécurité et de chiffrement</h2>
-      <p>Pour soutenir notre engagement envers la sécurité, Google Cloud Platform, qui héberge Firebase, a obtenu plusieurs certifications ISO clés, renforçant ainsi la confiance dans nos solutions de sécurité et de chiffrement :</p>
-      <ul>
-        <li>
-          <strong>ISO/IEC 27001</strong> : Cette norme est l'une des plus reconnues mondialement pour le système de gestion de la sécurité de l'information (SGSI). Elle certifie que Google Cloud Platform dispose de processus rigoureux pour gérer et protéger les données des utilisateurs.
-        </li>
-        <li>
-          <strong>ISO/IEC 27017</strong> : Spécifique au cloud, cette certification concerne la sécurité des informations et fournit des directives sur les aspects de la sécurité de l'information à gérer par un fournisseur de services cloud.
-        </li>
-        <li>
-          <strong>ISO/IEC 27018</strong> : Axée sur la protection des données personnelles dans le cloud, elle garantit que Google Cloud adhère aux pratiques de confidentialité reconnues internationalement, offrant ainsi une protection supplémentaire pour les données personnelles stockées sur Firebase.
-        </li>
-      </ul>
-      <p>
-        En intégrant ces normes internationales à notre infrastructure et à nos processus, nous assurons une protection maximale des données et des documents de Blockframes, tout en respectant les exigences réglementaires et en renforçant la confiance des utilisateurs dans notre plateforme.
-      </p>
+        <h2>Privacy Policy for AI Module</h2>
+        <ol>
+          <li>
+            <strong>Place of Processing & Server Locations</strong>
+            <p>The processing of user data for the AI module is conducted on servers based in the United States. Our servers are managed by Microsoft Azure, ensuring compliance with local and international data protection regulations.</p>
+          </li>
+          <li>
+            <strong>Data Processing Provider</strong>
+            <p>We use the AI capabilities provided by OpenAI, specifically the GPT-4 Turbo model, for processing the data submitted through our module. OpenAI is a reputable AI service provider known for its stringent data protection and privacy measures.</p>
+          </li>
+          <li>
+            <strong>Purpose of Data Collection</strong>
+            <p>The data collected through the AI module is used solely for the following purposes:</p>
+            <ul>
+              <li>Operational Needs: To enable the proper functioning of the AI module in assisting with contract completion.</li>
+              <li>Service Improvement: To analyze usage patterns and improve the functionality and user experience of our AI module.</li>
+              <li>Compliance: To comply with legal obligations and to protect against fraudulent activities.</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Types of Data Collected</strong>
+            <ul>
+              <li>Company Data: This includes company names, contact details, and other relevant information necessary for contract completion.</li>
+              <li>Contract Data: Confidential contract information including but not limited to, contract terms, dates of signature, licensing parts, and other contract-specific details.</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Data Treatment and Confidentiality</strong>
+            <p>All data submitted through the AI module is treated with the utmost confidentiality and is not used to train the AI model. The data is processed in a secure environment and is not shared with any unauthorized third parties. The data is only accessed by authorized personnel who are required to maintain its confidentiality.</p>
+          </li>
+          <li>
+            <strong>Data Security Measures</strong>
+            <p>We implement robust security measures to protect your data, including:</p>
+            <ul>
+              <li>Encryption: All data transmitted and stored is encrypted to prevent unauthorized access. OpenAI encrypts all data at rest using AES-256 and in transit using TLS 1.2+.</li>
+              <li>Access Controls: Strict access controls are in place to ensure that only authorized personnel have access to sensitive data. OpenAI uses strict access controls to limit who can access data.</li>
+              <li>Regular Audits: We conduct regular security audits to identify and mitigate potential vulnerabilities.</li>
+              <li>24/7/365 Security Team: OpenAI's security team has an on-call rotation that provides 24/7/365 coverage and is paged in case of any potential security incident.</li>
+              <li>Bug Bounty Program: OpenAI offers a Bug Bounty Program for responsible disclosure of vulnerabilities discovered on their platform and products.</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Assurance of Confidentiality</strong>
+            <p>We assure our users that the information processed by the AI module remains confidential. The data is not used to train the model or for any other purpose beyond the stated aims. For further details on the confidentiality measures provided by OpenAI, please refer to their <a href="https://openai.com/enterprise-privacy" target="_blank">Enterprise Privacy</a> page. Please visit OpenAI's <a href="https://openai.com/trust" target="_blank">Trust Portal</a> for more details.</p>
+            <p>For more information or to review the documents that prove the confidentiality of GPT-4 operations, please visit OpenAI's <a href="https://openai.com/enterprise-privacy" target="_blank">Enterprise Privacy</a> page.</p>
+          </li>
+        </ol>
+      </ng-container>
     </ng-container>
-  
-    <ng-template #defaultLang>
-      <h2>Data and documents</h2>
-      <p>Two types of Firebase databases are used for Blockframes:</p>
-      <ol>
-        <li><strong>Firestore</strong> : A NoSQL database designed for user data, backed up daily on two separate servers to ensure high availability and quick recovery in case of failure. Data can be exported in json format upon request, providing flexibility for data analysis and migration.</li>
-        <li><strong>File Storage</strong> : A storage solution for user documents, such as images, PDF files, Excel, etc. This platform ensures efficient management of large files or sensitive documents, facilitating their sharing and secure access.</li>
-      </ol>
-  
-      <h2>Security</h2>
-      <p>The security of data and documents on Firebase is our top priority. Here are the key security measures in place:</p>
-      <ul>
-        <li>
-          <strong>Data Encryption</strong> : Firestore and File Storage use robust encryption both in transit and at rest. In transit, TLS (Transport Layer Security) ensures the security of data during transfer between the client and Firebase. At rest, data is encrypted using advanced techniques that ensure protection against unauthorized access.
-        </li>
-        <li>
-          <strong>Authentication</strong> : Access to the databases is strictly controlled. By default, only authenticated users can access the data, using an email and password authentication system. This Firebase service ensures end-to-end encryption of passwords, preventing even Cascade8 administrators from accessing them.
-        </li>
-        <li>
-          <strong>Access Rules</strong> : Detailed access rules are defined for each type of document or data. These rules ensure that only authorized individuals, such as users invited by the owner of a document or Cascade8 administrators during maintenance, can access sensitive information, such as the financial terms of a project.
-        </li>
-      </ul>
-  
-      <h2>Security and Encryption ISO Certifications</h2>
-      <p>To support our commitment to security, Google Cloud Platform, which hosts Firebase, has obtained several key ISO certifications, thereby enhancing confidence in our security and encryption solutions:</p>
-      <ul>
-        <li>
-          <strong>ISO/IEC 27001</strong> : This standard is one of the most globally recognized for Information Security Management Systems (ISMS). It certifies that Google Cloud Platform has rigorous processes in place to manage and protect user data.
-        </li>
-        <li>
-          <strong>ISO/IEC 27017</strong> : Specific to the cloud, this certification focuses on information security and provides guidelines on information security aspects to be managed by a cloud service provider.
-        </li>
-        <li>
-          <strong>ISO/IEC 27018</strong> : Focused on the protection of personal data in the cloud, it ensures that Google Cloud adheres to internationally recognized privacy practices, thus providing additional protection for personal data stored on Firebase.
-        </li>
-      </ul>
-      <p>
-        By integrating these international standards into our infrastructure and processes, we ensure maximum protection of Blockframes' data and documents while also complying with regulatory requirements and enhancing users' trust in our platform.
-      </p>
-
-      <h2>Privacy Policy for AI Module</h2>
-      <ol>
-        <li>
-          <strong>Place of Processing & Server Locations</strong>
-          <p>The processing of user data for the AI module is conducted on servers based in the United States. Our servers are managed by Microsoft Azure, ensuring compliance with local and international data protection regulations.</p>
-        </li>
-        <li>
-          <strong>Data Processing Provider</strong>
-          <p>We use the AI capabilities provided by OpenAI, specifically the GPT-4 Turbo model, for processing the data submitted through our module. OpenAI is a reputable AI service provider known for its stringent data protection and privacy measures.</p>
-        </li>
-        <li>
-          <strong>Purpose of Data Collection</strong>
-          <p>The data collected through the AI module is used solely for the following purposes:</p>
-          <ul>
-            <li>Operational Needs: To enable the proper functioning of the AI module in assisting with contract completion.</li>
-            <li>Service Improvement: To analyze usage patterns and improve the functionality and user experience of our AI module.</li>
-            <li>Compliance: To comply with legal obligations and to protect against fraudulent activities.</li>
-          </ul>
-        </li>
-        <li>
-          <strong>Types of Data Collected</strong>
-          <ul>
-            <li>Company Data: This includes company names, contact details, and other relevant information necessary for contract completion.</li>
-            <li>Contract Data: Confidential contract information including but not limited to, contract terms, dates of signature, licensing parts, and other contract-specific details.</li>
-          </ul>
-        </li>
-        <li>
-          <strong>Data Treatment and Confidentiality</strong>
-          <p>All data submitted through the AI module is treated with the utmost confidentiality and is not used to train the AI model. The data is processed in a secure environment and is not shared with any unauthorized third parties. The data is only accessed by authorized personnel who are required to maintain its confidentiality.</p>
-        </li>
-        <li>
-          <strong>Data Security Measures</strong>
-          <p>We implement robust security measures to protect your data, including:</p>
-          <ul>
-            <li>Encryption: All data transmitted and stored is encrypted to prevent unauthorized access. OpenAI encrypts all data at rest using AES-256 and in transit using TLS 1.2+.</li>
-            <li>Access Controls: Strict access controls are in place to ensure that only authorized personnel have access to sensitive data. OpenAI uses strict access controls to limit who can access data.</li>
-            <li>Regular Audits: We conduct regular security audits to identify and mitigate potential vulnerabilities.</li>
-            <li>24/7/365 Security Team: OpenAI's security team has an on-call rotation that provides 24/7/365 coverage and is paged in case of any potential security incident.</li>
-            <li>Bug Bounty Program: OpenAI offers a Bug Bounty Program for responsible disclosure of vulnerabilities discovered on their platform and products.</li>
-          </ul>
-        </li>
-        <li>
-          <strong>Assurance of Confidentiality</strong>
-          <p>We assure our users that the information processed by the AI module remains confidential. The data is not used to train the model or for any other purpose beyond the stated aims. For further details on the confidentiality measures provided by OpenAI, please refer to their <a href="https://openai.com/enterprise-privacy" target="_blank">Enterprise Privacy</a> page. Please visit OpenAI's <a href="https://openai.com/trust" target="_blank">Trust Portal</a> for more details.</p>
-          <p>For more information or to review the documents that prove the confidentiality of GPT-4 operations, please visit OpenAI's <a href="https://openai.com/enterprise-privacy" target="_blank">Enterprise Privacy</a> page.</p>
-        </li>
-      </ol>
-    </ng-template>
   </div>
 </section>

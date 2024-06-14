@@ -4,7 +4,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { HoldbackModalComponent } from '../../holdback/modal/holdback-modal.component';
 import { OrganizationService } from '@blockframes/organization/service';
-import { BucketContract, Holdback, Sale, Scope, mediaGroup, territoriesGroup } from '@blockframes/model';
+import { BucketContract, Holdback, Sale, Scope } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
 
@@ -20,8 +20,6 @@ import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.co
   }
 })
 export class ContractItemComponent {
-  mediaGroup = mediaGroup;
-  territoriesGroup = territoriesGroup;
   orgId = this.orgService.org.id;
   @Input() contract: BucketContract | Sale;
 
