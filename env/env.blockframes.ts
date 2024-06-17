@@ -92,7 +92,7 @@ export const supportEmails = {
   catalog: 'support@archipelcontent.com',
   festival: 'support@archipelmarket.com',
   financiers: 'support@mediafinanciers.com',
-  waterfall: 'team@cascade8.com',
+  waterfall: 'team@blockframes.io',
 }
 
 export const suffixE2ESupportEmail = undefined;

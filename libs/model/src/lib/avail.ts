@@ -1,7 +1,7 @@
 import { max, min } from 'date-fns';
 import { Bucket, BucketContract } from './bucket';
 import { FullMandate, FullSale, Holdback, Mandate, Sale } from './contract';
-import { mediaGroup, territories, territoriesISOA3 } from './static';
+import { mediasGroup, territories, territoriesISOA3 } from './static';
 import { Media, Territory, TerritoryISOA3, TerritoryISOA3Value, TerritoryValue } from './static/types';
 import { BucketTerm, Term, Duration } from './terms';
 import { WaterfallSale } from './waterfall';
@@ -656,7 +656,7 @@ export function territoriesSold(contracts: (FullSale | FullMandate)[]) {
 
 function getMediaFamily(terms: Term[]): MediaFamily {
   const medias = Array.from(new Set(terms.map(t => t.medias).flat()));
-  const groups = Array.from(new Set(medias.map(m => mediaGroup.find(g => g.items.includes(m)).label)));
+  const groups = Array.from(new Set(medias.map(m => mediasGroup.find(g => g.items.includes(m)).label)));
 
   if (groups.length === 1 && groups[0] === 'TV') return 'tv';
   if (groups.length === 1 && groups[0] === 'VOD') return 'vod';

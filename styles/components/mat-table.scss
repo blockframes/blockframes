@@ -9,7 +9,10 @@
 
   .mat-table {
     border-radius: 4px;
-
+    
+    td.mat-cell.sticky:last-of-type {
+      background: var(--background-card);
+    }
     thead {
       background-color: mat.get-color-from-palette($background, card);
     }

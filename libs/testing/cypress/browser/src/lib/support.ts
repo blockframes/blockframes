@@ -6,8 +6,8 @@ import {
   PublicUser,
   Module,
   Territory,
-  MediaGroup,
-  TerritoryGroup,
+  MediaGroupValue,
+  TerritoryGroupValue,
   USER_FIXTURES_PASSWORD
 } from '@blockframes/model';
 import { browserAuth } from './browserAuth';
@@ -183,15 +183,15 @@ export function refreshIfMaintenance(app: App) {
 
 //* CATALOG AVAILS *//
 
-export function selectTerritories(territory: Territory | TerritoryGroup) {
+export function selectTerritories(territory: Territory | TerritoryGroupValue) {
   get('territories').click();
   get(territory).click('left');
   escapeKey();
 }
 
-export function selectMedias(mediaGroup: MediaGroup) {
+export function selectMedias(media: MediaGroupValue) {
   get('medias').click();
-  get(mediaGroup).click('left');
+  get(media).click('left');
   escapeKey();
 }
 

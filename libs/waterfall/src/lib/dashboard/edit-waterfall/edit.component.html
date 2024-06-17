@@ -66,7 +66,10 @@
   <mat-step>
     <ng-template matStepLabel i18n>Build Waterfall</ng-template>
     <ng-container *ngIf="(manualCreation$ | async) || (shell.sources$ | async)?.length > 0 || (shell.rights$ | async)?.length > 0; else noWaterfall">
-      <waterfall-version-selector [ngClass]="(shell.versionId$ | async) ? '' : 'hide'"></waterfall-version-selector>
+      <div class="top-graph">
+        <waterfall-version-selector [ngClass]="(shell.versionId$ | async) ? '' : 'hide'"></waterfall-version-selector>
+        <span i18n>Need help? Check out our <a href="https://www.blockframes.io/doc/welcome-page" target="_blank">User Guide</a></span>
+      </div>
       <waterfall-graph (canLeaveGraphForm)="canLeaveGraphForm = $event"></waterfall-graph>
     </ng-container>
     <ng-template #noWaterfall>

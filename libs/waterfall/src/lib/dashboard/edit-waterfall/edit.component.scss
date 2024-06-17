@@ -9,6 +9,12 @@ div {
   margin: 32px 0;
 }
 
+div.top-graph {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 article {
   display: flex;
   flex-direction: column;
@@ -44,10 +50,6 @@ section {
 
 waterfall-graph {
   margin-top: 24px;
-}
-
-waterfall-version-selector {
-  padding-top: 24px;
 }
 
 waterfall-version-selector.hide {

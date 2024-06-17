@@ -659,19 +659,27 @@ export const languagesISO3: Record<keyof typeof languages, string> = {
   zulu: 'zul',
 };
 
-export type MediaGroup = 'TV' | 'VOD' | 'Ancillary Rights' | 'Video (DVD, Blu-Ray)' | 'Festivals' | 'Theatrical Rights' | 'Derivative Rights';
-export const waterfallMediaGroups: MediaGroup[] = ['Theatrical Rights', 'Derivative Rights'];
+export const mediaGroup = {
+  tv: 'TV',
+  vod: 'VOD',
+  ancillary: 'Ancillary Rights',
+  homeVideo: 'Video (DVD, Blu-Ray)',
+  festivals: 'Festivals',
+  theatrical: 'Theatrical Rights',
+  derivative: 'Derivative Rights'
+} as const;
 
-export type TerritoryGroup =
-  | 'Africa'
-  | 'Asia'
-  | 'Caribbean'
-  | 'CIS'
-  | 'Europe'
-  | 'Latin America'
-  | 'Middle East'
-  | 'North America'
-  | 'Oceania';
+export const territoryGroup = {
+  africa: 'Africa',
+  asia: 'Asia',
+  caribbean: 'Caribbean',
+  cis: 'CIS',
+  europe: 'Europe',
+  latinAmerica: 'Latin America',
+  middleEast: 'Middle East',
+  northAmerica: 'North America',
+  oceania: 'Oceania'
+} as const;
 
 export const medias = {
   payTv: 'Pay TV',
