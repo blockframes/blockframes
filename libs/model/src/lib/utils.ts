@@ -377,9 +377,9 @@ export const deletedIdentifier = {
 
 export const externalOrgIdentifier = 'External';
 
-// TODO #9422
+// TODO #9422 remove ? or at least not used for waterfall 
 export type PricePerCurrency = Partial<Record<MovieCurrency, number>>;
-
+// TODO #9422 remove ? or at least not used for waterfall 
 export function getTotalPerCurrency(prices: { price: number, currency: MovieCurrency }[] = []): PricePerCurrency {
   const totalPrice: PricePerCurrency = {};
   prices.forEach(i => {
@@ -396,6 +396,7 @@ const pairs = {
   'EUR-EUR': 1,
   'USD-USD': 1,
 }
+// TODO #9422 remove
 export function convertCurrenciesTo(price: PricePerCurrency, to: MovieCurrency = mainCurrency): PricePerCurrency {
   const prices = Object.entries(price).map(([currency, price]) => price * pairs[`${currency}-${to}`]);
   const value = prices.reduce((a, b) => a + b, 0);

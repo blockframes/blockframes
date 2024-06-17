@@ -45,7 +45,7 @@ export interface ExpenseType {
   id: string;
   name: string;
   contractId: string;
-  currency: MovieCurrency;
+  currency: MovieCurrency; // TODO #9422 remove ?
   cap: ExpenseCap;
 }
 

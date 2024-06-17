@@ -6,6 +6,6 @@
   <ng-container *ngIf="price.USD && price.EUR"> and</ng-container>
   <ng-container *ngIf="price.EUR"> {{ price.EUR | currency:'EUR' }} </ng-container>
   <ng-container *ngIf="!price.USD && !price.EUR"> {{ default }} </ng-container>
-  <!-- TODO #9422 improve for all currencies -->
+  <!-- TODO #9422 improve for all currencies : 17/06 check, not useful for waterfall -->
 </ng-template>
 

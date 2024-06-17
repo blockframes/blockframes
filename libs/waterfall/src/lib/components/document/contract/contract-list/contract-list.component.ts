@@ -145,7 +145,6 @@ export class ContractListComponent {
       startDate: contract.duration?.from,
       endDate: contract.duration?.to,
       price: contract.price,
-      currency: contract.currency,
       terms: this.terms.map(t => createTerm(t)),
       file: file,
       expenseTypes,
@@ -225,7 +224,6 @@ export class ContractListComponent {
           to: this.contractForm.controls.endDate.value,
         },
         price,
-        currency: this.contractForm.controls.currency.value,
       }),
     });
 

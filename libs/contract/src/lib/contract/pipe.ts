@@ -14,7 +14,7 @@ export class GetCurrentContractPipe implements PipeTransform {
 
 @Pipe({ name: 'contractPrice' })
 export class ContractPricePipe implements PipeTransform {
-  transform(contract: WaterfallContract & { terms: Term[] }) {
+  transform(contract: WaterfallContract & { terms: Term[] }) { // TODO #9422 remove terms
     return getDeclaredAmount(contract);
   }
 }

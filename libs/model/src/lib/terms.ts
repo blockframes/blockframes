@@ -28,8 +28,8 @@ export interface Term extends BucketTerm {
   titleId?: string;
   criteria: unknown[];
   licensedOriginal: boolean;
-  price?: number;
-  currency?: MovieCurrency;
+  price?: number; // TODO #9422 remove ?
+  currency?: MovieCurrency;  // TODO #9422 remove ?
 }
 
 export function createTerm(params: Partial<Term> = {}): Term {

@@ -10,7 +10,7 @@ export interface Income {
   contractId: string;
   price: number;
   version: Record<string, { hidden?: true, price: number }>;
-  currency: MovieCurrency;
+  currency: MovieCurrency; // TODO #9422 not used on waterfall
   offerId?: string;
   titleId?: string;
   status: PaymentStatus;

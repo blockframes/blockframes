@@ -152,7 +152,7 @@ export function createWaterfall(params: Partial<Waterfall> = {}): Waterfall {
     ...params,
     rightholders: params.rightholders?.map(r => createWaterfallRightholder(r)) ?? [],
     sources: params.sources?.map(s => createWaterfallSource(s)) ?? [],
-    mainCurrency: params.mainCurrency ?? 'EUR' // TODO #9422 Create a migration to add default currency to existing waterfalls ?
+    mainCurrency: params.mainCurrency ?? 'EUR' // TODO #9422 Create a migration to add default currency to existing waterfalls
   }
 }
 
@@ -297,6 +297,7 @@ export interface WaterfallContract extends BaseContract {
   type: RightholderRole;
   name: string;
   price: WaterfallInvestment[];
+  // TODO #9422 Remove currency ?
 }
 
 export interface WaterfallSale extends WaterfallContract {

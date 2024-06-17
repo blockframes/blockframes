@@ -88,16 +88,11 @@
   </mat-form-field>
 </ng-container>
 
-<!-- TODO #9422 remove -->
-<static-select [control]="form.get('currency')" [only]="['USD', 'EUR']" required scope="movieCurrencies">
-  <mat-label i18n>Currency</mat-label>
-</static-select>
-
 <ng-container *ngFor="let invest of form.get('price').controls">
   <div class="group">
     <mat-form-field appearance="outline">
       <mat-label i18n>Investment | Minimum Guarantee</mat-label>
-      <mat-icon *ngIf="form.get('currency').value" [svgIcon]="form.get('currency').value" matSuffix></mat-icon>
+      <mat-icon [svgIcon]="waterfall.mainCurrency" matSuffix></mat-icon>
       <input matInput type="number" [formControl]="invest.get('value')" />
     </mat-form-field>
     <mat-form-field appearance="outline">
@@ -169,7 +164,7 @@
 
 <section *ngIf="showExpenseTypes">
   <h2 i18n>Expenses</h2>
-  <waterfall-expense-types [form]="form.get('expenseTypes')"></waterfall-expense-types>  
+  <waterfall-expense-types [form]="form.get('expenseTypes')" [waterfall]="waterfall"></waterfall-expense-types>  
 </section>
 
 
