@@ -148,6 +148,11 @@
   .mat-mdc-form-field-subscript-wrapper {
     margin-bottom: 0.6666666667em;
   }
+
+  // Fix strange hover effect on some input fields on chrome. Seem to be linked with will-change: auto; on .mat-mdc-text-field-wrapper
+  .mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field .mdc-notched-outline__notch {
+    border-left: none;
+  }
 }
 
 // TYPOGRAPHY
