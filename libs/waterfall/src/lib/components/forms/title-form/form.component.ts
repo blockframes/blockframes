@@ -6,6 +6,8 @@ import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { AuthService } from '@blockframes/auth/service';
 import { WaterfallPermissionsService } from '../../../permissions.service';
 import { combineLatest, map, tap } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { MovieCurrency } from '@blockframes/model';
 
 @Component({
   selector: '[movieId] waterfall-title-form',
@@ -16,6 +18,7 @@ import { combineLatest, map, tap } from 'rxjs';
 export class TitleFormComponent implements OnInit {
 
   @Input() movieForm: MovieForm;
+  @Input() currencyControl: FormControl<MovieCurrency>;
   @Input() movieId = '';
   @Input() createMode: boolean;
 

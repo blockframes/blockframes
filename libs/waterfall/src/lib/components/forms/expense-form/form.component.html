@@ -31,6 +31,7 @@
           <input matInput [formControl]="expenseForm.get('nature')" required/>
         </mat-form-field>
 
+        <!-- TODO #9422 remove -->
         <static-select [control]="expenseForm.get('currency')" [only]="['USD', 'EUR']" required scope="movieCurrencies">
           <mat-label i18n>Currency</mat-label>
         </static-select>

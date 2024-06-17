@@ -34,7 +34,8 @@ import {
   waterfallSources,
   WaterfallRightholder,
   Amortization,
-  amortizationsToActions
+  amortizationsToActions,
+  MovieCurrency
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { AuthService } from '@blockframes/auth/service';
@@ -97,13 +98,14 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     );
   }
 
-  public async create(id: string, orgIds: string[], rightholders?: WaterfallRightholder[]) {
+  public async create(id: string, orgIds: string[], rightholders?: WaterfallRightholder[], mainCurrency?: MovieCurrency) {
     const createdBy = this.authService.uid;
     const waterfall = createWaterfall({
       _meta: createDocumentMeta({ createdBy }),
       id,
       orgIds,
       rightholders,
+      mainCurrency
     });
 
     await this.runTransaction(async (tx) => {

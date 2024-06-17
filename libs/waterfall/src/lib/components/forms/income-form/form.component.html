@@ -49,6 +49,7 @@
           [control]="incomeForm.get('territories')">
         </group-multiselect>
 
+        <!-- TODO #9422 remove -->
         <static-select [control]="incomeForm.get('currency')" [only]="['USD', 'EUR']" required scope="movieCurrencies">
           <mat-label i18n>Currency</mat-label>
         </static-select>

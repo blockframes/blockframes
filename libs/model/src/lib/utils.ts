@@ -389,7 +389,7 @@ export function getTotalPerCurrency(prices: { price: number, currency: MovieCurr
   return totalPrice;
 }
 
-// TODO #9422
+// TODO #9422 remove
 const pairs = {
   'EUR-USD': 1.09,
   'USD-EUR': 0.92,

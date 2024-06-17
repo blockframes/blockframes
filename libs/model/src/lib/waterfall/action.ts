@@ -122,7 +122,7 @@ export function runAction<N extends ActionName>(
   return actions[name](state, payload as any) as any;
 }
 
-export const mainCurrency: MovieCurrency = 'EUR';
+export const mainCurrency: MovieCurrency = 'EUR'; // TODO #9422 put in DB
 
 export function contractsToActions(contracts: WaterfallContract[], terms: Term[]) {
   const actions: Action[] = [];

@@ -2,11 +2,13 @@
 section {
   margin: 32px 0;
 
-  mat-form-field {
+  mat-form-field,
+  static-select {
     width: 50%;
   }
 
-  .title {
+  .title,
+  static-select {
     padding-right: 84px;
   }
 }
