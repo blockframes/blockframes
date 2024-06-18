@@ -13,5 +13,5 @@
     "enableResourceInlining": true
   },
   "exclude": [],
-  "include": []
+  "include": ["src/lib"]
 }

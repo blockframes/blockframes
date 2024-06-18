@@ -13,8 +13,11 @@
     }
   }
 
-  .mat-mdc-tab-header {
+  *:not(.mat-mdc-tab-group-inverted-header) > .mat-mdc-tab-header {
     border-bottom: 1px solid mat.get-color-from-palette($foreground, divider);
+  }
+  .mat-mdc-tab-group-inverted-header > .mat-mdc-tab-header {
+    border-top: 1px solid mat.get-color-from-palette($foreground, divider);
   }
 
   .bf-tabs {
@@ -47,5 +50,17 @@
       }
     }
     
+  }
+}
+
+@mixin typography($theme) {
+  .mat-mdc-tab-link .mdc-tab__text-label,
+  .mat-mdc-tab .mdc-tab__text-label {
+    --mat-tab-header-inactive-label-text-color: var(--foreground-text);
+    --mat-tab-header-inactive-hover-label-text-color: var(--foreground-text);
+  }
+
+  .mat-mdc-tab-link {
+    --mat-tab-header-label-text-tracking: 0.5px;
   }
 }

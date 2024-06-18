@@ -15,7 +15,6 @@
       position: static;
     }
 
-
     &[no-underline] {
       .mat-mdc-form-field-underline {
         display: none;
@@ -69,21 +68,18 @@
       }
     }
 
-    .mdc-text-field:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid) .mdc-floating-label,
     .mat-mdc-form-field-hint {
       color: mat.get-color-from-palette($foreground, border-color);
+    }
+
+    .mdc-notched-outline--notched .mdc-floating-label--required:not(.mdc-floating-label--hide-required-marker)::after {
+      color: var(--warn);
     }
 
   }
 
   // OUTLINE
   .mat-form-field-appearance-outline {
-    /* Change the border color */
-    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid) .mdc-notched-outline__leading,
-    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid) .mdc-notched-outline__notch,
-    .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--invalid) .mdc-notched-outline__trailing {
-      border-color: mat.get-color-from-palette($foreground, divider);
-    }
 
     /* Change the border hover color */
     .mdc-text-field--outlined:not(.mdc-text-field--disabled):not(.mdc-text-field--focused):hover
@@ -118,10 +114,6 @@
     }
   }
 
-  .mat-mdc-select:not(.mat-mdc-select-disabled) .mat-mdc-select-value,
-  .mdc-form-field:not(.mat-form-field-disabled) > label,
-  .mat-mdc-option:not(.mdc-list-item--selected):not(.mdc-list-item--disabled) .mdc-list-item__primary-text,
-  .mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-input-element { color: mat.get-color-from-palette($foreground, text); }
 
   .mdc-menu-surface.mat-mdc-select-panel {
     padding: 0px;
@@ -129,7 +121,13 @@
 
   scope-multiselect:not([selectIcon="none"]) .mat-mdc-form-field label:not(.mdc-floating-label--float-above),
   group-multiselect:not([selectIcon="none"]) .mat-mdc-form-field label:not(.mdc-floating-label--float-above) { 
-    margin-left: 58px;
+    mat-label { margin-left: 58px; }
+    --mat-mdc-form-field-label-offset-x: -88px;
+  }
+
+  .cdk-overlay-pane scope-multiselect:not([selectIcon="none"]) .mat-mdc-form-field label:not(.mdc-floating-label--float-above),
+  .cdk-overlay-pane group-multiselect:not([selectIcon="none"]) .mat-mdc-form-field label:not(.mdc-floating-label--float-above) { 
+    mat-label { margin-left: 42px; }
     --mat-mdc-form-field-label-offset-x: 0px;
     transform: var(--mat-mdc-form-field-label-transform, translateY(-50%) translateX(0%))!important;
   }
@@ -146,6 +144,15 @@
 
   .mat-mdc-radio-button .mdc-radio { --mdc-radio-state-layer-size : 30px }
   .dark-contrast-theme .mat-mdc-checkbox .mdc-checkbox .mdc-checkbox__background { --mdc-checkbox-unselected-icon-color: #FFF; }
+
+  .mat-mdc-form-field-subscript-wrapper {
+    margin-bottom: 0.6666666667em;
+  }
+
+  // Fix strange hover effect on some input fields on chrome. Seem to be linked with will-change: auto; on .mat-mdc-text-field-wrapper
+  .mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field .mdc-notched-outline__notch {
+    border-left: none;
+  }
 }
 
 // TYPOGRAPHY
@@ -155,5 +162,41 @@
   .mat-mdc-select-panel {
     @include mat.typography-level(typography.$bf-typography, 'input');
   }
+
+  .mdc-text-field--outlined.mdc-text-field--disabled .mdc-text-field__input,
+  .mdc-checkbox--disabled,
+  .mat-mdc-select-disabled  {
+    --mdc-outlined-text-field-disabled-input-text-color: var(--foreground-disabled-text);
+    --mat-select-disabled-trigger-text-color: var(--foreground-disabled-text);
+    --mat-checkbox-disabled-label-color: var(--foreground-divider);
+  }
+
+  --mdc-switch-selected-track-color: var(--primary-lighter);
+  --mdc-switch-selected-hover-track-color: var(--primary-lighter);
+  --mdc-switch-selected-pressed-track-color: var(--primary-lighter);
+  --mdc-switch-selected-focus-track-color: var(--primary-lighter);
+  
+  --mat-form-field-subscript-text-line-height: 1.125;
+  --mdc-filled-text-field-label-text-tracking: 0.5px;
+  --mdc-outlined-text-field-label-text-tracking: 0.5px;
+
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading, 
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch, 
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+    --mdc-outlined-text-field-outline-color: --foreground-divider;
+  }
+
+  .mdc-text-field--outlined.mdc-text-field--disabled .mdc-notched-outline__leading,
+  .mdc-text-field--outlined.mdc-text-field--disabled .mdc-notched-outline__notch,
+  .mdc-text-field--outlined.mdc-text-field--disabled .mdc-notched-outline__trailing {
+    --mdc-outlined-text-field-disabled-outline-color: --foreground-divider;
+  }
+
+  .dark-contrast-theme .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-floating-label, 
+  .dark-contrast-theme .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-floating-label--float-above {
+    --mdc-outlined-text-field-label-text-color: #FFF;
+    --mdc-outlined-text-field-hover-label-text-color: #FFF;
+  }
+  
 }
 

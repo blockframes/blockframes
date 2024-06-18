@@ -1,6 +1,5 @@
 // Angular
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 
 // Pages
@@ -25,7 +24,6 @@ import { MatDividerModule } from '@angular/material/divider';
     BfCommonModule,
     RouterModule,
     LogoSpinnerModule,
-    FlexLayoutModule,
     MapModule,
     PricePerCurrencyModule,
     ImageModule,

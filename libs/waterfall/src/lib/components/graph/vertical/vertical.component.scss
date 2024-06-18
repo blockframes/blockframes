@@ -5,16 +5,6 @@ div {
   border: dashed 1px var(--primary);
   padding: 32px;
 
-  button.bf-primary {
-    position: absolute;
-    top: 2px;
-    left: 6px;
-    color: var(--primary);
-    text-transform: uppercase;
-    font-weight: normal;
-    padding: 0;
-  }
-
   price-per-currency.amount {
     position: absolute;
     font-size: 12px;

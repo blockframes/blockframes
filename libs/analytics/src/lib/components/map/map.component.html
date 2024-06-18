@@ -58,9 +58,11 @@
     <ng-content select="[listTitle]"></ng-content>
     <mat-list>
       <mat-list-item *ngFor="let country of top">
-        <span matLine>{{ country.label }}</span>
-        <span>{{ country.count }}</span>
-        <mat-divider></mat-divider>
+        <div>
+          <span>{{ country.label }}</span>
+          <mat-divider></mat-divider>
+        </div>
+        <span matListItemMeta>{{ country.count }}</span>
       </mat-list-item>
     </mat-list>
   </aside>

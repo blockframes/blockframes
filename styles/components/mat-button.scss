@@ -41,7 +41,8 @@
     }
 
     &.mat-button-disabled,
-    &.mat-mdc-button:disabled {
+    &.mat-mdc-button:disabled,
+    &.mat-mdc-button-disabled {
       color: mat.get-color-from-palette($foreground, disabled-text);
       svg g,
       svg polygon,
@@ -127,7 +128,8 @@
   }
 
   .mat-mdc-button.mat-button-disabled,
-  .mat-mdc-button:disabled {
+  .mat-mdc-button:disabled,
+  .mat-mdc-button.main-dashboard-cta[disabled] {
     background-color: mat.get-color-from-palette($background, disabled-button);
   }
 
@@ -213,6 +215,21 @@
 
   .mat-mdc-unelevated-button[disabled][disabled] {
     --mdc-filled-button-disabled-label-text-color: #FFF;
+    --mdc-filled-button-disabled-container-color: var(--background-disabled-button);
+  }
+
+  .mat-mdc-button:not(:disabled):not(.mat-primary):not(.mat-accent):not(.mat-warn):not(.mat-mdc-snack-bar-action).bf-primary {
+    position: absolute;
+    top: -4px;
+    left: 6px;
+    color: var(--primary);
+    text-transform: uppercase;
+    padding: 0;
+    .mdc-button__label {
+      font-weight: normal;
+      font-size: 14px;
+      z-index: 0;
+    }
   }
 }
 

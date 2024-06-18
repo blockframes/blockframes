@@ -19,4 +19,5 @@
   .mat-mdc-menu-panel .mat-mdc-menu-item .mdc-list-item__primary-text {
     @include mat.typography-level(typography.$bf-typography, 'body-2');
   }
+  --mat-menu-item-label-text-tracking: 0.5px;
 }

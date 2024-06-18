@@ -59,7 +59,9 @@ import {
   conditionOwnerLabels,
   amortizationStatus,
   periods,
-  documentPaths
+  documentPaths,
+  mediaGroup,
+  territoryGroup
 } from './static-model';
 
 export type App = typeof app[number];
@@ -202,3 +204,9 @@ export type DocumentPath = keyof typeof documentPaths;
 
 export type StatementType = keyof typeof statementType;
 export type StatementTypeValue = typeof statementType[StatementType];
+
+export type MediaGroup = keyof typeof mediaGroup;
+export type MediaGroupValue = typeof mediaGroup[MediaGroup];
+
+export type TerritoryGroup = keyof typeof territoryGroup;
+export type TerritoryGroupValue = typeof territoryGroup[TerritoryGroup];

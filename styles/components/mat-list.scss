@@ -110,6 +110,15 @@
   }
 
   .cdk-overlay-pane:has(.mat-mdc-select-panel) { min-width: fit-content; }
+
+  .mdc-list-item--with-leading-checkbox .mdc-list-item__start {
+    margin-right: 4px;
+  }
+
+  .mdc-list-item:hover::before {
+    --mdc-list-list-item-hover-state-layer-color: var(--primary-lighter);
+    --mdc-list-list-item-hover-state-layer-opacity: 0.2;
+  }
 }
 
 @mixin typography($theme) {
@@ -121,5 +130,9 @@
 
   .mat-mdc-select .mat-mdc-select-value, .mat-mdc-option .mdc-list-item__primary-text {
     @include mat.typography-level(typography.$bf-typography, 'body-2');
+  }
+
+  .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled):not(.mat-mdc-option-multiple) {
+    --mat-option-selected-state-layer-color: #FFF;
   }
 }

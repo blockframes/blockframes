@@ -15,7 +15,9 @@ import {
   TerritoryISOA2Value,
   preferredIsoA2,
   SupportedLocaleIds,
-  PreferredLanguage
+  PreferredLanguage,
+  getDefaultIsoA2,
+  defaultLocaleId
 } from '@blockframes/model';
 import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
@@ -261,14 +263,20 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
     const user = this.profile;
     if (!user?.settings) user.settings = {};
 
-    const defaultIsoA2: TerritoryISOA2Value = preferredLanguage === 'fr' ? 'FR' : 'GB';
+    const defaultIsoA2 = getDefaultIsoA2(preferredLanguage);
 
     if (!isoA2 || !supportedLocaleIds[`${preferredLanguage}-${isoA2}`]) isoA2 = preferredIsoA2();
 
     // Check if full language (ex: fr-FR) is logical
     if (!supportedLocaleIds[`${preferredLanguage}-${isoA2}`]) isoA2 = defaultIsoA2;
 
-    user.settings.preferredLanguage = { language: preferredLanguage, isoA2 };
+    // If still not logical, fallback to default
+    if (supportedLocaleIds[`${preferredLanguage}-${isoA2}`]) {
+      user.settings.preferredLanguage = { language: preferredLanguage, isoA2 };
+    } else {
+      const [languageFallback, isoA2FallBack] = defaultLocaleId.split('-') as [SupportedLanguages, TerritoryISOA2Value];
+      user.settings.preferredLanguage = { language: languageFallback, isoA2: isoA2FallBack };
+    }
     localStorage.setItem('locale.lang', user.settings.preferredLanguage.language);
     localStorage.setItem('locale.isoA2', user.settings.preferredLanguage.isoA2);
     await this.update({ settings: user.settings });

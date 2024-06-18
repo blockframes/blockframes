@@ -32,15 +32,17 @@ export class InvitationComponent {
   invitations$ = combineLatest([
     this.service.myInvitations$,
     this.form.valueChanges.pipe(startWith({ type: [], status: [] }))
-  ])
-    .pipe(
-      map(([invitations, filters]) => applyFilters(invitations, filters)),
-      tap(invitations => {
-        invitations.length ?
-          this.dynTitle.setPageTitle('Invitations List') :
-          this.dynTitle.setPageTitle('Invitations List', 'Empty');
-      })
-    )
+  ]).pipe(
+    map(([invitations, filters]) => applyFilters(invitations, filters)),
+    tap(invitations => {
+      invitations.length ?
+        this.dynTitle.setPageTitle('Invitations List') :
+        this.dynTitle.setPageTitle('Invitations List', 'Empty');
+    })
+  );
+
+  /** @dev i18n is only on waterfall app for now #9699 */
+  public bfi18n = this.app === 'waterfall';
 
   constructor(
     private service: InvitationService,

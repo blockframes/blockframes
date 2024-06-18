@@ -133,8 +133,8 @@ export class AnalyticsComponent implements OnInit {
     let staticticsTitle = this.event.title;
     if (isScreening(this.event)) {
       const titleId = this.event.meta.titleId;
-      const { title } = await this.movieService.getValue(titleId);
-      staticticsTitle = title.international;
+      const movie = await this.movieService.getValue(titleId);
+      staticticsTitle = movie ? movie.title.international : 'unknown title';
     }
 
     const eventStart = formatDate(this.event.start, 'MM/dd/yyyy', 'en');

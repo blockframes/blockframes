@@ -43,7 +43,7 @@
       }
     },
     "serve": {
-      "executor": "@nx/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "envFile": ".env",
         "commands": [
@@ -70,7 +70,7 @@
       }
     },
     "deploy": {
-      "executor": "@nx/workspace:run-commands",
+      "executor": "nx:run-commands",
       "options": {
         "envFile": ".env",
         "commands": [

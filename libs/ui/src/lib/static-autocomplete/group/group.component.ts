@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { GroupScope, Scope, StaticGroup, staticGroups, staticModel } from '@blockframes/model';
+import { GroupScope, Scope, StaticGroup, getStaticGroups, preferredLanguage, staticModel } from '@blockframes/model';
 import { FormStaticValueArray } from '@blockframes/utils/form';
 import { MatSelect } from '@angular/material/select';
 import { FormControl } from '@angular/forms';
@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { createModalData } from '../../global-modal/global-modal.component';
 import { DetailedGroupComponent } from '../../detail-modal/detailed.component';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
   selector: 'group-multiselect',
@@ -26,6 +27,7 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
   @Input() required = false;
   @Input() requiredMsg = 'This field is mandatory';
   @Input() hint = null;
+  @Input() @boolean bfi18n: boolean;
   @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
 
   // mySelect and scrollTopBeforeSelection are used to prevent jumps when selecting an option
@@ -49,14 +51,15 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
   constructor(private dialog: MatDialog) { }
 
   ngOnInit() {
-    const groups: StaticGroup[] = staticGroups[this.scope];
+    const lang = this.bfi18n ? preferredLanguage() : undefined;
+    const groups: StaticGroup[] = getStaticGroups(this.scope, lang);
     if (this.withoutValues.length) {
       for (const group of groups) {
         /* eslint-disable */
         group.items = (group.items as any[]).filter((item: string) => !this.withoutValues.includes(item));
       }
     }
-    this.groups = groups.filter(g => g.items.length && !this.withoutValues.includes(g.label));
+    this.groups = groups.filter(g => g.items.length && !this.withoutValues.includes(g.key));
     this.items = this.getAllItems(this.groups);
 
     this.selectable = this.items.reduce((aggr, item) => ({ ...aggr, [item]: true }), {});
@@ -159,12 +162,14 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
     const previous = this.control.value;
     const groupItems = this.groups.filter(group => group.label === groupLabel && group.items).flatMap(group => group.items);
     const selectableItems = groupItems.filter(item => selectable[item]);
+    this.control.markAsDirty();
     this.control.setValue(
       checked ? [...new Set([...previous, ...selectableItems])] : previous.filter(item => !selectableItems.includes(item))
     );
   }
 
   checkAll(checked: boolean) {
+    this.control.markAsDirty();
     this.control.setValue(checked ? this.items : []);
   }
 
@@ -200,6 +205,7 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
         .flat()
         .filter(item => !!item)
     );
+    this.control.markAsDirty();
     this.control.setValue(Array.from(pastedItems));
     this.mySelect.close();
   }

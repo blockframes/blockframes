@@ -47,6 +47,12 @@ async function initLanguage(locale: SupportedLanguages): Promise<void> {
       registerLocaleData(localeModule.default);
       break;
     }
+    // TODO #9870 reactivate
+    /* case 'es': {
+      const localeModule = await import('../../../../node_modules/@angular/common/locales/es');
+      registerLocaleData(localeModule.default);
+      break;
+    }*/
     case 'en': {
       // Default locale is already loaded
       break;
