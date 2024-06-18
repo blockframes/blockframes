@@ -162,12 +162,14 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
     const previous = this.control.value;
     const groupItems = this.groups.filter(group => group.label === groupLabel && group.items).flatMap(group => group.items);
     const selectableItems = groupItems.filter(item => selectable[item]);
+    this.control.markAsDirty();
     this.control.setValue(
       checked ? [...new Set([...previous, ...selectableItems])] : previous.filter(item => !selectableItems.includes(item))
     );
   }
 
   checkAll(checked: boolean) {
+    this.control.markAsDirty();
     this.control.setValue(checked ? this.items : []);
   }
 
@@ -203,6 +205,7 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
         .flat()
         .filter(item => !!item)
     );
+    this.control.markAsDirty();
     this.control.setValue(Array.from(pastedItems));
     this.mySelect.close();
   }
