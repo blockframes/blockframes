@@ -1,5 +1,5 @@
-import { waterfall } from '@blockframes/waterfall/main';
 import { Action, action } from './action';
+import { waterfall } from '@blockframes/waterfall/main';
 
 describe('Test standalone actions', () => {
   it('orgRevenu', () => {
