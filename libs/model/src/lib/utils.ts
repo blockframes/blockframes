@@ -416,7 +416,8 @@ export function sortByDate<T>(objects: T[], field: string) {
 export const supportedLanguages = {
   en: 'EN',
   fr: 'FR',
-  es: 'ES',
+  // TODO #9870 reactivate
+  //es: 'ES',
 } as const;
 
 export type SupportedLanguages = keyof typeof supportedLanguages;
@@ -427,14 +428,16 @@ export const supportedLocaleIds = {
   'fr-FR': 'fr-FR',
   'en-US': 'en-US',
   'en-GB': 'en-GB',
-  'es-ES': 'es-ES',
+  // TODO #9870 reactivate
+  //'es-ES': 'es-ES',
 } as const;
 
 const supportedIsoA2 = {
   'GB': 'GB',
   'FR': 'FR',
   'US': 'US',
-  'ES': 'ES',
+  // TODO #9870 reactivate
+  //'ES': 'ES',
 } as const;
 
 export type SupportedLocaleIds = keyof typeof supportedLocaleIds;
@@ -444,9 +447,10 @@ function getNavigatorLanguage(): SupportedLanguages {
     case 'fr':
     case 'fr-FR':
       return 'fr';
-    case 'es':
+    // TODO #9870 reactivate
+    /*case 'es':
     case 'es-ES':
-      return 'es';
+      return 'es';*/
     default:
       return defaultLocaleId.split('-')[0] as SupportedLanguages;
   }
