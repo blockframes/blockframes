@@ -389,13 +389,7 @@ export function getTotalPerCurrency(prices: { price: number, currency: MovieCurr
   return totalPrice;
 }
 
-// TODO #9422 remove
-const pairs = {
-  'EUR-USD': 1.09,
-  'USD-EUR': 0.92,
-  'EUR-EUR': 1,
-  'USD-USD': 1,
-}
+
 // TODO #9422 remove
 export function convertCurrenciesTo(price: PricePerCurrency, to: MovieCurrency = mainCurrency): PricePerCurrency {
   const prices = Object.entries(price).map(([currency, price]) => price * pairs[`${currency}-${to}`]);

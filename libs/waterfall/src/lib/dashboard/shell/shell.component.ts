@@ -422,7 +422,7 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
     const incomes = await this.incomes();
     const expenses = await this.expenses();
     const statements = await this.statements();
-    const terms = await this.terms();
+    const terms = await this.terms(); // TODO #9422 used ?
     const amortizations = await this.amortizations();
 
     const data: WaterfallData = {

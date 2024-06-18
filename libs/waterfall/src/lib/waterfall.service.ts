@@ -303,7 +303,7 @@ function groupActions(data: WaterfallData, versionId: string, isSimulation = fal
   const incomes = isSimulation ? Object.values(data.incomes) : Object.values(data.incomes).filter(i => !i.version[versionId] || !i.version[versionId].hidden);
 
   const expenseTypesActions = expenseTypesToAction(Object.values(data.waterfall.expenseTypes).flat(), versionId);
-  const contractActions = contractsToActions(data.contracts, data.terms);
+  const contractActions = contractsToActions(data.contracts);
   const investmentActions = investmentsToActions(data.contracts);
   const rightActions = rightsToActions(data.rights);
   const incomeActions = incomesToActions(data.contracts, incomes, sources, incomesAndExpensesStatements);

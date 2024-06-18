@@ -146,6 +146,7 @@ export function isSale(contract: Partial<BaseContract>): contract is Sale {
  * @param contract 
  * @returns 
  */
+// TODO #9422
 export function getDeclaredAmount(contract: BaseContract & { terms?: Term[], price?: number | WaterfallInvestment[] }): PricePerCurrency {
   const amount: PricePerCurrency = {};
   if (contract.price) {
