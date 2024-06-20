@@ -44,7 +44,7 @@ export class WaterfallSummaryAmortizationComponent {
     private router: Router,
     private snackBar: MatSnackBar,
   ) {
-    this.dynTitle.setPageTitle(this.movie.title.international, 'Film Amortization');
+    this.dynTitle.setPageTitle(this.movie.title.international, $localize`Film Amortization`);
   }
 
   previous() {
@@ -57,7 +57,7 @@ export class WaterfallSummaryAmortizationComponent {
     if (amortization) {
       amortization.status = 'applied';
       await this.service.update(amortization, { params: { waterfallId: this.shell.waterfall.id } });
-      this.snackBar.open('Calculation Method applied', 'close', { duration: 3000 });
+      this.snackBar.open($localize`Calculation Method applied`, 'close', { duration: 3000 });
     }
 
     this.router.navigate(['../../..', 'amortization'], { relativeTo: this.route });

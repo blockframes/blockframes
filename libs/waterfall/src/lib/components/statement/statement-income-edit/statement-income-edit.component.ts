@@ -19,6 +19,7 @@ interface StatementIncomeChangeData {
 export class StatementIncomeEditComponent implements OnInit {
 
   public form: IncomeEditForm;
+  public confirmationWord = $localize`SAVE`;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)

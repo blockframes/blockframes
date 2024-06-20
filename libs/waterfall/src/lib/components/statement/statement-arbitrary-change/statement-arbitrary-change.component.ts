@@ -19,7 +19,7 @@ interface StatementArbitraryChangeData {
   overrides: RightOverride[];
   statementId?: string;
   statements?: Statement[];
-  waterfall?: Waterfall;
+  waterfall: Waterfall;
   onConfirm?: (overrides: RightOverride[]) => void
 }
 
@@ -32,6 +32,7 @@ interface StatementArbitraryChangeData {
 export class StatementArbitraryChangeComponent implements OnInit {
 
   public form: ArbitraryChangeForm;
+  public confirmationWord = $localize`SAVE`;
   public warnings: Record<string, { directSales: Statement[]; outgoing: Statement[]; }> = {};
 
   constructor(

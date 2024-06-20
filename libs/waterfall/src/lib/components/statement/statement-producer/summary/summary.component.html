@@ -2,7 +2,7 @@
 <waterfall-statement-period [statement]="statement" [form]="form"></waterfall-statement-period>
 
 <section>
-  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [price]="payment" label="Total Participation" i18n-label></waterfall-statement-participation>
+  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [price]="payment.price" label="Total Participation" i18n-label></waterfall-statement-participation>
   <ng-container *ngIf="amortizationDetails$ | async as amortizationDetails">
     <waterfall-statement-participation class="restToBeAmortized" *ngIf="amortizationDetails" [price]="amortizationDetails.restToBeAmortized" label="Rest To Be Amortized" i18n-label></waterfall-statement-participation>
   </ng-container>
@@ -226,5 +226,5 @@
     </article>
   </ng-container>
 
-  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [price]="payment" label="Total Participation" i18n-label></waterfall-statement-participation>
+  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [price]="payment.price" label="Total Participation" i18n-label></waterfall-statement-participation>
 </section>

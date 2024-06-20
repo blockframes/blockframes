@@ -37,7 +37,7 @@
   </mat-form-field>
   
   <mat-dialog-actions>
-    <button mat-flat-button color="primary" [disabled]="form.invalid || form.get('confirm').value !== 'SAVE'" (click)="confirm()">
+    <button mat-flat-button color="primary" [disabled]="form.invalid || form.get('confirm').value !== confirmationWord" (click)="confirm()">
       <span>Confirm Changes</span>
       <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
     </button>

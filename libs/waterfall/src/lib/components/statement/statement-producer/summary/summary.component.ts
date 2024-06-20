@@ -565,6 +565,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
         right: row.right,
         maxPerIncome: row.maxPerIncome,
         overrides: statement.rightOverrides.filter(c => c.rightId === row.right.id),
+        waterfall: this.waterfall,
       })
     });
   }

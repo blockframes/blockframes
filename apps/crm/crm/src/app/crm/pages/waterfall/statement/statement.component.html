@@ -1,7 +1,7 @@
 <ng-container *ngIf="statement">
   <waterfall-statement-header *ngIf="sources" [statement]="statement" [sources]="sources" (versionChanged)="versionChanged()"></waterfall-statement-header>
 
-  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [price]="payment" label="Total Participation"></waterfall-statement-participation>
+  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [price]="payment.price" label="Total Participation"></waterfall-statement-participation>
 
   <h3>Incomes</h3>
   <bf-table [source]="incomes" useFilter pagination="50">

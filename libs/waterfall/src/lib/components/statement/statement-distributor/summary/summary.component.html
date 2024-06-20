@@ -3,7 +3,7 @@
   <mat-divider></mat-divider>
   <p class="mat-subtitle-2" *ngIf="statement.status === 'draft'" i18n>Here is the <strong>Summary of your Statement</strong>. Please verify the information below.</p>
 
-  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [price]="payment"></waterfall-statement-participation>
+  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [price]="payment.price"></waterfall-statement-participation>
 
   <article class="breakdown">
     <header>
@@ -195,7 +195,7 @@
     </ng-container>
   </article>
 
-  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [price]="payment"></waterfall-statement-participation>
+  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [price]="payment.price"></waterfall-statement-participation>
 
   <div class="surface comment" *ngIf="statement.status === 'draft'; else reportedComment">
     <h3 i18n>Comment</h3>

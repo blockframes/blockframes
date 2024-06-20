@@ -2,7 +2,7 @@
   <article>
     <mat-icon svgIcon="monetization"></mat-icon><span>{{ title }}</span>
   </article>
-  <p *ngIf="price > 0 else default" >{{ price | currency: waterfall.mainCurrency }}</p>
+  <span class="price" *ngIf="price > 0 else default" >{{ price | currency: waterfall.mainCurrency }}</span>
   <ng-template #default>
     <span class="default" i18n>No revenue declared yet</span>
   </ng-template>

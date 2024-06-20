@@ -276,6 +276,7 @@ export class StatementDirectSalesSummaryComponent {
         right: row.right,
         maxPerIncome: row.maxPerIncome,
         overrides: statement.rightOverrides.filter(c => c.rightId === row.right.id),
+        waterfall: this.waterfall,
         onConfirm: async (overrides: RightOverride[]) => {
           const rightOverrides = statement.rightOverrides.filter(c => c.rightId !== row.right.id);
           await this.statementService.update(statement.id, { rightOverrides: [...rightOverrides, ...overrides] }, { params: { waterfallId: this.waterfall.id } });
@@ -299,6 +300,7 @@ export class StatementDirectSalesSummaryComponent {
         right: row.right,
         maxPerIncome: row.maxPerIncome,
         overrides: statement.rightOverrides.filter(c => c.rightId === row.right.id),
+        waterfall: this.waterfall,
       })
     });
   }

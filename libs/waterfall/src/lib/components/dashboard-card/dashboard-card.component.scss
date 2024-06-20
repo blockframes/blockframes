@@ -11,7 +11,7 @@ section {
       vertical-align: text-bottom;
     }
   }
-  p {
+  span.price {
     font-size: 38px;
   }
 
@@ -31,7 +31,7 @@ section.primary {
   span.default {
     text-align: center;
   }
-  p {
+  span.price {
     margin-left: 82px;
   }
 }
