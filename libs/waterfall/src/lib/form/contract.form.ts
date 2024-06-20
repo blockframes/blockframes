@@ -1,20 +1,15 @@
-
 import { FormControl, FormGroup, FormRecord, UntypedFormControl, Validators } from '@angular/forms';
-
 import { WaterfallFileForm } from './file.form';
-
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { BucketTermForm, createBucketTermControl } from '@blockframes/contract/bucket/form';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import {
   BucketTerm,
   ExpenseType,
-  MovieCurrency,
   RightholderRole,
   Term,
   WaterfallFile,
   WaterfallInvestment,
-  mainCurrency
 } from '@blockframes/model';
 import { compareDates } from '@blockframes/utils/form';
 
@@ -28,7 +23,6 @@ export function createExpenseTypeControl(config?: Partial<ExpenseType>, versionI
   return {
     id: new FormControl<string>(config?.id ?? ''),
     name: new FormControl<string>(config?.name ?? ''),
-    currency: new FormControl<string>(config?.currency ?? mainCurrency),
     cap: new FormGroup({
       default: new FormControl<number>(defaultValue),
       version: new FormRecord(version)
@@ -72,7 +66,6 @@ export interface WaterfallContractFormValue {
   startDate: Date;
   endDate: Date;
 
-  currency: MovieCurrency;
   price: WaterfallInvestment[];
 
   terms: Term[];
@@ -119,7 +112,6 @@ function createWaterfallContractFormControl(contract: (Partial<WaterfallContract
     startDate: new FormControl(contract.startDate ?? new Date(), startDateValidators),
     endDate: new FormControl(contract.endDate ?? new Date(), endDateValidators),
 
-    currency: new FormControl<MovieCurrency>(contract.currency ?? mainCurrency),
     price: FormList.factory(contract?.price, c => WaterfallInvestmentForm.factory(c, createWaterfallInvestmentControl)),
 
     terms: FormList.factory(contract.terms, term => BucketTermForm.factory(term, creatWaterfallTermControl)),
@@ -151,7 +143,6 @@ export class WaterfallContractForm extends FormEntity<WaterfallContractFormContr
       startDate: data.startDate || new Date(),
       endDate: data.endDate || new Date(),
       file: data.file || { id: data.id },
-      currency: data.currency || mainCurrency,
     });
     this.controls.terms.patchAllValue(data.terms || []);
     this.controls.expenseTypes.patchAllValue(data.expenseTypes || []);

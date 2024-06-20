@@ -65,7 +65,7 @@
         <div class="statement-participation">
           <span>Total Participation Due:</span>
           <span>
-            {{formatPair data.statement.payments.rightholder.price data.statement.payments.rightholder.currency}}
+            {{toMainCurrency data.statement.payments.rightholder.price}}
           </span>
         </div>
       {{/if}}
@@ -73,7 +73,7 @@
         <div class="statement-participation">
           <span>Total Participation Due:</span>
           <span>
-            {{pricePerCurrency data.statement.reportedData.producerNetParticipation}}
+            {{toMainCurrency data.statement.reportedData.producerNetParticipation}}
           </span>
         </div>
       {{/if}}
@@ -82,7 +82,7 @@
         <div class="statement-participation rest-to-be-amortized">
           <span>Rest To Be Amortized:</span>
           <span>
-            {{formatPair data.statement.reportedData.amortization.restToBeAmortized data.mainCurrency}}
+            {{toMainCurrency data.statement.reportedData.amortization.restToBeAmortized}}
           </span>
         </div>
       {{/if}}
@@ -99,7 +99,7 @@
             <div class="surface">
               <div class="header">
                 <h3>{{name}}</h3>
-                <div>{{pricePerCurrency net}}</div>
+                <div>{{toMainCurrency net}}</div>
               </div>
               <table class="small-first-col">
                 <tr>
@@ -113,17 +113,17 @@
                     <td>{{section}}</td>
                     <td>
                       {{#if (eq type "right")}}({{/if}}
-                      {{pricePerCurrency previous}}
+                      {{toMainCurrency previous}}
                       {{#if (eq type "right")}}){{/if}}
                     </td>
                     <td>
                       {{#if (eq type "right")}}({{/if}}
-                      {{pricePerCurrency current}}
+                      {{toMainCurrency current}}
                       {{#if (eq type "right")}}){{/if}}
                     </td>
                     <td>
                       {{#if (eq type "right")}}({{/if}}
-                      {{pricePerCurrency cumulated}}
+                      {{toMainCurrency cumulated}}
                       {{#if (eq type "right")}}){{/if}}
                     </td>
                   </tr>
@@ -135,7 +135,7 @@
                 <div class="total-net">
                   Total Net Receipts:
                   <span>
-                    {{pricePerCurrency ../data.statement.totalNetReceipt}}
+                    {{toMainCurrency ../data.statement.totalNetReceipt}}
                   </span>
                 </div>
               {{/if}}
@@ -172,7 +172,7 @@
                       {{/if}}
                     </td>
                     <td>
-                      {{formatPair taken ../../data.mainCurrency}}
+                      {{toMainCurrency taken}}
                     </td>
                   </tr>
                 {{/rows}}
@@ -180,18 +180,18 @@
               {{#if stillToBeRecouped}}
                 <div class="to-be-recouped">
                   Still to be recouped:
-                  {{pricePerCurrency stillToBeRecouped}}
+                  {{toMainCurrency stillToBeRecouped}}
                 </div>
               {{/if}}
               {{#if mgStatus}}
                 <div class="to-be-recouped">
                   <span>
                     Before recoupment:
-                    {{pricePerCurrency mgStatus.investments}}
+                    {{toMainCurrency mgStatus.investments}}
                   </span>
                   <span>
                     Still to be recouped:
-                    {{pricePerCurrency mgStatus.stillToBeRecouped}}
+                    {{toMainCurrency mgStatus.stillToBeRecouped}}
                   </span>
                 </div>
               {{/if}}
@@ -225,11 +225,11 @@
                     <td>{{from}}</td>
                     <td>{{to}}</td>
                     <td>
-                      {{formatPair amount ../../data.mainCurrency}}
+                      {{toMainCurrency amount}}
                     </td>
                     <td>{{percent}}</td>
                     <td>
-                      {{formatPair taken ../../data.mainCurrency}}
+                      {{toMainCurrency taken}}
                     </td>
                   </tr>
                 {{/details}}
@@ -245,7 +245,7 @@
             <div class="surface">
               <div class="header">
                 <h3>{{name}}</h3>
-                <div>{{pricePerCurrency total}}</div>
+                <div>{{toMainCurrency total}}</div>
               </div>
               <table class="small-first-col">
                 <tr>
@@ -259,17 +259,17 @@
                     <td>{{section}}</td>
                     <td>
                       {{#if (eq type "right")}}({{/if}}
-                      {{pricePerCurrency previous}}
+                      {{toMainCurrency previous}}
                       {{#if (eq type "right")}}){{/if}}
                     </td>
                     <td>
                       {{#if (eq type "right")}}({{/if}}
-                      {{pricePerCurrency current}}
+                      {{toMainCurrency current}}
                       {{#if (eq type "right")}}){{/if}}
                     </td>
                     <td>
                       {{#if (eq type "right")}}({{/if}}
-                      {{pricePerCurrency cumulated}}
+                      {{toMainCurrency cumulated}}
                       {{#if (eq type "right")}}){{/if}}
                     </td>
                   </tr>
@@ -278,18 +278,18 @@
               {{#if stillToBeRecouped}}
                 <div class="to-be-recouped">
                   Still to be recouped:
-                  {{pricePerCurrency stillToBeRecouped}}
+                  {{toMainCurrency stillToBeRecouped}}
                 </div>
               {{/if}}
               {{#if mgStatus}}
                 <div class="to-be-recouped">
                   <span>
                     Before recoupment:
-                    {{pricePerCurrency mgStatus.investments}}
+                    {{toMainCurrency mgStatus.investments}}
                   </span>
                   <span>
                     Still to be recouped:
-                    {{pricePerCurrency mgStatus.stillToBeRecouped}}
+                    {{toMainCurrency mgStatus.stillToBeRecouped}}
                   </span>
                 </div>
               {{/if}}
@@ -315,9 +315,9 @@
                   </tr>
                   {{#rows}}
                     <tr>
-                      <td>{{pricePerCurrency previous}}</td>
-                      <td>{{pricePerCurrency current}}</td>
-                      <td>{{pricePerCurrency cumulated}}</td>
+                      <td>{{toMainCurrency previous}}</td>
+                      <td>{{toMainCurrency current}}</td>
+                      <td>{{toMainCurrency cumulated}}</td>
                       <td>{{#if capped}} Yes {{else}} No {{/if}}</td>
                     </tr>
                   {{/rows}}
@@ -346,7 +346,7 @@
                     <td>{{date date}}</td>
                     <td>{{nature}}</td>
                     <td>{{expenseType typeId contractId}}</td>
-                    <td>{{formatPair price currency}}</td>
+                    <td>{{toMainCurrency price}}</td>
                     <td>{{#if capped}} Yes {{else}} No {{/if}}</td>
                   </tr>
                 {{/data.statement.reportedData.expenses}}
@@ -373,9 +373,9 @@
                     </tr>
                     {{#this.rows}}
                       <tr>
-                        <td>{{pricePerCurrency previous}}</td>
-                        <td>{{pricePerCurrency current}}</td>
-                        <td>{{pricePerCurrency cumulated}}</td>
+                        <td>{{toMainCurrency previous}}</td>
+                        <td>{{toMainCurrency current}}</td>
+                        <td>{{toMainCurrency cumulated}}</td>
                         <td>{{#if capped}} Yes {{else}} No {{/if}}</td>
                       </tr>
                     {{/this.rows}}
@@ -406,7 +406,7 @@
                       <td>{{date date}}</td>
                       <td>{{nature}}</td>
                       <td>{{expenseType typeId contractId}}</td>
-                      <td>{{formatPair price currency}}</td>
+                      <td>{{toMainCurrency price}}</td>
                       <td>{{#if capped}} Yes {{else}} No {{/if}}</td>
                     </tr>
                   {{/this}}
@@ -439,13 +439,13 @@
                 {{#data.statement.reportedData.interests}}
                   <tr>
                     <td>{{event}}</td>
-                    <td>{{formatPair invested ../data.mainCurrency}}</td>
-                    <td>{{formatPair revenues ../data.mainCurrency}}</td>
+                    <td>{{toMainCurrency invested}}</td>
+                    <td>{{toMainCurrency revenues}}</td>
                     <td>{{date date}}</td>
-                    <td>{{formatPair amountOwed ../data.mainCurrency}}</td>
+                    <td>{{toMainCurrency amountOwed}}</td>
                     <td>{{periodDays}}</td>
-                    <td>{{formatPair periodInterests ../data.mainCurrency}}</td>
-                    <td>{{formatPair interestOwed ../data.mainCurrency}}</td>
+                    <td>{{toMainCurrency periodInterests}}</td>
+                    <td>{{toMainCurrency interestOwed}}</td>
                   </tr>
                 {{/data.statement.reportedData.interests}}
               </table>
@@ -461,25 +461,25 @@
             <div class="surface">
               <div class="header">
                 <h3>Cost of the film to amortize</h3>
-                <div>{{formatPair data.statement.reportedData.amortization.filmCost data.mainCurrency}}</div>
+                <div>{{toMainCurrency data.statement.reportedData.amortization.filmCost}}</div>
               </div>
             </div>
             <div class="surface">
               <div class="header">
                 <h3>Financing</h3>
-                <div>{{formatPair data.statement.reportedData.amortization.financing data.mainCurrency}}</div>
+                <div>{{toMainCurrency data.statement.reportedData.amortization.financing}}</div>
               </div>
             </div>
             <div class="surface">
               <div class="header">
                 <h3>Producer's Net Participation</h3>
-                <div>{{formatPair data.statement.reportedData.amortization.currentValue data.mainCurrency}}</div>
+                <div>{{toMainCurrency data.statement.reportedData.amortization.currentValue}}</div>
               </div>
             </div>
             <div class="statement-participation rest-to-be-amortized">
               <span>Rest To Be Amortized:</span>
               <span>
-                {{formatPair data.statement.reportedData.amortization.restToBeAmortized data.mainCurrency}}
+                {{toMainCurrency data.statement.reportedData.amortization.restToBeAmortized}}
               </span>
             </div>
           </div>
@@ -489,14 +489,14 @@
           <div class="statement-participation">
             <span>Total Participation Due:</span>
             <span>
-              {{formatPair data.statement.payments.rightholder.price data.statement.payments.rightholder.currency}}
+              {{toMainCurrency data.statement.payments.rightholder.price}}
           </div>
         {{/if}}
         {{#if data.statement.reportedData.producerNetParticipation}}
           <div class="statement-participation">
             <span>Total Participation Due:</span>
             <span>
-              {{pricePerCurrency data.statement.reportedData.producerNetParticipation}}
+              {{toMainCurrency data.statement.reportedData.producerNetParticipation}}
             </span>
           </div>
         {{/if}}
@@ -558,7 +558,7 @@
           <div class="statement-participation">
             <span>Total Participation Due:</span>
             <span>
-              {{formatPair payments.rightholder.price payments.rightholder.currency}}
+              {{toMainCurrency payments.rightholder.price}}
             </span>
           </div>
         {{/if}}
@@ -566,7 +566,7 @@
           <div class="statement-participation">
             <span>Total Participation Due:</span>
             <span>
-              {{pricePerCurrency reportedData.producerNetParticipation}}
+              {{toMainCurrency reportedData.producerNetParticipation}}
             </span>
           </div>
         {{/if}}
@@ -583,7 +583,7 @@
               <div class="surface">
                 <div class="header">
                   <h3>{{name}}</h3>
-                  <div>{{pricePerCurrency net}}</div>
+                  <div>{{toMainCurrency net}}</div>
                 </div>
                 <table class="small-first-col">
                   <tr>
@@ -597,17 +597,17 @@
                       <td>{{section}}</td>
                       <td>
                         {{#if (eq type "right")}}({{/if}}
-                        {{pricePerCurrency previous}}
+                        {{toMainCurrency previous}}
                         {{#if (eq type "right")}}){{/if}}
                       </td>
                       <td>
                         {{#if (eq type "right")}}({{/if}}
-                        {{pricePerCurrency current}}
+                        {{toMainCurrency current}}
                         {{#if (eq type "right")}}){{/if}}
                       </td>
                       <td>
                         {{#if (eq type "right")}}({{/if}}
-                        {{pricePerCurrency cumulated}}
+                        {{toMainCurrency cumulated}}
                         {{#if (eq type "right")}}){{/if}}
                       </td>
                     </tr>
@@ -619,7 +619,7 @@
                   <div class="total-net">
                     Total Net Receipts:
                     <span>
-                      {{pricePerCurrency ../totalNetReceipt}}
+                      {{toMainCurrency ../totalNetReceipt}}
                     </span>
                   </div>
                 {{/if}}
@@ -635,7 +635,7 @@
                 <div class="surface">
                   <div class="header">
                     <h3>{{name}}</h3>
-                    <div>{{pricePerCurrency total}}</div>
+                    <div>{{toMainCurrency total}}</div>
                   </div>
                   <table class="small-first-col">
                     <tr>
@@ -649,17 +649,17 @@
                         <td>{{section}}</td>
                         <td>
                           {{#if (eq type "right")}}({{/if}}
-                          {{pricePerCurrency previous}}
+                          {{toMainCurrency previous}}
                           {{#if (eq type "right")}}){{/if}}
                         </td>
                         <td>
                           {{#if (eq type "right")}}({{/if}}
-                          {{pricePerCurrency current}}
+                          {{toMainCurrency current}}
                           {{#if (eq type "right")}}){{/if}}
                         </td>
                         <td>
                           {{#if (eq type "right")}}({{/if}}
-                          {{pricePerCurrency cumulated}}
+                          {{toMainCurrency cumulated}}
                           {{#if (eq type "right")}}){{/if}}
                         </td>
                       </tr>
@@ -668,18 +668,18 @@
                   {{#if stillToBeRecouped}}
                     <div class="to-be-recouped">
                       Still to be recouped:
-                      {{pricePerCurrency stillToBeRecouped}}
+                      {{toMainCurrency stillToBeRecouped}}
                     </div>
                   {{/if}}
                   {{#if mgStatus}}
                     <div class="to-be-recouped">
                       <span>
                         Before recoupment:
-                        {{pricePerCurrency mgStatus.investments}}
+                        {{toMainCurrency mgStatus.investments}}
                       </span>
                       <span>
                         Still to be recouped:
-                        {{pricePerCurrency mgStatus.stillToBeRecouped}}
+                        {{toMainCurrency mgStatus.stillToBeRecouped}}
                       </span>
                     </div>
                   {{/if}}
@@ -704,9 +704,9 @@
                     </tr>
                     {{#rows}}
                       <tr>
-                        <td>{{pricePerCurrency previous}}</td>
-                        <td>{{pricePerCurrency current}}</td>
-                        <td>{{pricePerCurrency cumulated}}</td>
+                        <td>{{toMainCurrency previous}}</td>
+                        <td>{{toMainCurrency current}}</td>
+                        <td>{{toMainCurrency cumulated}}</td>
                         <td>{{#if capped}} Yes {{else}} No {{/if}}</td>
                       </tr>
                     {{/rows}}
@@ -735,7 +735,7 @@
                       <td>{{date date}}</td>
                       <td>{{nature}}</td>
                       <td>{{expenseType typeId contractId}}</td>
-                      <td>{{formatPair price currency}}</td>
+                      <td>{{toMainCurrency price}}</td>
                       <td>{{#if capped}} Yes {{else}} No {{/if}}</td>
                     </tr>
                   {{/reportedData.expenses}}
@@ -748,14 +748,14 @@
             <div class="statement-participation">
               <span>Total Participation Due:</span>
               <span>
-                {{formatPair payments.rightholder.price payments.rightholder.currency}}
+                {{toMainCurrency payments.rightholder.price}}
             </div>
           {{/if}}
           {{#if reportedData.producerNetParticipation}}
             <div class="statement-participation">
               <span>Total Participation Due:</span>
               <span>
-                {{pricePerCurrency reportedData.producerNetParticipation}}
+                {{toMainCurrency reportedData.producerNetParticipation}}
               </span>
             </div>
           {{/if}}

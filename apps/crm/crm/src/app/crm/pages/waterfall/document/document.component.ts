@@ -30,7 +30,7 @@ export class DocumentComponent {
 
   public childContracts$ = this.contract$.pipe(
     filter(c => !c?.rootId),
-    switchMap(c => this.shell.contractsAndTerms$.pipe(map(contracts => contracts.filter(contract => contract.rootId === c.id)))),
+    switchMap(c => this.shell.contracts$.pipe(map(contracts => contracts.filter(contract => contract.rootId === c.id)))),
   );
 
   public rights$ = this.shell.rights$.pipe(

@@ -7,7 +7,6 @@ import { WaterfallSummaryAmortizationComponent } from './summary.component';
 
 // Blockframes
 import { BfCommonModule } from '@blockframes/utils/bf-common.module';
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 import { RightHolderNamePipeModule } from '../../../pipes/rightholder-name.pipe';
 
@@ -25,7 +24,6 @@ import { MatDividerModule } from '@angular/material/divider';
 
     // Blockframes
     LogoSpinnerModule,
-    PricePerCurrencyModule,
     RightHolderNamePipeModule,
 
     // Material

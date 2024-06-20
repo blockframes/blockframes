@@ -20,8 +20,7 @@ import {
 
 // Blockframes
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
-import { OrgState, mainCurrency, movieCurrencies, titleCase, History, sum, PricePerCurrency } from '@blockframes/model';
-import { sorts } from '@blockframes/ui/list/table/sorts';
+import { OrgState, movieCurrenciesSymbols, titleCase, History, sum } from '@blockframes/model';
 import { FormControl } from '@angular/forms';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -49,10 +48,10 @@ type ChartOptions = {
 
 interface RevenueSummary {
   name: string;
-  investment: PricePerCurrency;
-  expense: PricePerCurrency;
-  turnover: PricePerCurrency;
-  revenue: PricePerCurrency;
+  investment: number;
+  expense: number;
+  turnover: number;
+  revenue: number;
   gross: number;
 }
 
@@ -84,15 +83,14 @@ export class DashboardComponent {
       }
     })
   );
-  public sorts = sorts;
+
   public rightholderControl = new FormControl<string>('');
 
   public incomes$ = this.state$.pipe(
     map(state => {
       const incomeStates = Object.values(state.waterfall.state.incomes);
-      if (!incomeStates.length) return { [mainCurrency]: 0 };
-      const sum = incomeStates.map(a => a.amount).reduce((a, b) => a + b);
-      return { [mainCurrency]: sum };
+      if (!incomeStates.length) return 0;
+      return incomeStates.map(a => a.amount).reduce((a, b) => a + b);
     })
   );
 
@@ -111,11 +109,11 @@ export class DashboardComponent {
   );
 
   public turnover$ = this.rightholderState$.pipe(
-    map(orgState => ({ [mainCurrency]: orgState?.turnover.actual || 0 }))
+    map(orgState => orgState?.turnover.actual || 0)
   );
 
   public revenue$ = this.rightholderState$.pipe(
-    map(orgState => ({ [mainCurrency]: orgState?.revenu.actual || 0 }))
+    map(orgState => orgState?.revenu.actual || 0)
   );
 
   private rightholdersRevenue$ = this.rightholdersState$.pipe(
@@ -147,7 +145,7 @@ export class DashboardComponent {
             }
           }
         ],
-        tooltip: { y: { formatter: (value) => `${Math.round(value)} ${movieCurrencies[mainCurrency]}` } },
+        tooltip: { y: { formatter: (value) => `${Math.round(value)} ${movieCurrenciesSymbols[this.shell.waterfall.mainCurrency]}` } },
       }
     })
   );
@@ -202,7 +200,7 @@ export class DashboardComponent {
         xaxis: {
           categories: rightholders.map(r => r.name)
         },
-        tooltip: { y: { formatter: (value) => `${Math.round(value)} ${movieCurrencies[mainCurrency]}` } },
+        tooltip: { y: { formatter: (value) => `${Math.round(value)} ${movieCurrenciesSymbols[this.shell.waterfall.mainCurrency]}` } },
       };
     })
   );
@@ -284,7 +282,7 @@ export class DashboardComponent {
               show: true
             },
             title: {
-              text: movieCurrencies[mainCurrency]
+              text: movieCurrenciesSymbols[this.shell.waterfall.mainCurrency]
             }
           }
         ],
@@ -295,7 +293,7 @@ export class DashboardComponent {
             offsetY: 30,
             offsetX: 60
           },
-          y: { formatter: (value) => `${Math.round(value / 1000)} K ${movieCurrencies[mainCurrency]}` }
+          y: { formatter: (value) => `${Math.round(value / 1000)} K ${movieCurrenciesSymbols[this.shell.waterfall.mainCurrency]}` }
         },
         legend: {
           horizontalAlign: 'left',
@@ -309,11 +307,11 @@ export class DashboardComponent {
     map(([incomes, orgs]) => {
       return orgs.map(org => ({
         name: org.name,
-        investment: { [mainCurrency]: org.investment },
-        expense: { [mainCurrency]: org.expense },
-        turnover: { [mainCurrency]: org.turnover.actual },
-        revenue: { [mainCurrency]: org.revenu.actual },
-        gross: Math.round(org.revenu.actual / incomes[mainCurrency] * 100),
+        investment: org.investment,
+        expense: org.investment,
+        turnover: org.investment,
+        revenue: org.investment,
+        gross: Math.round(org.revenu.actual / incomes * 100),
       }));
     }),
   );
@@ -341,10 +339,10 @@ export class DashboardComponent {
   public downloadCsv(rows: RevenueSummary[]) {
     const exportedRows = rows.map(r => ({
       'Right Holder Name': r.name,
-      'Investment': `${r.investment[mainCurrency]} ${movieCurrencies[mainCurrency]}`,
-      'Expenses': `${r.expense[mainCurrency]} ${movieCurrencies[mainCurrency]}`,
-      'Cash Flow': `${r.turnover[mainCurrency]} ${movieCurrencies[mainCurrency]}`,
-      'Net Revenue': `${r.revenue[mainCurrency]} ${movieCurrencies[mainCurrency]}`,
+      'Investment': `${r.investment} ${movieCurrenciesSymbols[this.shell.waterfall.mainCurrency]}`,
+      'Expenses': `${r.expense} ${movieCurrenciesSymbols[this.shell.waterfall.mainCurrency]}`,
+      'Cash Flow': `${r.turnover} ${movieCurrenciesSymbols[this.shell.waterfall.mainCurrency]}`,
+      'Net Revenue': `${r.revenue} ${movieCurrenciesSymbols[this.shell.waterfall.mainCurrency]}`,
       '% Gross': `${r.gross} %`
     }));
 

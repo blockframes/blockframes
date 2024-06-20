@@ -15,10 +15,11 @@ import { Arrow } from '../layout';
 })
 export class WaterfallGraphLabelComponent {
 
-  amount$ = this.shell.state$.pipe(
+  public amount$ = this.shell.state$.pipe(
     map(state => state.waterfall.state.transfers[`${this.arrow.parentId}->${this.arrow.childId}`]?.amount ?? 0),
     startWith(0),
   );
+  public waterfall = this.shell.waterfall;
   @Input() arrow: Arrow;
 
   constructor(

@@ -55,19 +55,19 @@ section {
         padding: 0;
         border: none;
 
-        price-per-currency.right::before {
+        span.right::before {
           content: '(';
         }
 
-        price-per-currency.right::after {
+        span.right::after {
           content: ')';
         }
 
-        price-per-currency.net, span.net {
+        span.net, span.net {
           font-weight: bold;
         }
 
-        price-per-currency.expense, span.expense {
+        span.expense, span.expense {
           font-style: italic;
         }
 

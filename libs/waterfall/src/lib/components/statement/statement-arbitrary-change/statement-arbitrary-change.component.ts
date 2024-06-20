@@ -8,8 +8,7 @@ import {
   Waterfall,
   createRightOverride,
   isDirectSalesStatement,
-  isProducerStatement,
-  mainCurrency
+  isProducerStatement
 } from '@blockframes/model';
 import { ArbitraryChangeForm, RightOverrideAmount } from '../../../form/arbitrary-change.form';
 
@@ -32,7 +31,6 @@ interface StatementArbitraryChangeData {
 })
 export class StatementArbitraryChangeComponent implements OnInit {
 
-  public mainCurrency = mainCurrency;
   public form: ArbitraryChangeForm;
   public warnings: Record<string, { directSales: Statement[]; outgoing: Statement[]; }> = {};
 

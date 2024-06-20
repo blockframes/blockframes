@@ -8,7 +8,6 @@ import {
   Expense,
   GroupsBreakdown,
   Income,
-  PricePerCurrency,
   Right,
   RightOverride,
   Statement,
@@ -94,8 +93,7 @@ function getRightTaken(rights: Right[], statement: Statement, state: TitleState,
   });
 
   /**
-   * @dev taken (mainCurrency) and currentRightPayment (statement currency) should be the same.
-   * details variable could be used to re-build percentage actually used (if overriden via statement.rightOverrides or updateRight action) 
+   * @dev details variable could be used to re-build percentage actually used (if overriden via statement.rightOverrides or updateRight action) 
    */
   const taken = details.reduce((acc, s) => acc + s.taken, 0);
   const currentRightPayment = statement.payments.right.filter(p => p.to === right.id);
@@ -313,19 +311,19 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
       if (!this.devMode && statement.status === 'reported' && statement.reportedData.expensesPerDistributor) return statement.reportedData.expensesPerDistributor;
       const parentStatements = getParentStatements(statements, statement.incomeIds);
 
-      const expensesHistory: Record<string, (Expense & { cap?: PricePerCurrency, editable: boolean })[]> = {};
+      const expensesHistory: Record<string, (Expense & { cap?: number, editable: boolean })[]> = {};
       for (const parentStatement of parentStatements) {
         const _statementHistory = filterStatements(parentStatement.type, [parentStatement.senderId, parentStatement.receiverId], parentStatement.contractId, statements);
         const statementHistory = sortStatements(_statementHistory);
 
-        const history: (Expense & { cap?: PricePerCurrency })[] = getExpensesHistory(parentStatement, statementHistory, expenses, declaredSources, rights, simulation.waterfall.state, incomes, versionId, statement.status !== 'reported')
+        const history: (Expense & { cap?: number })[] = getExpensesHistory(parentStatement, statementHistory, expenses, declaredSources, rights, simulation.waterfall.state, incomes, versionId, statement.status !== 'reported')
           .map(e => {
             const type = e.typeId ? this.waterfall.expenseTypes[e.contractId].find(t => t.id === e.typeId) : undefined;
             if (!type) return e;
             const versionKey = isDefaultVersion(this.shell.waterfall, versionId) ? 'default' : versionId;
             const cap = type.cap.version[versionKey] !== undefined ? type.cap.version[versionKey] : type.cap.default;
             if (cap === 0) return e;
-            return { ...e, cap: { [type.currency]: cap } };
+            return { ...e, cap };
           });
 
         for (const e of history) {

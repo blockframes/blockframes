@@ -15,7 +15,7 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContractsComponent {
-  public contracts$ = this.shell.contractsAndTerms$;
+  public contracts$ = this.shell.contracts$;
   public waterfall = this.shell.waterfall;
 
   constructor(

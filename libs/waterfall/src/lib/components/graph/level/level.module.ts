@@ -6,7 +6,6 @@ import { WaterfallGraphLevelComponent } from './level.component';
 
 // Blockframes
 import { NumberPipeModule } from '@blockframes/utils/pipes';
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 
 // Material
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -18,7 +17,6 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
 
     NumberPipeModule,
-    PricePerCurrencyModule,
 
     MatIconModule,
     MatTooltipModule,

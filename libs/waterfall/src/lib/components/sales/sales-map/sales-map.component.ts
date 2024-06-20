@@ -7,7 +7,6 @@ import {
   Media,
   Territory,
   getTotalPerCurrency,
-  getDeclaredAmount,
   getLatestContract,
   getCurrentContract,
   getContractAndAmendments,
@@ -16,7 +15,10 @@ import {
   Waterfall,
   Term,
   Income,
-  WaterfallSale
+  WaterfallSale,
+  contractPrice,
+  WaterfallFullSale,
+  sum
 } from '@blockframes/model';
 import { differenceInDays, differenceInMonths, differenceInYears } from 'date-fns';
 import { unique } from '@blockframes/utils/helpers';
@@ -141,7 +143,7 @@ export class SalesMapComponent implements OnInit {
       const rootContracts = territory.contracts.filter(c => !c.rootId);
       for (const rootContract of rootContracts) {
 
-        const contractAndAmendments = getContractAndAmendments(rootContract.id, territory.contracts);
+        const contractAndAmendments = getContractAndAmendments(rootContract.id, territory.contracts) as WaterfallFullSale[];
         const contract = getLatestContract(contractAndAmendments);
         const childContracts = contractAndAmendments.filter(c => c.rootId);
         const incomes = this.data.incomes.filter(i => i.status === 'received' && contractAndAmendments.find(c => c.id === i.contractId));
@@ -153,8 +155,8 @@ export class SalesMapComponent implements OnInit {
           duration: contract.duration,
           medias: unique(contract.terms.map(t => t.medias).flat()),
           territories: unique(contract.terms.map(t => t.territories).flat()),
-          declaredAmount: getDeclaredAmount(contract),
-          totalIncome: getTotalPerCurrency(incomes),
+          declaredAmount: contractPrice(contract),
+          totalIncome: sum(incomes, i => i.price),
           rootContract: rootContract.id,
           childContracts: childContracts.map(c => c.id)
         };

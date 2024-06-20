@@ -18,7 +18,6 @@ import {
   Duration,
   RightholderRole,
   Term,
-  MovieCurrency,
   WaterfallDocument,
   WaterfallRightholder,
   WaterfallInvestment
@@ -45,7 +44,6 @@ export interface FieldsConfig {
     sellerId: string;
     buyerId: string;
     price: WaterfallInvestment[];
-    currency?: MovieCurrency;
     duration?: Duration;
   },
   term: {
@@ -53,8 +51,6 @@ export interface FieldsConfig {
     territories_excluded: Territory[];
     medias: Media[];
     id: string;
-    price?: number;
-    currency?: MovieCurrency;
   }[];
 }
 
@@ -156,33 +152,20 @@ export function getDocumentConfig(option: DocumentConfig) {
         /* j */ 'meta.price': (value: string, data: FieldsConfig) => {
         return [{ value: Number(value), date: data.document.signatureDate }];
       },
-        /* k */ 'meta.currency': (value: string): MovieCurrency => {
-        if (value?.trim() === '€') return 'EUR';
-        if (value?.trim() === '$') return 'USD';
-        if (value?.trim() === '£') return 'GBP';
-
-        return getKeyIfExists('movieCurrencies', value);
-      },
-        /* l */ 'meta.duration.from': (value: string) => {
+        /* k */ 'meta.duration.from': (value: string) => {
         return getDate(value, 'Start of Contract');
       },
-        /* m */ 'meta.duration.to': (value: string) => {
+        /* l */ 'meta.duration.to': (value: string) => {
         return getDate(value, 'End of Contract');
       },
-        /* n */ 'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
-        /* o */ 'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
-        /* p */ 'term[].medias': (value: string) => getGroupedList(value, 'medias', separator, { required: false }),
-        /* q */ 'term[].id': async (value: string) => {
+        /* m */ 'term[].territories_included': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
+        /* n */ 'term[].territories_excluded': (value: string) => getGroupedList(value, 'territories', separator, { required: false }),
+        /* o */ 'term[].medias': (value: string) => getGroupedList(value, 'medias', separator, { required: false }),
+        /* p */ 'term[].id': async (value: string) => {
         if (!value) return termService.createId();
         const exist = await getTerm(value, termService, termCache);
         if (exist) throw alreadyExistError(value, 'Term ID');
         return value;
-      },
-        /* r */ 'term[].price': (value: string) => {
-        return Number(value);
-      },
-        /* s */ 'term[].currency': (value: string) => {
-        return getKeyIfExists('movieCurrencies', value);
       },
 
     };

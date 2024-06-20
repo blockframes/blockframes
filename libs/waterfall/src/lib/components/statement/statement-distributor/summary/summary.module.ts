@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Blockframes
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { StatementHeaderModule } from '../../statement-header/statement-header.module';
 import { StatementParticipationModule } from '../../statement-participation/statement-participation.module';
@@ -32,7 +31,6 @@ import { MatDialogModule } from '@angular/material/dialog';
     ReactiveFormsModule,
 
     // Blockframes
-    PricePerCurrencyModule,
     TableModule,
     StatementHeaderModule,
     StatementParticipationModule,

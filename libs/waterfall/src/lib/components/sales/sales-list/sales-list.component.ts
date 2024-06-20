@@ -1,9 +1,8 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Media, PricePerCurrency, Scope, Term, Territory, WaterfallSale, getContractAndAmendments, getDeclaredAmount, getLatestContract, toLabel } from '@blockframes/model';
+import { Media, Scope, Term, Territory, WaterfallSale, contractPrice, getContractAndAmendments, getLatestContract, toLabel } from '@blockframes/model';
 import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
-import { sorts } from '@blockframes/ui/list/table/sorts';
 import { downloadCsvFromJson, unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { rightholderName } from '../../../pipes/rightholder-name.pipe';
@@ -13,7 +12,7 @@ interface SalesData {
   contract: (WaterfallSale & { terms: Term[] });
   territories: Territory[];
   medias: Media[];
-  amount: PricePerCurrency;
+  amount: number;
 }
 
 @Component({
@@ -24,7 +23,6 @@ interface SalesData {
 })
 export class SalesListComponent implements OnInit {
   @Input() private sales: (WaterfallSale & { terms: Term[] })[] = [];
-  public sorts = sorts;
   public waterfall = this.shell.waterfall;
   public rows$ = new BehaviorSubject<SalesData[]>([]);
 
@@ -43,7 +41,7 @@ export class SalesListComponent implements OnInit {
         contract,
         territories: unique(contract.terms.map(t => t.territories).flat()),
         medias: unique(contract.terms.map(t => t.medias).flat()),
-        amount: getDeclaredAmount(contract),
+        amount: contractPrice(contract),
       };
       rows.push(row);
     }
@@ -56,7 +54,7 @@ export class SalesListComponent implements OnInit {
       'Licensee': rightholderName(r.contract.buyerId, this.shell.waterfall),
       'Territories': toLabel(r.territories, 'territories'),
       'Medias': toLabel(r.medias, 'medias'),
-      'Amount': r.amount.EUR ? `${r.amount.EUR} EUR` : `${r.amount.USD} USD`
+      'Amount': `${r.amount} ${toLabel(this.waterfall.mainCurrency, 'movieCurrencies')}`,
     }));
 
     const filename = `${this.shell.movie.title.international.split(' ').join('_')}_world_sales_summary`;

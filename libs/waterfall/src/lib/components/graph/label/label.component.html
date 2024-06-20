@@ -1,2 +1,1 @@
-
-<price-per-currency [price]="amount$ | async | formatPair" default="0€"></price-per-currency>
+<span>{{ (amount$ | async) | currency: waterfall.mainCurrency }}</span>

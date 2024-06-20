@@ -5,22 +5,22 @@
       <li *rxFor="let item of data.state | keyvalue">
         <ng-container [ngSwitch]="item.key">
           <ng-container *ngSwitchCase="'amount'">
-            <strong>{{ item.key }}:</strong> {{ item.value | currency:currency }}
+            <strong>{{ item.key }}:</strong> {{ item.value | currency:data.waterfall.mainCurrency }}
           </ng-container>
           <ng-container *ngSwitchCase="'revenu'">
             <ng-container *ngIf="item.value.calculated !== undefined else singleValue">
-              <strong>Calculated {{ item.key }}:</strong> {{ item.value.calculated | currency:currency }} <br>
-              <strong>Actual {{ item.key }}:</strong> {{ item.value.actual | currency:currency }}
+              <strong>Calculated {{ item.key }}:</strong> {{ item.value.calculated | currency:data.waterfall.mainCurrency }} <br>
+              <strong>Actual {{ item.key }}:</strong> {{ item.value.actual | currency:data.waterfall.mainCurrency }}
             </ng-container>
 
           </ng-container>
           <ng-container *ngSwitchCase="'shadowRevenu'">
-            <strong>{{ item.key }}:</strong> {{ item.value | currency:currency }}
+            <strong>{{ item.key }}:</strong> {{ item.value | currency:data.waterfall.mainCurrency }}
           </ng-container>
           <ng-container *ngSwitchCase="'turnover'">
             <ng-container *ngIf="item.value.calculated !== undefined else singleValue">
-              <strong>Calculated {{ item.key }}:</strong> {{ item.value.calculated | currency:currency }} <br>
-              <strong>Actual {{ item.key }}:</strong> {{ item.value.actual | currency:currency }}
+              <strong>Calculated {{ item.key }}:</strong> {{ item.value.calculated | currency:data.waterfall.mainCurrency }} <br>
+              <strong>Actual {{ item.key }}:</strong> {{ item.value.actual | currency:data.waterfall.mainCurrency }}
             </ng-container>
           </ng-container>
           <ng-container *ngSwitchCase="'date'">
@@ -58,7 +58,7 @@
           </ng-container>
         </ng-container>
         <ng-template #singleValue>
-          <strong>{{ item.key }}:</strong> {{ item.value | currency:currency }}
+          <strong>{{ item.key }}:</strong> {{ item.value | currency:data.waterfall.mainCurrency }}
         </ng-template>
       </li>
     </ul>

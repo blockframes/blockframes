@@ -24,6 +24,7 @@ export class WaterfallGraphVerticalComponent implements OnInit {
     map(([state, revenueMode]) => state.waterfall.state.verticals[this.vertical.id]?.revenu[revenueMode] ?? 0),
     startWith(0),
   );
+  public waterfall = this.shell.waterfall;
 
   public isVisible = false;
 

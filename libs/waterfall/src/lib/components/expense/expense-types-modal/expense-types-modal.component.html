@@ -12,7 +12,7 @@
     <p class="mat-body-2">Provide categories and caps of expenses that will be used in waterfall calculation.</p>
   </header>
 
-  <waterfall-expense-types [form]="data.form" [versionId]="data.versionId"></waterfall-expense-types>
+  <waterfall-expense-types [form]="data.form" [versionId]="data.versionId" [waterfall]="data.waterfall"></waterfall-expense-types>
 
   <mat-dialog-actions>
     <button mat-flat-button color="primary" (click)="confirm()">

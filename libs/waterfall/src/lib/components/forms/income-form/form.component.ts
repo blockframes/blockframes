@@ -5,6 +5,7 @@ import { Statement, Territory, WaterfallSource } from '@blockframes/model';
 import { DetailedGroupComponent } from '@blockframes/ui/detail-modal/detailed.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 import { StatementForm } from '../../../form/statement.form';
+import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 
 const incomeColumns = {
   medias: $localize`Medias`,
@@ -26,8 +27,10 @@ export class IncomeFormComponent {
 
   public incomeColumns = incomeColumns;
   public sourcesControl = new FormControl<string[]>([]);
+  public waterfall = this.shell.waterfall;
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog, private shell: DashboardWaterfallShellComponent) { }
+
 
   public openTerritoryModal(territories: Territory[]) {
     this.dialog.open(DetailedGroupComponent, {

@@ -1,4 +1,4 @@
-import { Media, MovieCurrency, Territory } from './static';
+import { Media, Territory } from './static';
 import { LanguageRecord } from './movie';
 import { decodeDate } from './utils';
 
@@ -28,8 +28,6 @@ export interface Term extends BucketTerm {
   titleId?: string;
   criteria: unknown[];
   licensedOriginal: boolean;
-  price?: number;
-  currency?: MovieCurrency;
 }
 
 export function createTerm(params: Partial<Term> = {}): Term {

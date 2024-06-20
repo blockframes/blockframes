@@ -21,9 +21,7 @@
       {{ getAssociatedSource(item) }}
     </ng-template>
     <ng-template colRef="" label="Price" let-item sort>
-      <ng-container *ngIf="toPricePerCurrency(item) as amount">
-        <price-per-currency [price]="amount"></price-per-currency>
-      </ng-container>
+      {{ item.price | currency: waterfall.mainCurrency }}
     </ng-template>
     <ng-template colRef="status" label="Status" let-status sort>
       {{ status | toLabel: 'paymentStatus' }}

@@ -2,7 +2,6 @@ import { addYears, subYears } from 'date-fns';
 import { Person } from './identity';
 import { LanguageRecord } from './movie';
 import { App, MovieCurrency, Scope, TerritoryISOA2Value, TimeFrame, staticModel, staticModeli18n, timeFrames, timeFramesi18n } from './static';
-import { mainCurrency } from './waterfall';
 
 export interface ErrorResultResponse {
   error: string;
@@ -377,29 +376,15 @@ export const deletedIdentifier = {
 
 export const externalOrgIdentifier = 'External';
 
-// TODO #9422
 export type PricePerCurrency = Partial<Record<MovieCurrency, number>>;
 
-export function getTotalPerCurrency(prices: { price: number, currency: MovieCurrency }[] = []): PricePerCurrency {
+export function getTotalPerCurrency(prices: { price: number, currency?: MovieCurrency }[] = []): PricePerCurrency {
   const totalPrice: PricePerCurrency = {};
-  prices.forEach(i => {
+  prices.filter(i => !!i.currency).forEach(i => {
     totalPrice[i.currency] ||= 0;
     totalPrice[i.currency] += i.price;
   });
   return totalPrice;
-}
-
-// TODO #9422
-const pairs = {
-  'EUR-USD': 1.09,
-  'USD-EUR': 0.92,
-  'EUR-EUR': 1,
-  'USD-USD': 1,
-}
-export function convertCurrenciesTo(price: PricePerCurrency, to: MovieCurrency = mainCurrency): PricePerCurrency {
-  const prices = Object.entries(price).map(([currency, price]) => price * pairs[`${currency}-${to}`]);
-  const value = prices.reduce((a, b) => a + b, 0);
-  return { [to]: value || 0 };
 }
 
 /**

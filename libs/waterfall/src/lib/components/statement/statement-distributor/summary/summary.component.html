@@ -3,7 +3,7 @@
   <mat-divider></mat-divider>
   <p class="mat-subtitle-2" *ngIf="statement.status === 'draft'" i18n>Here is the <strong>Summary of your Statement</strong>. Please verify the information below.</p>
 
-  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment"></waterfall-statement-participation>
+  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [price]="payment"></waterfall-statement-participation>
 
   <article class="breakdown">
     <header>
@@ -17,7 +17,7 @@
           <mat-expansion-panel-header>
             <mat-panel-title>
               <span>{{ item.name }}</span>
-              <price-per-currency [price]="item.net" default="€ 0" i18n-default></price-per-currency>
+              <span>{{ item.net | currency: waterfall.mainCurrency }}</span>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <bf-table [source]="item.rows">
@@ -25,13 +25,13 @@
               <span [class]="item.type">{{ item.section }}</span>
             </ng-template>
             <ng-template colRef="" label="Prior Period" let-item i18n-label>
-              <price-per-currency [class]="item.type" [price]="item.previous" default="€ 0" i18n-default></price-per-currency>
+              <span [class]="item.type">{{ item.previous | currency: waterfall.mainCurrency }}</span>
             </ng-template>
             <ng-template colRef="" label="Current Period" let-item i18n-label>
-              <price-per-currency [class]="item.type" [price]="item.current" default="€ 0" i18n-default></price-per-currency>
+              <span [class]="item.type">{{ item.current | currency: waterfall.mainCurrency }}</span>
             </ng-template>
             <ng-template colRef="" label="Cumulative" let-item i18n-label>
-              <price-per-currency [class]="item.type" [price]="item.cumulated" default="€ 0" i18n-default></price-per-currency>
+              <span [class]="item.type">{{ item.cumulated | currency: waterfall.mainCurrency }}</span>
             </ng-template>
             <ng-template colRef="" label="" let-item>
               <ng-container *ngIf="item.type === 'right'">
@@ -52,22 +52,19 @@
                 </ng-container>
               </ng-container>
               <ng-container *ngIf="item.type === 'expense' && item.cap">
-                <span [class]="item.cumulated | expenseTypeStatus: item.cap">CAP: <price-per-currency [price]="item.cap"></price-per-currency></span>
+                <span [class]="item.cumulated | expenseTypeStatus: item.cap">CAP: {{ item.cap | currency: waterfall.mainCurrency }}</span>
               </ng-container>
             </ng-template>
           </bf-table>
           <div class="to-be-recouped" *ngIf="item.stillToBeRecouped" i18n>
-            Still to be recouped:
-            <price-per-currency [price]="item.stillToBeRecouped" default="€ 0" i18n-default></price-per-currency>
+            Still to be recouped: {{ item.stillToBeRecouped | currency: waterfall.mainCurrency }}
           </div>
           <div class="to-be-recouped" *ngIf="item.mgStatus">
             <span i18n>
-              Before recoupment:
-            <price-per-currency [price]="item.mgStatus.investments" default="€ 0" i18n-default></price-per-currency>
+              Before recoupment: {{ item.mgStatus.investments | currency: waterfall.mainCurrency }}
             </span>
             <span i18n>
-              Still to be recouped:
-              <price-per-currency [price]="item.mgStatus.stillToBeRecouped" default="€ 0" i18n-default></price-per-currency>
+              Still to be recouped: {{ item.mgStatus.stillToBeRecouped | currency: waterfall.mainCurrency }}
             </span>
           </div>
         </mat-expansion-panel>
@@ -76,7 +73,7 @@
 
     <div class="total-net" i18n>
       Total Net Receipts:
-      <price-per-currency *ngIf="totalNetReceipt$ | async as totalNet" [price]="totalNet" default="€ 0" i18n-default></price-per-currency>
+      <ng-container *ngIf="totalNetReceipt$ | async as totalNet">{{ totalNet | currency: waterfall.mainCurrency }}</ng-container>
     </div>
 
     <ng-container *ngIf="rightsBreakdown$ | async as breakdown">
@@ -86,7 +83,7 @@
           <mat-expansion-panel-header>
             <mat-panel-title>
               <span>{{ item.name }}</span>
-              <span>(<price-per-currency [price]="item.total" default="€ 0" i18n-default></price-per-currency>)</span>
+              <span>({{ item.total | currency: waterfall.mainCurrency }})</span>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <bf-table [source]="item.rows">
@@ -94,13 +91,13 @@
               <span [class]="item.type">{{ item.section }}</span>
             </ng-template>
             <ng-template colRef="" label="Prior Period" let-item i18n-label>
-              <price-per-currency [class]="item.type" [price]="item.previous" default="€ 0" i18n-default></price-per-currency>
+              <span [class]="item.type">{{ item.previous | currency: waterfall.mainCurrency }}</span>
             </ng-template>
             <ng-template colRef="" label="Current Period" let-item i18n-label>
-              <price-per-currency [class]="item.type" [price]="item.current" default="€ 0" i18n-default></price-per-currency>
+              <span [class]="item.type">{{ item.current | currency: waterfall.mainCurrency }}</span>
             </ng-template>
             <ng-template colRef="" label="Cumulative" let-item i18n-label>
-              <price-per-currency [class]="item.type" [price]="item.cumulated" default="€ 0" i18n-default></price-per-currency>
+              <span [class]="item.type">{{ item.cumulated | currency: waterfall.mainCurrency }}</span>
             </ng-template>
             <ng-template colRef="" label="" let-item>
               <ng-container *ngIf="item.type === 'right'">
@@ -121,22 +118,20 @@
                 </ng-container>
               </ng-container>
               <ng-container *ngIf="item.type === 'expense' && item.cap">
-                <span [class]="item.cumulated | expenseTypeStatus: item.cap">CAP: <price-per-currency [price]="item.cap"></price-per-currency></span>
+                <span [class]="item.cumulated | expenseTypeStatus: item.cap">CAP: {{ item.cap | currency: waterfall.mainCurrency }}</span>
               </ng-container>
             </ng-template>
           </bf-table>
           <div class="to-be-recouped" *ngIf="item.stillToBeRecouped" i18n>
             Still to be recouped:
-            <price-per-currency [price]="item.stillToBeRecouped" default="€ 0" i18n-default></price-per-currency>
+            {{ item.stillToBeRecouped | currency: waterfall.mainCurrency }}
           </div>
           <div class="to-be-recouped" *ngIf="item.mgStatus">
             <span i18n>
-              Before recoupment:
-            <price-per-currency [price]="item.mgStatus.investments" default="€ 0" i18n-default></price-per-currency>
+              Before recoupment: {{ item.mgStatus.investments | currency: waterfall.mainCurrency }}
             </span>
             <span i18n>
-              Still to be recouped:
-              <price-per-currency [price]="item.mgStatus.stillToBeRecouped" default="€ 0" i18n-default></price-per-currency>
+              Still to be recouped: {{ item.mgStatus.stillToBeRecouped | currency: waterfall.mainCurrency }}
             </span>
           </div>
         </mat-expansion-panel>
@@ -154,13 +149,13 @@
           </mat-expansion-panel-header>
           <bf-table [source]="expensesDetail.rows" pagination="50">
             <ng-template colRef="previous" label="Previous" let-previous i18n-label>
-              <price-per-currency [price]="previous"></price-per-currency>
+              {{ previous | currency: waterfall.mainCurrency }}
             </ng-template>
             <ng-template colRef="current" label="Current" let-current i18n-label>
-              <price-per-currency [price]="current"></price-per-currency>
+              {{ current | currency: waterfall.mainCurrency }}
             </ng-template>
             <ng-template colRef="cumulated" label="Cumulated" let-cumulated i18n-label>
-              <price-per-currency [price]="cumulated"></price-per-currency>
+              {{ cumulated | currency: waterfall.mainCurrency }}
             </ng-template>
             <ng-template colRef="capped" label="Capped" let-capped i18n-label>
               {{ capped ? i18nStrings.yes : i18nStrings.no }}
@@ -189,7 +184,7 @@
               {{ item.typeId | expenseType : item.contractId : waterfall }}
             </ng-template>
             <ng-template colRef="" label="Amount" let-item sort i18n-label>
-              <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
+              {{ item.price | currency: waterfall.mainCurrency }}
             </ng-template>
             <ng-template colRef="capped" label="Capped" let-capped sort i18n-label>
               {{ capped ? i18nStrings.yes : i18nStrings.no }}
@@ -200,7 +195,7 @@
     </ng-container>
   </article>
 
-  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment"></waterfall-statement-participation>
+  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [price]="payment"></waterfall-statement-participation>
 
   <div class="surface comment" *ngIf="statement.status === 'draft'; else reportedComment">
     <h3 i18n>Comment</h3>

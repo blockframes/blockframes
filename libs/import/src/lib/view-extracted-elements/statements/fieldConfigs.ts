@@ -2,12 +2,10 @@ import {
   Expense,
   Media,
   Movie,
-  MovieCurrency,
   Statement,
   Territory,
   WaterfallRightholder,
   isProducerStatement,
-  mainCurrency
 } from '@blockframes/model';
 import { ExtractConfig, getGroupedList } from '@blockframes/utils/spreadsheet';
 import {
@@ -38,7 +36,6 @@ export interface FieldsConfig {
     medias: Media[];
     id?: string;
     price: number;
-    currency: MovieCurrency;
     salesContractId: string;
   }[];
   expenses: (Expense & { cap: number })[];
@@ -135,46 +132,33 @@ export function getStatementConfig(option: StatementConfig) {
         if (!value) return 0;
         return Number(value);
       },
-        /* n */ 'incomes[].currency': (value: string): MovieCurrency => {
-        return getCurrency(value);
-      },
-        /* o */ 'incomes[].salesContractId': (value: string) => {
+        /* n */ 'incomes[].salesContractId': (value: string) => {
         return value;
       },
-        /* p */ 'expenses[].id': async (value: string) => {
+        /* o */ 'expenses[].id': async (value: string) => {
         if (value) {
           const exists = await expenseService.getValue(value);
           if (exists) throw alreadyExistError(value, 'Expense ID');
         }
         return value.trim();
       },
-        /* q */ 'expenses[].price': (value: string) => {
+        /* p */ 'expenses[].price': (value: string) => {
         return Number(value);
       },
-        /* r */ 'expenses[].currency': (value: string): MovieCurrency => {
-        return getCurrency(value);
-      },
-        /* s */ 'expenses[].typeId': (value: string) => {
+        /* q */ 'expenses[].typeId': (value: string) => {
         return value;
       },
-        /* t */ 'expenses[].nature': (value: string) => {
+        /* r */ 'expenses[].nature': (value: string) => {
         return value.trim();
       },
-        /* u */ 'expenses[].capped': (value: string) => {
+        /* s */ 'expenses[].capped': (value: string) => {
         const lower = value.trim().toLowerCase();
         return ['yes', 'true'].includes(lower);
       },
-        /* v */ 'expenses[].cap': (value: string) => {
+        /* t */ 'expenses[].cap': (value: string) => {
         return Number(value);
       },
     };
-  }
-
-  function getCurrency(value: string): MovieCurrency {
-    if (value?.trim() === '€') return 'EUR';
-    if (value?.trim() === '$') return 'USD';
-    if (value?.trim() === '£') return 'GBP';
-    return getKeyIfExists('movieCurrencies', value) || mainCurrency;
   }
 
   return getAdminConfig();

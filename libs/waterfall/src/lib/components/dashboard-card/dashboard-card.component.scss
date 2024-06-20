@@ -11,7 +11,7 @@ section {
       vertical-align: text-bottom;
     }
   }
-  price-per-currency {
+  p {
     font-size: 38px;
   }
 
@@ -31,7 +31,7 @@ section.primary {
   span.default {
     text-align: center;
   }
-  price-per-currency {
+  p {
     margin-left: 82px;
   }
 }
@@ -44,7 +44,7 @@ section.secondary {
       color: var(--active);
     }
   }
-  price-per-currency {
+  p {
     color: var(--primary-lighter);
   }
 }

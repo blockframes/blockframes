@@ -4,8 +4,8 @@
     <ng-container *ngIf="expenseType.cap.default > 0 else uncapped">
       <ng-container *ngIf="(realTimeExpenses$ | async) as realTimeExpenses">
         <strong i18n>Total capped expenses declared:</strong> 
-        <price-per-currency [convertTo]="mainCurrency" [price]="realTimeExpenses[expenseType.id]"></price-per-currency> 
-        <span i18n [class]="realTimeExpenses[expenseType.id] | expenseTypeStatus: (expenseType.cap.default | formatPair: expenseType.currency)"> ( CAP <price-per-currency [price]="expenseType.cap.default | formatPair: expenseType.currency"></price-per-currency>)</span>
+        {{ realTimeExpenses[expenseType.id] | currency: waterfall.mainCurrency }}
+        <span i18n [class]="realTimeExpenses[expenseType.id] | expenseTypeStatus: expenseType.cap.default"> ( CAP {{ expenseType.cap.default | currency: waterfall.mainCurrency }})</span>
       </ng-container>
     </ng-container>
     <ng-template #uncapped>
@@ -15,7 +15,7 @@
   <bf-form-table *ngIf="form.getExpenseType(expenseType.id)" [columns]="expenseColumns" [form]="form.getExpenseType(expenseType.id)" showEmptyForm="false" [defaultFormValue]="defaultExpenseValue(expenseType)" (itemSaved)="form.markAsDirty()">
     <!-- Columns -->
     <ng-template colRef="" label="Amount" let-item i18n-label>
-      <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
+      {{ item.price | currency: waterfall.mainCurrency }}
     </ng-template>
     <ng-template colRef="nature" label="Expenses name" let-nature i18n-label>
       {{ nature }}
@@ -31,14 +31,10 @@
           <input matInput [formControl]="expenseForm.get('nature')" required/>
         </mat-form-field>
 
-        <static-select [control]="expenseForm.get('currency')" [only]="['USD', 'EUR']" required scope="movieCurrencies">
-          <mat-label i18n>Currency</mat-label>
-        </static-select>
-
         <mat-form-field appearance="outline">
           <mat-label i18n>Amount</mat-label>
           <input type="number" matInput [formControl]="expenseForm.get('price')" required/>
-          <mat-icon matPrefix *ngIf="expenseForm.get('currency').value" [svgIcon]="expenseForm.get('currency').value"></mat-icon>
+          <mat-icon matPrefix [svgIcon]="waterfall.mainCurrency"></mat-icon>
         </mat-form-field>
 
         <mat-slide-toggle *ngIf="expenseType.cap.default > 0" [formControl]="expenseForm.get('capped')" color="primary" i18n>Is capped?</mat-slide-toggle>

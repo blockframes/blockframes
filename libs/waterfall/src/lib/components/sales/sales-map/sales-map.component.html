@@ -66,12 +66,12 @@
             <li><span><b i18n>Medias: </b>{{ infos.medias | toGroupLabel:'medias':'All' | join | maxLength:120 }}</span></li>
             <li>
               <span><b i18n>Declared Amount: </b>
-                <price-per-currency [price]="infos.declaredAmount"></price-per-currency>
+                {{ infos.declaredAmount | currency: data.waterfall.mainCurrency }}
               </span>
             </li>
             <li>
               <span><b i18n>Declared Incomes: </b>
-                <price-per-currency [price]="infos.totalIncome"></price-per-currency>
+                {{ infos.totalIncome | currency: data.waterfall.mainCurrency }}
               </span>
             </li>
           </ul>

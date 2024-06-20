@@ -9,8 +9,8 @@
       <span matLine><strong i18n>Movie:</strong> {{ movie.title.international }}</span>
     </span>
     <span>
-      <mat-icon [svgIcon]="contract.currency"></mat-icon>
-      <span matLine><strong i18n>Price: </strong><price-per-currency [price]="contract | contractPrice"></price-per-currency></span>
+      <mat-icon [svgIcon]="waterfall.mainCurrency"></mat-icon>
+      <span matLine><strong i18n>Price: </strong>{{ contract | contractPrice | currency : waterfall.mainCurrency }}</span>
     </span>
     <span>
       <mat-icon svgIcon="sellers"></mat-icon>

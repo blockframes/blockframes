@@ -3,8 +3,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { NumberPipeModule } from '@blockframes/utils/pipes';
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
-
 import { WaterfallGraphLabelComponent } from './label.component';
 
 
@@ -13,8 +11,6 @@ import { WaterfallGraphLabelComponent } from './label.component';
   imports: [
     CommonModule,
     NumberPipeModule,
-
-    PricePerCurrencyModule,
   ],
   exports: [ WaterfallGraphLabelComponent ],
 })

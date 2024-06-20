@@ -11,7 +11,6 @@ import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/grou
 import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { ExpenseTypesModalModule } from '../../expense/expense-types-modal/expense-types-modal.module';
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -35,7 +34,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     ChipsAutocompleteModule,
     ToLabelModule,
     ExpenseTypesModalModule,
-    PricePerCurrencyModule,
 
     MatIconModule,
     MatInputModule,

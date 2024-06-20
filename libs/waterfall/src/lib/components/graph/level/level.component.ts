@@ -29,6 +29,7 @@ export class WaterfallGraphLevelComponent implements OnChanges {
     map(([state, revenueMode]) => state.waterfall.state.rights[this.right.id]?.revenu[revenueMode] ?? 0),
     startWith(0),
   );
+  public waterfall = this.shell.waterfall;
 
   constructor(
     public shell: DashboardWaterfallShellComponent,

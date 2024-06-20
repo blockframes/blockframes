@@ -7,7 +7,6 @@ import { WaterfallGraphVerticalComponent } from './vertical.component';
 
 // Blockframes
 import { NumberPipeModule } from '@blockframes/utils/pipes';
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { WaterfallGraphLevelModule } from '../level/level.module';
 import { WaterfallGraphRightModule } from '../right/right.module';
 import { GraphNodePipeModule } from '../../../pipes/graph-node-pipe';
@@ -23,7 +22,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     CommonModule,
 
     NumberPipeModule,
-    PricePerCurrencyModule,
     WaterfallGraphRightModule,
     WaterfallGraphLevelModule,
     GraphNodePipeModule,

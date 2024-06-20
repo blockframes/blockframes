@@ -8,7 +8,6 @@ import { SalesMapComponent } from './sales-map.component';
 // Blockframes
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 import { MapModule } from '@blockframes/ui/map';
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 import { ImageModule } from '@blockframes/media/image/directives/image.module';
 
@@ -25,7 +24,6 @@ import { MatDividerModule } from '@angular/material/divider';
     RouterModule,
     LogoSpinnerModule,
     MapModule,
-    PricePerCurrencyModule,
     ImageModule,
 
     // Material

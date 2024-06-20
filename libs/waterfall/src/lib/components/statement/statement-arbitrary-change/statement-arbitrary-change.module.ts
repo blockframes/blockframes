@@ -6,7 +6,6 @@ import { StatementArbitraryChangeComponent } from './statement-arbitrary-change.
 
 // Blockframes
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { RightHolderNamePipeModule } from '../../../pipes/rightholder-name.pipe';
 import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 
@@ -26,7 +25,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ReactiveFormsModule,
 
     GlobalModalModule,
-    PricePerCurrencyModule,
     RightHolderNamePipeModule,
 
     MatIconModule,

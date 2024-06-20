@@ -83,7 +83,7 @@
         </ng-template>
         <ng-template colRef="payload.amount" label="Amount" let-amount>
           <ng-container *ngIf="amount else noPrice">
-            <price-per-currency [price]="amount | formatPair"></price-per-currency>
+            {{ amount | currency: waterfall.mainCurrency }}
           </ng-container>
           <ng-template #noPrice>--</ng-template>
         </ng-template>
@@ -105,7 +105,7 @@
 
   <ng-container *ngIf="(displayWaterfall$ | async) && (shell.state$ | async) as state">
     <h3>Waterfall</h3>
-    <waterfall-g6-graph [tree]="state.waterfall" [rightholders]="waterfall.rightholders"></waterfall-g6-graph>
+    <waterfall-g6-graph [tree]="state.waterfall" [waterfall]="waterfall"></waterfall-g6-graph>
   </ng-container>
   
   <ng-container *ngIf="waterfall.versions.length">

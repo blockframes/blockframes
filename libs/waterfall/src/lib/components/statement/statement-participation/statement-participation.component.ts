@@ -1,6 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { MovieCurrency, PricePerCurrency } from '@blockframes/model';
+import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 
 @Component({
   selector: 'waterfall-statement-participation',
@@ -9,7 +9,9 @@ import { MovieCurrency, PricePerCurrency } from '@blockframes/model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StatementParticipationComponent {
-  @Input() payment: { price: number, currency: MovieCurrency };
-  @Input() price: PricePerCurrency;
+  @Input() price: number;
   @Input() label = $localize`Producer's net participation`;
+  public waterfall = this.shell.waterfall;
+
+  constructor(private shell: DashboardWaterfallShellComponent) { }
 }

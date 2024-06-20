@@ -1,4 +1,4 @@
-import { MovieVideos, Organization, PricePerCurrency, sum, Duration } from '@blockframes/model';
+import { MovieVideos, Organization, Duration } from '@blockframes/model';
 
 export const sorts = {
   byOrgName: (a: Organization, b: Organization) => {
@@ -16,13 +16,6 @@ export const sorts = {
   byLength: (a: unknown[], b: unknown[]) => {
     if (a.length > b.length) return 1;
     if (a.length < b.length) return -1;
-    return 0;
-  },
-  byPriceCurrency: (_a: PricePerCurrency, _b: PricePerCurrency) => {
-    const a = sum(Object.values(_a));
-    const b = sum(Object.values(_b));
-    if (a > b) return 1;
-    if (a < b) return -1;
     return 0;
   },
   byDuration: (a: Duration, b: Duration) => {

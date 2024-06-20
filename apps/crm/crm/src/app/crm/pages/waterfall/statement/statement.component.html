@@ -1,7 +1,7 @@
 <ng-container *ngIf="statement">
   <waterfall-statement-header *ngIf="sources" [statement]="statement" [sources]="sources" (versionChanged)="versionChanged()"></waterfall-statement-header>
 
-  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment" label="Total Participation"></waterfall-statement-participation>
+  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [price]="payment" label="Total Participation"></waterfall-statement-participation>
 
   <h3>Incomes</h3>
   <bf-table [source]="incomes" useFilter pagination="50">
@@ -15,15 +15,13 @@
       {{ status | toLabel: 'paymentStatus' }}
     </ng-template>
     <ng-template colRef="" label="Price" let-item sort>
-      <ng-container *ngIf="toPricePerCurrency(item) as amount">
-        <price-per-currency [price]="amount"></price-per-currency>
-      </ng-container>
+      {{ item.price | currency: (waterfall$ | async).mainCurrency }}
     </ng-template>
   </bf-table>
 
   <ng-container *ngIf="expenses.length">
     <h3>Expenses</h3>
-    <bf-table [source]="expenses" useFilter pagination="50">
+    <bf-table *ngIf="(waterfall$ | async) as waterfall" [source]="expenses" useFilter pagination="50">
       <ng-template colRef="id" label="Id" let-id sort>
         {{ id }}
       </ng-template>
@@ -31,7 +29,7 @@
         {{ nature }}
       </ng-template>
       <ng-template colRef="" label="Type" let-item sort>
-        {{ item.typeId | expenseType : item.contractId : (waterfall$ | async) }}
+        {{ item.typeId | expenseType : item.contractId : waterfall }}
       </ng-template>
       <ng-template colRef="capped" label="Capped" let-capped sort>
         {{ capped ? 'Yes' : 'No' }}
@@ -40,15 +38,13 @@
         {{ status | toLabel: 'paymentStatus' }}
       </ng-template>
       <ng-template colRef="" label="Amount" let-item sort>
-        <ng-container *ngIf="toPricePerCurrency(item) as amount">
-          <price-per-currency [price]="amount"></price-per-currency>
-        </ng-container>
+        {{ item.price | currency: waterfall.mainCurrency }}
       </ng-template>
     </bf-table>
   </ng-container>
 
   <h3>Rights</h3>
-  <bf-table [source]="rights | filterRights: statement" clickable useFilter pagination="50" (rowClick)="showRightDetails($event)">
+  <bf-table *ngIf="(waterfall$ | async) as waterfall" [source]="rights | filterRights: statement" clickable useFilter pagination="50" (rowClick)="showRightDetails($event)">
     <ng-template colRef="id" label="Id" let-id sort>
       {{ id }}
       <button mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
@@ -69,24 +65,24 @@
     </ng-template>
     <ng-template colRef="id" label="Declared" let-id>
       <strong>
-        <price-per-currency [price]="getRightPayment(id)"></price-per-currency>
+        {{ getRightPayment(id) | currency: waterfall.mainCurrency }}
       </strong>
     </ng-template>
     <ng-template colRef="id" label="Calculated" let-id>
-      <price-per-currency [price]="getCalculatedAmount(id)"></price-per-currency>
+      {{ getCalculatedAmount(id) | currency: waterfall.mainCurrency }}
     </ng-template>
     <ng-template colRef="id" label="Cumulated" let-id>
-      <price-per-currency [price]="getCumulatedAmount(id)"></price-per-currency>
+      {{ getCumulatedAmount(id) | currency: waterfall.mainCurrency }}
     </ng-template>
     <ng-template colRef="id" label="Overall Cumulated" let-id>
-      <price-per-currency [price]="getCumulatedAmount(id, true)"></price-per-currency>
+      {{ getCumulatedAmount(id, true) | currency: waterfall.mainCurrency }}
     </ng-template>
   </bf-table>
 
   <article *ngIf="rightDetails.length" class="right-details">
     <h3>Details</h3>
     <ng-container *ngFor="let details of rightDetails">
-      <bf-table [source]="details" pagination="50">
+      <bf-table *ngIf="(waterfall$ | async) as waterfall" [source]="details" pagination="50">
         <ng-template colRef="" label="#" let-index="index">
           {{ index + 1 }}
         </ng-template>
@@ -97,14 +93,14 @@
           {{ to }}
         </ng-template>
         <ng-template colRef="amount" label="Amount" let-amount>
-          <price-per-currency [price]="amount | formatPair"></price-per-currency>
+          {{ amount | currency: waterfall.mainCurrency }}
         </ng-template>
         <ng-template colRef="percent" label="%" let-percent>
           {{ percent }}
         </ng-template>
         <ng-template colRef="taken" label="Taken" let-taken>
           <strong>
-            <price-per-currency [price]="taken | formatPair"></price-per-currency>
+            {{ taken | currency: waterfall.mainCurrency }}
           </strong>
         </ng-template>
       </bf-table>

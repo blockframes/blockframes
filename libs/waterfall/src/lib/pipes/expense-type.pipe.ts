@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { PricePerCurrency, Waterfall, convertCurrenciesTo, mainCurrency } from '@blockframes/model';
+import { Waterfall } from '@blockframes/model';
 
 @Pipe({ name: 'expenseType' })
 export class ExpenseTypePipe implements PipeTransform {
@@ -10,12 +10,10 @@ export class ExpenseTypePipe implements PipeTransform {
 
 @Pipe({ name: 'expenseTypeStatus' })
 export class ExpenseTypeStatusPipe implements PipeTransform {
-  transform(amount: PricePerCurrency, cap: PricePerCurrency, currency = mainCurrency): string {
-    const currentValue = convertCurrenciesTo(amount, currency)[currency];
-    const capValue = convertCurrenciesTo(cap, currency)[currency];
-    if (currentValue / capValue <= 0.8) return 'ok';
-    if (currentValue / capValue >= 1) return 'alert';
-    if (currentValue / capValue > 0.8) return 'warning';
+  transform(amount: number, cap: number): string {
+    if (amount / cap <= 0.8) return 'ok';
+    if (amount / cap >= 1) return 'alert';
+    if (amount / cap > 0.8) return 'warning';
   }
 }
 

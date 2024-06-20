@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import {
   BreakdownRow,
-  PricePerCurrency,
   RightOverride,
   Statement,
   canOnlyReadStatements,
@@ -16,7 +15,8 @@ import {
   getStatementSources,
   preferredLanguage,
   skipSourcesWithAllHiddenIncomes,
-  sortStatements
+  sortStatements,
+  sum
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '../../../../dashboard/shell/shell.component';
@@ -144,14 +144,7 @@ export class StatementDistributorSummaryComponent {
     })
   );
 
-  public totalNetReceipt$: Observable<PricePerCurrency> = this.sourcesBreakdown$.pipe(
-    map(sources => sources.map(s => s.net).reduce((acc, curr) => {
-      for (const currency of Object.keys(curr)) {
-        acc[currency] = (acc[currency] || 0) + curr[currency];
-      }
-      return acc;
-    }, {}))
-  );
+  public totalNetReceipt$: Observable<number> = this.sourcesBreakdown$.pipe(map(sources => sum(sources, s => s.net)));
 
   public rightsBreakdown$ = combineLatest([
     this.statement$, this.statementsHistory$, this.shell.expenses$,

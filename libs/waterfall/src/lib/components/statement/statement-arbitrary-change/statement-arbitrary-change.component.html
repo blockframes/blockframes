@@ -17,9 +17,9 @@
         </section>
         
         <p class="mat-subtitle-2" i18n>Value for <strong>{{ data.right.name }}</strong> was changed from  
-          <strong><price-per-currency [price]="override.initial | formatPair" default="€ 0" i18n-default></price-per-currency></strong>
+          <strong>{{ override.initial | currency: data.waterfall.mainCurrency }}</strong>
           to 
-          <strong><price-per-currency [price]="config.current | formatPair" default="€ 0" i18n-default></price-per-currency></strong>
+          <strong>{{ config.current | currency: data.waterfall.mainCurrency }}</strong>
         </p>
 
         <strong i18n>Comment</strong>
@@ -97,7 +97,7 @@
         <section>
           <mat-form-field appearance="outline">
             <mat-label i18n>Amount</mat-label>
-            <mat-icon [svgIcon]="mainCurrency" matPrefix></mat-icon>
+            <mat-icon [svgIcon]="data.waterfall.mainCurrency" matPrefix></mat-icon>
             <input matInput type="number" min="0" [max]="config.max" [formControl]="override.get('amount')" required />
             <mat-error i18n>Please fill in a value between 0 and {{ config.max }}. Note that the receipt share cannot exceed the income received.</mat-error>
           </mat-form-field>

@@ -1,12 +1,13 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Input, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { History, mainCurrency } from '@blockframes/model';
+import { History, Waterfall } from '@blockframes/model';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
 
 export interface StateDialogData {
   title: string;
-  state: unknown
+  waterfall: Waterfall;
+  state: unknown;
 }
 
 @Component({
@@ -16,7 +17,7 @@ export interface StateDialogData {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StateReaderComponent {
-
+  @Input() waterfall: Waterfall;
   @Input() state: History;
 
   constructor(public dialog: MatDialog) { }
@@ -26,6 +27,7 @@ export class StateReaderComponent {
     this.dialog.open(StateDialogComponent, {
       data: createModalData<StateDialogData>({
         title: `${type} "${name}"`,
+        waterfall: this.waterfall,
         state
       }),
       autoFocus: false
@@ -39,6 +41,5 @@ export class StateReaderComponent {
   templateUrl: 'state-dialog.html',
 })
 export class StateDialogComponent {
-  public currency = mainCurrency;
   constructor(@Inject(MAT_DIALOG_DATA) public data: StateDialogData) { }
 }

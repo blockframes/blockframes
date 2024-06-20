@@ -6,9 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 // Blockframes
 import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
 import { JoinPipeModule, MaxLengthModule, ToGroupLabelPipeModule } from '@blockframes/utils/pipes';
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/group/group.module';
-import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
 // Components
 import { IncomeFormComponent } from './form.component';
@@ -33,9 +31,7 @@ import { MatButtonModule } from '@angular/material/button';
     ToGroupLabelPipeModule,
     MaxLengthModule,
     JoinPipeModule,
-    PricePerCurrencyModule,
     GroupMultiselectModule,
-    StaticSelectModule,
 
     // Material
     MatInputModule,

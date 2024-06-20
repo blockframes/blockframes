@@ -6,7 +6,7 @@
 
   <section>
     <mat-form-field appearance="outline">
-      <mat-icon [svgIcon]="form.get('override').get('currency').value" matPrefix></mat-icon>
+      <mat-icon [svgIcon]="data.waterfall.mainCurrency" matPrefix></mat-icon>
       <input matInput type="number" min="0" [formControl]="form.get('override').get('price')" required />
       <mat-error i18n>Please fill in a value.</mat-error>
       <mat-hint i18n>Enter the new amount of this Expense. Set it to zero to delete it.</mat-hint>

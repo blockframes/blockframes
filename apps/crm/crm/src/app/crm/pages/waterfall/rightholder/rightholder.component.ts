@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { PricePerCurrency, Right, WaterfallRightholder, mainCurrency } from '@blockframes/model';
+import { Right, WaterfallRightholder } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { WaterfallService } from '@blockframes/waterfall/waterfall.service';
 import { Observable, combineLatest, map, pluck, startWith, tap } from 'rxjs';
@@ -20,16 +20,18 @@ export class RightholderComponent {
     tap(rightholder => this.rightholderForm.setValue(rightholder))
   );
 
-  public rights$: Observable<(Right & { revenue: PricePerCurrency })[]> = combineLatest([this.rightholder$, this.shell.state$.pipe(startWith(undefined)), this.shell.rights$]).pipe(
+  public rights$: Observable<(Right & { revenue: number })[]> = combineLatest([this.rightholder$, this.shell.state$.pipe(startWith(undefined)), this.shell.rights$]).pipe(
     map(([rightholder, state, rights]) => rights
       .filter(r => r.rightholderId === rightholder.id)
-      .map(r => ({ ...r, revenue: { [mainCurrency]: state?.waterfall.state.rights[r.id]?.revenu.actual || 0 } }))
+      .map(r => ({ ...r, revenue: state?.waterfall.state.rights[r.id]?.revenu.actual || 0 }))
     )
   );
 
   public rightholderForm = new WaterfallRightholderForm({});
 
   public versions = this.shell.waterfall.versions;
+
+  public waterfall = this.shell.waterfall;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,

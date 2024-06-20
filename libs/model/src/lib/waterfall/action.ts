@@ -23,9 +23,8 @@ import { assertNode, getChildRights, getGroup, getNode, getNodeOrg, isGroupChild
 import { WaterfallContract, WaterfallSource } from './waterfall';
 import { Income } from '../income';
 import { Expense, ExpenseType } from '../expense';
-import { Term } from '../terms';
-import { getContractAndAmendments, getDeclaredAmount } from '../contract';
-import { convertCurrenciesTo, sortByDate, sum } from '../utils';
+import { contractPrice, getContractAndAmendments } from '../contract';
+import { sortByDate, sum } from '../utils';
 import { MovieCurrency, Media, Territory, rightholderGroups } from '../static';
 import { Right, orderRights } from './right';
 import { Statement, isDirectSalesStatement, isDistributorStatement } from './statement';
@@ -122,16 +121,12 @@ export function runAction<N extends ActionName>(
   return actions[name](state, payload as any) as any;
 }
 
-export const mainCurrency: MovieCurrency = 'EUR';
-
-export function contractsToActions(contracts: WaterfallContract[], terms: Term[]) {
+export function contractsToActions(contracts: WaterfallContract[]) {
   const actions: Action[] = [];
 
   contracts.forEach(c => {
-    const declaredAmount = getDeclaredAmount({ ...c, terms: terms.filter(t => t.contractId === c.id) });
-    const { [mainCurrency]: amount } = convertCurrenciesTo(declaredAmount, mainCurrency);
     const payload = {
-      amount,
+      amount: contractPrice(c),
       id: c.rootId || c.id,
       date: c.signatureDate,
       start: c.duration.from,
@@ -154,7 +149,7 @@ export function investmentsToActions(contracts: WaterfallContract[]) {
     const investments = c.price;
 
     for (const investment of investments) {
-      const { [mainCurrency]: amount } = convertCurrenciesTo({ [c.currency]: investment.value }, mainCurrency);
+      const amount = investment.value;
       if (amount <= 0) continue;
       actions.push(action('invest', {
         amount,
@@ -321,7 +316,7 @@ export function expenseTypesToAction(expenseTypes: ExpenseType[], versionId: str
   const actions: Action[] = [];
 
   expenseTypes.forEach((t, index) => {
-    const { [mainCurrency]: cap } = convertCurrenciesTo({ [t.currency]: t.cap.version[versionId] ?? t.cap.default }, mainCurrency);
+    const cap = t.cap.version[versionId] ?? t.cap.default;
     actions.push(action('expenseType', {
       ...t,
       cap,
@@ -349,14 +344,13 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
 
     const source = sources.find(s => s.id === i.sourceId);
 
-    const { [mainCurrency]: amount } = convertCurrenciesTo({ [i.currency]: i.price }, mainCurrency);
     actions.push(
       action('income', {
         id: i.id,
         contractId: rootContract?.id || '',
         from: source.id,
         to: source.destinationId,
-        amount,
+        amount: i.price,
         date: i.date,
         territories: i.territories,
         medias: i.medias,
@@ -376,12 +370,11 @@ export function expensesToActions(expenses: Expense[], statements: Statement[]) 
     // An expense should have at least one statement associated on current version
     if (!statements.filter(s => s.expenseIds?.includes(e.id)).length) continue;
 
-    const { [mainCurrency]: amount } = convertCurrenciesTo({ [e.currency]: e.price }, mainCurrency);
     actions.push(
       action('expense', {
         id: e.id,
         orgId: e.rightholderId,
-        amount,
+        amount: e.price,
         typeId: e.typeId,
         capped: e.capped,
         date: e.date
@@ -405,7 +398,7 @@ export function statementsToActions(statements: Statement[], incomes: Income[]) 
         if (!incomes.find(i => i.id === payment.incomeId)) continue;
         payments.push({
           id: payment.id,
-          amount: convertCurrenciesTo({ [payment.currency]: payment.price }, mainCurrency)[mainCurrency],
+          amount: payment.price,
           from: {
             income: payment.incomeId
           },
@@ -425,7 +418,7 @@ export function statementsToActions(statements: Statement[], incomes: Income[]) 
     if (rightholderPayment) {
       payments.push({
         id: rightholderPayment.id,
-        amount: convertCurrenciesTo({ [rightholderPayment.currency]: rightholderPayment.price }, mainCurrency)[mainCurrency],
+        amount: rightholderPayment.price,
         from: {
           org: statement.senderId
         },
@@ -444,7 +437,7 @@ export function statementsToActions(statements: Statement[], incomes: Income[]) 
 
       payments.push({
         id: payment.id,
-        amount: convertCurrenciesTo({ [payment.currency]: payment.price }, mainCurrency)[mainCurrency],
+        amount: payment.price,
         from: {
           org: payment.mode === 'internal' ? statement.senderId : statement.receiverId
         },

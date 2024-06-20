@@ -3,24 +3,24 @@
     {{ event }}
   </ng-template>
   <ng-template colRef="invested" label="Amount invested" let-invested>
-    <price-per-currency [price]="invested | formatPair"></price-per-currency>
+    {{ invested | currency: waterfall.mainCurrency }}
   </ng-template>
   <ng-template colRef="revenues" label="Revenues earned" let-revenues>
-    <price-per-currency [price]="revenues | formatPair"></price-per-currency>
+    {{ revenues | currency: waterfall.mainCurrency }}
   </ng-template>
   <ng-template colRef="date" label="Event date" let-date>
     {{ date | date }}
   </ng-template>
   <ng-template colRef="amountOwed" label="Amount Owed" let-amountOwed>
-    <price-per-currency [price]="amountOwed | formatPair"></price-per-currency>
+    {{ amountOwed | currency: waterfall.mainCurrency }}
   </ng-template>
   <ng-template colRef="periodDays" label="Period Days" let-periodDays>
     <span matTooltip="Since previous Event">{{ periodDays }}</span>
   </ng-template>
   <ng-template colRef="periodInterests" label="Period interests" let-periodInterests>
-    <price-per-currency [price]="periodInterests | formatPair"></price-per-currency>
+    {{ periodInterests | currency: waterfall.mainCurrency }}
   </ng-template>
   <ng-template colRef="interestOwed" label="Period interests owed" let-interestOwed>
-    <price-per-currency [price]="interestOwed | formatPair"></price-per-currency>
+    {{ interestOwed | currency: waterfall.mainCurrency }}
   </ng-template>
 </bf-table>

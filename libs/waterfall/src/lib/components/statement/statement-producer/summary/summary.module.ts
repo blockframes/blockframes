@@ -6,7 +6,6 @@ import { StatementPeriodModule } from '../../statement-period/statement-period.m
 import { StatementHeaderModule } from '../../statement-header/statement-header.module';
 import { IncomingStatementModule } from '../incoming-statements/incoming-statements.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { StatementParticipationModule } from '../../statement-participation/statement-participation.module';
 import { StatementArbitraryChangeModule } from '../../statement-arbitrary-change/statement-arbitrary-change.module';
 import { StatementIncomeEditModule } from '../../statement-income-edit/statement-income-edit.module';
@@ -38,7 +37,6 @@ import { MatDividerModule } from '@angular/material/divider';
     StatementHeaderModule,
     IncomingStatementModule,
     TableModule,
-    PricePerCurrencyModule,
     StatementParticipationModule,
     StatementArbitraryChangeModule,
     StatementIncomeEditModule,

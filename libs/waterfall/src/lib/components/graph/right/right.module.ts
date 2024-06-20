@@ -8,7 +8,6 @@ import { WaterfallGraphRightComponent } from './right.component';
 // Blockframes
 import { NumberPipeModule } from '@blockframes/utils/pipes';
 import { RightHolderNamePipeModule } from '../../../pipes/rightholder-name.pipe';
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { GraphNodePipeModule } from '../../../pipes/graph-node-pipe';
 
 // Material
@@ -22,7 +21,6 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     NumberPipeModule,
 
-    PricePerCurrencyModule,
     RightHolderNamePipeModule,
     GraphNodePipeModule,
 

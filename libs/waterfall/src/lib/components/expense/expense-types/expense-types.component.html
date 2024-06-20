@@ -7,11 +7,8 @@
   <mat-form-field appearance="outline">
     <mat-label i18n>CAP max</mat-label>
     <input matInput type="number" placeholder="CAP max" [formControl]="versionId === 'default' ? item.controls.cap.controls.default : item.controls.cap.controls.version.controls[versionId]" />
+    <mat-icon [svgIcon]="waterfall.mainCurrency" matSuffix></mat-icon>
   </mat-form-field>
-
-  <static-select [control]="item.controls.currency" [only]="['USD', 'EUR']" scope="movieCurrencies">
-    <mat-label i18n>Currency</mat-label>
-  </static-select>
 
   <ng-container *ngIf="!last; else isLast">
     <button mat-icon-button class="delete" (click)="remove(index)" [matTooltip]="deleteExpenseType" [disabled]="versionId !== 'default'">

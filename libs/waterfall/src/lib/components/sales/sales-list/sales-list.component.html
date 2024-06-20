@@ -26,8 +26,8 @@
         {{ medias | toGroupLabel:'medias':'All'| join }}
       </span>
     </ng-template>
-    <ng-template colRef="amount" label="Amount" let-amount sort [sort]="sorts.byPriceCurrency" i18n-label>
-      <price-per-currency [price]="amount"></price-per-currency>
+    <ng-template colRef="amount" label="Amount" let-amount sort i18n-label>
+      {{ amount | currency: waterfall.mainCurrency }}
     </ng-template>
   </bf-table>
 </section>

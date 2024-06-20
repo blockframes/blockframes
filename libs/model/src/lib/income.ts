@@ -10,7 +10,7 @@ export interface Income {
   contractId: string;
   price: number;
   version: Record<string, { hidden?: true, price: number }>;
-  currency: MovieCurrency;
+  currency?: MovieCurrency;
   offerId?: string;
   titleId?: string;
   status: PaymentStatus;

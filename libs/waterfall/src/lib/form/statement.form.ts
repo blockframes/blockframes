@@ -5,12 +5,10 @@ import {
   ExpenseType,
   Income,
   IncomePayment,
-  MovieCurrency,
   RightPayment,
   RightholderPayment,
   Statement,
-  WaterfallSource,
-  mainCurrency
+  WaterfallSource
 } from '@blockframes/model';
 import { FormEntity, FormList, compareDates, isDateAfter } from '@blockframes/utils/form';
 
@@ -25,7 +23,6 @@ function createIncomeFormControl(income?: Partial<Income>) {
     medias: new FormControl<string[]>(income?.medias ?? []),
     territories: new FormControl<string[]>(income?.territories ?? []),
     price: new FormControl<number>(income?.price ?? 0),
-    currency: new FormControl<string>(income?.currency ?? mainCurrency),
     date: new FormControl<Date>(income?.date ?? new Date()),
     status: new FormControl<string>(income?.status ?? 'pending'),
     sourceId: new FormControl<string>(income?.sourceId ?? ''),
@@ -50,7 +47,6 @@ function createExpenseFormControl(expense?: Partial<Expense>) {
     id: new FormControl<string>(expense?.id ?? ''),
     contractId: new FormControl<string>(expense?.contractId ?? ''),
     price: new FormControl<number>(expense?.price ?? 0),
-    currency: new FormControl<MovieCurrency>(expense?.currency ?? mainCurrency),
     date: new FormControl<Date>(expense?.date ?? new Date()),
     status: new FormControl<string>(expense?.status ?? 'pending'),
     titleId: new FormControl<string>(expense?.titleId ?? ''),
@@ -78,7 +74,6 @@ function createIncomePaymentControl(income?: Partial<IncomePayment>) {
     id: new FormControl<string>(income?.id ?? ''),
     type: new FormControl<string>('income'),
     price: new FormControl<number>(income?.price ?? 0),
-    currency: new FormControl<string>(income?.currency ?? mainCurrency),
     date: new FormControl<Date>(income?.date),
     status: new FormControl<string>('received'),
     mode: new FormControl<string>('internal'),
@@ -99,7 +94,6 @@ function createRightPaymentControl(right?: Partial<RightPayment>) {
     id: new FormControl<string>(right?.id ?? ''),
     type: new FormControl<string>('right'),
     price: new FormControl<number>(right?.price ?? 0),
-    currency: new FormControl<string>(right?.currency ?? mainCurrency),
     date: new FormControl<Date>(right?.date),
     status: new FormControl<string>(right?.status ?? 'pending'),
     mode: new FormControl<string>(right?.mode ?? 'internal'),
@@ -121,7 +115,6 @@ function createRightholderPaymentControl(rightholder?: Partial<RightholderPaymen
     id: new FormControl<string>(rightholder?.id ?? ''),
     type: new FormControl<string>('rightholder'),
     price: new FormControl<number>(rightholder?.price ?? 0),
-    currency: new FormControl<string>(rightholder?.currency ?? mainCurrency),
     date: new FormControl<Date>(rightholder?.date),
     status: new FormControl<string>(rightholder?.status ?? 'pending'),
     mode: new FormControl<string>('external'),

@@ -22,7 +22,7 @@
         </ng-template>
         <ng-template colRef="" label="Price" let-item sort>
           <ng-container *ngIf="item | contractPrice as amount">
-            <price-per-currency [price]="amount"></price-per-currency>
+            {{ amount | currency: waterfall.mainCurrency }}
           </ng-container>
         </ng-template>
         <ng-template colRef="type" label="Type" let-type sort>

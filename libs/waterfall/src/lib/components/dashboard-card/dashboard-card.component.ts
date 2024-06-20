@@ -1,6 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { PricePerCurrency, mainCurrency } from '@blockframes/model';
+import { Waterfall } from '@blockframes/model';
 
 @Component({
   selector: 'waterfall-dashboard-card',
@@ -9,8 +9,8 @@ import { PricePerCurrency, mainCurrency } from '@blockframes/model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardCardComponent {
-  public mainCurrency = mainCurrency;
   @Input() title: string;
   @Input() mode : 'primary' | 'secondary' = 'secondary';
-  @Input() price: PricePerCurrency;
+  @Input() price: number;
+  @Input() waterfall: Waterfall;
 }

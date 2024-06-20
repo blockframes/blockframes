@@ -2,9 +2,9 @@
 <waterfall-statement-period [statement]="statement" [form]="form"></waterfall-statement-period>
 
 <section>
-  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment" label="Total Participation" i18n-label></waterfall-statement-participation>
+  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [price]="payment" label="Total Participation" i18n-label></waterfall-statement-participation>
   <ng-container *ngIf="amortizationDetails$ | async as amortizationDetails">
-    <waterfall-statement-participation class="restToBeAmortized" *ngIf="amortizationDetails" [price]="amortizationDetails.restToBeAmortized | formatPair" label="Rest To Be Amortized" i18n-label></waterfall-statement-participation>
+    <waterfall-statement-participation class="restToBeAmortized" *ngIf="amortizationDetails" [price]="amortizationDetails.restToBeAmortized" label="Rest To Be Amortized" i18n-label></waterfall-statement-participation>
   </ng-container>
 </section>
 
@@ -33,7 +33,7 @@
               <span *ngIf="item.type === 'right'" [class]="item.type">{{ item.percent }} %</span>
             </ng-template>
             <ng-template colRef="" label="Net Receipts" let-item i18n-label>
-              <price-per-currency [class]="item.type" [price]="item.taken | formatPair" default="€ 0" i18n-default></price-per-currency>
+              <span>{{ item.taken | currency: waterfall.mainCurrency }}</span>
             </ng-template>
             <ng-template colRef="" label="" let-item>
               <ng-container *ngIf="item.type === 'right'">
@@ -84,7 +84,7 @@
               {{ to }}
             </ng-template>
             <ng-template colRef="" label="" let-item let-index="index">
-              <price-per-currency [price]="item.amount | formatPair" default="€ 0" i18n-default></price-per-currency>
+              <span>{{ item.amount | currency: waterfall.mainCurrency }}</span>
               <ng-container *ngIf="index === 0">
                 <button mat-icon-button 
                   [disabled]="!canEditIncome(item.fromId, statement)"
@@ -100,7 +100,7 @@
             </ng-template>
             <ng-template colRef="taken" label="Taken" let-taken>
               <strong>
-                <price-per-currency [price]="taken | formatPair" default="€ 0" i18n-default></price-per-currency>
+                <span>{{ taken | currency: waterfall.mainCurrency }}</span>
               </strong>
             </ng-template>
           </bf-table>
@@ -124,13 +124,13 @@
             </mat-expansion-panel-header>
             <bf-table [source]="expensesDetail.rows" pagination="50">
               <ng-template colRef="previous" label="Previous" let-previous i18n-label>
-                <price-per-currency [price]="previous"></price-per-currency>
+                <span>{{ previous | currency: waterfall.mainCurrency }}</span>
               </ng-template>
               <ng-template colRef="current" label="Current" let-current i18n-label>
-                <price-per-currency [price]="current"></price-per-currency>
+                <span>{{ current | currency: waterfall.mainCurrency }}</span>
               </ng-template>
               <ng-template colRef="cumulated" label="Cumulated" let-cumulated i18n-label>
-                <price-per-currency [price]="cumulated"></price-per-currency>
+                <span>{{ cumulated | currency: waterfall.mainCurrency }}</span>
               </ng-template>
               <ng-template colRef="capped" label="Capped" let-capped i18n-label>
                 {{ capped ? i18nStrings.yes : i18nStrings.no }}
@@ -159,7 +159,7 @@
                 {{ item.typeId | expenseType : item.contractId : waterfall }}
               </ng-template>
               <ng-template colRef="" label="Amount" let-item sort i18n-label>
-                <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
+                <span>{{ item.price | currency: waterfall.mainCurrency }}</span>
                 <button mat-icon-button 
                   [disabled]="!canEditExpense(item.id, statement) || !item.editable"
                   [matTooltip]="(!canEditExpense(item.id, statement) || !item.editable) ? i18nStrings.cannotEdit : i18nStrings.changeExpense"
@@ -171,7 +171,7 @@
               <ng-template colRef="" label="Capped" let-item sort i18n-label>
                 {{ item.capped ? i18nStrings.yes : i18nStrings.no }}
                 <ng-container *ngIf="item.cap">
-                  <span class="cap">( CAP: <price-per-currency [price]="item.cap"></price-per-currency> )</span>
+                  <span class="cap">( CAP: {{ item.cap | currency : waterfall.mainCurrency }} )</span>
                 </ng-container>
               </ng-template>
             </bf-table>
@@ -207,24 +207,24 @@
       <div class="surface">
         <section>
           <span i18n>Cost of the film to amortize</span>
-          <price-per-currency [price]="amortizationDetails.filmCost | formatPair" default="€ 0" i18n-default></price-per-currency>
+          <span>{{ amortizationDetails.filmCost | currency: waterfall.mainCurrency }}</span>
         </section>
       </div>
       <div class="surface">
         <section>
           <span i18n>Financing</span>
-          <price-per-currency [price]="amortizationDetails.financing | formatPair" default="€ 0" i18n-default></price-per-currency>
+          <span>{{ amortizationDetails.financing | currency: waterfall.mainCurrency }}</span>
         </section>
       </div>
       <div class="surface">
         <section>
           <span i18n>Producer's Net Participation</span>
-          <price-per-currency [price]="amortizationDetails.currentValue | formatPair" default="€ 0" i18n-default></price-per-currency>
+          <span>{{ amortizationDetails.currentValue | currency: waterfall.mainCurrency }}</span>
         </section>
       </div>
-      <waterfall-statement-participation class="restToBeAmortized"  [price]="amortizationDetails.restToBeAmortized | formatPair" label="Rest To Be Amortized" i18n-label></waterfall-statement-participation>
+      <waterfall-statement-participation class="restToBeAmortized" [price]="amortizationDetails.restToBeAmortized" label="Rest To Be Amortized" i18n-label></waterfall-statement-participation>
     </article>
   </ng-container>
 
-  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [payment]="payment" label="Total Participation" i18n-label></waterfall-statement-participation>
+  <waterfall-statement-participation *ngIf="statement.payments.rightholder as payment" [price]="payment" label="Total Participation" i18n-label></waterfall-statement-participation>
 </section>

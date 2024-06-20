@@ -1,8 +1,6 @@
 import {
   Movie,
-  MovieCurrency,
   Organization,
-  PricePerCurrency,
   PublicUser,
   Scope,
   Statement,
@@ -21,7 +19,6 @@ import {
   getUserEmailData,
   getWaterfallEmailData,
   isProducerStatement,
-  mainCurrency,
   rightholderKey,
   smartJoin
 } from '@blockframes/model';
@@ -133,14 +130,10 @@ async function generate(
   ]);
   hb.registerHelper('eq', (a, b) => a === b);
   hb.registerHelper('isLast', (index, array) => index === array.length - 1);
-  hb.registerHelper('pricePerCurrency', (price: PricePerCurrency) => {
-    if (!price.USD && !price.EUR) return '€ O';
-    const p = price.USD ? (Math.round(price.USD * 100) / 100) : (Math.round(price.EUR * 100) / 100);
-    return `${toLabel(price.USD ? 'USD' : 'EUR', 'movieCurrenciesSymbols')} ${p.toLocaleString(locale, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}`;
-  });
-  hb.registerHelper('formatPair', (price: number, currency: MovieCurrency) => {
-    const p = (Math.round(price * 100) / 100);
-    return `${toLabel(currency, 'movieCurrenciesSymbols')} ${p.toLocaleString(locale, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}`;
+  hb.registerHelper('toMainCurrency', (price: number) => {
+    if (!price) return `${toLabel(waterfall.mainCurrency, 'movieCurrenciesSymbols')} O`;
+    const p = (Math.round(price * 100) / 100)
+    return `${toLabel(waterfall.mainCurrency, 'movieCurrenciesSymbols')} ${p.toLocaleString(locale, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}`;
   });
   hb.registerHelper('date', (date: Date) => {
     // @dev similar to toTimezone() function
@@ -234,8 +227,7 @@ async function generate(
       },
       contract,
       rightholder,
-      parentStatements,
-      mainCurrency
+      parentStatements
     }
   };
 

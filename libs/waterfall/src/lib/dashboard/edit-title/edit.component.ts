@@ -2,14 +2,14 @@
 import { BehaviorSubject, map, startWith } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-
+import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { MovieService } from '@blockframes/movie/service';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { OrganizationService } from '@blockframes/organization/service';
 import { FileUploaderService } from '@blockframes/media/file-uploader.service';
-import { createAppConfig, createMovieAppConfig, createWaterfallRightholder } from '@blockframes/model';
+import { MovieCurrency, createAppConfig, createMovieAppConfig, createWaterfallRightholder } from '@blockframes/model';
 
 import { WaterfallService } from '../../waterfall.service';
 
@@ -23,6 +23,7 @@ export class WaterfallEditTitleComponent implements OnInit {
 
   createMode = true;
   movieForm = new MovieForm({ directors: [{ firstName: '', lastName: '' }] });
+  currencyControl = new FormControl<MovieCurrency>('USD');
   movieId = '';
 
   // check the invalidity of the movie forms value to disable/enable the create button
@@ -59,14 +60,18 @@ export class WaterfallEditTitleComponent implements OnInit {
       this.route.snapshot.params.movieId;
 
     if (!this.createMode) {
-      const movie = await this.movieService.getValue(this.movieId);
+      const [movie, waterfall] = await Promise.all([
+        this.movieService.getValue(this.movieId),
+        this.waterfallService.getValue(this.movieId)
+      ]);
       this.movieForm.patchValue(movie);
+      this.currencyControl.setValue(waterfall.mainCurrency);
     }
     this.loading$.next(false);
   }
 
   async update() {
-    if (!this.movieForm.pristine) {
+    if (!this.movieForm.pristine || !this.currencyControl.pristine) {
       this.updating$.next(true);
       const orgId = this.orgService.org.id;
 
@@ -84,6 +89,7 @@ export class WaterfallEditTitleComponent implements OnInit {
 
       } else {
         await this.movieService.update({ ...this.movieForm.value, id: this.movieId });
+        await this.waterfallService.update({ id: this.movieId, mainCurrency: this.currencyControl.value });
         this.uploadService.upload();
         this.snackBar.open('Movie updated!', 'close', { duration: 3000 });
         this.router.navigate(['..'], { relativeTo: this.route });

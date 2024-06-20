@@ -18,8 +18,8 @@ import { getUserDefaultDateFormat } from '@blockframes/utils/date-adapter';
 
 const toFixedPercentage = (percent: number) => (percent * 100).toLocaleString(undefined, { maximumFractionDigits: 4, minimumFractionDigits: 0 });
 
-function targetToString(target: TargetValue, waterfall?: Waterfall, contracts?: WaterfallContract[]) {
-  if (typeof target === 'number') return `${target}€`;
+function targetToString(target: TargetValue, waterfall: Waterfall, contracts: WaterfallContract[]) {
+  if (typeof target === 'number') return `${target}${toLabel(waterfall.mainCurrency, 'movieCurrenciesSymbols')}`;
 
   const { percent, id, in: targetIn } = target;
   /** @dev if more targets are enabled in "targetIn" libs/model/src/lib/waterfall/conditions.ts, add them here */
