@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ConditionInterest, getRightCondition, interestDetail, rightholderGroups } from '@blockframes/model';
 import { combineLatest, filter, map, switchMap } from 'rxjs';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
+import { sorts } from '@blockframes/ui/list/table/sorts';
 
 @Component({
   selector: 'crm-document',
@@ -15,6 +16,7 @@ export class DocumentComponent {
 
   public waterfall = this.shell.waterfall;
   public movie = this.shell.movie;
+  public sorts = sorts;
 
   public contract$ = this.shell.contractsAndTerms$.pipe(
     map(contracts => contracts.find(c => c.id === this.documentId)),

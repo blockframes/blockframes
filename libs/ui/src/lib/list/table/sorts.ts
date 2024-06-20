@@ -1,4 +1,4 @@
-import { MovieVideos, Organization, Duration } from '@blockframes/model';
+import { MovieVideos, Organization, Duration, contractPrice, WaterfallInvestment } from '@blockframes/model';
 
 export const sorts = {
   byOrgName: (a: Organization, b: Organization) => {
@@ -21,6 +21,13 @@ export const sorts = {
   byDuration: (a: Duration, b: Duration) => {
     if (a.to.getTime() > b.to.getTime()) return 1;
     if (a.to.getTime() < b.to.getTime()) return -1;
+    return 0;
+  },
+  byContractPrice: (a: WaterfallInvestment[], b: WaterfallInvestment[]) => {
+    const aPrice = contractPrice({ price: a });
+    const bPrice = contractPrice({ price: b });
+    if (aPrice > bPrice) return 1;
+    if (aPrice < bPrice) return -1;
     return 0;
   }
 }

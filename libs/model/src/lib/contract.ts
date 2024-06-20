@@ -4,7 +4,7 @@ import { Negotiation } from './negociation';
 import type { Media, Territory, ContractStatus, ContractType, MovieCurrency } from './static';
 import { Duration, Term } from './terms';
 import { PricePerCurrency, sortByDate, sum } from './utils';
-import { WaterfallContract } from './waterfall';
+import { WaterfallInvestment } from './waterfall';
 
 export interface Holdback {
   territories: Territory[];
@@ -140,7 +140,7 @@ export function isSale(contract: Partial<BaseContract>): contract is Sale {
   return contract.type === 'sale';
 }
 
-export function contractPrice(contract: WaterfallContract) {
+export function contractPrice(contract: { price: WaterfallInvestment[] }) {
   return sum(contract.price, (p) => p.value);
 }
 
