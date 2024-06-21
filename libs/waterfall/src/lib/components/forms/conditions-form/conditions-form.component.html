@@ -108,6 +108,7 @@
 
     <mat-form-field appearance="outline" *ngIf="form.controls.revenueTargetType.value === 'amount' || (form.controls.revenueTargetType.value === 'expense' && form.controls.revenueCap.value)">
       <mat-label i18n>Amount</mat-label>
+      <mat-icon *ngIf="waterfall$ | async as waterfall" [svgIcon]="waterfall.mainCurrency" matSuffix></mat-icon>
       <input matInput type="number" min="0" [formControl]="form.controls.revenueAmount" />
     </mat-form-field>
   </ng-container>

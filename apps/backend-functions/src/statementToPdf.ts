@@ -20,7 +20,8 @@ import {
   getWaterfallEmailData,
   isProducerStatement,
   rightholderKey,
-  smartJoin
+  smartJoin,
+  sum
 } from '@blockframes/model';
 import { Response } from 'firebase-functions';
 import { gzipSync } from 'node:zlib';
@@ -158,12 +159,7 @@ async function generate(
 
   // Data
   const rightholder = rightholders.find(r => r.id === statement[rightholderKey(statement.type)]);
-  const totalNetReceipt = statement.reportedData.sourcesBreakdown?.map(s => s.net).reduce((acc, curr) => {
-    for (const currency of Object.keys(curr)) {
-      acc[currency] = (acc[currency] || 0) + curr[currency];
-    }
-    return acc;
-  }, {});
+  const totalNetReceipt = sum(statement.reportedData.sourcesBreakdown || [], s => s.net);
   const parentStatements = _parentStatements.map(stm => {
     const senderAddress = rightholderOrgs.find(r => r.rightholderId === stm.senderId)?.org?.addresses?.main;
     return {
@@ -171,12 +167,7 @@ async function generate(
       sender: rightholders.find(r => r.id === stm.senderId).name,
       senderAddress: senderAddress?.country ? senderAddress : null,
       receiver: rightholders.find(r => r.id === stm.receiverId).name,
-      totalNetReceipt: stm.reportedData.sourcesBreakdown.map(s => s.net).reduce((acc, curr) => {
-        for (const currency of Object.keys(curr)) {
-          acc[currency] = (acc[currency] || 0) + curr[currency];
-        }
-        return acc;
-      }, {})
+      totalNetReceipt: sum(stm.reportedData.sourcesBreakdown || [], s => s.net)
     };
   });
 
