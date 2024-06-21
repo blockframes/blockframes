@@ -931,6 +931,8 @@
     "2228214326496939696": "Décompte de {$INTERPOLATION} #{$INTERPOLATION_1}",
     "1488419576044690248": "Vous consultez un décompte dupliqué.",
     "7951094347824229908": "Le décompte est en attente de révision",
+    "248995281800912525": "Enregistrer les modifications des revenus",
+    "3889187245818170822": "Entrez le nouveau montant de ce revenu. Mettez-le à zéro pour le supprimer.",
     "4435277012621228968": " Décompte reporté : {$INTERPOLATION} ",
     "4145927569453912240": "Voir le décompte",
     "5078046962778932115": "Contrat : ",

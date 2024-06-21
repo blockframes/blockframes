@@ -931,6 +931,8 @@
     "2228214326496939696": "{$INTERPOLATION} Declaración #{$INTERPOLATION_1}",
     "1488419576044690248": "Estás viendo una Declaración duplicada.",
     "7951094347824229908": "La declaración está esperando una revisión.",
+    "248995281800912525": "Guardar cambios de ingresos",
+    "3889187245818170822": "Ingrese el nuevo monto de este ingreso. Establézcalo en cero para eliminarlo.",
     "4435277012621228968": " Declaración Reportada: {$INTERPOLATION}",
     "4145927569453912240": "Ver Declaración",
     "5078046962778932115": "Contrato:",
