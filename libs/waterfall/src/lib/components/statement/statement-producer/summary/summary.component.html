@@ -33,7 +33,7 @@
               <span *ngIf="item.type === 'right'" [class]="item.type">{{ item.percent }} %</span>
             </ng-template>
             <ng-template colRef="" label="Net Receipts" let-item i18n-label>
-              <span>{{ item.taken | currency: waterfall.mainCurrency }}</span>
+              <span [class]="item.type">{{ item.taken | currency: waterfall.mainCurrency }}</span>
             </ng-template>
             <ng-template colRef="" label="" let-item>
               <ng-container *ngIf="item.type === 'right'">

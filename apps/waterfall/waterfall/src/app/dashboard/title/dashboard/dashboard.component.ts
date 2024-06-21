@@ -308,9 +308,9 @@ export class DashboardComponent {
       return orgs.map(org => ({
         name: org.name,
         investment: org.investment,
-        expense: org.investment,
-        turnover: org.investment,
-        revenue: org.investment,
+        expense: org.expense,
+        turnover: org.turnover.actual,
+        revenue: org.revenu.actual,
         gross: Math.round(org.revenu.actual / incomes * 100),
       }));
     }),
