@@ -133,7 +133,7 @@ async function generate(
   hb.registerHelper('isLast', (index, array) => index === array.length - 1);
   hb.registerHelper('toMainCurrency', (price: number) => {
     if (!price) return `${toLabel(waterfall.mainCurrency, 'movieCurrenciesSymbols')} O`;
-    const p = (Math.round(price * 100) / 100)
+    const p = (Math.round(price * 100) / 100);
     return `${toLabel(waterfall.mainCurrency, 'movieCurrenciesSymbols')} ${p.toLocaleString(locale, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}`;
   });
   hb.registerHelper('date', (date: Date) => {

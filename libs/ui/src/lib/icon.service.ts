@@ -2,8 +2,55 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { MovieCurrency } from '@blockframes/model';
 
-export const icons = [
+const currencyIcons: { name: MovieCurrency, url: string }[] = [
+  { name: 'USD', url: 'assets/icons/currencies/USD.svg' },
+  { name: 'EUR', url: 'assets/icons/currencies/EUR.svg' },
+  { name: 'JPY', url: 'assets/icons/currencies/JPY.svg' },
+  { name: 'GBP', url: 'assets/icons/currencies/GBP.svg' },
+  { name: 'AUD', url: 'assets/icons/currencies/USD.svg' },
+  { name: 'CAD', url: 'assets/icons/currencies/USD.svg' },
+  { name: 'CHF', url: 'assets/icons/currencies/CHF.svg' },
+  { name: 'CNY', url: 'assets/icons/currencies/CNY.svg' },
+  { name: 'SEK', url: 'assets/icons/currencies/SEK.svg' },
+  { name: 'NZD', url: 'assets/icons/currencies/NZD.svg' },
+  // TODO #9422 add missing currency icons
+  { name: 'XOF', url: 'assets/icons/currencies/default.svg' },
+  { name: 'XAF', url: 'assets/icons/currencies/default.svg' },
+  { name: 'ZAR', url: 'assets/icons/currencies/default.svg' },
+  { name: 'JMD', url: 'assets/icons/currencies/default.svg' },
+  { name: 'TTD', url: 'assets/icons/currencies/default.svg' },
+  { name: 'BBD', url: 'assets/icons/currencies/default.svg' },
+  { name: 'XCD', url: 'assets/icons/currencies/default.svg' },
+  { name: 'PGK', url: 'assets/icons/currencies/default.svg' },
+  { name: 'FJD', url: 'assets/icons/currencies/default.svg' },
+  { name: 'SBD', url: 'assets/icons/currencies/default.svg' },
+  { name: 'ARS', url: 'assets/icons/currencies/default.svg' },
+  { name: 'BOB', url: 'assets/icons/currencies/default.svg' },
+  { name: 'CLP', url: 'assets/icons/currencies/default.svg' },
+  { name: 'COP', url: 'assets/icons/currencies/default.svg' },
+  { name: 'CRC', url: 'assets/icons/currencies/default.svg' },
+  { name: 'CUP', url: 'assets/icons/currencies/default.svg' },
+  { name: 'CUC', url: 'assets/icons/currencies/default.svg' },
+  { name: 'DOP', url: 'assets/icons/currencies/default.svg' },
+  { name: 'GTQ', url: 'assets/icons/currencies/default.svg' },
+  { name: 'HNL', url: 'assets/icons/currencies/default.svg' },
+  { name: 'MXN', url: 'assets/icons/currencies/default.svg' },
+  { name: 'NIO', url: 'assets/icons/currencies/default.svg' },
+  { name: 'PAB', url: 'assets/icons/currencies/default.svg' },
+  { name: 'PYG', url: 'assets/icons/currencies/default.svg' },
+  { name: 'PEN', url: 'assets/icons/currencies/default.svg' },
+  { name: 'UYU', url: 'assets/icons/currencies/default.svg' },
+  { name: 'VES', url: 'assets/icons/currencies/default.svg' },
+  { name: 'AOA', url: 'assets/icons/currencies/default.svg' },
+  { name: 'CVE', url: 'assets/icons/currencies/default.svg' },
+  { name: 'MZN', url: 'assets/icons/currencies/default.svg' },
+  { name: 'STN', url: 'assets/icons/currencies/default.svg' },
+  { name: 'BRL', url: 'assets/icons/currencies/default.svg' },
+] as const;
+
+const icons = [
   { name: 'access_time', url: 'assets/icons/access_time.svg' },
   { name: 'account_balance_wallet', url: 'assets/icons/account_balance_wallet.svg' },
   { name: 'account_circle', url: 'assets/icons/account_circle.svg' },
@@ -22,14 +69,12 @@ export const icons = [
   { name: 'ask_screening', url: 'assets/icons/ask_screening.svg' },
   { name: 'ask_screening_2', url: 'assets/icons/ask_screening_2.svg' },
   { name: 'attachment', url: 'assets/icons/attachment.svg' },
-  { name: 'AUD', url: 'assets/icons/attach_money.svg' },
   { name: 'badge', url: 'assets/icons/badge.svg' },
   { name: 'bookmark_border', url: 'assets/icons/bookmark_border.svg' },
   { name: 'bookmark_solid', url: 'assets/icons/bookmark_solid.svg' },
   { name: 'block', url: 'assets/icons/block.svg' },
   { name: 'build', url: 'assets/icons/build.svg' },
   { name: 'business', url: 'assets/icons/business.svg' },
-  { name: 'CAD', url: 'assets/icons/attach_money.svg' },
   { name: 'calendar_avails', url: 'assets/icons/calendar_avails.svg' },
   { name: 'calendar_today', url: 'assets/icons/calendar_today.svg' },
   { name: 'call_end', url: 'assets/icons/call_end.svg' },
@@ -40,13 +85,11 @@ export const icons = [
   { name: 'check_circle', url: 'assets/icons/check_circle.svg' },
   { name: 'chevron_left', url: 'assets/icons/chevron_left.svg' },
   { name: 'chevron_right', url: 'assets/icons/chevron_right.svg' },
-  { name: 'CHF', url: 'assets/icons/CHF.svg' },
   { name: 'close', url: 'assets/icons/close.svg' },
   { name: 'cloud_download', url: 'assets/icons/cloud_download.svg' },
   { name: 'cloud_upload', url: 'assets/icons/cloud_upload.svg' },
   { name: 'comment', url: 'assets/icons/comment.svg' },
   { name: 'contract', url: 'assets/icons/contract.svg' },
-  { name: 'CNY', url: 'assets/icons/CNY.svg' },
   { name: 'dashboard', url: 'assets/icons/dashboard.svg' },
   { name: 'delete', url: 'assets/icons/delete.svg' },
   { name: 'document', url: 'assets/icons/document.svg' },
@@ -56,7 +99,6 @@ export const icons = [
   { name: 'drag_indicator', url: 'assets/icons/drag_indicator.svg' },
   { name: 'edit', url: 'assets/icons/edit.svg' },
   { name: 'estimated', url: 'assets/icons/estimated.svg' },
-  { name: 'EUR', url: 'assets/icons/euro.svg' },
   { name: 'excel', url: 'assets/icons/excel.svg' },
   { name: 'expand_less', url: 'assets/icons/expand_less.svg' },
   { name: 'expand_more', url: 'assets/icons/expand_more.svg' },
@@ -72,7 +114,6 @@ export const icons = [
   { name: 'front_hand', url: 'assets/icons/front_hand.svg' },
   { name: 'fullscreen', url: 'assets/icons/fullscreen.svg' },
   { name: 'fullscreen_exit', url: 'assets/icons/fullscreen_exit.svg' },
-  { name: 'GBP', url: 'assets/icons/GBP.svg' },
   { name: 'group', url: 'assets/icons/group.svg' },
   { name: 'help', url: 'assets/icons/help.svg' },
   { name: 'home', url: 'assets/icons/home.svg' },
@@ -80,7 +121,6 @@ export const icons = [
   { name: 'image', url: 'assets/icons/image.svg' },
   { name: 'info', url: 'assets/icons/info.svg' },
   { name: 'invitation', url: 'assets/icons/invitation.svg' },
-  { name: 'JPY', url: 'assets/icons/JPY.svg' },
   { name: 'landscape', url: 'assets/icons/landscape.svg' },
   { name: 'launch', url: 'assets/icons/launch.svg' },
   { name: 'last_page', url: 'assets/icons/last_page.svg' },
@@ -108,7 +148,6 @@ export const icons = [
   { name: 'buyer_insights', url: 'assets/icons/buyer_insights.svg' },
   { name: 'negotiate', url: 'assets/icons/negotiate.svg' },
   { name: 'notifications', url: 'assets/icons/notifications.svg' },
-  { name: 'NZD', url: 'assets/icons/NZD.svg' },
   { name: 'paid', url: 'assets/icons/paid.svg' }, // can be used in static model
   { name: 'pause_circle', url: 'assets/icons/pause_circle.svg' },
   { name: 'payment', url: 'assets/icons/payment.svg' },
@@ -130,7 +169,6 @@ export const icons = [
   { name: 'screening', url: 'assets/icons/screening.svg' },
   { name: 'search', url: 'assets/icons/search.svg' },
   { name: 'search_table', url: 'assets/icons/search_table.svg' },
-  { name: 'SEK', url: 'assets/icons/SEK.svg' },
   { name: 'sellers', url: 'assets/icons/sellers.svg' },
   { name: 'send', url: 'assets/icons/send.svg' },
   { name: 'sentiment_satisfied', url: 'assets/icons/sentiment_satisfied.svg' },
@@ -153,7 +191,6 @@ export const icons = [
   { name: 'unicorn', url: 'assets/icons/unicorn.svg' },
   { name: 'unpublished', url: 'assets/icons/unpublished.svg' },
   { name: 'update', url: 'assets/icons/update.svg' },
-  { name: 'USD', url: 'assets/icons/attach_money.svg' },
   { name: 'video', url: 'assets/icons/video.svg' },
   { name: 'videocam', url: 'assets/icons/videocam.svg' },
   { name: 'videocam_off', url: 'assets/icons/videocam_off.svg' },
@@ -167,10 +204,10 @@ export const icons = [
   { name: 'warning', url: 'assets/icons/warning.svg' },
   { name: 'water_drop', url: 'assets/icons/water_drop.svg' },
   { name: 'world', url: 'assets/icons/world.svg' },
+  ...currencyIcons,
 ] as const;
 
 export type IconSvg = typeof icons[number]['name'];
-
 
 /**
  * Load the icons and make sure they are provided everywhere.

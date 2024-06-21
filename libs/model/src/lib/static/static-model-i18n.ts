@@ -420,6 +420,51 @@ const territoryGroupFR = {
   oceania: 'Océanie'
 } as const;
 
+const movieCurrenciesFR = {
+  USD: 'Dollar des États-Unis (USD)',
+  EUR: 'Euro',
+  JPY: 'Yen Japonais',
+  GBP: 'Livre sterling',
+  AUD: 'Dollar australien',
+  CAD: 'Dollar canadien',
+  CHF: 'Franc Suisse',
+  CNY: 'Renminbi Chinois',
+  SEK: 'Couronne Suédoise',
+  NZD: 'Dollar néo-zélandais',
+  XOF: 'Franc CFA d\'Afrique de l\'Ouest',
+  XAF: 'Franc CFA d\'Afrique centrale',
+  ZAR: 'Rand sud-africain',
+  JMD: 'Dollar jamaïcain',
+  TTD: 'Dollar de Trinité-et-Tobago',
+  BBD: 'Dollar barbadien',
+  XCD: 'Dollar des Caraïbes orientales',
+  PGK: 'Kina papou-néo-guinéen',
+  FJD: 'Dollar fidjien',
+  SBD: 'Dollar des Îles Salomon',
+  ARS: 'Peso argentin',
+  BOB: 'Boliviano bolivien',
+  CLP: 'Peso chilien',
+  COP: 'Peso colombien',
+  CRC: 'Colón costaricien',
+  CUP: 'Peso cubain (CUP)',
+  CUC: 'Peso cubain convertible (CUC)',
+  DOP: 'Peso dominicain',
+  GTQ: 'Quetzal guatémaltèque',
+  HNL: 'Lempira hondurien',
+  MXN: 'Peso mexicain',
+  NIO: 'Córdoba nicaraguayen',
+  PAB: 'Balboa panaméen (PAB)',
+  PYG: 'Guarani paraguayen',
+  PEN: 'Sol péruvien',
+  UYU: 'Peso uruguayen',
+  VES: 'Bolívar vénézuélien',
+  AOA: 'Kwanza angolais',
+  CVE: 'Escudo cap-verdien',
+  MZN: 'Metical mozambicain',
+  STN: 'Dobra de São Tomé-et-Príncipe',
+  BRL: 'Réal brésilien',
+} as const
+
 //----------------------------------
 // ES translations
 //----------------------------------
@@ -840,6 +885,51 @@ const territoryGroupES = {
   oceania: 'Oceanía'
 } as const;
 
+const movieCurrenciesES = {
+  USD: 'Dólar estadounidense (USD)',
+  EUR: 'Euro',
+  JPY: 'Yen Japonés',
+  GBP: 'Libra esterlina',
+  AUD: 'Dólar australiano',
+  CAD: 'Dólar canadiense',
+  CHF: 'Franco Suizo',
+  CNY: 'Renminbi Chino',
+  SEK: 'Corona Sueca',
+  NZD: 'Dólar neozelandés',
+  XOF: 'Franco CFA de África Occidental',
+  XAF: 'Franco CFA de África Central',
+  ZAR: 'Rand sudafricano',
+  JMD: 'Dólar jamaicano',
+  TTD: 'Dólar de Trinidad y Tobago',
+  BBD: 'Dólar barbadense',
+  XCD: 'Dólar del Caribe Oriental',
+  PGK: 'Kina de Papúa Nueva Guinea',
+  FJD: 'Dólar fiyiano',
+  SBD: 'Dólar de las Islas Salomón',
+  ARS: 'Peso argentino',
+  BOB: 'Boliviano boliviano',
+  CLP: 'Peso chileno',
+  COP: 'Peso colombiano',
+  CRC: 'Colón costarricense',
+  CUP: 'Peso cubano (CUP)',
+  CUC: 'Peso convertible cubano (CUC)',
+  DOP: 'Peso dominicano',
+  GTQ: 'Quetzal guatemalteco',
+  HNL: 'Lempira hondureño',
+  MXN: 'Peso mexicano',
+  NIO: 'Córdoba nicaragüense',
+  PAB: 'Balboa panameño (PAB)',
+  PYG: 'Guaraní paraguayo',
+  PEN: 'Sol peruano',
+  UYU: 'Peso uruguayo',
+  VES: 'Bolívar venezolano',
+  AOA: 'Kwanza angoleño',
+  CVE: 'Escudo caboverdiano',
+  MZN: 'Metical mozambiqueño',
+  STN: 'Dobra de Santo Tomé y Príncipe',
+  BRL: 'Real brasileño',
+} as const
+
 //----------------------------------
 // Mapping
 //----------------------------------
@@ -860,7 +950,8 @@ export const staticModeli18n = {
     territories: territoriesFR,
     medias: mediasFR,
     mediaGroup: mediaGroupFR,
-    territoryGroup: territoryGroupFR
+    territoryGroup: territoryGroupFR,
+    movieCurrencies: movieCurrenciesFR
   },
   es: {
     rightholderRoles: rightholderRolesES,
@@ -877,7 +968,8 @@ export const staticModeli18n = {
     territories: territoriesES,
     medias: mediasES,
     mediaGroup: mediaGroupES,
-    territoryGroup: territoryGroupES
+    territoryGroup: territoryGroupES,
+    movieCurrencies: movieCurrenciesES
   }
 };
 

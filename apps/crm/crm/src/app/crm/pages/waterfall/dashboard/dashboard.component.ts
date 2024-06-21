@@ -17,13 +17,13 @@ import {
   createProducerStatement,
   getOutgoingStatementPrerequists,
   hasContractWith,
-  movieCurrenciesSymbols,
   rightholderGroups,
   sum
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { WaterfallState } from '@blockframes/waterfall/waterfall.service';
 import { Subscription, firstValueFrom } from 'rxjs';
+import { toCurrency } from '@blockframes/utils/currency-format';
 
 @Component({
   selector: 'crm-dashboard',
@@ -46,7 +46,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public currentBlock: string;
   public producer: WaterfallRightholder;
   public options = { xAxis: { categories: [] }, series: [] };
-  public formatter = { formatter: (value: number) => `${value} ${movieCurrenciesSymbols[this.shell.waterfall.mainCurrency]}` };
+  public formatter = { formatter: (value: number) => toCurrency(value, this.shell.waterfall.mainCurrency) };
   public sub: Subscription;
 
   public columns: Record<string, string> = {

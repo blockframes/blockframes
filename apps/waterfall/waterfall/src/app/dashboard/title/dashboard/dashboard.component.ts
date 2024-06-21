@@ -20,7 +20,7 @@ import {
 
 // Blockframes
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
-import { OrgState, movieCurrenciesSymbols, titleCase, History, sum } from '@blockframes/model';
+import { OrgState, titleCase, History, sum } from '@blockframes/model';
 import { FormControl } from '@angular/forms';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationService } from '@blockframes/organization/service';
@@ -28,6 +28,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { Intercom } from 'ng-intercom';
 import { Router } from '@angular/router';
+import { currencySymbol, toCurrency } from '@blockframes/utils/currency-format';
 
 type ChartOptions = {
   series: ApexNonAxisChartSeries | ApexAxisChartSeries;
@@ -145,7 +146,7 @@ export class DashboardComponent {
             }
           }
         ],
-        tooltip: { y: { formatter: (value) => `${Math.round(value)} ${movieCurrenciesSymbols[this.shell.waterfall.mainCurrency]}` } },
+        tooltip: { y: { formatter: (value) => toCurrency(Math.round(value), this.shell.waterfall.mainCurrency) } },
       }
     })
   );
@@ -200,7 +201,7 @@ export class DashboardComponent {
         xaxis: {
           categories: rightholders.map(r => r.name)
         },
-        tooltip: { y: { formatter: (value) => `${Math.round(value)} ${movieCurrenciesSymbols[this.shell.waterfall.mainCurrency]}` } },
+        tooltip: { y: { formatter: (value) => toCurrency(Math.round(value), this.shell.waterfall.mainCurrency) } },
       };
     })
   );
@@ -282,7 +283,7 @@ export class DashboardComponent {
               show: true
             },
             title: {
-              text: movieCurrenciesSymbols[this.shell.waterfall.mainCurrency]
+              text: currencySymbol(this.shell.waterfall.mainCurrency)
             }
           }
         ],
@@ -293,7 +294,7 @@ export class DashboardComponent {
             offsetY: 30,
             offsetX: 60
           },
-          y: { formatter: (value) => `${Math.round(value / 1000)} K ${movieCurrenciesSymbols[this.shell.waterfall.mainCurrency]}` }
+          y: { formatter: (value) => toCurrency(Math.round(value), this.shell.waterfall.mainCurrency) }
         },
         legend: {
           horizontalAlign: 'left',
@@ -339,10 +340,10 @@ export class DashboardComponent {
   public downloadCsv(rows: RevenueSummary[]) {
     const exportedRows = rows.map(r => ({
       'Right Holder Name': r.name,
-      'Investment': `${r.investment} ${movieCurrenciesSymbols[this.shell.waterfall.mainCurrency]}`,
-      'Expenses': `${r.expense} ${movieCurrenciesSymbols[this.shell.waterfall.mainCurrency]}`,
-      'Cash Flow': `${r.turnover} ${movieCurrenciesSymbols[this.shell.waterfall.mainCurrency]}`,
-      'Net Revenue': `${r.revenue} ${movieCurrenciesSymbols[this.shell.waterfall.mainCurrency]}`,
+      'Investment': toCurrency(r.investment, this.shell.waterfall.mainCurrency),
+      'Expenses': toCurrency(r.expense, this.shell.waterfall.mainCurrency),
+      'Cash Flow': toCurrency(r.turnover, this.shell.waterfall.mainCurrency),
+      'Net Revenue': toCurrency(r.revenue, this.shell.waterfall.mainCurrency),
       '% Gross': `${r.gross} %`
     }));
 

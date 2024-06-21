@@ -1,6 +1,7 @@
-import { MovieCurrency, TitleState, getGroup, getNode, isGroup, toLabel } from '@blockframes/model';
+import { MovieCurrency, TitleState, getGroup, getNode, isGroup } from '@blockframes/model';
 import { EdgeConfig, NodeConfig, ComboConfig, GraphData, TreeGraph, Tooltip, GraphOptions } from '@antv/g6';
 import { DagreLayout } from '@antv/layout';
+import { currencySymbol } from '@blockframes/utils/currency-format';
 
 const roundCent = (value: number) => Math.round(value * 100) / 100;
 
@@ -40,7 +41,7 @@ export function toG6(state: TitleState, mainCurrency: MovieCurrency): GraphData 
   const edges: EdgeConfig[] = [];
   const combos: ComboConfig[] = [];
 
-  const symbol = toLabel(mainCurrency, 'movieCurrenciesSymbols');
+  const symbol = currencySymbol(mainCurrency);
 
   // Map the rights in a group with the combo id it should be in
   const rightCombo: Record<string, string> = {};
