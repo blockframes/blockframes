@@ -93,7 +93,7 @@ export class WaterfallGraphNodeDetailsComponent implements OnInit {
         );
 
         if (statement?.reportedData && statement.type !== 'producer') {
-          const { distributorExpenses, sourcesBreakdown, rightsBreakdown } = statement.reportedData;
+          const { distributorExpenses = [], sourcesBreakdown, rightsBreakdown } = statement.reportedData;
 
           const hasRight = (b: SourcesBreakdown | RightsBreakdown) => b.rows.some(r => r.right?.id === right.id);
           const breakdown = sourcesBreakdown.find(hasRight) || rightsBreakdown.find(hasRight);
