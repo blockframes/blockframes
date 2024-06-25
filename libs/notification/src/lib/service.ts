@@ -14,7 +14,8 @@ import {
   displayName,
   toLabel,
   createMovie,
-  createTitle
+  createTitle,
+  preferredLanguage
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
 import { applicationUrl } from '@blockframes/utils/apps';
@@ -53,6 +54,9 @@ export class NotificationService extends BlockframesCollection<Notification> {
   );
 
   myNotificationsCount$ = this.myNotifications$.pipe(map((notifs) => notifs.filter(notif => !notif.app?.isRead).length));
+
+  /** @dev i18n is only on waterfall app for now #9699 */
+  private locale = this.app === 'waterfall' ? preferredLanguage() : undefined;
 
   constructor(
     private authService: AuthService,
@@ -476,7 +480,8 @@ export class NotificationService extends BlockframesCollection<Notification> {
       case 'invitationToJoinWaterfallUpdated': {
         const movie = await this.loadMovie(notification.docId);
         const subject = await this.notificationSubject(notification);
-        const message = $localize`${subject} has ${notification.invitation.status} your ${notification.invitation.mode} to join ${movie.title.international}'s Waterfall.`;
+        const status = toLabel(notification.invitation.status, 'invitationStatus', undefined, undefined, this.locale);
+        const message = $localize`${subject} has ${status.toLowerCase()} your ${notification.invitation.mode} to join ${movie.title.international}'s Waterfall.`;
         return {
           ...notification,
           _meta: { ...notification._meta, createdAt: notification._meta.createdAt },
@@ -505,7 +510,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
       case 'requestForStatementReviewCreated': {
         const movie = await this.loadMovie(notification.docId);
         const imgRef = this.getPoster(movie);
-        let message = $localize`Your request to review a statement is being processed by the ${toLabel('producer', 'rightholderRoles')}.`;
+        let message = $localize`Your request to review a statement is being processed by the ${toLabel('producer', 'rightholderRoles', undefined, undefined, this.locale)}.`;
         if (notification.statementId) {
           message = $localize`Your request to review a <a href="/c/o/dashboard/title/${movie.id}/statement/${notification.statementId}" target="_blank">statement</a> for ${movie.title.international}'s Waterfall is being processed.`;
         }
@@ -521,7 +526,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
       case 'requestForStatementReviewApproved': {
         const movie = await this.loadMovie(notification.docId);
         const imgRef = this.getPoster(movie);
-        let message = $localize`Your statement has been approved by the ${toLabel('producer', 'rightholderRoles')}.`;
+        let message = $localize`Your statement has been approved by the ${toLabel('producer', 'rightholderRoles', undefined, undefined, this.locale)}.`;
         if (notification.statementId) {
           message = $localize`Your <a href="/c/o/dashboard/title/${movie.id}/statement/${notification.statementId}" target="_blank">statement</a> for ${movie.title.international}'s Waterfall has been approved.`;
         }
@@ -537,7 +542,7 @@ export class NotificationService extends BlockframesCollection<Notification> {
       case 'requestForStatementReviewDeclined': {
         const movie = await this.loadMovie(notification.docId);
         const imgRef = this.getPoster(movie);
-        let message = $localize`Your statement has been declined by the ${toLabel('producer', 'rightholderRoles')}.`;
+        let message = $localize`Your statement has been declined by the ${toLabel('producer', 'rightholderRoles', undefined, undefined, this.locale)}.`;
         if (notification.statementId) {
           message = $localize`Your <a href="/c/o/dashboard/title/${movie.id}/statement/${notification.statementId}/edit" target="_blank">statement</a> for ${movie.title.international}'s Waterfall has been declined.`;
         }
