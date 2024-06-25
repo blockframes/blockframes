@@ -78,8 +78,14 @@ section {
           color: var(--warn);
         }
 
-        mat-icon {
-          color: var(--primary);
+        button:not(.mat-mdc-button-disabled) {
+          mat-icon {
+            color: var(--primary);
+          }
+        }
+
+        button.mat-mdc-button-disabled {
+          pointer-events: auto;
         }
       }
 

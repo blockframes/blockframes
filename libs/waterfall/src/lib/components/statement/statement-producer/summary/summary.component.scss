@@ -57,8 +57,14 @@ section {
         padding: 0;
         border: none;
 
-        mat-icon {
-          color: var(--primary);
+        button:not(.mat-mdc-button-disabled) {
+          mat-icon {
+            color: var(--primary);
+          }
+        }
+
+        button.mat-mdc-button-disabled {
+          pointer-events: auto;
         }
 
         span.total, span.right {
