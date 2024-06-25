@@ -59,11 +59,9 @@ section {
 
         mat-icon {
           color: var(--primary);
-          vertical-align: middle;
-          margin-top: -2px;
         }
 
-        price-per-currency.total , span.total, price-per-currency.right , span.right {
+        span.total, span.right {
           font-weight: bold;
         }
 

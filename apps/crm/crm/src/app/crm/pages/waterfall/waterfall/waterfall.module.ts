@@ -11,7 +11,6 @@ import { ImageModule } from '@blockframes/media/image/directives/image.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { GraphModule } from '@blockframes/waterfall/components/g6/graph/graph.module';
 import { TreeModule } from '@blockframes/waterfall/components/g6/tree/tree.module';
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 import { EmptyWaterfallModule } from '@blockframes/waterfall/components/empty/empty.module';
 import { ConfirmInputModule } from '@blockframes/ui/confirm-input/confirm-input.module';
@@ -33,7 +32,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 
     TableModule,
     ImageModule,
-    PricePerCurrencyModule,
     GraphModule,
     TreeModule,
     ClipboardModule,

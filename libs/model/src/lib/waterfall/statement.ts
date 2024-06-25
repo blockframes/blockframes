@@ -1,14 +1,13 @@
 import { DocumentMeta } from '../meta';
-import { MovieCurrency, PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups, statementsRolesMapping, NegotiationStatus, RightType } from '../static';
+import { PaymentStatus, PaymentType, StatementType, StatementStatus, rightholderGroups, statementsRolesMapping, NegotiationStatus, RightType } from '../static';
 import { Duration, createDuration } from '../terms';
-import { PricePerCurrency, SupportedLanguages, convertCurrenciesTo, getTotalPerCurrency, sortByDate, sum, toLabel } from '../utils';
+import { SupportedLanguages, sortByDate, sum, toLabel } from '../utils';
 import { TitleState, TransferState } from './state';
 import { Version, Waterfall, WaterfallContract, WaterfallRightholder, WaterfallSource, getIncomesSources } from './waterfall';
 import { Right, RightOverride, createRightOverride, getChilds, getRightCondition, skipGroups } from './right';
 import { getSources, isVerticalGroupChild, nodeExists, pathExists } from './node';
 import { Income, createIncome } from '../income';
 import { getContractsWith } from '../contract';
-import { mainCurrency } from './action';
 import { ConditionWithTarget, getInvestmentValue, isConditionWithTarget } from './conditions';
 import { Expense, ExpenseType } from '../expense';
 import { InterestDetail } from './interest';
@@ -21,7 +20,6 @@ export interface Payment {
   id: string;
   type: PaymentType;
   price: number;
-  currency: MovieCurrency;
   date?: Date;
   status: PaymentStatus;
   mode: 'internal' | 'external';
@@ -63,7 +61,6 @@ function createPaymentBase(params: Partial<Payment> = {}): Payment {
     id: '',
     type: 'rightholder',
     price: 0,
-    currency: 'EUR',
     status: 'pending',
     mode: 'internal',
     ...params,
@@ -133,10 +130,10 @@ export interface Statement {
     details?: DetailsRow[]; // Rights details for outgoing statements
     expenses?: Expense[]; // Expenses history for distributor statements
     distributorExpenses?: DistributorExpenses[]; // Expenses details for distributor statements
-    expensesPerDistributor?: Record<string, (Expense & { cap?: PricePerCurrency, editable: boolean })[]>; // Expenses history for outgoing statements
+    expensesPerDistributor?: Record<string, (Expense & { cap?: number, editable: boolean })[]>; // Expenses history for outgoing statements
     distributorExpensesPerDistributor?: Record<string, DistributorExpenses[]>; // Expenses details for outgoing statements
     interests?: InterestDetail[]; // Interest details for outgoing statements 
-    producerNetParticipation?: PricePerCurrency; // Producer's net participation (for direct sales statements only)
+    producerNetParticipation?: number; // Producer's net participation (for direct sales statements only)
     amortization?: AmortizationDetails; // Amortization details for outgoing statements
   },
   hash: {
@@ -548,10 +545,9 @@ export function getCalculatedAmount(rightId: string, incomeIds: string[] | strin
  * @param state 
  * @param rights 
  * @param incomes 
- * @param currency 
  * @returns 
  */
-export function generatePayments(statement: Statement, state: TitleState, rights: Right[], incomes: Income[], currency = mainCurrency) {
+export function generatePayments(statement: Statement, state: TitleState, rights: Right[], incomes: Income[]) {
 
   // Income payments 
   if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
@@ -561,7 +557,6 @@ export function generatePayments(statement: Statement, state: TitleState, rights
       statement.payments.income.push(createIncomePayment({
         incomeId,
         price: income.price,
-        currency: income.currency,
         date: statement.duration.to,
       }));
     }
@@ -577,7 +572,6 @@ export function generatePayments(statement: Statement, state: TitleState, rights
     const payment = createRightPayment({
       to: right.id,
       price: sum(amountPerIncome, i => i.amount),
-      currency,
       date: isInternal ? statement.duration.to : undefined,
       incomeIds: amountPerIncome.map(i => i.incomeId).filter(id => {
         const income = incomes.find(i => i.id === id);
@@ -597,7 +591,6 @@ export function generatePayments(statement: Statement, state: TitleState, rights
     // Sum of external right payments
     statement.payments.rightholder = createRightholderPayment({
       price: price,
-      currency,
       date: undefined,
       incomeIds: statement.incomeIds.filter(id => {
         const income = incomes.find(i => i.id === id);
@@ -631,7 +624,6 @@ export function createMissingIncomes(incomeSources: WaterfallSource[], statement
     const income = createIncome({
       contractId: statement.contractId,
       price: 0,
-      currency: mainCurrency,
       titleId: waterfall.id,
       date: statement.duration.to,
       medias: sourceWithoutIncome.medias,
@@ -719,11 +711,11 @@ export interface MaxPerIncome {
 export interface BreakdownRow {
   section: string;
   type?: 'right' | 'net' | 'expense';
-  previous: PricePerCurrency;
-  current: PricePerCurrency;
-  cumulated: PricePerCurrency;
+  previous: number;
+  current: number;
+  cumulated: number;
   right?: Right;
-  cap?: PricePerCurrency;
+  cap?: number;
   maxPerIncome?: MaxPerIncome[];
 }
 
@@ -738,23 +730,23 @@ export interface ProducerBreakdownRow {
 }
 
 export interface MgStatus {
-  investments: PricePerCurrency,
-  stillToBeRecouped: PricePerCurrency
+  investments: number,
+  stillToBeRecouped: number
 }
 
 export interface SourcesBreakdown {
   name: string;
   rows: BreakdownRow[];
-  net: PricePerCurrency;
-  stillToBeRecouped: PricePerCurrency; // For Expenses
+  net: number;
+  stillToBeRecouped: number; // For Expenses
   mgStatus?: MgStatus
 }
 
 export interface RightsBreakdown {
   name: string;
   rows: BreakdownRow[];
-  total: PricePerCurrency;
-  stillToBeRecouped: PricePerCurrency; // For Expenses
+  total: number;
+  stillToBeRecouped: number; // For Expenses
   mgStatus?: MgStatus
 }
 
@@ -780,9 +772,9 @@ export interface DistributorExpenses {
   name: string;
   rows: {
     capped: boolean;
-    previous: PricePerCurrency;
-    current: PricePerCurrency,
-    cumulated: PricePerCurrency
+    previous: number;
+    current: number,
+    cumulated: number
   }[]
 }
 
@@ -828,9 +820,9 @@ export function getSourcesBreakdown(
     const cumulatedSourcePayments = history.map(s => s.payments.income).flat().filter(income => incomes.find(i => i.id === income.incomeId).sourceId === source.id);
     rows.push({
       section: `${toLabel('grossReceipts', 'statementSection', undefined, undefined, lang)}`,
-      previous: getTotalPerCurrency(previousSourcePayments),
-      current: getTotalPerCurrency(currentSourcePayments),
-      cumulated: getTotalPerCurrency(cumulatedSourcePayments)
+      previous: sum(previousSourcePayments, i => i.price),
+      current: sum(currentSourcePayments, i => i.price),
+      cumulated: sum(cumulatedSourcePayments, i => i.price)
     });
 
     const rights = orderedRights
@@ -844,7 +836,7 @@ export function getSourcesBreakdown(
     const previousSum: RightPayment[] = [];
     const currentSum: RightPayment[] = [];
     const cumulatedSum: RightPayment[] = [];
-    const expensesToBeRecouped: { price: number, currency: MovieCurrency }[] = [];
+    const expensesToBeRecouped: { price: number }[] = [];
     const mgStatus: { investments: number, stillToBeRecouped: number } = { investments: 0, stillToBeRecouped: 0 };
     for (const right of rights) {
       const section = right.type ? `${right.name} (${toLabel(right.type, 'rightTypes', undefined, undefined, lang)} - ${right.percent}%)` : `${right.name} (${right.percent}%)`;
@@ -873,29 +865,29 @@ export function getSourcesBreakdown(
         section,
         type: 'right',
         right,
-        previous: getTotalPerCurrency(previousRightPayment),
-        current: getTotalPerCurrency(currentRightPayment),
-        cumulated: getTotalPerCurrency(cumulatedRightPayment),
+        previous: sum(previousRightPayment, r => r.price),
+        current: sum(currentRightPayment, r => r.price),
+        cumulated: sum(cumulatedRightPayment, r => r.price),
         maxPerIncome
       });
     }
 
     // Net receipts
-    const currentNet = getTotalPerCurrency([...currentSourcePayments, ...currentSum]);
+    const currentNet = sum([...currentSourcePayments, ...currentSum], p => p.price);
     rows.push({
       section: `${source.name} (${toLabel('netReceipts', 'statementSection', undefined, undefined, lang)})`,
       type: 'net',
-      previous: getTotalPerCurrency([...previousSourcePayments, ...previousSum]),
+      previous: sum([...previousSourcePayments, ...previousSum], p => p.price),
       current: currentNet,
-      cumulated: getTotalPerCurrency([...cumulatedSourcePayments, ...cumulatedSum])
+      cumulated: sum([...cumulatedSourcePayments, ...cumulatedSum], p => p.price)
     });
 
     return {
       name: source.name,
       rows,
       net: currentNet,
-      stillToBeRecouped: expensesToBeRecouped.length ? getTotalPerCurrency(expensesToBeRecouped) : undefined,
-      mgStatus: mgStatus.investments ? { investments: { [mainCurrency]: mgStatus.investments }, stillToBeRecouped: { [mainCurrency]: mgStatus.stillToBeRecouped } } : undefined
+      stillToBeRecouped: expensesToBeRecouped.length ? sum(expensesToBeRecouped, (e) => e.price) : undefined,
+      mgStatus: mgStatus.investments ? mgStatus : undefined
     };
   });
 }
@@ -946,7 +938,7 @@ export function getRightsBreakdown(
   return rightTypes.map(type => {
     const rows: BreakdownRow[] = [];
 
-    const expensesToBeRecouped: { price: number, currency: MovieCurrency }[] = [];
+    const expensesToBeRecouped: { price: number }[] = [];
     const mgStatus: { investments: number, stillToBeRecouped: number } = { investments: 0, stillToBeRecouped: 0 };
     for (const right of rightsWithManySources) {
       if (right.type !== type) continue;
@@ -976,26 +968,21 @@ export function getRightsBreakdown(
         section,
         type: 'right',
         right,
-        previous: getTotalPerCurrency(previousRightPayment),
-        current: getTotalPerCurrency(currentRightPayment),
-        cumulated: getTotalPerCurrency(cumulatedRightPayment),
+        previous: sum(previousRightPayment, r => r.price),
+        current: sum(currentRightPayment, r => r.price),
+        cumulated: sum(cumulatedRightPayment, r => r.price),
         maxPerIncome
       });
     }
 
-    const total: PricePerCurrency = rows.filter(r => r.type === 'right').map(r => r.current).reduce((acc, curr) => {
-      for (const currency of Object.keys(curr)) {
-        acc[currency] = (acc[currency] || 0) + curr[currency];
-      }
-      return acc;
-    }, {});
+    const total = sum(rows.filter(r => r.type === 'right'), r => r.current);
 
     return {
       name: toLabel(type, 'rightTypes', undefined, undefined, lang),
       rows,
       total,
-      stillToBeRecouped: expensesToBeRecouped.length ? getTotalPerCurrency(expensesToBeRecouped) : undefined,
-      mgStatus: mgStatus.investments ? { investments: { [mainCurrency]: mgStatus.investments }, stillToBeRecouped: { [mainCurrency]: mgStatus.stillToBeRecouped } } : undefined
+      stillToBeRecouped: expensesToBeRecouped.length ? sum(expensesToBeRecouped, (e) => e.price) : undefined,
+      mgStatus: mgStatus.investments ? mgStatus : undefined
     };
   });
 }
@@ -1011,7 +998,7 @@ function getExpensesRecoupment(
   history: Statement[],
   waterfall: Waterfall
 ) {
-  const recoupment: { price: number, currency: MovieCurrency }[] = []
+  const recoupment: { price: number }[] = []
   const rightExpenseTypes = getRightExpenseTypes(right, current, waterfall);
   for (const expenseTypeId of rightExpenseTypes) {
     const expenseType = expenseTypes?.find(e => e.id === expenseTypeId);
@@ -1032,34 +1019,28 @@ function getExpensesRecoupment(
 
     rows.push({
       section: expenseType.name,
-      cap: cap > 0 ? { [expenseType.currency]: cap } : undefined,
+      cap: cap > 0 ? cap : undefined,
       type: 'expense',
-      previous: getTotalPerCurrency(previousExpenses),
-      current: getTotalPerCurrency(currentExpenses),
-      cumulated: getTotalPerCurrency(cumulatedExpenses)
+      previous: sum(previousExpenses, e => e.price),
+      current: sum(currentExpenses, e => e.price),
+      cumulated: sum(cumulatedExpenses, e => e.price)
     });
 
     if (cap > 0) {
-      // convert expenses to expenseType currency
-      const cumulatedExpensesConverted = cumulatedExpenses.map(e => ({
-        ...e,
-        price: convertCurrenciesTo({ [e.currency]: e.price }, expenseType.currency)[expenseType.currency],
-        currency: expenseType.currency
-      }));
 
-      const cappedCumulatedExpenses = cumulatedExpensesConverted.filter(e => e.capped);
-      const uncappedCumulatedExpenses = cumulatedExpensesConverted.filter(e => !e.capped);
+      const cappedCumulatedExpenses = cumulatedExpenses.filter(e => e.capped);
+      const uncappedCumulatedExpenses = cumulatedExpenses.filter(e => !e.capped);
 
       const cappedAmount = Math.min(sum(cappedCumulatedExpenses.map(e => e.price)), cap);
       const uncappedAmount = sum(uncappedCumulatedExpenses.map(e => e.price));
 
-      recoupment.push({ price: cappedAmount + uncappedAmount, currency: expenseType.currency });
+      recoupment.push({ price: cappedAmount + uncappedAmount });
     } else {
       recoupment.push(...cumulatedExpenses);
     }
   }
 
-  if (rightExpenseTypes.length > 0) recoupment.push(...cumulatedRightPayment.map(r => ({ currency: r.currency, price: -r.price })));
+  if (rightExpenseTypes.length > 0) recoupment.push(...cumulatedRightPayment.map(r => ({ price: -r.price })));
   return recoupment;
 }
 
@@ -1134,22 +1115,22 @@ export function getDistributorExpensesDetails(currents: Statement[], history: Ex
     const cummulatedCapped = [...historyCapped, ...currentCapped];
     const cummulatedUncapped = [...historyUncapped, ...currentUncapped];
 
-    const rows: { capped: boolean, previous: PricePerCurrency, current: PricePerCurrency, cumulated: PricePerCurrency }[] = [];
+    const rows: { capped: boolean, previous: number, current: number, cumulated: number }[] = [];
     if (cummulatedCapped.length) {
       rows.push({
         capped: true,
-        previous: getTotalPerCurrency(historyCapped),
-        current: getTotalPerCurrency(currentCapped),
-        cumulated: getTotalPerCurrency(cummulatedCapped),
+        previous: sum(historyCapped, e => e.price),
+        current: sum(currentCapped, e => e.price),
+        cumulated: sum(cummulatedCapped, e => e.price),
       });
     }
 
     if (cummulatedUncapped.length) {
       rows.push({
         capped: false,
-        previous: getTotalPerCurrency(historyUncapped),
-        current: getTotalPerCurrency(currentUncapped),
-        cumulated: getTotalPerCurrency(cummulatedUncapped),
+        previous: sum(historyUncapped, e => e.price),
+        current: sum(currentUncapped, e => e.price),
+        cumulated: sum(cummulatedUncapped, e => e.price),
       });
     }
 
@@ -1164,7 +1145,7 @@ function getMgRecoupment(right: Right, cumulatedRightPayment: RightPayment[], st
   let payments = 0;
   for (const contractId of contractIds) {
     investments += getInvestmentValue(state, contractId);
-    payments += convertCurrenciesTo(getTotalPerCurrency(cumulatedRightPayment))[mainCurrency];
+    payments += sum(cumulatedRightPayment, r => r.price);
   }
 
   return { investments, stillToBeRecouped: investments - payments };

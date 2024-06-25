@@ -4,7 +4,7 @@
   <bf-form-table *ngIf="form.getSource(source.id)" [columns]="incomeColumns" [form]="form.getSource(source.id)" showEmptyForm="false" [defaultFormValue]="defaultIncomeValue(source)" (itemSaved)="form.markAsDirty()">
     <!-- Columns -->
     <ng-template colRef="" label="Gross Receipts" let-item i18n-label>
-      <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
+      {{ item.price | currency: waterfall.mainCurrency }}
     </ng-template>
     <ng-template colRef="medias" label="Medias" let-medias i18n-label>
       <mat-chip-listbox *ngIf="medias.length else noMedias" aria-label="Medias">
@@ -49,14 +49,10 @@
           [control]="incomeForm.get('territories')">
         </group-multiselect>
 
-        <static-select [control]="incomeForm.get('currency')" [only]="['USD', 'EUR']" required scope="movieCurrencies">
-          <mat-label i18n>Currency</mat-label>
-        </static-select>
-
         <mat-form-field appearance="outline">
           <mat-label i18n>Gross Receipts</mat-label>
           <input type="number" matInput [formControl]="incomeForm.get('price')" required/>
-          <mat-icon matPrefix *ngIf="incomeForm.get('currency').value" [svgIcon]="incomeForm.get('currency').value"></mat-icon>
+          <mat-icon matPrefix [svgIcon]="waterfall.mainCurrency"></mat-icon>
         </mat-form-field>
       </form>
 

@@ -6,9 +6,6 @@ import {
   Income,
   Expense,
   Right,
-  PricePerCurrency,
-  Payment,
-  mainCurrency,
   isDistributorStatement,
   getSources,
   sum,
@@ -143,10 +140,6 @@ export class StatementComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  public toPricePerCurrency(item: Income | Expense | Payment): PricePerCurrency {
-    return { [item.currency]: item.price };
-  }
-
   public getAssociatedSource(income: Income) {
     try {
       return this.waterfall.sources.find(s => s.id === income.sourceId).name;
@@ -167,25 +160,23 @@ export class StatementComponent implements OnInit {
 
   public getRightPayment(rightId: string) {
     const payment = this.statement.payments.right.find(p => p.to === rightId);
-    return payment ? this.toPricePerCurrency(payment) : { [mainCurrency]: 0 };
+    return payment.price || 0;
   }
 
-  public getCalculatedAmount(rightId: string): PricePerCurrency {
-    return { [mainCurrency]: getCalculatedAmount(rightId, this.statement.incomeIds, this.simulation.waterfall.state.transfers) };
+  public getCalculatedAmount(rightId: string) {
+    return getCalculatedAmount(rightId, this.statement.incomeIds, this.simulation.waterfall.state.transfers);
   }
 
-  public getCumulatedAmount(rightId: string, overrall = false): PricePerCurrency {
+  public getCumulatedAmount(rightId: string, overrall = false) {
     if (overrall) {
-      const currentCalculatedRevenue = this.simulation.waterfall.state.rights[rightId].revenu.calculated;
-      return { [mainCurrency]: currentCalculatedRevenue };
+      return this.simulation.waterfall.state.rights[rightId].revenu.calculated;
     } else {
       // Get amount only for transfers to this right that are from the sames sources as the statement
       const transfers = Object.values(this.simulation.waterfall.state.transfers).filter(t => t.to === rightId);
       const sources = Object.values(this.simulation.waterfall.state.sources).filter(s => s.incomeIds.some(i => this.statement.incomeIds.includes(i)));
       const incomeIds = sources.map(s => s.incomeIds).flat();
       const history = transfers.map(t => t.history.filter(h => h.checked && incomeIds.includes(h.incomeId))).flat();
-      const currentCalculatedRevenue = sum(history, i => i.amount * i.percent);
-      return { [mainCurrency]: currentCalculatedRevenue };
+      return sum(history, i => i.amount * i.percent);
     }
   }
 

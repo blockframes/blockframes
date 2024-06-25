@@ -7,7 +7,6 @@ import { RouterModule } from '@angular/router';
 import { IncomingStatementComponent } from './incoming-statements.component';
 
 // Blockframes
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 
 // Material
@@ -23,9 +22,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   imports: [
     BfCommonModule,
     ReactiveFormsModule,
-
-    // Blockframes
-    PricePerCurrencyModule,
 
     // Material
     MatCheckboxModule,

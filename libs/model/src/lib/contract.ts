@@ -3,7 +3,7 @@ import { DocumentMeta, createDocumentMeta } from './meta';
 import { Negotiation } from './negociation';
 import type { Media, Territory, ContractStatus, ContractType, MovieCurrency } from './static';
 import { Duration, Term } from './terms';
-import { PricePerCurrency, sortByDate } from './utils';
+import { PricePerCurrency, sortByDate, sum } from './utils';
 import { WaterfallInvestment } from './waterfall';
 
 export interface Holdback {
@@ -140,29 +140,8 @@ export function isSale(contract: Partial<BaseContract>): contract is Sale {
   return contract.type === 'sale';
 }
 
-/**
- * Returns declared amount of a contract.
- * Amount can be located on contract document (number or array of investments) or on its terms for more detailed data
- * @param contract 
- * @returns 
- */
-export function getDeclaredAmount(contract: BaseContract & { terms?: Term[], price?: number | WaterfallInvestment[] }): PricePerCurrency {
-  const amount: PricePerCurrency = {};
-  if (contract.price) {
-    if (!Array.isArray(contract.price) && contract.price > 0) return { [contract.currency]: contract.price };
-    else if (Array.isArray(contract.price) && contract.price.some(p => p.value > 0)) {
-      contract.price.forEach(p => {
-        amount[contract.currency] ||= 0;
-        amount[contract.currency] += p.value;
-      });
-      return amount;
-    }
-  }
-  (contract.terms || []).forEach(t => {
-    amount[t.currency] ||= 0;
-    amount[t.currency] += t.price;
-  });
-  return amount;
+export function contractPrice(contract: { price: WaterfallInvestment[] }) {
+  return sum(contract.price, (p) => p.value);
 }
 
 export function getContractDurationStatus(contract: BaseContract): 'future' | 'past' | 'ongoing' {

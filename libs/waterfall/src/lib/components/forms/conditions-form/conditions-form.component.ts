@@ -8,16 +8,15 @@ import {
   numberOperator,
   WaterfallContract,
   rightholderGroups,
-  getDeclaredAmount,
   ConditionOwnerLabel,
   isDefaultVersion,
   getDefaultVersionId,
   ExpenseType,
   createExpenseType,
   Waterfall,
-  PricePerCurrency,
   Amortization,
   NumberOperator,
+  contractPrice,
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 
@@ -90,10 +89,7 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
         this.pools = [...pools];
 
         const investmentContracts = contracts.filter(c => rightholderGroups.investors.includes(c.type));
-        this.investments = investmentContracts.filter(c => {
-          const amount = getDeclaredAmount(c);
-          return amount[c.currency] > 0;
-        });
+        this.investments = investmentContracts.filter(c => contractPrice(c) > 0);
 
         const right = rights.find(r => r.id === this.rightId);
         if (!right) return; // avoid error that can happen during a right deletion
@@ -191,11 +187,10 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
 
 @Pipe({ name: 'expenseTypeCap' })
 export class ExpenseTypeCapPipe implements PipeTransform {
-  transform(typeId: string, expenseTypes: ExpenseType[], versionId: string): PricePerCurrency {
+  transform(typeId: string, expenseTypes: ExpenseType[], versionId: string): number {
     if (!typeId) return undefined;
     const expenseType = expenseTypes.find(type => type.id === typeId);
     if (!expenseType) return undefined;
-    const cap = versionId && expenseType.cap.version[versionId] ? expenseType.cap.version[versionId] : expenseType.cap.default;
-    return cap ? { [expenseType.currency]: cap } : undefined;
+    return versionId && expenseType.cap.version[versionId] ? expenseType.cap.version[versionId] : expenseType.cap.default;
   }
 }

@@ -26,7 +26,7 @@
     </svg>
   </ng-container>
 
-  <price-per-currency class="amount" [price]="amount$ | async | formatPair" default="0€"></price-per-currency>
+  <p class="amount">{{ (amount$ | async) | currency: waterfall.mainCurrency }}</p>
 
   <ng-container *ngIf="selected === '*' && !nonEditableNodeIds.includes(vertical.id)">
     <button mat-mini-fab color="primary" class="right" matTooltip="Add new Receipt Share" (click)="handleAddSibling($event)" i18n-matTooltip>

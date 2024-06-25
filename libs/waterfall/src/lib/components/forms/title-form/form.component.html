@@ -37,6 +37,11 @@
     </ng-container>
   </div>
 
+  <static-select [control]="currencyControl" required scope="movieCurrencies" [prefixIcon]="currencyControl.value" bfi18n>
+    <mat-label i18n>Currency</mat-label>
+    <span bf-mat-hint i18n>Please choose the currency that will be applied all over your project</span>
+  </static-select>
+
   <image-uploader *ngIf="canEditMovie$ | async else noUpload"
     [meta]="['movies', 'poster', movieId]"
     ratio="poster"

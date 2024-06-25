@@ -1,7 +1,7 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Input, OnChanges, OnInit } from '@angular/core';
 
-import { ExpenseType, createExpenseType } from '@blockframes/model';
+import { ExpenseType, Waterfall, createExpenseType } from '@blockframes/model';
 import { FormList } from '@blockframes/utils/form';
 import { WaterfallDocumentsService } from '../../../documents.service';
 import { ExpenseTypeForm } from '../../../form/contract.form';
@@ -15,6 +15,7 @@ import { ExpenseTypeForm } from '../../../form/contract.form';
 export class ExpenseTypesComponent implements OnInit, OnChanges {
   @Input() form: FormList<ExpenseType, ExpenseTypeForm>;
   @Input() versionId = 'default';
+  @Input() waterfall: Waterfall;
   public addExpenseType = $localize`Add Expense Type`;
   public deleteExpenseType = $localize`Delete Expense Type`;
 

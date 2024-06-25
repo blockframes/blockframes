@@ -7,7 +7,6 @@ import { StatementPaymentComponent } from './statement-payment.component';
 
 // Blockframes
 import { GlobalModalModule } from '@blockframes/ui/global-modal/global-modal.module';
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { StatementMainInfoModule } from '../statement-main-info/statement-main-info.module';
 
 // Material
@@ -25,7 +24,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     ReactiveFormsModule,
 
     GlobalModalModule,
-    PricePerCurrencyModule,
     StatementMainInfoModule,
 
     MatIconModule,

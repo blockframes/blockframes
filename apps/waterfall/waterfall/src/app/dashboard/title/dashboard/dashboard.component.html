@@ -9,6 +9,7 @@
           title="Total Gross Receipts"
           i18n-title
           [price]="income"
+          [waterfall]="waterfall"
           i18n-matTooltip
           matTooltip="The overall income a movie earns from all sources.">
         </waterfall-dashboard-card>
@@ -18,6 +19,7 @@
           title="My Total Cash Flow"
           i18n-title
           [price]="turnover"
+          [waterfall]="waterfall"
           i18n-matTooltip
           matTooltip="Refers to the sum of all incoming and outgoing money, reflecting your overall financial movement.">
         </waterfall-dashboard-card>
@@ -27,6 +29,7 @@
           title="My Total Revenue"
           i18n-title
           [price]="revenue"
+          [waterfall]="waterfall"
           i18n-matTooltip
           matTooltip="The overall income earned from all sources.">
         </waterfall-dashboard-card>
@@ -145,17 +148,17 @@
             <ng-template colRef="name" i18n-label label="Right Holder Name" let-name sort>
               {{ name }}
             </ng-template>
-            <ng-template colRef="investment" i18n-label label="Investment" let-investment [sort]="sorts.byPriceCurrency">
-              <price-per-currency [price]="investment" default="€ 0" i18n-default></price-per-currency>
+            <ng-template colRef="investment" i18n-label label="Investment" let-investment sort>
+              {{ investment | currency: waterfall.mainCurrency }}
             </ng-template>
-            <ng-template colRef="expense" i18n-label label="Expenses" let-expense sort [sort]="sorts.byPriceCurrency">
-              <price-per-currency [price]="expense" default="€ 0" i18n-default></price-per-currency>
+            <ng-template colRef="expense" i18n-label label="Expenses" let-expense sort>
+              {{ expense | currency: waterfall.mainCurrency }}
             </ng-template>
-            <ng-template colRef="turnover" i18n-label label="Cash Flow" let-turnover sort [sort]="sorts.byPriceCurrency">
-              <price-per-currency [price]="turnover" default="€ 0" i18n-default></price-per-currency>
+            <ng-template colRef="turnover" i18n-label label="Cash Flow" let-turnover sort>
+              {{ turnover | currency: waterfall.mainCurrency }}
             </ng-template>
-            <ng-template colRef="revenue" i18n-label label="Net Revenue" let-revenue sort [sort]="sorts.byPriceCurrency">
-              <price-per-currency [price]="revenue" default="€ 0" i18n-default></price-per-currency>
+            <ng-template colRef="revenue" i18n-label label="Net Revenue" let-revenue sort>
+              {{ revenue | currency: waterfall.mainCurrency }}
             </ng-template>
             <ng-template colRef="gross" i18n-label label="% Gross" let-gross sort>
               {{ gross }} %

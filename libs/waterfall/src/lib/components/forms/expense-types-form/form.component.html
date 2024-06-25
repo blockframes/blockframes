@@ -1,5 +1,5 @@
 <article *ngIf="waterfall$ | async as waterfall">
-  <waterfall-expense-types [form]="form" [versionId]="versionId$ | async"></waterfall-expense-types>
+  <waterfall-expense-types [form]="form" [versionId]="versionId$ | async" [waterfall]="waterfall"></waterfall-expense-types>
   <div>
     <button type="button" mat-stroked-button (click)="save(waterfall)">
       <mat-icon svgIcon="save"></mat-icon>

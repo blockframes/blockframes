@@ -21,7 +21,6 @@ import {
   statementsToActions,
   groupByDate,
   WaterfallContract,
-  Term,
   Right,
   Income,
   Expense,
@@ -34,7 +33,8 @@ import {
   waterfallSources,
   WaterfallRightholder,
   Amortization,
-  amortizationsToActions
+  amortizationsToActions,
+  MovieCurrency
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { AuthService } from '@blockframes/auth/service';
@@ -54,7 +54,6 @@ export interface WaterfallState {
 export interface WaterfallData {
   waterfall: Waterfall;
   contracts: WaterfallContract[];
-  terms: Term[];
   rights: Right[];
   incomes: Record<string, Income>;
   expenses: Record<string, Expense>;
@@ -97,13 +96,14 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
     );
   }
 
-  public async create(id: string, orgIds: string[], rightholders?: WaterfallRightholder[]) {
+  public async create(id: string, orgIds: string[], rightholders?: WaterfallRightholder[], mainCurrency?: MovieCurrency) {
     const createdBy = this.authService.uid;
     const waterfall = createWaterfall({
       _meta: createDocumentMeta({ createdBy }),
       id,
       orgIds,
       rightholders,
+      mainCurrency
     });
 
     await this.runTransaction(async (tx) => {
@@ -301,7 +301,7 @@ function groupActions(data: WaterfallData, versionId: string, isSimulation = fal
   const incomes = isSimulation ? Object.values(data.incomes) : Object.values(data.incomes).filter(i => !i.version[versionId] || !i.version[versionId].hidden);
 
   const expenseTypesActions = expenseTypesToAction(Object.values(data.waterfall.expenseTypes).flat(), versionId);
-  const contractActions = contractsToActions(data.contracts, data.terms);
+  const contractActions = contractsToActions(data.contracts);
   const investmentActions = investmentsToActions(data.contracts);
   const rightActions = rightsToActions(data.rights);
   const incomeActions = incomesToActions(data.contracts, incomes, sources, incomesAndExpensesStatements);

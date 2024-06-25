@@ -193,6 +193,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
           this.nonEditableNodeIds$.next(allNodeIds); // All nodes are non-editable
           // Nodes not "touched" by a reported statement are still partially editable (percentage and conditions)
           this.nonPartiallyEditableNodeIds$.next(getNonEditableNodeIds(rights, this.sources, reportedStatements, incomes));
+          // Re-partially disable current selected form
+          this.setFormState(this.selected$.value);
         } else {
           // Nodes not "touched" by a reported statement are still fully editable
           this.nonEditableNodeIds$.next(getNonEditableNodeIds(rights, this.sources, reportedStatements, incomes));
@@ -241,6 +243,21 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
+  private setFormState(selected: string) {
+    if (this.nonEditableNodeIds$.value.includes(selected)) {
+      this.rightForm.disable();
+      this.rightForm.get('parents').enable();
+      this.rightholderControl.disable();
+      if (!this.nonPartiallyEditableNodeIds$.value.includes(selected)) {
+        this.rightForm.controls.percent.enable();
+        this.rightForm.controls.steps.enable();
+      }
+    } else {
+      this.rightForm.enable();
+      this.rightholderControl.enable();
+    }
   }
 
   private updateRightName(org?: string, type?: RightType) {
@@ -334,18 +351,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
     const right = this.rights.find(right => right.id === id);
     if (right) {
-      if (this.nonEditableNodeIds$.value.includes(id)) {
-        this.rightForm.disable();
-        this.rightForm.get('parents').enable();
-        this.rightholderControl.disable();
-        if (!this.nonPartiallyEditableNodeIds$.value.includes(id)) {
-          this.rightForm.controls.percent.enable();
-          this.rightForm.controls.steps.enable();
-        }
-      } else {
-        this.rightForm.enable();
-        this.rightholderControl.enable();
-      }
+      this.setFormState(id);
       this.isSourceSelected = false;
       let steps: Condition[][] = [];
 
@@ -447,6 +453,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       }
     }
 
+    this.rightForm.markAsPristine();
+    this.conditionFormPristine$.next(true);
+
     const write = this.waterfallService.batch();
     await Promise.all([
       this.rightService.add(changes.created.rights, { params: { waterfallId: this.waterfallId }, write }),
@@ -455,9 +464,6 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.updateSources(newGraph.sources, write),
     ]);
     await write.commit();
-
-    this.rightForm.markAsPristine();
-    this.conditionFormPristine$.next(true);
 
     if (right.type === 'horizontal') {
       this.snackBar.open($localize`Group Details saved`, 'close', { duration: 3000 });

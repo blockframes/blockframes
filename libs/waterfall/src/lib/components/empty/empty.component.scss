@@ -33,9 +33,8 @@ ul {
   li {
     display: flex;
     align-items: center;
-    a { 
-      width: 300px;
-      text-align: left;
+    a {
+      min-width: 328px;
     }
   }
 }

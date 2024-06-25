@@ -29,8 +29,6 @@ function toTerm(rawTerm: FieldsConfig['term'][number], waterfallId: string, cont
     medias,
     territories_excluded = [],
     territories_included = [],
-    price,
-    currency
   } = rawTerm;
 
   const territories = territories_included.filter(territory => !territories_excluded.includes(territory));
@@ -44,8 +42,6 @@ function toTerm(rawTerm: FieldsConfig['term'][number], waterfallId: string, cont
     medias,
     territories,
     criteria: [],
-    price: (!price || isNaN(price)) ? 0 : price,
-    currency
   });
 
   term.duration = createDuration(duration);

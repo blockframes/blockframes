@@ -7,7 +7,6 @@ import { DocumentComponent } from './document.component';
 // Blockframes
 import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 import { ExpenseTypesFormModule } from '@blockframes/waterfall/components/forms/expense-types-form/form.module';
 import { InterestTableModule } from '@blockframes/waterfall/components/interests-table/interest-table.module';
@@ -25,7 +24,6 @@ import { MatButtonModule } from '@angular/material/button';
     ClipboardModule,
 
     TableModule,
-    PricePerCurrencyModule,
     RightHolderNamePipeModule,
     ExpenseTypesFormModule,
     InterestTableModule,

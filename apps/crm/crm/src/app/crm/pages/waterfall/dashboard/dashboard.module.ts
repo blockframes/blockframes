@@ -7,7 +7,6 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { DashboardComponent } from './dashboard.component';
 
 // Blockframes
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
@@ -31,7 +30,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     NgApexchartsModule,
 
     RightHolderNamePipeModule,
-    PricePerCurrencyModule,
     TableModule,
     ToLabelModule,
     StatementTableModule,

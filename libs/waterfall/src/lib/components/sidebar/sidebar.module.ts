@@ -8,7 +8,6 @@ import { WaterfallSidebarComponent } from './sidebar.component';
 
 // Blockframes
 import { BfCommonModule } from '@blockframes/utils/bf-common.module';
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -25,8 +24,6 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     BfCommonModule,
     ReactiveFormsModule,
     RouterModule,
-
-    PricePerCurrencyModule,
 
     MatIconModule,
     MatInputModule,

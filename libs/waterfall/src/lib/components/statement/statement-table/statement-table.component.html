@@ -24,16 +24,14 @@
     {{ duration.from | date }} -  {{ duration.to | date }}
   </ng-template>
   <ng-template *ngIf="columns.due" colRef="payments" [label]="columns.due" let-payments>
-    <price-per-currency 
-      *ngIf="payments.rightholder as payment else noPayment" 
-      [price]="payment.price | formatPair : payment.currency">
-    </price-per-currency>
+    <ng-container *ngIf="payments.rightholder as payment else noPayment">
+      {{ payment.price | currency: waterfall.mainCurrency }}
+    </ng-container>
   </ng-template>
   <ng-template *ngIf="columns.paid" colRef="payments" [label]="columns.paid" let-payments>
-    <price-per-currency 
-      *ngIf="payments.rightholder?.status === 'received' else noPayment"
-      [price]="payments.rightholder.price | formatPair : payments.rightholder.currency">
-    </price-per-currency>
+    <ng-container *ngIf="payments.rightholder?.status === 'received' else noPayment">
+      {{ payments.rightholder.price | currency: waterfall.mainCurrency }}
+    </ng-container>
   </ng-template>
   <ng-template *ngIf="columns.date" colRef="payments" [label]="columns.date" let-payments>
     <ng-container *ngIf="payments.rightholder?.status === 'received'">
@@ -90,6 +88,4 @@
     </ng-container>
   </ng-template>
 </bf-table>
-<ng-template #noPayment>
-  <price-per-currency [price]="0 | formatPair"></price-per-currency>
-</ng-template>
+<ng-template #noPayment>{{ 0 | currency: waterfall.mainCurrency }}</ng-template>

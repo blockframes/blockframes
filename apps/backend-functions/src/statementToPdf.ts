@@ -1,8 +1,6 @@
 import {
   Movie,
-  MovieCurrency,
   Organization,
-  PricePerCurrency,
   PublicUser,
   Scope,
   Statement,
@@ -21,9 +19,9 @@ import {
   getUserEmailData,
   getWaterfallEmailData,
   isProducerStatement,
-  mainCurrency,
   rightholderKey,
-  smartJoin
+  smartJoin,
+  sum
 } from '@blockframes/model';
 import { Response } from 'firebase-functions';
 import { gzipSync } from 'node:zlib';
@@ -133,14 +131,10 @@ async function generate(
   ]);
   hb.registerHelper('eq', (a, b) => a === b);
   hb.registerHelper('isLast', (index, array) => index === array.length - 1);
-  hb.registerHelper('pricePerCurrency', (price: PricePerCurrency) => {
-    if (!price.USD && !price.EUR) return '€ O';
-    const p = price.USD ? (Math.round(price.USD * 100) / 100) : (Math.round(price.EUR * 100) / 100);
-    return `${toLabel(price.USD ? 'USD' : 'EUR', 'movieCurrenciesSymbols')} ${p.toLocaleString(locale, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}`;
-  });
-  hb.registerHelper('formatPair', (price: number, currency: MovieCurrency) => {
+  hb.registerHelper('toMainCurrency', (price: number) => {
+    if (!price) return `${toLabel(waterfall.mainCurrency, 'movieCurrenciesSymbols')} O`;
     const p = (Math.round(price * 100) / 100);
-    return `${toLabel(currency, 'movieCurrenciesSymbols')} ${p.toLocaleString(locale, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}`;
+    return `${toLabel(waterfall.mainCurrency, 'movieCurrenciesSymbols')} ${p.toLocaleString(locale, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}`;
   });
   hb.registerHelper('date', (date: Date) => {
     // @dev similar to toTimezone() function
@@ -165,12 +159,7 @@ async function generate(
 
   // Data
   const rightholder = rightholders.find(r => r.id === statement[rightholderKey(statement.type)]);
-  const totalNetReceipt = statement.reportedData.sourcesBreakdown?.map(s => s.net).reduce((acc, curr) => {
-    for (const currency of Object.keys(curr)) {
-      acc[currency] = (acc[currency] || 0) + curr[currency];
-    }
-    return acc;
-  }, {});
+  const totalNetReceipt = sum(statement.reportedData.sourcesBreakdown || [], s => s.net);
   const parentStatements = _parentStatements.map(stm => {
     const senderAddress = rightholderOrgs.find(r => r.rightholderId === stm.senderId)?.org?.addresses?.main;
     return {
@@ -178,12 +167,7 @@ async function generate(
       sender: rightholders.find(r => r.id === stm.senderId).name,
       senderAddress: senderAddress?.country ? senderAddress : null,
       receiver: rightholders.find(r => r.id === stm.receiverId).name,
-      totalNetReceipt: stm.reportedData.sourcesBreakdown.map(s => s.net).reduce((acc, curr) => {
-        for (const currency of Object.keys(curr)) {
-          acc[currency] = (acc[currency] || 0) + curr[currency];
-        }
-        return acc;
-      }, {})
+      totalNetReceipt: sum(stm.reportedData.sourcesBreakdown || [], s => s.net)
     };
   });
 
@@ -234,8 +218,7 @@ async function generate(
       },
       contract,
       rightholder,
-      parentStatements,
-      mainCurrency
+      parentStatements
     }
   };
 

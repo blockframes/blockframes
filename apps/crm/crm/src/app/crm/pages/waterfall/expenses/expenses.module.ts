@@ -3,7 +3,6 @@ import { RouterModule } from '@angular/router';
 
 import { ExpensesComponent } from './expenses.component';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { RightHolderNamePipeModule } from '@blockframes/waterfall/pipes/rightholder-name.pipe';
 import { ContractPipeModule } from '@blockframes/contract/contract/pipe';
 import { ExpenseTypePipeModule } from '@blockframes/waterfall/pipes/expense-type.pipe';
@@ -23,7 +22,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     BfCommonModule,
 
     TableModule,
-    PricePerCurrencyModule,
     RightHolderNamePipeModule,
     ContractPipeModule,
     ExpenseTypePipeModule,

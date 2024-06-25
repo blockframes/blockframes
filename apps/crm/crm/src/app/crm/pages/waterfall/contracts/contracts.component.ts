@@ -7,6 +7,7 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { sorts } from '@blockframes/ui/list/table/sorts';
 
 @Component({
   selector: 'crm-contracts',
@@ -15,8 +16,9 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContractsComponent {
-  public contracts$ = this.shell.contractsAndTerms$;
+  public contracts$ = this.shell.contracts$;
   public waterfall = this.shell.waterfall;
+  public sorts = sorts;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,

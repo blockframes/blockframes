@@ -48,6 +48,7 @@ export class WaterfallEditAmortizationComponent implements AmortizationFormGuard
       return getNonEditableNodeIds(rights, sources, reportedStatements, incomes);
     })
   );
+  public waterfall = this.shell.waterfall;
 
   constructor(
     private router: Router,

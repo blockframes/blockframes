@@ -9,4 +9,8 @@
       width: 100%;
     }
   }
+
+  .bf-checkbox.mdc-checkbox--disabled {
+    pointer-events: auto;
+  }
 }

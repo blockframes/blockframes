@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 
 // Blockframes
 import { TableModule } from '@blockframes/ui/list/table/table.module';
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.module';
 import { RightHolderNamePipeModule } from '../../../pipes/rightholder-name.pipe';
 import { JoinPipeModule, ToGroupLabelPipeModule } from '@blockframes/utils/pipes';
@@ -23,7 +22,6 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
 
     TableModule,
-    PricePerCurrencyModule,
     ToGroupLabelPipeModule,
     JoinPipeModule,
     LogoSpinnerModule,

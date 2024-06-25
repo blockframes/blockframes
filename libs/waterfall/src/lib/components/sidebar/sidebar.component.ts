@@ -38,6 +38,7 @@ export class WaterfallSidebarComponent implements OnInit, OnDestroy {
   );
   public roles$ = this.rightholders$.pipe(map(rightholders => unique(rightholders.map(r => r.roles).flat())));
   public sources$ = this.shell.rightholderSources$;
+  public waterfall = this.shell.waterfall;
 
   private subs: Subscription[] = [];
 

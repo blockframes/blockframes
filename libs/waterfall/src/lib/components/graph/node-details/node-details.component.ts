@@ -4,14 +4,11 @@ import { BehaviorSubject, Observable, combineLatest, map, startWith, tap } from 
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import {
   MgStatus,
-  PricePerCurrency,
   RightsBreakdown,
   SourcesBreakdown,
-  convertCurrenciesTo,
   getExpensesValue,
-  getTotalPerCurrency,
-  mainCurrency,
-  sortStatements
+  sortStatements,
+  sum
 } from '@blockframes/model';
 import { MatTabGroup } from '@angular/material/tabs';
 
@@ -21,7 +18,7 @@ interface Information {
   right: number;
   expenses?: number;
   cappedExpenses?: number;
-  expensesToBeRecouped?: PricePerCurrency;
+  expensesToBeRecouped?: number;
   mgStatus?: MgStatus;
 }
 
@@ -43,7 +40,7 @@ export class WaterfallGraphNodeDetailsComponent implements OnInit {
   );
   public formValue$: Observable<RightFormValue>;
   public information$: Observable<Information>;
-
+  public waterfall = this.shell.waterfall;
   private statements$ = this.shell.rightholderStatements$.pipe(
     map(statements => statements.filter(s => s.status === 'reported' && (!s.reviewStatus || s.reviewStatus === 'accepted'))),
     map(statements => sortStatements(statements))
@@ -102,8 +99,7 @@ export class WaterfallGraphNodeDetailsComponent implements OnInit {
           const breakdown = sourcesBreakdown.find(hasRight) || rightsBreakdown.find(hasRight);
           if (right.type === 'expenses') {
             const expensesByType = distributorExpenses.map(e => e.rows)?.flat();
-            const statementExpenses = expensesByType?.map(r => ({ price: convertCurrenciesTo(r.cumulated, mainCurrency)[mainCurrency], currency: mainCurrency }));
-            data.expenses = getTotalPerCurrency(statementExpenses)[mainCurrency];
+            data.expenses = expensesByType ? sum(expensesByType, e => e.cumulated) : undefined;
             if (data.expenses && data.expenses !== cappedExpenses) data.cappedExpenses = cappedExpenses;
             if (breakdown.stillToBeRecouped) data.expensesToBeRecouped = breakdown.stillToBeRecouped;
           } else if (right.type === 'mg' && breakdown.mgStatus) {

@@ -1,6 +1,7 @@
-import { TitleState, getGroup, getNode, isGroup } from '@blockframes/model';
+import { MovieCurrency, TitleState, getGroup, getNode, isGroup } from '@blockframes/model';
 import { EdgeConfig, NodeConfig, ComboConfig, GraphData, TreeGraph, Tooltip, GraphOptions } from '@antv/g6';
 import { DagreLayout } from '@antv/layout';
+import { currencySymbol } from '@blockframes/utils/currency-format';
 
 const roundCent = (value: number) => Math.round(value * 100) / 100;
 
@@ -35,10 +36,12 @@ const toColor = (str: string) => {
   return bindedColors[str];
 }
 
-export function toG6(state: TitleState): GraphData {
+export function toG6(state: TitleState, mainCurrency: MovieCurrency): GraphData {
   const nodes: NodeConfig[] = [];
   const edges: EdgeConfig[] = [];
   const combos: ComboConfig[] = [];
+
+  const symbol = currencySymbol(mainCurrency);
 
   // Map the rights in a group with the combo id it should be in
   const rightCombo: Record<string, string> = {};
@@ -47,8 +50,8 @@ export function toG6(state: TitleState): GraphData {
   // Horizontal Group
   for (const group of Object.values(state.horizontals)) {
     const comboLabel = group.percent !== 1
-      ? `${group.id} (${roundCent(group.percent * 100)}%): ${roundCent(group.revenu.calculated)}€`
-      : `${group.id}: ${roundCent(group.revenu.calculated)}€`;
+      ? `${group.id} (${roundCent(group.percent * 100)}%): ${roundCent(group.revenu.calculated)}${symbol}`
+      : `${group.id}: ${roundCent(group.revenu.calculated)}${symbol}`;
     combos.push({
       id: group.id,
       label: comboLabel,
@@ -66,7 +69,7 @@ export function toG6(state: TitleState): GraphData {
         edges.push({
           type: 'cubic-vertical',
           id: transferId,
-          label: '0€',
+          label: `0${symbol}`,
           source: group.id,
           target: previous,
           history: []
@@ -78,8 +81,8 @@ export function toG6(state: TitleState): GraphData {
   // Vertical Group
   for (const vertical of Object.values(state.verticals)) {
     const comboLabel = vertical.percent
-      ? `${vertical.id} (${roundCent(vertical.percent * 100)}%): ${roundCent(vertical.revenu.calculated)}€`
-      : `${vertical.id}: ${roundCent(vertical.revenu.calculated)}€`;
+      ? `${vertical.id} (${roundCent(vertical.percent * 100)}%): ${roundCent(vertical.revenu.calculated)}${symbol}`
+      : `${vertical.id}: ${roundCent(vertical.revenu.calculated)}${symbol}`;
     combos.push({
       id: vertical.id,
       label: comboLabel,
@@ -107,7 +110,7 @@ export function toG6(state: TitleState): GraphData {
         edges.push({
           type: 'cubic-vertical',
           id: transferId,
-          label: '0€',
+          label: `0${symbol}`,
           source: vertical.id,
           target: previous,
           history: []
@@ -141,7 +144,7 @@ export function toG6(state: TitleState): GraphData {
         edges.push({
           type: 'cubic-vertical',
           id: transferId,
-          label: '0€',
+          label: `0${symbol}`,
           source: right.id,
           target: previous,
           history: []
@@ -162,7 +165,7 @@ export function toG6(state: TitleState): GraphData {
     const edge: EdgeConfig = {
       type: 'cubic-vertical',
       id: transfer.id,
-      label: `${roundCent(transfer.amount)}€`,
+      label: `${roundCent(transfer.amount)}${symbol}`,
       source: transfer.from,
       target: transfer.to,
       history: transfer.history
@@ -173,8 +176,8 @@ export function toG6(state: TitleState): GraphData {
       const compensationAmount = compensations.reduce((sum, current) => sum + current.amount, 0);
       if (compensationAmount !== 0) {
         edge.label = transfer.amount - compensationAmount ?
-          `${roundCent(transfer.amount - compensationAmount)} (${compensationAmount > 0 ? '+' : ''} ${roundCent(compensationAmount)} )€` :
-          `${roundCent(transfer.amount)}€`
+          `${roundCent(transfer.amount - compensationAmount)} (${compensationAmount > 0 ? '+' : ''} ${roundCent(compensationAmount)} )${symbol}` :
+          `${roundCent(transfer.amount)}${symbol}`
         edge.labelCfg = { style: { fill: compensationAmount > 0 ? 'green' : 'red' } };
         edge.style = { stroke: compensationAmount > 0 ? 'green' : 'red' };
       }

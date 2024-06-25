@@ -1,5 +1,5 @@
 import { DocumentMeta } from './meta';
-import type { MovieCurrency, PaymentStatus } from './static/types';
+import type { PaymentStatus } from './static/types';
 
 export interface Expense {
   _meta?: DocumentMeta;
@@ -12,7 +12,6 @@ export interface Expense {
   status: PaymentStatus;
   price: number;
   version: Record<string, { hidden?: true, price: number }>;
-  currency: MovieCurrency;
   typeId: string;
   nature: string;
   capped: boolean;
@@ -27,7 +26,6 @@ export function createExpense(params: Partial<Expense> = {}): Expense {
     status: 'pending',
     price: 0,
     version: {},
-    currency: 'EUR',
     date: new Date(),
     typeId: '',
     nature: '',
@@ -45,7 +43,6 @@ export interface ExpenseType {
   id: string;
   name: string;
   contractId: string;
-  currency: MovieCurrency;
   cap: ExpenseCap;
 }
 
@@ -54,7 +51,6 @@ export function createExpenseType(params: Partial<ExpenseType> = {}): ExpenseTyp
     id: '',
     name: '',
     contractId: '',
-    currency: 'EUR',
     ...params,
     cap: createExpenseCap(params.cap),
   };

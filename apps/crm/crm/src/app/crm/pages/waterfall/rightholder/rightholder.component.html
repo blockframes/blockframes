@@ -49,7 +49,7 @@
       {{ conditions?.conditions?.length ? conditions.conditions.length  : '--' }}
     </ng-template>
     <ng-template colRef="revenue" label="Right Revenue" let-revenue sort>
-      <price-per-currency [price]="revenue"></price-per-currency>
+      {{ revenue | currency: waterfall.mainCurrency }}
     </ng-template>
   </bf-table>
 </ng-container>

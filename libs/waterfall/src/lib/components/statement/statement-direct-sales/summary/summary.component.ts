@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import {
   BreakdownRow,
-  PricePerCurrency,
   RightOverride,
   RightType,
   Statement,
@@ -17,7 +16,8 @@ import {
   getStatementSources,
   preferredLanguage,
   skipSourcesWithAllHiddenIncomes,
-  sortStatements
+  sortStatements,
+  sum
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '../../../../dashboard/shell/shell.component';
@@ -148,14 +148,7 @@ export class StatementDirectSalesSummaryComponent {
     })
   );
 
-  public totalNetReceipt$: Observable<PricePerCurrency> = this.sourcesBreakdown$.pipe(
-    map(sources => sources.map(s => s.net).reduce((acc, curr) => {
-      for (const currency of Object.keys(curr)) {
-        acc[currency] = (acc[currency] || 0) + curr[currency];
-      }
-      return acc;
-    }, {}))
-  );
+  public totalNetReceipt$: Observable<number> = this.sourcesBreakdown$.pipe(map(sources => sum(sources, s => s.net)));
 
   public rightsBreakdown$ = combineLatest([
     this.statement$, this.statementsHistory$, this.shell.expenses$,
@@ -203,23 +196,11 @@ export class StatementDirectSalesSummaryComponent {
    * @dev This code takes totalNetReceipt and substitute price from commission and expenses from rightsBreakdown
    * to get the amount that the producer (from distributor point of view) will send to producer.
    */
-  public producerNetParticipation$: Observable<PricePerCurrency> = combineLatest([this.statement$, this.totalNetReceipt$, this.rightsBreakdown$]).pipe(
+  public producerNetParticipation$: Observable<number> = combineLatest([this.statement$, this.totalNetReceipt$, this.rightsBreakdown$]).pipe(
     map(([current, totalNetReceipt, rightsBreakdown]) => {
       if (!this.devMode && current.status === 'reported' && current.reportedData.producerNetParticipation) return current.reportedData.producerNetParticipation;
-      const rightsTaken = rightsBreakdown.map(rb => rb.total).map(total => {
-        return Object.keys(total).reduce((acc, currency) => {
-          acc[currency] = total[currency] * -1;
-          return acc;
-        }, {});
-      });
-
-      const total: PricePerCurrency = [...rightsTaken, totalNetReceipt].reduce((acc, curr) => {
-        for (const currency of Object.keys(curr)) {
-          acc[currency] = (acc[currency] || 0) + curr[currency];
-        }
-        return acc;
-      }, {});
-
+      const rightsTaken = sum(rightsBreakdown, rb =>  rb.total);
+      const total = totalNetReceipt - rightsTaken;
       return total;
     }),
     tap(async producerNetParticipation => {
@@ -295,6 +276,7 @@ export class StatementDirectSalesSummaryComponent {
         right: row.right,
         maxPerIncome: row.maxPerIncome,
         overrides: statement.rightOverrides.filter(c => c.rightId === row.right.id),
+        waterfall: this.waterfall,
         onConfirm: async (overrides: RightOverride[]) => {
           const rightOverrides = statement.rightOverrides.filter(c => c.rightId !== row.right.id);
           await this.statementService.update(statement.id, { rightOverrides: [...rightOverrides, ...overrides] }, { params: { waterfallId: this.waterfall.id } });
@@ -318,6 +300,7 @@ export class StatementDirectSalesSummaryComponent {
         right: row.right,
         maxPerIncome: row.maxPerIncome,
         overrides: statement.rightOverrides.filter(c => c.rightId === row.right.id),
+        waterfall: this.waterfall,
       })
     });
   }

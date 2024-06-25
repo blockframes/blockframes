@@ -19,6 +19,7 @@ interface StatementExpenseChangeData {
 export class StatementExpenseEditComponent implements OnInit {
 
   public form: ExpenseEditForm;
+  public confirmationWord = $localize`SAVE`;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)

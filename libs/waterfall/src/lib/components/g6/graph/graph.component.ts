@@ -9,11 +9,10 @@ import {
   TransferState,
   TitleState,
   History,
-  WaterfallRightholder,
   VerticalState,
   HorizontalState,
-  mainCurrency,
-  sum
+  sum,
+  Waterfall
 } from '@blockframes/model';
 
 @Component({
@@ -33,11 +32,10 @@ export class GraphComponent implements OnInit, AfterViewInit, OnChanges {
   verticalGroup?: VerticalState;
   horizontalGroup?: HorizontalState;
   org?: OrgState & { expense: number };
-  currency = mainCurrency;
 
   @Input() tree?: { state: TitleState, history: History[] };
   @Input() hideDetails = false;
-  @Input() rightholders?: WaterfallRightholder[] = [];
+  @Input() waterfall: Waterfall;
 
   constructor() {
     this.control = new FormControl(0, { nonNullable: true });
@@ -50,7 +48,7 @@ export class GraphComponent implements OnInit, AfterViewInit, OnChanges {
   async ngOnInit() {
     if (this.tree) this.history = this.tree.history;
 
-    this.graphs = this.history.map(h => toG6(h));
+    this.graphs = this.history.map(h => toG6(h, this.waterfall.mainCurrency));
 
     this.data$ = this.control.valueChanges.pipe(map(index => this.graphs[index]));
     this.state$ = this.control.valueChanges.pipe(map(index => this.history[index]));
@@ -59,7 +57,7 @@ export class GraphComponent implements OnInit, AfterViewInit, OnChanges {
   async ngOnChanges() {
     if (this.tree) this.history = this.tree.history;
 
-    this.graphs = this.history.map(h => toG6(h));
+    this.graphs = this.history.map(h => toG6(h, this.waterfall.mainCurrency));
 
     this.control.setValue(this.history.length - 1);
   }
@@ -98,7 +96,7 @@ export class GraphComponent implements OnInit, AfterViewInit, OnChanges {
 
   getRightholderName(id: string) {
     if (!id) return '--';
-    return this.rightholders.find(r => r.id === id)?.name || id;
+    return this.waterfall.rightholders.find(r => r.id === id)?.name || id;
   }
 
   unselect() {

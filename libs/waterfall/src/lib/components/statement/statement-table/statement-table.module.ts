@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 
 // Blockframes
 import { TableModule } from '@blockframes/ui/list/table/table.module';
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { StatementPaymentModule } from '../statement-payment/statement-payment.module';
 import { RightHolderNamePipeModule } from '../../../pipes/rightholder-name.pipe';
 import { ContractPipeModule } from '@blockframes/contract/contract/pipe';
@@ -28,7 +27,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     BfCommonModule,
 
     TableModule,
-    PricePerCurrencyModule,
     StatementPaymentModule,
     RightHolderNamePipeModule,
     ContractPipeModule,

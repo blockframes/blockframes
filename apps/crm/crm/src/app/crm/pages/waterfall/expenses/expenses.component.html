@@ -25,8 +25,8 @@
     <ng-template colRef="" label="Type" let-item sort>
       {{ item.typeId | expenseType : item.contractId : waterfall }}
     </ng-template>
-    <ng-template colRef="" label="Amount" let-item sort>
-      <price-per-currency [price]="item.price | formatPair: item.currency"></price-per-currency>
+    <ng-template colRef="price" label="Amount" let-price sort>
+      {{ price | currency: waterfall.mainCurrency }}
     </ng-template>
     <ng-template colRef="capped" label="Capped" let-capped sort>
       {{ capped ? 'Yes' : 'No' }}

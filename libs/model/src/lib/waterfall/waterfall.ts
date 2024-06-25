@@ -2,8 +2,9 @@ import { BaseContract, getContractsWith } from '../contract';
 import { Income } from '../income';
 import { StorageFile } from '../media';
 import { DocumentMeta, createDocumentMeta } from '../meta';
-import { Media, RightholderRole, StatementType, Territory, rightholderGroups, statementsRolesMapping } from '../static';
+import { Media, MovieCurrency, RightholderRole, StatementType, Territory, rightholderGroups, statementsRolesMapping } from '../static';
 import { ExpenseType } from '../expense';
+import { Term } from '../terms';
 
 export interface WaterfallPermissions {
   _meta?: DocumentMeta;
@@ -139,6 +140,7 @@ export interface Waterfall {
   sources: WaterfallSource[];
   rightholders: WaterfallRightholder[];
   expenseTypes: Record<string, ExpenseType[]>; // key is contractId or 'directSales'
+  mainCurrency: MovieCurrency;
 }
 
 export function createWaterfall(params: Partial<Waterfall> = {}): Waterfall {
@@ -151,6 +153,7 @@ export function createWaterfall(params: Partial<Waterfall> = {}): Waterfall {
     ...params,
     rightholders: params.rightholders?.map(r => createWaterfallRightholder(r)) ?? [],
     sources: params.sources?.map(s => createWaterfallSource(s)) ?? [],
+    mainCurrency: params.mainCurrency ?? 'EUR'
   }
 }
 
@@ -291,7 +294,7 @@ export interface WaterfallInvestment {
   date: Date;
 }
 
-export interface WaterfallContract extends BaseContract {
+export interface WaterfallContract extends Omit<BaseContract, 'currency'> {
   type: RightholderRole;
   name: string;
   price: WaterfallInvestment[];
@@ -299,6 +302,10 @@ export interface WaterfallContract extends BaseContract {
 
 export interface WaterfallSale extends WaterfallContract {
   type: keyof typeof rightholderGroups.sales;
+}
+
+export interface WaterfallFullSale extends WaterfallSale {
+  terms: Term[];
 }
 
 export interface WaterfallFinancingPlan {

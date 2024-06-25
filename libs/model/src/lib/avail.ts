@@ -4,7 +4,7 @@ import { FullMandate, FullSale, Holdback, Mandate, Sale } from './contract';
 import { mediasGroup, territories, territoriesISOA3 } from './static';
 import { Media, Territory, TerritoryISOA3, TerritoryISOA3Value, TerritoryValue } from './static/types';
 import { BucketTerm, Term, Duration } from './terms';
-import { WaterfallSale } from './waterfall';
+import { WaterfallFullSale, WaterfallSale } from './waterfall';
 
 export interface BaseAvailsFilter {
   medias: Media[],
@@ -616,7 +616,7 @@ export interface TerritorySoldMarker {
   isoA3: TerritoryISOA3Value,
   label: TerritoryValue,
   type: MediaFamily
-  contracts?: (FullSale | FullMandate)[]
+  contracts?: (FullSale | FullMandate | WaterfallFullSale)[]
 }
 
 export function territoriesSold(contracts: (FullSale | FullMandate)[]) {

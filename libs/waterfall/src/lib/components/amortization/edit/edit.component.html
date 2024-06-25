@@ -41,7 +41,7 @@
         <p i18n>Please provide us with the following information so we can calculate the film amortization.</p>
         <mat-form-field appearance="outline">
           <mat-label i18n>Effective Film Cost (Total Amount)</mat-label>
-          <mat-icon svgIcon="EUR" matSuffix></mat-icon>
+          <mat-icon [svgIcon]="waterfall.mainCurrency" matSuffix></mat-icon>
           <input matInput type="number" [formControl]="amortizationForm.get('filmCost')" required />
         </mat-form-field>
       </div>
@@ -70,7 +70,7 @@
       <p i18n>Please take into account all the financing sources that need to be considered when calculating the amortization of the film's costs.</p>
       <mat-form-field appearance="outline">
         <mat-label i18n>Total Financing Amount</mat-label>
-        <mat-icon svgIcon="EUR" matSuffix></mat-icon>
+        <mat-icon [svgIcon]="waterfall.mainCurrency" matSuffix></mat-icon>
         <input matInput type="number" [formControl]="amortizationForm.get('financing')" required />
       </mat-form-field>
     </div>

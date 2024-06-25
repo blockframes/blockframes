@@ -9,9 +9,9 @@
     <p class="nodrag org">{{ right.rightHolderId | rightholderName: shell.waterfall }}</p>
     <div class="nodrag total">
       <mat-icon svgIcon="monetization"></mat-icon>
-      <p class="nodrag">{{ monetizationLabel }}: <price-per-currency [price]="amount$ | async | formatPair" default="0€"></price-per-currency></p>
+      <p class="nodrag">{{ monetizationLabel }}: {{ (amount$ | async) | currency: waterfall.mainCurrency }}</p>
     </div>
-    <price-per-currency *ngIf="!hideAmount" class="nodrag amount" [price]="amount$ | async | formatPair" default="0€"></price-per-currency>
+    <p *ngIf="!hideAmount" class="nodrag amount">{{ (amount$ | async) | currency: waterfall.mainCurrency }}</p>
   </div>
 
   <ng-container *ngIf="selected && !nonEditableNodeIds.includes(right.id)">

@@ -1,12 +1,13 @@
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ExpenseType } from '@blockframes/model';
+import { ExpenseType, Waterfall } from '@blockframes/model';
 import { FormList } from '@blockframes/utils/form';
 import { ExpenseTypeForm } from '../../../form/contract.form';
 
 interface ExpenseTypeData {
   form: FormList<ExpenseType, ExpenseTypeForm>;
   versionId: 'default';
+  waterfall: Waterfall;
   onConfirm: () => void
 }
 

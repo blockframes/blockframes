@@ -65,11 +65,11 @@
           <mat-option [matTooltip]="expenseType.name" *ngFor="let expenseType of expenseTypes" [value]="expenseType.id">{{ expenseType.name }}</mat-option>
         </mat-select>
       </mat-form-field>
-      <section class="expenses-opt">
-        <button [disabled]="!form.controls.revenueTargetType.enabled" *ngIf="waterfall$ | async as waterfall" mat-icon-button (click)="editExpenseType(waterfall)" matTooltip="Manage Expenses">
+      <section class="expenses-opt" *ngIf="waterfall$ | async as waterfall">
+        <button [disabled]="!form.controls.revenueTargetType.enabled" mat-icon-button (click)="editExpenseType(waterfall)" matTooltip="Manage Expenses">
           <mat-icon svgIcon="edit"></mat-icon>
         </button>
-        <span *ngIf="(form.controls.revenueTarget.value | expenseTypeCap : expenseTypes : (versionId$ | async)) as cap">cap : <price-per-currency [price]="cap"></price-per-currency></span>
+        <span *ngIf="(form.controls.revenueTarget.value | expenseTypeCap : expenseTypes : (versionId$ | async)) as cap">cap : {{ cap | currency : waterfall.mainCurrency }}</span>
       </section>
     </ng-container>
 
@@ -108,6 +108,7 @@
 
     <mat-form-field appearance="outline" *ngIf="form.controls.revenueTargetType.value === 'amount' || (form.controls.revenueTargetType.value === 'expense' && form.controls.revenueCap.value)">
       <mat-label i18n>Amount</mat-label>
+      <mat-icon *ngIf="waterfall$ | async as waterfall" [svgIcon]="waterfall.mainCurrency" matSuffix></mat-icon>
       <input matInput type="number" min="0" [formControl]="form.controls.revenueAmount" />
     </mat-form-field>
   </ng-container>

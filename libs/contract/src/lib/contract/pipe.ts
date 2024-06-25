@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { Term, WaterfallContract, getContractAndAmendments, getCurrentContract, getDeclaredAmount } from '@blockframes/model';
+import { WaterfallContract, contractPrice, getContractAndAmendments, getCurrentContract, WaterfallInvestment } from '@blockframes/model';
 
 @Pipe({ name: 'getCurrentContract' })
 export class GetCurrentContractPipe implements PipeTransform {
@@ -14,8 +14,9 @@ export class GetCurrentContractPipe implements PipeTransform {
 
 @Pipe({ name: 'contractPrice' })
 export class ContractPricePipe implements PipeTransform {
-  transform(contract: WaterfallContract & { terms: Term[] }) {
-    return getDeclaredAmount(contract);
+  transform(data: { price: WaterfallInvestment[] } | WaterfallInvestment[]) {
+    const contract = Array.isArray(data) ? { price: data } : data;
+    return contractPrice(contract);
   }
 }
 

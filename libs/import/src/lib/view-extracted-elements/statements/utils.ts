@@ -82,7 +82,7 @@ export async function formatStatement(
       statement.receiverId = statement.senderId;
     }
 
-    const incomes = data.incomes.filter(i => i.price && i.currency).map(i => {
+    const incomes = data.incomes.filter(i => i.price).map(i => {
       const { territories_included, territories_excluded } = i;
       delete i.territories_included;
       delete i.territories_excluded;
@@ -131,7 +131,7 @@ export async function formatStatement(
       return income;
     });
 
-    const expenses = data.expenses.filter(e => e.price && e.currency).map(e => {
+    const expenses = data.expenses.filter(e => e.price).map(e => {
       if (!e.id) e.id = waterfallService.createId();
       const expense = createExpense({ ...e });
       delete (expense as any).cap;
@@ -150,7 +150,6 @@ export async function formatStatement(
         expenseTypes[contractId].push(createExpenseType({
           id: typeId,
           contractId,
-          currency: e.currency,
           name: e.typeId,
           cap: { default: e.cap, version: {} }
         }));

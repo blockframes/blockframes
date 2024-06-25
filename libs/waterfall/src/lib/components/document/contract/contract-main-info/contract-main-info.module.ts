@@ -4,7 +4,6 @@ import { NgModule } from '@angular/core';
 import { ContractMainInfoComponent } from './contract-main-info.component';
 
 // Blockframes
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { RightHolderNamePipeModule } from '../../../../pipes/rightholder-name.pipe';
 import { ContractPipeModule } from '@blockframes/contract/contract/pipe';
 import { BfCommonModule } from '@blockframes/utils/bf-common.module';
@@ -21,7 +20,6 @@ import { MatDialogModule } from '@angular/material/dialog';
     BfCommonModule,
 
     // Blockframes
-    PricePerCurrencyModule,
     RightHolderNamePipeModule,
     ContractPipeModule,
 

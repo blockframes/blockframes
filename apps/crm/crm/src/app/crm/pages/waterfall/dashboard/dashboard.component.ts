@@ -6,7 +6,6 @@ import {
   History,
   Income,
   IncomeState,
-  PricePerCurrency,
   ProducerStatement,
   Right,
   RightholderRole,
@@ -18,14 +17,13 @@ import {
   createProducerStatement,
   getOutgoingStatementPrerequists,
   hasContractWith,
-  mainCurrency,
-  movieCurrencies,
-  rightholderGroups
+  rightholderGroups,
+  sum
 } from '@blockframes/model';
-import { formatPair } from '@blockframes/ui/price-per-currency/price-per-currency.component';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { WaterfallState } from '@blockframes/waterfall/waterfall.service';
 import { Subscription, firstValueFrom } from 'rxjs';
+import { toCurrency } from '@blockframes/utils/currency-format';
 
 @Component({
   selector: 'crm-dashboard',
@@ -48,7 +46,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public currentBlock: string;
   public producer: WaterfallRightholder;
   public options = { xAxis: { categories: [] }, series: [] };
-  public formatter = { formatter: (value: number) => `${value} ${movieCurrencies[mainCurrency]}` };
+  public formatter = { formatter: (value: number) => toCurrency(value, this.shell.waterfall.mainCurrency) };
   public sub: Subscription;
 
   public columns: Record<string, string> = {
@@ -143,27 +141,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.options = { xAxis: { categories }, series };
   }
 
-  public getTotalIncomes(incomeState: Record<string, IncomeState>): PricePerCurrency {
+  public getTotalIncomes(incomeState: Record<string, IncomeState>) {
     const incomeStates = Object.values(incomeState);
-    if (!incomeStates.length) return formatPair(0);
-    return formatPair(incomeStates.map(a => a.amount).reduce((a, b) => a + b));
+    if (!incomeStates.length) return 0;
+    return sum(incomeStates, i => i.amount);
   }
 
   public getRightholder(id: string) {
     return this.waterfall.rightholders.find(r => r.id === id);
   }
 
-  public getPendingRevenue(rightholderId: string): PricePerCurrency {
+  public getPendingRevenue(rightholderId: string) {
     const pendingRevenue = this.statements
       .filter(s => s.receiverId === rightholderId && s.payments.rightholder?.status === 'pending')
       .map(s => s.payments.rightholder);
 
-    const pending: PricePerCurrency = {};
-    pendingRevenue.forEach(i => {
-      pending[i.currency] ||= 0;
-      pending[i.currency] += i.price;
-    });
-    return pending;
+    return sum(pendingRevenue, p => p.price);
   }
 
   private displayOutgoingStatements() {

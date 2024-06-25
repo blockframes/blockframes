@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { IncomeService } from '@blockframes/contract/income/service';
-import { Income, PricePerCurrency } from '@blockframes/model';
+import { Income } from '@blockframes/model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 
@@ -13,6 +13,7 @@ import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboa
 export class IncomesComponent {
   public incomes$ = this.shell.incomes$;
   public contracts$ = this.shell.contracts$;
+  public waterfall = this.shell.waterfall;
 
   constructor(
     private shell: DashboardWaterfallShellComponent,
@@ -26,10 +27,6 @@ export class IncomesComponent {
     } catch (error) {
       if (this.snackBar._openedSnackBarRef === null) this.snackBar.open(error, 'close', { duration: 5000 });
     }
-  }
-
-  public toPricePerCurrency(item: Income): PricePerCurrency {
-    return { [item.currency]: item.price };
   }
 
   public async removeIncomes(incomes: Income[]) {

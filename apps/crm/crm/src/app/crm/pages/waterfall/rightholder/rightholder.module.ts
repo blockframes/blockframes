@@ -10,7 +10,6 @@ import { RightholderComponent } from './rightholder.component';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { TableModule } from '@blockframes/ui/list/table/table.module';
 import { ToLabelModule } from '@blockframes/utils/pipes';
-import { PricePerCurrencyModule } from '@blockframes/ui/price-per-currency/price-per-currency.module';
 import { GetOrgPipeModule } from '@blockframes/organization/pipes/get-org.pipe';
 import { VersionSelectorModule } from '@blockframes/waterfall/components/version/version-selector/version-selector.module';
 
@@ -31,7 +30,6 @@ import { MatSelectModule } from '@angular/material/select';
     StaticSelectModule,
     TableModule,
     ToLabelModule,
-    PricePerCurrencyModule,
     GetOrgPipeModule,
     VersionSelectorModule,
 

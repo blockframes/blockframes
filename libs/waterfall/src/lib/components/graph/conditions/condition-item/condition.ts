@@ -15,11 +15,12 @@ import {
 import { rightholderName } from '../../../../pipes/rightholder-name.pipe';
 import { format } from 'date-fns';
 import { getUserDefaultDateFormat } from '@blockframes/utils/date-adapter';
+import { toCurrency } from '@blockframes/utils/currency-format';
 
 const toFixedPercentage = (percent: number) => (percent * 100).toLocaleString(undefined, { maximumFractionDigits: 4, minimumFractionDigits: 0 });
 
-function targetToString(target: TargetValue, waterfall?: Waterfall, contracts?: WaterfallContract[]) {
-  if (typeof target === 'number') return `${target}€`;
+function targetToString(target: TargetValue, waterfall: Waterfall, contracts: WaterfallContract[]) {
+  if (typeof target === 'number') return toCurrency(target, waterfall.mainCurrency);
 
   const { percent, id, in: targetIn } = target;
   /** @dev if more targets are enabled in "targetIn" libs/model/src/lib/waterfall/conditions.ts, add them here */
