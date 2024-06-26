@@ -396,6 +396,8 @@ const mediasFR = {
   multimedia: 'Multimédia',
   multimediaExtract: 'Extrait multimédia',
   tvExtract: 'Extrait TV',
+  otherVideo: 'Autre droit Vidéo',
+  otherTheatrical: 'Autre droit Salles',
 } as const
 
 const mediaGroupFR = {
@@ -861,6 +863,8 @@ const mediasES = {
   multimedia: 'Multimedia',
   multimediaExtract: 'Extracto Multimedia',
   tvExtract: 'Extracto TV',
+  otherVideo: 'Otro Video',
+  otherTheatrical: 'Otro Teatral'
 } as const;
 
 const mediaGroupES = {

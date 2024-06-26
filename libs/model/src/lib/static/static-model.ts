@@ -706,6 +706,8 @@ export const medias = {
   multimedia: 'Multimedia',
   multimediaExtract: 'Multimedia Extract',
   tvExtract: 'TV Extract',
+  otherVideo: 'Other Video',
+  otherTheatrical: 'Other Theatrical',
 } as const
 
 export const releaseMedias = {

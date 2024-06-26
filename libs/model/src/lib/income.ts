@@ -27,7 +27,6 @@ export function createIncome(params: Partial<Income> = {}): Income {
     contractId: '',
     price: 0,
     version: {},
-    currency: 'EUR',
     status: 'pending',
     date: new Date(),
     medias: [],
