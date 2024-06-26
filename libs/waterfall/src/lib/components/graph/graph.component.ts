@@ -51,6 +51,7 @@ import { RightService } from '../../right.service';
 import { WaterfallService } from '../../waterfall.service';
 import { createRightForm, setRightFormValue } from '../../form/right.form';
 import { createSourceForm, setSourceFormValue } from '../../form/source.form';
+import { RevenueSimulationForm } from '../../form/revenue-simulation.form';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 import {
   Arrow,
@@ -76,7 +77,18 @@ import {
 export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   @Input() @boolean public readonly = false;
-  @Input() public stateMode: 'simulation' | 'actual';
+  @Input() set stateMode(mode: 'simulation' | 'actual') { this.stateMode$.next(mode); }
+  public stateMode$ = new BehaviorSubject<'simulation' | 'actual'>('actual');
+  public rightPanelMode$ = this.stateMode$.asObservable().pipe(
+    map(stateMode => {
+      if (stateMode === 'simulation') {
+        this.showEditPanel = true;
+        return 'simulation';
+      }
+      return this.readonly ? 'readonly' : 'builder';
+    }));
+  @Input() simulationForm: RevenueSimulationForm;
+  @Output() simulationExited = new EventEmitter<boolean>(false);
   @Output() canLeaveGraphForm = new EventEmitter<boolean>(true);
   public showEditPanel = this.shell.canBypassRules;
   public waterfall = this.shell.waterfall;
