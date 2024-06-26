@@ -70,7 +70,11 @@
         <waterfall-version-selector [ngClass]="(shell.versionId$ | async) ? '' : 'hide'"></waterfall-version-selector>
         <span i18n>Need help? Check out our <a href="https://www.blockframes.io/doc/welcome-page" target="_blank">User Guide</a></span>
       </div>
-      <waterfall-graph (canLeaveGraphForm)="canLeaveGraphForm = $event"></waterfall-graph>
+      <div class="surface">
+        <button mat-button (click)="simulate()">simulation
+        </button>
+      </div>
+      <waterfall-graph (canLeaveGraphForm)="canLeaveGraphForm = $event" [stateMode]="stateMode$ | async"></waterfall-graph>
     </ng-container>
     <ng-template #noWaterfall>
       <article class="surface">

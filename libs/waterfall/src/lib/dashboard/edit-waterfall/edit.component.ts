@@ -11,7 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 // Blockframes
 import { FormList } from '@blockframes/utils/form';
-import { WaterfallRightholder, createWaterfallRightholder, hasDefaultVersion } from '@blockframes/model';
+import { WaterfallRightholder, createIncome, createWaterfallRightholder, hasDefaultVersion } from '@blockframes/model';
 import { WaterfallService } from '../../waterfall.service';
 import { WaterfallContractForm } from '../../form/contract.form';
 import { DashboardWaterfallShellComponent } from '../shell/shell.component';
@@ -46,6 +46,7 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
   public createMode = !hasDefaultVersion(this.shell.waterfall);
   public manualCreation$ = new BehaviorSubject(false);
   public canLeaveGraphForm = true;
+  public stateMode$ = new BehaviorSubject<'simulation' | 'actual'>('actual');
 
   private sub: Subscription;
 
@@ -169,5 +170,20 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
   redirectToBuilder() {
     this.stepper.selectedIndex = 1;
     this.stepper.next();
+  }
+
+  public async simulate() {
+
+    const income = createIncome({
+      price: 10000,
+      date: new Date(),
+      sourceId: 'recettes_dvd_france',
+      status: 'received'
+    });
+
+    await this.shell.appendToSimulation({ incomes: [income], expenses: [] }, true);
+    this.stateMode$.next('simulation');
+
+    //TODO #9897 on form close, change stateMode to 'actual'
   }
 }

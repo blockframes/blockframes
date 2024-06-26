@@ -564,9 +564,9 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
    * @param incomes 
    * @param expenses 
    */
-  async appendToSimulation(append: { incomes?: Income[], expenses?: Expense[] } = { incomes: [], expenses: [] }) {
+  async appendToSimulation(append: { incomes?: Income[], expenses?: Expense[] } = { incomes: [], expenses: [] }, fromScratch = false) {
     this.isRefreshing$.next(true);
-    if (!this.simulationData) this.simulationData = await this.loadData();
+    if (!this.simulationData) this.simulationData = await this.loadData(); // TODO #9897 reset data if version changed
 
     for (const income of append.incomes || []) {
       this.simulationData.incomes[income.id] = income;
@@ -576,7 +576,10 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
       this.simulationData.expenses[expense.id] = expense;
     }
 
-    const waterfall = await this.waterfallService.simulateWaterfall(this.simulationData, this.versionId$.value, this.date$.value, this.currentStatementId$.value);
+    // If fromScratch is true, we remove all previous incomes, expenses and statements from the simulation
+    const cleanData = { ...this.simulationData, incomes: append.incomes || {}, expenses: append.expenses || {}, statements: [] };
+    const data = fromScratch ? cleanData : this.simulationData;
+    const waterfall = await this.waterfallService.simulateWaterfall(data, this.versionId$.value, this.date$.value, this.currentStatementId$.value);
     this._simulation$.next(waterfall);
     this.isRefreshing$.next(false);
     return waterfall;

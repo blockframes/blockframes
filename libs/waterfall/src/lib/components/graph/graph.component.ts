@@ -76,6 +76,7 @@ import {
 export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   @Input() @boolean public readonly = false;
+  @Input() public stateMode: 'simulation' | 'actual';
   @Output() canLeaveGraphForm = new EventEmitter<boolean>(true);
   public showEditPanel = this.shell.canBypassRules;
   public waterfall = this.shell.waterfall;
