@@ -26,7 +26,7 @@ export const mediasGroup: StaticGroup<'medias'>[] = [{
 }, {
   key: 'homeVideo',
   label: 'Video (DVD, Blu-Ray)',
-  items: ['rental', 'through']
+  items: ['rental', 'through', 'otherVideo']
 }, {
   key: 'festivals',
   label: 'Festivals',
@@ -34,7 +34,7 @@ export const mediasGroup: StaticGroup<'medias'>[] = [{
 }, {
   key: 'theatrical',
   label: 'Theatrical Rights',
-  items: ['theatrical', 'nonTheatrical']
+  items: ['theatrical', 'nonTheatrical', 'otherTheatrical']
 }, {
   key: 'derivative',
   label: 'Derivative Rights',
