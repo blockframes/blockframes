@@ -1,7 +1,7 @@
 import { filter } from 'rxjs/operators';
 import { emulatorConfig } from '../environment/environment';
 import { production, firebase, firebaseRegion, sentryDsn, intercomId } from '@env';
-import { IntercomModule } from 'ng-intercom';
+import { IntercomModule } from '@supy-io/ngx-intercom';
 
 // NgFire
 import { FIREBASE_CONFIG, FIRESTORE_SETTINGS, REGION_OR_DOMAIN } from 'ngfire';

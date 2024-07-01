@@ -1,6 +1,6 @@
 import { emulatorConfig } from '../environment/environment';
 import { firebase, firebaseRegion, intercomId, sentryDsn } from '@env';
-import { IntercomModule } from 'ng-intercom';
+import { IntercomModule } from '@supy-io/ngx-intercom';
 
 // NgFire
 import { FIREBASE_CONFIG, FIRESTORE_SETTINGS, REGION_OR_DOMAIN } from 'ngfire';

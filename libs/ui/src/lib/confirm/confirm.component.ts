@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Inject, Optional } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 
 interface ConfirmationData {
   title: string,

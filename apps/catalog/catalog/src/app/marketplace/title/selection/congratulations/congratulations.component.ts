@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Optional } from '@angular/core';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 
 @Component({
   selector: 'catalog-congratulations',
