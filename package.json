@@ -91,7 +91,7 @@
     "@supy-io/ngx-intercom": "^14.2.12",
     "airtable": "^0.12.2",
     "algoliasearch": "^4.13.0",
-    "angular-calendar": "^0.28.5",
+    "angular-calendar": "^0.31.1",
     "apexcharts": "^3.15.3",
     "core-js": "^3.21.1",
     "dagre": "^0.8.5",
