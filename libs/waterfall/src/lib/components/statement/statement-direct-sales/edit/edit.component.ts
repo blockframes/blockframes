@@ -30,8 +30,8 @@ export class StatementDirectSalesEditComponent implements OnChanges {
 
   public statement$ = combineLatest([this.sources$, this.shell.incomes$, this.shell.expenses$, this.shell.waterfall$]).pipe(
     map(([sources, _incomes, _expenses, waterfall]) => {
-      const incomes = this.statement.incomeIds.map(id => _incomes.find(i => i.id === id));
-      const expenses = this.statement.expenseIds.map(id => _expenses.find(e => e.id === id));
+      const incomes = this.statement.incomeIds.map(id => _incomes.find(i => i.id === id)).filter(i => !!i);
+      const expenses = this.statement.expenseIds.map(id => _expenses.find(e => e.id === id)).filter(e => !!e);
 
       const expenseTypes = waterfall.expenseTypes.directSales || [];
       const missingIncomes = createMissingIncomes(sources, incomes, this.statement, this.shell.waterfall);
