@@ -165,7 +165,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
           if (this.shell.canBypassRules) {
             this.router.navigate(['c/o/dashboard/title', this.waterfallId, 'init']);
           } else {
-            this.intercom.show(`${toLabel('producer', 'rightholderRoles', undefined, undefined, lang)} is not defined in the waterfall "${this.shell.movie.title.international}"`);
+            this.intercom.show($localize`${toLabel('producer', 'rightholderRoles', undefined, undefined, lang)} is not defined in the waterfall "${this.shell.movie.title.international}"`);
           }
         });
     }
