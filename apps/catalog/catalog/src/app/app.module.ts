@@ -13,7 +13,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
-import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 
 // Components
 import { AppComponent } from './app.component';
@@ -52,12 +51,10 @@ import { VersionModule } from '@blockframes/utils/version/version.module';
     sentryDsn ? SentryModule : ErrorLoggerModule,
 
     // Router
-    IdlePreloadModule.forRoot(),
     RouterModule.forRoot([{
       path: '',
       loadChildren: () => import('./catalog.module').then(m => m.CatalogModule)
     }], {
-      preloadingStrategy: IdlePreload,
       initialNavigation: 'enabledBlocking',
       anchorScrolling: 'enabled',
       onSameUrlNavigation: 'reload',
