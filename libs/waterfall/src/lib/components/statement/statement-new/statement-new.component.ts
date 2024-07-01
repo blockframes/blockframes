@@ -15,7 +15,7 @@ import {
   rightholderKey,
   statementsRolesMapping
 } from '@blockframes/model';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 import { Subscription } from 'rxjs';
 
 export interface StatementNewData {

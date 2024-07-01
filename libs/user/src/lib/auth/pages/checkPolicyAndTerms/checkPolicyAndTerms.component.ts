@@ -3,7 +3,7 @@ import { AuthService } from '../../service';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/model';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 import { firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
 

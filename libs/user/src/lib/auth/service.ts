@@ -19,7 +19,7 @@ import {
   getDefaultIsoA2,
   defaultLocaleId
 } from '@blockframes/model';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 import { intercomId, production } from '@env';
