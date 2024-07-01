@@ -5,7 +5,6 @@ import { OrganizationGuard } from '@blockframes/organization/guard/organization.
 import { PermissionsGuard } from '@blockframes/permissions/guard/permissions.guard';
 import { MaintenanceGuard } from '@blockframes/ui/maintenance/maintenance.guard';
 import { RouteOptions } from '@blockframes/utils/routes/create-routes';
-import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 
 export function createAdminRoutes({ appsRoutes }: RouteOptions): Routes {
   return [
@@ -68,13 +67,11 @@ const routes = createAdminRoutes({
   declarations: [],
   exports: [RouterModule],
   imports: [
-    IdlePreloadModule.forRoot(),
     RouterModule.forRoot(routes, {
     initialNavigation: 'enabledBlocking',
     anchorScrolling: 'enabled',
     onSameUrlNavigation: 'reload',
     paramsInheritanceStrategy: 'always',
-    preloadingStrategy: IdlePreload
 })],
 })
 export class CmsModule { }

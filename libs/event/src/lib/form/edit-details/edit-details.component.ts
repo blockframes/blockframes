@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Optional,
 import { EventForm } from '../event.form';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { InvitationService } from '@blockframes/invitation/service';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { EventService } from '../../service';
