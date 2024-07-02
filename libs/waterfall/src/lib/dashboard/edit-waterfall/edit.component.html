@@ -73,6 +73,7 @@
           mat-button
           (click)="simulate()"
           [disabled]="(shell.canInitWaterfall$ | async) === false"
+          [matTooltip]="(shell.canInitWaterfall$ | async) === false  ? missingSimulationData : ''"
         >
           <mat-icon svgIcon="default_currency"></mat-icon>
           <span *ngIf="stateMode$.value === 'actual'" i18n>Start Revenue Simulation</span>

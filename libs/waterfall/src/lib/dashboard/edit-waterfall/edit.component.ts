@@ -33,6 +33,7 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
 
   @ViewChild('stepper') stepper?: MatStepper;
   public missingData = $localize`Missing data to publish Waterfall. Make sure to have Contracts and Receipt Shares`;
+  public missingSimulationData = $localize`Missing data to start revenue simulation. Make sure to have Contracts and Receipt Shares`;
   public contractForm = new WaterfallContractForm({ id: '' });
   public rightholdersForm = FormList.factory<WaterfallRightholderFormValue, WaterfallRightholderForm>([], rightholder => new WaterfallRightholderForm(rightholder));
   public simulationForm = new RevenueSimulationForm();
