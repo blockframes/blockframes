@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ExpenseType, Waterfall } from '@blockframes/model';
+import { ExpenseType, Waterfall, isStandaloneVersion } from '@blockframes/model';
 import { FormList } from '@blockframes/utils/form';
 import { ExpenseTypeForm } from '../../../form/contract.form';
 
@@ -17,13 +17,17 @@ interface ExpenseTypeData {
   styleUrls: ['./expense-types-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExpenseTypesModalComponent {
-
+export class ExpenseTypesModalComponent implements OnInit {
+  public isStandaloneVersion = false;
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: ExpenseTypeData,
     public dialogRef: MatDialogRef<ExpenseTypesModalComponent>
   ) { }
+
+  ngOnInit() {
+    this.isStandaloneVersion = isStandaloneVersion(this.data.waterfall, this.data.versionId);
+  }
 
   public confirm() {
     this.data.onConfirm();

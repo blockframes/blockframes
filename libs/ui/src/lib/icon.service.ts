@@ -203,6 +203,7 @@ const icons = [
   { name: 'warning', url: 'assets/icons/warning.svg' },
   { name: 'water_drop', url: 'assets/icons/water_drop.svg' },
   { name: 'world', url: 'assets/icons/world.svg' },
+  { name: 'default_currency', url: 'assets/icons/currencies/default.svg' },
   ...currencyIcons,
 ] as const;
 

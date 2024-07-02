@@ -3,7 +3,6 @@ import { RouterModule } from '@angular/router';
 import { createRoutes } from '@blockframes/utils/routes/create-routes';
 import { ModuleGuard } from '@blockframes/utils/routes/module.guard';
 import { NoLandingGuard } from '@blockframes/auth/guard/no-landing.guard';
-import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 
 const routes = createRoutes({
   landing: {
@@ -39,13 +38,11 @@ const routes = createRoutes({
   declarations: [],
   exports: [RouterModule],
   imports: [
-    IdlePreloadModule.forRoot(),
     RouterModule.forRoot(routes, {
     initialNavigation: 'enabledBlocking',
     anchorScrolling: 'enabled',
     onSameUrlNavigation: 'reload',
     paramsInheritanceStrategy: 'always',
-    preloadingStrategy: IdlePreload
 })],
 })
 export class WaterfallModule { }

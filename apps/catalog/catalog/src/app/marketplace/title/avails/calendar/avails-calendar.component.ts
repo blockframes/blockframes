@@ -15,7 +15,7 @@ import {
 } from '@blockframes/model';
 import { AnalyticsService } from '@blockframes/analytics/service';
 import { MovieService } from '@blockframes/movie/service';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 
 @Component({
   selector: 'catalog-movie-avails-calendar',

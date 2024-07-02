@@ -3,7 +3,7 @@ import { InvitationService } from '@blockframes/invitation/service';
 import { OrganizationService } from '../../service';
 import { filter, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 import { User, Organization, Invitation, App } from '@blockframes/model';
 import { AuthService } from '@blockframes/auth/service';
 import { APP } from '@blockframes/utils/routes/utils';

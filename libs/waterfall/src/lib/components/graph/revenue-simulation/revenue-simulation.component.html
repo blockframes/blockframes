@@ -1,0 +1,47 @@
+<h3 i18n>Report date</h3>
+<mat-divider></mat-divider>
+<section>
+  <h5 i18n>Indicate report date</h5>
+  <mat-form-field appearance="outline">
+    <mat-label i18n>Select Date</mat-label>
+    <input matInput [formControl]="dateControl" [matDatepicker]="datePicker" required [placeholder]="dateInputFormat">
+    <mat-datepicker-toggle matPrefix [for]="datePicker">
+      <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
+    </mat-datepicker-toggle>
+    <mat-datepicker #datePicker></mat-datepicker>
+  </mat-form-field>
+</section>
+<h3 i18n>Sources</h3>
+<mat-divider></mat-divider>
+<section *ngFor="let income of form.get('incomes').controls; let i = index;">
+  <h5 i18n>Source : {{ income.get('sourceId').value | sourceName : (sources$ | async) }}</h5>
+  <mat-form-field appearance="outline">
+    <mat-label i18n>Gross Receipts Amount</mat-label>
+    <input type="number" matInput [formControl]="income.get('price')" required/>
+    <mat-icon matPrefix [svgIcon]="waterfall.mainCurrency"></mat-icon>
+  </mat-form-field>
+</section>
+<h3 i18n>Expenses</h3>
+<mat-divider></mat-divider>
+<section *ngFor="let expense of form.get('expenses').controls; let i = index;">
+  <h5 i18n>Expenses : {{ expense.get('typeId').value | expenseType : expense.get('contractId').value : waterfall }}</h5>
+  <ng-container *ngIf="(expense.get('typeId').value | expenseTypeCap : (expenseTypes$ | async) : (versionId$ | async)) as cap else notcapped">
+    <div>cap : {{ cap | currency : waterfall.mainCurrency }}</div>
+    <mat-form-field appearance="outline">
+      <mat-label i18n>Expenses Amount</mat-label>
+      <input type="number" matInput [formControl]="expense.get('price')" required/>
+      <mat-icon matPrefix [svgIcon]="waterfall.mainCurrency"></mat-icon>
+    </mat-form-field>
+    <mat-slide-toggle [formControl]="expense.get('capped')" color="primary" i18n>Is capped?</mat-slide-toggle>
+  </ng-container>
+  <ng-template #notcapped>
+    <mat-form-field appearance="outline">
+      <mat-label i18n>Expenses Amount</mat-label>
+      <input type="number" matInput [formControl]="expense.get('price')" required/>
+      <mat-icon matPrefix [svgIcon]="waterfall.mainCurrency"></mat-icon>
+    </mat-form-field>
+  </ng-template>
+</section>
+<section *ngIf="form.get('expenses').controls.length === 0">
+  <p i18n>There are no receipt shares with expenses conditions.</p>
+</section>

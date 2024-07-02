@@ -14,5 +14,12 @@ article {
   button {
     margin-top: 16px;
   }
+  p {
+    margin: auto;
+    text-decoration: underline;
+    mat-icon {
+      vertical-align: middle;
+    }
+  }
 }
 

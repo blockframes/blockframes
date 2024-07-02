@@ -36,7 +36,7 @@ import { createModalData } from '@blockframes/ui/global-modal/global-modal.compo
 import { StatementNewComponent, StatementNewData } from '@blockframes/waterfall/components/statement/statement-new/statement-new.component';
 import { OrganizationService } from '@blockframes/organization/service';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 
 interface StatementRolesConfig {
   roles: RightholderRole[],

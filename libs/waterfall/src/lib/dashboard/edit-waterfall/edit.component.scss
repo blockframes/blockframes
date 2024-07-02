@@ -5,14 +5,16 @@
   padding: 0 24px 0px 24px;
 }
 
-div {
+div,
+waterfall-version-selector {
   margin: 32px 0;
 }
 
-div.top-graph {
+div.toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0;
 }
 
 article {

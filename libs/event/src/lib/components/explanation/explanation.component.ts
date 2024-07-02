@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, Optional } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EventTypes } from '@blockframes/model';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 
 @Component({
   selector: 'festival-event-explanation',

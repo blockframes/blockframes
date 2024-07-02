@@ -1,7 +1,7 @@
 import { filter } from 'rxjs/operators';
 import { emulatorConfig } from '../environment/environment';
 import { production, firebase, firebaseRegion, sentryDsn, intercomId } from '@env';
-import { IntercomModule } from 'ng-intercom';
+import { IntercomModule } from '@supy-io/ngx-intercom';
 
 // NgFire
 import { FIREBASE_CONFIG, FIRESTORE_SETTINGS, REGION_OR_DOMAIN } from 'ngfire';
@@ -13,7 +13,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
-import { IdlePreload, IdlePreloadModule } from 'angular-idle-preload';
 
 // Components
 import { AppComponent } from './app.component';
@@ -52,12 +51,10 @@ import { VersionModule } from '@blockframes/utils/version/version.module';
     sentryDsn ? SentryModule : ErrorLoggerModule,
 
     // Router
-    IdlePreloadModule.forRoot(),
     RouterModule.forRoot([{
       path: '',
       loadChildren: () => import('./catalog.module').then(m => m.CatalogModule)
     }], {
-      preloadingStrategy: IdlePreload,
       initialNavigation: 'enabledBlocking',
       anchorScrolling: 'enabled',
       onSameUrlNavigation: 'reload',

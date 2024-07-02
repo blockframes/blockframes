@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Optional, OnInit } from '@angular/core';
 import { ContractService } from '@blockframes/contract/contract/service';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 import { joinWith } from 'ngfire';
 import { combineLatest, of, map, catchError } from 'rxjs';
 import { MovieService } from '@blockframes/movie/service';

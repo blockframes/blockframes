@@ -1,7 +1,7 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Input, OnChanges, OnInit } from '@angular/core';
 
-import { ExpenseType, Waterfall, createExpenseType } from '@blockframes/model';
+import { ExpenseType, Waterfall, createExpenseType, isStandaloneVersion } from '@blockframes/model';
 import { FormList } from '@blockframes/utils/form';
 import { WaterfallDocumentsService } from '../../../documents.service';
 import { ExpenseTypeForm } from '../../../form/contract.form';
@@ -18,18 +18,21 @@ export class ExpenseTypesComponent implements OnInit, OnChanges {
   @Input() waterfall: Waterfall;
   public addExpenseType = $localize`Add Expense Type`;
   public deleteExpenseType = $localize`Delete Expense Type`;
+  public isStandaloneVersion = false;
 
   constructor(
     private documentService: WaterfallDocumentsService,
   ) { }
 
   ngOnInit() {
-    this.addExpenseType = this.versionId === 'default' ? $localize`Add Expense Type` : $localize`Not permitted`;
-    this.deleteExpenseType = this.versionId === 'default' ? $localize`Delete Expense Type` : $localize`Not permitted`;
+    this.isStandaloneVersion = isStandaloneVersion(this.waterfall, this.versionId);
+    this.addExpenseType = this.versionId === 'default' || this.isStandaloneVersion ? $localize`Add Expense Type` : $localize`Not permitted`;
+    this.deleteExpenseType = this.versionId === 'default' || this.isStandaloneVersion ? $localize`Delete Expense Type` : $localize`Not permitted`;
   }
 
   ngOnChanges() {
-    if (this.versionId === 'default') {
+    this.isStandaloneVersion = isStandaloneVersion(this.waterfall, this.versionId);
+    if (this.versionId === 'default' || this.isStandaloneVersion) {
       this.form.enable();
     } else {
       this.form.disable();

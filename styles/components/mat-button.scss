@@ -17,7 +17,8 @@
   // No background
   .mdc-button--outlined,
   .mat-mdc-button,
-  .mat-icon-button {
+  .mat-icon-button,
+  .mat-mdc-icon-button {
     &.mat-primary {
       svg g,
       svg polygon,
@@ -43,6 +44,7 @@
     &.mat-button-disabled,
     &.mat-mdc-button:disabled,
     &.mat-mdc-button-disabled {
+      pointer-events: auto;
       color: mat.get-color-from-palette($foreground, disabled-text);
       svg g,
       svg polygon,
@@ -105,7 +107,9 @@
     }
 
     &.mat-button-disabled,
-    &.mat-mdc-button:disabled {
+    &.mat-mdc-button:disabled,
+    &.mat-mdc-button-disabled {
+      pointer-events: auto;
       background-color: mat.get-color-from-palette($background, disabled-button);
       // Prevent override from above style
       &:hover {

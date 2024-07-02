@@ -15,7 +15,7 @@ import {
   rightholderKey,
   statementsRolesMapping
 } from '@blockframes/model';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 import { Subscription } from 'rxjs';
 
 export interface StatementNewData {
@@ -128,6 +128,6 @@ export class StatementNewComponent implements OnInit, OnDestroy {
   }
 
   public openIntercom() {
-    return this.intercom.show('I cannot find my contract when creating a new statement');
+    return this.intercom.show($localize`I cannot find my contract when creating a new statement`);
   }
 }
