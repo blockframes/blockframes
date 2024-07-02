@@ -159,18 +159,24 @@ describe('Movie tunnel', () => {
       .find('input')
       .type(`${Object.keys(update.languages)[0]}{enter}{esc}`);
     get('save-language').click();
+    assertUrlIncludes(`c/o/dashboard/tunnel/movie/${movie.id}/available-versions`);
     check('subtitle');
     get('next').click();
     //files - nothing yet to change, see #8900
+    assertUrlIncludes(`c/o/dashboard/tunnel/movie/${movie.id}/media-files`);
     get('next').click();
     //images - idem #8900
+    assertUrlIncludes(`c/o/dashboard/tunnel/movie/${movie.id}/media-images`);
     get('next').click();
     //videos
+    assertUrlIncludes(`c/o/dashboard/tunnel/movie/${movie.id}/media-videos`);
     get('description').type(' edited');
     get('next').click();
     //screener - idem #8900
+    assertUrlIncludes(`c/o/dashboard/tunnel/movie/${movie.id}/media-screener`);
     get('next').click();
     //available materials - idem #8900
+    assertUrlIncludes(`c/o/dashboard/tunnel/movie/${movie.id}/available-materials`);
     get('next').click();
 
     //summary & submission

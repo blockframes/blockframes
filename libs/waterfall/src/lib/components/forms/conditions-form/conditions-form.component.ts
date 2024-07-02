@@ -169,6 +169,7 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
       data: createModalData({
         versionId,
         form,
+        waterfall,
         onConfirm: () => {
           const { expenseTypes, id } = waterfall;
           const expenseType = form.getRawValue().filter(c => !!c.name).map(c => createExpenseType({

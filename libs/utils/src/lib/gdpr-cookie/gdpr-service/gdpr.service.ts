@@ -6,6 +6,7 @@ import { App, User } from '@blockframes/model';
 // import { YandexMetricaService } from './../../yandex-metrica/yandex-metrica.service';
 import { APP } from './../../routes/utils';
 import { HotjarService } from './../../hotjar/hotjar.service';
+import { intercomId } from '@env';
 
 @Injectable({ providedIn: 'root' })
 export class GDPRService {
@@ -29,7 +30,7 @@ export class GDPRService {
 
   enableIntercom(user: User, enable: boolean) {
     this.enable('intercom', enable);
-    enable ? this.intercom.enable(user) : this.intercom.disable();
+    enable && intercomId ? this.intercom.enable(user) : this.intercom.disable();
   }
 
   enableHotjar(enable: boolean) {

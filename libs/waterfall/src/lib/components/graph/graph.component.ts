@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 import { WriteBatch } from 'firebase/firestore';
 import { BehaviorSubject, Observable, Subscription, combineLatest, map, tap } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';

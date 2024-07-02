@@ -20,7 +20,7 @@ import { map, switchMap, shareReplay, filter, distinctUntilChanged } from 'rxjs/
 import { combineLatest, firstValueFrom, of } from 'rxjs';
 
 // Intercom
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 
 // NgFire
 import { joinWith } from 'ngfire';

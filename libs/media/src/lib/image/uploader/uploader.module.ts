@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ImageCropperModule } from 'ngx-image-cropper';
+import { ImageCropperComponent } from 'ngx-image-cropper';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Material
@@ -21,7 +21,7 @@ import { DownloadPipeModule } from '../../file/pipes/download.pipe';
   imports: [
     CommonModule,
     FlexLayoutModule,
-    ImageCropperModule,
+    ImageCropperComponent,
     ImageModule,
     DownloadPipeModule,
 

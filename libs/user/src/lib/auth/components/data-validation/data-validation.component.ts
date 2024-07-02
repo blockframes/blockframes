@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit, Input, Optional, Inject } f
 import { AuthService } from '../../service';
 import { App, getOrgModuleAccess, Organization, hasDisplayName } from '@blockframes/model';
 import { BehaviorSubject } from 'rxjs';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 import { delay, hasName } from '@blockframes/utils/helpers';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { APP } from '@blockframes/utils/routes/utils';

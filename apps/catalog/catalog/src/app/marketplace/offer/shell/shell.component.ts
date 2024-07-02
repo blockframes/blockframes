@@ -5,7 +5,7 @@ import { OfferService } from '@blockframes/contract/offer/service';
 import { MovieService } from '@blockframes/movie/service';
 import { joinWith } from 'ngfire';
 import { where } from 'firebase/firestore';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 import { pluck, shareReplay, switchMap } from 'rxjs/operators';
 
 

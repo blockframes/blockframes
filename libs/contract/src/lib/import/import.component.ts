@@ -1,5 +1,5 @@
 import { Inject, Component, ChangeDetectionStrategy, Optional } from '@angular/core';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/model';

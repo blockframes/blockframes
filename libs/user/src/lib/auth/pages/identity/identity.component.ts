@@ -21,7 +21,7 @@ import {
   TerritoryISOA2Value
 } from '@blockframes/model';
 import { OrganizationService } from '@blockframes/organization/service';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 import { createLocation } from '@blockframes/model';
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
 import { UntypedFormControl } from '@angular/forms';

@@ -5,7 +5,7 @@ import { Component, ChangeDetectionStrategy, Optional, Inject } from '@angular/c
 import { MovieFormShellComponent } from '../shell/shell.component';
 
 // Utils
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 
 // Blockframes
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
