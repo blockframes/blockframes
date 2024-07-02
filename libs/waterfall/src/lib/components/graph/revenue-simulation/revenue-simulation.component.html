@@ -25,11 +25,23 @@
 <mat-divider></mat-divider>
 <section *ngFor="let expense of form.get('expenses').controls; let i = index;">
   <h5 i18n>Expenses : {{ expense.get('typeId').value | expenseType : expense.get('contractId').value : waterfall }}</h5>
-  <div *ngIf="(expense.get('typeId').value | expenseTypeCap : (expenseTypes$ | async) : (versionId$ | async)) as cap">cap : {{ cap | currency : waterfall.mainCurrency }}</div>
-  <mat-form-field appearance="outline">
-    <mat-label i18n>Expenses Amount</mat-label>
-    <input type="number" matInput [formControl]="expense.get('price')" required/>
-    <mat-icon matPrefix [svgIcon]="waterfall.mainCurrency"></mat-icon>
-  </mat-form-field>
-  <mat-slide-toggle *ngIf="(expense.get('typeId').value | expenseTypeCap : (expenseTypes$ | async) : (versionId$ | async)) as cap" [formControl]="expense.get('capped')" color="primary" i18n>Is capped?</mat-slide-toggle>
+  <ng-container *ngIf="(expense.get('typeId').value | expenseTypeCap : (expenseTypes$ | async) : (versionId$ | async)) as cap else notcapped">
+    <div>cap : {{ cap | currency : waterfall.mainCurrency }}</div>
+    <mat-form-field appearance="outline">
+      <mat-label i18n>Expenses Amount</mat-label>
+      <input type="number" matInput [formControl]="expense.get('price')" required/>
+      <mat-icon matPrefix [svgIcon]="waterfall.mainCurrency"></mat-icon>
+    </mat-form-field>
+    <mat-slide-toggle [formControl]="expense.get('capped')" color="primary" i18n>Is capped?</mat-slide-toggle>
+  </ng-container>
+  <ng-template #notcapped>
+    <mat-form-field appearance="outline">
+      <mat-label i18n>Expenses Amount</mat-label>
+      <input type="number" matInput [formControl]="expense.get('price')" required/>
+      <mat-icon matPrefix [svgIcon]="waterfall.mainCurrency"></mat-icon>
+    </mat-form-field>
+  </ng-template>
+</section>
+<section *ngIf="form.get('expenses').controls.length === 0">
+  <p i18n>There are no receipt shares with expenses conditions.</p>
 </section>
