@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Optional, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
 import { ActivatedRoute } from '@angular/router';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 import { MovieService } from '@blockframes/movie/service';
 import { pluck, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { AnalyticsService } from '@blockframes/analytics/service';
