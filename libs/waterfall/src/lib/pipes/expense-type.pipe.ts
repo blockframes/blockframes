@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { Waterfall } from '@blockframes/model';
+import { ExpenseType, Waterfall } from '@blockframes/model';
 
 @Pipe({ name: 'expenseType' })
 export class ExpenseTypePipe implements PipeTransform {
@@ -17,8 +17,18 @@ export class ExpenseTypeStatusPipe implements PipeTransform {
   }
 }
 
+@Pipe({ name: 'expenseTypeCap' })
+export class ExpenseTypeCapPipe implements PipeTransform {
+  transform(typeId: string, expenseTypes: ExpenseType[], versionId: string): number {
+    if (!typeId) return undefined;
+    const expenseType = expenseTypes.find(type => type.id === typeId);
+    if (!expenseType) return undefined;
+    return versionId && expenseType.cap.version[versionId] ? expenseType.cap.version[versionId] : expenseType.cap.default;
+  }
+}
+
 @NgModule({
-  declarations: [ExpenseTypePipe, ExpenseTypeStatusPipe],
-  exports: [ExpenseTypePipe, ExpenseTypeStatusPipe],
+  declarations: [ExpenseTypePipe, ExpenseTypeStatusPipe, ExpenseTypeCapPipe],
+  exports: [ExpenseTypePipe, ExpenseTypeStatusPipe, ExpenseTypeCapPipe],
 })
 export class ExpenseTypePipeModule { }

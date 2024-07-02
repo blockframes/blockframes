@@ -4,13 +4,14 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Components
-import { ExpenseTypeCapPipe, WaterfallConditionsFormComponent } from './conditions-form.component';
+import { WaterfallConditionsFormComponent } from './conditions-form.component';
 
 // Blockframes
 import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { ExpenseTypesModalModule } from '../../expense/expense-types-modal/expense-types-modal.module';
+import { ExpenseTypePipeModule } from '../../../pipes/expense-type.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -25,7 +26,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
-  declarations: [WaterfallConditionsFormComponent, ExpenseTypeCapPipe],
+  declarations: [WaterfallConditionsFormComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -34,6 +35,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     ChipsAutocompleteModule,
     ToLabelModule,
     ExpenseTypesModalModule,
+    ExpenseTypePipeModule,
 
     MatIconModule,
     MatInputModule,
