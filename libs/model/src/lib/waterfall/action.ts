@@ -343,6 +343,7 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
     const rightOverrides = statements.map(s => s.rightOverrides.filter(r => r.incomeId === i.id).map(r => ({ rightId: r.rightId, percent: r.percent / 100 }))).flat();
 
     const source = sources.find(s => s.id === i.sourceId);
+    if (!source) continue;
 
     actions.push(
       action('income', {
