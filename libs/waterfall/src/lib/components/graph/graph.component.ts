@@ -789,6 +789,12 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       return this.waterfallService.update(this.waterfallId, { id: this.waterfallId, sources: [...sources, ...waterfallSources] }, { write });
     }
   }
+
+  public populateSimulation() {
+    const incomes = this.simulationForm.get('incomes').value.filter(i => i.price > 0);
+    const expenses = this.simulationForm.get('expenses').value.filter(e => e.price > 0);
+    return this.shell.appendToSimulation({ incomes, expenses }, { fromScratch: true });
+  }
 }
 
 @Pipe({ name: 'getNode' })
