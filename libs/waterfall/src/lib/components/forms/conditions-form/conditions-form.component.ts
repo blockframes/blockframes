@@ -17,6 +17,7 @@ import {
   Amortization,
   NumberOperator,
   contractPrice,
+  isStandaloneVersion,
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 
@@ -161,7 +162,7 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
 
     if (this.expenseTypes.length > 0) {
       this.expenseTypes.forEach(expenseType => form.add(expenseType));
-    } else {
+    } else if (versionId === 'default' || isStandaloneVersion(waterfall, versionId)) {
       form.add(createExpenseType({ contractId: this.contractId }));
     }
 
