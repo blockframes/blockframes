@@ -5,7 +5,7 @@ import { SupportedLanguages, sortByDate, sum, toLabel } from '../utils';
 import { TitleState, TransferState } from './state';
 import { Version, Waterfall, WaterfallContract, WaterfallRightholder, WaterfallSource, getIncomesSources } from './waterfall';
 import { Right, RightOverride, createRightOverride, getChilds, getRightCondition, getRightExpenseTypes, skipGroups } from './right';
-import { getSources, isVerticalGroupChild, nodeExists, pathExists } from './node';
+import { getGroup, getSources, isVerticalGroupChild, nodeExists, pathExists } from './node';
 import { Income, createIncome } from '../income';
 import { getContractsWith } from '../contract';
 import { ConditionWithTarget, getInvestmentValue, isConditionWithTarget } from './conditions';
@@ -481,7 +481,7 @@ function getTopLevelRights(_rights: Right[], state: TitleState) {
 
   const topLevelRights: Right[] = [];
   for (const right of rights) {
-    const notBrother = (r: Right) => (!r.groupId || r.groupId !== right.groupId);
+    const notBrother = (r: Right) => (!r.groupId || (r.groupId !== right.groupId && getGroup(state, r.groupId)?.id !== right.groupId));
     if (!rights.filter(r => r.id !== right.id && notBrother(r)).some(r => pathExists(right.id, r.id, state))) {
       topLevelRights.push(right);
     }
