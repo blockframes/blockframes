@@ -128,6 +128,6 @@ export class StatementNewComponent implements OnInit, OnDestroy {
   }
 
   public openIntercom() {
-    return this.intercom.show('I cannot find my contract when creating a new statement');
+    return this.intercom.show($localize`I cannot find my contract when creating a new statement`);
   }
 }

@@ -128,6 +128,8 @@ const translatedTemplates: Partial<Record<SupportedLanguages, unknown>> = {
   fr: templateIdsFr
 }
 
+// TODO #9870 check if still useful given that we use if statements in existing emails templates
+// Delete FR templates if needed
 export const getTemplateId = (path: string, lang?: SupportedLanguages): string => {
   const resolve = (path: string, obj: unknown) => path.split('.').reduce((prev, curr) => prev?.[curr], obj);
   const defaultId = resolve(path, templateIds) as string;

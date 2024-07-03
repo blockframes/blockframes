@@ -1,0 +1,11 @@
+<h3 i18n>Simulation Results</h3>
+
+<section>
+  <ng-container *ngFor="let result of results$ | async; let isLast = last">
+    <article>
+      <span>{{ result.name }}</span>
+      <span>{{ result.revenue | currency: waterfall.mainCurrency }}</span>
+    </article>
+    <mat-divider *ngIf="!isLast"></mat-divider>
+  </ng-container>
+</section>

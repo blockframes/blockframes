@@ -1,0 +1,18 @@
+:host {
+  padding: 0 16px;
+  display: block;
+}
+
+h3 {
+  color: var(--primary);
+  padding: 16px 16px 0 16px;
+}
+
+section {
+  padding: 0px 16px;
+  article {
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+  }
+}

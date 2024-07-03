@@ -158,7 +158,7 @@ export class WaterfallService extends BlockframesCollection<Waterfall> {
   }
 
   /**
-   * Runs a simulation of the waterfall without storing data in the database
+   * Runs a simulation of the waterfall without using or modifying blocks stored in the database
    * @param waterfall 
    * @param blocks 
    * @param versionId
@@ -304,10 +304,10 @@ function groupActions(data: WaterfallData, versionId: string, isSimulation = fal
   const contractActions = contractsToActions(data.contracts);
   const investmentActions = investmentsToActions(data.contracts);
   const rightActions = rightsToActions(data.rights);
-  const incomeActions = incomesToActions(data.contracts, incomes, sources, incomesAndExpensesStatements);
+  const incomeActions = incomesToActions(data.contracts, incomes, sources, incomesAndExpensesStatements, isSimulation);
   // Skip hidden expenses for this version: prevent them to be part of state
   const expenses = isSimulation ? Object.values(data.expenses) : Object.values(data.expenses).filter(i => !i.version[versionId] || !i.version[versionId].hidden);
-  const expenseActions = expensesToActions(expenses, incomesAndExpensesStatements);
+  const expenseActions = expensesToActions(expenses, incomesAndExpensesStatements, isSimulation);
   const paymentActions = statementsToActions(data.statements, incomes);
   const amortizationActions = amortizationsToActions(data.amortizations);
 
@@ -336,8 +336,10 @@ function buildBlocks(data: WaterfallData, createdBy: string, versionId: string, 
 }
 
 /**
- * Used only by BlockframesAdmin users that can bypass database rules
- * @param data 
+ * @param waterfallId 
+ * @param version 
+ * @param blocks 
+ * @returns 
  */
 function buildWaterfall(waterfallId: string, version: Version, blocks: Block[]): WaterfallState {
   return { waterfall: _waterfall(waterfallId, blocks), version };

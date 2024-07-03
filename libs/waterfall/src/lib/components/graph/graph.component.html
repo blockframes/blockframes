@@ -31,10 +31,11 @@
         (addSibling)="addSibling($event)"
         [selected]="(selected$ | async)"
         [ngStyle]="{ left: node.x + 'px', top: node.y + 'px' }"
+        [stateMode]="stateMode$.value"
       ></waterfall-graph-node>
   
       <svg:path *ngFor="let arrow of (arrows$ | async)" edge [attr.d]="arrow.path" stroke-width="2" stroke="#9392A7" fill="none"></svg:path>
-      <waterfall-graph-label *ngFor="let arrow of (arrows$ | async)" node [ngStyle]="{ left: arrow.labelPosition.x + 'px', top: arrow.labelPosition.y + 'px' }" [arrow]="arrow"></waterfall-graph-label>
+      <waterfall-graph-label [stateMode]="stateMode$.value" *ngFor="let arrow of (arrows$ | async)" node [ngStyle]="{ left: arrow.labelPosition.x + 'px', top: arrow.labelPosition.y + 'px' }" [arrow]="arrow"></waterfall-graph-label>
   
     </bf-graph-container>
   </ng-container>
@@ -47,8 +48,11 @@
 </section>
 
 <bf-card-modal [ngStyle]="{ display: showEditPanel ? 'block' : 'none' }">
-  <ng-container *ngIf="selected$ | async as selected; else noSelection">
-    <ng-container *ngIf="!readonly else nodeDetails">
+  <ng-container *ngIf="(rightPanelMode$ | async) === 'builder'">
+    <!-------------------->
+    <!--- BUILDER MODE --->
+    <!-------------------->
+    <ng-container *ngIf="selected$ | async as selected; else noSelection">
       <ng-container *ngIf="isSourceSelected; else notSource">
         <header>
           <h2>
@@ -221,88 +225,129 @@
         </mat-tab-group>
       </ng-template>
     </ng-container>
-    <ng-template #nodeDetails>
-      <header>
-        <h2>
-          <span>{{ rightForm.get('name').value | maxLength : 38 }} </span>
-        </h2>
-        <button mat-icon-button matTooltip="Close" (click)="select('')" i18n-matTooltip>
-          <mat-icon svgIcon="close"></mat-icon>
-        </button>
-      </header>
-      <waterfall-graph-node-details [rightForm]="rightForm" [rightId]="selected"></waterfall-graph-node-details>
+    <ng-template #noSelection>
+      <ng-container *ngIf="(nodes$ | async).length; else emptyForm">
+        <header>
+          <h2 i18n>Receipt Share List</h2>
+          <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? i18nStrings.shrink : i18nStrings.enlarge" i18n-malTooltip>
+            <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
+          </button>
+        </header>
+        <section class="add">
+          <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="isDuplicateVersion" >
+            <mat-icon svgIcon="add"></mat-icon>
+            <span i18n>New Receipt Source</span>
+          </button>
+          <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="isDuplicateVersion" >
+            <mat-icon svgIcon="add"></mat-icon>
+            <span i18n>New Receipt Share</span>
+          </button>
+        </section>
+        <p class="description" i18n><strong>Pool</strong> is needed when several Receipts Shares come from different sources, but should be used in the same condition.</p>
+        <mat-tab-group mat-stretch-tabs="false">
+          <mat-tab label="Receipts Shares" i18n-label>
+            <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
+              <waterfall-right-list (deleteRight)="delete($event)" (selectRight)="select($event)" [nonEditableNodeIds]="nonEditableNodeIds$.value" [canCreatePool]="!isDuplicateVersion"></waterfall-right-list>
+            </section>
+          </mat-tab>
+          <mat-tab label="Pools Only" i18n-label>
+            <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
+              <waterfall-pool-list [nonEditableNodeIds]="nonEditableNodeIds$.value"></waterfall-pool-list>
+            </section>
+          </mat-tab>
+        </mat-tab-group>
+      </ng-container>
+      <ng-template #emptyForm>
+        <header>
+          <h2 i18n>Instructions</h2>
+        </header>
+        <section class="add">
+          <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="isDuplicateVersion" >
+            <mat-icon svgIcon="add"></mat-icon>
+            <span i18n>New Receipt Source</span>
+          </button>
+          <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="isDuplicateVersion" >
+            <mat-icon svgIcon="add"></mat-icon>
+            <span i18n>New Receipt Share</span>
+          </button>
+        </section>
+        <section class="begin">
+          <h3 i18n>Title Waterfall Creation Guide</h3>
+          <p class="mat-body-2" i18n>Welcome to the section dedicated to crafting the revenue distribution (waterfall) for your film or series (Title). Please adhere to the following structured guidelines to ensure an accurate and efficient setup:</p>
+      
+          <h3 i18n>Understanding the Waterfall Schema:</h3>
+          <p class="mat-body-2" i18n>This schema illustrates the revenue flow, systematically channeling funds from the top tier downwards.</p>
+      
+          <h3 i18n>Identifying Receipt Sources:</h3>
+          <p class="mat-body-2" i18n>These are the origins of your revenue. Typically, they encompass various media and geographical territories.</p>
+      
+          <h3 i18n>Allocating Receipt Shares:</h3>
+          <p class="mat-body-2" i18n>Receipt Shares represent the entitlements granted to each stakeholder, allowing them to claim a portion of the earnings. This may include commission fees, recoupment of expenses, the producer’s net revenue share, or other rights afforded to stakeholders.</p>
+      
+          <h3 i18n>Step-by-Step Waterfall Creation:</h3>
+          <ol>
+            <li i18n>Individual Stakeholder Focus: Tackle the waterfall creation one stakeholder at a time. It’s advisable to start with the sales agent and main distributor’s mandates.</li>
+            <li i18n>Establish Receipt Sources: For each stakeholder, identify and list all the Receipt Sources from which they derive revenue.</li>
+            <li i18n>Structure Receipt Shares: Begin by allocating Receipt Shares that draw from the initial earnings ('first euros'). Subsequently, establish subsequent shares in a sequential manner.</li>
+          </ol>
+          <button mat-button (click)="openIntercom()">
+            <mat-icon svgIcon="help"></mat-icon>
+            <span i18n>Ask for Help</span>
+          </button>
+        </section>
+      </ng-template>
     </ng-template>
   </ng-container>
-  <ng-template #noSelection>
-    <ng-container *ngIf="(nodes$ | async).length; else emptyGraph">
-      <header>
-        <h2 i18n>Receipt Share List</h2>
-        <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? i18nStrings.shrink : i18nStrings.enlarge" i18n-malTooltip>
-          <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
+  <ng-container *ngIf="(rightPanelMode$ | async) === 'readonly'">
+    <!-------------------->
+    <!-- READONLY MODE --->
+    <!-------------------->
+    <header>
+      <h2>
+        <span>{{ rightForm.get('name').value | maxLength : 38 }}</span>
+      </h2>
+      <button mat-icon-button matTooltip="Close" (click)="select('')" i18n-matTooltip>
+        <mat-icon svgIcon="close"></mat-icon>
+      </button>
+    </header>
+    <waterfall-graph-node-details *ngIf="selected$ | async as selected" [rightForm]="rightForm" [rightId]="selected"></waterfall-graph-node-details>
+  </ng-container>
+  <ng-container *ngIf="(rightPanelMode$ | async) === 'simulation'">
+    <!---------------------->
+    <!-- SIMULATION MODE --->
+    <!---------------------->
+    <header>
+      <h2>
+        <span i18n>Revenue Simulation</span>
+      </h2>
+      <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? i18nStrings.shrink : i18nStrings.enlarge">
+        <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Close" (click)="toggleEditPanel()" i18n-matTooltip>
+        <mat-icon svgIcon="close"></mat-icon>
+      </button>
+    </header>
+    <ng-container *ngIf="!showSimulationResults$.value">  
+      <waterfall-revenue-simulation-form (simulationExited)="simulationExited.emit(true)" [form]="simulationForm" [dateControl]="dateControl"></waterfall-revenue-simulation-form>
+      <footer>
+        <button color="primary" mat-button (click)="populateSimulation()">
+          <span i18n>Simulate revenue distribution</span>
         </button>
-      </header>
-      <section class="add">
-        <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="isDuplicateVersion" >
-          <mat-icon svgIcon="add"></mat-icon>
-          <span i18n>New Receipt Source</span>
+        <button color="warn" mat-button (click)="simulationExited.next(true)">
+          <span i18n>Exit Simulation</span>
         </button>
-        <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="isDuplicateVersion" >
-          <mat-icon svgIcon="add"></mat-icon>
-          <span i18n>New Receipt Share</span>
-        </button>
-      </section>
-      <p class="description" i18n><strong>Pool</strong> is needed when several Receipts Shares come from different sources, but should be used in the same condition.</p>
-      <mat-tab-group mat-stretch-tabs="false">
-        <mat-tab label="Receipts Shares" i18n-label>
-          <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-right-list (deleteRight)="delete($event)" (selectRight)="select($event)" [nonEditableNodeIds]="nonEditableNodeIds$.value" [canCreatePool]="!isDuplicateVersion"></waterfall-right-list>
-          </section>
-        </mat-tab>
-        <mat-tab label="Pools Only" i18n-label>
-          <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-            <waterfall-pool-list [nonEditableNodeIds]="nonEditableNodeIds$.value"></waterfall-pool-list>
-          </section>
-        </mat-tab>
-      </mat-tab-group>
+      </footer>
     </ng-container>
-    <ng-template #emptyGraph>
-      <header>
-        <h2 i18n>Instructions</h2>
-      </header>
-      <section class="add">
-        <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="isDuplicateVersion" >
-          <mat-icon svgIcon="add"></mat-icon>
-          <span i18n>New Receipt Source</span>
+    <ng-container *ngIf="showSimulationResults$.value">
+      <waterfall-revenue-simulation-results></waterfall-revenue-simulation-results>
+      <footer>
+        <button color="primary" mat-button (click)="populateSimulation()">
+          <span i18n>Start new simulation</span>
         </button>
-        <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="isDuplicateVersion" >
-          <mat-icon svgIcon="add"></mat-icon>
-          <span i18n>New Receipt Share</span>
+        <button color="warn" mat-button (click)="simulationExited.next(true)">
+          <span i18n>Exit Simulation</span>
         </button>
-      </section>
-      <section class="begin">
-        <h3 i18n>Title Waterfall Creation Guide</h3>
-        <p class="mat-body-2" i18n>Welcome to the section dedicated to crafting the revenue distribution (waterfall) for your film or series (Title). Please adhere to the following structured guidelines to ensure an accurate and efficient setup:</p>
-
-        <h3 i18n>Understanding the Waterfall Schema:</h3>
-        <p class="mat-body-2" i18n>This schema illustrates the revenue flow, systematically channeling funds from the top tier downwards.</p>
-
-        <h3 i18n>Identifying Receipt Sources:</h3>
-        <p class="mat-body-2" i18n>These are the origins of your revenue. Typically, they encompass various media and geographical territories.</p>
-
-        <h3 i18n>Allocating Receipt Shares:</h3>
-        <p class="mat-body-2" i18n>Receipt Shares represent the entitlements granted to each stakeholder, allowing them to claim a portion of the earnings. This may include commission fees, recoupment of expenses, the producer’s net revenue share, or other rights afforded to stakeholders.</p>
-
-        <h3 i18n>Step-by-Step Waterfall Creation:</h3>
-        <ol>
-          <li i18n>Individual Stakeholder Focus: Tackle the waterfall creation one stakeholder at a time. It’s advisable to start with the sales agent and main distributor’s mandates.</li>
-          <li i18n>Establish Receipt Sources: For each stakeholder, identify and list all the Receipt Sources from which they derive revenue.</li>
-          <li i18n>Structure Receipt Shares: Begin by allocating Receipt Shares that draw from the initial earnings ('first euros'). Subsequently, establish subsequent shares in a sequential manner.</li>
-        </ol>
-        <button mat-button (click)="openIntercom()">
-          <mat-icon svgIcon="help"></mat-icon>
-          <span i18n>Ask for Help</span>
-        </button>
-      </section>
-    </ng-template>
-  </ng-template>
+      </footer>
+    </ng-container>
+  </ng-container>
 </bf-card-modal>

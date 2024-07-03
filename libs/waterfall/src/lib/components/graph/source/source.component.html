@@ -1,15 +1,15 @@
 
 <mat-icon svgIcon="world"></mat-icon>
 
-<p class="nodrag" [matTooltip]="source.name || 'Source Name'">
-  {{source.name || 'Receipt Source (Media & Territory)'}}
+<p class="nodrag" [matTooltip]="source.name || defaultSourceName">
+  {{ source.name || defaultSourceName }}
 </p>
 
 <ng-container *ngIf="selected && canUpdate">
-  <button mat-mini-fab color="primary" class="right" matTooltip="Add new Source" (click)="handleAddSibling($event)">
+  <button mat-mini-fab color="primary" class="right" matTooltip="Add new Source" i18n-matTooltip (click)="handleAddSibling($event)">
     <mat-icon svgIcon="add"></mat-icon>
   </button>
-  <button *ngIf="source.children.length === 0" mat-mini-fab color="primary" matTooltip="Add new Receipt Share" class="bottom" (click)="handleAddChild($event)">
+  <button *ngIf="source.children.length === 0" mat-mini-fab color="primary" matTooltip="Add new Receipt Share" i18n-matTooltip class="bottom" (click)="handleAddChild($event)">
     <mat-icon svgIcon="add"></mat-icon>
   </button>
 </ng-container>

@@ -63,10 +63,8 @@
           </ng-template>
         </ng-container>
       </ng-container>
-      <ng-container *ngSwitchCase="'joinOrganization'">
-        <ng-container *ngIf="_invitation.mode !== 'invitation'" i18n>
-          {{ _invitation.fromUser | displayName }} wants to join your organization.
-        </ng-container>
+      <ng-container *ngSwitchCase="'joinOrganization'" i18n>
+        {{ _invitation.fromUser | displayName }} wants to join your organization.
       </ng-container>
       <ng-container *ngSwitchCase="'joinWaterfall'">
         <ng-container *ngIf="_invitation | movieFromWaterfallInvitation | async as movie" i18n>
