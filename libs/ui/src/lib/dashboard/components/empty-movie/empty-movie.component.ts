@@ -2,7 +2,7 @@
 import { ChangeDetectionStrategy, Component, Inject, Optional } from '@angular/core';
 import { App } from '@blockframes/model';
 import { APP } from '@blockframes/utils/routes/utils';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 
 @Component({
   selector: 'dashboard-empty-movie',

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Optional } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 
 @Component({
   selector: 'catalog-movie-avails-explanation',

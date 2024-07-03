@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 import { BucketService } from '@blockframes/contract/bucket/service';
 import { Movie, Bucket, Holdback, movieCurrencies, createBucket } from '@blockframes/model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';

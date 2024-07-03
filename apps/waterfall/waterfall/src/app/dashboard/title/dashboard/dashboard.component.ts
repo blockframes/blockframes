@@ -26,7 +26,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { OrganizationService } from '@blockframes/organization/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 import { Router } from '@angular/router';
 import { currencySymbol, toCurrency } from '@blockframes/utils/currency-format';
 

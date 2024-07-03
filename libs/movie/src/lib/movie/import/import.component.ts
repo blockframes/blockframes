@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Optional, Inject, OnInit, ChangeDet
 import { APP } from '@blockframes/utils/routes/utils';
 import { App } from '@blockframes/model';
 
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { AuthService } from '@blockframes/auth/service';

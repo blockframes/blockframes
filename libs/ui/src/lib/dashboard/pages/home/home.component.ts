@@ -17,7 +17,7 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 // Intercom
-import { Intercom } from 'ng-intercom';
+import { Intercom } from '@supy-io/ngx-intercom';
 
 @Component({
   selector: 'dashboard-home',
