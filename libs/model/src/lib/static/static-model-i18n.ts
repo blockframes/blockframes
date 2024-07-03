@@ -467,6 +467,11 @@ const movieCurrenciesFR = {
   BRL: 'Réal brésilien',
 } as const
 
+const groupsFR = {
+  medias: 'Droits',
+  territories: 'Territoires'
+} as const;
+
 //----------------------------------
 // ES translations
 //----------------------------------
@@ -934,6 +939,11 @@ const movieCurrenciesES = {
   BRL: 'Real brasileño',
 } as const
 
+const groupsES = {
+  medias: 'Droits',
+  territories: 'Territoires'
+} as const;
+
 //----------------------------------
 // Mapping
 //----------------------------------
@@ -955,7 +965,8 @@ export const staticModeli18n = {
     medias: mediasFR,
     mediaGroup: mediaGroupFR,
     territoryGroup: territoryGroupFR,
-    movieCurrencies: movieCurrenciesFR
+    movieCurrencies: movieCurrenciesFR,
+    groups: groupsFR
   },
   es: {
     rightholderRoles: rightholderRolesES,
@@ -973,7 +984,8 @@ export const staticModeli18n = {
     medias: mediasES,
     mediaGroup: mediaGroupES,
     territoryGroup: territoryGroupES,
-    movieCurrencies: movieCurrenciesES
+    movieCurrencies: movieCurrenciesES,
+    groups: groupsES
   }
 };
 
