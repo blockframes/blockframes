@@ -1,5 +1,5 @@
 import { Injectable, Optional } from '@angular/core';
-import { Intercom } from '@supy-io/ngx-intercom';
+import { Intercom, IntercomBootInput } from '@supy-io/ngx-intercom';
 import { User } from '@blockframes/model';
 
 @Injectable({ providedIn: 'root' })
@@ -18,11 +18,11 @@ export class IntercomService {
   }
 }
 
-export function getIntercomOptions(user?: User) {
-  const widget = { custom_launcher_selector: '#intercom' };
+export function getIntercomOptions(user?: User): IntercomBootInput {
+  const options = { custom_launcher_selector: '#intercom' };
   if (user) {
     const { email, uid, firstName } = user;
-    return { email, ...widget, user_id: uid, name: firstName };
+    return { email, ...options, user_id: uid, name: firstName };
   }
-  return widget;
+  return options;
 }
