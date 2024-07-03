@@ -79,12 +79,15 @@ export function createPublicInvitation(invitation: Invitation) {
   } as PublicInvitation
 }
 
-/* 
-  We want to display attendEvent invitation in festival only
-  JoinOrganisation must be displayed on every app
-*/
 export function filterInvitation(invitation: Invitation, app: App) {
-  return invitation.type === 'attendEvent' ? app === 'festival' : true;
+  // We want to display attendEvent invitation in festival only
+  if (invitation.type === 'attendEvent' && app !== 'festival') return false;
+  // We don't display invitation to join org as the user can
+  // see it in invitation list only after accepting it when creating account
+  if (invitation.type === 'joinOrganization' && invitation.mode === 'invitation') return false;
+  // We want to display joinWaterfall invitation in waterfall app only
+  if (invitation.type === 'joinWaterfall' && app !== 'waterfall') return false;
+  return true;
 }
 
 export interface InvitationDetailed extends Invitation {
