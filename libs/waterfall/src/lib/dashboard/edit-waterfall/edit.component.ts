@@ -81,7 +81,8 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
     const versionSub = this.shell.versionId$.subscribe(_ => {
       if (this.stateMode$.value === 'simulation') {
         const incomes = this.simulationForm.get('incomes').value;
-        this.shell.appendToSimulation({ incomes, expenses: [] }, { fromScratch: true, resetData: true });
+        const expenses = this.simulationForm.get('expenses').value;
+        this.shell.appendToSimulation({ incomes, expenses }, { fromScratch: true, resetData: true });
       }
     });
     this.subs.push(versionSub);

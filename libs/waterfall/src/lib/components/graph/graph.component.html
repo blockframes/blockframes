@@ -327,14 +327,27 @@
         <mat-icon svgIcon="close"></mat-icon>
       </button>
     </header>
-    <waterfall-revenue-simulation (simulationExited)="simulationExited.emit(true)" [form]="simulationForm"></waterfall-revenue-simulation>
-    <footer>
-      <button color="primary" mat-button (click)="populateSimulation()">
-        <span i18n>Simulate revenue distribution</span>
-      </button>
-      <button color="warn" mat-button (click)="simulationExited.next(true)">
-        <span i18n>Exit Simulation</span>
-      </button>
-    </footer>
+    <ng-container *ngIf="!showSimulationResults$.value">  
+      <waterfall-revenue-simulation-form (simulationExited)="simulationExited.emit(true)" [form]="simulationForm" [dateControl]="dateControl"></waterfall-revenue-simulation-form>
+      <footer>
+        <button color="primary" mat-button (click)="populateSimulation()">
+          <span i18n>Simulate revenue distribution</span>
+        </button>
+        <button color="warn" mat-button (click)="simulationExited.next(true)">
+          <span i18n>Exit Simulation</span>
+        </button>
+      </footer>
+    </ng-container>
+    <ng-container *ngIf="showSimulationResults$.value">
+      <waterfall-revenue-simulation-results></waterfall-revenue-simulation-results>
+      <footer>
+        <button color="primary" mat-button (click)="populateSimulation()">
+          <span i18n>Start new simulation</span>
+        </button>
+        <button color="warn" mat-button (click)="simulationExited.next(true)">
+          <span i18n>Exit Simulation</span>
+        </button>
+      </footer>
+    </ng-container>
   </ng-container>
 </bf-card-modal>

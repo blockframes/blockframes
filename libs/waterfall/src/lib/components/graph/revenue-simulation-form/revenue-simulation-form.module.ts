@@ -2,7 +2,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { WaterfallRevenueSimulationComponent, SourceNamePipe } from './revenue-simulation.component';
+import { WaterfallRevenueSimulationFormComponent, SourceNamePipe } from './revenue-simulation-form.component';
 import { ExpenseTypePipeModule } from '../../../pipes/expense-type.pipe';
 
 // Material
@@ -15,7 +15,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 
 @NgModule({
-  declarations: [WaterfallRevenueSimulationComponent, SourceNamePipe],
+  declarations: [WaterfallRevenueSimulationFormComponent, SourceNamePipe],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -31,6 +31,6 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
     MatDatepickerModule,
     MatSlideToggle,
   ],
-  exports: [WaterfallRevenueSimulationComponent],
+  exports: [WaterfallRevenueSimulationFormComponent],
 })
-export class WaterfallRevenueSimulationModule { }
+export class WaterfallRevenueSimulationFormModule { }

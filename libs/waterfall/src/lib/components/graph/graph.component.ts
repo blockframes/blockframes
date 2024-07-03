@@ -84,12 +84,16 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       if (stateMode === 'simulation') {
         this.showEditPanel = true;
         return 'simulation';
+      } else {
+        this.showSimulationResults$.next(false);
       }
       return this.readonly ? 'readonly' : 'builder';
     }));
+  public showSimulationResults$ = new BehaviorSubject<boolean>(false);
   @Input() simulationForm: RevenueSimulationForm;
   @Output() simulationExited = new EventEmitter<boolean>(false);
   @Output() canLeaveGraphForm = new EventEmitter<boolean>(true);
+  public dateControl = new FormControl(new Date());
   public showEditPanel = this.shell.canBypassRules;
   public waterfall = this.shell.waterfall;
   public isDefaultVersion: boolean;
@@ -793,6 +797,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   public populateSimulation() {
     const incomes = this.simulationForm.get('incomes').value.filter(i => i.price > 0);
     const expenses = this.simulationForm.get('expenses').value.filter(e => e.price > 0);
+    this.showSimulationResults$.next(!this.showSimulationResults$.value);
     return this.shell.appendToSimulation({ incomes, expenses }, { fromScratch: true });
   }
 }

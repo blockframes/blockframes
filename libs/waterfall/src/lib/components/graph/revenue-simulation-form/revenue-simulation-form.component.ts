@@ -9,13 +9,14 @@ import { FormControl } from '@angular/forms';
 import { dateInputFormat } from '@blockframes/utils/date-adapter';
 
 @Component({
-  selector: 'waterfall-revenue-simulation',
-  templateUrl: './revenue-simulation.component.html',
-  styleUrls: ['./revenue-simulation.component.scss'],
+  selector: 'waterfall-revenue-simulation-form',
+  templateUrl: './revenue-simulation-form.component.html',
+  styleUrls: ['./revenue-simulation-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WaterfallRevenueSimulationComponent implements OnInit, OnDestroy {
+export class WaterfallRevenueSimulationFormComponent implements OnInit, OnDestroy {
   @Input() form: RevenueSimulationForm;
+  @Input() dateControl: FormControl<Date>;
   public sources$ = this.shell.sources$;
   public expenseTypes$ = combineLatest([this.shell.waterfall$, this.shell.rightholderRights$]).pipe(
     map(([waterfall, rights]) => {
@@ -26,7 +27,6 @@ export class WaterfallRevenueSimulationComponent implements OnInit, OnDestroy {
   );
   public versionId$ = this.shell.versionId$;
   public waterfall = this.shell.waterfall;
-  public dateControl = new FormControl(new Date());
   public dateInputFormat = dateInputFormat;
 
   private producer = this.shell.waterfall.rightholders.find(r => r.roles.includes('producer'));

@@ -22,7 +22,8 @@ import { WaterfallConditionsModule } from './conditions/conditions.module';
 import { WaterfallGraphNodeDetailsModule } from './node-details/node-details.module';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 import { GraphNodePipeModule } from '../../pipes/graph-node-pipe';
-import { WaterfallRevenueSimulationModule } from './revenue-simulation/revenue-simulation.module';
+import { WaterfallRevenueSimulationFormModule } from './revenue-simulation-form/revenue-simulation-form.module';
+import { WaterfallRevenueSimulationResultsModule } from './revenue-simulation-results/revenue-simulation-results.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -52,7 +53,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     WaterfallGraphLabelModule,
     WaterfallConditionsModule,
     WaterfallGraphNodeDetailsModule,
-    WaterfallRevenueSimulationModule,
+    WaterfallRevenueSimulationFormModule,
+    WaterfallRevenueSimulationResultsModule,
     ConfirmModule,
     ImageModule,
     GraphNodePipeModule,

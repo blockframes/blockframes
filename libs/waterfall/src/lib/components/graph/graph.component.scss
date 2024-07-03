@@ -61,6 +61,11 @@
       }
     }
 
+    waterfall-revenue-simulation-form,
+    waterfall-revenue-simulation-results {
+      min-height: calc(100% - 200px);
+    }
+
     footer {
       gap: 15px;
       padding: 24px;
