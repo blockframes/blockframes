@@ -14,7 +14,11 @@ div.toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0;
+  padding: 2px;
+  span {
+    display: flex;
+    gap: 4px;
+  }
 }
 
 article {

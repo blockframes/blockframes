@@ -91,9 +91,26 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     }));
   public showSimulationResults$ = new BehaviorSubject<boolean>(false);
   @Input() simulationForm: RevenueSimulationForm;
+  @Input() set triggerNewSource(val: string) {
+    if (val !== undefined) {
+      this.createNewSource();
+      this.simulationExited.emit(true);
+    }
+  }
+  @Input() set triggerNewRight(val: string) {
+    if (val !== undefined) {
+      this.createNewRight();
+      this.simulationExited.emit(true);
+    }
+  }
+  @Input() set triggerUnselect(val: string) {
+    if (val !== undefined) {
+      this.select('');
+      this.simulationExited.emit(true);
+    }
+  }
   @Output() simulationExited = new EventEmitter<boolean>(false);
   @Output() canLeaveGraphForm = new EventEmitter<boolean>(true);
-  public dateControl = new FormControl(new Date());
   public showEditPanel = this.shell.canBypassRules;
   public waterfall = this.shell.waterfall;
   public isDefaultVersion: boolean;

@@ -5,7 +5,6 @@ import { RevenueSimulationForm } from '../../../form/revenue-simulation.form';
 import { ExpenseForm, IncomeForm } from '../../../form/statement.form';
 import { Subscription, combineLatest, map, startWith } from 'rxjs';
 import { IncomeService } from '@blockframes/contract/income/service';
-import { FormControl } from '@angular/forms';
 import { dateInputFormat } from '@blockframes/utils/date-adapter';
 
 @Component({
@@ -16,7 +15,6 @@ import { dateInputFormat } from '@blockframes/utils/date-adapter';
 })
 export class WaterfallRevenueSimulationFormComponent implements OnInit, OnDestroy {
   @Input() form: RevenueSimulationForm;
-  @Input() dateControl: FormControl<Date>;
   public sources$ = this.shell.sources$;
   public expenseTypes$ = combineLatest([this.shell.waterfall$, this.shell.rightholderRights$]).pipe(
     map(([waterfall, rights]) => {
@@ -37,7 +35,7 @@ export class WaterfallRevenueSimulationFormComponent implements OnInit, OnDestro
   ) { }
 
   ngOnInit() {
-    const date = this.dateControl.valueChanges.pipe(startWith(this.dateControl.value));
+    const date = this.form.get('date').valueChanges.pipe(startWith(this.form.get('date').value));
     this.sub = combineLatest([date, this.sources$, this.expenseTypes$, this.shell.rightholderContracts$]).pipe(
       map(([date, sources, expenseTypes, contracts]) => {
         const incomes = this.form.get('incomes').value;

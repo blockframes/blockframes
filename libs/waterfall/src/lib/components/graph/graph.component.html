@@ -234,11 +234,11 @@
           </button>
         </header>
         <section class="add">
-          <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="isDuplicateVersion" >
+          <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="isDuplicateVersion">
             <mat-icon svgIcon="add"></mat-icon>
             <span i18n>New Receipt Source</span>
           </button>
-          <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="isDuplicateVersion" >
+          <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="isDuplicateVersion">
             <mat-icon svgIcon="add"></mat-icon>
             <span i18n>New Receipt Share</span>
           </button>
@@ -328,7 +328,7 @@
       </button>
     </header>
     <ng-container *ngIf="!showSimulationResults$.value">  
-      <waterfall-revenue-simulation-form (simulationExited)="simulationExited.emit(true)" [form]="simulationForm" [dateControl]="dateControl"></waterfall-revenue-simulation-form>
+      <waterfall-revenue-simulation-form (simulationExited)="simulationExited.emit(true)" [form]="simulationForm"></waterfall-revenue-simulation-form>
       <footer>
         <button color="primary" mat-button (click)="populateSimulation()">
           <span i18n>Simulate revenue distribution</span>
