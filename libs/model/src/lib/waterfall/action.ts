@@ -327,7 +327,7 @@ export function expenseTypesToAction(expenseTypes: ExpenseType[], versionId: str
   return actions;
 }
 
-export function incomesToActions(contracts: WaterfallContract[], incomes: Income[], sources: WaterfallSource[], _statements: Statement[]) {
+export function incomesToActions(contracts: WaterfallContract[], incomes: Income[], sources: WaterfallSource[], _statements: Statement[], isSimulation = false) {
   const actions: Action[] = [];
 
   for (const i of incomes.filter(i => i.status === 'received')) {
@@ -337,12 +337,13 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
 
     // An income should have at least one statement associated on current version
     const statements = _statements.filter(s => s.incomeIds.includes(i.id));
-    if (!statements.length) continue;
+    if (!isSimulation && !statements.length) continue;
 
     // Fetch overrides from statements. There can be multiple statements for a single income (distrib/direct sales and outgoing(s))
     const rightOverrides = statements.map(s => s.rightOverrides.filter(r => r.incomeId === i.id).map(r => ({ rightId: r.rightId, percent: r.percent / 100 }))).flat();
 
     const source = sources.find(s => s.id === i.sourceId);
+    if (!source) continue;
 
     actions.push(
       action('income', {
@@ -362,13 +363,13 @@ export function incomesToActions(contracts: WaterfallContract[], incomes: Income
   return actions;
 }
 
-export function expensesToActions(expenses: Expense[], statements: Statement[]) {
+export function expensesToActions(expenses: Expense[], statements: Statement[], isSimulation = false) {
   const actions: Action[] = [];
 
   for (const e of expenses.filter(e => e.status === 'received')) {
 
     // An expense should have at least one statement associated on current version
-    if (!statements.filter(s => s.expenseIds?.includes(e.id)).length) continue;
+    if (!isSimulation && !statements.filter(s => s.expenseIds?.includes(e.id)).length) continue;
 
     actions.push(
       action('expense', {

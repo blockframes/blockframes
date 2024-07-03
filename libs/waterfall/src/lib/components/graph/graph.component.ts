@@ -51,6 +51,7 @@ import { RightService } from '../../right.service';
 import { WaterfallService } from '../../waterfall.service';
 import { createRightForm, setRightFormValue } from '../../form/right.form';
 import { createSourceForm, setSourceFormValue } from '../../form/source.form';
+import { RevenueSimulationForm } from '../../form/revenue-simulation.form';
 import { DashboardWaterfallShellComponent } from '../../dashboard/shell/shell.component';
 import {
   Arrow,
@@ -76,7 +77,23 @@ import {
 export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   @Input() @boolean public readonly = false;
+  @Input() set stateMode(mode: 'simulation' | 'actual') { this.stateMode$.next(mode); }
+  public stateMode$ = new BehaviorSubject<'simulation' | 'actual'>('actual');
+  public rightPanelMode$ = this.stateMode$.asObservable().pipe(
+    map(stateMode => {
+      if (stateMode === 'simulation') {
+        this.showEditPanel = true;
+        return 'simulation';
+      } else {
+        this.showSimulationResults$.next(false);
+      }
+      return this.readonly ? 'readonly' : 'builder';
+    }));
+  public showSimulationResults$ = new BehaviorSubject<boolean>(false);
+  @Input() simulationForm: RevenueSimulationForm;
+  @Output() simulationExited = new EventEmitter<boolean>(false);
   @Output() canLeaveGraphForm = new EventEmitter<boolean>(true);
+  public dateControl = new FormControl(new Date());
   public showEditPanel = this.shell.canBypassRules;
   public waterfall = this.shell.waterfall;
   public isDefaultVersion: boolean;
@@ -152,7 +169,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
           if (this.shell.canBypassRules) {
             this.router.navigate(['c/o/dashboard/title', this.waterfallId, 'init']);
           } else {
-            this.intercom.show(`${toLabel('producer', 'rightholderRoles', undefined, undefined, lang)} is not defined in the waterfall "${this.shell.movie.title.international}"`);
+            this.intercom.show($localize`${toLabel('producer', 'rightholderRoles', undefined, undefined, lang)} is not defined in the waterfall "${this.shell.movie.title.international}"`);
           }
         });
     }
@@ -775,6 +792,13 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       const waterfallSources = this.version?.id ? this.shell.waterfall.sources.filter(s => !s.version || !s.version[this.version.id]) : [];
       return this.waterfallService.update(this.waterfallId, { id: this.waterfallId, sources: [...sources, ...waterfallSources] }, { write });
     }
+  }
+
+  public populateSimulation() {
+    const incomes = this.simulationForm.get('incomes').value.filter(i => i.price > 0);
+    const expenses = this.simulationForm.get('expenses').value.filter(e => e.price > 0);
+    this.showSimulationResults$.next(!this.showSimulationResults$.value);
+    return this.shell.appendToSimulation({ incomes, expenses }, { fromScratch: true });
   }
 }
 

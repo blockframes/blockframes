@@ -8,6 +8,7 @@ import { SourceNode } from '../layout';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaterfallGraphSourceComponent {
+  public defaultSourceName = $localize`Receipt Source (Media & Territory)`;
 
   @Input() public source: SourceNode;
   @Input() public selected: boolean;

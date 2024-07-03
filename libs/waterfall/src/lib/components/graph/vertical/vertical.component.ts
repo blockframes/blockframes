@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { combineLatest, map, startWith } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, startWith, switchMap } from 'rxjs';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { HorizontalNode, VerticalNode } from '../layout';
 
@@ -15,12 +15,15 @@ export class WaterfallGraphVerticalComponent implements OnInit {
   @Input() public group: HorizontalNode;
   @Input() public selected: '' | '*' | string;
   @Input() public nonEditableNodeIds: string[] = [];
+  @Input() public set stateMode(mode: 'simulation' | 'actual') { this.stateMode$.next(mode); }
+  public stateMode$ = new BehaviorSubject<'simulation' | 'actual'>('actual');
 
   @Output() addChild = new EventEmitter<string>();
   @Output() addSibling = new EventEmitter<string>();
   @Output() handleSelect = new EventEmitter<string>();
 
-  public amount$ = combineLatest([this.shell.state$, this.shell.revenueMode$]).pipe(
+  public amount$ = this.stateMode$.pipe(
+    switchMap(mode => combineLatest([mode === 'actual' ? this.shell.state$ : this.shell.simulation$, this.shell.revenueMode$])),
     map(([state, revenueMode]) => state.waterfall.state.verticals[this.vertical.id]?.revenu[revenueMode] ?? 0),
     startWith(0),
   );

@@ -4,7 +4,7 @@ import { Duration, createDuration } from '../terms';
 import { SupportedLanguages, sortByDate, sum, toLabel } from '../utils';
 import { TitleState, TransferState } from './state';
 import { Version, Waterfall, WaterfallContract, WaterfallRightholder, WaterfallSource, getIncomesSources } from './waterfall';
-import { Right, RightOverride, createRightOverride, getChilds, getRightCondition, skipGroups } from './right';
+import { Right, RightOverride, createRightOverride, getChilds, getRightCondition, getRightExpenseTypes, skipGroups } from './right';
 import { getGroup, getSources, isVerticalGroupChild, nodeExists, pathExists } from './node';
 import { Income, createIncome } from '../income';
 import { getContractsWith } from '../contract';
@@ -640,38 +640,6 @@ export function createMissingIncomes(incomeSources: WaterfallSource[], statement
 export function hasRightsWithExpenseCondition(_rights: Right[], statement: Statement, waterfall: Waterfall) {
   const rights = _rights.filter(r => r.rightholderId === statement.senderId);
   return rights.some(r => getRightExpenseTypes(r, statement, waterfall).length > 0);
-}
-
-/**
- * Return expense types defined in conditions of a right
- * @param right 
- * @param statement
- * @param waterfall
- * @returns 
- */
-function getRightExpenseTypes(right: Right, statement: Statement, waterfall: Waterfall) {
-  const conditions = getRightCondition(right);
-  const conditionsWithTarget = conditions.filter(c => isConditionWithTarget(c)) as ConditionWithTarget[];
-
-  const expenseTargets = conditionsWithTarget
-    .map(c => (typeof c.payload.target === 'object' && c.payload.target.in === 'expense') ? c.payload.target.id : undefined)
-    .filter(id => !!id);
-
-  /** 
-  * @deprecated not used. Might be removed in future
-  * If target "orgs.expense" in "targetIn" libs/model/src/lib/waterfall/conditions.ts is re-enabled, uncomment this code
-  const [orgId] = conditionsWithTarget
-    .map(c => (typeof c.payload.target === 'object' && c.payload.target.in === 'orgs.expense') ? c.payload.target.id : undefined)
-    .filter(id => !!id);
-
-  if (orgId) {
-    // @dev target contract.expense instead of org.expense would be more appropriate.
-    if (orgId !== statement.senderId) throw new Error(`Statement senderId ${statement.senderId} does not match expense target orgId ${orgId}`);
-    const orgExpenseTargets = waterfall.expenseTypes[statement.contractId || 'directSales'].map(e => e.id);
-    expenseTargets.push(...orgExpenseTargets);
-  }*/
-
-  return Array.from(expenseTargets);
 }
 
 /**

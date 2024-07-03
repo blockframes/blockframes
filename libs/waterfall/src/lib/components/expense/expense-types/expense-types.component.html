@@ -11,13 +11,16 @@
   </mat-form-field>
 
   <ng-container *ngIf="!last; else isLast">
-    <button mat-icon-button class="delete" (click)="remove(index)" [matTooltip]="deleteExpenseType" [disabled]="versionId !== 'default'">
+    <button mat-icon-button class="delete" (click)="remove(index)" [matTooltip]="deleteExpenseType" [disabled]="versionId !== 'default' && !isStandaloneVersion">
       <mat-icon svgIcon="delete"></mat-icon>
     </button>
   </ng-container>
   <ng-template #isLast>
-    <button mat-mini-fab color="primary" (click)="add()" [matTooltip]="addExpenseType" [disabled]="versionId !== 'default'">
+    <button mat-mini-fab color="primary" (click)="add()" [matTooltip]="addExpenseType" [disabled]="versionId !== 'default' && !isStandaloneVersion">
       <mat-icon svgIcon="add"></mat-icon>
     </button>
   </ng-template>
+</article>
+<article *ngIf="form.controls.length === 0 && versionId !== 'default' && !isStandaloneVersion">
+  <p i18n><mat-icon color="warn"svgIcon="warning"></mat-icon>Only existing expenses can be edited on this version. Please switch to default version.</p>
 </article>

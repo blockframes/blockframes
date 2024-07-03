@@ -1,6 +1,6 @@
 
 import { BehaviorSubject, Subscription, combineLatest, startWith } from 'rxjs';
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import {
   Right,
@@ -17,6 +17,7 @@ import {
   Amortization,
   NumberOperator,
   contractPrice,
+  isStandaloneVersion,
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 
@@ -161,7 +162,7 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
 
     if (this.expenseTypes.length > 0) {
       this.expenseTypes.forEach(expenseType => form.add(expenseType));
-    } else {
+    } else if (versionId === 'default' || isStandaloneVersion(waterfall, versionId)) {
       form.add(createExpenseType({ contractId: this.contractId }));
     }
 
@@ -183,15 +184,5 @@ export class WaterfallConditionsFormComponent implements OnInit, OnDestroy {
         }
       })
     });
-  }
-}
-
-@Pipe({ name: 'expenseTypeCap' })
-export class ExpenseTypeCapPipe implements PipeTransform {
-  transform(typeId: string, expenseTypes: ExpenseType[], versionId: string): number {
-    if (!typeId) return undefined;
-    const expenseType = expenseTypes.find(type => type.id === typeId);
-    if (!expenseType) return undefined;
-    return versionId && expenseType.cap.version[versionId] ? expenseType.cap.version[versionId] : expenseType.cap.default;
   }
 }

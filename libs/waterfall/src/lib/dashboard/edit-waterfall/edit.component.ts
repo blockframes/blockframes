@@ -14,6 +14,7 @@ import { FormList } from '@blockframes/utils/form';
 import { WaterfallRightholder, createWaterfallRightholder, hasDefaultVersion } from '@blockframes/model';
 import { WaterfallService } from '../../waterfall.service';
 import { WaterfallContractForm } from '../../form/contract.form';
+import { RevenueSimulationForm } from '../../form/revenue-simulation.form';
 import { DashboardWaterfallShellComponent } from '../shell/shell.component';
 import { WaterfallFormGuardedComponent } from '../../guards/waterfall-form-guard';
 import { WaterfallRightholderForm, WaterfallRightholderFormValue } from '../../form/right-holder.form';
@@ -32,8 +33,10 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
 
   @ViewChild('stepper') stepper?: MatStepper;
   public missingData = $localize`Missing data to publish Waterfall. Make sure to have Contracts and Receipt Shares`;
+  public missingSimulationData = $localize`Missing data to start revenue simulation. Make sure to have Contracts and Receipt Shares`;
   public contractForm = new WaterfallContractForm({ id: '' });
   public rightholdersForm = FormList.factory<WaterfallRightholderFormValue, WaterfallRightholderForm>([], rightholder => new WaterfallRightholderForm(rightholder));
+  public simulationForm = new RevenueSimulationForm();
   public updating$ = new BehaviorSubject(false);
   public invalidDocument$ = this.shell.contracts$.pipe(
     map(docs => docs.length === 0),
@@ -46,8 +49,9 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
   public createMode = !hasDefaultVersion(this.shell.waterfall);
   public manualCreation$ = new BehaviorSubject(false);
   public canLeaveGraphForm = true;
+  public stateMode$ = new BehaviorSubject<'simulation' | 'actual'>('actual');
 
-  private sub: Subscription;
+  private subs: Subscription[] = [];
 
   constructor(
     private router: Router,
@@ -63,14 +67,34 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
   }
 
   ngOnInit() {
-    this.sub = this.shell.waterfall$.subscribe(waterfall => {
+    const sub = this.shell.waterfall$.subscribe(waterfall => {
       this.rightholdersForm.clear({ emitEvent: false });
       waterfall.rightholders.forEach(rightholder => this.rightholdersForm.add(createWaterfallRightholder(rightholder)));
     });
+    this.subs.push(sub);
+
+    const stateModeSub = this.stateMode$.asObservable().subscribe(mode => {
+      if (mode === 'simulation') this.simulationForm.reset();
+    });
+    this.subs.push(stateModeSub);
+
+    const versionSub = this.shell.versionId$.subscribe(_ => {
+      if (this.stateMode$.value === 'simulation') {
+        const incomes = this.simulationForm.get('incomes').value;
+        const expenses = this.simulationForm.get('expenses').value;
+        this.shell.appendToSimulation({ incomes, expenses }, { fromScratch: true, resetData: true });
+      }
+    });
+    this.subs.push(versionSub);
+
+    const waterfallReadySub = this.shell.canInitWaterfall$.subscribe(canInit => {
+      if (!canInit) this.stateMode$.next('actual');
+    });
+    this.subs.push(waterfallReadySub);
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.subs.forEach(sub => sub?.unsubscribe());
   }
 
   onStepClicked($event: MouseEvent) {
@@ -169,5 +193,11 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
   redirectToBuilder() {
     this.stepper.selectedIndex = 1;
     this.stepper.next();
+  }
+
+  public async simulate() {
+    const mode = this.stateMode$.value === 'actual' ? 'simulation' : 'actual';
+    if (mode === 'simulation') await this.shell.simulateWaterfall();
+    this.stateMode$.next(mode);
   }
 }

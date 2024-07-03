@@ -66,11 +66,26 @@
   <mat-step>
     <ng-template matStepLabel i18n>Build Waterfall</ng-template>
     <ng-container *ngIf="(manualCreation$ | async) || (shell.sources$ | async)?.length > 0 || (shell.rights$ | async)?.length > 0; else noWaterfall">
-      <div class="top-graph">
-        <waterfall-version-selector [ngClass]="(shell.versionId$ | async) ? '' : 'hide'"></waterfall-version-selector>
-        <span i18n>Need help? Check out our <a href="https://www.blockframes.io/doc/welcome-page" target="_blank">User Guide</a></span>
+      <waterfall-version-selector [ngClass]="(shell.versionId$ | async) ? '' : 'hide'"></waterfall-version-selector>
+      <div class="surface toolbar">
+        <button 
+          color="primary"
+          mat-button
+          (click)="simulate()"
+          [disabled]="(shell.canInitWaterfall$ | async) === false"
+          [matTooltip]="(shell.canInitWaterfall$ | async) === false  ? missingSimulationData : ''"
+        >
+          <mat-icon svgIcon="default_currency"></mat-icon>
+          <span *ngIf="stateMode$.value === 'actual'" i18n>Start Revenue Simulation</span>
+          <span *ngIf="stateMode$.value === 'simulation'" i18n>Exit Simulation</span>
+        </button>
+
+        <a mat-button href="https://www.blockframes.io/doc/welcome-page" target="_blank">
+          <mat-icon svgIcon="help"></mat-icon>
+          <span i18n>Need Help ?</span>
+        </a>
       </div>
-      <waterfall-graph (canLeaveGraphForm)="canLeaveGraphForm = $event"></waterfall-graph>
+      <waterfall-graph (canLeaveGraphForm)="canLeaveGraphForm = $event" (simulationExited)="stateMode$.next('actual')" [simulationForm]="simulationForm" [stateMode]="stateMode$ | async"></waterfall-graph>
     </ng-container>
     <ng-template #noWaterfall>
       <article class="surface">

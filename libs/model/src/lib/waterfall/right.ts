@@ -1,7 +1,9 @@
 import { DocumentMeta } from '../meta';
 import { RightType } from '../static/types';
 import { ActionName } from './action';
-import { Condition, ConditionGroup, isCondition } from './conditions';
+import { Condition, ConditionGroup, ConditionWithTarget, isCondition, isConditionWithTarget } from './conditions';
+import { Statement } from './statement';
+import { Waterfall } from './waterfall';
 
 export interface Right {
   _meta?: DocumentMeta;
@@ -216,4 +218,40 @@ function _getChilds(rightId: string, rights: Right[]): Right[] {
   const childs = rights.filter(r => r.nextIds.includes(rightId));
   if (!childs.length) return [];
   return childs.concat(childs.map(c => getChilds(c.id, rights)).flat());
+}
+
+/**
+ * Return expense types defined in conditions of a right
+ * @param right 
+ * @param statement
+ * @param waterfall
+ * @returns 
+ */
+export function getRightExpenseTypes(right: Right, statement?: Statement, waterfall?: Waterfall) {
+  const conditions = getRightCondition(right);
+  const conditionsWithTarget = conditions.filter(c => isConditionWithTarget(c)) as ConditionWithTarget[];
+
+  const expenseTargets = conditionsWithTarget
+    .map(c => (typeof c.payload.target === 'object' && c.payload.target.in === 'expense') ? c.payload.target.id : undefined)
+    .filter(id => !!id);
+
+  /** 
+  * @deprecated not used. Might be removed in future
+  * If target "orgs.expense" in "targetIn" libs/model/src/lib/waterfall/conditions.ts is re-enabled, uncomment this code
+  const [orgId] = conditionsWithTarget
+    .map(c => (typeof c.payload.target === 'object' && c.payload.target.in === 'orgs.expense') ? c.payload.target.id : undefined)
+    .filter(id => !!id);
+
+  if (orgId) {
+    // @dev target contract.expense instead of org.expense would be more appropriate.
+    if (orgId !== statement.senderId) throw new Error(`Statement senderId ${statement.senderId} does not match expense target orgId ${orgId}`);
+    const orgExpenseTargets = waterfall.expenseTypes[statement.contractId || 'directSales'].map(e => e.id);
+    expenseTargets.push(...orgExpenseTargets);
+  }*/
+
+  return Array.from(expenseTargets);
+}
+
+export function getRightsExpenseTypes(rights: Right[]) {
+  return rights.map(r => getRightExpenseTypes(r)).flat();
 }

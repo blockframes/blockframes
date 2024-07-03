@@ -61,6 +61,23 @@
       }
     }
 
+    waterfall-revenue-simulation-form,
+    waterfall-revenue-simulation-results {
+      min-height: calc(100% - 200px);
+    }
+
+    footer {
+      gap: 15px;
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+      border-top: solid 1px var(--foreground-divider);
+      position: sticky;
+      bottom: 0px;
+      background-color: #FFF;
+      z-index: 2;
+    }
+
     p.description {
       margin: 24px;
     }
