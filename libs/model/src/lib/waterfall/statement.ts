@@ -434,7 +434,8 @@ export function getStatementSources(statement: Statement, sources: WaterfallSour
   } else if (isDistributorStatement(statement)) {
     const rightholderRights = rights.filter(r => r.rightholderId === statement.senderId && r.contractId === statement.contractId)
       .filter(r => nodeExists(state, r.id));
-    const sourceNodes = getSources(state, rightholderRights.map(r => r.id));
+    const topLevelRights = getTopLevelRights(rightholderRights, state);
+    const sourceNodes = getSources(state, topLevelRights.map(r => r.id));
     const sourceIds = Array.from(new Set(sourceNodes.map(node => node.id)));
     return sourceIds.map(id => sources.find(s => s.id === id));
   }
