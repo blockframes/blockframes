@@ -4,7 +4,7 @@
   <h5 i18n>Indicate report date</h5>
   <mat-form-field appearance="outline">
     <mat-label i18n>Select Date</mat-label>
-    <input matInput [formControl]="dateControl" [matDatepicker]="datePicker" required [placeholder]="dateInputFormat">
+    <input matInput [formControl]="form.get('date')" [matDatepicker]="datePicker" required [placeholder]="dateInputFormat">
     <mat-datepicker-toggle matPrefix [for]="datePicker">
       <mat-icon matDatepickerToggleIcon svgIcon="calendar_today"></mat-icon>
     </mat-datepicker-toggle>
@@ -15,11 +15,38 @@
 <mat-divider></mat-divider>
 <section *ngFor="let income of form.get('incomes').controls; let i = index;">
   <h5 i18n>Source : {{ income.get('sourceId').value | sourceName : (sources$ | async) }}</h5>
-  <mat-form-field appearance="outline">
-    <mat-label i18n>Gross Receipts Amount</mat-label>
-    <input type="number" matInput [formControl]="income.get('price')" required/>
-    <mat-icon matPrefix [svgIcon]="waterfall.mainCurrency"></mat-icon>
-  </mat-form-field>
+  <div class="group">
+    <mat-form-field appearance="outline">
+      <mat-label i18n>Gross Receipts Amount</mat-label>
+      <input type="number" matInput [formControl]="income.get('price')" required/>
+      <mat-icon matPrefix [svgIcon]="waterfall.mainCurrency"></mat-icon>
+    </mat-form-field>
+    <group-multiselect
+      scope="medias"
+      label="Choose Medias"
+      i18n-label
+      i18n-filterPlaceholder
+      i18n-displayAll
+      bfi18n
+      selectIcon="play_arrow"
+      displayAll="All Medias"
+      filterPlaceholder="Specify territories to filter"
+      showDetails="false"
+      [control]="income.get('medias')"
+    ></group-multiselect>
+    <group-multiselect
+      scope="territories"
+      label="Choose Territories"
+      i18n-label
+      i18n-filterPlaceholder
+      i18n-displayAll
+      bfi18n
+      displayAll="World"
+      filterPlaceholder="Specify territories to filter"
+      showDetails="false"
+      [control]="income.get('territories')"
+    ></group-multiselect>
+  </div>
 </section>
 <h3 i18n>Expenses</h3>
 <mat-divider></mat-divider>

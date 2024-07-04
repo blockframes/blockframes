@@ -4,14 +4,14 @@ import { Intercom } from '@supy-io/ngx-intercom';
 import { MatStepper } from '@angular/material/stepper';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BehaviorSubject, Subscription, map, startWith } from 'rxjs';
+import { BehaviorSubject, Subscription, combineLatest, map, startWith } from 'rxjs';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { Component, ChangeDetectionStrategy, ViewChild, Optional, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 // Blockframes
 import { FormList } from '@blockframes/utils/form';
-import { WaterfallRightholder, createWaterfallRightholder, hasDefaultVersion } from '@blockframes/model';
+import { WaterfallRightholder, createWaterfallRightholder, hasDefaultVersion, isDefaultVersion } from '@blockframes/model';
 import { WaterfallService } from '../../waterfall.service';
 import { WaterfallContractForm } from '../../form/contract.form';
 import { RevenueSimulationForm } from '../../form/revenue-simulation.form';
@@ -50,6 +50,10 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
   public manualCreation$ = new BehaviorSubject(false);
   public canLeaveGraphForm = true;
   public stateMode$ = new BehaviorSubject<'simulation' | 'actual'>('actual');
+  public triggerNewSource$ = new BehaviorSubject<boolean>(undefined);
+  public triggerNewRight$ = new BehaviorSubject<boolean>(undefined);
+  public triggerUnselect$ = new BehaviorSubject<boolean>(undefined);
+  public isDuplicateVersion = false;
 
   private subs: Subscription[] = [];
 
@@ -74,7 +78,7 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
     this.subs.push(sub);
 
     const stateModeSub = this.stateMode$.asObservable().subscribe(mode => {
-      if (mode === 'simulation') this.simulationForm.reset();
+      if (mode === 'simulation') this.simulationForm.reset({ date: new Date(), fromScratch: true });
     });
     this.subs.push(stateModeSub);
 
@@ -82,10 +86,18 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
       if (this.stateMode$.value === 'simulation') {
         const incomes = this.simulationForm.get('incomes').value;
         const expenses = this.simulationForm.get('expenses').value;
-        this.shell.appendToSimulation({ incomes, expenses }, { fromScratch: true, resetData: true });
+        const fromScratch = this.simulationForm.get('fromScratch').value;
+        this.shell.appendToSimulation({ incomes, expenses }, { fromScratch, resetData: true });
       }
     });
     this.subs.push(versionSub);
+
+    const duplicateVersionSub = combineLatest([this.shell.waterfall$, this.shell.versionId$,]).subscribe(([waterfall, versionId,]) => {
+      const version = waterfall.versions.find(v => v.id === versionId);
+      const defaultVersion = isDefaultVersion(waterfall, versionId);
+      this.isDuplicateVersion = version?.id && !defaultVersion && !version.standalone;
+    });
+    this.subs.push(duplicateVersionSub);
 
     const waterfallReadySub = this.shell.canInitWaterfall$.subscribe(canInit => {
       if (!canInit) this.stateMode$.next('actual');

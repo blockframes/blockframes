@@ -5,7 +5,6 @@ import { RevenueSimulationForm } from '../../../form/revenue-simulation.form';
 import { ExpenseForm, IncomeForm } from '../../../form/statement.form';
 import { Subscription, combineLatest, map, startWith } from 'rxjs';
 import { IncomeService } from '@blockframes/contract/income/service';
-import { FormControl } from '@angular/forms';
 import { dateInputFormat } from '@blockframes/utils/date-adapter';
 
 @Component({
@@ -16,7 +15,6 @@ import { dateInputFormat } from '@blockframes/utils/date-adapter';
 })
 export class WaterfallRevenueSimulationFormComponent implements OnInit, OnDestroy {
   @Input() form: RevenueSimulationForm;
-  @Input() dateControl: FormControl<Date>;
   public sources$ = this.shell.sources$;
   public expenseTypes$ = combineLatest([this.shell.waterfall$, this.shell.rightholderRights$]).pipe(
     map(([waterfall, rights]) => {
@@ -37,7 +35,7 @@ export class WaterfallRevenueSimulationFormComponent implements OnInit, OnDestro
   ) { }
 
   ngOnInit() {
-    const date = this.dateControl.valueChanges.pipe(startWith(this.dateControl.value));
+    const date = this.form.get('date').valueChanges.pipe(startWith(this.form.get('date').value));
     this.sub = combineLatest([date, this.sources$, this.expenseTypes$, this.shell.rightholderContracts$]).pipe(
       map(([date, sources, expenseTypes, contracts]) => {
         const incomes = this.form.get('incomes').value;
@@ -45,14 +43,17 @@ export class WaterfallRevenueSimulationFormComponent implements OnInit, OnDestro
         this.form.get('incomes').hardReset([]);
         this.form.get('expenses').hardReset([]);
         sources.forEach((source, index) => {
+          const income = incomes.find(i => i.sourceId === source.id);
           this.form.get('incomes').setControl(index, new IncomeForm(createIncome({
             id: this.incomeService.createId(),
             sourceId: source.id,
             status: 'received',
             date,
             titleId: this.waterfall.id,
+            territories: income?.territories || source.territories || [],
+            medias: income?.medias || source.medias || [],
             // TODO #9624 contractId for contractAmount, contractDate & contract conditions
-            price: incomes.find(i => i.sourceId === source.id)?.price || 0
+            price: income?.price || 0
           })));
         });
 
@@ -60,6 +61,7 @@ export class WaterfallRevenueSimulationFormComponent implements OnInit, OnDestro
           const contract = contracts.find(c => c.id === expenseType.contractId);
           const otherParty = contract?.sellerId === this.producer.id ? contract?.buyerId : contract?.sellerId;
           const rightholderId = expenseType.contractId === 'directSales' ? this.producer.id : otherParty;
+          const expense = expenses.find(i => i.typeId === expenseType.id);
           this.form.get('expenses').setControl(index, new ExpenseForm(createExpense({
             id: this.incomeService.createId(),
             typeId: expenseType.id,
@@ -68,8 +70,8 @@ export class WaterfallRevenueSimulationFormComponent implements OnInit, OnDestro
             date,
             rightholderId,
             titleId: this.waterfall.id,
-            capped: expenses.find(i => i.typeId === expenseType.id)?.capped || false,
-            price: expenses.find(i => i.typeId === expenseType.id)?.price || 0
+            capped: expense?.capped || false,
+            price: expense?.price || 0
           })));
         });
 

@@ -234,11 +234,11 @@
           </button>
         </header>
         <section class="add">
-          <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="isDuplicateVersion" >
+          <button mat-flat-button color="primary" (click)="createNewSource()" [disabled]="isDuplicateVersion">
             <mat-icon svgIcon="add"></mat-icon>
             <span i18n>New Receipt Source</span>
           </button>
-          <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="isDuplicateVersion" >
+          <button mat-flat-button color="primary" (click)="createNewRight()" [disabled]="isDuplicateVersion">
             <mat-icon svgIcon="add"></mat-icon>
             <span i18n>New Receipt Share</span>
           </button>
@@ -320,6 +320,7 @@
       <h2>
         <span i18n>Revenue Simulation</span>
       </h2>
+      <mat-slide-toggle *ngIf="!showSimulationResults$.value" [formControl]="simulationForm.get('fromScratch')" color="primary" i18n>Clear existing data ?</mat-slide-toggle>
       <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? i18nStrings.shrink : i18nStrings.enlarge">
         <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
       </button>
@@ -328,7 +329,7 @@
       </button>
     </header>
     <ng-container *ngIf="!showSimulationResults$.value">  
-      <waterfall-revenue-simulation-form (simulationExited)="simulationExited.emit(true)" [form]="simulationForm" [dateControl]="dateControl"></waterfall-revenue-simulation-form>
+      <waterfall-revenue-simulation-form (simulationExited)="simulationExited.emit(true)" [form]="simulationForm"></waterfall-revenue-simulation-form>
       <footer>
         <button color="primary" mat-button (click)="populateSimulation()">
           <span i18n>Simulate revenue distribution</span>
@@ -341,7 +342,7 @@
     <ng-container *ngIf="showSimulationResults$.value">
       <waterfall-revenue-simulation-results></waterfall-revenue-simulation-results>
       <footer>
-        <button color="primary" mat-button (click)="populateSimulation()">
+        <button color="primary" mat-button (click)="showSimulationResults$.next(false)">
           <span i18n>Start new simulation</span>
         </button>
         <button color="warn" mat-button (click)="simulationExited.next(true)">

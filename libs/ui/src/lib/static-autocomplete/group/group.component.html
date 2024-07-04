@@ -61,7 +61,7 @@
     <mat-error *ngIf="control.hasError('required')"> {{ requiredMsg }} </mat-error>
   </mat-form-field>
   <button
-    *ngIf="control.value.length && control.value.length !== items.length"
+    *ngIf="control.value.length && control.value.length !== items.length && showDetails"
     mat-icon-button
     type="button"
     matTooltip="See details"

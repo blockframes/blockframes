@@ -68,24 +68,46 @@
     <ng-container *ngIf="(manualCreation$ | async) || (shell.sources$ | async)?.length > 0 || (shell.rights$ | async)?.length > 0; else noWaterfall">
       <waterfall-version-selector [ngClass]="(shell.versionId$ | async) ? '' : 'hide'"></waterfall-version-selector>
       <div class="surface toolbar">
-        <button 
-          color="primary"
-          mat-button
-          (click)="simulate()"
-          [disabled]="(shell.canInitWaterfall$ | async) === false"
-          [matTooltip]="(shell.canInitWaterfall$ | async) === false  ? missingSimulationData : ''"
-        >
-          <mat-icon svgIcon="default_currency"></mat-icon>
-          <span *ngIf="stateMode$.value === 'actual'" i18n>Start Revenue Simulation</span>
-          <span *ngIf="stateMode$.value === 'simulation'" i18n>Exit Simulation</span>
-        </button>
+        <span>
+          <button color="primary" mat-button (click)="triggerNewSource$.next(!triggerNewSource$.value)" [disabled]="isDuplicateVersion">
+            <mat-icon svgIcon="add"></mat-icon>
+            <span i18n>Source</span>
+          </button>
+          <button color="primary" mat-button (click)="triggerNewRight$.next(!triggerNewRight$.value)" [disabled]="isDuplicateVersion">
+            <mat-icon svgIcon="add"></mat-icon>
+            <span i18n>Receipt Share</span>
+          </button>
+          <button color="primary" mat-button (click)="triggerUnselect$.next(!triggerUnselect$.value)">
+            <mat-icon svgIcon="view_list"></mat-icon>
+            <span i18n>Receipt Share List</span>
+          </button>
+          <button 
+            color="primary"
+            mat-button
+            (click)="simulate()"
+            [disabled]="(shell.canInitWaterfall$ | async) === false"
+            [matTooltip]="(shell.canInitWaterfall$ | async) === false  ? missingSimulationData : ''"
+          >
+            <mat-icon svgIcon="default_currency"></mat-icon>
+            <span *ngIf="stateMode$.value === 'actual'" i18n>Start Revenue Simulation</span>
+            <span *ngIf="stateMode$.value === 'simulation'" i18n>Exit Simulation</span>
+          </button>
+        </span>
 
         <a mat-button href="https://www.blockframes.io/doc/welcome-page" target="_blank">
           <mat-icon svgIcon="help"></mat-icon>
           <span i18n>Need Help ?</span>
         </a>
       </div>
-      <waterfall-graph (canLeaveGraphForm)="canLeaveGraphForm = $event" (simulationExited)="stateMode$.next('actual')" [simulationForm]="simulationForm" [stateMode]="stateMode$ | async"></waterfall-graph>
+      <waterfall-graph 
+        (canLeaveGraphForm)="canLeaveGraphForm = $event"
+        (simulationExited)="stateMode$.next('actual')"
+        [simulationForm]="simulationForm"
+        [stateMode]="stateMode$ | async"
+        [triggerNewSource]="triggerNewSource$ | async"
+        [triggerNewRight]="triggerNewRight$ | async"
+        [triggerUnselect]="triggerUnselect$ | async"
+      ></waterfall-graph>
     </ng-container>
     <ng-template #noWaterfall>
       <article class="surface">

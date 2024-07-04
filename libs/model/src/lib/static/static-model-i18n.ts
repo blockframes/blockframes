@@ -468,8 +468,8 @@ const movieCurrenciesFR = {
 } as const
 
 const groupsFR = {
-  medias: 'Droits',
-  territories: 'Territoires'
+  medias: 'Medios',
+  territories: 'Territorios'
 } as const;
 
 //----------------------------------

@@ -91,9 +91,26 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     }));
   public showSimulationResults$ = new BehaviorSubject<boolean>(false);
   @Input() simulationForm: RevenueSimulationForm;
+  @Input() set triggerNewSource(val: string) {
+    if (val !== undefined) {
+      this.createNewSource();
+      this.simulationExited.emit(true);
+    }
+  }
+  @Input() set triggerNewRight(val: string) {
+    if (val !== undefined) {
+      this.createNewRight();
+      this.simulationExited.emit(true);
+    }
+  }
+  @Input() set triggerUnselect(val: string) {
+    if (val !== undefined) {
+      this.select('');
+      this.simulationExited.emit(true);
+    }
+  }
   @Output() simulationExited = new EventEmitter<boolean>(false);
   @Output() canLeaveGraphForm = new EventEmitter<boolean>(true);
-  public dateControl = new FormControl(new Date());
   public showEditPanel = this.shell.canBypassRules;
   public waterfall = this.shell.waterfall;
   public isDefaultVersion: boolean;
@@ -189,7 +206,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.version = waterfall.versions.find(v => v.id === versionId);
       this.sources = sources;
       this.rightholders = waterfall.rightholders;
-      this.rightholderNames$.next(this.rightholders.map(r => r.name));
+      // Only producer or rightholders with contracts with the producer can be selected
+      const relevantRightholders = this.rightholders.filter(r => r.id === this.producer?.id || getContractsWith([r.id, this.producer?.id], this.contracts).length > 0);
+      this.rightholderNames$.next(relevantRightholders.map(r => r.name));
       this.isDefaultVersion = isDefaultVersion(waterfall, versionId);
       this.defaultVersionId = getDefaultVersionId(waterfall);
       const allNodeIds = [...rights.map(r => r.id), ...this.sources.map(s => s.id)];
@@ -226,11 +245,16 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.updateRightName(org, undefined);
       const rightholder = this.rightholders.find(r => r.name === org);
       this.rightholderControl.setValue(rightholder?.name);
-      const producer = this.rightholders.find(r => r.roles.includes('producer'));
-      if (rightholder && rightholder.id !== producer?.id) {
-        this.relevantContracts$.next(getContractsWith([rightholder.id, producer?.id], this.contracts));
+      if (rightholder && rightholder.id !== this.producer?.id) {
+        this.relevantContracts$.next(getContractsWith([rightholder.id, this.producer?.id], this.contracts));
       } else {
         this.relevantContracts$.next([]);
+      }
+
+      // Clean contract input if no relevant contract or populate with first one.
+      if (rightholder && rightholder.id !== this.producer?.id) {
+        const contracts = this.relevantContracts$.value;
+        this.rightForm.controls.contract.setValue(contracts.length === 0 ? '' : contracts[0].id);
       }
     }));
 
@@ -243,9 +267,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
           this.rightForm.markAsDirty();
           this.rightForm.controls.org.setValue(rightholder.name);
         }
-      } else if (name !== '') {
+      } else {
         this.rightholderControl.setErrors({ invalidValue: true });
-        if (this.rightForm.controls.org.value) this.rightForm.markAsDirty();
+        if (name !== '' && this.rightForm.controls.org.value) this.rightForm.markAsDirty();
       }
     }));
 
@@ -372,9 +396,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.isSourceSelected = false;
       let steps: Condition[][] = [];
 
-      const producer = this.rightholders.find(r => r.roles.includes('producer'));
-      if (right.rightholderId && right.rightholderId !== producer?.id) {
-        this.relevantContracts$.next(getContractsWith([right.rightholderId, producer?.id], this.contracts));
+      if (right.rightholderId && right.rightholderId !== this.producer?.id) {
+        this.relevantContracts$.next(getContractsWith([right.rightholderId, this.producer?.id], this.contracts));
       } else {
         this.relevantContracts$.next([]);
       }
@@ -392,6 +415,17 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       } else if (right.type === 'horizontal') {
         rightholderId = right.blameId;
       } else {
+        // Populate rightForm with first step data.
+        const parent = right.groupId ? this.rights.find(r => r.id === right.groupId) : undefined;
+        if (parent && parent.type === 'vertical') {
+          const members = this.rights.filter(r => r.groupId === parent.id).sort((a, b) => a.order - b.order);
+          if (members.length) {
+            const firstChild = members[0];
+            right.contractId = firstChild.contractId;
+            right.type = firstChild.type;
+            right.rightholderId = firstChild.rightholderId;
+          }
+        }
         steps[0] = right.conditions?.conditions.filter(c => !isConditionGroup(c)) as Condition[] ?? [];
         rightholderId = right.rightholderId;
       }
@@ -412,8 +446,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
     if (this.relevantContracts$.value.length === 0) this.rightForm.controls.contract.setValue('');
 
-    const producer = this.rightholders.find(r => r.roles.includes('producer'));
-    if (producer?.id !== rightholder.id && this.rightForm.controls.type.value !== 'horizontal' && !this.rightForm.controls.contract.value) {
+    if (this.producer?.id !== rightholder.id && this.rightForm.controls.type.value !== 'horizontal' && !this.rightForm.controls.contract.value) {
       this.snackBar.open($localize`Please provide the contract associated to this Receipt Share`, 'close', { duration: 3000 });
       return;
     }
@@ -573,9 +606,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.snackBar.open($localize`Operation not permitted.`, 'close', { duration: 5000 });
       return;
     }
-    createStep(rightId, graph);
+    const currentStepName = createStep(rightId, graph, this.rightForm.controls.name.value);
     const newGraph = fromGraph(graph, this.version);
     const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
+    if (currentStepName) this.rightForm.controls.name.setValue(currentStepName);
 
     const write = this.waterfallService.batch();
     await Promise.all([
@@ -594,18 +628,28 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.snackBar.open($localize`Operation not permitted.`, 'close', { duration: 5000 });
       return;
     }
-    deleteStep(rightId, index, graph);
+    const wasLastMember = deleteStep(rightId, index, graph);
     const newGraph = fromGraph(graph, this.version);
     const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
 
     const write = this.waterfallService.batch();
-    await Promise.all([
-      this.rightService.add(changes.created.rights, { params: { waterfallId: this.waterfallId }, write }),
-      this.rightService.update(changes.updated.rights, { params: { waterfallId: this.waterfallId }, write }),
-      this.rightService.remove(changes.deleted.rights.map(r => r.id), { params: { waterfallId: this.waterfallId }, write }),
-      this.updateSources(newGraph.sources, write),
-    ]);
-    return write.commit();
+    try {
+      await Promise.all([
+        this.rightService.add(changes.created.rights, { params: { waterfallId: this.waterfallId }, write }),
+        this.rightService.update(changes.updated.rights, { params: { waterfallId: this.waterfallId }, write }),
+        this.rightService.remove(changes.deleted.rights.map(r => r.id), { params: { waterfallId: this.waterfallId }, write }),
+        this.updateSources(newGraph.sources, write),
+      ]);
+      await write.commit();
+    } catch (_) {
+      this.snackBar.open($localize`An error occured, please try again.`, 'close', { duration: 5000 });
+    }
+
+    if (wasLastMember) {
+      // Last member was deteled we unselect current right to prevent errors
+      this.rightForm.markAsPristine();
+      this.select('');
+    }
   }
 
   async createNewSource() {
@@ -797,8 +841,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   public populateSimulation() {
     const incomes = this.simulationForm.get('incomes').value.filter(i => i.price > 0);
     const expenses = this.simulationForm.get('expenses').value.filter(e => e.price > 0);
+    const fromScratch = this.simulationForm.get('fromScratch').value;
     this.showSimulationResults$.next(!this.showSimulationResults$.value);
-    return this.shell.appendToSimulation({ incomes, expenses }, { fromScratch: true });
+    const resetData = !fromScratch;
+    return this.shell.appendToSimulation({ incomes, expenses }, { fromScratch, resetData });
   }
 }
 

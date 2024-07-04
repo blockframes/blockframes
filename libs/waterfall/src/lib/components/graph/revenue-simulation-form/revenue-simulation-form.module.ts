@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { WaterfallRevenueSimulationFormComponent, SourceNamePipe } from './revenue-simulation-form.component';
 import { ExpenseTypePipeModule } from '../../../pipes/expense-type.pipe';
+import { GroupMultiselectModule } from '@blockframes/ui/static-autocomplete/group/group.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -12,7 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [WaterfallRevenueSimulationFormComponent, SourceNamePipe],
@@ -21,6 +22,7 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
     ReactiveFormsModule,
 
     ExpenseTypePipeModule,
+    GroupMultiselectModule,
 
     // Material
     MatButtonModule,
@@ -29,7 +31,7 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
     MatFormFieldModule,
     MatIconModule,
     MatDatepickerModule,
-    MatSlideToggle,
+    MatSlideToggleModule,
   ],
   exports: [WaterfallRevenueSimulationFormComponent],
 })
