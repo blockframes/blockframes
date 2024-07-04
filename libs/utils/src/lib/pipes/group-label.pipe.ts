@@ -1,10 +1,11 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { GroupScope, toGroupLabel } from '@blockframes/model';
+import { GroupScope, preferredLanguage, toGroupLabel } from '@blockframes/model';
 
 @Pipe({ name: 'toGroupLabel' })
 export class GroupLabel implements PipeTransform {
-  transform(value: string[], scope: GroupScope, all?: string) {
-    return toGroupLabel(value, scope, all);
+  transform(value: string[], scope: GroupScope, all?: string, i18n?: boolean) {
+    const lang = i18n ? preferredLanguage() : undefined;
+    return toGroupLabel(value, scope, all, lang);
   }
 }
 

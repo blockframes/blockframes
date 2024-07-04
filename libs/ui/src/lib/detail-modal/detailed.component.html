@@ -1,8 +1,8 @@
 <global-modal>
   <ng-container *ngIf="groups$ | async as groups">
     <header>
-      <h2>{{ (data.scope === 'medias' ? 'rights' : data.scope) | titlecase }}</h2>
-      <button *ngIf="!!groups.length" mat-icon-button type="button" (click)="copy()" matTooltip="Copy in clipboard">
+      <h2>{{ data.scope | toLabel : 'groups' : data.bfi18n }}</h2>
+      <button *ngIf="!!groups.length" mat-icon-button type="button" (click)="copy()" matTooltip="Copy in clipboard" i18n-matTooltip>
         <mat-icon svgIcon="file_copy"></mat-icon>
       </button>
     </header>
@@ -13,7 +13,7 @@
             <p class="mat-subtitle-2">{{ group.label }}</p>
             <mat-chip-listbox>
               <mat-chip disableRipple *ngFor="let item of group.items">
-                {{ item | toLabel: data.scope }}
+                {{ item | toLabel: data.scope : data.bfi18n }}
               </mat-chip>
             </mat-chip-listbox>
           </article>
@@ -22,7 +22,7 @@
       <ng-template #default>
         <mat-chip-listbox>
           <mat-chip disableRipple *ngFor="let item of data.items">
-            {{ item | toLabel: data.scope }}
+            {{ item | toLabel: data.scope : data.bfi18n }}
           </mat-chip>
         </mat-chip-listbox>
       </ng-template>

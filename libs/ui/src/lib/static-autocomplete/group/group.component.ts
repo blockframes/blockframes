@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { GroupScope, Scope, StaticGroup, getStaticGroups, preferredLanguage, staticModel } from '@blockframes/model';
+import { GroupScope, Scope, StaticGroup, getStaticGroups, preferredLanguage, staticModel, staticModeli18n } from '@blockframes/model';
 import { FormStaticValueArray } from '@blockframes/utils/form';
 import { MatSelect } from '@angular/material/select';
 import { FormControl } from '@angular/forms';
@@ -111,7 +111,8 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
   }
 
   getSelectable(groups: StaticGroup[], filter?: string): Record<string, boolean> {
-    const scope = staticModel[this.scope];
+    const lang = this.bfi18n ? preferredLanguage() : undefined;
+    const scope = (lang && staticModeli18n[lang] && staticModeli18n[lang][this.scope]) ? staticModeli18n[lang][this.scope] : staticModel[this.scope];
     const selectable: Record<string, boolean> = {};
     const lowerCaseFilter = filter.toLowerCase();
 
@@ -122,7 +123,7 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
         : items
           .map(i => scope[i].toLowerCase()) // get the displayed value
           .filter(item => item.includes(lowerCaseFilter)) // compare above value with filter
-          .map(itemValue => getKeyIfExists(this.scope, itemValue)); // retrieve item key
+          .map(itemValue => getKeyIfExists(this.scope, itemValue, lang)); // retrieve item key
 
       if (lowerCaseLabel.includes(lowerCaseFilter) || selectableItems.length > 0) {
         selectable[label] = true;
@@ -216,7 +217,7 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
 
   openGroupModal() {
     this.dialog.open(DetailedGroupComponent, {
-      data: createModalData({ items: this.control.value, scope: this.scope }),
+      data: createModalData({ items: this.control.value, scope: this.scope, bfi18n: this.bfi18n }),
       autoFocus: false,
     });
   }
