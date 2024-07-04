@@ -681,6 +681,11 @@ export const territoryGroup = {
   oceania: 'Oceania'
 } as const;
 
+export const groups = {
+  medias: 'Rights',
+  territories: 'Territories'
+} as const;
+
 export const medias = {
   payTv: 'Pay TV',
   freeTv: 'Free TV',
@@ -2070,7 +2075,8 @@ export const staticModel = {
   conditionOwnerLabels,
   periods,
   documentPaths,
-  statementSection
+  statementSection,
+  groups
 };
 
 export const emailErrorCode = ['E01-unauthorized', 'E02-general-error', 'E03-missing-api-key', 'E04-no-template-available'] as const;

@@ -362,9 +362,9 @@ export function getStaticGroups(scope: GroupScope, lang?: SupportedLanguages): S
   return group.map(g => ({ ...g, label: labels ? labels[g.key] : g.label }));
 }
 
-export function toGroupLabel(value: string[], scope: GroupScope, all?: string) {
+export function toGroupLabel(value: string[], scope: GroupScope, all?: string, lang?: SupportedLanguages) {
 
-  const groups: StaticGroup[] = staticGroups[scope];
+  const groups: StaticGroup[] = getStaticGroups(scope, lang);
 
   const allItems = groups.reduce((items, group) => items.concat(group.items), []);
 
@@ -373,7 +373,10 @@ export function toGroupLabel(value: string[], scope: GroupScope, all?: string) {
   return groups.map(group => {
     const items = [];
     for (const item of group.items) {
-      if (value.includes(item)) items.push(staticModel[scope][item]);
+      if (value.includes(item)) {
+        const value = (lang && staticModeli18n[lang] && staticModeli18n[lang][scope]) ? staticModeli18n[lang][scope][item] : staticModel[scope][item];
+        items.push(value);
+      }
     }
     return items.length === group.items.length
       ? group.label

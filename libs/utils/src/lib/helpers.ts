@@ -1,4 +1,4 @@
-import { staticModel, Scope, GetKeys, Organization } from '@blockframes/model';
+import { staticModel, Scope, GetKeys, Organization, staticModeli18n, SupportedLanguages } from '@blockframes/model';
 
 function isObject(item: unknown) {
   return item && typeof item === 'object' && !Array.isArray(item) && item !== null;
@@ -58,10 +58,11 @@ function findCorrespondence(code: string) {
  * getKeyIfExist('storeType', 'Line-Up'); // 'line-up'
  * getKeyIfExist('storeType', 'Test'); // undefined
  */
-export function getKeyIfExists<S extends Scope>(base: S, code: string) {
+export function getKeyIfExists<S extends Scope>(base: S, code: string, lang?: SupportedLanguages) {
   // Sanitized input to properly compare with base data
   const sanitizedCode = code.trim().toLowerCase();
-  const candidate = Object.entries(staticModel[base])
+  const scope = (lang && staticModeli18n[lang] && staticModeli18n[lang][base]) ? staticModeli18n[lang][base] : staticModel[base];
+  const candidate = Object.entries(scope)
     .find(findCorrespondence(sanitizedCode)) as [GetKeys<S>, string];
   return candidate ? candidate[0] : undefined;
 }
