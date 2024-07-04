@@ -28,6 +28,7 @@ export class GroupMultiselectComponent implements OnInit, OnDestroy {
   @Input() requiredMsg = 'This field is mandatory';
   @Input() hint = null;
   @Input() @boolean bfi18n: boolean;
+  @Input() @boolean showDetails = true;
   @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
 
   // mySelect and scrollTopBeforeSelection are used to prevent jumps when selecting an option

@@ -814,8 +814,10 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   public populateSimulation() {
     const incomes = this.simulationForm.get('incomes').value.filter(i => i.price > 0);
     const expenses = this.simulationForm.get('expenses').value.filter(e => e.price > 0);
+    const fromScratch = this.simulationForm.get('fromScratch').value;
     this.showSimulationResults$.next(!this.showSimulationResults$.value);
-    return this.shell.appendToSimulation({ incomes, expenses }, { fromScratch: true });
+    const resetData = !fromScratch;
+    return this.shell.appendToSimulation({ incomes, expenses }, { fromScratch, resetData });
   }
 }
 

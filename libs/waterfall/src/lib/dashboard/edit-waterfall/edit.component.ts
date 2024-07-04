@@ -78,7 +78,7 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
     this.subs.push(sub);
 
     const stateModeSub = this.stateMode$.asObservable().subscribe(mode => {
-      if (mode === 'simulation') this.simulationForm.reset({ date: new Date() });
+      if (mode === 'simulation') this.simulationForm.reset({ date: new Date(), fromScratch: true });
     });
     this.subs.push(stateModeSub);
 
@@ -86,7 +86,8 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
       if (this.stateMode$.value === 'simulation') {
         const incomes = this.simulationForm.get('incomes').value;
         const expenses = this.simulationForm.get('expenses').value;
-        this.shell.appendToSimulation({ incomes, expenses }, { fromScratch: true, resetData: true });
+        const fromScratch = this.simulationForm.get('fromScratch').value;
+        this.shell.appendToSimulation({ incomes, expenses }, { fromScratch, resetData: true });
       }
     });
     this.subs.push(versionSub);

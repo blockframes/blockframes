@@ -4,6 +4,7 @@ import { ExpenseForm, IncomeForm } from './statement.form';
 import { FormControl } from '@angular/forms';
 
 interface SimulationConfig {
+  fromScratch: FormControl<boolean>,
   date: FormControl<Date>,
   incomes: Income[],
   expenses: Expense[],
@@ -11,6 +12,7 @@ interface SimulationConfig {
 
 function createRevenueSimulationFormControl(config?: Partial<SimulationConfig>) {
   const controls = {
+    fromScratch: new FormControl(config?.fromScratch ?? true),
     date: new FormControl(new Date()),
     incomes: FormList.factory(config?.incomes, (el) => new IncomeForm(el)),
     expenses: FormList.factory(config?.expenses, (el) => new ExpenseForm(el)),
