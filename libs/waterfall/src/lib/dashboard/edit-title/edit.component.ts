@@ -23,7 +23,7 @@ export class WaterfallEditTitleComponent implements OnInit {
 
   createMode = true;
   movieForm = new MovieForm({ directors: [{ firstName: '', lastName: '' }] });
-  currencyControl = new FormControl<MovieCurrency>('USD');
+  currencyControl = new FormControl<MovieCurrency>('EUR');
   movieId = '';
 
   // check the invalidity of the movie forms value to disable/enable the create button
