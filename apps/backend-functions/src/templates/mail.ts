@@ -4,7 +4,7 @@
  * https://www.notion.so/cascade8/Email-Data-Object-8ed9d64e8cd4490ea7bc0e469c04043e
  */
 import { supportEmails, appUrl, e2eMode } from '../environments/environment';
-import { getTemplateId, templateIds } from '@blockframes/utils/emails/ids';
+import { templateIds } from '@blockframes/utils/emails/ids';
 import { RequestDemoInformations } from '@blockframes/utils/request-demo';
 import {
   PublicUser,
@@ -73,7 +73,7 @@ export function accountCreationEmail(email: string, link: string, user: UserEmai
     pageUrl: link,
     user
   };
-  return { to: email, templateId: getTemplateId('user.welcomeMessage', user.preferredLanguage.language), data };
+  return { to: email, templateId: templateIds.user.welcomeMessage, data };
 }
 
 export function userResetPassword(email: string, link: string, app: App): EmailTemplateRequest {
