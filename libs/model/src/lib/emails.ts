@@ -4,7 +4,7 @@ import { Offer } from './offer';
 import { Negotiation } from './negociation';
 import { Movie } from './movie';
 import { Organization } from './organisation';
-import { SupportedLanguages, toLabel, toLanguageVersionString } from './utils';
+import { defaultLocaleId, SupportedLanguages, toLabel, toLanguageVersionString } from './utils';
 import { eventTypes, movieCurrenciesSymbols, staticModel } from './static/static-model';
 import { Bucket, BucketContract } from './bucket';
 import { AccessibilityTypes, App, EventTypesValue, TerritoryISOA2Value } from './static/types';
@@ -167,6 +167,7 @@ export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailReq
 }
 
 export function getUserEmailData(user: Partial<User>, password?: string): UserEmailData {
+  const [languageFallback, isoA2FallBack] = defaultLocaleId.split('-') as [SupportedLanguages, TerritoryISOA2Value];
   return {
     firstName: user.firstName || '',
     lastName: user.lastName || '',
@@ -174,8 +175,8 @@ export function getUserEmailData(user: Partial<User>, password?: string): UserEm
     password,
     isRegistered: !!user.orgId,
     preferredLanguage: {
-      language: user.settings?.preferredLanguage?.language || 'en',
-      isoA2: user.settings?.preferredLanguage?.isoA2 || 'GB'
+      language: user.settings?.preferredLanguage?.language || languageFallback,
+      isoA2: user.settings?.preferredLanguage?.isoA2 || isoA2FallBack
     }
   };
 }
