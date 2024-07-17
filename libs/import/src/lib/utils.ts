@@ -495,7 +495,7 @@ export function valueToId(value: string) {
     .toLowerCase()
     .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove accents
     .replace(/[\])}[{(]/g, '') // remove brackets
-    .replace(/['"+-.,/\\()]/g, ' ') // replace special characters by space
+    .replace(/['`"+-.,/\\()]/g, ' ') // replace special characters by space
     .replace(/&/g, 'AND')
     .replace(/<=/g, 'lte')
     .replace(/>=/g, 'gte')
