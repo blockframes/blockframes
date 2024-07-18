@@ -15,7 +15,9 @@ import {
   ErrorResultResponse,
   emailErrorCodes,
   EmailRequest,
-  EmailTemplateRequest
+  EmailTemplateRequest,
+  defaultLocaleId,
+  SupportedLanguages
 } from '@blockframes/model';
 
 interface AppMailSetting {
@@ -78,6 +80,13 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
     msg.attachments = [data.event.calendar];
   } else if (data.statement?.pdf) {
     msg.attachments = [data.statement.pdf];
+  }
+
+  if (data.user?.preferredLanguage?.language) {
+    msg.dynamicTemplateData.lang = { [data.user.preferredLanguage.language]: true };
+  } else {
+    const [languageFallback] = defaultLocaleId.split('-') as [SupportedLanguages];
+    msg.dynamicTemplateData.lang = { [languageFallback]: true };
   }
 
   return send(msg);
