@@ -1,5 +1,5 @@
 import { BucketTerm } from './terms';
-import { User } from './user';
+import { PublicUser, User } from './user';
 import { Offer } from './offer';
 import { Negotiation } from './negociation';
 import { Movie } from './movie';
@@ -166,7 +166,7 @@ export function createEmailRequest(params: Partial<EmailRequest> = {}): EmailReq
   };
 }
 
-export function getUserEmailData(user: Partial<User>, password?: string): UserEmailData {
+export function getUserEmailData(user: Partial<User | PublicUser>, password?: string): UserEmailData {
   const [languageFallback, isoA2FallBack] = defaultLocaleId.split('-') as [SupportedLanguages, TerritoryISOA2Value];
   return {
     firstName: user.firstName || '',

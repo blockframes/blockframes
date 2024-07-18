@@ -19,6 +19,7 @@ import {
   getEventEmailData,
   Movie,
   getWaterfallEmailData,
+  SupportedLanguages,
 } from '@blockframes/model';
 import { getOrInviteUserByMail } from './internals/users';
 import { CallableContext } from 'firebase-functions/v1/https';
@@ -140,6 +141,7 @@ export interface UserInvitation {
   emails: string[];
   invitation: Partial<Invitation>;
   app?: App;
+  language?: SupportedLanguages; // TODO #9699 update front to send language when needed
 }
 
 /**
@@ -199,8 +201,7 @@ export const inviteUsers = async (data: UserInvitation, context: CallableContext
     // Data for invitation to joinWaterfall
     const waterfallData = type === 'joinWaterfall' ? getWaterfallEmailData(movie) : undefined;
 
-
-    const user = await getOrInviteUserByMail(email, { id: invitationId, type, mode, fromOrg }, data.app, eventData, waterfallData);
+    const user = await getOrInviteUserByMail(email, { id: invitationId, type, mode, fromOrg }, data.app, eventData, waterfallData, data.language);
 
     if (user.invitationStatus) invitation.status = user.invitationStatus;
 
