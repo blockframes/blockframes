@@ -770,6 +770,8 @@
     "551423316343929098": "Nouveau droit",
     "2437959718409217676": "Nouvelle source",
     "7869233338356036500": "J'ai besoin d'aide pour créer un waterfall.",
+    "3050187162375401890": "Vous êtes sur le point de quitter le mode simulation, êtes-vous sûr ?",
+    "1972566729562110075": "Faites attention, si vous quittez le mode simulation, vous allez perdre les données de simulation.",
     "9155608366859514313": "Source",
     "4382617935824923481": "Conditions de partage des recettes",
     "7386623027098677994": "Vous êtes sur le point de quitter le {$PH} formulaire",
@@ -1075,6 +1077,7 @@
     "8744750738404790272": "Vous êtes sur le point de quitter le {$PH}",
     "4058575476871566236": "Publié",
     "7239750919884229270": "Mis à jour",
+    "5583677637160826178": "Vous êtes sur le point de quitter le Constructeur de waterfall",
     "4126547754925407239": "Créer waterfall"
   }
 }

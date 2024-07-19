@@ -770,6 +770,8 @@
     "551423316343929098": "New right",
     "2437959718409217676": "New source",
     "7869233338356036500": "I need help to create a waterfall",
+    "3050187162375401890": "You are about to leave the simulation mode, are you sure?",
+    "1972566729562110075": "Pay attention, if you exist the simulation mode you are going to loose the simulation data.",
     "9155608366859514313": "Source",
     "4382617935824923481": "Receipt Share Conditions",
     "7386623027098677994": "You are about to leave the {$PH} form",
@@ -1075,6 +1077,7 @@
     "8744750738404790272": "You are about to leave the {$PH}",
     "4058575476871566236": "Published",
     "7239750919884229270": "Updated",
+    "5583677637160826178": "You are about to leave the Waterfall Builder",
     "4126547754925407239": "Create Waterfall"
   }
 }

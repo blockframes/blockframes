@@ -770,6 +770,8 @@
     "551423316343929098": "Nuevo derecho",
     "2437959718409217676": "Nueva fuente",
     "7869233338356036500": "Necesito ayuda para crear un desglose de ingresos",
+    "3050187162375401890": "Estás a punto de salir del modo de simulación, ¿estás seguro?",
+    "1972566729562110075": "Presta atención, si sales del modo de simulación vas a perder los datos de la simulación.",
     "9155608366859514313": "Fuente",
     "4382617935824923481": "Condiciones de Participación en Ingresos",
     "7386623027098677994": "Estás a punto de salir del formulario de {$PH}",
@@ -1075,6 +1077,7 @@
     "8744750738404790272": "Estás a punto de salir del {$PH}",
     "4058575476871566236": "Publicado",
     "7239750919884229270": "Actualizado",
+    "5583677637160826178": "Estás a punto de salir del Constructor de Desglose de Ingresos",
     "4126547754925407239": "Crear Desglose de Ingresos"
   }
 }
