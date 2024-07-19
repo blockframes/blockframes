@@ -12,7 +12,7 @@ interface SimulationConfig {
 
 function createRevenueSimulationFormControl(config?: Partial<SimulationConfig>) {
   const controls = {
-    fromScratch: new FormControl(config?.fromScratch ?? true),
+    fromScratch: new FormControl(config?.fromScratch ?? false),
     date: new FormControl(new Date()),
     incomes: FormList.factory(config?.incomes, (el) => new IncomeForm(el)),
     expenses: FormList.factory(config?.expenses, (el) => new ExpenseForm(el)),

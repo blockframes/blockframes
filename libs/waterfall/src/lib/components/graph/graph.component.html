@@ -320,7 +320,6 @@
       <h2>
         <span i18n>Revenue Simulation</span>
       </h2>
-      <mat-slide-toggle *ngIf="!showSimulationResults$.value" [formControl]="simulationForm.get('fromScratch')" color="primary" i18n>Clear existing data ?</mat-slide-toggle>
       <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? i18nStrings.shrink : i18nStrings.enlarge">
         <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
       </button>

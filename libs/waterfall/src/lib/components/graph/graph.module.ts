@@ -68,7 +68,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatTooltipModule,
     MatSnackBarModule,
     MatFormFieldModule,
-    MatSlideToggleModule,
   ],
   exports: [WaterfallGraphComponent],
 })
