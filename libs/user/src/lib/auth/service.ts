@@ -237,8 +237,8 @@ export class AuthService extends BlockframesAuth<User> implements OnDestroy {
    * @param orgName
    * @param app
    */
-  public async createUser(email: string, orgEmailData: OrgEmailData, app: App = this.app): Promise<PublicUser> {
-    const user = await this.functions.call<{ email: string, orgEmailData: OrgEmailData, app: App }, PublicUser>('createUser', { email, orgEmailData, app });
+  public async createUser(email: string, orgEmailData: OrgEmailData, app: App = this.app, language?: SupportedLanguages): Promise<PublicUser> {
+    const user = await this.functions.call<{ email: string, orgEmailData: OrgEmailData, app: App, language?: SupportedLanguages }, PublicUser>('createUser', { email, orgEmailData, app, language });
     return createUser(user);
   }
 
