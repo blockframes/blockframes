@@ -339,26 +339,32 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   select(id: string) {
     if (id == this.selected$.value) return;
 
-    if(this.stateMode$.value === 'simulation') {
-      const dialogRef = this.dialog.open(ConfirmComponent, {
-        data: createModalData({
-          title: $localize`You are about to leave the simulation mode, are you sure?`,
-          question: $localize`Pay attention, if you exist the simulation mode you are going to loose the simulation data.`,
-          cancel: $localize`Cancel`,
-          confirm: $localize`Leave anyway`
-        }, 'small'),
-        autoFocus: false
-      });
-      const sub = dialogRef.afterClosed().subscribe((leave: boolean) => {
-        if (leave) {
-          this.simulationExited.next(true);
-          return this.handleSelect(id);
-        } else {
-          return;
-        }
-      });
+    if (this.stateMode$.value === 'simulation') {
+      if (!this.simulationForm.pristine) {
+        const dialogRef = this.dialog.open(ConfirmComponent, {
+          data: createModalData({
+            title: $localize`You are about to leave the simulation mode, are you sure?`,
+            question: $localize`Pay attention, if you exist the simulation mode you are going to loose the simulation data.`,
+            cancel: $localize`Cancel`,
+            confirm: $localize`Leave anyway`
+          }, 'small'),
+          autoFocus: false
+        });
+        const sub = dialogRef.afterClosed().subscribe((leave: boolean) => {
+          if (leave) {
+            this.simulationExited.next(true);
+            return this.handleSelect(id);
+          } else {
+            return;
+          }
+        });
 
-      this.subscriptions.push(sub);
+        this.subscriptions.push(sub);
+      } else {
+        this.simulationExited.next(true);
+        return this.handleSelect(id);
+      }
+
     } else {
       return this.handleSelect(id);
     }
@@ -876,6 +882,31 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     this.showSimulationResults$.next(!this.showSimulationResults$.value);
     const resetData = !fromScratch;
     return this.shell.appendToSimulation({ incomes, expenses }, { fromScratch, resetData });
+  }
+
+  public exitSimulation(showModale = false) {
+    if (!this.simulationForm.pristine && showModale) {
+      const dialogRef = this.dialog.open(ConfirmComponent, {
+        data: createModalData({
+          title: $localize`You are about to leave the simulation mode, are you sure?`,
+          question: $localize`Pay attention, if you exist the simulation mode you are going to loose the simulation data.`,
+          cancel: $localize`Cancel`,
+          confirm: $localize`Leave anyway`
+        }, 'small'),
+        autoFocus: false
+      });
+      const sub = dialogRef.afterClosed().subscribe((leave: boolean) => {
+        if (leave) {
+          this.simulationExited.next(true);
+          if (this.cardModal.isOpened) this.cardModal.toggle();
+        }
+      });
+
+      this.subscriptions.push(sub);
+    } else {
+      this.simulationExited.next(true);
+      if (this.cardModal.isOpened) this.cardModal.toggle();
+    }
   }
 }
 
