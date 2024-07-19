@@ -13,8 +13,8 @@
   <ng-container *ngIf="hasReportedStatements$ | async">
     <h5 i18n>If there are statements issued</h5>
     <mat-radio-group [formControl]="form.get('fromScratch')">
-      <mat-radio-button [value]="false" i18n>Keep the statement's data and add new revenues.</mat-radio-button>
-      <mat-radio-button [value]="true" i18n>Clear the statement's data and simulate with new revenues only.</mat-radio-button>
+      <mat-radio-button [value]="false" i18n>Keep the statements' data and add new revenues.</mat-radio-button>
+      <mat-radio-button [value]="true" i18n>Clear the statements' data and simulate with new revenues only.</mat-radio-button>
     </mat-radio-group>
   </ng-container>
 </section>
