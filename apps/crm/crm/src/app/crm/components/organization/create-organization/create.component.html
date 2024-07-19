@@ -20,6 +20,16 @@
 
   <crm-organization-form [form]="form" disableCropper></crm-organization-form>
 
+  <mat-form-field appearance="outline" *ngIf="showPreferredLanguage$ | async">
+    <mat-label>Select Preferred Language</mat-label>
+    <mat-select [formControl]="superAdminForm.get('preferredLanguage')">
+      <mat-option *ngFor="let lang of languages | keyvalue" [value]="lang.key">
+        {{ lang.value }}
+      </mat-option>
+    </mat-select>
+    <mat-hint>Used to determine the language of the email invitation for the new Org Super Admin. Browser settings will then be used to determine in app language.</mat-hint>
+  </mat-form-field>
+
   <button mat-flat-button color="accent" [disabled]="creatingOrg" (click)="addOrganization()" test-id="create">
     <span>Create</span>
     <mat-icon iconPositionEnd svgIcon="arrow_forward"></mat-icon>
