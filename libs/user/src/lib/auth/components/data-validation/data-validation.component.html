@@ -7,7 +7,7 @@
         matTooltip="Fill in your profile information (first name, last name, etc.)" i18n-matTooltip></mat-icon>
     </div>
     <mat-icon *ngIf="profileData" svgIcon="check_circle" color="primary" class="margin" test-id="profile-data-ok"></mat-icon>
-    <button *ngIf="!profileData" mat-icon-button (click)="refresh()" matTooltip="Refresh page." i18n-matTooltip>
+    <button *ngIf="!profileData" mat-icon-button (click)="refresh()" matTooltip="Refresh page" i18n-matTooltip>
       <mat-icon svgIcon="update" test-id="profile-data-pending"></mat-icon>
     </button>
   </article>
@@ -56,7 +56,7 @@
         matTooltip="Please wait for the approval of the company information you provided." i18n-matTooltip></mat-icon>
     </div>
     <mat-icon *ngIf="orgApproval" svgIcon="check_circle" color="primary" class="margin" test-id="org-approval-ok"></mat-icon>
-    <button *ngIf="!orgApproval" mat-icon-button (click)="refresh()"  matTooltip="Refresh page." i18n-matTooltip>
+    <button *ngIf="!orgApproval" mat-icon-button (click)="refresh()"  matTooltip="Refresh page" i18n-matTooltip>
       <mat-icon svgIcon="update" test-id="org-approval-pending"></mat-icon>
     </button>
   </article>
