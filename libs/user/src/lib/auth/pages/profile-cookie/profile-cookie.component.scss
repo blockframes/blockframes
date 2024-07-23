@@ -1,4 +1,8 @@
 footer { 
   padding-top: 48px;
   padding-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
 }

@@ -118,6 +118,10 @@ const routes: Routes = [{
     {
       path: 'security',
       loadChildren: () => import('@blockframes/ui/static-informations/security/security.module').then(m => m.SecurityModule)
+    },
+    {
+      path: 'cookies',
+      loadChildren: () => import('@blockframes/ui/static-informations/cookies/cookies.module').then(m => m.CookiesModule)
     }
   ]
 },

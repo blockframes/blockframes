@@ -1,0 +1,60 @@
+@import '@angular/flex-layout/mq';
+
+section {
+  flex-direction: row;
+  box-sizing: border-box;
+  display: flex;
+  place-content: stretch center;
+  align-items: stretch;
+}
+
+.surface {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  width: 60%;
+  ul {
+    list-style-type: disc;
+    margin-left: 16px;
+  }
+
+  &.dialog {
+    width: 100%;
+    margin: 0;
+  }
+}
+
+@include layout-bp(lt-lg) {
+  .surface {
+    width: 80%;
+    margin-top: 50px;
+    &.dialog {
+      width: 100%;
+      margin: 0;
+    }
+  }
+}
+
+@include layout-bp(xs) {
+  .surface {
+    width: 100%;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    &.dialog {
+      width: 100%;
+      margin: 0;
+    }
+  }
+}
+
+.table-wrapper{
+  overflow: auto;
+}
+table {
+  border-collapse: collapse;
+  border: 1px solid var(--foreground-divider);
+  td {
+    vertical-align: middle;
+    text-align: center;
+    padding: 8px;
+  }
+}
