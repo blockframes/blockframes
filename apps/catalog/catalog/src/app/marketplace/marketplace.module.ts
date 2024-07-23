@@ -46,10 +46,6 @@ const routes: Routes = [{
       loadChildren: () => import('@blockframes/ui/static-informations/privacy/privacy.module').then(m => m.PrivacyModule)
     },
     {
-      path: 'cookies',
-      loadChildren: () => import('@blockframes/ui/static-informations/cookies/cookies.module').then(m => m.CookiesModule)
-    },
-    {
       path: 'notifications',
       loadChildren: () => import('@blockframes/notification/notification.module').then(m => m.NotificationModule),
       data: { animation: 'notifications' }
