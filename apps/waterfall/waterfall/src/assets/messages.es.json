@@ -990,6 +990,8 @@
     "5055246788675897181": " Fecha de Pago: {$START_TAG_NG_CONTAINER} {$INTERPOLATION} {$CLOSE_TAG_NG_CONTAINER}",
     "8395288337672851171": "Participación Total",
     "5567878220337396059": "Restante por Amortizar",
+    "4318455759093805107": "Participación en ingresos",
+    "8771561057478618897": "Anterior",
     "4731002771092160659": "Valor ajustado manualmente.",
     "8084380115603930925": "Detalles del cálculo",
     "309233369515902596": "Gastos {$INTERPOLATION} Detalles {$INTERPOLATION_1}",
