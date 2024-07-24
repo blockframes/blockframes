@@ -13,7 +13,7 @@
           <article>
             <h3>1 – Purpose - Definitions</h3>
             <p>
-              The present Terms and Conditions of Use (hereinafter the (“<strong>T&Cs</strong>”) detail the rights and
+              The present Terms and Conditions of Use (hereinafter the “<strong>T&Cs</strong>”) detail the rights and
               obligations of CASCADE 8, whose registered office is 4 rue de la République 69001 Lyon, France, registered
               under the Commercial Registry of Lyon under number 847 756 764 (hereinafter referred to as “<strong>CASCADE 8</strong>”)
               and of all users of the ARCHIPEL MARKET service (hereinafter referred as the “<strong>Service</strong>”).
@@ -1622,81 +1622,820 @@
     </section>
   </ng-container>
   <ng-container *ngSwitchCase="'waterfall'">
-    <header>
-      <a mat-icon-button *ngIf="canGoBack" (click)="goBack()">
-        <mat-icon svgIcon="arrow_back"></mat-icon>
-      </a>
-      <h1>General Terms and Conditions of the Blockframes Service</h1>
-    </header>
-    <section fxLayout="row" fxLayoutAlign="center">
-      <mat-card appearance="outlined">
-        <mat-card-content>
-          <article>
-            <p>
-              These terms and conditions ("Terms") govern your use of blockframes.io ("the Website"), operated by Cascade8. 
-              By accessing or using the Website, you agree to be bound by these Terms. 
-              If you disagree with any part of the Terms, you may not access the Website.
-            </p>
-          </article>
+    <ng-container [ngSwitch]="appLang">
+      <ng-container *ngSwitchCase="'fr'">
+        <header>
+          <a mat-icon-button *ngIf="canGoBack" (click)="goBack()">
+            <mat-icon svgIcon="arrow_back"></mat-icon>
+          </a>
+          <h1>CONDITIONS D'UTILISATION DE BLOCKFRAMES</h1>
+        </header>
+        <section fxLayout="row" fxLayoutAlign="center">
+          <mat-card appearance="outlined">
+            <mat-card-content>
+              <article>
+                <h3>1 – Objet - Définitions</h3>
+                <p>
+                  Les présentes Conditions Générales d'Utilisation (ci-après les « <strong>CGU</strong> ») 
+                  détaillent les droits et obligations de CASCADE8, dont le siège social est situé 4 rue de
+                  la République 69001 Lyon, France, immatriculée au Registre du Commerce de Lyon sous le 
+                  numéro 847 756 764 (ci-après dénommée « <strong>CASCADE8</strong> ») et de tous les Utilisateurs de la solution 
+                  numérique en ligne BLOCKFRAMES, disponible sur <a href="https://www.blockframes.io" target="_blank">www.blockframes.io</a> 
+                  (ci-après la « <strong>Solution</strong> »), qui permet de gérer les revenus générés par l'exploitation 
+                  des Droits sur les Films  (ci-après le « <strong>Service</strong> ») détenus ou gérés par une organisation cliente de CASCADE8,
+                  par le biais d'un abonnement au Service (ci-après l' « <strong>Abonnement</strong> »). 
+                </p>
+                <p>
+                  Le terme « <strong>Catégorie</strong> » a la signification indiquée à l'article 2.1.
+                </p>
+                <p>
+                  Le terme « <strong>Contenu</strong> » fait référence à toute information, 
+                  financière ou non, photos, ou tout autre élément publié par tout Client Utilisateur 
+                  de Votre Organisation Cliente, sur son profil et/ou sur son Tableau de Bord ou Waterfall, 
+                  notamment en relation avec les Droits de Films acquis et/ou financés.
+                </p>
+                <p>
+                  Le terme « <strong>Tableau de bord</strong> » fait référence au Tableau de Bord privé 
+                  de Votre Organisation Cliente, permettant de gérer les Films et les Droits 
+                  sur les Films acquis et/ou financés.
+                </p>
+                <p>
+                  Le terme « <strong>Films</strong> » se réfère à des films cinématographiques 
+                  et/ou à des créations audiovisuelles et/ou à des séries.
+                </p>
+                <p>
+                  Le terme « <strong>Droits sur les Films</strong> » désigne les diverses autorisations 
+                  légales et morales liées à la création, la distribution, et l'exploitation des 
+                  Films détenus ou contrôlés par Votre Organisation Cliente. ou pour lesquels Votre 
+                  Organisation Cliente a participé au financement.
+                </p>
+                <p>
+                  Le terme « <strong>Rapport généré</strong> » fait référence à un décompte de redevances, 
+                  un rapport, un état, un graphique et/ou tout autre document ou donnée généré par 
+                  l'utilisation du Service par un Utilisateur Client de Votre Organisation Cliente, 
+                  concernant les aspects financiers de la gestion des Droits sur les Films.
+                </p>
+                <p>
+                  Le terme « <strong>Identifiants de Connexion</strong> » fait référence à Vos identifiants
+                  et mots de passe pour accéder à la Solution. 
+                </p>
+                <p>
+                  Le terme « <strong>Utilisateur</strong> » du Service désigne indistinctement
+                </p>
+                <ul>
+                  <li>
+                    Un « <strong>Utilisateur Client</strong> », dans le cas où la personne physique qui 
+                    utilise la Solution est liée (par un contrat de travail) à son Organisation Cliente ;
+                  </li>
+                  <li>
+                    Un « <strong>Utilisateur Invité</strong> », dans le cas où la personne physique 
+                    concernée a été invitée par un Utilisateur Client à accéder à un Contenu spécifique 
+                    dans la Solution de son Organisation Cliente.
+                  </li>
+                </ul>
+                <p>
+                  Le terme « <strong>Waterfall</strong> » se réfère à la chaine de répartition des revenus 
+                  entre les ayant-droits d'un Film de Votre Organisation Cliente. 
+                </p>
+                <p>
+                  Le terme « <strong>Vous/Votre</strong> » fait référence à tout Utilisateur qui est en train de lire les CGU.
+                </p>
+                <p>
+                  Le terme « <strong>Organisation</strong> » désigne indistinctement une Organisation Cliente ou une 
+                  Organisation Tierce.
+                </p>
+                <ul>
+                  <li>
+                    « <strong>Votre Organisation Cliente</strong> » désigne l'Organisation Cliente à 
+                    laquelle Vous êtes lié en tant qu'Utilisateur Client ;
+                  </li>
+                  <li>
+                    « <strong>Organisation Tierce</strong> » désigne une organisation à laquelle Vous 
+                    n'êtes pas lié en tant qu'Utilisateur Client, que cette organisation dispose ou non 
+                    d'un Abonnement payant au Service.
+                  </li>
+                </ul>
+                <p>
+                  Le terme « <strong>Données Personnelles</strong> » désigne toute information concernant 
+                  une personne physique identifiée ou identifiable.
+                </p>
+              </article>
+              <article>
+                <h3>2 – Création et fermeture d'un profil - Acceptation des CGU</h3>
+                <p>
+                  Pour utiliser le Service, Vous devez créer Votre propre profil.
+                </p>
+                <h4>2.1. Si Vous êtes un Utilisateur Client</h4>
+                <p>
+                  Dès lors que Votre Organisation Cliente dispose d'un Abonnement valide, 
+                  Vous pourrez créer Votre propre profil en tant qu'Utilisateur Client en complétant 
+                  toutes les informations obligatoires, notamment concernant Vos prénom, nom, raison 
+                  sociale, et en acceptant les CGU mises à disposition et la Politique de Confidentialité 
+                  de CASCADE8 (voir article 9). Votre profil sera lié au profil de Votre Organisation 
+                  Cliente et Vous aurez accès, selon la catégorie d'Utilisateur (Super Admin, Admin ou 
+                  Membre) dont Vous faites partie (ci-après la « <strong>Catégorie</strong> »), à tout ou 
+                  partie du Tableau de Bord et du Waterfall de Votre Organisation Cliente et disposerez 
+                  des droits spécifiques suivants :
+                </p>
+                <ul>
+                  <li>
+                    En tant que super administrateur, Vous pouvez visualiser les Utilisateurs Clients 
+                    de Votre Organisation Cliente, envoyer des invitations à d'autres Utilisateurs et 
+                    modifier les informations d'identification de tout Utilisateur Client ;
+                  </li>
+                  <li>
+                    En tant qu'administrateur, Vous pouvez visualiser les Utilisateurs Clients de Votre 
+                    Organisation Cliente et envoyer des invitations à d'autres Utilisateurs ;
+                  </li>
+                  <li>
+                    En tant que membre, Vous pouvez consulter les Utilisateurs Clients de Votre Organisation Cliente.
+                    Tout nouvel Utilisateur Client est membre de l'Organisation Cliente concernée.
+                  </li>
+                </ul>
+                <p>
+                  Les Catégories et droits afférents sont susceptibles d'évoluer avec la Solution.
+                </p>
 
-          <article>
-            <h3>1 – Use of the Website</h3>
-            <p>
-              1.1. You are granted a limited, non-exclusive, revocable license to access and use the Website for personal and non-commercial purposes.
-            </p>
-            <p>
-              1.2. You agree not to use the Website for any unlawful purpose, or to solicit others to engage in any unlawful acts.
-            </p>
-          </article>
-            
-          <article>
-            <h3>2 – Intellectual Property Rights</h3>
-            <p>
-              2.1. The Website and its original content, features, and functionality are owned by Cascade8 and are protected by international copyright, 
-              trademark, patent, trade secret, and other intellectual property or proprietary rights laws.
-            </p>
-            <p>
-              2.2. You may not modify, reproduce, distribute, create derivative works of, publicly display, publicly perform, republish, 
-              download, store, or transmit any of the material on our Website, except as provided by the Website’s functionality.
-            </p>
-          </article>
-            
-          <article>
-            <h3>3 – Limitation of Liability</h3>
-            <p>
-              3.1. In no event shall Cascade8 or its directors, employees, partners, agents, suppliers, or affiliates be liable for any indirect, incidental, 
-              special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, 
-              resulting from (i) your access to or use of or inability to access or use the Website; (ii) any conduct or content of any third party on the Website; 
-              (iii) any content obtained from the Website; and (iv) unauthorized access, use, or alteration of your transmissions or content, whether based on warranty, 
-              contract, tort (including negligence), or any other legal theory, whether or not we have been informed of the possibility of such damage, and even if a remedy 
-              set forth herein is found to have failed of its essential purpose.
-            </p>
-          </article>
-            
-          <article>
-            <h3>4 – Governing Law</h3>
-            <p>
-              4.1. These Terms shall be governed and construed in accordance with the laws of France, without regard to its conflict of law provisions.
-            </p>
-          </article>
-            
-          <article>
-            <h3>5 – Changes to Terms</h3>
-            <p>
-              5.1. We reserve the right, at our sole discretion, to modify or replace these Terms at any time. 
-              By continuing to access or use our Website after those revisions become effective, you agree to be bound by the revised terms. 
-              If you do not agree to the new terms, please stop using the Website.
-            </p>
-          </article>
-            
-          <article>
-            <h3>6 – Contact Us</h3>
-            <p>
-              6.1. If you have any questions about these Terms, please contact us at team&#64;blockframes.io.
-            </p>
-          </article>
-        </mat-card-content>
-      </mat-card>
-    </section>
+                <h4>2.2. Si Vous êtes un Utilisation Invité</h4>
+                <p>
+                  Il se peut que Vous soyez déjà un Utilisateur ayant accès à la Solution 
+                  selon l'Abonnement de l'Organisation dont Vous faites partie. Si ce n'est pas le 
+                  cas, Vous recevrez une invitation d'un autre Utilisateur via Votre adresse email 
+                  qui Vous permettra de Vous inscrire. L'équipe CASCADE8 Vous permettra de créer Votre 
+                  propre profil et d'accéder à la Solution à sa discrétion après vérification de Votre 
+                  identité. L'équipe CASCADE8 peut exiger que l'Organisation dont Vous faites partie 
+                  obtienne d'abord un Abonnement. Dans tous les cas, Vous serez lié à une Organisation 
+                  qui aura son propre profil. 
+                </p>
+                <p>
+                  La création d'un profil nécessite de compléter toutes les informations obligatoires 
+                  et d'accepter les CGU mises à disposition ainsi que la Politique de Confidentialité 
+                  de CASCADE8 (voir article 9).
+                </p>
+                <h4>2.3. Dans les deux cas :</h4>
+                <p>
+                  Votre profil peut être complété par des informations supplémentaires. Toutes les 
+                  informations personnelles collectées et traitées sont couvertes par la Politique de 
+                  Confidentialité que Vous trouverez  à l'article 9 ci-dessous. 
+                </p>
+                <p>
+                  Lorsque Vous complétez et enregistrez Votre profil ou celui de Votre Organisation 
+                  Cliente, Vous déclarez et garantissez que Vous avez le pouvoir d'engager légalement 
+                  cette Organisation Cliente et Vous Vous engagez à fournir des informations exactes, 
+                  actuelles et mises à jour tout au long de la procédure d'enregistrement et à maintenir 
+                  à tout moment les informations de Votre page de profil à jour. Vous avez le choix de 
+                  décider, à tout moment, si Vous voulez ou non garder confidentielles certaines de Vos 
+                  Données Personnelles de Votre profil. 
+                </p>
+                <p>
+                  La création d'un profil implique l'acceptation pleine et entière des présentes CGU, qui 
+                  est confirmée en cliquant sur « J'accepte par la présente les CGU de Blockframes ». Les 
+                  CGU sont mises à la disposition de tout Utilisateur au moment de l'inscription. Vous 
+                  pouvez imprimer ou sauvegarder les CGU après les avoir lues. CASCADE8 se réserve le 
+                  droit de modifier les CGU à tout moment. Dans ce cas, CASCADE8 pourra en informer tout 
+                  Utilisateur par courrier électronique ou lors de sa première connexion à la Solution 
+                  après la modification des CGU. L'utilisation du Service après toute modification 
+                  vaudra acceptation des nouvelles CGU. Tout Utilisateur devra informer CASCADE8 par 
+                  email en cas de non-acceptation. Les Utilisateurs qui acceptent les CGU sous réserve, 
+                  ou qui n'acceptent pas les CGU, ne peuvent plus accéder à la Solution ou utiliser le 
+                  Service.  Tout Utilisateur peut décider de fermer son profil à tout moment en envoyant 
+                  un courrier électronique à CASCADE8. Si une Organisation Cliente décide de fermer son 
+                  propre profil, tous les profils des Utilisateurs Clients qui lui sont rattachés seront 
+                  automatiquement fermés par CASCADE8 au même moment. 
+                </p>
+                <p>
+                  Tout manquement grave d'un Utilisateur Client à l'une de ses obligations au titre des 
+                  CGU, non réparé dans un délai de quinze (15) jours à compter de la réception d'une 
+                  lettre recommandée avec accusé de réception ou d'un courrier électronique avec accusé 
+                  de réception de la part de CASCADE8, lui permettra de suspendre ou de révoquer les 
+                  Identifiants de Connexion de l'Utilisateur Client concerné, en fonction de la gravité 
+                  des faits, ou d'interdire l'utilisation du Service, le cas échéant. La lettre ou l'email 
+                  précisera les faits reprochés. En outre, tout accès de l'Utilisateur Client concerné 
+                  aux fonctionnalités du Service sera impossible, sans préjudice de tous autres dommages 
+                  et intérêts auxquels CASCADE8 pourrait prétendre. En cas de trouble ou d'infraction 
+                  manifestement illicite, le délai pour y remédier pourra être plus court.
+                </p>
+                <p>
+                  En acceptant les CGU, Vous autorisez CASCADE8 à publier sur la Solution les informations 
+                  qui sont marquées comme publiques ou que Vous avez accepté de rendre publiques aux 
+                  autres Utilisateurs et à permettre aux autres Utilisateurs de Vous contacter.
+                </p>
+              </article>
+              <article>
+                <h3>3 – Conditions spécifiques applicables à l'Utilisateur Client</h3>
+                <p>
+                  En tant qu'Utilisateur Client, Vous pouvez accéder à Votre profil et le modifier et, 
+                  en fonction de Votre Catégorie dans Votre Organisation Cliente, Vous pourrez gérer le 
+                  Tableau de Bord en ajoutant du Contenu et des Films, en décrivant les droits des Films, 
+                  en téléchargeant des documents sur les Films et en créant et en gérant le Waterfall d'un 
+                  Film spécifique de Votre Organisation Cliente.              
+                </p>
+                <p>
+                  Vous pourrez également, en fonction de Votre Catégorie : 
+                </p>
+                <ul>
+                  <li>
+                    Partager tout ou partie du Tableau de Bord, du Contenu et/ou du Waterfall de Votre Organisation 
+                    Cliente, pour chaque Film concerné de Votre Organisation Cliente, avec un Utilisation Invité, en 
+                    tant que spectateur ou éditeur,
+                  </li>
+                  <li>
+                    Utiliser le Service pour obtenir un Rapport Généré, et exporter, télécharger un Rapport Généré.
+                  </li>
+                </ul>
+                <p>
+                  Vous êtes responsable de la mise à jour et de l'exactitude de tout le Contenu à tout moment.
+                </p>
+              </article>
+              <article>
+                <h3>4 – Conditions spécifiques applicables à l'Utilisateur Invité</h3>
+                <p>
+                  En tant qu'Utilisation Invité, sachez que Vous aurez des droits limités sur le 
+                  Contenu de l'Organisation Tierce qui Vous a invité et que Vous n'aurez peut-être qu'une 
+                  vue partielle du Tableau de Bord et/ou du Waterfall de cette Organisation Tierce, 
+                  conformément aux Droits sur les Films que Vous avez partiellement acquis ou financés 
+                  par l'intermédiaire de Votre propre Organisation.              
+                </p>
+                <p>
+                  Si Vous recevez un Rapport Généré par un Utilisateur (à la demande de ce dernier) qui 
+                  ne fait pas partie de Votre Organisation, veuillez respecter la confidentialité des 
+                  informations contenues dans ce Rapport Généré, conformément aux accords contractuels 
+                  qui peuvent s'appliquer entre Vos organisations.
+                </p>
+              </article>
+              <article>
+                <h3>5 – Conditions générales applicables aux Utilisateurs</h3>
+                <p>
+                  Toutes les caractéristiques du Service sont susceptibles d'être modifiées et d'évoluer. 
+                  Certaines des fonctionnalités ci-dessous font l'objet d'un coût supplémentaire : 
+                  veuillez consulter Votre Organisation Cliente pour obtenir plus d'informations.
+                </p>
+                <p>Parmi les fonctionnalités disponibles, citons :</p>
+                <ul>
+                  <li>Interaction avec un membre de l'équipe CASCADE8 (messagerie In-app)</li>
+                  <li>Réception des notifications du Service,</li>
+                  <li>Modéliser le Waterfall</li>
+                  <li>Calculer la répartition des recettes des Droits sur les Films,</li>
+                  <li>Générer une déclaration, un rapport et / ou faire le calcul des revenus (inclus dans le Rapport Généré),</li>
+                  <li>Modifiez les Utilisateurs de Votre Organisation Cliente en fonction de Votre Catégorie,</li>
+                  <li>Modifier les droits de visualisation ou d'édition de tout Utilisateur Invité, en fonction de Votre Catégorie,</li>
+                  <li>Vérification de la cohérence de Votre Contenu (par une demande à l'équipe de CASCADE8),</li>
+                  <li>Sécuriser un Rapport Généré par le biais de la blockchain (par le biais d'une demande à l'équipe CASCADE8).</li>
+                </ul>
+              </article>
+              <article>
+                <h3>6 – Obligations et responsabilité de CASCADE8</h3>
+                <p>
+                  Vous pouvez avoir accès à des statistiques générées automatiquement par le Service et à 
+                  des Rapports Générés : ces statistiques et Rapports Générés sont basés sur le Contenu 
+                  mis à disposition ou téléchargé sur Votre Tableau de Bord et CASCADE8 décline toute 
+                  responsabilité à cet égard. 
+                  CASCADE8 s'engage à faire ses meilleurs efforts pour Vous permettre d'accéder au Service 
+                  7 jours/7 et 24 heures/24. CASCADE8 ne saurait être tenue responsable des interruptions 
+                  et/ou indisponibilités et/ou erreurs ou bogues survenant sur le Service et/ou la 
+                  Solution. Vous acceptez que CASCADE8 ne puisse être tenue pour responsable d'une 
+                  éventuelle indisponibilité de la Solution et/ou du Service due à des aléas techniques 
+                  liés au réseau internet, à un cas de force majeure, à la défaillance de la connexion 
+                  internet d'un Utilisateur ou de son équipement, aux opérations de maintenance nécessaires
+                  au bon fonctionnement de la Solution et/ou du Service, ou à l'interruption de l'accès à 
+                  la Solution et/ou au Service pour protéger tout profil d'une attaque virale. CASCADE8 
+                  s'engage à mettre en œuvre les moyens techniques à sa disposition pour maintenir le plus 
+                  longtemps possible l'intégrité et la sécurité du Service et de la Solution et la 
+                  confidentialité des Contenus et des Données Personnelles des Utilisateurs. Toutefois, 
+                  il n'est pas garanti que le Service soit exempt d'erreurs, de bugs, de failles ou de 
+                  défauts et/ou qu'il n'y ait pas d'intrusion ou de maintien frauduleux par un tiers du 
+                  profil d'un Utilisateur ou d'extraction illicite de données.  CASCADE8 ne pourra être 
+                  tenue pour responsable de tout dommage causé à un tiers ou à un Utilisateur résultant 
+                  de la violation ou du non-respect par un autre Utilisateur de l'une de ses obligations 
+                  au titre des présentes CGU. En conséquence, en cas d'action ou de réclamation d'un tiers 
+                  à l'encontre de la CASCADE8, CASCADE8 pourra se retourner contre tout Utilisateur qui, en 
+                  ne respectant pas ses engagements au titre des présentes CGU, serait à l'origine de 
+                  l'action ou de la réclamation dudit tiers à l'encontre de la CASCADE8. 
+                </p>
+              </article>
+              <article>
+                <h3>7 – Obligations et responsabilité de l'Utilisateur</h3>
+                <p>
+                  Vous êtes responsable de la sécurité des postes individuels et/ou tablettes et/ou smartphones 
+                  permettant Votre accès à la Solution. Dans l'hypothèse où Vous auriez connaissance d'une intrusion 
+                  frauduleuse sur Votre système d'information, Votre intranet et/ou l'un des postes individuels susceptible 
+                  de compromettre les Contenus, le Service et/ou la Solution, Vous en informerez immédiatement et par écrit 
+                  CASCADE8.
+                  Vous déclarez et reconnaissez protéger à tout moment Vos Identifiants de Connexion, à savoir leur 
+                  confidentialité et leur intégrité. Vous devez prendre les précautions d'usage pour changer régulièrement 
+                  Votre mot de passe. En cas de perte ou de découverte d'une intrusion dans Votre profil, Vous devez 
+                  immédiatement changer Votre mot de passe et suivre la procédure de sécurité pour récupérer Votre identifiant 
+                  ou Votre mot de passe. Vous devez immédiatement informer CASCADE8 si Vous savez ou avez des raisons de 
+                  suspecter que Votre identifiant et Votre mot de passe ont été perdus, volés, détournés ou autrement compromis 
+                  ou en cas d'utilisation non autorisée réelle ou suspectée de Votre profil. Vous êtes responsable de toutes 
+                  les activités menées par l'intermédiaire de Votre profil.
+                  Vous êtes responsable de l'utilisation que Vous faites de la Solution et du Service conformément à 
+                  la réglementation française et/ou étrangère applicable. A cet effet, Vous utiliserez la Solution et 
+                  le Service conformément aux dispositions des CGU ; Vous connaissez les caractéristiques de l'Internet 
+                  et les contraintes liées à son utilisation, notamment l'impossibilité de garantir l'intégrité et la 
+                  confidentialité des données qui y transitent, y compris les Contenus. 
+                  Vous êtes seul responsable de déterminer à quels Utilisateurs Invités Vous donnerez un accès de visualisation 
+                  ou d'édition à tout ou partie de Votre Contenu, de Votre Tableau de Bord et/ou de Votre Waterfall, et des 
+                  conséquences qui en résulteront.
+                  Vous êtes seul responsable de tout le Contenu et de tous les commentaires que Vous mettez à disposition 
+                  sur la Solution ou par son intermédiaire. En particulier, Vous êtes seul responsable vis à vis de tout 
+                  tiers, de tout Utilisateur, et/ou de toute Organisation (i) du Contenu publié dans la Solution ou utilisé 
+                  pour les besoins du Service, (ii) de l’exactitude de ce dernier (en ce compris le Waterfall saisi dans la 
+                  Solution par Vos soins ou par CASCADE8 sur la base des données que Vous lui aurez fournies) et des Rapports 
+                  Générés, même lorsque les données de Votre Contenu ont été automatiquement téléchargées dans Votre Tableau de 
+                  Bord et / ou le Waterfall : il Vous incombe de vérifier ce téléchargement automatique et tout calcul et 
+                  résultat de ce calcul mis à disposition dans Votre Tableau de Bord, Votre Waterfall et / ou Votre Rapport 
+                  Généré.
+                </p>
+                <p>
+                  Lorsque Vous utilisez la Solution, Vous Vous engagez à modérer Votre langage et à ne 
+                  pas divulguer ou diffuser de commentaires :
+                </p>
+                <ul>
+                  <li>
+                    la publicité ou le matériel promotionnel pour des produits ou services réglementés ou illégaux,
+                  </li>
+                  <li>
+                    contraire à l'ordre public, et/ou non conforme aux dispositions légales et réglementaires en vigueur,
+                  </li>
+                  <li>
+                    diffamatoire, insultante, outrageante, trompeuse, discriminatoire ou calomnieuse à l'égard de toute personne,
+                  </li>
+                  <li>
+                    raciste, xénophobe, négationniste, incitant à la discrimination, à la haine ou à la violence à 
+                    l'égard d'une personne ou d'un groupe de personnes en raison de leur origine, de leur sexe, de 
+                    leur situation de famille, de leur apparence physique, de leur patronyme, de leur état de santé, 
+                    de leur handicap, de leurs caractéristiques génétiques, de leurs mœurs, de leur orientation sexuelle 
+                    réelle ou supposée, de leur âge, de leurs opinions politiques, de leurs activités syndicales, de leur 
+                    appartenance réelle ou supposée à une ethnie, une nation, une race ou une religion déterminée,
+                  </li>
+                  <li>
+                    contenant des virus, ou tout programme informatique de nature à perturber, interrompre, 
+                    détruire en tout ou partie le Service ou la Solution.
+                  </li>
+                </ul>
+                <p>
+                  De même, Vous Vous engagez à ne pas porter atteinte aux droits de propriété intellectuelle de CASCADE8 
+                  sur la Solution ou de tout tiers, y compris toute Organisation (voir article ci-dessous), à la vie privée 
+                  ou à l'intimité de la vie privée, à l'image d'une personne ou à la réputation d'une Organisation ou d'un 
+                  autre Utilisateur, ni à diffuser toute information dont la diffusion constituerait une violation d'un 
+                  engagement contractuel de confidentialité à l'égard d'un tiers ou d'une Organisation. Il est interdit 
+                  d'effectuer toute action de nature à interrompre le Service, à en restreindre la disponibilité ou à en 
+                  empêcher la continuité. Toute intrusion, ou tentative d'intrusion, dans le Service ou la Solution, 
+                  détournement de données et/ou de Contenus, atteinte aux mesures de sécurité et d'authentification du 
+                  Service ou de la Solution, du fait d'un Utilisateur, ouvre droit à des poursuites judiciaires à l'encontre 
+                  de CASCADE8.
+                  CASCADE8 est en droit de prendre des mesures à l'encontre d'un Utilisateur en cas de violation des 
+                  présentes CGU. 
+                </p>
+                <p>
+                  Si Vous constatez un abus ou un manquement aux engagements des CGU par un Utilisateur, Vous Vous engagez à 
+                  en informer immédiatement CASCADE8 par courrier électronique à l'adresse suivante : team&#64;cascade8.com.
+                </p>
+              </article>
+              <article>
+                <h3>8 – Propriété intellectuelle - Contenu</h3>
+                <p>
+                  Le Service, ses fonctionnalités, la Solution et tous leurs composants sont et resteront la propriété pleine 
+                  et entière de CASCADE8, y compris les droits de propriété intellectuelle y afférents. CASCADE8 accorde à 
+                  chaque Utilisateur une licence limitée, personnelle, incessible et non exclusive d'utilisation du Service 
+                  pour ses besoins personnels nécessaires à ses activités professionnelles. Toute autre utilisation est 
+                  expressément exclue. 
+                </p>
+                <p>
+                  En créant, téléchargeant, publiant ou mettant à disposition de toute autre manière tout commentaire et Contenu 
+                  dans la Solution, notamment, cette liste n'étant pas exhaustive, les Films et les contrats relatifs aux Droits 
+                  sur les Films, Vous accordez à CASCADE8 une licence non exclusive, mondiale, libre de droits et irrévocable, 
+                  pour toute la durée de l'Abonnement de Votre Organisation Cliente, pour accéder, stocker, copier, modifier, 
+                  distribuer, éditer, publier, transmettre, utiliser et exploiter de toute autre manière, par le biais du 
+                  Service, ce Contenu, et plus généralement pour la fourniture du Service et de la Solution. En aucun cas 
+                  CASCADE8, ou ses sous-traitants, ne pourront par conséquent divulguer, utiliser et / ou diffuser le Contenu à des tiers 
+                  ou à d'autres fins que celles liées à l'exploitation du Service dans le cadre de l'Abonnement de Votre Organisation. 
+                </p>
+                <p>
+                  Vous déclarez et garantissez que (i) Vous êtes le propriétaire unique et exclusif de tout le Contenu que Vous mettez à 
+                  disposition dans la Solution ou par son intermédiaire, ou que Vous disposez de tous les droits, licences, consentements 
+                  et décharges nécessaires pour accorder à CASCADE8 les droits d'utilisation de ce Contenu aux fins de l'exécution du Service, 
+                  comme le prévoient les présentes Conditions Générales d'Utilisation ; (ii) ni le Contenu que Vous avez mis à disposition, 
+                  ni Vos commentaires, qu'ils aient été téléchargés, publiés, téléchargés ou utilisés par CASCADE8 conformément aux présentes 
+                  CGU, n'enfreignent, ne détournent ou ne violent le brevet, le droit d'auteur, la marque, le secret commercial, le droit 
+                  moral, le droit à l'image ou tout autre droit de propriété ou de propriété intellectuelle d'un tiers ou d'une Organisation, 
+                  ou les droits de publicité ou de confidentialité, ou n'entraînent la violation d'une loi ou d'un règlement applicable.
+                </p>
+                <p>
+                  CASCADE8 peut, sans préavis, supprimer ou désactiver l'accès à tout commentaire et/ou contenu qu'elle estime être en violation 
+                  de la loi applicable et/ou des présentes CGU et/ou qui pourrait être nuisible ou répréhensible pour CASCADE8, tout 
+                  Utilisateur, toute Organisation, tout tiers ou toute propriété.
+                </p>
+              </article>
+              <article>
+                <h3>9 – Vie privée</h3>
+                <p>
+                  CASCADE8 s'engage à protéger la confidentialité et la sécurité de Vos Données Personnelles.
+                  CASCADE8, en tant que Sous-traitant, collecte les Données Personnelles des Utilisateurs pour les besoins de la 
+                  gestion de la Solution et de l'exécution du Service. 
+                  CASCADE8, de Responsable de données, recueille les Données Personnelles des Utilisateurs dans le but 
+                  d'améliorer la Solution et de compiler des statistiques et des métriques. 
+                  Les Données Personnelles sont transférées à des sous-traitants aux seules fins exposées ci-dessus et 
+                  conformément à la législation applicable.
+                  En utilisant la Solution, Vous acceptez expressément de partager certaines de Vos Données Personnelles avec 
+                  d'autres Utilisateurs.
+                  Vous avez le droit d'accéder, de modifier et de supprimer Vos données personnelles en contactant CASCADE8 
+                  à l'adresse suivante : 4 rue de la République, 69002 Lyon, France ou par courrier électronique à l'adresse 
+                  suivante : team&#64;cascade8.com
+                </p>
+                <p>
+                  Pour plus d'informations sur la manière dont nous traitons Vos Données Personnelles, Vous pouvez consulter 
+                  notre <a [routerLink]="['/auth/privacy']">Politique de Confidentialité</a> et notre <a [routerLink]="['/auth/cookies']">Politique en matière de Cookies</a>.
+                </p>
+              </article>
+              <article>
+                <h3>10 – Droit applicable et juridiction</h3>
+                <p>
+                  Ces CGU sont régies par le droit français. En cas de litige relatif à la validité, l'interprétation 
+                  et/ou l'exécution des présentes, les Parties conviennent que les tribunaux de Lyon, FRANCE, seront compétents.
+                </p>
+              </article>
+            </mat-card-content>
+          </mat-card>
+        </section>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <header>
+          <a mat-icon-button *ngIf="canGoBack" (click)="goBack()">
+            <mat-icon svgIcon="arrow_back"></mat-icon>
+          </a>
+          <h1>TERMS AND CONDITIONS OF USE OF BLOCKFRAMES</h1>
+        </header>
+        <section fxLayout="row" fxLayoutAlign="center">
+          <mat-card appearance="outlined">
+            <mat-card-content>
+              <article>
+                <h3>1 – Purpose - Definitions</h3>
+                <p>
+                  The present Terms and Conditions of Use (hereinafter the "<strong>T&Cs</strong>")
+                  detail the rights and obligations of CASCADE8, whose registered office is 4 rue de la République 
+                  69001 Lyon, France, registered under the Commercial Registry of Lyon under number 847 756 764 
+                  (hereinafter referred to as "<strong>CASCADE8</strong>") and of all Users of the online digital BLOCKFRAMES 
+                  solution, available on www.blockframes.io (hereinafter the "<strong>Solution</strong>"), that enables the management
+                  revenues generated by exploitation of Film Rights (hereinafter the "<strong>Service</strong>") acquired and / or 
+                  financed by an organization being a client of CASCADE8, through subscription to the Service 
+                  (hereinafter the "<strong>Subscription</strong>"). 
+                </p>
+                <p>
+                  The term "<strong>Category</strong>" shall have the meaning set forth in section 2.1.
+                </p>
+                <p>
+                  The term "<strong>Content</strong>" refers to any information, either financial or not, photos, or any other element 
+                  published by any Client User of Your Client Organization, on its profile and / or on its Dashboard or Waterfall, 
+                  notably relating to acquired and / or financed Film Rights.
+                </p>
+                <p>
+                  The term "<strong>Dashboard</strong>" refers to the private dashboard of Your Client Organization, allowing to 
+                  manage the Films and Films Rights acquired and / or financed.
+                </p>
+                <p>
+                  The term "<strong>Films</strong>" refers to a movie pictures and / or audio-visual creations and / or series.
+                </p>
+                <p>
+                  The term "<strong>Film Rights</strong>" refers to the legal and / or moral authorizations related to the creation, 
+                  the distribution and the exploitation rights on Films that are owned or controlled by Your Client Organization or 
+                  to which Your Client Organization has participated in financing.
+                </p>
+                <p>
+                  The term "<strong>Generated Report</strong>" refers to a royatlies statement, a report, statement, chart, and / or 
+                  any other document or data generated by the use of the Service by a Client User of Your Client Organization, 
+                  regarding financial aspects of management of Film Rights.
+                </p>
+                <p>
+                  The term "<strong>Login Credentials</strong>" refers to Your login and passwords to access the Solution. 
+                </p>
+                <p>
+                  The term "<strong>User</strong>" of the Service means indistinctively:
+                </p>
+                <ul>
+                  <li>
+                    A "<strong>Client User</strong>", in the case the natural person using the Solution is linked (through labour 
+                    contract) to its Client Organization;
+                  </li>
+                  <li>
+                    An "<strong>Invited User</strong>", in the event the relevant natural person has been invited by a Client User to 
+                    access a specific Content into the Solution of its Client Organization.
+                  </li>
+                </ul>
+                <p>
+                  The term "<strong>Waterfall</strong>" refers to the waterfall of revenues between Films Rights holders regarding a Film of Your Client Organization
+                </p>
+                <p>
+                  The term "<strong>You/Your</strong>" refers to any User who is currently reading the T&Cs.
+                </p>
+                <p>
+                  The term "<strong>Organization</strong>" refers indistinctively to a Client Organization or a Third-Party Organization.
+                </p>
+                <ul>
+                  <li>
+                    "<strong>Your Client Organization</strong>" shall refer to the Client Organization You, as a Client User, are linked to;
+                  </li>
+                  <li>
+                    "<strong>Third-Party Organization</strong>" shall refer to an organization You, as a Client User, are not linked to, whether or not such organization has a paid Subscription to the Service.  
+                  </li>
+                </ul>
+                <p>
+                  The term "<strong>Personal Data</strong>" shall mean any information relating to an identified or identifiable natural person.
+                </p>
+              </article>
+              <article>
+                <h3>2 – Creating and closing a profile – Acceptance of the T&Cs</h3>
+                <p>
+                  To use the Service, You must create Your own profile.
+                </p>
+                <h4>2.1. If You are a Client User</h4>
+                <p>
+                  Once Your Client Organization has a valid Subscription, You will be able to create Your own profile as a Client User 
+                  by completing all mandatory information, notably regarding Your first name, surname, company name, and accepting the 
+                  T&Cs made available and the Privacy Policy of CASCADE8 (see section 9). Your profile will be linked with the profile 
+                  of Your Client Organization and You will have access, according to the category of User (Super Admin, Admin or Member)
+                  You are part of (hereinafter the "<strong>Category</strong>"), to all or part of the Dashboard and Waterfall of 
+                  Your Client Organization and have specific rights as follow:
+                </p>
+                <ul>
+                  <li>
+                    As a Super Admin, You may view the Client Users of Your Client Organization, send invites to other Users, and 
+                    change credentials to any Client Users; it may creates Login Credentials of Admins of its Client Organization;
+                  </li>
+                  <li>
+                    As an Admin, You may view the Client Users of Your Client Organization and send invites to other Users;
+                  </li>
+                  <li>
+                    As a Member, You may view the Client Users of Your Client Organization. Any new Client User is a Member of the
+                    relevant Client Organization.
+                  </li>
+                </ul>
+                <p>The different Categories and related rights may be modified from time to time.</p>
+                <h4>2.2. If You are an Invited User</h4>
+                <p>
+                  You may already be a User having access to the Solution according to the Subscription of the Organization You 
+                  are part of. If not, You will receive an invitation from another User via Your email address which will enable 
+                  You to sign up. CASCADE8 team will allow You to create Your own profile and access the Solution at its discretion 
+                  upon verification of Your identity. CASCADE8 team may require the Organization Your are part of, to first obtain a 
+                  Subscription. In all cases You will be linked to an Organization which will have its own profile. 
+                </p>
+                <p>
+                  Creating a profile requires to complete all mandatory information and accepting the T&Cs made available and the 
+                  Privacy Policy of CASCADE8 (see section 9).
+                </p>
+                
+                <h4>2.3. In both cases:</h4>
+                <p>
+                  Your profile may be completed with additional information. Any personal information collected and treated is covered 
+                  by the Privacy Policy You will find in section 9 below.  
+                </p>
+                <p>
+                  When You complete and register Your profile or the profile of Your Client Organization, You represent and warrant 
+                  that You have the authority to legally bind that Client Organization and You undertake to provide accurate, current 
+                  and updated information during all the registration process and to keep Your profile page information up-to-date at 
+                  all times. You have the choice to decide, at any time, whether or not You want to keep confidential some of Your 
+                  Personal Sata of Your profile. 
+                </p>
+                <p>
+                  Creation of a profile implies full acceptance of the present T&Cs, which is confirmed by clicking on “I hereby accept 
+                  Blockframes Terms & Conditions”. The T&Cs are made available to any User at the time of sign up. You can print or 
+                  save the T&Cs after reading them. CASCADE8 reserves the right to change the T&Cs at any time. In this case CASCADE8 
+                  may either inform any User by email or when connecting to the Solution for the first time after the modification of 
+                  the T&Cs. Use of the Service after any modification will constitute acceptance of the new T&Cs. Any User will have to 
+                  inform CASCADE8 by email in case of non-acceptance. Users who accept the T&Cs subject to reservations, or do not 
+                  accept the T&Cs, cannot access the Solution or use the Service anymore.  Any User can decide to close its profile 
+                  at any time by sending an email to CASCADE8. If a Client Organization decides to close its own profile, all Client 
+                  Users’ profiles attached to it will be automatically closed by CASCADE8 at the same time. 
+                </p>
+                <p>
+                  Any serious breach by a Client User of any of its obligations under the T&Cs, which is not remedied within fifteen 
+                  (15) days of receipt of a registered letter with acknowledgement of receipt or an email with acknowledgement of 
+                  receipt from CASCADE8 shall entitle it to suspend or revoke the Login Credentials of the relevant Client User, 
+                  depending on the seriousness of the facts, or to prohibit the use of the Service, if applicable. The letter or 
+                  email will specify the facts alleged. In addition, any access by the relevant Client User to the functionalities of 
+                  the Service will be impossible, without prejudice to any other damages and interest to which CASCADE8 could claim. 
+                  In the event of a manifestly unlawful disturbance or infringement, the time limit for remedying the breach may be 
+                  shorter.
+                </p>
+                <p>
+                  By accepting the T&Cs, You hereby authorize CASCADE8 to publish information on the Solution that are tagged as 
+                  public or that You have accepted to render public to other Users and allow other Users to contact You.
+                </p>
+              </article>
+              <article>
+                <h3>3 – Specific terms applicable to Client User</h3>
+                <p>
+                  As a Client User, You may access and modify Your profile and, according to Your Category into Your 
+                  Client Organization, You will be able to manage the Dashboard by adding Content and Films, describing 
+                  Films Rights, uploading Films documents, and to create and manage the Waterfall of a specific Film of 
+                  Your Client Organization          
+                </p>
+                <p>
+                  You will also be able, according to Your Category:
+                </p>
+                <ul>
+                  <li>
+                    Share all or part of the Dashboard, Content and / or Waterfall of Your Client Organization, for each 
+                    concerned Film of Your Client Organization, with an Invited User, as a viewer or editor,
+                  </li>
+                  <li>
+                    Use the Service to obtain a Generated Report, and export, download a Generated Report.
+                  </li>
+                </ul>
+                <p>
+                  You are responsible for keeping all Content up-to-date and accurate at all times.
+                </p>
+              </article>
+              <article>
+                <h3>4 – Specific terms applicable to Invited User</h3>
+                <p>
+                  As an Invited User, be aware that You will have limited rights over Content of the Third-Party Organization 
+                  that invited You and may have only partial view of such Third-Party Organization’s Dashboard and / or Waterfall, 
+                  in accordance with the Film Rights You have partially acquired or financed through Your own Organization.        
+                </p>
+                <p>
+                  In the event You receive Generated Report from any User (at his request) that is not part of Your own Organization, 
+                  please respect the expected confidentiality of the information of such Generated Report in accordance with the 
+                  contractual agreements that may apply between Your Organizations.
+                </p>
+              </article>
+              <article>
+                <h3>5 – General terms applicable to Users</h3>
+                <p>
+                  Any features of the Service are subject to change and evolution. Some of the below features are 
+                  subject to additional cost: please consult Your Client Organization to have more information.
+                </p>
+                <p>Some of features available are:</p>
+                <ul>
+                  <li>Interaction with a CASCADE8 team member (In-app messaging)</li>
+                  <li>Receipt of notifications from the Service,</li>
+                  <li>Modelize the Waterfall,</li>
+                  <li>Calculate split of revenues of Film Rights,</li>
+                  <li>Generate statement, report and / or make calculation of revenues (included in Generated Report),</li>
+                  <li>Modify the Client Users of Your Client Organization, according to Your Category,</li>
+                  <li>Change view or edition rights of any Invited User, according to Your Category,</li>
+                  <li>Check of consistency of Your Content (through request to CASCADE8 team),</li>
+                  <li>Secure a Generated Report through blockchain (through request to CASCADE8 team).</li>
+                </ul>
+              </article>
+              <article>
+                <h3>6 – Obligations and liability of CASCADE8</h3>
+                <p>
+                  You may have access to statistics generated automatically by the Service and to Generated Reports: 
+                  these statistics and Generated Reports are based on the Content made available or uploaded on Your Dashboard 
+                  and CASCADE8 declines any liability in relation to it. 
+                  CASCADE8 shall use reasonable endeavours to allow Your access to the Service 7 days / 7 and 24 hours / 24. 
+                  CASCADE8 shall not be held responsible for interruptions and/or unavailability and/or errors or bugs occurring 
+                  on the Service and/or the Solution. 
+                  You agree that CASCADE8 cannot be held liable for any unavailability of the Solution and / or of the Service due 
+                  to technical hazards linked to the internet, a force majeure event, the defaulting internet connection of a User 
+                  or its equipment, the maintenance operations required for the smooth functioning of the Solution and / or the 
+                  Service, or the interruption of access to the Solution  and / or Service to protect any profiles from a virus 
+                  attack. CASCADE8 undertakes to implement the technical means at its disposal to maintain as long as possible the 
+                  integrity and security of the Service and Solution and the confidentiality of Content and Users’ Personal Data. 
+                  However, there is no guarantee that the Service is free from errors, bugs, flaws or defects and / or that no 
+                  intrusion or fraudulent maintenance by a third party of a User profile or illicit data extraction will occur.  
+                  CASCADE8 cannot be held liable for any damage to a third party or User resulting from the breach or non-compliance 
+                  by another User with one of its obligations under the hereby T&Cs. As a consequence, in the event of action or a 
+                  claim by a third party against CASCADE8, CASCADE8 may institute proceedings against any User who, by failing to 
+                  respect its commitments under the hereby T&Cs, is the cause of the action or claim by the aforementioned third 
+                  party against CASCADE8. 
+                </p>
+              </article>
+              <article>
+                <h3>7 – Obligations and liability of the User</h3>
+                <p>
+                  You are responsible for the security of the individual workstations and/or tablets and/or smartphones allowing 
+                  Your access to the Solution. In the event You are aware of a fraudulent intrusion on Your information system, 
+                  Your intranet and/or one of the individual workstations that may compromise the Content, the Service, and / or the 
+                  Solution, You shall immediately inform CASCADE8 in writing.
+                  You declare and acknowledge to protect Your Login Credentials at any time, namely its confidentiality and integrity. 
+                  You must take the usual precautions to regularly change Your password. In the event of loss or discovery of an 
+                  intrusion into Your profile, You must immediately change Your password and follow the security procedure to recover 
+                  Your login or password. You must immediately notify CASCADE8 if You know or have any reason to suspect that Your 
+                  login and password have been lost, stolen, misappropriated, or otherwise compromised or in case of any actual or 
+                  suspected unauthorized use of Your profile. You are liable for all activities conducted through Your profile.
+                  You are responsible for Your use of the Solution and the Service in accordance with the applicable French and/or 
+                  foreign regulations. To this end, You shall use the Solution and the Service in accordance with the provisions of 
+                  the T&Cs ; You are fully aware of the characteristics of the Internet and the constraints related to its use, in 
+                  particular the impossibility of guaranteeing the integrity and confidentiality of any data transiting there, 
+                  including the Content. 
+                  You are solely liable to determine to which Invited Users You will give viewing or editing access to all or part of 
+                  Your Content, Dashboard and / or Waterfall, and for the consequences resulting therefrom. In particular, You are 
+                  solely liable towards any third-party, any User, and/or any Organization for (i) the Content published in the 
+                  Solution or used for the purposes of the Service, (ii) the accuracy of the latter (including the Waterfall included 
+                  within the Solution by Yourself or by CASCADES based on the data You provided to it) and the Generated Reports, 
+                  even when the data of Your Content has been automatically downloaded into your Dashboard and/or the Waterfall: 
+                  You are responsible for verifying this automatic download and any calculation and result of this calculation made 
+                  available in Your Dashboard, Your Waterfall, and/or Your Generated Report.
+                </p>
+                <p>
+                  You are solely responsible for all Content and comments You make available on, or through, the Solution.
+                </p>
+                <p>
+                  When using the Solution, You agree to moderate Your language and not to divulge or broadcast any comments:
+                </p>
+                <ul>
+                  <li>
+                    advertising or promotional material for regulated or illegal products or services,
+                  </li>
+                  <li>
+                    contrary to public order, and/or not in conformity with the legal and regulatory provisions in force,
+                  </li>
+                  <li>
+                    slanderous, insulting, outrageous, misleading, discriminatory, or libellous towards any person, 
+                  </li>
+                  <li>
+                    racist, xenophobic, negationist, inciting discrimination, hatred or violence against a person or a group 
+                    of persons because of their origin, their sex, their family situation, their physical appearance, their 
+                    surname, their state of health, their disability, their genetic characteristics, their morals, their real or 
+                    supposed sexual orientation, their age, their political opinions, their trade union activities, their real or 
+                    supposed membership in a particular ethnic group, nation, race or religion,
+                  </li>
+                  <li>
+                    containing viruses, or any computer program of a nature to disrupt, interrupt, destroy in 
+                    whole or in part the Service or the Solution.
+                  </li>
+                </ul>
+                <p>
+                  Likewise, You undertake not to infringe the intellectual property rights of CASCADE8 over the Solution or of 
+                  any third party, including any Organization (see section below), the privacy or intimacy of private life, the 
+                  image of a person or the reputation of an Organization or of another User, nor to disseminate any information the 
+                  dissemination of which would constitute a breach of a contractual confidentiality commitment to a third party or 
+                  any Organization. It is forbidden to carry out any action of a nature to interrupt the Service, restrict its 
+                  availability, or prevent its continuity. Any intrusion, or attempted intrusion, into the Service or the Solution, 
+                  misappropriation of data and / or Content, infringement of the security and authentication measures of the Service 
+                  or the Solution, due to a User, entitle CASCADE8 to prosecution.
+                  CASCADE8 is entitled to take action against a User for any breach of the hereby T&Cs. 
+                </p>
+                <p>
+                  If You discover abuse or a breach of the commitments of the T&Cs by any User, You undertake to immediately 
+                  notify CASCADE8 by email at the following address: team&#64;cascade8.com
+                </p>
+              </article>
+              <article>
+                <h3>8 – Intellectual property – Content</h3>
+                <p>
+                  The Service, its features, the Solution, and all of their components are and will remain the full property of 
+                  CASCADE8, including any related intellectual property rights. CASCADE8 grants each User a limited, personal, 
+                  non-transferable and non-exclusive license to use the Service for its personal business needs as necessary for 
+                  its professional activities. Any other use is expressly excluded. 
+                </p>
+                <p>
+                  By creating, uploading, posting or otherwise making available any comment and Content into the Solution, notably, 
+                  this list being unexhaustive, Films and contracts related to Films Rights, You grant CASCADE8 a non-exclusive, 
+                  worldwide, royalty-free, irrevocable license, for the full duration of Your Client Organization’s Subscription, 
+                  to access, store, copy, modify, distribute, edit, publish, transmit, use and otherwise exploit in any manner, 
+                  through the Service, such Content, and more generally to provide the Service and the Solution. In no way CASCADE 8, 
+                  or its subcontractors, may disclose, nor use, nor publish the Content to any third-party or for any other purpose 
+                  than the provision of the Service in accordance with Your Organisation’s Subscription. 
+                </p>
+                <p>
+                  You represent and warrant that: (i) You either are the sole and exclusive owner of all Content that You make available 
+                  into, or through, the Solution, or have all rights, licenses, consents and releases that are necessary to grant CASCADE8 
+                  the rights to use such Content for the purpose of executing the Service, as contemplated under these T&Cs ; (ii) neither the 
+                  Content You made available nor Your comments, whether it has been uploaded, published, downloaded or used by CASCADE8 as 
+                  contemplated under these T&Cs, infringe, misappropriate or violate, a third party’s or any Organization’s patent, copyright, 
+                  trademark, trade secret, moral rights, image’s rights, or other proprietary or intellectual property rights, or rights of 
+                  publicity or privacy, or result in the violation of any applicable law or regulation.
+                </p>
+                <p>
+                  CASCADE8 may, without prior notice, remove or disable access to any comment and / or Content that CASCADE8 finds to be in 
+                  violation of applicable law, and / or of these T&Cs, and / or otherwise may be harmful or objectionable to CASCADE8, any User, 
+                  any Organization, third parties, or property.
+                </p>
+              </article>
+              <article>
+                <h3>9 – Privacy</h3>
+                <p>
+                  CASCADE8 is committed to protecting the privacy and security of Your Personal Data.
+                  CASCADE8, as a data processor, collects the Users’ Personal Data for the purposes of managing the Solution and 
+                  performing the Service. 
+                  CASCADE8, as a data controller, collects the Users’ Personal Data for the purposes of improving the Solution and 
+                  compiling statistics and metrics. 
+                  The Personal Data are transferred to subcontractors for the sole purposes exposed above and in accordance with the 
+                  applicable legislation.
+                  By using the Solution, You expressly accept to share some of Your Personal Data with other Users.
+                  You have the right to access, modify and remove Your Personal Data by contacting CASCADE8 at the following address: 
+                  4 rue de la République, 69002 Lyon, France or by email at: team&#64;cascade8.com
+                </p>
+                <p>
+                  For more information on how we process your Personal Data, You can read our 
+                  <a [routerLink]="['/auth/privacy']">Privacy Policy</a> and our <a [routerLink]="['/auth/cookies']">Cookies Policy</a>.
+                </p>
+              </article>
+              <article>
+                <h3>10 – Applicable law and jurisdiction</h3>
+                <p>
+                  Those T&Cs are governed by French law. In the event of a dispute regarding the validity, interpretation and/or 
+                  performance hereof, the Parties agree that the courts of Lyon, FRANCE, shall have jurisdiction.
+                </p>
+              </article>
+            </mat-card-content>
+          </mat-card>
+        </section>
+      </ng-container>
+    </ng-container>
   </ng-container>
 </ng-container>

@@ -1,6 +1,7 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 // Component
 import { PrivacyPolicyTextComponent } from './privacy-policy-text.component';
@@ -12,7 +13,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
   declarations: [PrivacyPolicyTextComponent],
   imports: [
     CommonModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    RouterModule
   ],
   exports: [PrivacyPolicyTextComponent]
 })
