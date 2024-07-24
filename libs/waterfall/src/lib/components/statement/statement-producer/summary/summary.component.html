@@ -26,29 +26,32 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <bf-table [source]="item.rows">
-            <ng-template colRef="" label="Section" let-item i18n-label>
-              <span [class]="item.type">{{ item.name }}</span>
+            <ng-template colRef="" label="Revenue Share" let-row i18n-label>
+              <span [class]="row.type">{{ row.section }}</span>
             </ng-template>
-            <ng-template colRef="" label="" let-item>
-              <span *ngIf="item.type === 'right'" [class]="item.type">{{ item.percent }} %</span>
+            <ng-template colRef="" label="Prior" let-row i18n-label>
+              <span [class]="row.type">{{ row.previous | currency: waterfall.mainCurrency }}</span>
             </ng-template>
-            <ng-template colRef="" label="Net Receipts" let-item i18n-label>
-              <span [class]="item.type">{{ item.taken | currency: waterfall.mainCurrency }}</span>
+            <ng-template colRef="" label="Current" let-row i18n-label>
+              <span [class]="row.type">{{ row.current | currency: waterfall.mainCurrency }}</span>
             </ng-template>
-            <ng-template colRef="" label="" let-item>
-              <ng-container *ngIf="item.type === 'right'">
+            <ng-template colRef="" label="Cumulative" let-row i18n-label>
+              <span [class]="row.type">{{ row.cumulated | currency: waterfall.mainCurrency }}</span>
+            </ng-template>
+            <ng-template colRef="" label="" let-row>
+              <ng-container *ngIf="row.type === 'right'">
                 <button mat-icon-button 
-                  [disabled]="!canEditRightPayment(item, statement)"
-                  [matTooltip]="!canEditRightPayment(item, statement) ? i18nStrings.cannotEdit : i18nStrings.changeCurrent"
-                  (click)="editRightPayment(item, statement)"
+                  [disabled]="!canEditRightPayment(row, statement)"
+                  [matTooltip]="!canEditRightPayment(row, statement) ? i18nStrings.cannotEdit : i18nStrings.changeCurrent"
+                  (click)="editRightPayment(row, statement)"
                 >
                   <mat-icon svgIcon="statement_warning"></mat-icon>
                 </button>
-                <ng-container *ngIf="hasOverrides(item, statement)">
+                <ng-container *ngIf="hasOverrides(row, statement)">
                   <button mat-icon-button 
                     matTooltip="Value manually adjusted."
                     i18n-matTooltip
-                    (click)="showOverrides(item, statement)"
+                    (click)="showOverrides(row, statement)"
                   >
                     <mat-icon svgIcon="comment"></mat-icon>
                   </button>
@@ -71,37 +74,34 @@
           <mat-expansion-panel-header>
             <mat-panel-title>
               <span>{{ item.name }}</span>
+              <span>{{ item.net | currency: waterfall.mainCurrency }}</span>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <bf-table [source]="item.details" pagination="50">
             <ng-template colRef="" label="#" let-index="index">
               {{ index + 1 }}
             </ng-template>
-            <ng-template colRef="from" label="From" let-from i18n-label>
-              {{ from }}
+            <ng-template colRef="node" label="Revenue Share" let-node i18n-label>
+              {{ node }}
             </ng-template>
-            <ng-template colRef="to" label="To" let-to i18n-label>
-              {{ to }}
+            <ng-template colRef="previous" label="Prior" let-previous  i18n-label>
+              <span>{{ previous | currency: waterfall.mainCurrency }}</span>
             </ng-template>
-            <ng-template colRef="" label="" let-item let-index="index">
-              <span>{{ item.amount | currency: waterfall.mainCurrency }}</span>
-              <ng-container *ngIf="index === 0">
-                <button mat-icon-button 
-                  [disabled]="!canEditIncome(item.fromId, statement)"
-                  [matTooltip]="!canEditIncome(item.fromId, statement) ? i18nStrings.cannotEdit : i18nStrings.changeIncome"
-                  (click)="editIncome(item.fromId)"
-                >
+            <ng-template colRef="" label="Current" let-row i18n-label>
+              <strong>
+                <span>{{ row.current | currency: waterfall.mainCurrency }}</span>
+              </strong>
+              <button mat-icon-button 
+                *ngIf="row.sourceId"
+                [disabled]="!canEditIncome(row.sourceId, statement)"
+                [matTooltip]="!canEditIncome(row.sourceId, statement) ? i18nStrings.cannotEdit : i18nStrings.changeIncome"
+                (click)="editIncome(row.sourceId)"
+              >
                 <mat-icon svgIcon="statement_warning"></mat-icon>
               </button>
-              </ng-container>
             </ng-template>
-            <ng-template colRef="percent" label="%" let-percent>
-              {{ percent }}
-            </ng-template>
-            <ng-template colRef="taken" label="Taken" let-taken>
-              <strong>
-                <span>{{ taken | currency: waterfall.mainCurrency }}</span>
-              </strong>
+            <ng-template colRef="cumulated" label="Cumulative" let-cumulated  i18n-label>
+              <span>{{ cumulated | currency: waterfall.mainCurrency }}</span>
             </ng-template>
           </bf-table>
         </mat-expansion-panel>

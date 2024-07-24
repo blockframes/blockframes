@@ -678,22 +678,13 @@ export interface MaxPerIncome {
 
 export interface BreakdownRow {
   section: string;
-  type?: 'right' | 'net' | 'expense';
+  type?: 'right' | 'net' | 'expense' | 'source' | 'total';
   previous: number;
   current: number;
   cumulated: number;
   right?: Right;
   cap?: number;
-  maxPerIncome?: MaxPerIncome[];
-}
-
-export interface ProducerBreakdownRow {
-  name: string;
-  percent?: number;
-  taken: number;
-  type?: 'source' | 'total' | 'right';
-  right?: Right;
-  source?: WaterfallSource & { taken: number };
+  source?: WaterfallSource;
   maxPerIncome?: MaxPerIncome[];
 }
 
@@ -721,18 +712,18 @@ export interface RightsBreakdown {
 export interface GroupsBreakdown {
   group: Right;
   rights: Right[];
-  rows: ProducerBreakdownRow[];
+  rows: BreakdownRow[];
 }
 
 export interface DetailsRow {
-  name: string,
+  name: string;
+  net: number;
   details: {
-    from: string,
-    fromId: string,
-    to: string,
-    amount: number,
-    taken: number,
-    percent: number,
+    node: string;
+    sourceId?: string;
+    previous: number;
+    current: number;
+    cumulated: number;
   }[]
 }
 
