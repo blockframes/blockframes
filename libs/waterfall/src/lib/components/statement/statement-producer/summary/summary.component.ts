@@ -353,7 +353,7 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
             node: rights.find(r => r.id === d.to.id).name,
           }))
           // Remove rows already displayed in the source details and its brothers
-          .filter(d => d.to.id !== row.right.id && row.right.groupId !== d.to.id && row.right.groupId !== d.rootGroupId);
+          .filter(d => ![row.right.id, row.right.groupId].includes(d.to.id) && row.right.groupId !== d.rootGroupId);
 
         const net = sourceDetails.current - sum(pathDetails, (d => d.current));
         const item: DetailsRow = {
