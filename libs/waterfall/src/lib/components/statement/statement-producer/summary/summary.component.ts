@@ -3,10 +3,10 @@ import { FormControl } from '@angular/forms';
 import {
   BreakdownRow,
   ConditionInterest,
-  DetailsRow,
+  OutgoingDetails,
   Duration,
   Expense,
-  GroupsBreakdown,
+  OutgoingBreakdown,
   Income,
   Right,
   RightOverride,
@@ -249,12 +249,12 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     map(([statement, sources, incomes]) => skipSourcesWithAllHiddenIncomes(statement, sources, incomes)),
   );
 
-  public groupsBreakdown$ = combineLatest([
+  public outgoingBreakdown$ = combineLatest([
     this.statement$, this.shell.rights$, this.shell.incomes$,
     this.shell.simulation$, this.sources$, this.previousIncomeIds$
   ]).pipe(
     map(([statement, rights, incomes, simulation, sources, previousIncomeIds]) => {
-      if (!this.devMode && statement.status === 'reported' && statement.reportedData.groupsBreakdown) return statement.reportedData.groupsBreakdown;
+      if (!this.devMode && statement.status === 'reported' && statement.reportedData.outgoingBreakdown) return statement.reportedData.outgoingBreakdown;
       const displayedRights = getStatementRightsToDisplay(statement, rights);
       const orderedRights = getOrderedRights(displayedRights, simulation.waterfall.state);
       const statementIncomes = incomes.filter(i => statement.incomeIds.includes(i.id));
@@ -309,30 +309,30 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
         }
       }
 
-      return Object.values(groups).filter(g => g.rows.filter(r => r.type === 'source').length) as GroupsBreakdown[];
+      return Object.values(groups).filter(g => g.rows.filter(r => r.type === 'source').length) as OutgoingBreakdown[];
     }),
-    tap(async groupsBreakdown => {
+    tap(async outgoingBreakdown => {
       if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
-      if (this.statement.status === 'reported' && !reportedData.groupsBreakdown) {
-        this.statement.reportedData.groupsBreakdown = groupsBreakdown;
+      if (this.statement.status === 'reported' && !reportedData.outgoingBreakdown) {
+        this.statement.reportedData.outgoingBreakdown = outgoingBreakdown;
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
-      } else if (this.statement.status !== 'reported' && reportedData.groupsBreakdown) {
+      } else if (this.statement.status !== 'reported' && reportedData.outgoingBreakdown) {
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
       }
     })
   );
 
-  public details$ = combineLatest([
-    this.groupsBreakdown$, this.shell.simulation$,
+  public outgoingDetails$ = combineLatest([
+    this.outgoingBreakdown$, this.shell.simulation$,
     this.statement$, this.shell.rights$, this.previousIncomeIds$
   ]).pipe(
     map(([groups, simulation, statement, rights, previousIncomeIds]) => {
-      if (!this.devMode && statement.status === 'reported' && statement.reportedData.details) return statement.reportedData.details;
+      if (!this.devMode && statement.status === 'reported' && statement.reportedData.outgoingDetails) return statement.reportedData.outgoingDetails;
       const sourcesDetails = groups.map(g => g.rows.filter(r => r.type === 'source')).flat();
       const pathDetailsOptions = { showChildsDetails: true, skipEmptyTransfers: true };
 
-      const items: DetailsRow[] = [];
+      const items: OutgoingDetails[] = [];
       for (const row of sourcesDetails) {
         const source = this.waterfall.sources.find(s => s.id === row.source.id);
         const path = getPath(row.right.id, row.source.id, simulation.waterfall.state);
@@ -356,14 +356,14 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
           .filter(d => ![row.right.id, row.right.groupId].includes(d.to.id) && row.right.groupId !== d.rootGroupId);
 
         const net = sourceDetails.current - sum(pathDetails, (d => d.current));
-        const item: DetailsRow = {
+        const item: OutgoingDetails = {
           name: source.name,
           net,
           details: [sourceDetails, ...pathDetails]
         };
 
         // Prevent duplicated rows
-        const rowExists = (r: DetailsRow) => items.some(i =>
+        const rowExists = (r: OutgoingDetails) => items.some(i =>
           i.name === r.name && i.details.length === r.details.length &&
           i.details[i.details.length - 1].node === r.details[r.details.length - 1].node
         );
@@ -375,10 +375,10 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     tap(async details => {
       if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
-      if (this.statement.status === 'reported' && !reportedData.details) {
-        this.statement.reportedData.details = details;
+      if (this.statement.status === 'reported' && !reportedData.outgoingDetails) {
+        this.statement.reportedData.outgoingDetails = details;
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
-      } else if (this.statement.status !== 'reported' && reportedData.details) {
+      } else if (this.statement.status !== 'reported' && reportedData.outgoingDetails) {
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
       }
     })

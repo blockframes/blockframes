@@ -17,7 +17,7 @@
       <div i18n>Net Receipts</div>
     </header>
 
-    <ng-container *ngIf="groupsBreakdown$ | async as breakdown">
+    <ng-container *ngIf="outgoingBreakdown$ | async as breakdown">
       <div class="surface" *ngFor="let item of breakdown; let isFirst = first">
         <mat-expansion-panel [expanded]="isFirst">
           <mat-expansion-panel-header>
@@ -64,7 +64,7 @@
     </ng-container>
   </article>
 
-  <ng-container *ngIf="details$ | async as details">
+  <ng-container *ngIf="outgoingDetails$ | async as details">
     <article *ngIf="details.length" class="breakdown">
       <header>
         <span i18n>Calculation details</span>

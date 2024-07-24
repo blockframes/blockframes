@@ -124,16 +124,19 @@ export interface Statement {
   comment: string;
   rightOverrides: RightOverride[];
   reportedData: { // Final data of the statement once it is reported
-    sourcesBreakdown?: SourcesBreakdown[]; // For Distributor and Direct Sales statements.
-    rightsBreakdown?: RightsBreakdown[]; // For Distributor and Direct Sales statements.
-    groupsBreakdown?: GroupsBreakdown[]; // For outgoing statements 
-    details?: DetailsRow[]; // Rights details for outgoing statements
-    expenses?: Expense[]; // Expenses history for distributor statements
-    distributorExpenses?: DistributorExpenses[]; // Expenses details for distributor statements
-    expensesPerDistributor?: Record<string, (Expense & { cap?: number, editable: boolean })[]>; // Expenses history for outgoing statements
-    distributorExpensesPerDistributor?: Record<string, DistributorExpenses[]>; // Expenses details for outgoing statements
-    interests?: InterestDetail[]; // Interest details for outgoing statements 
+    // For Distributor and Direct Sales statements.
+    sourcesBreakdown?: SourcesBreakdown[];
+    rightsBreakdown?: RightsBreakdown[];
+    expenses?: Expense[]; // Expenses history
+    distributorExpenses?: DistributorExpenses[]; // Expenses details
     producerNetParticipation?: number; // Producer's net participation (for direct sales statements only)
+
+    // For Outgoing statements
+    outgoingBreakdown?: OutgoingBreakdown[];
+    outgoingDetails?: OutgoingDetails[]; // Rights details
+    expensesPerDistributor?: Record<string, (Expense & { cap?: number, editable: boolean })[]>; // Expenses history
+    distributorExpensesPerDistributor?: Record<string, DistributorExpenses[]>; // Expenses details
+    interests?: InterestDetail[]; // Interest details
     amortization?: AmortizationDetails; // Amortization details for outgoing statements
   },
   hash: {
@@ -709,13 +712,13 @@ export interface RightsBreakdown {
   mgStatus?: MgStatus
 }
 
-export interface GroupsBreakdown {
+export interface OutgoingBreakdown {
   group: Right;
   rights: Right[];
   rows: BreakdownRow[];
 }
 
-export interface DetailsRow {
+export interface OutgoingDetails {
   name: string;
   net: number;
   details: {

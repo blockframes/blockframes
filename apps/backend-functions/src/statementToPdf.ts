@@ -156,6 +156,9 @@ async function generate(
     }
     options.data.root[varName] = varValue;
   });
+  hb.registerHelper('inc', (value: string) => {
+    return parseInt(value) + 1;
+  });
 
   // Data
   const rightholder = rightholders.find(r => r.id === statement[rightholderKey(statement.type)]);
@@ -211,7 +214,7 @@ async function generate(
         totalNetReceipt,
         reportedData: {
           ...statement.reportedData,
-          details: showCalculationDetails ? statement.reportedData.details : undefined,
+          outgoingDetails: showCalculationDetails ? statement.reportedData.outgoingDetails : undefined,
           expensesPerDistributor: showCalculationDetails ? statement.reportedData.expensesPerDistributor : undefined,
           distributorExpensesPerDistributor: showCalculationDetails ? statement.reportedData.distributorExpensesPerDistributor : undefined,
         }
