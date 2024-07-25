@@ -18,6 +18,7 @@ import { WriteBatch } from 'firebase/firestore';
 import { BehaviorSubject, Observable, Subscription, combineLatest, map, tap } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTabGroup } from '@angular/material/tabs';
 import {
   Right,
   Version,
@@ -144,6 +145,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   );
   public arrows$ = new BehaviorSubject<Arrow[]>([]);
   public rightForm = createRightForm();
+  public rightFormValid$ = new BehaviorSubject<boolean>(true);
+  public invalidFormTooltip = $localize`Please fill all required fields`;
   public sourceForm = createSourceForm();
   public rightholderControl = new FormControl<string>('');
   public rightholderNames$ = new BehaviorSubject<string[]>([]);
@@ -168,6 +171,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   private contracts: WaterfallContract[];
 
   @ViewChild(CardModalComponent, { static: true }) cardModal: CardModalComponent;
+  @ViewChild('formTabs', { static: false }) formTabs: MatTabGroup;
 
   constructor(
     private dialog: MatDialog,
@@ -281,6 +285,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.sourceForm.controls.territories.valueChanges.subscribe(territories => this.updateSourceName(undefined, territories)));
 
     this.subscriptions.push(combineLatest([this.rightForm.valueChanges, this.sourceForm.valueChanges, this.conditionFormPristine$]).subscribe(() => {
+      this.rightFormValid$.next(this.rightFormValid());
       const canLeaveGraphForm = this.rightForm.pristine && this.sourceForm.pristine && this.conditionFormPristine$.value;
       this.canLeaveGraphForm.emit(canLeaveGraphForm);
     }));
@@ -288,6 +293,19 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
+  private rightFormValid() {
+    const rightholderName = this.rightForm.controls.org.value;
+    const rightholder = this.rightholders.find(r => r.name === rightholderName);
+    if (!rightholder) return false;
+
+    const invalidContract = this.producer?.id !== rightholder.id &&
+      this.rightForm.controls.type.value !== 'horizontal' &&
+      !this.rightForm.controls.contract.value;
+    if (invalidContract) return false;
+
+    return true;
   }
 
   private setFormState(selected: string) {
@@ -470,6 +488,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       const rightholderName = this.rightholders.find(r => r.id === rightholderId)?.name ?? '';
       const parents = this.nodes$.getValue().filter(node => node.children.includes(right.groupId || id)); // do not use ?? instead of ||, it will break since '' can be considered truthy
       setRightFormValue(this.rightForm, { ...right, type, rightholderId: rightholderName, nextIds: parents.map(parent => parent.id) }, steps);
+      if (this.formTabs && !this.rightFormValid()) this.formTabs.selectedIndex = 0;
     }
   }
 

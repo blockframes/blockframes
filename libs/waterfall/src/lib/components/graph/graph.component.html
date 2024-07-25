@@ -121,7 +121,7 @@
             <mat-icon svgIcon="close"></mat-icon>
           </button>
         </header>
-        <mat-tab-group mat-stretch-tabs="false">
+        <mat-tab-group mat-stretch-tabs="false" #formTabs>
           <mat-tab [label]="(rightForm.get('type').value | isHorizontal) ? i18nStrings.groupDetais : i18nStrings.receiptsShare">
             <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
               <p *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)" i18n>Fill the following fields to define the Receipt Share.</p>
@@ -209,7 +209,10 @@
               </div>
             </section>
           </mat-tab>
-          <mat-tab label="Conditions" *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)" i18n-label>
+          <mat-tab label="Conditions" [disabled]="(rightFormValid$ | async) === false" *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)" i18n-label>
+            <ng-template mat-tab-label>
+              <label i18n [matTooltip]="(rightFormValid$ | async) === false ? invalidFormTooltip : ''">Conditions</label>
+            </ng-template>
             <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
               <waterfall-conditions 
                 [canUpdate]="!nonPartiallyEditableNodeIds$.value.includes(selected)"
