@@ -3,7 +3,10 @@
     <cookie-form [form]="form"></cookie-form>
   </mat-card-content>
 </mat-card>
-<footer fxLayout fxLayoutAlign="center center">
+<footer>
+  <a mat-button (click)="openCookiesPolicy()">
+    <span i18n>Cookies Policy</span>
+  </a>
   <button mat-flat-button color="primary" (click)="update()">
     <mat-icon svgIcon="save"></mat-icon>
     <span i18n>Update</span>

@@ -20,6 +20,8 @@ import {
   Organization,
   getUserEmailData,
   OrgEmailData,
+  SupportedLanguages,
+  getDefaultIsoA2,
 } from '@blockframes/model';
 import { registerToNewsletters, updateMemberTags } from './mailchimp';
 import { getPreferenceTag, MailchimpTag } from '@blockframes/utils/mailchimp/mailchimp-model';
@@ -256,8 +258,8 @@ export const sendUserMail = async (data: { subject: string, message: string, app
  * @param data
  * @param context
  */
-export const createUser = async (data: { email: string, orgEmailData: OrgEmailData, app: App }, context: CallableContext): Promise<PublicUser> => {
-  const { email, orgEmailData, app } = data;
+export const createUser = async (data: { email: string, orgEmailData: OrgEmailData, app: App, language?: SupportedLanguages }, context: CallableContext): Promise<PublicUser> => {
+  const { email, orgEmailData, app, language } = data;
 
   if (!context?.auth) { throw new functions.https.HttpsError('permission-denied', 'Missing auth context!'); }
   const blockframesAdmin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
@@ -275,6 +277,8 @@ export const createUser = async (data: { email: string, orgEmailData: OrgEmailDa
 
   try {
     const newUser = await createUserFromEmail(email, app);
+    if (language) newUser.user.settings = { preferredLanguage: { language, isoA2: getDefaultIsoA2(language) } };
+
     const toUser = getUserEmailData(newUser.user, newUser.password);
     const urlToUse = applicationUrl[app];
 

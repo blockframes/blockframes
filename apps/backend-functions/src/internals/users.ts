@@ -18,7 +18,10 @@ import {
   getUserEmailData,
   getOrgEmailData,
   EventEmailData,
-  WaterfallEmailData
+  WaterfallEmailData,
+  User,
+  SupportedLanguages,
+  getDefaultIsoA2,
 } from '@blockframes/model';
 import { logger } from 'firebase-functions';
 import { hasUserAnOrgOrIsAlreadyInvited } from '../invitation';
@@ -43,7 +46,8 @@ export const getOrInviteUserByMail = async (
   invitation: { id: string, type: InvitationType, mode: InvitationMode, fromOrg: PublicOrganization },
   app: App = 'catalog',
   eventData?: EventEmailData,
-  waterfallData?: WaterfallEmailData
+  waterfallData?: WaterfallEmailData,
+  language?: SupportedLanguages
 ): Promise<{ user: UserProposal | PublicUser, invitationStatus?: InvitationStatus }> => {
   const fromOrgId = invitation.fromOrg.id;
   let invitationStatus: InvitationStatus;
@@ -63,6 +67,7 @@ export const getOrInviteUserByMail = async (
           to: email,
           templateId: invitationTemplateId,
           data: {
+            user: getUserEmailData(user),
             event: eventData,
             org: getOrgEmailData(invitation.fromOrg),
             isInvitationReminder: true
@@ -71,11 +76,12 @@ export const getOrInviteUserByMail = async (
       } else if (invitation.type === 'joinWaterfall') {
         const invitationTemplateId = templateIds.invitation.joinWaterfall.created;
         const urlToUse = applicationUrl[app];
-        const link = `c/o/dashboard/invitations`;
+        const link = 'c/o/dashboard/invitations';
         await sendMailFromTemplate({
           to: email,
           templateId: invitationTemplateId,
           data: {
+            user: getUserEmailData(user),
             waterfall: waterfallData,
             org: getOrgEmailData(invitation.fromOrg),
             isInvitationReminder: true,
@@ -92,6 +98,7 @@ export const getOrInviteUserByMail = async (
   } catch {
     try {
       const newUser = await createUserFromEmail(email, app);
+      if (language) newUser.user.settings = { preferredLanguage: { language, isoA2: getDefaultIsoA2(language) } };
       const toUser = getUserEmailData(newUser.user, newUser.password);
 
       // User does not exists, send him an email.
@@ -147,8 +154,7 @@ export const createUserFromEmail = async (email: string, createdFrom: App = 'fes
 
   // We don't have the time to wait for the trigger onUserCreate,
   // So we create it here first.
-  // TODO #9699 include preferred language (when set via CRM or when invited)
-  const userDb = { uid: user.uid, email, _meta: createInternalDocumentMeta({ createdFrom, emailVerified: true }) };
+  const userDb: Partial<User> = { uid: user.uid, email, _meta: createInternalDocumentMeta({ createdFrom, emailVerified: true }) };
   await db.collection('users').doc(userDb.uid).set(userDb);
 
   return { user: createPublicUser(userDb), password };

@@ -22,6 +22,7 @@ import { ChangePasswordComponent } from './pages/change-password/change-password
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { TermsConditionsModule } from './components/terms-conditions/terms-conditions.module';
 import { PrivacyPolicyModule } from './components/privacy-policy/privacy-policy.module';
+import { CookiesPolicyModule } from './components/cookies-policy/cookies-policy.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { OrganizationLiteFormModule } from '@blockframes/organization/forms/organization-lite-form/organization-lite-form.module';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
@@ -51,6 +52,10 @@ export const AuthRoutes: Routes = [
     loadChildren: () => import('@blockframes/ui/static-informations/privacy/privacy.module').then(m => m.PrivacyModule)
   },
   {
+    path: 'cookies',
+    loadChildren: () => import('@blockframes/ui/static-informations/cookies/cookies.module').then(m => m.CookiesModule)
+  },
+  {
     path: 'checkPrivacyAndTerms',
     canActivate: [NoLegalTermsGuard],
     loadChildren: () => import('./pages/checkPolicyAndTerms/checkPolicyAndTerms.module').then(m => m.CheckPolicyAndTermsModule)
@@ -71,6 +76,7 @@ export const AuthRoutes: Routes = [
     FlexLayoutModule,
     TermsConditionsModule,
     PrivacyPolicyModule,
+    CookiesPolicyModule,
     PasswordConfirmModule,
     ImageModule,
     AlgoliaAutocompleteModule,

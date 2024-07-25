@@ -61,6 +61,7 @@ export interface PublicUser {
   lastName?: string;
   orgId?: string;
   hideEmail: boolean;
+  settings?: UserSettings;
 }
 
 export interface Preferences {
@@ -71,7 +72,7 @@ export interface Preferences {
 }
 
 export function createPublicUser(user: Partial<User> = {}): PublicUser {
-  return {
+  const publicUser: PublicUser = {
     uid: user.uid ?? '',
     email: user.email ?? '',
     avatar: createStorageFile(user?.avatar),
@@ -80,6 +81,9 @@ export function createPublicUser(user: Partial<User> = {}): PublicUser {
     orgId: user.orgId ?? '',
     hideEmail: user.hideEmail ?? false,
   };
+
+  if (user.settings?.preferredLanguage?.language) publicUser.settings = { preferredLanguage: user.settings.preferredLanguage };
+  return publicUser;
 }
 
 export interface OrganizationMember extends PublicUser {

@@ -17,9 +17,12 @@ section {
   div.group {
     display: flex;
     flex-wrap: wrap;
-    column-gap: 32px;
+    column-gap: 16px;
     * {
       flex: 1;
+    }
+    mat-form-field {
+      min-width: 162px;
     }
   }
 }
@@ -30,4 +33,8 @@ mat-form-field {
 
 mat-slide-toggle {
   margin-left: 16px;
+}
+
+mat-divider {
+  margin-bottom: 20px;
 }

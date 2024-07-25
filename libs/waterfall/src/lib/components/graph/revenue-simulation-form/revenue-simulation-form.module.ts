@@ -14,6 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
   declarations: [WaterfallRevenueSimulationFormComponent, SourceNamePipe],
@@ -32,6 +33,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatIconModule,
     MatDatepickerModule,
     MatSlideToggleModule,
+    MatRadioModule,
   ],
   exports: [WaterfallRevenueSimulationFormComponent],
 })

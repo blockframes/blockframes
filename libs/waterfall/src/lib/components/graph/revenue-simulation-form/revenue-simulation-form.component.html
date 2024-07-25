@@ -1,4 +1,4 @@
-<h3 i18n>Report date</h3>
+<h3 i18n>General</h3>
 <mat-divider></mat-divider>
 <section>
   <h5 i18n>Indicate report date</h5>
@@ -10,6 +10,13 @@
     </mat-datepicker-toggle>
     <mat-datepicker #datePicker></mat-datepicker>
   </mat-form-field>
+  <ng-container *ngIf="hasReportedStatements$ | async">
+    <h5 i18n>If there are statements issued</h5>
+    <mat-radio-group [formControl]="form.get('fromScratch')">
+      <mat-radio-button [value]="false" i18n>Keep the statements' data and add new revenues.</mat-radio-button>
+      <mat-radio-button [value]="true" i18n>Clear the statements' data and simulate with new revenues only.</mat-radio-button>
+    </mat-radio-group>
+  </ng-container>
 </section>
 <h3 i18n>Sources</h3>
 <mat-divider></mat-divider>
