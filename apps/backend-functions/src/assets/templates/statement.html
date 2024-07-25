@@ -129,54 +129,6 @@
                   </tr>
                 {{/rows}}
               </table>
-            </div>
-            {{#if (isLast @index ../data.statement.reportedData.sourcesBreakdown)}}
-              {{#if ../data.statement.totalNetReceipt}}
-                <div class="total-net">
-                  Total Net Receipts:
-                  <span>
-                    {{toMainCurrency ../data.statement.totalNetReceipt}}
-                  </span>
-                </div>
-              {{/if}}
-            {{/if}}
-          </div>
-        {{/data.statement.reportedData.sourcesBreakdown}}
-      {{/if}}
-
-      {{#if data.statement.reportedData.groupsBreakdown}} <!-- For outgoing statements  -->
-        {{#data.statement.reportedData.groupsBreakdown}}
-          <div class="breakdown">
-            {{#if (eq @index 0)}}
-              <div class="header">
-                <span>Calculation breakdown</span>
-                <div>Net Receipts</div>
-              </div>
-            {{/if}}
-            <div class="surface">
-              <div class="header">
-                <h3>{{group.name}}</h3>
-              </div>
-              <table class="groups">
-                <tr>
-                  <th>Section</th>
-                  <th></th>
-                  <th>Net Receipt</th>
-                </tr>
-                {{#rows}}
-                  <tr class="{{#if type}}{{type}}{{/if}}">
-                    <td>{{name}}</td>
-                    <td>
-                      {{#if (eq type "right")}}
-                        {{ percent }} %
-                      {{/if}}
-                    </td>
-                    <td>
-                      {{toMainCurrency taken}}
-                    </td>
-                  </tr>
-                {{/rows}}
-              </table>
               {{#if stillToBeRecouped}}
                 <div class="to-be-recouped">
                   Still to be recouped:
@@ -196,47 +148,101 @@
                 </div>
               {{/if}}
             </div>
+            {{#if (isLast @index ../data.statement.reportedData.sourcesBreakdown)}}
+              {{#if ../data.statement.totalNetReceipt}}
+                <div class="total-net">
+                  Total Net Receipts:
+                  <span>
+                    {{toMainCurrency ../data.statement.totalNetReceipt}}
+                  </span>
+                </div>
+              {{/if}}
+            {{/if}}
           </div>
-        {{/data.statement.reportedData.groupsBreakdown}}
+        {{/data.statement.reportedData.sourcesBreakdown}}
       {{/if}}
 
-      {{#if data.statement.reportedData.details}} <!-- For outgoing statements  -->
-        {{#data.statement.reportedData.details}}
+      {{#if data.statement.reportedData.outgoingBreakdown}} <!-- For outgoing statements  -->
+        {{#data.statement.reportedData.outgoingBreakdown}}
+          <div class="breakdown">
+            {{#if (eq @index 0)}}
+              <div class="header">
+                <span>Calculation breakdown</span>
+                <div>Net Receipts</div>
+              </div>
+            {{/if}}
+            <div class="surface">
+              <div class="header">
+                <h3>{{group.name}}</h3>
+              </div>
+              <table class="groups">
+                <tr>
+                  <th>Revenue Share</th>
+                  <th>Prior</th>
+                  <th>Current</th>
+                  <th>Cumulative</th>
+                </tr>
+                {{#rows}}
+                  <tr class="{{#if type}}{{type}}{{/if}}">
+                    <td>{{section}}</td>
+                    <td>
+                      {{toMainCurrency previous}}
+                    </td>
+                    <td>
+                      {{toMainCurrency current}}
+                    </td>
+                    <td>
+                      {{toMainCurrency cumulated}}
+                    </td>
+                  </tr>
+                {{/rows}}
+              </table>
+            </div>
+          </div>
+        {{/data.statement.reportedData.outgoingBreakdown}}
+      {{/if}}
+
+      {{#if data.statement.reportedData.outgoingDetails}} <!-- For outgoing statements  -->
+        {{#data.statement.reportedData.outgoingDetails}}
           <div class="breakdown">
             {{#if (eq @index 0)}}
               <div class="header">
                 <span>Calculation details</span>
+                <div>Net Receipts</div>
               </div>
             {{/if}}
             <div class="surface">
               <div class="header">
                 <h3>{{name}}</h3>
+                <div>{{toMainCurrency net}}</div>
               </div>
               <table class="groups">
                 <tr>
-                  <th>From</th>
-                  <th>To</th>
-                  <th></th>
-                  <th>%</th>
-                  <th>Taken</th>
+                  <th>#</th>
+                  <th>Revenue Share</th>
+                  <th>Prior</th>
+                  <th>Current</th>
+                  <th>Cumulative</th>
                 </tr>
                 {{#details}}
                   <tr>
-                    <td>{{from}}</td>
-                    <td>{{to}}</td>
+                    <td>{{inc @index}}</td>
+                    <td>{{node}}</td>
                     <td>
-                      {{toMainCurrency amount}}
+                      {{toMainCurrency previous}}
                     </td>
-                    <td>{{percent}}</td>
                     <td>
-                      {{toMainCurrency taken}}
+                      {{toMainCurrency current}}
+                    </td>
+                    <td>
+                      {{toMainCurrency cumulated}}
                     </td>
                   </tr>
                 {{/details}}
               </table>
             </div>
           </div>
-        {{/data.statement.reportedData.details}}
+        {{/data.statement.reportedData.outgoingDetails}}
       {{/if}}
 
       {{#if data.statement.reportedData.rightsBreakdown}} <!-- For Distributor and Direct Sales statements. -->

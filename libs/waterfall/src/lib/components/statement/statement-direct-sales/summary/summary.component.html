@@ -21,38 +21,38 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <bf-table [source]="item.rows">
-            <ng-template colRef="" label="Section" let-item i18n-label>
-              <span [class]="item.type">{{ item.section }}</span>
+            <ng-template colRef="" label="Section" let-row i18n-label>
+              <span [class]="row.type">{{ row.section }}</span>
             </ng-template>
-            <ng-template colRef="" label="Prior Period" let-item i18n-label>
-              <span [class]="item.type">{{ item.previous | currency: waterfall.mainCurrency }}</span>
+            <ng-template colRef="" label="Prior Period" let-row i18n-label>
+              <span [class]="row.type">{{ row.previous | currency: waterfall.mainCurrency }}</span>
             </ng-template>
-            <ng-template colRef="" label="Current Period" let-item i18n-label>
-              <span [class]="item.type">{{ item.current | currency: waterfall.mainCurrency }}</span>
+            <ng-template colRef="" label="Current Period" let-row i18n-label>
+              <span [class]="row.type">{{ row.current | currency: waterfall.mainCurrency }}</span>
             </ng-template>
-            <ng-template colRef="" label="Cumulative" let-item i18n-label>
-              <span [class]="item.type">{{ item.cumulated | currency: waterfall.mainCurrency }}</span>
+            <ng-template colRef="" label="Cumulative" let-row i18n-label>
+              <span [class]="row.type">{{ row.cumulated | currency: waterfall.mainCurrency }}</span>
             </ng-template>
-            <ng-template colRef="" label="" let-item>
-              <ng-container *ngIf="item.type === 'right'">
+            <ng-template colRef="" label="" let-row>
+              <ng-container *ngIf="row.type === 'right'">
                 <button mat-icon-button 
-                  [disabled]="!canEditRightPayment(item, statement)"
-                  [matTooltip]="!canEditRightPayment(item, statement) ? 'This cannot be edited.' : 'Change current value'"
-                  (click)="editRightPayment(item, statement)"
+                  [disabled]="!canEditRightPayment(row, statement)"
+                  [matTooltip]="!canEditRightPayment(row, statement) ? 'This cannot be edited.' : 'Change current value'"
+                  (click)="editRightPayment(row, statement)"
                 >
                   <mat-icon svgIcon="statement_warning"></mat-icon>
                 </button>
-                <ng-container *ngIf="hasOverrides(item, statement)">
+                <ng-container *ngIf="hasOverrides(row, statement)">
                   <button mat-icon-button 
                     matTooltip="Value manually adjusted."
-                    (click)="showOverrides(item, statement)"
+                    (click)="showOverrides(row, statement)"
                   >
                     <mat-icon svgIcon="comment"></mat-icon>
                   </button>
                 </ng-container>
               </ng-container>
-              <ng-container *ngIf="item.type === 'expense' && item.cap">
-                <span [class]="item.cumulated | expenseTypeStatus: item.cap">CAP: {{ item.cap | currency: waterfall.mainCurrency }}</span>
+              <ng-container *ngIf="row.type === 'expense' && row.cap">
+                <span [class]="row.cumulated | expenseTypeStatus: row.cap">CAP: {{ row.cap | currency: waterfall.mainCurrency }}</span>
               </ng-container>
             </ng-template>
           </bf-table>
@@ -79,38 +79,38 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <bf-table [source]="item.rows">
-            <ng-template colRef="" label="Section" let-item i18n-label>
-              <span [class]="item.type">{{ item.section }}</span>
+            <ng-template colRef="" label="Section" let-row i18n-label>
+              <span [class]="row.type">{{ row.section }}</span>
             </ng-template>
-            <ng-template colRef="" label="Prior Period" let-item i18n-label>
-              <span [class]="item.type">{{ item.previous | currency: waterfall.mainCurrency }}</span>
+            <ng-template colRef="" label="Prior Period" let-row i18n-label>
+              <span [class]="row.type">{{ row.previous | currency: waterfall.mainCurrency }}</span>
             </ng-template>
-            <ng-template colRef="" label="Current Period" let-item i18n-label>
-              <span [class]="item.type">{{ item.current | currency: waterfall.mainCurrency }}</span>
+            <ng-template colRef="" label="Current Period" let-row i18n-label>
+              <span [class]="row.type">{{ row.current | currency: waterfall.mainCurrency }}</span>
             </ng-template>
-            <ng-template colRef="" label="Cumulative" let-item i18n-label>
-              <span [class]="item.type">{{ item.cumulated | currency: waterfall.mainCurrency }}</span>
+            <ng-template colRef="" label="Cumulative" let-row i18n-label>
+              <span [class]="row.type">{{ row.cumulated | currency: waterfall.mainCurrency }}</span>
             </ng-template>
-            <ng-template colRef="" label="" let-item>
-              <ng-container *ngIf="item.type === 'right'">
+            <ng-template colRef="" label="" let-row>
+              <ng-container *ngIf="row.type === 'right'">
                 <button mat-icon-button 
-                  [disabled]="!canEditRightPayment(item, statement)"
-                  [matTooltip]="!canEditRightPayment(item, statement) ? 'This cannot be edited.' : 'Change current value'"
-                  (click)="editRightPayment(item, statement)"
+                  [disabled]="!canEditRightPayment(row, statement)"
+                  [matTooltip]="!canEditRightPayment(row, statement) ? 'This cannot be edited.' : 'Change current value'"
+                  (click)="editRightPayment(row, statement)"
                 >
                   <mat-icon svgIcon="statement_warning"></mat-icon>
                 </button>
-                <ng-container *ngIf="hasOverrides(item, statement)">
+                <ng-container *ngIf="hasOverrides(row, statement)">
                   <button mat-icon-button 
                     matTooltip="Value manually adjusted."
-                    (click)="showOverrides(item, statement)"
+                    (click)="showOverrides(row, statement)"
                   >
                     <mat-icon svgIcon="comment"></mat-icon>
                   </button>
                 </ng-container>
               </ng-container>
-              <ng-container *ngIf="item.type === 'expense' && item.cap">
-                <span [class]="item.cumulated | expenseTypeStatus: item.cap">CAP: {{ item.cap | currency: waterfall.mainCurrency }}</span>
+              <ng-container *ngIf="row.type === 'expense' && row.cap">
+                <span [class]="row.cumulated | expenseTypeStatus: row.cap">CAP: {{ row.cap | currency: waterfall.mainCurrency }}</span>
               </ng-container>
             </ng-template>
           </bf-table>
