@@ -994,6 +994,8 @@
     "5055246788675897181": " Date de paiement : {$START_TAG_NG_CONTAINER} {$INTERPOLATION} {$CLOSE_TAG_NG_CONTAINER}",
     "8395288337672851171": "Participation Totale",
     "5567878220337396059": "Restant à amortir",
+    "4318455759093805107": "Part de revenu",
+    "8771561057478618897": "Précédent",
     "4731002771092160659": "Valeur ajustée manuellement.",
     "8084380115603930925": "Détails du calcul",
     "309233369515902596": " Détails des frais de {$INTERPOLATION} {$INTERPOLATION_1}",

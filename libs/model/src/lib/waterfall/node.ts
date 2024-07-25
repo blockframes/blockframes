@@ -203,22 +203,26 @@ function getParentNodes(state: TitleState, id: string) {
   return [...sources, ...rights, ...horizontals, ...verticals];
 }
 
-export function getTransferDetails(statementIncomeIds: string[], sourceId: string, fromId: string, toId: string, state: TitleState) {
-  // Fetch incomes that are in the statement duration
+interface TransferDetails {
+  from: NodeState;
+  to: NodeState;
+  max: number; // What was transfered to "toId" from "fromId" for the given incomeIds (turnover)
+  taken: number; // What was actually taken by the node "toId" for the given incomeIds (revenue)
+}
+export function getTransferDetails(statementIncomeIds: string[], sourceId: string, fromId: string, toId: string, state: TitleState): TransferDetails {
+  // Fetch incomes that are in the statement scope
   const incomeIds = state.sources[sourceId].incomeIds.filter(i => statementIncomeIds.includes(i));
 
   const to = getNode(state, toId);
   const from = getNode(state, fromId);
   const transfer = state.transfers[`${from.id}->${to.id}`];
-  const amount = { checked: 0, taken: 0, max: 0 };
+  const amount = { taken: 0, max: 0 };
   if (transfer) {
     const incomes = transfer.history.filter(h => incomeIds.includes(h.incomeId));
-    amount.checked = sum(incomes.filter(i => i.checked), i => i.amount);
     amount.taken = sum(incomes.filter(i => i.checked), i => i.amount * i.percent);
     amount.max = sum(incomes, i => i.amount);
   }
 
-  let taken = amount.taken;
   if (isGroup(state, to)) {
     const innerTransfers: TransferState[] = [];
     for (const childId of to.children) {
@@ -230,24 +234,58 @@ export function getTransferDetails(statementIncomeIds: string[], sourceId: strin
       }
     }
     const innerIncomes = innerTransfers.map(t => t.history.filter(h => incomeIds.includes(h.incomeId))).flat();
-    taken = sum(innerIncomes.filter(i => i.checked), i => i.amount * i.percent);
+    amount.taken = sum(innerIncomes.filter(i => i.checked), i => i.amount * i.percent);
   }
 
-  const percent = amount.checked > 0 ? taken / amount.checked : 0;
-
-  return {
-    from,
-    to,
-    amount: amount.max,
-    taken,
-    percent: parseFloat((percent * 100).toFixed(2)),
-  };
+  return { from, to, ...amount };
 }
 
-export function getPathDetails(statementIncomeIds: string[], right: string, sourceId: string, state: TitleState) {
+interface PathDetails {
+  from: NodeState;
+  to: NodeState;
+  rootGroupId?: string;
+  current: number;
+  previous: number;
+  cumulated: number;
+}
+export function getPathDetails(
+  statementIncomeIds: string[],
+  previousIncomeIds: string[],
+  right: string,
+  sourceId: string,
+  state: TitleState,
+  options: { showChildsDetails: boolean, skipEmptyTransfers: boolean } = { showChildsDetails: false, skipEmptyTransfers: false }
+) {
   const path = getPath(right, sourceId, state);
-  return path.map((item, index) => {
+  const details: PathDetails[] = [];
+
+  const getItemDetails = (fromId: string, toId: string, rootGroupId?: string): PathDetails => {
+    const current = getTransferDetails(statementIncomeIds, sourceId, fromId, toId, state);
+    const previous = getTransferDetails(previousIncomeIds, sourceId, fromId, toId, state);
+    const cumulated = getTransferDetails([...statementIncomeIds, ...previousIncomeIds], sourceId, fromId, toId, state);
+    return { from: current.from, to: current.to, current: current.taken, previous: previous.taken, cumulated: cumulated.taken, rootGroupId };
+  }
+
+  path.forEach((item, index) => {
     if (!path[index + 1]) return;
-    return getTransferDetails(statementIncomeIds, sourceId, item, path[index + 1], state);
-  }).filter(i => !!i);
+    const to = getNode(state, path[index + 1]);
+
+    if (!isGroup(state, to) || !options.showChildsDetails) {
+      return details.push(getItemDetails(item, to.id));
+    }
+
+    for (const childId of to.children) {
+      const child = getNode(state, childId);
+      if (isVerticalGroup(state, child)) {
+        for (const subChildId of child.children) {
+          details.push(getItemDetails(childId, subChildId, to.id));
+        }
+      } else {
+        details.push(getItemDetails(to.id, childId, to.id));
+      }
+    }
+
+  });
+
+  return details.filter(d => !options.skipEmptyTransfers || d.cumulated > 0);
 }
