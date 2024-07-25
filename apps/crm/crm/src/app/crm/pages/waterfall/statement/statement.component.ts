@@ -9,7 +9,6 @@ import {
   isDistributorStatement,
   getSources,
   sum,
-  isSource,
   WaterfallSource,
   isProducerStatement,
   WaterfallContract,
@@ -20,21 +19,12 @@ import {
   getAssociatedRights,
   getStatementRightsToDisplay,
   generatePayments,
-  getPathDetails,
 } from '@blockframes/model';
 import { unique } from '@blockframes/utils/helpers';
 import { DashboardWaterfallShellComponent } from '@blockframes/waterfall/dashboard/shell/shell.component';
 import { StatementService } from '@blockframes/waterfall/statement.service';
 import { WaterfallState } from '@blockframes/waterfall/waterfall.service';
 import { filter, firstValueFrom, pluck, switchMap, tap } from 'rxjs';
-
-interface RightDetails {
-  from: string,
-  to: string,
-  amount: number,
-  taken: number,
-  percent: number,
-}
 
 @Component({
   selector: 'crm-statement',
@@ -49,8 +39,6 @@ export class StatementComponent implements OnInit {
   public sources: WaterfallSource[];
   public expenses: Expense[] = [];
   public rights: Right[] = [];
-  public rightDetails: RightDetails[][] = [];
-  private allRights: Right[];
   private contract: WaterfallContract;
   private simulation: WaterfallState;
 
@@ -76,7 +64,7 @@ export class StatementComponent implements OnInit {
   ngOnInit() { return this.versionChanged(); }
 
   public async versionChanged() {
-    this.allRights = await this.shell.rights();
+    const allRights = await this.shell.rights();
     const statement = await firstValueFrom(this.statement$);
     this.incomes = await this.shell.incomes(statement.incomeIds);
 
@@ -99,7 +87,7 @@ export class StatementComponent implements OnInit {
     this.simulation = await this.shell.simulateWaterfall();
     this.snackBar.open('Waterfall initialized!', 'close', { duration: 5000 });
 
-    this.sources = getStatementSources(statement, this.waterfall.sources, this.incomes, this.allRights, this.simulation.waterfall.state)
+    this.sources = getStatementSources(statement, this.waterfall.sources, this.incomes, allRights, this.simulation.waterfall.state)
 
     if (isDistributorStatement(statement) || isDirectSalesStatement(statement)) {
       this.statement = statement;
@@ -122,7 +110,7 @@ export class StatementComponent implements OnInit {
       this.statement = statement;
     }
 
-    const rights = getStatementRights(this.statement, this.allRights);
+    const rights = getStatementRights(this.statement, allRights);
     const rightIds = unique(this.sources.map(s => getAssociatedRights(s.id, rights, this.simulation.waterfall.state)).flat().map(r => r.id));
     this.rights = rights.filter(r => rightIds.includes(r.id));
 
@@ -178,21 +166,6 @@ export class StatementComponent implements OnInit {
       const history = transfers.map(t => t.history.filter(h => h.checked && incomeIds.includes(h.incomeId))).flat();
       return sum(history, i => i.amount * i.percent);
     }
-  }
-
-  public showRightDetails({ id: rightId }: { id: string }) {
-    const sources = this.getAssociatedSourceIds(rightId);
-
-    this.rightDetails = sources.map(sourceId => {
-      const details = getPathDetails(this.statement.incomeIds, rightId, sourceId, this.simulation.waterfall.state);
-      return details.map(d => ({
-        ...d,
-        from: isSource(this.simulation.waterfall.state, d.from) ? this.waterfall.sources.find(s => s.id === d.from.id).name : this.allRights.find(r => r.id === d.from.id).name,
-        to: this.allRights.find(r => r.id === d.to.id).name,
-      }));
-    });
-
-    this.cdRef.markForCheck();
   }
 
 }
