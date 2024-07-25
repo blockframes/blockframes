@@ -1,5 +1,18 @@
 @import "@angular/flex-layout/mq";
 
+div.top {
+  display: flex;
+  justify-content: space-between;
+
+  waterfall-version-selector {
+    padding: 24px;
+  }
+  span {
+    align-self: end;
+    padding: 0 24px;
+  }
+}
+
 header {
   display: flex;
   padding: 24px;
@@ -7,9 +20,6 @@ header {
   justify-content: space-between;
 }
 
-waterfall-version-selector {
-  padding: 24px;
-}
 
 section {
   display: flex;

@@ -109,6 +109,13 @@ export class DashboardComponent {
     map(([state, currentRightholder]) => state.waterfall.state.orgs[currentRightholder.id])
   );
 
+  public lastPaymentDate$ = this.state$.pipe(
+    map(state => {
+      const history = state.waterfall.history.filter(h => h.actions.some(a => a.name === 'payment')).pop();
+      return history?.date;
+    })
+  );
+
   public turnover$ = this.rightholderState$.pipe(
     map(orgState => orgState?.turnover.actual || 0)
   );

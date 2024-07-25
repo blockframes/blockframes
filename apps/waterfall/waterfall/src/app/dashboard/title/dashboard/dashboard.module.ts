@@ -1,7 +1,6 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -17,6 +16,7 @@ import { LogoSpinnerModule } from '@blockframes/ui/logo-spinner/logo-spinner.mod
 import { EmptyWaterfallModule } from '@blockframes/waterfall/components/empty/empty.module';
 import { VersionSelectorModule } from '@blockframes/waterfall/components/version/version-selector/version-selector.module';
 import { WaterfallAdminGuard } from '@blockframes/waterfall/guards/waterfall-admin.guard';
+import { BfCommonModule } from '@blockframes/utils/bf-common.module';
 
 // Material
 import { MatDividerModule } from '@angular/material/divider';
@@ -29,7 +29,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 @NgModule({
   declarations: [DashboardComponent],
   imports: [
-    CommonModule,
+    BfCommonModule,
     ReactiveFormsModule,
     NgApexchartsModule,
 
