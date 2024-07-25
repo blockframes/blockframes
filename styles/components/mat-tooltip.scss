@@ -10,6 +10,10 @@
   a.mdc-icon-button {
     .mat-mdc-focus-indicator, .mat-mdc-button-touch-target { display: none; }
   }
+
+  .mat-mdc-tab .mdc-tab__text-label .mat-mdc-tooltip-trigger {
+    pointer-events: auto;
+  }
 }
 
 // TYPOGRAPHY
