@@ -44,7 +44,7 @@
   </ng-container>
 
   <h3>Rights</h3>
-  <bf-table *ngIf="(waterfall$ | async) as waterfall" [source]="rights | filterRights: statement" clickable useFilter pagination="50" (rowClick)="showRightDetails($event)">
+  <bf-table *ngIf="(waterfall$ | async) as waterfall" [source]="rights | filterRights: statement" useFilter pagination="50">
     <ng-template colRef="id" label="Id" let-id sort>
       {{ id }}
       <button mat-icon-button [cdkCopyToClipboard]="id" (click)="$event.stopPropagation()">
@@ -78,32 +78,4 @@
       {{ getCumulatedAmount(id, true) | currency: waterfall.mainCurrency }}
     </ng-template>
   </bf-table>
-
-  <article *ngIf="rightDetails.length" class="right-details">
-    <h3>Details</h3>
-    <ng-container *ngFor="let details of rightDetails">
-      <bf-table *ngIf="(waterfall$ | async) as waterfall" [source]="details" pagination="50">
-        <ng-template colRef="" label="#" let-index="index">
-          {{ index + 1 }}
-        </ng-template>
-        <ng-template colRef="from" label="From" let-from>
-          {{ from }}
-        </ng-template>
-        <ng-template colRef="to" label="To" let-to>
-          {{ to }}
-        </ng-template>
-        <ng-template colRef="amount" label="Amount" let-amount>
-          {{ amount | currency: waterfall.mainCurrency }}
-        </ng-template>
-        <ng-template colRef="percent" label="%" let-percent>
-          {{ percent }}
-        </ng-template>
-        <ng-template colRef="taken" label="Taken" let-taken>
-          <strong>
-            {{ taken | currency: waterfall.mainCurrency }}
-          </strong>
-        </ng-template>
-      </bf-table>
-    </ng-container>
-  </article>
 </ng-container>

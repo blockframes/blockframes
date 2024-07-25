@@ -1,12 +1,12 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy, OnChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {
-  ProducerBreakdownRow as BreakdownRow,
+  BreakdownRow,
   ConditionInterest,
-  DetailsRow,
+  OutgoingDetails,
   Duration,
   Expense,
-  GroupsBreakdown,
+  OutgoingBreakdown,
   Income,
   Right,
   RightOverride,
@@ -44,7 +44,9 @@ import {
   getDistributorExpensesDetails,
   DistributorExpenses,
   getParentStatements,
-  AmortizationDetails
+  AmortizationDetails,
+  MaxPerIncome,
+  sum
 } from '@blockframes/model';
 import { DashboardWaterfallShellComponent } from '../../../../dashboard/shell/shell.component';
 import { StatementForm } from '../../../../form/statement.form';
@@ -60,27 +62,78 @@ import { StatementExpenseEditComponent } from '../../statement-expense-edit/stat
 import { ExpenseService } from '@blockframes/contract/expense/service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-function getRightTurnover(incomeIds: string[], state: TitleState, right: Right, sources: WaterfallSource[], statementIncomes: Income[], statementStatus: StatementStatus, versionId: string): BreakdownRow[] {
+/**
+ * Returns the amount that arrived to a given right for :
+ * - current incomeIds (current statement)
+ * - previous incomeIds (previous statements)
+ * @param incomeIds 
+ * @param previousIncomeIds 
+ * @param state 
+ * @param right 
+ * @param sources 
+ * @param filterOptions
+ * @returns 
+ */
+function getRightTurnover(
+  incomeIds: string[],
+  previousIncomeIds: string[],
+  state: TitleState,
+  right: Right,
+  sources: WaterfallSource[],
+  filterOptions: { statementIncomes: Income[], statementStatus: StatementStatus, versionId: string }
+): BreakdownRow[] {
   const sourceIds = getSources(state, right.id).map(i => i.id);
 
-  return sources.filter(s => sourceIds.includes(s.id)).map(s => {
-    const path = getPath(right.id, s.id, state);
+  return sources.filter(s => sourceIds.includes(s.id)).map(source => {
+    const path = getPath(right.id, source.id, state);
 
     const to = path[path.length - 1];
     const from = path[path.indexOf(to) - 1];
-    const details = getTransferDetails(incomeIds, s.id, from, to, state);
-    return { ...s, taken: details.amount };
-  }).map(source => ({ name: source.name, taken: source.taken, type: 'source', source, right } as BreakdownRow))
+    const transfers = {
+      current: getTransferDetails(incomeIds, source.id, from, to, state).max,
+      previous: getTransferDetails(previousIncomeIds, source.id, from, to, state).max,
+      cumulated: getTransferDetails([...incomeIds, ...previousIncomeIds], source.id, from, to, state).max
+    }
+
+    return { source, transfers };
+  }).map(details => ({
+    section: details.source.name,
+    ...details.transfers,
+    type: 'source',
+    source: details.source,
+    right
+  } as BreakdownRow))
     .filter(row => {
-      if (statementStatus === 'draft') return true;
+      if (filterOptions.statementStatus === 'draft') return true;
       // Remove sources where all incomes are hidden from reported statement 
-      const sourceIncomes = statementIncomes.filter(i => i.sourceId === row.source.id);
-      const allHidden = sourceIncomes.every(i => i.version[versionId]?.hidden);
+      const sourceIncomes = filterOptions.statementIncomes.filter(i => i.sourceId === row.source.id);
+      const allHidden = sourceIncomes.every(i => i.version[filterOptions.versionId]?.hidden);
       return !allHidden;
     })
 }
 
-function getRightTaken(rights: Right[], statement: Statement, state: TitleState, rightId: string, sources: WaterfallSource[], incomes: Income[]): BreakdownRow {
+/**
+ * Return the maximum amount that can be taken by a right for a given income (used for right overrides)
+ * @param statement 
+ * @param right 
+ * @param state 
+ * @param incomes 
+ * @param sources 
+ * @returns 
+ */
+function getMaxPerIncome(statement: Statement, right: Right, state: TitleState, incomes: Income[], sources: WaterfallSource[]): MaxPerIncome[] {
+  const currentRightPayment = statement.payments.right.filter(p => p.to === right.id);
+  return unique(currentRightPayment.map(r => r.incomeIds).flat())
+    .map(incomeId => incomes.find(i => i.id === incomeId))
+    .map(income => ({
+      income,
+      max: getIncomingAmount(right.id, income.id, state.transfers),
+      current: getCalculatedAmount(right.id, income.id, state.transfers, { rounded: true }),
+      source: sources.find(s => s.id === income.sourceId)
+    })).filter(i => i.max > 0);
+}
+
+function getRightTaken(rights: Right[], statement: Statement, previousIncomeIds: string[], state: TitleState, rightId: string, sources: WaterfallSource[], incomes: Income[]): BreakdownRow {
   const right = rights.find(r => r.id === rightId);
   const sourceIds = getSources(state, rightId).map(i => i.id);
 
@@ -89,31 +142,21 @@ function getRightTaken(rights: Right[], statement: Statement, state: TitleState,
 
     const to = path[path.length - 1];
     const from = path[path.indexOf(to) - 1];
-    return getTransferDetails(statement.incomeIds, s.id, from, to, state);
+    return {
+      current: getTransferDetails(statement.incomeIds, s.id, from, to, state).taken,
+      previous: getTransferDetails(previousIncomeIds.flat(), s.id, from, to, state).taken,
+      cumulated: getTransferDetails([...statement.incomeIds, ...previousIncomeIds], s.id, from, to, state).taken
+    }
   });
 
-  /**
-   * @dev details variable could be used to re-build percentage actually used (if overriden via statement.rightOverrides or updateRight action) 
-   */
-  const taken = details.reduce((acc, s) => acc + s.taken, 0);
-  const currentRightPayment = statement.payments.right.filter(p => p.to === right.id);
-
-  const maxPerIncome = unique(currentRightPayment.map(r => r.incomeIds).flat())
-    .map(incomeId => incomes.find(i => i.id === incomeId))
-    .map(income => ({
-      income,
-      max: getIncomingAmount(right.id, income.id, state.transfers),
-      current: getCalculatedAmount(right.id, income.id, state.transfers, { rounded: true }),
-      source: sources.find(s => s.id === income.sourceId)
-    })).filter(i => i.max > 0);
-
   return {
-    name: right.name,
-    percent: right.percent,
-    taken,
+    section: right.name,
+    current: details.reduce((acc, s) => acc + s.current, 0),
+    previous: details.reduce((acc, s) => acc + s.previous, 0),
+    cumulated: details.reduce((acc, s) => acc + s.cumulated, 0),
     type: 'right',
     right,
-    maxPerIncome
+    maxPerIncome: getMaxPerIncome(statement, right, state, incomes, sources)
   };
 }
 
@@ -187,19 +230,35 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
+  private previousStatements$ = combineLatest([this.statement$, this.shell.statements$]).pipe(
+    map(([statement, statements]) => {
+      const filteredStatements = filterStatements(statement.type, [statement.senderId, statement.receiverId], statement.contractId, statements);
+      const sortedStatements = sortStatements(filteredStatements);
+      const current = sortedStatements.find(s => s.id === statement.id);
+      return sortedStatements.filter(s => s.number < current.number);
+    }),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  private previousIncomeIds$ = this.previousStatements$.pipe(
+    map(statements => Array.from(new Set(statements.map(s => s.incomeIds).flat()))),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
   public cleanSources$ = combineLatest([this.statement$, this.sources$, this.shell.incomes$]).pipe(
     map(([statement, sources, incomes]) => skipSourcesWithAllHiddenIncomes(statement, sources, incomes)),
   );
 
-  public groupsBreakdown$ = combineLatest([
+  public outgoingBreakdown$ = combineLatest([
     this.statement$, this.shell.rights$, this.shell.incomes$,
-    this.shell.simulation$, this.sources$
+    this.shell.simulation$, this.sources$, this.previousIncomeIds$
   ]).pipe(
-    map(([statement, rights, incomes, simulation, sources]) => {
-      if (!this.devMode && statement.status === 'reported' && statement.reportedData.groupsBreakdown) return statement.reportedData.groupsBreakdown;
+    map(([statement, rights, incomes, simulation, sources, previousIncomeIds]) => {
+      if (!this.devMode && statement.status === 'reported' && statement.reportedData.outgoingBreakdown) return statement.reportedData.outgoingBreakdown;
       const displayedRights = getStatementRightsToDisplay(statement, rights);
       const orderedRights = getOrderedRights(displayedRights, simulation.waterfall.state);
       const statementIncomes = incomes.filter(i => statement.incomeIds.includes(i.id));
+      const filterOptions = { statementIncomes, statementStatus: statement.status, versionId: this.shell.versionId$.value };
 
       const groups: Record<string, { group: Right, rights: Right[], rows: BreakdownRow[] }> = {};
       for (const right of orderedRights) {
@@ -208,17 +267,21 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
           const group = rights.find(r => r.id === groupState.id);
           if (!groups[group.id]) {
             // Sources remains 
-            const rows = getRightTurnover(statement.incomeIds, simulation.waterfall.state, group, sources, statementIncomes, statement.status, this.shell.versionId$.value);
+            const rows = getRightTurnover(statement.incomeIds, previousIncomeIds, simulation.waterfall.state, group, sources, filterOptions);
 
-            const remainTotal = rows.reduce((acc, s) => acc + s.taken, 0);
+            const total = {
+              current: rows.reduce((acc, s) => acc + s.current, 0),
+              previous: rows.reduce((acc, s) => acc + s.previous, 0),
+              cumulated: rows.reduce((acc, s) => acc + s.cumulated, 0)
+            }
 
             // Total
-            rows.push({ name: 'TOTAL', taken: remainTotal, type: 'total' });
+            rows.push({ section: 'TOTAL', ...total, type: 'total' });
 
             // Rights details
             const childs = getChildRights(simulation.waterfall.state, groupState); // All ChildRights are from the same org
             for (const child of childs) {
-              const row = getRightTaken(rights, statement, simulation.waterfall.state, child.id, sources, incomes);
+              const row = getRightTaken(rights, statement, previousIncomeIds, simulation.waterfall.state, child.id, sources, incomes);
               rows.push(row);
             }
 
@@ -227,64 +290,82 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
           groups[group.id].rights.push(right);
         } else {
           // Sources remains 
-          const rows = getRightTurnover(statement.incomeIds, simulation.waterfall.state, right, sources, statementIncomes, statement.status, this.shell.versionId$.value);
+          const rows = getRightTurnover(statement.incomeIds, previousIncomeIds, simulation.waterfall.state, right, sources, filterOptions);
 
-          const remainTotal = rows.reduce((acc, s) => acc + s.taken, 0);
+          const total = {
+            current: rows.reduce((acc, s) => acc + s.current, 0),
+            previous: rows.reduce((acc, s) => acc + s.previous, 0),
+            cumulated: rows.reduce((acc, s) => acc + s.cumulated, 0)
+          }
 
           // Total
-          rows.push({ name: 'TOTAL', taken: remainTotal, type: 'total' });
+          rows.push({ section: 'TOTAL', ...total, type: 'total' });
 
           // Right details
-          const row = getRightTaken(rights, statement, simulation.waterfall.state, right.id, sources, incomes);
+          const row = getRightTaken(rights, statement, previousIncomeIds, simulation.waterfall.state, right.id, sources, incomes);
           rows.push(row);
 
           groups[right.id] = { group: right, rights: [right], rows };
         }
       }
 
-      return Object.values(groups).filter(g => g.rows.filter(r => r.type === 'source').length) as GroupsBreakdown[];
+      return Object.values(groups).filter(g => g.rows.filter(r => r.type === 'source').length) as OutgoingBreakdown[];
     }),
-    tap(async groupsBreakdown => {
+    tap(async outgoingBreakdown => {
       if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
-      if (this.statement.status === 'reported' && !reportedData.groupsBreakdown) {
-        this.statement.reportedData.groupsBreakdown = groupsBreakdown;
+      if (this.statement.status === 'reported' && !reportedData.outgoingBreakdown) {
+        this.statement.reportedData.outgoingBreakdown = outgoingBreakdown;
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
-      } else if (this.statement.status !== 'reported' && reportedData.groupsBreakdown) {
+      } else if (this.statement.status !== 'reported' && reportedData.outgoingBreakdown) {
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
       }
     })
   );
 
-  public details$ = combineLatest([
-    this.groupsBreakdown$, this.shell.simulation$,
-    this.statement$, this.shell.rights$
+  public outgoingDetails$ = combineLatest([
+    this.outgoingBreakdown$, this.shell.simulation$,
+    this.statement$, this.shell.rights$, this.previousIncomeIds$
   ]).pipe(
-    map(([groups, simulation, statement, rights]) => {
-      if (!this.devMode && statement.status === 'reported' && statement.reportedData.details) return statement.reportedData.details;
+    map(([groups, simulation, statement, rights, previousIncomeIds]) => {
+      if (!this.devMode && statement.status === 'reported' && statement.reportedData.outgoingDetails) return statement.reportedData.outgoingDetails;
       const sourcesDetails = groups.map(g => g.rows.filter(r => r.type === 'source')).flat();
+      const pathDetailsOptions = { showChildsDetails: true, skipEmptyTransfers: true };
 
-      const items: DetailsRow[] = [];
+      const items: OutgoingDetails[] = [];
       for (const row of sourcesDetails) {
         const source = this.waterfall.sources.find(s => s.id === row.source.id);
         const path = getPath(row.right.id, row.source.id, simulation.waterfall.state);
 
+        const sourceDetails = {
+          node: source.name,
+          sourceId: source.id,
+          current: getTransferDetails(statement.incomeIds, row.source.id, path[0], path[1], simulation.waterfall.state).max,
+          previous: getTransferDetails(previousIncomeIds, row.source.id, path[0], path[1], simulation.waterfall.state).max,
+          cumulated: getTransferDetails([...statement.incomeIds, ...previousIncomeIds], row.source.id, path[0], path[1], simulation.waterfall.state).max,
+        };
+
         const rightId = path[path.indexOf(row.right.id) - 1];
-        const details = getPathDetails(statement.incomeIds, rightId, row.source.id, simulation.waterfall.state);
-        const item: DetailsRow = {
-          name: source.name,
-          details: details.map(d => ({
+
+        const pathDetails = getPathDetails(statement.incomeIds, previousIncomeIds, rightId, row.source.id, simulation.waterfall.state, pathDetailsOptions)
+          .map(d => ({
             ...d,
-            from: isSource(simulation.waterfall.state, d.from) ? this.waterfall.sources.find(s => s.id === d.from.id).name : rights.find(r => r.id === d.from.id).name,
-            to: rights.find(r => r.id === d.to.id).name,
-            fromId: d.from.id
+            node: rights.find(r => r.id === d.to.id).name,
           }))
-        }
+          // Remove rows already displayed in the source details and its brothers
+          .filter(d => ![row.right.id, row.right.groupId].includes(d.to.id) && row.right.groupId !== d.rootGroupId);
+
+        const net = sourceDetails.current - sum(pathDetails, (d => d.current));
+        const item: OutgoingDetails = {
+          name: source.name,
+          net,
+          details: [sourceDetails, ...pathDetails]
+        };
 
         // Prevent duplicated rows
-        const rowExists = (r: DetailsRow) => items.some(i =>
+        const rowExists = (r: OutgoingDetails) => items.some(i =>
           i.name === r.name && i.details.length === r.details.length &&
-          i.details[i.details.length - 1].to === r.details[r.details.length - 1].to
+          i.details[i.details.length - 1].node === r.details[r.details.length - 1].node
         );
         if (!rowExists(item)) items.push(item);
       }
@@ -294,10 +375,10 @@ export class StatementProducerSummaryComponent implements OnInit, OnChanges, OnD
     tap(async details => {
       if (this.readonly || (this.statement.versionId !== this.shell.versionId$.value)) return;
       const reportedData = this.statement.reportedData;
-      if (this.statement.status === 'reported' && !reportedData.details) {
-        this.statement.reportedData.details = details;
+      if (this.statement.status === 'reported' && !reportedData.outgoingDetails) {
+        this.statement.reportedData.outgoingDetails = details;
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: this.statement.reportedData }, { params: { waterfallId: this.waterfall.id } });
-      } else if (this.statement.status !== 'reported' && reportedData.details) {
+      } else if (this.statement.status !== 'reported' && reportedData.outgoingDetails) {
         await this.statementService.update(this.statement.id, { id: this.statement.id, reportedData: {} }, { params: { waterfallId: this.waterfall.id } });
       }
     })

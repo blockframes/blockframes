@@ -3,6 +3,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../service';
 import { CookiesConsentForm } from '@blockframes/utils/gdpr-cookie/cookie-form/cookie.form';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
+import { CookiesPolicyComponent } from '@blockframes/auth/components/cookies-policy/cookies-policy.component';
+import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'user-profile-cookie',
@@ -19,7 +22,8 @@ export class ProfileCookieComponent {
   constructor(
     private gdpr: GDPRService,
     private snackBar: MatSnackBar,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialog: MatDialog,
   ) {
     this.form = new CookiesConsentForm(gdpr.cookieConsent)
   }
@@ -32,5 +36,12 @@ export class ProfileCookieComponent {
       this.gdpr.enableHotjar(settings.hotjar);
       this.snackBar.open('Cookie Preferences updated.', 'close', { duration: 4000 });
     }
+  }
+
+  public openCookiesPolicy() {
+    this.dialog.open(CookiesPolicyComponent, {
+      data: createModalData({ onClose: () => this.dialog.closeAll() }, 'large'),
+      autoFocus: false
+    });
   }
 }

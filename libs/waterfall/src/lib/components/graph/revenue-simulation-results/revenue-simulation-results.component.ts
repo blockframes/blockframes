@@ -10,8 +10,12 @@ import { combineLatest, map } from 'rxjs';
 })
 export class WaterfallRevenueSimulationResultsComponent {
   public waterfall = this.shell.waterfall;
-  private rightholders$ = combineLatest([this.shell.rightholderRights$, this.shell.rightholders$]).pipe(
-    map(([rights, rightholders]) => rightholders.filter(r => rights.some(right => right.rightholderId === r.id)))
+  private rightholders$ = combineLatest([this.shell.rightholderRights$, this.shell.waterfall$, this.shell.simulation$]).pipe(
+    map(([rights, waterfall, state]) => {
+      const rightholderIds = Array.from(new Set(Object.values(state.waterfall.state.rights).map(r => r.orgId)));
+      const rightholders = waterfall.rightholders.filter(r => rightholderIds.includes(r.id));
+      return rightholders.filter(r => rights.some(right => right.rightholderId === r.id))
+    })
   );
 
   public results$ = combineLatest([this.shell.simulation$, this.rightholders$]).pipe(
