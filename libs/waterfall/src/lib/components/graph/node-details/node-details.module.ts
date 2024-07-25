@@ -7,7 +7,7 @@ import { GraphNodePipeModule } from '../../../pipes/graph-node-pipe';
 
 // Blockframes
 import { RightHolderNamePipeModule } from '../../../pipes/rightholder-name.pipe';
-import { WaterfallConditionsModule } from '../conditions/conditions.module';
+import { WaterfallConditionsReadOnlyModule } from '../conditions/read-only/read-only.module';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
@@ -19,7 +19,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 
     // Blockframes
     RightHolderNamePipeModule,
-    WaterfallConditionsModule,
+    WaterfallConditionsReadOnlyModule,
     GraphNodePipeModule,
 
     // Material

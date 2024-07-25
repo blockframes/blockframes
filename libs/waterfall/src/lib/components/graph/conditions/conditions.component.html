@@ -1,23 +1,17 @@
-<ng-container *ngIf="!readOnly">
-  <p i18n>Please chose a condition that will influence your waterfall.</p>
-  <p i18n>According to the type you chose, the fields will adapt.</p>
-  
-  <div class="right">
-    <static-select [control]="rightForm.controls.type" scope="rightTypes" [withoutValues]="['horizontal','vertical']" bfi18n>
-      <mat-label i18n>Receipt Share Type</mat-label>
-    </static-select>
-    <mat-form-field appearance="outline">
-      <mat-label i18n>Receipt Share Name</mat-label>
-      <input matInput type="text" [formControl]="rightForm.controls.name" />
-    </mat-form-field>
-  </div>
-  
-  <hr />
-</ng-container>
+<p i18n>Please chose a condition that will influence your waterfall.</p>
+<p i18n>According to the type you chose, the fields will adapt.</p>
 
-<ng-container *ngIf="readOnly && rightForm.controls.steps.value[0].length === 0">
-  <p i18n class="no-conditions">There are no conditions for this receipt share.</p>
-</ng-container>
+<div class="right">
+  <static-select [control]="rightForm.controls.type" scope="rightTypes" [withoutValues]="['horizontal','vertical']" bfi18n>
+    <mat-label i18n>Receipt Share Type</mat-label>
+  </static-select>
+  <mat-form-field appearance="outline">
+    <mat-label i18n>Receipt Share Name</mat-label>
+    <input matInput type="text" [formControl]="rightForm.controls.name" />
+  </mat-form-field>
+</div>
+
+<hr />
 
 <ng-container *ngFor="let step of rightForm.controls.steps.value; let stepIndex = index">
   <ng-container *ngIf="selectedStep$.value === stepIndex; else item">
@@ -46,6 +40,6 @@
   </ng-template>
 </ng-container>
 
-<div class="add-step" *ngIf="!readOnly">
+<div class="add-step">
   <button mat-button color="primary" [disabled]="!canUpdate" (click)="addStep()" i18n>Add New Step</button>
 </div>

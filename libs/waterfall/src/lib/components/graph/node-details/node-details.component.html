@@ -26,12 +26,7 @@
   </mat-tab>
   <mat-tab label="Conditions" *ngIf="!((formValue$ | async)?.type | isHorizontal) && !(rightId | isStep : (rights$ | async))" i18n-label>
     <section>
-      <waterfall-conditions 
-        canUpdate="false"
-        readOnly="true"
-        [rightForm]="rightForm"
-        [rightId]="rightId">
-      </waterfall-conditions>
+      <waterfall-conditions-read-only [rightForm]="rightForm" [rightId]="rightId"></waterfall-conditions-read-only>
     </section>
   </mat-tab>
 </mat-tab-group>

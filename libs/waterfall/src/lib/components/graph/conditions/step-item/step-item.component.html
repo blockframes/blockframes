@@ -4,7 +4,7 @@
 
 <span class="spacer"></span>
 
-<button mat-icon-button (click)="editStep.emit()" [matTooltip]="tooltip">
+<button [disabled]="!canUpdate && conditionCount === 0" mat-icon-button (click)="editStep.emit()" [matTooltip]="tooltip">
   <mat-icon [svgIcon]="canUpdate ? 'edit' : 'visibility'"></mat-icon>
 </button>
 
