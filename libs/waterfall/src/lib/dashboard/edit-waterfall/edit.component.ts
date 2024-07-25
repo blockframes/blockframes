@@ -78,7 +78,7 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
     this.subs.push(sub);
 
     const stateModeSub = this.stateMode$.asObservable().subscribe(mode => {
-      if (mode === 'simulation') this.simulationForm.reset({ date: new Date(), fromScratch: true });
+      if (mode === 'simulation') this.simulationForm.reset({ date: new Date(), fromScratch: false });
     });
     this.subs.push(stateModeSub);
 
@@ -208,8 +208,26 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
   }
 
   public async simulate() {
-    const mode = this.stateMode$.value === 'actual' ? 'simulation' : 'actual';
-    if (mode === 'simulation') await this.shell.simulateWaterfall();
-    this.stateMode$.next(mode);
+    if (this.stateMode$.value === 'actual' && !this.canLeaveGraphForm) {
+      const dialogRef = this.dialog.open(ConfirmComponent, {
+        data: createModalData({
+          title: $localize`You are about to leave the Waterfall Builder`,
+          question: $localize`Some changes have not been saved. If you leave now, you might lose these changes`,
+          cancel: $localize`Cancel`,
+          confirm: $localize`Leave anyway`
+        }, 'small'),
+        autoFocus: false
+      });
+      dialogRef.afterClosed().subscribe(async (leave: boolean) => {
+        if (leave) {
+          await this.shell.simulateWaterfall();
+          this.stateMode$.next('simulation');
+        }
+      });
+    } else {
+      const mode = this.stateMode$.value === 'actual' ? 'simulation' : 'actual';
+      if (mode === 'simulation') await this.shell.simulateWaterfall();
+      this.stateMode$.next(mode);
+    }
   }
 }

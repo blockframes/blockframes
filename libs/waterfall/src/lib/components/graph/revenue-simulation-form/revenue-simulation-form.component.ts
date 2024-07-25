@@ -26,6 +26,7 @@ export class WaterfallRevenueSimulationFormComponent implements OnInit, OnDestro
   public versionId$ = this.shell.versionId$;
   public waterfall = this.shell.waterfall;
   public dateInputFormat = dateInputFormat;
+  public hasReportedStatements$ = this.shell.statements$.pipe(map(statements => statements.some(s => s.status === 'reported')))
 
   private producer = this.shell.waterfall.rightholders.find(r => r.roles.includes('producer'));
   private sub: Subscription;

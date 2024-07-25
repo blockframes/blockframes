@@ -332,17 +332,18 @@ export class IdentityComponent implements OnInit, OnDestroy {
     if (this.form.get('lastName').enabled && this.form.get('firstName').enabled) {
       const legalTerms = await this.authService.getLegalTerms();
       const privacyPolicy = legalTerms;
-      const termsAndConditions = {
-        [this.app]: legalTerms
-      }
-      await this.authService.update({
+      const termsAndConditions = { [this.app]: legalTerms };
+      const updatedUser: Partial<User> = {
         _meta: createDocumentMeta({ createdFrom: this.app }),
         firstName,
         lastName,
         privacyPolicy,
         termsAndConditions,
-        // TODO #9699 check if we need to populate preferred language for next emails
-      });
+      };
+
+      /** @dev i18n is only on waterfall app for now #9699 */
+      if (this.app === 'waterfall') updatedUser.settings = { preferredLanguage: this.preferredLanguage };
+      await this.authService.update(updatedUser);
     }
 
     const query = [

@@ -320,33 +320,32 @@
       <h2>
         <span i18n>Revenue Simulation</span>
       </h2>
-      <mat-slide-toggle *ngIf="!showSimulationResults$.value" [formControl]="simulationForm.get('fromScratch')" color="primary" i18n>Clear existing data ?</mat-slide-toggle>
       <button mat-icon-button (click)="cardModal.toggle()" [matTooltip]="cardModal.isOpened ? i18nStrings.shrink : i18nStrings.enlarge">
         <mat-icon [svgIcon]="cardModal.isOpened ? 'fullscreen_exit' : 'fullscreen'"></mat-icon>
       </button>
-      <button mat-icon-button matTooltip="Close" (click)="toggleEditPanel()" i18n-matTooltip>
+      <button mat-icon-button matTooltip="Exit Simulation" (click)="exitSimulation(true)" i18n-matTooltip>
         <mat-icon svgIcon="close"></mat-icon>
       </button>
     </header>
     <ng-container *ngIf="!showSimulationResults$.value">  
       <waterfall-revenue-simulation-form (simulationExited)="simulationExited.emit(true)" [form]="simulationForm"></waterfall-revenue-simulation-form>
       <footer>
+        <button mat-button (click)="exitSimulation()">
+          <span i18n>Exit Simulation</span>
+        </button>
         <button color="primary" mat-button (click)="populateSimulation()">
           <span i18n>Simulate revenue distribution</span>
-        </button>
-        <button color="warn" mat-button (click)="simulationExited.next(true)">
-          <span i18n>Exit Simulation</span>
         </button>
       </footer>
     </ng-container>
     <ng-container *ngIf="showSimulationResults$.value">
       <waterfall-revenue-simulation-results></waterfall-revenue-simulation-results>
       <footer>
+        <button mat-button (click)="exitSimulation()">
+          <span i18n>Exit Simulation</span>
+        </button>
         <button color="primary" mat-button (click)="showSimulationResults$.next(false)">
           <span i18n>Start new simulation</span>
-        </button>
-        <button color="warn" mat-button (click)="simulationExited.next(true)">
-          <span i18n>Exit Simulation</span>
         </button>
       </footer>
     </ng-container>
