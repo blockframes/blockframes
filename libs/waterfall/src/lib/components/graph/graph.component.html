@@ -123,53 +123,49 @@
         <mat-tab-group mat-stretch-tabs="false" #formTabs>
           <mat-tab [label]="(rightForm.get('type').value | isHorizontal) ? i18nStrings.groupDetais : i18nStrings.receiptsShare">
             <section [ngClass]="[cardModal.isOpened ? 'modal' : 'card']">
-              <p *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)" i18n>Fill the following fields to define the Receipt Share.</p>
+              <p *ngIf="!(rightForm.get('type').value | isHorizontal)" i18n>Fill the following fields to define the Receipt Share.</p>
               <p *ngIf="(rightForm.get('type').value | isHorizontal)" i18n>Fill the following fields to define the Group Details.</p>
-              <p *ngIf="(selected$.value | isStep : rights)" i18n>Fill the following fields to define the Step Details.</p>
   
-              <ng-container *ngIf="!(selected$.value | isStep : rights)">
-                <static-select *ngIf="!(rightForm.get('type').value | isHorizontal)" [control]="rightForm.get('type')" scope="rightTypes" [withoutValues]="['horizontal','vertical']" bfi18n>
-                  <mat-label>Type</mat-label>
-                </static-select>
-  
-                <bf-autocomplete *ngIf="(rightForm.get('type').value | isHorizontal)"
-                  required 
-                  label="Responsible of the Group"
-                  i18n-label
-                  error="Please select a Right Holder. Most likely the Producer."
-                  i18n-error
-                  hint="Responsible of the Group is most likely the Producer."
-                  i18n-hint
-                  [options]="rightholderNames$"
-                  placeholder="Choose Right Holder"
-                  i18n-placeholder
-                  [form]="rightholderControl"
-                ></bf-autocomplete>
+              <static-select *ngIf="!(rightForm.get('type').value | isHorizontal)" [control]="rightForm.get('type')" scope="rightTypes" [withoutValues]="['horizontal','vertical']" bfi18n>
+                <mat-label>Type</mat-label>
+              </static-select>
 
-                <bf-autocomplete *ngIf="!(rightForm.get('type').value | isHorizontal)"
-                  required 
-                  label="Right Holder Name"
-                  i18n-label
-                  error="To select a Right Holder, first add a contract with them."
-                  i18n-error
-                  [options]="rightholderNames$"
-                  placeholder="Choose Right Holder"
-                  i18n-placeholder
-                  [form]="rightholderControl"
-                ></bf-autocomplete>
-  
-                <mat-form-field *ngIf="!(rightForm.get('type').value | isHorizontal) && (relevantContracts$ | async).length" appearance="outline">
-                  <mat-label i18n>Contract</mat-label>
-                  <mat-select [formControl]="rightForm.get('contract')">
-                    <mat-option *ngFor="let contract of (relevantContracts$ | async)" [value]="contract.id">{{contract.name}}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </ng-container>
+              <bf-autocomplete *ngIf="(rightForm.get('type').value | isHorizontal)"
+                required 
+                label="Responsible of the Group"
+                i18n-label
+                error="Please select a Right Holder. Most likely the Producer."
+                i18n-error
+                hint="Responsible of the Group is most likely the Producer."
+                i18n-hint
+                [options]="rightholderNames$"
+                placeholder="Choose Right Holder"
+                i18n-placeholder
+                [form]="rightholderControl"
+              ></bf-autocomplete>
+
+              <bf-autocomplete *ngIf="!(rightForm.get('type').value | isHorizontal)"
+                required 
+                label="Right Holder Name"
+                i18n-label
+                error="To select a Right Holder, first add a contract with them."
+                i18n-error
+                [options]="rightholderNames$"
+                placeholder="Choose Right Holder"
+                i18n-placeholder
+                [form]="rightholderControl"
+              ></bf-autocomplete>
+
+              <mat-form-field *ngIf="!(rightForm.get('type').value | isHorizontal) && (relevantContracts$ | async).length" appearance="outline">
+                <mat-label i18n>Contract</mat-label>
+                <mat-select [formControl]="rightForm.get('contract')">
+                  <mat-option *ngFor="let contract of (relevantContracts$ | async)" [value]="contract.id">{{contract.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
       
               <mat-form-field appearance="outline">
-                <mat-label *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)" i18n>Receipt Share Name</mat-label>
+                <mat-label *ngIf="!(rightForm.get('type').value | isHorizontal)" i18n>Receipt Share Name</mat-label>
                 <mat-label *ngIf="(rightForm.get('type').value | isHorizontal)" i18n>Group Name</mat-label>
-                <mat-label *ngIf="(selected$.value | isStep : rights)" i18n>Step Name</mat-label>
                 <input matInput type="text" [placeholder]="(rightForm.get('type').value | isHorizontal) ? i18nStrings.groupName : i18nStrings.receiptShareName" [formControl]="rightForm.get('name')" />
               </mat-form-field>
       
@@ -179,23 +175,21 @@
                 <input matInput type="number" min="0" max="100" [formControl]="rightForm.get('percent')" />
               </mat-form-field>
       
-              <ng-container *ngIf="!(selected$.value | isStep : rights)">
-                <p i18n>Parent Revenue Element(s)</p>
-                <mat-form-field appearance="outline">
-                  <mat-label i18n>Parent Name(s)</mat-label>
-                  <mat-select multiple [formControl]="rightForm.get('parents')">
-                    <mat-option [matTooltip]="node.name" *ngFor="let node of (availableNodes$ | async)" [disabled]="node.disabled" [value]="node.id">{{ node.name }}</mat-option>
-                  </mat-select>
-                  <mat-hint i18n>Choose parent revenue elements from which this Receipt Share draw funds. You can add as many parents as you want.</mat-hint>
-                </mat-form-field>
-              </ng-container>
+              <p i18n>Parent Revenue Element(s)</p>
+              <mat-form-field appearance="outline">
+                <mat-label i18n>Parent Name(s)</mat-label>
+                <mat-select multiple [formControl]="rightForm.get('parents')">
+                  <mat-option [matTooltip]="node.name" *ngFor="let node of (availableNodes$ | async)" [disabled]="node.disabled" [value]="node.id">{{ node.name }}</mat-option>
+                </mat-select>
+                <mat-hint i18n>Choose parent revenue elements from which this Receipt Share draw funds. You can add as many parents as you want.</mat-hint>
+              </mat-form-field>
       
-              <div class="info" *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)">
+              <div class="info" *ngIf="!(rightForm.get('type').value | isHorizontal)">
                 <mat-icon svgIcon="info"></mat-icon>
                 <p i18n>If you have multiple steps, you can set them up later inside conditions.</p>
               </div>
       
-              <div class="add-next" *ngIf="!(selected$.value | isStep : rights)">
+              <div class="add-next">
                 <hr/>
                 <p class="mat-caption" i18n>Add Next Receipt Share</p>
                 <button 
@@ -208,7 +202,7 @@
               </div>
             </section>
           </mat-tab>
-          <mat-tab label="Conditions" [disabled]="(rightFormValid$ | async) === false" *ngIf="!(rightForm.get('type').value | isHorizontal) && !(selected$.value | isStep : rights)" i18n-label>
+          <mat-tab label="Conditions" [disabled]="(rightFormValid$ | async) === false" *ngIf="!(rightForm.get('type').value | isHorizontal)" i18n-label>
             <ng-template mat-tab-label>
               <label i18n [matTooltip]="(rightFormValid$ | async) === false ? invalidFormTooltip : ''">Conditions</label>
             </ng-template>
