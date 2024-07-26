@@ -272,7 +272,7 @@ export async function toGraph(rights: Right[], sources: WaterfallSource[], hidde
     nodes.push(createSourceNode({
       id: source.id,
       name: source.name,
-      children: source.destinationId ? [source.destinationId] : [],
+      children: source.destinationId && rights.find(r => r.id === source.destinationId) ? [source.destinationId] : [],
       medias: source.medias,
       territories: source.territories,
       version: source.version,
