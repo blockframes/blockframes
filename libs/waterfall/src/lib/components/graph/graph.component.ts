@@ -75,43 +75,39 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaterfallGraphComponent implements OnInit, OnDestroy {
-  @Input() set stateMode(mode: 'simulation' | 'actual') { this.stateMode$.next(mode); }
-  public stateMode$ = new BehaviorSubject<'simulation' | 'actual'>('actual');
-  public rightPanelMode$ = this.stateMode$.asObservable().pipe(
-    map(stateMode => {
+  public rightPanelMode$ = this.shell.stateMode$.asObservable().pipe(
+    tap(stateMode => {
       if (stateMode === 'simulation') {
         this.showEditPanel = true;
         this.rightForm.markAsPristine();
         this.sourceForm.markAsPristine();
         this.conditionFormPristine$.next(true);
         this.handleSelect('');
-        return 'simulation';
       } else {
         this.showSimulationResults$.next(false);
       }
-      return 'builder';
+      return stateMode;
     }));
   public showSimulationResults$ = new BehaviorSubject<boolean>(false);
   @Input() simulationForm: RevenueSimulationForm;
   @Input() set triggerNewSource(val: string) {
     if (val !== undefined) {
       this.createNewSource();
-      this.simulationExited.emit(true);
+      this.shell.stateMode$.next('builder');
     }
   }
   @Input() set triggerNewRight(val: string) {
     if (val !== undefined) {
       this.createNewRight();
-      this.simulationExited.emit(true);
+      this.shell.stateMode$.next('builder');
     }
   }
   @Input() set triggerUnselect(val: string) {
     if (val !== undefined) {
       this.select('');
-      this.simulationExited.emit(true);
+      this.shell.stateMode$.next('builder');
     }
   }
-  @Output() simulationExited = new EventEmitter<boolean>(false);
   @Output() canLeaveGraphForm = new EventEmitter<boolean>(true);
   public showEditPanel = true;
   public waterfall = this.shell.waterfall;
@@ -143,7 +139,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   public arrows$ = new BehaviorSubject<Arrow[]>([]);
   public rightForm = createRightForm();
   public rightFormValid$ = new BehaviorSubject<boolean>(true);
-  public invalidFormTooltip = $localize`Please fill all required fields`;
+  public invalidFormTooltip = $localize`Please fill all required fields.`;
   public sourceForm = createSourceForm();
   public rightholderControl = new FormControl<string>('');
   public rightholderNames$ = new BehaviorSubject<string[]>([]);
@@ -258,11 +254,15 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       if (rightholder) {
         if (this.rightForm.controls.org.value !== rightholder.name) {
           this.rightForm.markAsDirty();
+          this.canLeaveGraphForm.emit(false);
           this.rightForm.controls.org.setValue(rightholder.name);
         }
       } else {
         this.rightholderControl.setErrors({ invalidValue: true });
-        if (name !== '' && this.rightForm.controls.org.value) this.rightForm.markAsDirty();
+        if (name !== '' && this.rightForm.controls.org.value) {
+          this.rightForm.markAsDirty();
+          this.canLeaveGraphForm.emit(false);
+        }
       }
     }));
 
@@ -342,7 +342,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   select(id: string) {
     if (id == this.selected$.value) return;
 
-    if (this.stateMode$.value === 'simulation') {
+    if (this.shell.stateMode$.value === 'simulation') {
       if (!this.simulationForm.pristine) {
         const dialogRef = this.dialog.open(ConfirmComponent, {
           data: createModalData({
@@ -355,7 +355,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
         });
         const sub = dialogRef.afterClosed().subscribe((leave: boolean) => {
           if (leave) {
-            this.simulationExited.next(true);
+            this.shell.stateMode$.next('builder');
             return this.handleSelect(id);
           } else {
             return;
@@ -364,7 +364,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(sub);
       } else {
-        this.simulationExited.next(true);
+        this.shell.stateMode$.next('builder');
         return this.handleSelect(id);
       }
 
@@ -894,14 +894,14 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       });
       const sub = dialogRef.afterClosed().subscribe((leave: boolean) => {
         if (leave) {
-          this.simulationExited.next(true);
+          this.shell.stateMode$.next('builder');
           if (this.cardModal.isOpened) this.cardModal.toggle();
         }
       });
 
       this.subscriptions.push(sub);
     } else {
-      this.simulationExited.next(true);
+      this.shell.stateMode$.next('builder');
       if (this.cardModal.isOpened) this.cardModal.toggle();
     }
   }

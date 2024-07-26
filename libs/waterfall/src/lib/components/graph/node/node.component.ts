@@ -14,7 +14,6 @@ export class WaterfallGraphNodeComponent implements OnInit, OnDestroy {
   @Input() public node: Node;
   @Input() public selected = '';
   @Input() public nonEditableNodeIds: string[] = [];
-  @Input() public stateMode: 'simulation' | 'actual' = 'actual'; // TODO #9896 rename actual to waterfall (ie not simulated) ?
 
   @Output() addChild = new EventEmitter<string>();
   @Output() addSibling = new EventEmitter<string>();

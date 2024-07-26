@@ -382,6 +382,11 @@ export class DashboardWaterfallShellComponent implements OnInit, OnDestroy {
   public hiddenRightHolderIds$ = new BehaviorSubject<string[]>([]);
   public revenueMode$: BehaviorSubject<'calculated' | 'actual'> = new BehaviorSubject('calculated'); // keyof AmountState
 
+  // ---------
+  // Builder options
+  // ---------
+  public stateMode$ = new BehaviorSubject<'simulation' | 'builder'>('builder');
+
   @Input() routes: RouteDescription[];
   @Input() editRoute?: string | string[];
   @Input() @boolean lite = false;

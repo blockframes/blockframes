@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, startWith, switchMap } from 'rxjs';
+import { combineLatest, map, startWith, switchMap } from 'rxjs';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import { HorizontalNode, VerticalNode } from '../layout';
 import { boolean } from '@blockframes/utils/decorators/decorators';
@@ -16,15 +16,13 @@ export class WaterfallGraphVerticalComponent implements OnInit {
   @Input() public group: HorizontalNode;
   @Input() @boolean public selected = false;
   @Input() public nonEditableNodeIds: string[] = [];
-  @Input() public set stateMode(mode: 'simulation' | 'actual') { this.stateMode$.next(mode); }
-  public stateMode$ = new BehaviorSubject<'simulation' | 'actual'>('actual');
 
   @Output() addChild = new EventEmitter<string>();
   @Output() addSibling = new EventEmitter<string>();
   @Output() handleSelect = new EventEmitter<string>();
 
-  public amount$ = this.stateMode$.pipe(
-    switchMap(mode => combineLatest([mode === 'actual' ? this.shell.state$ : this.shell.simulation$, this.shell.revenueMode$])),
+  public amount$ = this.shell.stateMode$.pipe(
+    switchMap(mode => combineLatest([mode === 'builder' ? this.shell.state$ : this.shell.simulation$, this.shell.revenueMode$])),
     map(([state, revenueMode]) => state.waterfall.state.verticals[this.vertical.id]?.revenu[revenueMode] ?? 0),
     startWith(0),
   );

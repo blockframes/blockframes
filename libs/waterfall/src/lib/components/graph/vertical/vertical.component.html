@@ -8,7 +8,6 @@
         [right]="member"
         [nonEditableNodeIds]="[member.id]"
         [selected]="selected"
-        [stateMode]="stateMode$.value"
         (handleSelect)="handleSelect.emit(vertical.id)"
         monetizationLabel='Revenue'
         i18n-monetizationLabel
@@ -20,7 +19,6 @@
         [right]="member"
         (handleSelect)="handleSelect.emit(vertical.id)"
         [selected]="selected"
-        [stateMode]="stateMode$.value"
       ></waterfall-graph-level>
     </ng-template>
     <svg *ngIf="!isLast" width="240" height="32" viewBox="0 0 240 32">
