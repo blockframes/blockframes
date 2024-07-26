@@ -1,0 +1,22 @@
+<ng-container *ngIf="steps[0].length === 0">
+  <p i18n class="no-conditions">There are no conditions for this receipt share.</p>
+</ng-container>
+
+<ng-container *ngFor="let step of steps; let stepIndex = index">
+  <ng-container *ngIf="selectedStep$.value === stepIndex; else item">
+    <p class="step" *ngIf="step.length" i18n>Treshold {{ stepIndex + 1 }}</p>
+  
+    <waterfall-condition-item
+      *ngFor="let condition of step; let conditionIndex = index"
+      [canUpdate]="canUpdate" 
+      [condition]="condition" 
+      (edit)="displayCondition(conditionIndex)"
+    ></waterfall-condition-item>
+
+    <waterfall-conditions-form [form]="conditionForm" [rightId]="rightId"></waterfall-conditions-form>
+
+  </ng-container>
+  <ng-template #item>
+    <waterfall-step-item class="surface" [index]="stepIndex" [conditionCount]="step.length" (editStep)="selectStep(stepIndex)" [canUpdate]="canUpdate"></waterfall-step-item>
+  </ng-template>
+</ng-container>

@@ -19,7 +19,6 @@ import { WaterfallGraphLabelModule } from './label/label.module';
 import { WaterfallPoolListModule } from './pool-list/pool-list.module';
 import { WaterfallRightListModule } from './right-list/right-list.module';
 import { WaterfallConditionsModule } from './conditions/conditions.module';
-import { WaterfallGraphNodeDetailsModule } from './node-details/node-details.module';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 import { GraphNodePipeModule } from '../../pipes/graph-node-pipe';
 import { WaterfallRevenueSimulationFormModule } from './revenue-simulation-form/revenue-simulation-form.module';
@@ -34,7 +33,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [WaterfallGraphComponent, GetNodePipe, GetGroupPipe],
@@ -53,7 +51,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     WaterfallRightListModule,
     WaterfallGraphLabelModule,
     WaterfallConditionsModule,
-    WaterfallGraphNodeDetailsModule,
     WaterfallRevenueSimulationFormModule,
     WaterfallRevenueSimulationResultsModule,
     ConfirmModule,

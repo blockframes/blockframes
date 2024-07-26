@@ -89,8 +89,8 @@
             [matTooltip]="(shell.canInitWaterfall$ | async) === false  ? missingSimulationData : ''"
           >
             <mat-icon svgIcon="default_currency"></mat-icon>
-            <span *ngIf="stateMode$.value === 'actual'" i18n>Start Revenue Simulation</span>
-            <span *ngIf="stateMode$.value === 'simulation'" i18n>Exit Simulation</span>
+            <span *ngIf="shell.stateMode$.value === 'builder'" i18n>Start Revenue Simulation</span>
+            <span *ngIf="shell.stateMode$.value === 'simulation'" i18n>Exit Simulation</span>
           </button>
         </span>
 
@@ -101,9 +101,7 @@
       </div>
       <waterfall-graph 
         (canLeaveGraphForm)="canLeaveGraphForm = $event"
-        (simulationExited)="stateMode$.next('actual')"
         [simulationForm]="simulationForm"
-        [stateMode]="stateMode$ | async"
         [triggerNewSource]="triggerNewSource$ | async"
         [triggerNewRight]="triggerNewRight$ | async"
         [triggerUnselect]="triggerUnselect$ | async"

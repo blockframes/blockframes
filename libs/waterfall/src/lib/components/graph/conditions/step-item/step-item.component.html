@@ -1,13 +1,13 @@
 
-<p i18n>Step {{ index + 1}}</p>
+<p i18n>Treshold {{ index + 1}}</p>
 <p>({{conditionCount}} condition{{ conditionCount > 1 ? 's' : '' }})</p>
 
 <span class="spacer"></span>
 
-<button mat-icon-button (click)="editStep.emit()" [matTooltip]="tooltip">
+<button [disabled]="!canUpdate && conditionCount === 0" mat-icon-button (click)="editStep.emit()" [matTooltip]="tooltip">
   <mat-icon [svgIcon]="canUpdate ? 'edit' : 'visibility'"></mat-icon>
 </button>
 
-<button *ngIf="canUpdate" mat-icon-button (click)="deleteStep.emit()" matTooltip="Delete Step Conditions" i18n-matTooltip>
+<button *ngIf="canUpdate" mat-icon-button (click)="deleteStep.emit()" matTooltip="Delete Treshold Conditions" i18n-matTooltip>
   <mat-icon svgIcon="delete"></mat-icon>
 </button>

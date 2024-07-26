@@ -140,7 +140,7 @@ const SOURCE_HEIGHT = 70;
 const SPACING = 32;
 
 
-export async function toGraph(rights: Right[], sources: WaterfallSource[], hiddenRightHolderIds: string[]) {
+export async function toGraph(rights: Right[], sources: WaterfallSource[], hiddenRightHolderIds: string[] = []) {
 
   const dedupeOrgs = new Set<string>();
   rights.forEach(right => dedupeOrgs.add(right.rightholderId));
@@ -774,7 +774,7 @@ export function createChild(parentId: string, graph: Node[], producerId: string)
   }
 }
 
-export function createStep(nodeId: string, graph: Node[], groupName?: string) {
+export function createStep(nodeId: string, graph: Node[], groupName?: string): { currentStepName?: string, groupId: string } {
   const group = graph.find(n => n.type === 'horizontal' && (n as HorizontalNode).members.find(m => m.id === nodeId)) as HorizontalNode;
   const groupIndex = group?.members.findIndex(member => member.id === nodeId);
   const isGroupChild = groupIndex !== undefined && groupIndex !== -1;
@@ -794,22 +794,23 @@ export function createStep(nodeId: string, graph: Node[], groupName?: string) {
 
     // update current node
     const children = [...node.children];
-    const currentStepName = $localize`Step 1`;
+    const currentStepName = $localize`Treshold 1`;
     node.name = currentStepName;
     node.children = [];
 
     // create a new step right
     const right1 = createRightNode({
       id: createNodeId('z-right'),
-      name: $localize`Step 2`,
+      name: $localize`Treshold 2`,
       rightHolderId: node.rightHolderId ?? '',
       version: node.version,
     });
 
     // create a new vertical group
     const members = [node, right1];
+    const newGroupId = createNodeId('z-group');
     const verticalNode = createVerticalNode({
-      id: createNodeId('z-group'),
+      id: newGroupId,
       name: groupName || newGroupDefaultName,
       members,
       children,
@@ -829,18 +830,19 @@ export function createStep(nodeId: string, graph: Node[], groupName?: string) {
       });
     }
 
-    return currentStepName;
-  } else if (node.type === 'vertical') { // if current node is already a vertical group simply add a new member
+    return { currentStepName, groupId: newGroupId };
+  }
+
+  if (node.type === 'vertical') { // if current node is already a vertical group simply add a new member
     const right = createRightNode({
       id: createNodeId('z-right'),
-      name: $localize`Step ${node.members.length + 1}`,
+      name: $localize`Treshold ${node.members.length + 1}`,
       rightHolderId: node.members[0].rightHolderId ?? '',
       version: node.version,
     });
     node.members.push(right);
     node.height = RIGHT_HEIGHT + (LEVEL_HEIGHT * (node.members.length - 1)) + (SPACING * (node.members.length + 1));
-  } else {
-    return;
+    return { groupId: node.id };
   }
 }
 
@@ -857,7 +859,7 @@ export function deleteStep(groupId: string, stepIndex: number, graph: Node[]) {
   vGroup.members.splice(stepIndex, 1);
 
   vGroup.members.forEach((member, index) => {
-    member.name = $localize`Step ${index + 1}`;
+    member.name = $localize`Treshold ${index + 1}`;
   });
 
   // if the group has only one member left, remove the group

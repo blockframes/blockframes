@@ -49,7 +49,6 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
   public createMode = !hasDefaultVersion(this.shell.waterfall);
   public manualCreation$ = new BehaviorSubject(false);
   public canLeaveGraphForm = true;
-  public stateMode$ = new BehaviorSubject<'simulation' | 'actual'>('actual');
   public triggerNewSource$ = new BehaviorSubject<boolean>(undefined);
   public triggerNewRight$ = new BehaviorSubject<boolean>(undefined);
   public triggerUnselect$ = new BehaviorSubject<boolean>(undefined);
@@ -77,13 +76,13 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
     });
     this.subs.push(sub);
 
-    const stateModeSub = this.stateMode$.asObservable().subscribe(mode => {
+    const stateModeSub = this.shell.stateMode$.asObservable().subscribe(mode => {
       if (mode === 'simulation') this.simulationForm.reset({ date: new Date(), fromScratch: false });
     });
     this.subs.push(stateModeSub);
 
     const versionSub = this.shell.versionId$.subscribe(_ => {
-      if (this.stateMode$.value === 'simulation') {
+      if (this.shell.stateMode$.value === 'simulation') {
         const incomes = this.simulationForm.get('incomes').value;
         const expenses = this.simulationForm.get('expenses').value;
         const fromScratch = this.simulationForm.get('fromScratch').value;
@@ -100,7 +99,7 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
     this.subs.push(duplicateVersionSub);
 
     const waterfallReadySub = this.shell.canInitWaterfall$.subscribe(canInit => {
-      if (!canInit) this.stateMode$.next('actual');
+      if (!canInit) this.shell.stateMode$.next('builder');
     });
     this.subs.push(waterfallReadySub);
   }
@@ -208,7 +207,7 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
   }
 
   public async simulate() {
-    if (this.stateMode$.value === 'actual' && !this.canLeaveGraphForm) {
+    if (this.shell.stateMode$.value === 'builder' && !this.canLeaveGraphForm) {
       const dialogRef = this.dialog.open(ConfirmComponent, {
         data: createModalData({
           title: $localize`You are about to leave the Waterfall Builder`,
@@ -221,13 +220,13 @@ export class WaterfallEditFormComponent implements WaterfallFormGuardedComponent
       dialogRef.afterClosed().subscribe(async (leave: boolean) => {
         if (leave) {
           await this.shell.simulateWaterfall();
-          this.stateMode$.next('simulation');
+          this.shell.stateMode$.next('simulation');
         }
       });
     } else {
-      const mode = this.stateMode$.value === 'actual' ? 'simulation' : 'actual';
+      const mode = this.shell.stateMode$.value === 'builder' ? 'simulation' : 'builder';
       if (mode === 'simulation') await this.shell.simulateWaterfall();
-      this.stateMode$.next(mode);
+      this.shell.stateMode$.next(mode);
     }
   }
 }

@@ -15,7 +15,6 @@ export class WaterfallConditionsComponent implements OnInit, OnDestroy {
 
   @Input() public rightForm: RightForm;
   @Input() @boolean public canUpdate = true;
-  @Input() @boolean public readOnly = false;
   @Input() public set rightId(id: string) {
     this.conditionForm.reset();
     if (this.canUpdate) {
@@ -28,15 +27,20 @@ export class WaterfallConditionsComponent implements OnInit, OnDestroy {
     const steps = this.rightForm.get('steps').value;
     this.index = steps[0]?.length || 0;
     this._rightId = id;
+    this.showConditionForm$.next(steps[0].length > 0);
+    this.lastStepEmpty$.next(steps[steps.length - 1].length === 0); // TODO #9896 not working well (when adding first cond and other cases), check
   }
 
   public get rightId() { return this._rightId; }
   public selectedStep$ = new BehaviorSubject<number>(0);
+  public showConditionForm$ = new BehaviorSubject<boolean>(false);
+  public lastStepEmpty$ = new BehaviorSubject<boolean>(false);
   public newCondition: Condition | undefined = undefined;
   public conditionForm = new ConditionForm();
 
   @Output() createStep = new EventEmitter();
   @Output() deleteStep = new EventEmitter();
+  @Output() openModal = new EventEmitter<boolean>(false);
   @Output() validCondition = new EventEmitter<{ rightId: string, condition: Condition, step: number, index: number }>();
   @Output() conditionFormPristine = new EventEmitter<boolean>();
 
@@ -58,10 +62,12 @@ export class WaterfallConditionsComponent implements OnInit, OnDestroy {
       }
     });
 
+    // TODO #9896 remove ?
     const nameSub = this.rightForm.get('name').valueChanges.subscribe(name => {
       this.rightForm.get('name').setValue(name, { emitEvent: false });
     });
 
+    // TODO #9896 remove
     const typeSub = this.rightForm.get('type').valueChanges.subscribe(type => {
       this.rightForm.get('type').setValue(type, { emitEvent: false });
     });
@@ -78,6 +84,11 @@ export class WaterfallConditionsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subs.forEach(sub => sub?.unsubscribe());
+  }
+
+  addFirstStep() {
+    this.showConditionForm$.next(true);
+    this.openModal.emit(true);
   }
 
   addNewCondition(index: number) {

@@ -1,7 +1,5 @@
-<ng-container *ngIf="!readOnly">
-  <p i18n>Please chose a condition that will influence your waterfall.</p>
-  <p i18n>According to the type you chose, the fields will adapt.</p>
-  
+<ng-container *ngIf="showConditionForm$ | async else noConditions">
+  <!-- TODO #9896 remove-->
   <div class="right">
     <static-select [control]="rightForm.controls.type" scope="rightTypes" [withoutValues]="['horizontal','vertical']" bfi18n>
       <mat-label i18n>Receipt Share Type</mat-label>
@@ -11,41 +9,41 @@
       <input matInput type="text" [formControl]="rightForm.controls.name" />
     </mat-form-field>
   </div>
-  
-  <hr />
-</ng-container>
 
-<ng-container *ngIf="readOnly && rightForm.controls.steps.value[0].length === 0">
-  <p i18n class="no-conditions">There are no conditions for this receipt share.</p>
-</ng-container>
 
-<ng-container *ngFor="let step of rightForm.controls.steps.value; let stepIndex = index">
-  <ng-container *ngIf="selectedStep$.value === stepIndex; else item">
-    <p class="step" *ngIf="canUpdate || step.length" i18n>Step {{stepIndex + 1}}</p>
-  
-    <waterfall-condition-item
-      *ngFor="let condition of step; let conditionIndex = index"
-      [canUpdate]="canUpdate" 
-      [condition]="condition" 
-      (edit)="editCondition(conditionIndex)" 
-      (delete)="deleteCondition(conditionIndex)"
-    ></waterfall-condition-item>
+  <!-- end remove-->
 
-    <waterfall-conditions-form [form]="conditionForm" [rightId]="rightId"></waterfall-conditions-form>
+  <ng-container *ngFor="let step of rightForm.controls.steps.value; let stepIndex = index">
+    <ng-container *ngIf="selectedStep$.value === stepIndex; else item">
+      <section>
+        <p *ngIf="canUpdate || step.length" i18n>Treshold {{ stepIndex + 1 }}</p>
+        <button mat-button color="primary" [disabled]="!newCondition || !canUpdate" (click)="addNewCondition(step.length)">
+          <mat-icon svgIcon="add"></mat-icon>
+          <span i18n>Add condition</span>
+        </button>
+      </section>
+    
+      <waterfall-condition-item
+        *ngFor="let condition of step; let conditionIndex = index"
+        [canUpdate]="canUpdate" 
+        [condition]="condition" 
+        (edit)="editCondition(conditionIndex)" 
+        (delete)="deleteCondition(conditionIndex)"
+      ></waterfall-condition-item>
 
-    <div class="add-next" *ngIf="canUpdate">
-      <hr />
-      <p class="mat-caption" i18n>Add Next Condition</p>
-      <button mat-mini-fab color="primary" [disabled]="!newCondition || !canUpdate" (click)="addNewCondition(step.length)">
-        <mat-icon svgIcon="add"></mat-icon>
-      </button>
-    </div>
+      <waterfall-conditions-form [form]="conditionForm" [rightId]="rightId"></waterfall-conditions-form>
+    </ng-container>
+    <ng-template #item>
+      <waterfall-step-item class="surface" [index]="stepIndex" [conditionCount]="step.length" (editStep)="selectStep(stepIndex)" (deleteStep)="removeStep(stepIndex)" [canUpdate]="canUpdate"></waterfall-step-item>
+    </ng-template>
   </ng-container>
-  <ng-template #item>
-    <waterfall-step-item class="surface" [index]="stepIndex" [conditionCount]="step.length" (editStep)="selectStep(stepIndex)" (deleteStep)="removeStep(stepIndex)" [canUpdate]="canUpdate"></waterfall-step-item>
-  </ng-template>
+
+  <mat-divider></mat-divider>
+  <button class="add-step" mat-flat-button color="primary" [disabled]="!canUpdate || (lastStepEmpty$ | async)" (click)="addStep()" i18n>Add another Treshold</button>
 </ng-container>
 
-<div class="add-step" *ngIf="!readOnly">
-  <button mat-button color="primary" [disabled]="!canUpdate" (click)="addStep()" i18n>Add New Step</button>
-</div>
+<ng-template #noConditions>
+  <p i18n>The conditions will be tested in order that if they are true, the Receipt Share will take its percentage.</p>
+  <p i18n>You are working with <strong>{{ rightForm.controls.name.value }}</strong>.</p>
+  <button mat-flat-button color="primary" [disabled]="!canUpdate" (click)="addFirstStep()" i18n>Add Threshold</button>
+</ng-template>

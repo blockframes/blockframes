@@ -18,6 +18,7 @@ import { WriteBatch } from 'firebase/firestore';
 import { BehaviorSubject, Observable, Subscription, combineLatest, map, tap } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTabGroup } from '@angular/material/tabs';
 import {
   Right,
   Version,
@@ -42,7 +43,6 @@ import {
   getNonEditableNodeIds,
   preferredLanguage,
 } from '@blockframes/model';
-import { boolean } from '@blockframes/utils/decorators/decorators';
 import { GraphService } from '@blockframes/ui/graph/graph.service';
 import { CardModalComponent, cardModalI18nStrings } from '@blockframes/ui/card-modal/card-modal.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
@@ -75,47 +75,41 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaterfallGraphComponent implements OnInit, OnDestroy {
-
-  @Input() @boolean public readonly = false;
-  @Input() set stateMode(mode: 'simulation' | 'actual') { this.stateMode$.next(mode); }
-  public stateMode$ = new BehaviorSubject<'simulation' | 'actual'>('actual');
-  public rightPanelMode$ = this.stateMode$.asObservable().pipe(
-    map(stateMode => {
+  public rightPanelMode$ = this.shell.stateMode$.asObservable().pipe(
+    tap(stateMode => {
       if (stateMode === 'simulation') {
         this.showEditPanel = true;
         this.rightForm.markAsPristine();
         this.sourceForm.markAsPristine();
         this.conditionFormPristine$.next(true);
         this.handleSelect('');
-        return 'simulation';
       } else {
         this.showSimulationResults$.next(false);
       }
-      return this.readonly ? 'readonly' : 'builder';
+      return stateMode;
     }));
   public showSimulationResults$ = new BehaviorSubject<boolean>(false);
   @Input() simulationForm: RevenueSimulationForm;
   @Input() set triggerNewSource(val: string) {
     if (val !== undefined) {
       this.createNewSource();
-      this.simulationExited.emit(true);
+      this.shell.stateMode$.next('builder');
     }
   }
   @Input() set triggerNewRight(val: string) {
     if (val !== undefined) {
       this.createNewRight();
-      this.simulationExited.emit(true);
+      this.shell.stateMode$.next('builder');
     }
   }
   @Input() set triggerUnselect(val: string) {
     if (val !== undefined) {
       this.select('');
-      this.simulationExited.emit(true);
+      this.shell.stateMode$.next('builder');
     }
   }
-  @Output() simulationExited = new EventEmitter<boolean>(false);
   @Output() canLeaveGraphForm = new EventEmitter<boolean>(true);
-  public showEditPanel = this.shell.canBypassRules;
+  public showEditPanel = true;
   public waterfall = this.shell.waterfall;
   public isDefaultVersion: boolean;
   public isDuplicateVersion = false;
@@ -144,6 +138,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   );
   public arrows$ = new BehaviorSubject<Arrow[]>([]);
   public rightForm = createRightForm();
+  public rightFormValid$ = new BehaviorSubject<boolean>(true);
+  public invalidFormTooltip = $localize`Please fill all required fields.`;
   public sourceForm = createSourceForm();
   public rightholderControl = new FormControl<string>('');
   public rightholderNames$ = new BehaviorSubject<string[]>([]);
@@ -168,6 +164,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   private contracts: WaterfallContract[];
 
   @ViewChild(CardModalComponent, { static: true }) cardModal: CardModalComponent;
+  @ViewChild('formTabs', { static: false }) formTabs: MatTabGroup;
 
   constructor(
     private dialog: MatDialog,
@@ -182,17 +179,11 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const lang = preferredLanguage();
-    if (this.readonly) this.showEditPanel = false;
     if (!this.producer) {
-      this.snackBar.open(`${toLabel('producer', 'rightholderRoles', undefined, undefined, lang)} is not defined.`, this.shell.canBypassRules ? 'WATERFALL MANAGEMENT' : 'ASK FOR HELP', { duration: 5000 })
+      const message = $localize`${toLabel('producer', 'rightholderRoles', undefined, undefined, lang)} is not defined.`;
+      this.snackBar.open(message, $localize`WATERFALL MANAGEMENT`, { duration: 5000 })
         .onAction()
-        .subscribe(() => {
-          if (this.shell.canBypassRules) {
-            this.router.navigate(['c/o/dashboard/title', this.waterfallId, 'init']);
-          } else {
-            this.intercom.show($localize`${toLabel('producer', 'rightholderRoles', undefined, undefined, lang)} is not defined in the waterfall "${this.shell.movie.title.international}"`);
-          }
-        });
+        .subscribe(() => this.router.navigate(['c/o/dashboard/title', this.waterfallId, 'init']));
     }
 
     this.subscriptions.push(combineLatest([
@@ -202,9 +193,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.shell.versionId$.pipe(tap(_ => this.select(''))),
       this.shell.statements$.pipe(map(statements => statements.filter(s => s.status === 'reported'))),
       this.shell.contracts$,
-      this.shell.hiddenRightHolderIds$,
       this.shell.incomes$,
-    ]).subscribe(([rights, sources, waterfall, versionId, reportedStatements, contracts, hiddenRightHolderIds, incomes]) => {
+    ]).subscribe(([rights, sources, waterfall, versionId, reportedStatements, contracts, incomes]) => {
       this.rights = rights;
       this.contracts = contracts;
       this.version = waterfall.versions.find(v => v.id === versionId);
@@ -220,29 +210,24 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.sourceForm.enable();
       this.rightForm.enable();
 
-      if (this.readonly) {
+      this.nonEditableNodeIds$.next([]);
+      this.nonPartiallyEditableNodeIds$.next(this.nonEditableNodeIds$.value);
+
+      this.isDuplicateVersion = this.version?.id && !this.isDefaultVersion && !this.version.standalone;
+
+      if (this.isDuplicateVersion) {
         this.nonEditableNodeIds$.next(allNodeIds); // All nodes are non-editable
-        this.nonPartiallyEditableNodeIds$.next(this.nonEditableNodeIds$.value); // All nodes are non-editable
+        // Nodes not "touched" by a reported statement are still partially editable (percentage and conditions)
+        this.nonPartiallyEditableNodeIds$.next(getNonEditableNodeIds(rights, this.sources, reportedStatements, incomes));
+        // Re-partially disable current selected form
+        this.setFormState(this.selected$.value);
       } else {
-        this.nonEditableNodeIds$.next([]);
+        // Nodes not "touched" by a reported statement are still fully editable
+        this.nonEditableNodeIds$.next(getNonEditableNodeIds(rights, this.sources, reportedStatements, incomes));
         this.nonPartiallyEditableNodeIds$.next(this.nonEditableNodeIds$.value);
-
-        this.isDuplicateVersion = this.version?.id && !this.isDefaultVersion && !this.version.standalone;
-
-        if (this.isDuplicateVersion) {
-          this.nonEditableNodeIds$.next(allNodeIds); // All nodes are non-editable
-          // Nodes not "touched" by a reported statement are still partially editable (percentage and conditions)
-          this.nonPartiallyEditableNodeIds$.next(getNonEditableNodeIds(rights, this.sources, reportedStatements, incomes));
-          // Re-partially disable current selected form
-          this.setFormState(this.selected$.value);
-        } else {
-          // Nodes not "touched" by a reported statement are still fully editable
-          this.nonEditableNodeIds$.next(getNonEditableNodeIds(rights, this.sources, reportedStatements, incomes));
-          this.nonPartiallyEditableNodeIds$.next(this.nonEditableNodeIds$.value);
-        }
       }
 
-      this.layout(hiddenRightHolderIds);
+      this.layout();
     }));
 
     this.subscriptions.push(this.rightForm.controls.org.valueChanges.subscribe(org => {
@@ -269,11 +254,15 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       if (rightholder) {
         if (this.rightForm.controls.org.value !== rightholder.name) {
           this.rightForm.markAsDirty();
+          this.canLeaveGraphForm.emit(false);
           this.rightForm.controls.org.setValue(rightholder.name);
         }
       } else {
         this.rightholderControl.setErrors({ invalidValue: true });
-        if (name !== '' && this.rightForm.controls.org.value) this.rightForm.markAsDirty();
+        if (name !== '' && this.rightForm.controls.org.value) {
+          this.rightForm.markAsDirty();
+          this.canLeaveGraphForm.emit(false);
+        }
       }
     }));
 
@@ -281,6 +270,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.sourceForm.controls.territories.valueChanges.subscribe(territories => this.updateSourceName(undefined, territories)));
 
     this.subscriptions.push(combineLatest([this.rightForm.valueChanges, this.sourceForm.valueChanges, this.conditionFormPristine$]).subscribe(() => {
+      this.rightFormValid$.next(this.rightFormValid());
       const canLeaveGraphForm = this.rightForm.pristine && this.sourceForm.pristine && this.conditionFormPristine$.value;
       this.canLeaveGraphForm.emit(canLeaveGraphForm);
     }));
@@ -288,6 +278,19 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
+  private rightFormValid() {
+    const rightholderName = this.rightForm.controls.org.value;
+    const rightholder = this.rightholders.find(r => r.name === rightholderName);
+    if (!rightholder) return false;
+
+    const invalidContract = this.producer?.id !== rightholder.id &&
+      this.rightForm.controls.type.value !== 'horizontal' &&
+      !this.rightForm.controls.contract.value;
+    if (invalidContract) return false;
+
+    return true;
   }
 
   private setFormState(selected: string) {
@@ -339,7 +342,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   select(id: string) {
     if (id == this.selected$.value) return;
 
-    if (this.stateMode$.value === 'simulation') {
+    if (this.shell.stateMode$.value === 'simulation') {
       if (!this.simulationForm.pristine) {
         const dialogRef = this.dialog.open(ConfirmComponent, {
           data: createModalData({
@@ -352,7 +355,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
         });
         const sub = dialogRef.afterClosed().subscribe((leave: boolean) => {
           if (leave) {
-            this.simulationExited.next(true);
+            this.shell.stateMode$.next('builder');
             return this.handleSelect(id);
           } else {
             return;
@@ -361,7 +364,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(sub);
       } else {
-        this.simulationExited.next(true);
+        this.shell.stateMode$.next('builder');
         return this.handleSelect(id);
       }
 
@@ -372,15 +375,6 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   private handleSelect(id: string) {
     if (this.cardModal.isOpened) this.cardModal.toggle();
-    if (this.readonly) {
-      if (id) {
-        const right = this.rights.find(right => right.id === id);
-        this.showEditPanel = !!right && right.type !== 'horizontal';
-      } else {
-        this.showEditPanel = false;
-      }
-      return this._select(id);
-    }
     const allPristine = this.rightForm.pristine && this.sourceForm.pristine && this.conditionFormPristine$.value;
     if (allPristine) return this._select(id);
 
@@ -470,6 +464,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       const rightholderName = this.rightholders.find(r => r.id === rightholderId)?.name ?? '';
       const parents = this.nodes$.getValue().filter(node => node.children.includes(right.groupId || id)); // do not use ?? instead of ||, it will break since '' can be considered truthy
       setRightFormValue(this.rightForm, { ...right, type, rightholderId: rightholderName, nextIds: parents.map(parent => parent.id) }, steps);
+      if (this.formTabs && !this.rightFormValid()) this.formTabs.selectedIndex = 0;
     }
   }
 
@@ -578,8 +573,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     this.snackBar.open($localize`Receipt Source saved`, 'close', { duration: 3000 });
   }
 
-  async layout(hiddenRightHolderIds: string[]) {
-    const { nodes, arrows, bounds } = await toGraph(this.rights, this.sources, hiddenRightHolderIds);
+  async layout() {
+    const { nodes, arrows, bounds } = await toGraph(this.rights, this.sources);
     this.service.updateBounds(bounds);
     this.nodes$.next(nodes);
     this.arrows$.next(arrows);
@@ -643,7 +638,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.snackBar.open($localize`Operation not permitted.`, 'close', { duration: 5000 });
       return;
     }
-    const currentStepName = createStep(rightId, graph, this.rightForm.controls.name.value);
+    const { currentStepName, groupId } = createStep(rightId, graph, this.rightForm.controls.name.value);
     const newGraph = fromGraph(graph, this.version);
     const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
     if (currentStepName) this.rightForm.controls.name.setValue(currentStepName);
@@ -655,7 +650,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.rightService.remove(changes.deleted.rights.map(r => r.id), { params: { waterfallId: this.waterfallId }, write }),
       this.updateSources(newGraph.sources, write),
     ]);
-    return write.commit();
+    await write.commit();
+    this.select(groupId);
+    if (this.formTabs) this.formTabs.selectedIndex = 1;
   }
 
   async deleteStep(index: number) {
@@ -806,7 +803,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
           vMembers.splice(indexToRemove, 1);
           vMembers.forEach((r, index) => {
             r.order = index;
-            r.name = $localize`Step ${index + 1}`;
+            r.name = $localize`Treshold ${index + 1}`;
           });
 
           const write = this.waterfallService.batch();
@@ -897,14 +894,14 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       });
       const sub = dialogRef.afterClosed().subscribe((leave: boolean) => {
         if (leave) {
-          this.simulationExited.next(true);
+          this.shell.stateMode$.next('builder');
           if (this.cardModal.isOpened) this.cardModal.toggle();
         }
       });
 
       this.subscriptions.push(sub);
     } else {
-      this.simulationExited.next(true);
+      this.shell.stateMode$.next('builder');
       if (this.cardModal.isOpened) this.cardModal.toggle();
     }
   }

@@ -14,7 +14,6 @@ export class WaterfallGraphNodeComponent implements OnInit, OnDestroy {
   @Input() public node: Node;
   @Input() public selected = '';
   @Input() public nonEditableNodeIds: string[] = [];
-  @Input() public stateMode: 'simulation' | 'actual';
 
   @Output() addChild = new EventEmitter<string>();
   @Output() addSibling = new EventEmitter<string>();
@@ -60,9 +59,8 @@ export class WaterfallGraphNodeComponent implements OnInit, OnDestroy {
   }
 
   verticalSelection() {
-    if (this.node.type !== 'vertical') return;
-    if (this.node.id === this.selected || this.isHighlightedRight) return '*';
-    const selectedMember = this.node.members.find(member => member.id === this.selected);
-    return selectedMember?.id ?? '';
+    if (this.node.type !== 'vertical') return false;
+    if (this.node.id === this.selected || this.isHighlightedRight) return true;
+    return false
   }
 }
