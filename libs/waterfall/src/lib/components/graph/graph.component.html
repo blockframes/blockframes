@@ -1,6 +1,6 @@
 
 <section class="surface" [ngStyle]="{ width: showEditPanel ? '50%' : '100%' }" (dblclick)="select('')">
-  <header *ngIf="!readonly">
+  <header>
     <div>
       <h2>
         <span i18n>Waterfall Scheme</span>
@@ -221,7 +221,8 @@
                 (createStep)="createNewStep()"
                 (deleteStep)="deleteStep($event)"
                 (validCondition)="addCondition($event)"
-                (conditionFormPristine)="conditionFormPristine$.next($event)">
+                (conditionFormPristine)="conditionFormPristine$.next($event)"
+                (openModal)="!cardModal.isOpened ? cardModal.toggle() : undefined">
               </waterfall-conditions>
             </section>
           </mat-tab>
@@ -300,20 +301,6 @@
         </section>
       </ng-template>
     </ng-template>
-  </ng-container>
-  <ng-container *ngIf="(rightPanelMode$ | async) === 'readonly'">
-    <!-------------------->
-    <!-- READONLY MODE --->
-    <!-------------------->
-    <header>
-      <h2>
-        <span>{{ rightForm.get('name').value | maxLength : 38 }}</span>
-      </h2>
-      <button mat-icon-button matTooltip="Close" (click)="select('')" i18n-matTooltip>
-        <mat-icon svgIcon="close"></mat-icon>
-      </button>
-    </header>
-    <waterfall-graph-node-details *ngIf="selected$ | async as selected" [rightForm]="rightForm" [rightId]="selected"></waterfall-graph-node-details>
   </ng-container>
   <ng-container *ngIf="(rightPanelMode$ | async) === 'simulation'">
     <!---------------------->

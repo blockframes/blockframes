@@ -43,7 +43,6 @@ import {
   getNonEditableNodeIds,
   preferredLanguage,
 } from '@blockframes/model';
-import { boolean } from '@blockframes/utils/decorators/decorators';
 import { GraphService } from '@blockframes/ui/graph/graph.service';
 import { CardModalComponent, cardModalI18nStrings } from '@blockframes/ui/card-modal/card-modal.component';
 import { createModalData } from '@blockframes/ui/global-modal/global-modal.component';
@@ -76,8 +75,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaterfallGraphComponent implements OnInit, OnDestroy {
-
-  @Input() @boolean public readonly = false;
   @Input() set stateMode(mode: 'simulation' | 'actual') { this.stateMode$.next(mode); }
   public stateMode$ = new BehaviorSubject<'simulation' | 'actual'>('actual');
   public rightPanelMode$ = this.stateMode$.asObservable().pipe(
@@ -92,7 +89,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       } else {
         this.showSimulationResults$.next(false);
       }
-      return this.readonly ? 'readonly' : 'builder';
+      return 'builder';
     }));
   public showSimulationResults$ = new BehaviorSubject<boolean>(false);
   @Input() simulationForm: RevenueSimulationForm;
@@ -116,7 +113,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
   }
   @Output() simulationExited = new EventEmitter<boolean>(false);
   @Output() canLeaveGraphForm = new EventEmitter<boolean>(true);
-  public showEditPanel = this.shell.canBypassRules;
+  public showEditPanel = true;
   public waterfall = this.shell.waterfall;
   public isDefaultVersion: boolean;
   public isDuplicateVersion = false;
@@ -186,17 +183,11 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const lang = preferredLanguage();
-    if (this.readonly) this.showEditPanel = false;
     if (!this.producer) {
-      this.snackBar.open(`${toLabel('producer', 'rightholderRoles', undefined, undefined, lang)} is not defined.`, this.shell.canBypassRules ? 'WATERFALL MANAGEMENT' : 'ASK FOR HELP', { duration: 5000 })
+      const message = $localize`${toLabel('producer', 'rightholderRoles', undefined, undefined, lang)} is not defined.`;
+      this.snackBar.open(message, $localize`WATERFALL MANAGEMENT`, { duration: 5000 })
         .onAction()
-        .subscribe(() => {
-          if (this.shell.canBypassRules) {
-            this.router.navigate(['c/o/dashboard/title', this.waterfallId, 'init']);
-          } else {
-            this.intercom.show($localize`${toLabel('producer', 'rightholderRoles', undefined, undefined, lang)} is not defined in the waterfall "${this.shell.movie.title.international}"`);
-          }
-        });
+        .subscribe(() => this.router.navigate(['c/o/dashboard/title', this.waterfallId, 'init']));
     }
 
     this.subscriptions.push(combineLatest([
@@ -206,9 +197,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.shell.versionId$.pipe(tap(_ => this.select(''))),
       this.shell.statements$.pipe(map(statements => statements.filter(s => s.status === 'reported'))),
       this.shell.contracts$,
-      this.shell.hiddenRightHolderIds$,
       this.shell.incomes$,
-    ]).subscribe(([rights, sources, waterfall, versionId, reportedStatements, contracts, hiddenRightHolderIds, incomes]) => {
+    ]).subscribe(([rights, sources, waterfall, versionId, reportedStatements, contracts, incomes]) => {
       this.rights = rights;
       this.contracts = contracts;
       this.version = waterfall.versions.find(v => v.id === versionId);
@@ -224,29 +214,24 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.sourceForm.enable();
       this.rightForm.enable();
 
-      if (this.readonly) {
+      this.nonEditableNodeIds$.next([]);
+      this.nonPartiallyEditableNodeIds$.next(this.nonEditableNodeIds$.value);
+
+      this.isDuplicateVersion = this.version?.id && !this.isDefaultVersion && !this.version.standalone;
+
+      if (this.isDuplicateVersion) {
         this.nonEditableNodeIds$.next(allNodeIds); // All nodes are non-editable
-        this.nonPartiallyEditableNodeIds$.next(this.nonEditableNodeIds$.value); // All nodes are non-editable
+        // Nodes not "touched" by a reported statement are still partially editable (percentage and conditions)
+        this.nonPartiallyEditableNodeIds$.next(getNonEditableNodeIds(rights, this.sources, reportedStatements, incomes));
+        // Re-partially disable current selected form
+        this.setFormState(this.selected$.value);
       } else {
-        this.nonEditableNodeIds$.next([]);
+        // Nodes not "touched" by a reported statement are still fully editable
+        this.nonEditableNodeIds$.next(getNonEditableNodeIds(rights, this.sources, reportedStatements, incomes));
         this.nonPartiallyEditableNodeIds$.next(this.nonEditableNodeIds$.value);
-
-        this.isDuplicateVersion = this.version?.id && !this.isDefaultVersion && !this.version.standalone;
-
-        if (this.isDuplicateVersion) {
-          this.nonEditableNodeIds$.next(allNodeIds); // All nodes are non-editable
-          // Nodes not "touched" by a reported statement are still partially editable (percentage and conditions)
-          this.nonPartiallyEditableNodeIds$.next(getNonEditableNodeIds(rights, this.sources, reportedStatements, incomes));
-          // Re-partially disable current selected form
-          this.setFormState(this.selected$.value);
-        } else {
-          // Nodes not "touched" by a reported statement are still fully editable
-          this.nonEditableNodeIds$.next(getNonEditableNodeIds(rights, this.sources, reportedStatements, incomes));
-          this.nonPartiallyEditableNodeIds$.next(this.nonEditableNodeIds$.value);
-        }
       }
 
-      this.layout(hiddenRightHolderIds);
+      this.layout();
     }));
 
     this.subscriptions.push(this.rightForm.controls.org.valueChanges.subscribe(org => {
@@ -390,15 +375,6 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
 
   private handleSelect(id: string) {
     if (this.cardModal.isOpened) this.cardModal.toggle();
-    if (this.readonly) {
-      if (id) {
-        const right = this.rights.find(right => right.id === id);
-        this.showEditPanel = !!right && right.type !== 'horizontal';
-      } else {
-        this.showEditPanel = false;
-      }
-      return this._select(id);
-    }
     const allPristine = this.rightForm.pristine && this.sourceForm.pristine && this.conditionFormPristine$.value;
     if (allPristine) return this._select(id);
 
@@ -597,8 +573,8 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
     this.snackBar.open($localize`Receipt Source saved`, 'close', { duration: 3000 });
   }
 
-  async layout(hiddenRightHolderIds: string[]) {
-    const { nodes, arrows, bounds } = await toGraph(this.rights, this.sources, hiddenRightHolderIds);
+  async layout() {
+    const { nodes, arrows, bounds } = await toGraph(this.rights, this.sources);
     this.service.updateBounds(bounds);
     this.nodes$.next(nodes);
     this.arrows$.next(arrows);
@@ -662,7 +638,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.snackBar.open($localize`Operation not permitted.`, 'close', { duration: 5000 });
       return;
     }
-    const currentStepName = createStep(rightId, graph, this.rightForm.controls.name.value);
+    const { currentStepName, groupId } = createStep(rightId, graph, this.rightForm.controls.name.value);
     const newGraph = fromGraph(graph, this.version);
     const changes = computeDiff({ rights: this.rights, sources: this.sources }, newGraph);
     if (currentStepName) this.rightForm.controls.name.setValue(currentStepName);
@@ -674,7 +650,9 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
       this.rightService.remove(changes.deleted.rights.map(r => r.id), { params: { waterfallId: this.waterfallId }, write }),
       this.updateSources(newGraph.sources, write),
     ]);
-    return write.commit();
+    await write.commit();
+    this.select(groupId);
+    if (this.formTabs) this.formTabs.selectedIndex = 1;
   }
 
   async deleteStep(index: number) {

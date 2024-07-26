@@ -140,7 +140,7 @@ const SOURCE_HEIGHT = 70;
 const SPACING = 32;
 
 
-export async function toGraph(rights: Right[], sources: WaterfallSource[], hiddenRightHolderIds: string[]) {
+export async function toGraph(rights: Right[], sources: WaterfallSource[], hiddenRightHolderIds: string[] = []) {
 
   const dedupeOrgs = new Set<string>();
   rights.forEach(right => dedupeOrgs.add(right.rightholderId));

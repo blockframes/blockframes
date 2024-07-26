@@ -93,7 +93,6 @@
       padding: 22px;
       margin-bottom: 12px;
       display: grid;
-      grid-template-columns: 1fr 1fr;
       gap: 0 12px;
 
       p,
@@ -130,8 +129,7 @@
         gap: 16px;
         display: flex;
         align-items: center;
-        // margin-bottom: 10px;
-    
+
         hr {
           flex-grow: 1;
           color: transparent;
