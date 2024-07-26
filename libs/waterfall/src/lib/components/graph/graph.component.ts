@@ -803,7 +803,7 @@ export class WaterfallGraphComponent implements OnInit, OnDestroy {
           vMembers.splice(indexToRemove, 1);
           vMembers.forEach((r, index) => {
             r.order = index;
-            r.name = $localize`Step ${index + 1}`;
+            r.name = $localize`Treshold ${index + 1}`;
           });
 
           const write = this.waterfallService.batch();

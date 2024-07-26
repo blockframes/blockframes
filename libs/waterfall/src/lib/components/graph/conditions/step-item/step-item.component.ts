@@ -13,10 +13,10 @@ export class WaterfallStepItemComponent {
   @Input() conditionCount: number;
   @Input() set canUpdate(canUpdate: boolean) {
     this._canUpdate = canUpdate;
-    this.tooltip = this._canUpdate ? $localize`Edit Step Conditions` : $localize`View Step Conditions`;
+    this.tooltip = this._canUpdate ? $localize`Edit Treshold Conditions` : $localize`View Treshold Conditions`;
   }
   get canUpdate() { return this._canUpdate; }
-  public tooltip = $localize`Edit Step Conditions`;
+  public tooltip = $localize`Edit Treshold Conditions`;
   private _canUpdate: boolean;
 
   @Output() editStep = new EventEmitter();

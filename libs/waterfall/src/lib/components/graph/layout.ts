@@ -794,14 +794,14 @@ export function createStep(nodeId: string, graph: Node[], groupName?: string): {
 
     // update current node
     const children = [...node.children];
-    const currentStepName = $localize`Step 1`;
+    const currentStepName = $localize`Treshold 1`;
     node.name = currentStepName;
     node.children = [];
 
     // create a new step right
     const right1 = createRightNode({
       id: createNodeId('z-right'),
-      name: $localize`Step 2`,
+      name: $localize`Treshold 2`,
       rightHolderId: node.rightHolderId ?? '',
       version: node.version,
     });
@@ -836,7 +836,7 @@ export function createStep(nodeId: string, graph: Node[], groupName?: string): {
   if (node.type === 'vertical') { // if current node is already a vertical group simply add a new member
     const right = createRightNode({
       id: createNodeId('z-right'),
-      name: $localize`Step ${node.members.length + 1}`,
+      name: $localize`Treshold ${node.members.length + 1}`,
       rightHolderId: node.members[0].rightHolderId ?? '',
       version: node.version,
     });
@@ -859,7 +859,7 @@ export function deleteStep(groupId: string, stepIndex: number, graph: Node[]) {
   vGroup.members.splice(stepIndex, 1);
 
   vGroup.members.forEach((member, index) => {
-    member.name = $localize`Step ${index + 1}`;
+    member.name = $localize`Treshold ${index + 1}`;
   });
 
   // if the group has only one member left, remove the group
