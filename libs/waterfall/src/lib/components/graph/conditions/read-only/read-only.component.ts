@@ -1,8 +1,8 @@
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { RightForm } from '../../../../form/right.form';
 import { ConditionForm, setConditionForm } from '../../../../form/condition.form';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { Condition } from '@blockframes/model';
 
 @Component({
   selector: 'waterfall-conditions-read-only',
@@ -10,8 +10,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
   styleUrls: ['./read-only.component.scss'],
 })
 export class WaterfallConditionsReadOnlyComponent implements OnInit, OnDestroy {
-
-  @Input() public rightForm: RightForm;
+  @Input() public steps: Condition[][];
   @Input() public set rightId(id: string) {
     this.conditionForm.reset();
     this.conditionForm.disable();
@@ -24,7 +23,6 @@ export class WaterfallConditionsReadOnlyComponent implements OnInit, OnDestroy {
   public conditionForm = new ConditionForm();
 
   private _rightId: string;
-
   private sub: Subscription;
 
   ngOnInit() {
@@ -36,9 +34,7 @@ export class WaterfallConditionsReadOnlyComponent implements OnInit, OnDestroy {
   }
 
   displayCondition(index: number) {
-    const steps = this.rightForm.controls.steps.value;
-    const condition = steps[this.selectedStep$.value][index];
-    this.rightForm.controls.steps.setValue(steps);
+    const condition = this.steps[this.selectedStep$.value][index];
     setConditionForm(this.conditionForm, condition);
   }
 

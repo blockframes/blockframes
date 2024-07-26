@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { RightForm, RightFormValue } from '../../../form/right.form';
-import { BehaviorSubject, Observable, combineLatest, map, startWith, tap } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest, map, tap } from 'rxjs';
 import { DashboardWaterfallShellComponent } from '../../../dashboard/shell/shell.component';
 import {
+  Condition,
   MgStatus,
+  Right,
   RightsBreakdown,
   SourcesBreakdown,
   getExpensesValue,
@@ -13,15 +14,17 @@ import {
 import { MatTabGroup } from '@angular/material/tabs';
 
 interface Information {
-  org: number;
+  right: Right;
+  rightholderId: string;
+  orgRevenue: number;
   bonus?: number;
-  right: number;
+  rightRevenue: number;
   expenses?: number;
   cappedExpenses?: number;
   expensesToBeRecouped?: number;
   mgStatus?: MgStatus;
 }
-
+// TODO #9896 review this component as steps cannot be selected anymore
 @Component({
   selector: 'waterfall-graph-node-details',
   templateUrl: './node-details.component.html',
@@ -29,59 +32,56 @@ interface Information {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaterfallGraphNodeDetailsComponent implements OnInit {
-  @Input() public rightForm: RightForm;
-  @Input() public set rightId(id: string) { this.rightId$.next(id); }
-  public get rightId() { return this.rightId$.value; }
-  private rightId$ = new BehaviorSubject<string>(null);
-  public rights$ = this.shell.rights$;
-  public right$ = combineLatest([this.rightId$, this.rights$]).pipe(
-    map(([id, rights]) => rights.find(r => r.id === id)),
-    tap(r => { if (this.tabs && r?.type === 'vertical') this.tabs.selectedIndex = 1; })
-  );
-  public formValue$: Observable<RightFormValue>;
+  @Input() public steps: Condition[][];
+  @Input() private rightId$: BehaviorSubject<string>;
+
   public information$: Observable<Information>;
   public waterfall = this.shell.waterfall;
-  private statements$ = this.shell.rightholderStatements$.pipe(
-    map(statements => statements.filter(s => s.status === 'reported' && (!s.reviewStatus || s.reviewStatus === 'accepted'))),
-    map(statements => sortStatements(statements))
-  );
 
   @ViewChild('tabs', { static: true }) tabs?: MatTabGroup;
 
-  constructor(
-    private shell: DashboardWaterfallShellComponent,
-  ) { }
+  constructor(private shell: DashboardWaterfallShellComponent) { }
 
   ngOnInit() {
-    this.formValue$ = this.rightForm.valueChanges.pipe(
-      startWith(this.rightForm.getRawValue()),
-      map(() => this.rightForm.getRawValue())
+    const right$ = combineLatest([this.rightId$, this.shell.rights$]).pipe(
+      map(([id, rights]) => rights.find(r => r.id === id)),
+      tap(r => { if (this.tabs && r?.type === 'vertical') this.tabs.selectedIndex = 1; })
+    );
+
+    const statements$ = this.shell.rightholderStatements$.pipe(
+      map(statements => statements.filter(s => s.status === 'reported' && (!s.reviewStatus || s.reviewStatus === 'accepted'))),
+      map(statements => sortStatements(statements))
     );
 
     this.information$ = combineLatest([
-      this.right$,
+      right$,
       this.shell.state$,
-      this.rights$,
+      this.shell.rights$,
       this.shell.revenueMode$,
-      this.statements$
+      statements$
     ]).pipe(
       map(([right, state, rights, revenueMode, _statements]) => {
         if (!right) return;
-        let rightRevenue = state.waterfall.state.rights[right.id]?.revenu[revenueMode];
+        const data: Information = {
+          right: { ...right },
+          rightholderId: '',
+          orgRevenue: 0,
+          rightRevenue: state.waterfall.state.rights[right.id]?.revenu[revenueMode]
+        };
 
         if (right.type === 'vertical') {
-          rightRevenue = state.waterfall.state.verticals[right.id]?.revenu[revenueMode];
+          data.rightRevenue = state.waterfall.state.verticals[right.id]?.revenu[revenueMode];
           right = rights.find(r => r.groupId === right.id);
         }
 
         const orgState = state.waterfall.state.orgs[right.rightholderId];
         if (!orgState) return;
-        const orgRevenue = orgState.revenu[revenueMode];
+        data.orgRevenue = orgState.revenu[revenueMode];
+        data.rightholderId = right.rightholderId;
 
         const expenseState = Object.values(state.waterfall.state.expenses).filter(e => e.orgId === orgState.id);
         const cappedExpenses = getExpensesValue(state.waterfall.state, expenseState);
 
-        const data: Information = { org: orgRevenue, right: rightRevenue };
         if (revenueMode === 'calculated') data.bonus = orgState.bonus;
 
         // Get last statement about this right
@@ -110,6 +110,5 @@ export class WaterfallGraphNodeDetailsComponent implements OnInit {
         return data;
       })
     )
-
   }
 }

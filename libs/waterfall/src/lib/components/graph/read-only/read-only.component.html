@@ -1,0 +1,34 @@
+<section class="surface" [ngStyle]="{ width: showDetailsPanel ? '50%' : '100%' }" (dblclick)="select('')">
+  <ng-container *ngIf="(nodes$ | async) as nodes">
+    <bf-graph-container *ngIf="nodes.length else emptyGraph">
+      <waterfall-graph-node
+        *ngFor="let node of nodes"
+        [node]="node"
+        [nonEditableNodeIds]="nonEditableNodeIds$.value"
+        (handleSelect)="select($event)"
+        [selected]="(selected$ | async)"
+        [ngStyle]="{ left: node.x + 'px', top: node.y + 'px' }"
+      ></waterfall-graph-node>
+      <svg:path *ngFor="let arrow of (arrows$ | async)" edge [attr.d]="arrow.path" stroke-width="2" stroke="#9392A7" fill="none"></svg:path>
+      <waterfall-graph-label *ngFor="let arrow of (arrows$ | async)" node [ngStyle]="{ left: arrow.labelPosition.x + 'px', top: arrow.labelPosition.y + 'px' }" [arrow]="arrow"></waterfall-graph-label>
+    </bf-graph-container>
+  </ng-container>
+
+  <ng-template #emptyGraph>
+    <div class="empty-waterfall">
+      <img asset="empty_waterfall_graph.svg" alt="Empty Waterfall">
+    </div>
+  </ng-template>
+</section>
+
+<bf-card-modal [ngStyle]="{ display: showDetailsPanel ? 'block' : 'none' }">
+  <header>
+    <h2>
+      <span>{{ (rightName$ | async) | maxLength : 38 }}</span>
+    </h2>
+    <button mat-icon-button matTooltip="Close" (click)="select('')" i18n-matTooltip>
+      <mat-icon svgIcon="close"></mat-icon>
+    </button>
+  </header>
+  <waterfall-graph-node-details *ngIf="steps$ | async as steps" [steps]="steps" [rightId$]="selected$"></waterfall-graph-node-details>
+</bf-card-modal>

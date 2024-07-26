@@ -9,7 +9,7 @@ export class IsHorizontalPipe implements PipeTransform {
   }
 }
 
-@Pipe({ name: 'isStep' })
+@Pipe({ name: 'isStep' }) // TODO #9896 remove this pipe as we cannot select steps anymore
 export class IsStepPipe implements PipeTransform {
   transform(id: string, rights: Right[]) {
     const groupId = rights.find(r => r.id === id)?.groupId;

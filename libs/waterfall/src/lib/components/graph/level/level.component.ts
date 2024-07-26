@@ -20,7 +20,7 @@ export class WaterfallGraphLevelComponent implements OnChanges {
   @Input() selected: boolean;
   @Input() @boolean hideAmount: boolean;
   @Input() public monetizationLabel = $localize`Revenue`;
-  @Input() public set stateMode(mode: 'simulation' | 'actual') { this.stateMode$.next(mode); }
+  @Input() public set stateMode(mode: 'simulation' | 'actual') { this.stateMode$.next(mode); }  // TODO #9896 rename actual to waterfall (ie not simulated) ?
   private stateMode$ = new BehaviorSubject<'simulation' | 'actual'>('actual');
   @Output() handleSelect = new EventEmitter();
 

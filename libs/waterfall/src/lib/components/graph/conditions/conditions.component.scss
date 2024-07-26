@@ -1,50 +1,28 @@
-
-:host {
-
+section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   p {
-    margin: 0;
-  }
-
-  p.step {
     font-weight: 600;
     margin: 6px 24px;
     font-size: 20px;
-  }
-
-  div.right {
-    margin-top: 16px;
-    display: flex;
-    gap: 16px;
-
-    mat-form-field, static-select {
-      flex-grow: 1;
-    }
-  }
-
-  hr {
-    color: transparent;
-    border-bottom: solid 1px var(--foreground-divider);
-  }
-
-  div.add-next {
-    gap: 16px;
-    display: flex;
-    align-items: center;
-
-    hr {
-      flex-grow: 1;
-      color: transparent;
-      background-color: var(--primary);
-    }
-    p.mat-caption {
-      margin: 0;
-      color: var(--primary);
-    }
-  }
-
-  div.add-step {
-    display: flex;
-    margin-top: 32px;
-    justify-content: center;
+    margin: 0;
+    text-transform: uppercase;
   }
 }
+
+div.right { // TODO #9896 remove
+  margin-top: 16px;
+  display: flex;
+  gap: 16px;
+
+  mat-form-field, static-select {
+    flex-grow: 1;
+  }
+}
+
+button.add-step {
+  margin-top: 32px;
+  text-transform: uppercase;
+}
+

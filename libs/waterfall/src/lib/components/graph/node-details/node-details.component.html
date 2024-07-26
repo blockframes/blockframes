@@ -1,16 +1,16 @@
-<h3>{{ (formValue$ | async)?.org }}</h3>
-<mat-tab-group mat-stretch-tabs="false" #tabs >
+<h3 *ngIf="information$ | async as information">{{ information.rightholderId | rightholderName: waterfall }}</h3>
+<mat-tab-group mat-stretch-tabs="false" #tabs>
   <mat-tab label="Information" i18n-label>
     <section *ngIf="information$ | async as information">
       <ul>
         <li><strong i18n>Total Organization Revenue :</strong> 
-          {{ information.org | currency: waterfall.mainCurrency }}
+          {{ information.orgRevenue | currency: waterfall.mainCurrency }}
           <ng-container *ngIf="information.bonus"> 
             <span class="penalty" *ngIf="information.bonus < 0"> (<span i18n>Penalty : </span>{{ information.bonus | currency: waterfall.mainCurrency }})</span>
             <span class="bonus" *ngIf="information.bonus > 0"> (<span i18n>Bonus : </span>{{ information.bonus | currency: waterfall.mainCurrency }})</span>
           </ng-container>
         </li>
-        <li><strong i18n>Receipt Share Revenue :</strong> {{ information.right | currency: waterfall.mainCurrency }}</li>
+        <li><strong i18n>Receipt Share Revenue :</strong> {{ information.rightRevenue | currency: waterfall.mainCurrency }}</li>
         <li *ngIf="information.expenses">
           <strong i18n>Expenses :</strong> {{ information.expenses | currency: waterfall.mainCurrency }}
           <ng-container *ngIf="information.cappedExpenses"> (<span i18n>Capped : </span>{{ information.cappedExpenses | currency: waterfall.mainCurrency }})</ng-container>
@@ -18,15 +18,13 @@
         <li *ngIf="information.expensesToBeRecouped !== undefined"><strong i18n>Expenses to be recouped :</strong> {{ information.expensesToBeRecouped | currency : waterfall.mainCurrency }} </li>
         <li *ngIf="information.mgStatus"><strong i18n>MG before recoupment :</strong> {{ information.mgStatus.investments | currency: waterfall.mainCurrency }}</li>
         <li *ngIf="information.mgStatus"><strong i18n>Still to be recouped :</strong> {{ information.mgStatus.stillToBeRecouped | currency: waterfall.mainCurrency }}</li>
-        <ng-container *ngIf="right$ | async as right">
-          <li *ngIf="right.type !== 'vertical'"><strong i18n>Percentage :</strong> {{ (right.percent ?? 0) / 100 | percent: '1.0-4' }}</li>
-        </ng-container>
+        <li *ngIf="information.right.type !== 'vertical'"><strong i18n>Percentage :</strong> {{ (information.right.percent ?? 0) / 100 | percent: '1.0-4' }}</li>
       </ul>
     </section>
   </mat-tab>
-  <mat-tab label="Conditions" *ngIf="!((formValue$ | async)?.type | isHorizontal) && !(rightId | isStep : (rights$ | async))" i18n-label>
-    <section>
-      <waterfall-conditions-read-only [rightForm]="rightForm" [rightId]="rightId"></waterfall-conditions-read-only>
+  <mat-tab label="Conditions" i18n-label>
+    <section *ngIf="information$ | async as information">
+      <waterfall-conditions-read-only [steps]="steps" [rightId]="information.right.id"></waterfall-conditions-read-only>
     </section>
   </mat-tab>
 </mat-tab-group>

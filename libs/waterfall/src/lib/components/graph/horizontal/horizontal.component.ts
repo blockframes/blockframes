@@ -53,9 +53,8 @@ export class WaterfallGraphHorizontalComponent implements OnInit, OnDestroy {
   }
 
   verticalSelection(memberId: string) {
-    if (this.selected === memberId) return '*';
-    if (this.highlighted.includes(memberId)) return '*';
-    return this.selected;
+    if (this.selected === memberId || this.highlighted.includes(memberId)) return true;
+    return false;
   }
 
   horizontalSelection(memberId: string) {
